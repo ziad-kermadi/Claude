@@ -82,7 +82,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: MPOR 4/4]</b> The Brownian lag exposure from the previous card is a simplification. Name what it misses for a realistic portfolio, and state the regulatory margin-period floor for a daily-margined bilateral netting set (approximate; check the current rule text).",
-  "back": "<b>Answer:</b><br><ul>\n<li><b>Jumps and gap risk:</b> an MTM move larger than the threshold plus the lag cannot be collateralised. The \\(\\sqrt\\delta\\) scaling understates tail exposure.</li>\n<li><b>Disputes and illiquid collateral:</b> they lengthen the effective margin period beyond the nominal \\(\\delta\\).</li>\n<li><b>Path maximum within the window:</b> if default occurs inside the window, exposure is the running maximum of the MTM, not its endpoint (Brownian bridge derivation below).</li></ul>\nRegulatory floor: about 10 business days for a daily-margined bilateral netting set, extended to about 20 business days for large or illiquid netting sets and disputes (approx.).<br>\n<b>Interviewer follow-up:</b> Why \\(\\sqrt\\delta\\) and not \\(\\delta\\)? (Brownian variance is linear in time, so standard deviation is \\(\\sqrt\\delta\\).)",
+  "back": "<b>Answer:</b><br><ul>\n<li><b>Jumps and gap risk:</b> an MTM move larger than the threshold plus the lag cannot be collateralised. The \\(\\sqrt\\delta\\) scaling understates tail exposure.</li>\n<li><b>Disputes and illiquid collateral:</b> they lengthen the effective margin period beyond the nominal \\(\\delta\\).</li>\n<li><b>Path maximum within the window:</b> if default occurs inside the window, exposure is the running maximum of the MTM, not its endpoint (Brownian bridge derivation below).</li></ul>\nRegulatory floor: 10 business days for a daily-margined bilateral netting set. The floor is 20 business days for large netting sets (more than 5,000 trades, approx.) or netting sets with illiquid collateral or OTC derivatives that cannot easily be replaced. Disputes do not set a flat 20: if more than two margin disputes lasting longer than the MPoR occur on a netting set over the preceding two quarters, the MPoR must be at least double the applicable floor for the following two quarters (approx.; check the current rule text).<br>\n<b>Interviewer follow-up:</b> Why \\(\\sqrt\\delta\\) and not \\(\\delta\\)? (Brownian variance is linear in time, so standard deviation is \\(\\sqrt\\delta\\).)",
   "tags": [
    "collateral",
    "mpor",
@@ -115,7 +115,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: FVA 3/4]</b> Uncollateralised 5-year swap: flat \\(E^+=1.5\\)m, flat \\(E^-=0.5\\)m, \\(s_F=100\\)bp, \\(s_B=60\\)bp, flat \\(r=3\\%\\). Compute FCA, FBA and net FVA. Compare with a symmetric \\(s=100\\)bp applied to the net expected MTM \\(E^+-E^-=1.0\\)m.",
-  "back": "<b>Steps:</b><br><ul>\n<li>Annuity \\(A=\\int_0^5 e^{-0.03t}dt=(1-e^{-0.15})/0.03=4.6431\\).</li>\n<li>FCA \\(=-0.0100\\times1.5\\times4.6431=-0.0697\\)m.</li>\n<li>FBA \\(=+0.0060\\times0.5\\times4.6431=+0.0139\\)m.</li>\n<li>Net FVA \\(=-0.0557\\)m, about \\(-56\\)k.</li>\n<li>Symmetric at 100bp on 1.0m net: \\(-0.0464\\)m.</li></ul>\n<b>Sanity check:</b> the asymmetric charge is larger than the symmetric one because it funds the full 1.5m positive exposure, and the benefit only offsets part of it. FBA/FCA \\(=(0.6\\times0.5)/(1.0\\times1.5)=0.2\\). Flat exposures are a simplification; path-dependent exposures change the answer.<br>\n<b>Interviewer follow-up:</b> Which side of the Hull–White vs Burgard–Kjaer debate does this charge sit on? (Next card.)",
+  "back": "<b>Steps:</b><br><ul>\n<li>Annuity \\(A=\\int_0^5 e^{-0.03t}dt=(1-e^{-0.15})/0.03=4.6431\\).</li>\n<li>FCA \\(=-0.0100\\times1.5\\times4.6431=-0.0696\\)m.</li>\n<li>FBA \\(=+0.0060\\times0.5\\times4.6431=+0.0139\\)m.</li>\n<li>Net FVA \\(=-0.0557\\)m, about \\(-56\\)k.</li>\n<li>Symmetric at 100bp on 1.0m net: \\(-0.0464\\)m.</li></ul>\n<b>Sanity check:</b> the asymmetric charge is larger than the symmetric one because it funds the full 1.5m positive exposure, and the benefit only offsets part of it. FBA/FCA \\(=(0.6\\times0.5)/(1.0\\times1.5)=0.2\\). Flat exposures are a simplification; path-dependent exposures change the answer.<br>\n<b>Interviewer follow-up:</b> Which side of the Hull–White vs Burgard–Kjaer debate does this charge sit on? (Next card.)",
   "tags": [
    "fva",
    "case_study",
@@ -334,7 +334,7 @@
  },
  {
   "type": "cloze",
-  "front": "Regulatory margin period of risk for a daily-margined bilateral netting set is at least {{c1::10 business days}}; it extends to {{c2::20 business days}} for large or illiquid netting sets and for disputes (approx.; check the current rule text).",
+  "front": "Regulatory margin period of risk for a daily-margined bilateral netting set is at least {{c1::10 business days}}; it is {{c2::20 business days}} for large netting sets or those with illiquid or hard-to-replace OTC collateral, and {{c3::at least double the applicable floor}} after repeated disputes (approx.; check the current rule text).",
   "back": "The margin period \\(\\delta\\) enters the lag exposure as \\(\\sigma\\sqrt\\delta\\), so the regulatory floor sets the minimum collateral-lag exposure.",
   "tags": [
    "mpor",
@@ -368,7 +368,7 @@
  {
   "type": "basic",
   "front": "How does IFRS 13 treat own credit (DVA) and funding (FVA) in the fair value of a derivative? Give the principle and the practical sticking point.",
-  "back": "<b>Answer:</b> IFRS 13 measures fair value as an exit price from a market-participant perspective, including non-performance risk. That covers counterparty credit (CVA) and the entity's own credit (DVA). Funding is not listed as an explicit adjustment. Most large dealers adopted FVA in the early 2010s where a market participant would price funding into the trade.<br>\nThe sticking point is which funding curve a market participant would use. A firm-specific spread is an entity input; a market funding curve is a market input. The choice changes both the FVA and the own-credit component of DVA (approx.; check the standard and the firm's policy).<br>\n<b>Interviewer follow-up:</b> Why does DVA produce income when the bank's credit deteriorates? (Lower own-default-adjusted liability value, recognised in P&L.)",
+  "back": "<b>Answer:</b> IFRS 13 measures fair value as an exit price from a market-participant perspective, including non-performance risk. That covers counterparty credit (CVA) and the entity's own credit (DVA). Funding is not listed as an explicit adjustment. Most large dealers adopted FVA in the early 2010s (approx.; unverified) where a market participant would price funding into the trade.<br>\nThe sticking point is which funding curve a market participant would use. A firm-specific spread is an entity input; a market funding curve is a market input. The choice changes both the FVA and the own-credit component of DVA (approx.; check the standard and the firm's policy).<br>\n<b>Interviewer follow-up:</b> Why does DVA produce income when the bank's credit deteriorates? (Lower own-default-adjusted liability value, recognised in P&L.)",
   "tags": [
    "accounting",
    "ifrs13",
@@ -379,7 +379,7 @@
  {
   "type": "basic",
   "front": "Under Basel III final, what does SA-CVA take as inputs, and why is hedge recognition narrower than in a P&L hedge?",
-  "back": "<b>Answer:</b> SA-CVA takes the bank's sensitivities of CVA (not of MTM) to regulatory market risk factors, such as interest rate, FX and counterparty credit spread, and aggregates them with supervisory risk weights and correlations in a market-risk-style formula. It requires supervisory approval (approx.).<br>\nHedge recognition is restricted to instruments on the eligible list, and only the offset of CVA sensitivities is credited. A hedge that is economically a CVA hedge but is not eligible earns no capital relief. The P&L hedge can be any instrument; the regulatory recognition is narrower.<br>\n<b>Interviewer follow-up:</b> Why is the CVA's sensitivity, not the trade's, the input? (Capital follows the risk the CVA charge actually carries.)",
+  "back": "<b>Answer:</b> SA-CVA takes the bank's sensitivities of CVA (not of MTM) to regulatory market risk factors, such as interest rate, FX and counterparty credit spread, and aggregates them with supervisory risk weights and correlations in a market-risk-style formula. It requires supervisory approval (approx.; unverified).<br>\nHedge recognition is restricted to instruments on the eligible list, and only the offset of CVA sensitivities is credited. A hedge that is economically a CVA hedge but is not eligible earns no capital relief. The P&L hedge can be any instrument; the regulatory recognition is narrower.<br>\n<b>Interviewer follow-up:</b> Why is the CVA's sensitivity, not the trade's, the input? (Capital follows the risk the CVA charge actually carries.)",
   "tags": [
    "regulatory",
    "sa_cva",
