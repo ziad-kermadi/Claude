@@ -283,7 +283,7 @@
  {
   "type": "basic",
   "front": "Compare free-boundary SABR and ZABR as responses to the limitations of Hagan's SABR.",
-  "back": "Free-boundary (no-arbitrage) SABR, Doust (2012), modifies the dynamics so the forward can reach a boundary below zero. This gives an arbitrage-free density at low and negative strikes that the Hagan formula misses.<br>\nZABR (Andreasen and Huge) generalises the volatility dynamics to \\(d\\sigma\\propto\\sigma^{\\gamma}\\). The volatility exponent controls the vol-of-vol shape separately, which improves long-expiry smiles and wing behaviour.<br>\nBoth trade some simplicity for better wing behaviour and no-arbitrage properties.",
+  "back": "Free-boundary SABR (Antonov, Konikov and Spector, Risk 2015) lets the forward move below zero through a free boundary, so no shift is needed. It has an exact price at zero correlation and a one-dimensional integral approximation otherwise. Its arbitrage-freeness is not guaranteed in general, which the same authors later address with a mixed model.<br>No-arbitrage SABR (Doust, 2012) instead puts an absorbing boundary at zero and writes the density as a sum of positive components, with prices by numerical integration. It targets the same low-strike density problem by a different route.<br>ZABR (Andreasen and Huge) generalises the volatility dynamics to \\(d\\sigma\\propto\\sigma^{\\gamma}\\). The volatility exponent controls the vol-of-vol shape separately, which improves long-expiry smiles and wing behaviour.<br>All three trade some simplicity for better wing behaviour and no-arbitrage properties.",
   "tags": [
    "sabr",
    "free_boundary",
@@ -513,7 +513,7 @@
  {
   "type": "basic",
   "front": "What is rank reduction in an LMM, and why does it matter for pricing?",
-  "back": "The correlation matrix is \\(N\\times N\\) and must be positive semi-definite. Rank reduction writes each correlation as an inner product of unit-norm vectors in \\(d\\) dimensions, for example Rebonato's parametrisation, or a PCA of the correlation.<br>\nA small number of factors, often 2 or 3, captures most of the variance of rate moves (approximately 90% or more). This speeds simulation at the cost of approximation error in the correlation, which can shift the swaption fit and Bermudan value.<br>\n<b>Interviewer follow-up:</b> What is the trade-off? Fewer factors lose correlation fidelity. More factors slow simulation and overfit.",
+  "back": "The correlation matrix is \\(N\\times N\\) and must be positive semi-definite. Rank reduction writes each correlation as an inner product of unit-norm vectors in \\(d\\) dimensions, for example Rebonato's parametrisation, or a PCA of the correlation.<br>\nA small number of factors, often 2 or 3, captures most of the variance of rate moves (approximately 90% or more; approx.; unverified). This speeds simulation at the cost of approximation error in the correlation, which can shift the swaption fit and Bermudan value.<br>\n<b>Interviewer follow-up:</b> What is the trade-off? Fewer factors lose correlation fidelity. More factors slow simulation and overfit.",
   "tags": [
    "lmm",
    "rank_reduction",
@@ -557,7 +557,7 @@
  {
   "type": "basic",
   "front": "Give the static replication formula for \\(\\mathbb{E}^{A}[g(S)]\\) and explain how it prices CMS-type payoffs with a full smile.",
-  "back": "Decompose \\(g\\) around the forward \\(F_0\\): \\(g(S)=g(F_0)+\\int_0^{F_0}g''(K)(K-S)^+\\,dK+\\int_{F_0}^{\\infty}g''(K)(S-K)^+\\,dK\\). Taking expectations under the annuity measure:\n\\[\\mathbb{E}^{A}[g(S)]=g(F_0)+\\int_0^{F_0}g''(K)\\,\\mathrm{Rec}(K)\\,dK+\\int_{F_0}^{\\infty}g''(K)\\,\\mathrm{Pay}(K)\\,dK\\]\nwhere \\(\\mathrm{Pay}(K)\\) and \\(\\mathrm{Rec}(K)\\) are the payer and receiver swaption prices per unit annuity, taken from the market smile at each strike. For a payment lag, a measure change is added.<br>\n<b>Interviewer follow-up:</b> Why is this better than a single-vol convexity formula? It uses the whole smile, so it captures wing and skew effects that a single vol misses.",
+  "back": "Decompose \\(g\\) around the forward \\(F_0\\): \\(g(S)=g(F_0)+\\int_{-\\infty}^{F_0}g''(K)(K-S)^+\\,dK+\\int_{F_0}^{\\infty}g''(K)(S-K)^+\\,dK\\). Taking expectations under the annuity measure:\n\\[\\mathbb{E}^{A}[g(S)]=g(F_0)+\\int_{-\\infty}^{F_0}g''(K)\\,\\mathrm{Rec}(K)\\,dK+\\int_{F_0}^{\\infty}g''(K)\\,\\mathrm{Pay}(K)\\,dK\\]\nwhere \\(\\mathrm{Pay}(K)\\) and \\(\\mathrm{Rec}(K)\\) are the payer and receiver swaption prices per unit annuity, taken from the market smile at each strike. Rates can be negative, so the lower limit is \\(-\\infty\\), not 0. For a payment lag, a measure change is added.<br>\n<b>Interviewer follow-up:</b> Why is this better than a single-vol convexity formula? It uses the whole smile, so it captures wing and skew effects that a single vol misses.",
   "tags": [
    "cms",
    "static_replication",
