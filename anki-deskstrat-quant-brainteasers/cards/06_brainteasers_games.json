@@ -15,6 +15,9 @@
    "Colour the squares like a chessboard. Do the two removed corners leave the colours balanced?",
    "Colour square \\((i,j)\\) black when \\(i+j\\) is even, then count black against white squares.",
    "Let \\(B\\) and \\(W\\) be the numbers of black and white squares left after removing \\(a_1\\) and \\(h_8\\); compare \\(B\\) with \\(W\\)."
+  ],
+  "figs_back": [
+   "f06_chessboard_colour"
   ]
  },
  {
@@ -33,6 +36,9 @@
    "Each meeting changes the three counts by the same fixed amounts. Is there a quantity those changes leave alone?",
    "Look at the differences between the counts, taken modulo 3.",
    "Write the counts as \\((13,15,17)\\) and compute \\(13-15\\), \\(15-17\\) and \\(13-17\\) modulo 3."
+  ],
+  "figs_back": [
+   "f06_pile_residues"
   ]
  },
  {
@@ -51,6 +57,9 @@
    "Each move takes one stone from two piles and adds two to the third. Which combinations of pile sizes change by the same amount every move?",
    "Structural feature: each move changes the pile sizes by \\((-1,-1,+2)\\), so look for a linear combination of the sizes that does not change, or changes only by a multiple of a fixed number.",
    "Setup: track the differences between pile sizes after one move. Which of them change by a multiple of a fixed integer, and what does that say about reaching two empty piles?"
+  ],
+  "figs_back": [
+   "f06_pile_residues"
   ]
  },
  {
@@ -64,6 +73,9 @@
    "colouring",
    "toolkit",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f06_balanced_4x4"
   ]
  },
  {
@@ -161,6 +173,9 @@
    "parties",
    "graphs",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f06_ramsey_pentagon"
   ]
  },
  {
@@ -179,6 +194,9 @@
    "With two pirates the proposer keeps everything. What must he buy with coins when there are three, and from whom?",
    "Solve from the smallest game upward; for each size, buy the cheapest votes using what the rejected juniors get in the smaller game.",
    "Let \\(x_k\\) be the coins that the most junior pirate of a \\(k\\)-pirate game receives; start with \\(x_2=0\\) and work up to five pirates, counting the votes he needs."
+  ],
+  "figs_back": [
+   "f06_pirate_allocations"
   ]
  },
  {
@@ -208,6 +226,9 @@
    "pirates",
    "game_theory",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f06_pirate_allocations"
   ]
  },
  {
@@ -239,6 +260,9 @@
    "What one piece of shared information could the back prisoner broadcast so that everyone else can recover their own hat?",
    "Use the parity (sum modulo 2) of the hats in front as the shared code, so each later prisoner only needs to decode one bit.",
    "Let \\(p=\\sum h_i \\bmod 2\\) over the 99 front prisoners, with \\(h_i\\in\\{0,1\\}\\); write prisoner \\(k\\)'s hat as a function of \\(p\\) and the hats he can see."
+  ],
+  "figs_back": [
+   "f06_hat_parity"
   ]
  },
  {
@@ -252,6 +276,9 @@
    "prisoners",
    "parity",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f06_hat_parity"
   ]
  },
  {
@@ -288,6 +315,9 @@
    "Each person's state is one of two values, and each person sees everyone in front. What single summary of the people in front could the back person announce?",
    "Structural feature: each person needs only one bit from the call, and the call can summarise everything in front. Ask what that summary must add up to in order to fix the next person's state.",
    "Setup: let \\(L_i\\in\\{0,1\\}\\) be the lamp states, and let the call be a function of the lamps in front. Write the condition that person \\(k\\) can deduce his own lamp from the call and the lamps he sees."
+  ],
+  "figs_back": [
+   "f06_hat_parity"
   ]
  },
  {
@@ -318,6 +348,9 @@
    "With one egg you must scan every floor. How can the first egg cut the search, and how many floors can the second egg cover in the worst case?",
    "Drop the first egg at a floor that splits the building into blocks; use the second egg to scan each block one floor at a time, with blocks shrinking by one each time.",
    "Let the first drop be at floor \\(x\\); if it breaks, the second egg scans floors \\(1\\) to \\(x-1\\), and if it survives the next block is shorter by one. Write the sum of the block sizes."
+  ],
+  "figs_back": [
+   "f06_egg_drop_staircase"
   ]
  },
  {
@@ -335,6 +368,9 @@
    "With the drops left after each break, how many floors can the second egg still check?",
    "Use the triangular count: with \\(m\\) drops and two eggs, the floors you can check form a sum of decreasing block sizes.",
    "Write \\(F(m)\\) for the floors checkable with \\(m\\) drops and two eggs as \\(m+(m-1)+\\cdots+1\\), then set \\(F(m)\\ge 100\\)."
+  ],
+  "figs_back": [
+   "f06_egg_drop_staircase"
   ]
  },
  {
@@ -352,6 +388,9 @@
    "If the first egg breaks, how many drops does the second egg have left, and how many floors must it check below the break?",
    "Choose the first floor so that the second egg can scan the floors below it with the drops that remain.",
    "Let the first drop be at floor \\(x\\) with \\(m\\) drops in total; if it breaks, the second egg covers floors \\(1\\) to \\(x-1\\) with \\(m-1\\) drops, so write the inequality between \\(x-1\\) and \\(m-1\\)."
+  ],
+  "figs_back": [
+   "f06_egg_drop_staircase"
   ]
  },
  {
@@ -420,6 +459,9 @@
    "What is special about lighting a rope at both ends at once compared with lighting it at one end?",
    "Names the move: a rope lit at both ends finishes at a time that does not depend on where the rate is fast or slow. Use that as a timer, and ask what the second rope can do while it runs.",
    "Set up: rope A lit at both ends and rope B lit at one end at time 0; write when A finishes and how much of B is left at that moment."
+  ],
+  "figs_back": [
+   "f06_rope_timeline"
   ]
  },
  {
@@ -432,6 +474,9 @@
    "burning_ropes",
    "timing",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f06_rope_timeline"
   ]
  },
  {
@@ -507,6 +552,9 @@
    "How many different outcomes can \\(r\\) rats' deaths produce, and what does each rat's death tell you?",
    "Names the move: encode the bottles so that each rat's death is one digit of a code. How many digits are needed to tell 1000 bottles apart?",
    "Setup: the death patterns of \\(r\\) rats form a set of size \\(2^r\\). Require that this set can label all 1000 bottles, and find the smallest \\(r\\)."
+  ],
+  "figs_back": [
+   "f06_wine_rats_code"
   ]
  },
  {
@@ -520,6 +568,9 @@
    "binary_encoding",
    "toolkit",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f06_wine_rats_code"
   ]
  },
  {
@@ -538,6 +589,9 @@
    "Is there one number that summarises all three heaps and is zero exactly in losing positions?",
    "Use the bitwise XOR of the heap sizes; find a heap you can shrink so the XOR becomes zero.",
    "Compute \\(3\\oplus4\\oplus5\\) in binary, then find a heap \\(h\\) with \\(h\\oplus s<h\\), where \\(s\\) is that XOR."
+  ],
+  "figs_back": [
+   "f06_nim_xor_345"
   ]
  },
  {
@@ -556,6 +610,9 @@
    "Does the XOR rule still hold when every heap has size 0 or 1?",
    "Switch to the misère rule and separate the case where every heap has at most one counter from the general case.",
    "Write the position after each candidate first move and check whether some heap has at least 2 counters, and what the XOR is."
+  ],
+  "figs_back": [
+   "f06_nim_xor_345"
   ]
  },
  {
@@ -586,6 +643,9 @@
    "Which pile sizes are losing for the player to move? Start from zero and work upward.",
    "Use Grundy values: the value of a pile is the mex of the values reachable in one legal move.",
    "Write \\(g(0)=0\\) and \\(g(n)=\\operatorname{mex}\\{g(n-1),g(n-3),g(n-4)\\}\\) for \\(n\\ge 1\\), then compute \\(g\\) up to 10."
+  ],
+  "figs_back": [
+   "f06_sub_134_grundy"
   ]
  },
  {
@@ -604,6 +664,9 @@
    "Each turn touches exactly one bowl and removes any positive amount. Can the three bowls be treated as independent games whose outcomes combine?",
    "Structural feature: a single bowl on its own is a simple game that the player to move always wins by emptying it. Ask what combination of the bowls' values decides the whole position.",
    "Setup: for each bowl, find a value that measures it, then combine the three values with one operation and test whether the result is zero."
+  ],
+  "figs_back": [
+   "f06_nim_xor_345"
   ]
  },
  {
@@ -617,6 +680,9 @@
    "xor",
    "toolkit",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f06_sub_134_grundy"
   ]
  },
  {
@@ -629,6 +695,9 @@
    "modular",
    "games",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f06_pile_round_complement"
   ]
  },
  {
@@ -659,6 +728,9 @@
    "Is there a quantity that is fair on average, whichever card you turn over next?",
    "Track the fraction of red cards among the cards not yet turned over; it is a martingale, so use optional stopping.",
    "Let \\(p_0\\) be the starting fraction of red cards and \\(p_n\\) the fraction after \\(n\\) cards; write the win probability for a stopping time \\(T\\) as \\(E[p_T]\\)."
+  ],
+  "figs_back": [
+   "f06_red_black_dp"
   ]
  },
  {
@@ -677,6 +749,9 @@
    "Does the argument for an equal deck depend on the two colours being equal in number?",
    "Use the same martingale argument; only the starting fraction of red cards changes.",
    "Setup: write the starting fraction of red cards from the two colour counts, then the win probability as its expectation at the stopping time."
+  ],
+  "figs_back": [
+   "f06_red_black_dp"
   ]
  },
  {
@@ -724,6 +799,9 @@
    "Which applicants can you still hire well after the first block, and how do you tell that an applicant is the best so far?",
    "Use a threshold rule: reject the first block, then hire the first applicant better than all those seen.",
    "Let \\(r\\) be the cut-off; write the success probability as a sum over candidate positions \\(i\\) of \\(P(\\text{best is at } i)\\cdot P(\\text{best of the first } i-1 \\text{ is in the first } r-1)\\)."
+  ],
+  "figs_back": [
+   "f06_secretary_threshold"
   ]
  },
  {
@@ -736,6 +814,9 @@
    "secretary",
    "optimal_stopping",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f06_secretary_threshold"
   ]
  },
  {
@@ -782,6 +863,9 @@
    "Each house is judged only against those already seen. Does buying a house depend on anything except its rank so far, and what would make skipping early useful?",
    "Structural feature: a house is the best overall exactly when it beats every earlier house, and the early houses serve only as a benchmark. Ask how the benchmark's size trades off against the chance the best one comes later.",
    "Let \\(r\\) be the number of houses to skip; write the success probability as a sum over the position \\(i\\) of the best house."
+  ],
+  "figs_back": [
+   "f06_secretary_threshold"
   ]
  },
  {
@@ -799,6 +883,9 @@
    "If Alice misses, what does the duel look like from the start, and does it repeat?",
    "Condition on the first shot: either Alice hits, or both miss and the duel restarts with the same shooters in the same order.",
    "Let \\(P\\) be Alice's probability of hitting first; write \\(P=a+(1-a)(1-b)P\\) with \\(a=1/3\\) and \\(b=1/2\\), then solve for \\(P\\)."
+  ],
+  "figs_back": [
+   "f06_duel_tree"
   ]
  },
  {
@@ -834,6 +921,9 @@
    "Is the best target the most dangerous opponent or the weakest one? Compare what happens after each possible shot.",
    "Solve the two-person duels that remain after each possible first shot, then compare the three targets for A.",
    "Write A's winning probability for each target as a formula in the hit probabilities, using the two-person duel values for the remaining pair."
+  ],
+  "figs_back": [
+   "f06_truel_targets"
   ]
  },
  {
@@ -863,6 +953,9 @@
    "If everyone is known to pick at most \\(M\\), what is the largest pick a rational player would make?",
    "Iterate: remove the strategies that can never win, and repeat the bound each round.",
    "Let \\(M_0=100\\) and \\(M_{t+1}=\\tfrac23 M_t\\); track \\(M_t\\) round by round until it falls below 1."
+  ],
+  "figs_back": [
+   "f06_guess_bounds"
   ]
  },
  {
@@ -908,6 +1001,9 @@
    "Each player can assume the others also restrict their picks. If the winner is the one closest to a fixed fraction of the average, what is the largest pick that can still win once everyone restricts to a range?",
    "Repeat iterated elimination with the new fraction and count the rounds needed to shrink the range below one.",
    "Setup: let \\(M_t\\) be the largest pick that survives round \\(t\\), with \\(M_0=100\\). Write \\(M_{t+1}\\) as a fixed multiple of \\(M_t\\) and find that multiple from the target fraction."
+  ],
+  "figs_back": [
+   "f06_guess_bounds"
   ]
  },
  {
@@ -926,6 +1022,9 @@
    "If you bid exactly your value and win, what surplus do you keep?",
    "Shade your bid below your value; write the chance your bid wins against the rivals' strategy and maximise expected surplus.",
    "Write the win probability of bid \\(b\\) as \\(P(\\text{both rivals' bids} < b)\\), assuming a symmetric increasing bid function \\(\\beta(x)\\) with inverse \\(\\beta^{-1}\\)."
+  ],
+  "figs_back": [
+   "f06_first_price_bid"
   ]
  },
  {
@@ -969,6 +1068,9 @@
    "Under first price, what happens to your surplus if you bid exactly your value?",
    "Assume the rival uses some increasing bid function, and maximise your expected surplus over your bid. What does the first-order condition require?",
    "Write the win probability of bid \\(b\\) as \\(P(\\text{rival's bid}<b)\\) for a rival bidding \\(\\beta(x)\\), and the expected surplus as \\((v-b)\\cdot P\\)."
+  ],
+  "figs_back": [
+   "f06_first_price_bid"
   ]
  },
  {
@@ -986,6 +1088,9 @@
    "Who must carry the torch back, and is it ever worth sending the slowest person back?",
    "Pair the slowest people together so their cost is paid once; use the fastest person to shuttle the torch.",
    "Sort the times \\(a\\le b\\le c\\le d\\) and write the total for each strategy as a sum of crossing and return times."
+  ],
+  "figs_back": [
+   "f06_bridge_17"
   ]
  },
  {
@@ -1003,6 +1108,9 @@
    "With three people on the bridge, does the slowest person still need a faster escort on every crossing?",
    "Use the fastest person as the torch carrier and let three people cross in one trip.",
    "Start with the two fastest crossing and the return of one of them; then list which three people can cross together in the next trip."
+  ],
+  "figs_back": [
+   "f06_bridge_13"
   ]
  },
  {
@@ -1014,6 +1122,9 @@
    "bridge_torch",
    "crossing",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f06_bridge_17"
   ]
  },
  {
@@ -1061,6 +1172,9 @@
    "If two ants bounce off each other, could you let them pass through instead, and would the fall times change?",
    "Replace collisions by pass-throughs: ants are interchangeable, so the set of fall times is unchanged.",
    "For each ghost, write its distance to the end it faces as a uniform variable on \\([0,1]\\), and express the last fall time as a maximum over the ghosts."
+  ],
+  "figs_back": [
+   "f06_ant_ghosts"
   ]
  },
  {
@@ -1072,6 +1186,9 @@
    "ants",
    "relabelling",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f06_ant_ghosts"
   ]
  },
  {
@@ -1090,6 +1207,9 @@
    "Work backwards from the morning: what must the pile have been before the last night?",
    "Work backwards one night at a time; each night needs the pile to satisfy a congruence modulo 5.",
    "Write the nightly map \\(N\\mapsto \\tfrac45(N-1)\\), which needs \\(N\\equiv 1 \\pmod 5\\), and test candidates forward through five nights."
+  ],
+  "figs_back": [
+   "f06_coconut_chain"
   ]
  },
  {
@@ -1125,6 +1245,9 @@
    "A single look at the bulb shows only on or off. What else can a bulb tell you after it has been powered?",
    "Use heat as a second observable: a switch left on for a while leaves a warm bulb after it is turned off.",
    "Plan the timeline: switch A on for some minutes, switch A off, switch B on, then enter; list the three states you can see."
+  ],
+  "figs_back": [
+   "f06_bulb_switches"
   ]
  },
  {
@@ -1137,6 +1260,9 @@
    "switches",
    "information",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f06_bulb_switches"
   ]
  },
  {
@@ -1154,6 +1280,9 @@
    "If there were only one blue-eyed person, what would he conclude on the first morning after the guru speaks?",
    "Induct on the number of blue-eyed people; the guru's statement makes the count common knowledge, and each silent night is public information.",
    "Let \\(b\\) be the number of blue-eyed people; write what a blue-eyed person sees (\\(b-1\\) blue eyes) and what silence on night \\(k-1\\) tells everyone."
+  ],
+  "figs_back": [
+   "f06_islander_nights"
   ]
  },
  {
@@ -1187,6 +1316,9 @@
    "Is this the island argument with children and mud? Which children can be sure in round 1?",
    "Induct on the number of muddy children, using the father's remark as the common knowledge.",
    "Write what a muddy child sees (\\(k-1\\) muddy foreheads) and what it means if nobody steps forward in round \\(k-1\\)."
+  ],
+  "figs_back": [
+   "f06_islander_nights"
   ]
  },
  {
@@ -1216,6 +1348,9 @@
    "With six pirates, how many votes does pirate 1 need, and which junior pirates are cheap to buy?",
    "Use the five-pirate outcome as the fallback values for pirates 2 to 6, and buy the cheapest votes.",
    "List the five-pirate payoffs for pirates 2 to 6, mark which of them receive nothing, and count the votes pirate 1 must buy."
+  ],
+  "figs_back": [
+   "f06_pirate_allocations"
   ]
  },
  {
@@ -1246,6 +1381,9 @@
    "Does the pattern of losing positions survive when the allowed moves change?",
    "Recompute the Grundy values from scratch with the new move set, using the mex rule.",
    "Write \\(g(n)=\\operatorname{mex}\\{g(n-1),g(n-2),g(n-4)\\}\\) with \\(g(0)=0\\), and compute \\(g\\) for \\(n\\le 10\\)."
+  ],
+  "figs_back": [
+   "f06_sub_124_grundy"
   ]
  }
 ]
