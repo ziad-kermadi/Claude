@@ -244,7 +244,7 @@ def _(ax):
     ax.plot([K0], [(cm + cp) / 2], "o", color=GREY, ms=4)
     ax.annotate("", xy=(K0, (cm + cp) / 2), xytext=(K0, c0),
                 arrowprops=dict(arrowstyle="<->", color=ORANGE, lw=1.3))
-    ax.text(K0 + 3.0, (cm + 3 * c0 + cp) / 5, r"$\frac{1}{2}\Delta^2C$", color=ORANGE, fontsize=10, va="center")
+    ax.text(K0 + 3.5, c0 - 4.5, r"$\frac{1}{2}\Delta^2C$", color=ORANGE, fontsize=10, va="center")
     ax.text(K0 - h, cm + 2.5, f"$K-h$", fontsize=9, ha="center")
     ax.text(K0 + h, cp + 2.5, f"$K+h$", fontsize=9, ha="center")
     ax.set_xlabel("strike $K$"); ax.set_ylabel("call price $C(K)$")
@@ -406,7 +406,7 @@ def _(ax):
     ax.axvline(fs, color=ORANGE, ls="--", lw=1.1)
     ax.plot([fs], [gs], "o", color=ORANGE, ms=5)
     ax.axhline(0, color=GREY, lw=0.8, ls=":")
-    ax.text(fs + 0.02, gs - 0.035, f"$f^*=p-q={fs:.1f}$", color=ORANGE, fontsize=9)
+    ax.text(fs + 0.03, gs - 0.075, f"$f^*=p-q={fs:.1f}$", color=ORANGE, fontsize=9)
     ax.set_ylim(-0.2, 0.05); ax.set_xlim(-0.3, 0.8)
     ax.set_xlabel("bet fraction $f$"); ax.set_ylabel(r"growth $g(f)$")
     ax.set_title(r"$g(f)=p\ln(1+f)+q\ln(1-f)$, $p=0.6$: maximum at $f^*=0.2$", fontsize=9.5)
