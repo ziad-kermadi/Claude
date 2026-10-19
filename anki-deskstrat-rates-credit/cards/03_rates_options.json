@@ -513,7 +513,7 @@
  {
   "type": "basic",
   "front": "What is rank reduction in an LMM, and why does it matter for pricing?",
-  "back": "The correlation matrix is \\(N\\times N\\) and must be positive semi-definite. Rank reduction writes each correlation as an inner product of unit-norm vectors in \\(d\\) dimensions, for example Rebonato's parametrisation, or a PCA of the correlation.<br>\nA small number of factors, often 2 or 3, captures most of the variance of rate moves (approximately 90% or more; approx.; unverified). This speeds simulation at the cost of approximation error in the correlation, which can shift the swaption fit and Bermudan value.<br>\n<b>Interviewer follow-up:</b> What is the trade-off? Fewer factors lose correlation fidelity. More factors slow simulation and overfit.",
+  "back": "The correlation matrix is \\(N\\times N\\) and must be positive semi-definite. Rank reduction writes each correlation as an inner product of unit-norm vectors in \\(d\\) dimensions, for example Rebonato's parametrisation, or a PCA of the correlation.<br>\nA small number of factors, often 2 or 3, captures most of the variance of rate moves. This speeds simulation at the cost of approximation error in the correlation, which can shift the swaption fit and Bermudan value.<br>\n<b>Interviewer follow-up:</b> What is the trade-off? Fewer factors lose correlation fidelity. More factors slow simulation and overfit.",
   "tags": [
    "lmm",
    "rank_reduction",

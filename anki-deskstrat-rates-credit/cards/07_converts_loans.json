@@ -249,7 +249,7 @@
  {
   "type": "basic",
   "front": "Compare settlement conventions for par loan trades under LSTA (US) and LMA (Europe). What is delayed compensation, and why do consent-required trades settle slowly?",
-  "back": "LSTA: standard par settlement is T+7 business days (approx.). LMA: standard settlement is customarily longer, around T+10 (approx.; unverified, varies by trade type).<br>\nDelayed compensation: if settlement runs beyond the standard period, the party causing the delay pays the other a compensation accrual on the notional. It is a rate-based payment, not a fee, and the exact terms follow the trade documentation.<br>\nConsent-required trades settle slowly because the agent's consent, KYC and assignment documentation must be completed before the buyer is a lender of record.<br>\n<b>Interviewer follow-up:</b> Why does settlement timing matter for a distressed buyer? Delayed compensation and loss of voting rights during the restructuring can change the economics, and a buyer who settles late may miss a vote.",
+  "back": "LSTA: standard par settlement is T+7 business days. LMA: the settlement period is set by the LMA trading terms for the trade type and is not a single fixed number here; check the current LMA standard before quoting it.<br>\nDelayed compensation: if settlement runs beyond the standard period, the party causing the delay pays the other a compensation accrual on the notional. It is a rate-based payment, not a fee, and the exact terms follow the trade documentation.<br>\nConsent-required trades settle slowly because the agent's consent, KYC and assignment documentation must be completed before the buyer is a lender of record.<br>\n<b>Interviewer follow-up:</b> Why does settlement timing matter for a distressed buyer? Delayed compensation and loss of voting rights during the restructuring can change the economics, and a buyer who settles late may miss a vote.",
   "tags": [
    "loans",
    "settlement",
@@ -303,8 +303,8 @@
  },
  {
   "type": "basic",
-  "front": "A CLO pool is 40% in B2 (WARF factor 2,720), 40% in Ba3 (1,766) and 20% in Caa1 (4,770), using Moody's factor values (approx.; unverified against Moody's CLO methodology; check the deal's own table). Compute the WARF. If the 10% of Caa1 that is cut is moved to Ba3, what is the new WARF?",
-  "back": "WARF \\(= 0.4 \\times 2{,}720 + 0.4 \\times 1{,}766 + 0.2 \\times 4{,}770 = 1{,}088 + 706.4 + 954 = 2{,}748\\).<br>\nAfter the move: B2 40%, Ba3 50%, Caa1 10%. WARF \\(= 1{,}088 + 883 + 477 = 2{,}448\\), a fall of 300.<br>\nThe WARF is linear in rating factors, so the Caa1 cut reduces it by \\(0.10 \\times (4{,}770 - 1{,}766) = 300\\). A separate CCC bucket limit is tested on its own, so a WARF pass does not cure a CCC excess.<br>\n<b>Interviewer follow-up:</b> Why do managers still trade into CCC names? The WARF test allows a margin, and CCC exposure is paid for in spread. The binding constraint is usually the CCC bucket and the diversity score, not the average.",
+  "front": "A CLO pool is 40% in B2 (WARF factor 2,720), 40% in Ba1 (940) and 20% in Caa3 (8,070), using Moody's rating factors (the deal's own table governs). Compute the WARF. If 10% of the pool is cut from Caa3 and moved to Ba1, what is the new WARF?",
+  "back": "WARF \\(= 0.4 \\times 2{,}720 + 0.4 \\times 940 + 0.2 \\times 8{,}070 = 1{,}088 + 376 + 1{,}614 = 3{,}078\\).<br>\nAfter the move: B2 40%, Ba1 50%, Caa3 10%. WARF \\(= 1{,}088 + 470 + 807 = 2{,}365\\), a fall of 713.<br>\nThe WARF is linear in rating factors, so the Caa3 cut reduces it by \\(0.10 \\times (8{,}070 - 940) = 713\\). A separate CCC bucket limit is tested on its own, so a WARF pass does not cure a CCC excess.<br>\n<b>Interviewer follow-up:</b> Why do managers still trade into CCC names? The WARF test allows a margin, and CCC exposure is paid for in spread. The binding constraint is usually the CCC bucket and the diversity score, not the average.",
   "tags": [
    "clo",
    "rating",

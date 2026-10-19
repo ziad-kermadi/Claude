@@ -264,7 +264,7 @@
  {
   "type": "basic",
   "front": "Standard composition and coupons of the four main CDS indices: iTraxx Main, iTraxx Crossover, CDX IG and CDX HY. Which ones use a 500bp coupon?",
-  "back": "iTraxx Main (European IG): 125 names, 5y, 100bp coupon.<br>\niTraxx Crossover (European sub-IG): 75 names (approx.; unverified current count), 5y, 500bp coupon.<br>\nCDX IG (North American IG): 125 names, 5y, 100bp coupon.<br>\nCDX HY (North American HY): 100 names, 5y, 500bp coupon.<br>\nThe HY-style indices (Crossover and CDX HY) are quoted as points upfront plus the 500bp running premium.<br>\n<b>Interviewer follow-up:</b> Why is the composition fixed at each roll? It keeps the index a fixed portfolio for the series life, with defaults handled through the index factor rather than by rebalancing.",
+  "back": "iTraxx Main (European IG): 125 names, 5y, 100bp coupon.<br>\niTraxx Crossover (European sub-IG): 75 names, 5y, 500bp coupon.<br>\nCDX IG (North American IG): 125 names, 5y, 100bp coupon.<br>\nCDX HY (North American HY): 100 names, 5y, 500bp coupon.<br>\nThe HY-style indices (Crossover and CDX HY) are quoted as points upfront plus the 500bp running premium.<br>\n<b>Interviewer follow-up:</b> Why is the composition fixed at each roll? It keeps the index a fixed portfolio for the series life, with defaults handled through the index factor rather than by rebalancing.",
   "tags": [
    "indices",
    "convention",
@@ -499,7 +499,7 @@
  {
   "type": "basic",
   "front": "Sovereign CDS: what is redenomination risk, and how does a euro-area sovereign's exit from the euro interact with its CDS contract?",
-  "back": "Redenomination risk is the risk that a sovereign's bonds are converted into a new currency that is expected to depreciate. The contract's payout and the reference obligation then diverge, because the bond's currency changes while the CDS currency may not.<br>\nThe 2003 Definitions treated a binding change to a non-permitted currency as a restructuring-type event; the 2014 Definitions add express redenomination language and asset package delivery (approx.; unverified against the operative text), so it can in principle trigger a payout. Whether and how it does so depends on the clause text and the Determinations Committee, so verify the operative wording before relying on it.<br>\n<b>Interviewer follow-up:</b> Why is this a quanto problem? The payout is converted into the contract currency at a fixed rate while the bond is in a depreciating currency, so default and FX are linked.",
+  "back": "Redenomination risk is the risk that a sovereign's bonds are converted into a new currency that is expected to depreciate. The contract's payout and the reference obligation then diverge, because the bond's currency changes while the CDS currency may not.<br>\nThe 2003 Definitions treated a binding change to a non-permitted currency as a restructuring-type event; the 2014 Definitions add express currency redenomination provisions, a Governmental Intervention Credit Event and asset package delivery, so it can in principle trigger a payout. Whether and how it does so depends on the clause text and the Determinations Committee, so verify the operative wording before relying on it.<br>\n<b>Interviewer follow-up:</b> Why is this a quanto problem? The payout is converted into the contract currency at a fixed rate while the bond is in a depreciating currency, so default and FX are linked.",
   "tags": [
    "sovereign",
    "quanto",

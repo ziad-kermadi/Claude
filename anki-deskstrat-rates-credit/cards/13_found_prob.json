@@ -191,7 +191,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: STOP 2/3]</b> Context: \\(W_0=0\\). Let \\(\\tau\\) be the first exit time of \\(W\\) from \\((-1,2)\\). Find \\(\\mathbb P(W_\\tau=2)\\) and \\(\\mathbb E[\\tau]\\).",
-  "back": "<b>Probability.</b> Let \\(p=\\mathbb P(W_\\tau=2)\\). Since \\(\\tau\\) is bounded in expectation, optional stopping gives \\(\\mathbb E[W_\\tau]=0=2p-1(1-p)\\), so \\(p=\\tfrac13\\).<br>\n<b>Expected exit time.</b> \\(W_t^2-t\\) is a martingale. Optional stopping gives \\(\\mathbb E[\\tau]=\\mathbb E[W_\\tau^2]=4\\cdot\\tfrac13+1\\cdot\\tfrac23=2\\), which equals \\(ab\\) for exit from \\((-a,b)\\) with \\(a=1,b=2\\).<br>\n<b>Generalisation.</b> From 0, \\(\\mathbb P(\\text{hit }b\\text{ first})=a/(a+b)\\) and \\(\\mathbb E[\\tau]=ab\\).<br>\n<b>Used in the deck for:</b> exit probabilities in barrier and trigger models.",
+  "back": "<b>Probability.</b> Let \\(p=\\mathbb P(W_\\tau=2)\\). The stopped path \\(W_{t\\wedge\\tau}\\) lies in \\([-1,2]\\), so optional stopping applies and gives \\(\\mathbb E[W_\\tau]=0=2p-(1-p)\\), so \\(p=\\tfrac13\\).<br>\n<b>Expected exit time.</b> \\(W_t^2-t\\) is a martingale. Optional stopping gives \\(\\mathbb E[\\tau]=\\mathbb E[W_\\tau^2]=4\\cdot\\tfrac13+1\\cdot\\tfrac23=2\\), which equals \\(ab\\) for exit from \\((-a,b)\\) with \\(a=1,b=2\\).<br>\n<b>Generalisation.</b> From 0, \\(\\mathbb P(\\text{hit }b\\text{ first})=a/(a+b)\\) and \\(\\mathbb E[\\tau]=ab\\).<br>\n<b>Used in the deck for:</b> exit probabilities in barrier and trigger models.",
   "tags": [
    "martingale",
    "gamblers_ruin",
@@ -323,7 +323,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: NUM 3/3]</b> Context: stock \\(S_0=100\\), no dividends. The one-year zero-coupon bond is \\(P(0,1)=0.97\\). The forward is \\(F=S_0/P(0,1)\\). Under the one-year forward measure \\(\\mathbb Q^1\\) (numeraire \\(P(\\cdot,1)\\)), check that the claim \\(S_1\\) paid at \\(t=1\\) is worth 100 today. Give the implied continuously compounded rate.",
-  "back": "<b>Forward.</b> \\(F=100/0.97=103.09\\). Since \\(S_t/P(t,1)\\) is a \\(\\mathbb Q^1\\)-martingale, \\(\\mathbb E^{1}[S_1]=S_0/P(0,1)=103.09\\).<br>\n<b>Pricing check.</b> \\(V_0=P(0,1)\\,\\mathbb E^{1}[S_1]=0.97\\times103.09=100.00\\), equal to \\(S_0\\) as the replication argument requires.<br>\n<b>Implied rate.</b> \\(\\ln(1/0.97)=3.05\\%\\) continuously compounded. Without dividends or borrow cost, the forward carries exactly this rate.<br>\n<b>Interviewer follow-up:</b> what changes with a dividend yield \\(q\\)? \\(F=S_0e^{-qT}/P(0,T)\\) and the martingale is \\(S_t e^{-q t}/P(t,T)\\).<br>\n<b>Used in the deck for:</b> forward pricing and the Black-76 formula.",
+  "back": "<b>Forward.</b> \\(F=100/0.97=103.09\\). Since \\(S_t/P(t,1)\\) is a \\(\\mathbb Q^1\\)-martingale, \\(\\mathbb E^{1}[S_1]=S_0/P(0,1)=103.09\\).<br>\n<b>Pricing check.</b> \\(V_0=P(0,1)\\,\\mathbb E^{1}[S_1]=0.97\\times103.09=100.00\\), equal to \\(S_0\\) as the replication argument requires.<br>\n<b>Implied rate.</b> \\(\\ln(1/0.97)=3.05\\%\\) continuously compounded. Without dividends or borrow cost, the forward carries exactly this rate.<br>\n<b>Interviewer follow-up:</b> what changes with a dividend yield \\(q\\)? \\(F=S_0e^{-qT}/P(0,T)\\) and the martingale is \\(S_t e^{-q(T-t)}/P(t,T)\\), which equals \\(e^{-qT}S_t e^{qt}/P(t,T)\\) up to the constant \\(e^{-qT}\\).<br>\n<b>Used in the deck for:</b> forward pricing and the Black-76 formula.",
   "tags": [
    "forward_measure",
    "numeraire",
@@ -520,7 +520,7 @@
  {
   "type": "cloze",
   "front": "For a Gaussian copula with parameter \\(\\rho\\), Kendall's tau equals {{c1::\\(\\tfrac{2}{\\pi}\\arcsin\\rho\\)}}, so \\(\\rho=0.5\\) gives \\(\\tau=\\){{c2::1/3}}.",
-  "back": "The identity comes from the elliptical structure of the normal. It is the only copula-level link between the Gaussian copula parameter and a rank-based dependence measure, and it is useful for checking calibration on a rank basis.",
+  "back": "The identity comes from the elliptical structure of the normal. It is a closed-form link between the Gaussian copula parameter and a rank-based dependence measure, and it is useful for checking calibration on a rank basis.",
   "tags": [
    "copula",
    "kendall_tau",
@@ -568,7 +568,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: OU 3/3]</b> Same Vasicek model (\\(\\theta=3\\%\\), \\(\\sigma=1\\%\\), \\(\\kappa=0.5\\)) at long horizons. Give the stationary law, the probability that \\(r\\) is negative under the stationary law, and the main limitation an interviewer will probe.",
-  "back": "<b>Stationary law.</b> \\(N\\bigl(\\theta,\\ \\sigma^2/(2\\kappa)\\bigr)\\). Stationary standard deviation \\(=1\\%/\\sqrt{1}=1\\%\\).<br>\n<b>Negative mass.</b> \\(\\mathbb P(r<0)=\\Phi(-\\theta/\\text{sd})=\\Phi(-3)=0.135\\%\\).<br>\n<b>Where it breaks.</b> A Gaussian has positive mass on every negative level, so the model can never impose a floor, and the probability of deeply negative rates is set by the normal tail. Calibration of \\(\\sigma\\) also depends on \\(\\kappa\\): if \\(\\kappa\\to0\\), the stationary variance blows up.<br>\n<b>Interviewer follow-up:</b> why is normal volatility the convention after 2015? Because a lognormal model cannot price rates at or below zero, and the normal (Bachelier) vol remains defined for negative forwards.<br>\n<b>Used in the deck for:</b> the choice of normal versus lognormal vol and the Hull–White model.",
+  "back": "<b>Stationary law.</b> \\(N\\bigl(\\theta,\\ \\sigma^2/(2\\kappa)\\bigr)\\). Stationary standard deviation \\(=1\\%/\\sqrt{1}=1\\%\\).<br>\n<b>Negative mass.</b> \\(\\mathbb P(r<0)=\\Phi(-\\theta/\\text{sd})=\\Phi(-3)=0.135\\%\\).<br>\n<b>Where it breaks.</b> A Gaussian has positive mass on every negative level, so the model can never impose a floor, and the probability of deeply negative rates is set by the normal tail. Calibration of \\(\\sigma\\) also depends on \\(\\kappa\\): if \\(\\kappa\\to0\\), the stationary variance blows up.<br>\n<b>Interviewer follow-up:</b> why did quoting move to normal volatility in the early-to-mid 2010s? Because a lognormal model cannot price rates at or below zero, and the normal (Bachelier) vol remains defined for negative forwards.<br>\n<b>Used in the deck for:</b> the choice of normal versus lognormal vol and the Hull–White model.",
   "tags": [
    "ornstein_uhlenbeck",
    "vasicek",
