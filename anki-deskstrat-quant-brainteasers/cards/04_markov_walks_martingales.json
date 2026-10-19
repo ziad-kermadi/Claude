@@ -220,6 +220,11 @@
    "random_walk",
    "coin",
    "fmt_solve"
+  ],
+  "hints": [
+   "Once the walk has taken one step, is the remaining problem the same problem with a different starting fortune?",
+   "Look at \\(S_n\\) itself: it is a martingale, so stopping it at the two barriers lets you use optional stopping. Find a second martingale built from \\(S_n\\) that involves \\(n\\).",
+   "Optional stopping on \\(S_n\\): \\(E[S_T]=S_0\\) with \\(S_T\\in\\{0,7\\}\\) and \\(P=P(S_T=7)\\). Write this as one equation in \\(P\\)."
   ]
  },
  {
@@ -231,6 +236,11 @@
    "betting",
    "coin",
    "fmt_solve"
+  ],
+  "hints": [
+   "What is the largest single bet you might have to place before the first head? Does the fair-game argument still apply when that bet has no ceiling?",
+   "This is an optional stopping question. Check whether the stopping rule is bounded before trusting \\(E[S_T]=S_0\\), and compute the expected stake directly.",
+   "\\(E[\\text{stake at stop}]=\\sum_k \\text{stake}_k\\cdot P(T=k)\\), where \\(\\text{stake}_k\\) is the bet on round \\(k\\) and \\(P(T=k)\\) is the chance the first head comes on toss \\(k\\)."
   ]
  },
  {
@@ -241,6 +251,11 @@
    "s_optional_stopping",
    "random_walk",
    "fmt_solve"
+  ],
+  "hints": [
+   "Before any algebra: is the stopping time guaranteed to be finite, and roughly how long does the walk take to reach \\(+1\\)?",
+   "Optional stopping needs either a bounded stopping time or a finite mean with bounded steps. Compute \\(E[T]\\) from the tail sum \\(\\sum_k P(T\\gt k)\\).",
+   "\\(E[T]=\\sum_{k\\ge0}P(T\\gt k)\\), and \\(P(T\\gt k)\\) is the probability that the walk has stayed at or below \\(0\\) for the first \\(k\\) steps. How fast does that decay?"
   ]
  },
  {
@@ -251,6 +266,11 @@
    "s_markov_chain",
    "coin",
    "fmt_solve"
+  ],
+  "hints": [
+   "When a pattern ends in a tail after a head, what happens to the progress you have made if the next toss is a head instead of a tail? Compare that with HH.",
+   "Conway's leading-number rule: each length \\(k\\) at which the length-\\(k\\) prefix matches the length-\\(k\\) suffix adds \\(2^k\\) to the expected wait.",
+   "\\(E_{\\text{pattern}}=\\sum_{k\\in O}2^k\\), where \\(O\\) is the set of self-overlap lengths. Write \\(O\\) for HH and for HT before adding anything."
   ]
  },
  {
@@ -261,6 +281,11 @@
    "s_markov_chain",
    "coin",
    "fmt_solve"
+  ],
+  "hints": [
+   "Does the target have a partial match with itself at its start? Which of the two patterns could restart partway through after a failure?",
+   "Use Conway's leading-number rule: \\(E=\\sum 2^k\\) over the self-overlap lengths \\(k\\) of the pattern.",
+   "\\(E[\\text{HTH}]=\\sum_{k\\in O_{\\text{HTH}}}2^k\\) and \\(E[\\text{HHT}]=\\sum_{k\\in O_{\\text{HHT}}}2^k\\). List \\(O\\) for each pattern, then compare."
   ]
  },
  {
@@ -271,6 +296,11 @@
    "s_markov_chain",
    "coin",
    "fmt_solve"
+  ],
+  "hints": [
+   "For each length \\(k\\), does the prefix of HHH of that length match the suffix of the same length? Is there any length where they fail to match?",
+   "Apply the leading-number rule: every self-overlap length \\(k\\) contributes \\(2^k\\) to the expected wait.",
+   "Write the sum over the self-overlap lengths of HHH, one term \\(2^k\\) per length, before evaluating it."
   ]
  },
  {
@@ -282,6 +312,11 @@
    "s_martingale",
    "letters",
    "fmt_solve"
+  ],
+  "hints": [
+   "Which prefixes of ABRACADABRA also appear as its suffix of the same length? Look for the short ones first, then check the longer ones.",
+   "Conway's leading numbers over a 26-letter alphabet: each length at which the word overlaps itself adds \\(26^k\\) to the expected wait.",
+   "\\(E=\\sum_{k\\in O}26^k\\), with \\(O=\\{k : \\text{length-}k\\text{ prefix}=\\text{length-}k\\text{ suffix}\\}\\). Write \\(O\\) as a set before evaluating any power."
   ]
  },
  {
@@ -293,6 +328,11 @@
    "penney",
    "coin",
    "fmt_solve"
+  ],
+  "hints": [
+   "The second mover has an edge in a race between two patterns. What would you need to know about how each pattern overlaps itself and the other to decide which one tends to appear first?",
+   "Use Conway's odds for a race between your pattern \\(A\\) and the opponent's \\(B\\): correlations \\(c_{XY}\\) sum \\(2^{k-1}\\) over lengths where a suffix of \\(X\\) equals a prefix of \\(Y\\). Compare candidate \\(A\\)'s against \\(B\\).",
+   "\\(P(A\\text{ first}):P(B\\text{ first})=(c_{BB}-c_{BA}):(c_{AA}-c_{AB})\\). Pick a candidate \\(A\\) and list its four correlations against \\(B=\\)THH before comparing candidates."
   ]
  },
  {
@@ -304,6 +344,11 @@
    "penney",
    "coin",
    "fmt_solve"
+  ],
+  "hints": [
+   "Look at how the ending of each of your patterns lines up with the beginning of the other. Does that asymmetry tilt the race?",
+   "Conway's odds: \\(P(A\\text{ first}):P(B\\text{ first})=(c_{BB}-c_{BA}):(c_{AA}-c_{AB})\\), with \\(c_{XY}=\\sum 2^{k-1}\\) over lengths \\(k\\) where a suffix of \\(X\\) equals a prefix of \\(Y\\).",
+   "Write \\(c_{AA},c_{BB},c_{AB},c_{BA}\\) as four separate lines for \\(A=\\)HHT and \\(B=\\)HTT, one line per correlation, before combining them."
   ]
  },
  {
@@ -315,6 +360,11 @@
    "random_walk",
    "cycle",
    "fmt_solve"
+  ],
+  "hints": [
+   "After the walk has visited some vertices, what shape does the set of visited vertices always have on a ring? How many new vertices can the next step add?",
+   "The visited set is always a contiguous arc. Split the total time into stages, one for each growth of the arc, find the expected time of each stage, and add them.",
+   "Unwrap the walk onto \\(\\mathbb Z\\). Covering the ring means the range \\(\\max S-\\min S\\) reaches \\(n-1\\); set up the expected hitting time of that range."
   ]
  },
  {
@@ -325,6 +375,11 @@
    "s_markov_chain",
    "random_walk_graph",
    "fmt_solve"
+  ],
+  "hints": [
+   "From a vertex other than the target, what is the chance that the next step lands on the target? Does that chance depend on which vertex you are at?",
+   "Each step from a non-target vertex is a trial with the same success probability, so the hitting time is geometric.",
+   "\\(E[\\tau]=1/p\\), where \\(p\\) is the probability that one step from a non-target vertex lands on the target. Write \\(p\\) in terms of \\(n\\)."
   ]
  },
  {
@@ -336,6 +391,11 @@
    "s_linearity_expectation",
    "random_walk_graph",
    "fmt_solve"
+  ],
+  "hints": [
+   "Once you have visited \\(k\\) distinct vertices, does the wait for the next new one depend on anything except \\(k\\)? How does that wait change as \\(k\\) grows?",
+   "Split the total time into phases indexed by the number of visited vertices. Each phase is a geometric wait, and linearity of expectation lets you add them.",
+   "\\(E=\\sum_{k=1}^{n-1}\\frac{1}{p_k}\\), where \\(p_k\\) is the chance that the next step reaches a new vertex when \\(k\\) vertices are visited. Write \\(p_k\\) as a function of \\(k\\) and \\(n\\)."
   ]
  },
  {
@@ -347,6 +407,11 @@
    "random_walk_graph",
    "knight",
    "fmt_solve"
+  ],
+  "hints": [
+   "Think about the long-run share of time the walk spends at each square. Is that share related to how many moves are available from each square?",
+   "Return time to a square equals \\(1/\\pi(v)\\), where \\(\\pi(v)=\\deg(v)/\\sum_u\\deg(u)\\) is the stationary probability of a random walk on a graph.",
+   "Write \\(\\sum_u\\deg(u)\\) as a sum over all \\(64\\) squares of the board, then divide by the degree of the centre square."
   ]
  },
  {
@@ -358,6 +423,11 @@
    "random_walk",
    "stationary",
    "fmt_solve"
+  ],
+  "hints": [
+   "On a line, is there a simpler balance condition between neighbouring states than the full set of equations? What probability flow crosses each edge?",
+   "Detailed balance on each edge: \\(\\pi_k p_{k,k+1}=\\pi_{k+1}p_{k+1,k}\\). Then the return time to \\(0\\) is \\(1/\\pi_0\\).",
+   "Write the detailed-balance equation for the edge between \\(0\\) and \\(1\\): \\(\\pi_0\\cdot p_{01}=\\pi_1\\cdot p_{10}\\). Fill in \\(p_{01}\\) and \\(p_{10}\\) from the statement."
   ]
  },
  {
@@ -369,6 +439,11 @@
    "s_markov_chain",
    "stationary",
    "fmt_solve"
+  ],
+  "hints": [
+   "In the long run, what must hold for the flow of probability between the two states? Is there a balance condition that avoids solving a full matrix?",
+   "The stationary vector is the left eigenvector with eigenvalue \\(1\\). For two states this is a balance between the two cross-flows, followed by normalisation.",
+   "Balance: \\(\\pi_S\\cdot P(S\\to R)=\\pi_R\\cdot P(R\\to S)\\), together with \\(\\pi_S+\\pi_R=1\\)."
   ]
  },
  {
@@ -379,6 +454,11 @@
    "s_reflection",
    "random_walk",
    "fmt_solve"
+  ],
+  "hints": [
+   "How does the chance that the walk ever reaches level \\(3\\) compare with the chance that it ends at or above \\(3\\)? Think about what happens after the first time it touches \\(3\\).",
+   "Reflection principle: \\(P(M_n\\ge a)=2P(S_n\\gt a)+P(S_n=a)\\). Check whether \\(S_n=a\\) is even possible for the given \\(n\\) and \\(a\\).",
+   "\\(P(M_8\\ge3)=2P(S_8\\gt3)+P(S_8=3)\\). Before computing, state the parity of \\(S_8\\) and check which values it can take."
   ]
  },
  {
@@ -389,6 +469,11 @@
    "s_reflection",
    "random_walk",
    "fmt_solve"
+  ],
+  "hints": [
+   "For the walk to be at \\(+2\\) for the first time at step \\(4\\), what must the walk have done at step \\(3\\)? Which earlier paths are excluded?",
+   "First-passage formula: \\(P(T_a=n)=\\frac{a}{n}P(S_n=a)\\) (the hitting-time theorem).",
+   "\\(P(T_2=4)=\\frac{2}{4}P(S_4=2)\\). Write \\(P(S_4=2)\\) as \\(\\binom{4}{k}/2^4\\) for the number \\(k\\) of up-steps, and find \\(k\\)."
   ]
  },
  {
@@ -399,6 +484,11 @@
    "s_reflection",
    "random_walk",
    "fmt_solve"
+  ],
+  "hints": [
+   "If the walk must end at a positive level and never touch zero, is there a standard counting result for paths that stay on one side of the axis?",
+   "Ballot theorem: the number of paths from \\(0\\) to \\(a\\) in \\(n\\) steps that stay strictly positive is given by a ballot count with \\(a\\) and \\(n\\).",
+   "Count the paths \\(=\\frac{a}{n}\\binom{n}{(n+a)/2}\\) with \\(a\\) the end level and \\(n\\) the number of steps, then divide by the total number of paths \\(2^n\\)."
   ]
  },
  {
@@ -409,6 +499,11 @@
    "s_martingale",
    "random_walk",
    "fmt_solve"
+  ],
+  "hints": [
+   "With upward drift, is it certain that the walk reaches \\(+1\\)? For \\(-1\\), what does a function like \\((q/p)^{S_n}\\) do on average?",
+   "Use the exponential martingale \\((q/p)^{S_n}\\) with optional stopping at \\(-1\\), and handle the case where the walk drifts away to \\(+\\infty\\).",
+   "\\(E[(q/p)^{S_T}]=(q/p)^{S_0}\\) where \\(T\\) is the first hit of \\(-1\\). Write this as a two-term expectation, one term for hitting \\(-1\\) and one for escaping."
   ]
  },
  {
@@ -420,6 +515,11 @@
    "s_martingale",
    "random_walk",
    "fmt_solve"
+  ],
+  "hints": [
+   "Given the first four steps, which part of \\(S_{20}\\) is still random? What is the best prediction of a future value of a process with no drift?",
+   "Tower property: the conditional expectation of a future value of a martingale equals its current value, and \\(S_n\\) is a martingale.",
+   "\\(E[S_{20}\\mid\\mathcal F_4]=S_4\\). Write \\(S_4\\) as the sum of the four given steps."
   ]
  },
  {
@@ -430,6 +530,11 @@
    "s_markov_chain",
    "coin",
    "fmt_solve"
+  ],
+  "hints": [
+   "Does the target's beginning reappear inside the target at more than one place? Check each shorter prefix of HTHT against the matching suffix.",
+   "Leading-number rule: \\(E=\\sum_{k\\in O}2^k\\) over the self-overlap lengths of the pattern, including the full length.",
+   "Write \\(O\\) for HTHT as a set of lengths, then write the sum \\(\\sum_{k\\in O}2^k\\) before evaluating it."
   ]
  },
  {
@@ -440,6 +545,11 @@
    "s_martingale",
    "urn",
    "fmt_solve"
+  ],
+  "hints": [
+   "Is there a quantity built from the red count and the total count whose expected value does not change from draw to draw?",
+   "The red fraction, scaled by the total number of balls, is a martingale, so its expectation stays at its starting value.",
+   "\\(E\\!\\left[\\frac{R_n}{n+2}\\right]=\\frac{R_0}{R_0+B_0}\\) for every \\(n\\). Write \\(R_0\\) and \\(B_0\\) from the statement and solve for \\(E[R_{10}]\\)."
   ]
  },
  {
@@ -450,6 +560,11 @@
    "s_generating_function",
    "branching",
    "fmt_solve"
+  ],
+  "hints": [
+   "Does the population grow or shrink on average each generation? How does that decide whether extinction is certain?",
+   "Extinction probability \\(q\\) satisfies \\(G(q)=q\\) for the offspring generating function \\(G\\), and is the smallest root in \\([0,1]\\).",
+   "\\(G(s)=\\sum_k p_k s^k\\). Write \\(G(s)\\) from the offspring law, then set \\(G(q)=q\\) and collect terms."
   ]
  },
  {
@@ -460,6 +575,11 @@
    "s_tail_sum",
    "dice",
    "fmt_solve"
+  ],
+  "hints": [
+   "Instead of the time of the first repeat, think about the probability that the first \\(k\\) rolls are all different. How does that relate to the expected number of rolls?",
+   "Tail-sum formula: \\(E[N]=\\sum_{k\\ge0}P(N\\gt k)\\), where \\(P(N\\gt k)\\) is the chance that the first \\(k\\) rolls are all distinct.",
+   "\\(E[N]=\\sum_{k\\ge0}\\prod_{j=0}^{k-1}\\frac{6-j}{6}\\). Write out the first few terms, starting with \\(k=0\\)."
   ]
  },
  {
@@ -471,6 +591,11 @@
    "s_tail_sum",
    "dice",
    "fmt_solve"
+  ],
+  "hints": [
+   "After the first roll, does the remaining problem look like the original one with a smaller target? Can you write an equation for the probability that the running total hits each value?",
+   "Renewal recursion: let \\(u_k\\) be the probability that the running total ever equals \\(k\\). Then \\(E[N]=\\sum_{k=0}^{10}u_k\\).",
+   "\\(u_k=\\frac16\\sum_{j=1}^{6}u_{k-j}\\) for \\(k\\ge1\\), with \\(u_0=1\\) and \\(u_m=0\\) for \\(m\\lt0\\). Evaluate the first few \\(u_k\\)."
   ]
  },
  {
@@ -481,6 +606,11 @@
    "s_martingale",
    "random_walk",
    "fmt_solve"
+  ],
+  "hints": [
+   "Is there a quantity built from the square of the position that, after compensating for time, has zero expected drift?",
+   "Use \\(S_n^2-n\\) as a martingale and optional stopping: the expectation of \\(S_T^2\\) at the stopping time equals \\(E[T]\\).",
+   "\\(E[S_T^2]=E[T]\\) with \\(S_T\\in\\{-2,5\\}\\). Write \\(P(S_T=5)=p\\), and use \\(E[S_T]=0\\) to set up an equation for \\(p\\)."
   ]
  },
  {
@@ -492,6 +622,11 @@
    "random_walk",
    "reflecting_barrier",
    "fmt_perturb"
+  ],
+  "hints": [
+   "The earlier formula used absorbing barriers at both ends. What changes at a reflecting end, and what happens to the walk on each step there?",
+   "Use first-step analysis: write the expected time from each state in terms of its neighbours, with the reflecting end as a special equation.",
+   "Write the first-step equation for an interior state \\(i\\), and separately the equation for state \\(0\\), where the step is deterministic."
   ]
  },
  {
@@ -503,6 +638,11 @@
    "coin",
    "biased_coin",
    "fmt_perturb"
+  ],
+  "hints": [
+   "The fair-coin weights are powers of \\(2\\). With unequal probabilities, what should each self-overlap weight become?",
+   "With bias, each self-overlap of length \\(k\\) contributes \\(1/P(\\text{prefix of length }k)\\) rather than \\(2^k\\).",
+   "\\(E[\\text{HH}]=\\sum_{k\\in O}\\frac{1}{P(\\text{prefix}_k)}\\), with \\(O\\) the self-overlap lengths of HH. Write each \\(P(\\text{prefix}_k)\\) in terms of \\(p=P(H)\\)."
   ]
  },
  {
@@ -514,6 +654,11 @@
    "penney",
    "biased_coin",
    "fmt_perturb"
+  ],
+  "hints": [
+   "With a biased coin, does the race depend only on how the patterns overlap, or do the individual letter probabilities matter too?",
+   "Track progress with a small Markov chain on the states given by the longest suffix that matches a prefix of either pattern, and solve first-step equations with weights \\(p\\) and \\(q\\).",
+   "Let \\(w_s\\) be the probability that THH appears first from state \\(s\\). Write the equation for \\(w_{\\varnothing}\\) (no progress yet) in terms of \\(p\\) and \\(q\\)."
   ]
  },
  {
@@ -525,6 +670,11 @@
    "urn",
    "s_bayes",
    "fmt_perturb"
+  ],
+  "hints": [
+   "After one red draw, the urn composition changes. Does the chance of a second red depend on the first draw? What distribution does the red fraction settle into?",
+   "Compute the first two draws directly from the urn composition. The limiting law is a Beta distribution; find its parameters from the starting counts and the number of balls added per draw.",
+   "\\(P(R_1R_2)=\\frac{R_0}{R_0+B_0}\\cdot\\frac{R_0+c}{R_0+B_0+c}\\), where \\(c\\) is the number of balls added per draw. Substitute \\(c\\) from the statement."
   ]
  },
  {
@@ -535,6 +685,11 @@
    "s_generating_function",
    "branching",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Compute the mean number of children per individual. Does the population grow on average, and does that change which root of the extinction equation to choose?",
+   "Extinction probability is the smallest root of \\(G(q)=q\\) in \\([0,1]\\). Check whether the mean is above one before choosing a root.",
+   "\\(G(s)=\\sum_k p_k s^k\\). Write \\(G(q)=q\\) for this offspring law as an equation in \\(q\\)."
   ]
  },
  {
@@ -546,6 +701,11 @@
    "s_tail_sum",
    "dice",
    "fmt_perturb"
+  ],
+  "hints": [
+   "The running-total argument did not depend on the faces being \\(1\\) to \\(6\\) specifically. What changes in the step distribution, and does the renewal recursion still apply?",
+   "Renewal recursion: \\(u_k\\) is the probability the running total ever equals \\(k\\), and the expected number of rolls is the sum of the \\(u_k\\) up to the threshold. Only the face set changes the weights.",
+   "\\(u_k=\\frac{1}{|F|}\\sum_{j\\in F}u_{k-j}\\), where \\(F\\) is the set of faces, with \\(u_0=1\\). Write \\(F\\) explicitly and evaluate for the first few \\(k\\)."
   ]
  },
  {
@@ -557,6 +717,11 @@
    "dice",
    "s_first_step_conditioning",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Does the chance of a repeat depend on anything beyond the previous roll? Is each new roll a fresh trial, and what is its success probability?",
+   "After the first roll, each later roll succeeds independently with the same chance, so the wait is geometric and the first roll is free.",
+   "\\(E=1+E[\\text{geometric wait}]\\), where the success probability \\(p\\) is the chance that a roll equals the one before it. Write \\(p\\) in terms of the number of faces."
   ]
  },
  {
@@ -568,6 +733,11 @@
    "random_walk",
    "drift",
    "fmt_perturb"
+  ],
+  "hints": [
+   "In the symmetric plane walk, the return happens because each coordinate is recurrent. Does a drift in one coordinate change that?",
+   "Project onto one coordinate. The \\(x\\)-coordinate is a one-dimensional walk; if it has a drift it is transient, so the plane walk visits the origin only finitely often.",
+   "Write the \\(x\\)-increment distribution: \\(+1\\) with probability \\(0.3\\), \\(-1\\) with probability \\(0.2\\), and \\(0\\) otherwise. Check whether it has zero mean."
   ]
  },
  {
@@ -579,6 +749,11 @@
    "betting",
    "biased_coin",
    "fmt_perturb"
+  ],
+  "hints": [
+   "With a fair coin the stopped wealth had zero mean. Which probability changes when the coin is biased, and what does that do to the all-losses outcome?",
+   "Compute the expected profit from the stopping outcomes: a win at some round gives a fixed net gain, and losing every round gives a fixed net loss with a small probability.",
+   "\\(E[\\text{profit}]=P(\\text{win})\\cdot(\\text{net gain on a win})+P(\\text{all lose})\\cdot(\\text{net loss})\\). Write each factor in terms of \\(q\\), the probability of tails."
   ]
  },
  {
@@ -590,6 +765,11 @@
    "random_walk",
    "reflecting_barrier",
    "fmt_perturb"
+  ],
+  "hints": [
+   "With both ends reflecting, is there still a simple long-run share of time at each state? What property of the chain determines it?",
+   "Return time equals \\(1/\\pi_0\\), and for a random walk on a graph the stationary distribution is proportional to degree.",
+   "\\(\\pi_v=\\deg(v)/\\sum_u\\deg(u)\\). Write the degree of each state along the line, counting each reflecting end as having one neighbour."
   ]
  },
  {
@@ -601,6 +781,11 @@
    "random_walk",
    "cycle",
    "fmt_perturb"
+  ],
+  "hints": [
+   "If the walker sometimes stays put, does the geometry of the walk change, or only how fast it moves?",
+   "Laziness only changes the time scale: each move takes a geometric number of time units, so the expected hitting time is a constant multiple of the non-lazy one.",
+   "Let \\(h\\) be the non-lazy hitting time from distance \\(d\\) on the cycle. Write \\(h\\) from the cycle formula for distance \\(d\\) on \\(n\\) vertices, and find the multiplier from the stay probability."
   ]
  },
  {
@@ -612,6 +797,11 @@
    "penney",
    "biased_coin",
    "fmt_perturb"
+  ],
+  "hints": [
+   "With a fair coin the race between HT and HH is symmetric. What decides it once the first head appears, and do tails before the first head matter?",
+   "Condition on the first H. From that point the race is decided by one-step outcomes, so set up a first-step equation for the win probability.",
+   "Let \\(W\\) be the win probability from the state just after an H. Write \\(W=p\\cdot(\\text{value after H})+q\\cdot(\\text{value after T})\\) and fill in what each outcome leads to."
   ]
  },
  {
@@ -623,6 +813,11 @@
    "s_optional_stopping",
    "random_walk",
    "fmt_twin"
+  ],
+  "hints": [
+   "Track only one player's holdings from round to round. Is the change each round symmetric, and what must be true when the game ends?",
+   "Her holdings form a martingale, so optional stopping between the two extremes applies.",
+   "\\(E[X_T]=X_0\\) with \\(X_T\\in\\{0,\\text{total}\\}\\) and \\(P=P(X_T=\\text{total})\\). Write this as one equation in \\(P\\)."
   ]
  },
  {
@@ -634,6 +829,11 @@
    "random_walk",
    "reflecting_barrier",
    "fmt_twin"
+  ],
+  "hints": [
+   "Suppose the robot is at shelf \\(k\\) and the far end is at some distance ahead. Can you write the expected time from each shelf in terms of its neighbours, including what happens at the near wall?",
+   "First-step analysis with a boundary condition: the far end is the target, and the near end sends the robot inward with certainty.",
+   "Let \\(E_k\\) be the expected time from shelf \\(k\\). Write \\(E_k=1+\\tfrac12(E_{k-1}+E_{k+1})\\) for interior shelves and the separate equation for the wall shelf."
   ]
  },
  {
@@ -646,6 +846,11 @@
    "urn",
    "coin",
    "fmt_twin"
+  ],
+  "hints": [
+   "The chance of three heads depends on an unknown bias \\(p\\). How do you compute a probability when it depends on a quantity with a known distribution?",
+   "Condition on \\(p\\): \\(P(\\text{three heads}\\mid p)=p^3\\). Then average over the prior by integrating.",
+   "\\(P=\\int_0^1 p^3\\,f(p)\\,dp\\), where \\(f\\) is the prior density. Write the integrand explicitly."
   ]
  },
  {
@@ -656,6 +861,11 @@
    "s_reflection",
    "random_walk",
    "fmt_twin"
+  ],
+  "hints": [
+   "Given the final tally, every ordering of the votes is equally likely. How many orderings are there in total, and which of them keep A in front throughout?",
+   "Ballot-type counting: count the orderings in which A is strictly ahead at every step, and divide by the total number of orderings.",
+   "Total orderings: \\(\\binom{a+b}{a}\\). Write the favourable count as a ballot count for \\(a\\) and \\(b\\), then divide by the total."
   ]
  },
  {
@@ -666,6 +876,11 @@
    "s_markov_chain",
    "random_walk",
    "fmt_twin"
+  ],
+  "hints": [
+   "How many balls are in urn A after each step, and does that count on its own form a Markov chain? What share of time does the chain spend in the all-in-A state?",
+   "The return time to a state equals the reciprocal of its stationary probability, so find the stationary law of the count in urn A.",
+   "\\(E[\\text{return}]=1/\\pi_2\\), where \\(\\pi_k\\) is the stationary probability of having \\(k\\) balls in A. Write \\(\\pi_k\\) as a binomial expression in \\(k\\) and \\(N\\)."
   ]
  },
  {
@@ -676,6 +891,11 @@
    "s_markov_chain",
    "dice",
    "fmt_twin"
+  ],
+  "hints": [
+   "Consider how much progress you keep when a roll goes the wrong way. Does a failure reset everything, or only part of the progress?",
+   "Use a two-state first-step recursion: one state for no progress, and one for having just made the first step toward the goal.",
+   "\\(E_0=1+(1-p)E_0+pE_1\\), with \\(p\\) the chance of the relevant face. Define \\(E_1\\) in terms of \\(E_0\\) and write it as a second equation."
   ]
  },
  {
@@ -686,6 +906,11 @@
    "s_generating_function",
    "branching",
    "fmt_twin"
+  ],
+  "hints": [
+   "What is the average number of sons per man, and does that average tell you anything about whether the line can persist?",
+   "Let \\(q\\) be the probability that the line ends. Condition on the number of sons of the first man: each son's line must end independently.",
+   "\\(q=\\sum_k p_k q^k\\). Write this equation for \\(q\\) using the probabilities \\(p_0\\) and \\(p_2\\) from the statement, and collect terms."
   ]
  },
  {
@@ -696,6 +921,11 @@
    "s_reflection",
    "random_walk",
    "fmt_twin"
+  ],
+  "hints": [
+   "Split the event by where the balance ends after the 10 bets. Which endings are easy to compute directly?",
+   "Reflection-type argument: reflect the path after its first hit of level \\(a\\), and express the answer through probabilities of endpoints.",
+   "\\(P(M_{10}\\ge4)=P(S_{10}\\ge4)+P(\\text{reflected endpoint})\\). Fill in where the reflected paths end."
   ]
  },
  {
@@ -792,6 +1022,11 @@
    "s_optional_stopping",
    "random_walk",
    "fmt_chain"
+  ],
+  "hints": [
+   "The coin is now biased. Is there a function of the position that stays unchanged on average each step, so that you can stop at both boundaries?",
+   "Use the exponential martingale \\(r^{X_n}\\) with \\(r=q/p\\), and apply optional stopping at the two barriers.",
+   "\\(E[r^{X_T}]=r^{X_0}\\) with \\(X_T\\in\\{0,12\\}\\). Write this as \\(r^4=P\\cdot r^{12}+(1-P)\\cdot r^{0}\\) and solve for \\(P\\)."
   ]
  },
  {
@@ -803,6 +1038,11 @@
    "s_optional_stopping",
    "random_walk",
    "fmt_chain"
+  ],
+  "hints": [
+   "Is there a linear function of the position that stays constant on average apart from a drift term? How would that drift relate to the expected stopping time?",
+   "Use the martingale \\(X_n-(p-q)n\\) and optional stopping, so the expected stopping time follows from the expectation of the endpoint.",
+   "\\(E[X_T]-X_0=(p-q)E[T]\\). Write \\(E[X_T]\\) as a weighted average of the two barriers, using the probability from the previous card."
   ]
  },
  {
@@ -814,6 +1054,11 @@
    "s_optional_stopping",
    "random_walk",
    "fmt_chain"
+  ],
+  "hints": [
+   "For a general bias, is there a function of the form \\(c^{x}\\) for a suitable constant \\(c\\) that is a martingale? What happens to that constant as the bias disappears?",
+   "Use the exponential martingale with \\(r=q/p\\) and optional stopping at \\(0\\) and \\(N\\), which gives a linear equation for the exit probability.",
+   "Write \\(E[r^{X_T}]=r^{X_0}\\) with \\(r=q/p\\) and \\(X_T\\in\\{0,N\\}\\), and let \\(P_N\\) be the exit probability at \\(N\\)."
   ]
  },
  {
@@ -825,6 +1070,11 @@
    "penney",
    "coin",
    "fmt_chain"
+  ],
+  "hints": [
+   "The two patterns start and end with different letters. Which parts of one pattern can match the start of the other, and how does that affect the race?",
+   "Conway's odds rule: the correlations between suffixes and prefixes decide the odds of \\(P(A)\\) against \\(P(B)\\).",
+   "Write the four correlations \\(c_{AA},c_{BB},c_{AB},c_{BA}\\) for \\(A=\\)THH and \\(B=\\)HHT as a list, then write the odds \\((c_{BB}-c_{BA}):(c_{AA}-c_{AB})\\)."
   ]
  },
  {
@@ -836,6 +1086,11 @@
    "penney",
    "coin",
    "fmt_chain"
+  ],
+  "hints": [
+   "Your opponent has switched patterns. Which candidate reply is most likely to appear first against THH? Can you compare candidates using the same rule?",
+   "Compare the candidates pairwise with the odds rule, and choose the one that gives the best odds against THH.",
+   "Pick one candidate \\(A\\) and write its four correlations against \\(B=\\)THH, then the odds \\((c_{BB}-c_{BA}):(c_{AA}-c_{AB})\\)."
   ]
  },
  {
@@ -847,6 +1102,11 @@
    "penney",
    "coin",
    "fmt_chain"
+  ],
+  "hints": [
+   "If every sequence can be beaten by another, what does that say about a single best sequence? Try following which pattern beats which, starting from any one of them.",
+   "The beats relation is not transitive, so the best-reply graph has a cycle, and no pure reply is optimal against everything.",
+   "Build a directed graph on the four sequences with an edge from each pattern to the one that beats it. Write out the edges and look for a closed loop."
   ]
  }
 ]
