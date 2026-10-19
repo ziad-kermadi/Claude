@@ -169,7 +169,7 @@
  },
  {
   "type": "basic",
-  "front": "<b>[Desk practice]</b> You have hedged a 10y gilt position with a receiver-neutral 10y swap, with a 10y gilt future, or with a short cash gilt. For each hedge, name the residual risk you still carry and the one check you run every day.",
+  "front": "<b>[Desk practice]</b> You have hedged a 10y gilt position with a 10y swap, with a 10y gilt future, or with a short cash gilt. For each hedge, name the residual risk you still carry and the one check you run every day.",
   "back": "Headline: no hedge is DV01-clean. The residuals sit in the spread between the hedge and the position.<br>\nSwap: the gilt-swap spread (the asset-swap spread) moves, so the swap leaves spread DV01 unhedged. Also the discounting curve of the swap (collateral and OIS) differs from the gilt's repo-implied discounting. Check: daily swap-spread DV01 on the book.<br>\nFuture: cheapest-to-deliver switching and delivery optionality change the future's DV01 and the basis to the cash gilt. Check: the current CTD and the gross and net basis, and the future's DV01 recomputed with that CTD.<br>\nShort cash gilt: repo specialness can spike, so the cost of borrowing the bond rises, and the short must be bought back in the market. Check: the bond's repo rate and borrow availability each morning.<br>\n<i>Interviewer follow-up:</i> which hedge would you switch away from into a delivery window? The future, because the CTD risk is the largest residual at that point. The swap or the cash bond takes over until the roll is complete.",
   "tags": [
    "hedging",

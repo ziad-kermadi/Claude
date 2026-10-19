@@ -203,7 +203,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: STOP 3/3]</b> Context: \\(\\tau\\) is the first time \\(W\\) hits \\(+1\\). Then \\(W_\\tau=1\\) almost surely. A trader argues that optional stopping gives \\(\\mathbb E[W_\\tau]=\\mathbb E[W_0]=0\\). Which hypothesis fails, and what is \\(\\mathbb E[\\tau]\\)?",
-  "back": "<b>Failure.</b> \\(\\tau\\) is finite almost surely but unbounded, and \\(\\mathbb E[\\tau]=\\infty\\). The stopped process \\(W_{t\\wedge\\tau}\\) is not uniformly integrable, so \\(\\mathbb E[W_\\tau]=1\\neq0\\).<br>\n<b>Why \\(\\mathbb E[\\tau]=\\infty\\).</b> \\(\\mathbb P(\\tau>t)=\\mathbb P(\\max_{s\\le t}W_s<1)=\\mathbb P(|W_t|<1)\\approx 0.8/\\sqrt t\\) for large \\(t\\). A tail of order \\(t^{-1/2}\\) has infinite mean.<br>\n<b>Trading meaning.</b> The doubling strategy wins 1 with probability one, but it needs unbounded credit before the win and an unbounded time horizon. Finite capital or a finite horizon restores a finite expectation, and the sure win disappears.<br>\n<b>Interviewer follow-up:</b> what if we stop at \\(\\tau\\wedge T\\)? Then optional stopping holds and \\(\\mathbb E[W_{\\tau\\wedge T}]=0\\), with the atom at \\(+1\\) offset by a negative tail at \\(T\\).<br>\n<b>Used in the deck for:</b> the caveat on exit-time and barrier arguments.",
+  "back": "<b>Failure.</b> \\(\\tau\\) is finite almost surely but unbounded, and \\(\\mathbb E[\\tau]=\\infty\\). The stopped process \\(W_{t\\wedge\\tau}\\) is not uniformly integrable, so \\(\\mathbb E[W_\\tau]=1\\neq0\\).<br>\n<b>Why \\(\\mathbb E[\\tau]=\\infty\\).</b> \\(\\mathbb P(\\tau>t)=\\mathbb P(\\max_{s\\le t}W_s<1)=\\mathbb P(|W_t|<1)\\approx 0.8/\\sqrt t\\) for large \\(t\\). A tail of order \\(t^{-1/2}\\) has infinite mean.<br>\n<b>Trading meaning.</b> The doubling strategy wins 1 with probability one, but it needs unbounded credit before the win and an unbounded time horizon. A finite horizon or a bounded stopping rule restores optional stopping, and the sure win disappears.<br>\n<b>Interviewer follow-up:</b> what if we stop at \\(\\tau\\wedge T\\)? Then optional stopping holds and \\(\\mathbb E[W_{\\tau\\wedge T}]=0\\), with the atom at \\(+1\\) offset by a negative tail at \\(T\\).<br>\n<b>Used in the deck for:</b> the caveat on exit-time and barrier arguments.",
   "tags": [
    "martingale",
    "optional_stopping",
@@ -414,7 +414,6 @@
    "exponential_distribution",
    "hazard_rate",
    "cloze",
-   "chain_poisson",
    "lvl_foundation"
   ]
  },
@@ -575,6 +574,7 @@
    "vasicek",
    "negative_rates",
    "stationary_distribution",
+   "chain_ou",
    "lvl_vp_core"
   ]
  },
@@ -586,7 +586,6 @@
    "ito",
    "ito_correction",
    "cloze",
-   "chain_ito",
    "lvl_foundation"
   ]
  }
