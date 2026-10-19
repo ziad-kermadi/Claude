@@ -56,8 +56,8 @@
  },
  {
   "type": "cloze",
-  "front": "The ISDA IBOR Fallbacks Protocol (October 2020) sets the fallback spread as the {{c1::historical median}} of the difference between term IBOR and the compounded RFR, measured over {{c2::five years}}. For USD 3M LIBOR it is about {{c3::26bp}}.",
-  "back": "The spread is fixed for each tenor and is added to the compounded RFR when a legacy term-rate trade falls back. Check the exact figure against the protocol schedule before quoting it externally.",
+  "front": "The ISDA IBOR Fallbacks Protocol (October 2020) sets the fallback spread as the {{c1::historical median}} of the difference between term IBOR and the compounded RFR, measured over {{c2::five years}}. For USD 3M LIBOR it is about {{c3::26.161bp}}.",
+  "back": "The spread is fixed for each tenor and is added to the compounded RFR when a legacy term-rate trade falls back. The 3M value 26.161bp was fixed on 5 March 2021 (Bloomberg, five-year median) and matches ARRC/LSEG documents; other tenors (1M, 6M, 12M) are not verified here.",
   "tags": [
    "libor_transition",
    "fallbacks",
@@ -79,7 +79,7 @@
  {
   "type": "cloze",
   "front": "USD LIBOR 1M, 3M, 6M and 12M ceased publication after {{c1::30 June 2023}}. Legacy contracts without usable fallback language needed a {{c2::contract amendment or the protocol}} to move to a compounded RFR plus a fixed spread.",
-  "back": "Fallback language is contract-specific. The protocol applies only to counterparties that adhered, or where the trade's own clause points to it.",
+  "back": "Fallback language is contract-specific. The protocol applies only to counterparties that adhered, or where the trade's own clause points to it. US-law legacy contracts without usable fallbacks were also covered by the US Adjustable Interest Rate (LIBOR) Act (2022).",
   "tags": [
    "libor_transition",
    "cessation",
@@ -309,7 +309,7 @@
  {
   "type": "basic",
   "front": "Mental math: a 5y payer swap with fixed rate 3.00% and par rate 3.20%, notional 100m, annuity 4.60. What is the value? Then give the PV01 for a 10y swap with annuity about 8.0 on the same notional.",
-  "back": "<b>Answer:</b> Payer value \\(=N\\cdot A\\cdot(S-K)=100\\text{m}\\times 4.60\\times 0.0020=+920{,}000\\). The receiver at the same terms is \\(-920{,}000\\).\nPV01 for the 10y: \\(100\\text{m}\\times 8.0\\times 0.0001\\approx 80{,}000\\) per basis point.<br>\n<b>Interviewer follow-up:</b> Why is the 10y PV01 almost nine times the 5y one? The annuity grows with maturity, here from about 4.6 to about 8.0, so the sensitivity to the par rate grows roughly with the annuity.",
+  "back": "<b>Answer:</b> Payer value \\(=N\\cdot A\\cdot(S-K)=100\\text{m}\\times 4.60\\times 0.0020=+920{,}000\\). The receiver at the same terms is \\(-920{,}000\\).\nPV01 for the 10y: \\(100\\text{m}\\times 8.0\\times 0.0001\\approx 80{,}000\\) per basis point.<br>\n<b>Interviewer follow-up:</b> Why is the 10y PV01 about 1.7 times the 5y one (about 46k versus 80k per bp)? The annuity grows with maturity, here from about 4.6 to about 8.0, so the sensitivity to the par rate grows roughly with the annuity.",
   "tags": [
    "swaps",
    "mental_math",
@@ -331,7 +331,7 @@
  {
   "type": "basic",
   "front": "Write the forward par swap rate for a swap starting at \\(T_0\\) and ending at \\(T_n\\). With \\(DF(T_0)=0.960\\), \\(DF(T_n)=0.780\\) and forward annuity \\(A=4.20\\), what is the forward rate?",
-  "back": "<b>Answer:</b> \\[S(T_0,T_n)=\\frac{DF(T_0)-DF(T_n)}{A(T_0,T_n)},\\qquad A(T_0,T_n)=\\sum_i\\tau_i DF(T_i)\\] over the forward swap's own schedule.\nHere \\((0.960-0.780)/4.20=0.180/4.20\\approx 4.29\\%\\).\nDerivation: a forward-start float leg with no spread telescopes to \\(DF(T_0)-DF(T_n)\\), the same identity as the spot case.<br>\n<b>Interviewer follow-up:</b> How sensitive is the forward rate to \\(DF(T_0)\\)? \\(\\partial S/\\partial DF(T_0)=1/A\\approx 0.24\\), so a 1% move in the start DF moves the forward by about 24bp.",
+  "back": "<b>Answer:</b> \\[S(T_0,T_n)=\\frac{DF(T_0)-DF(T_n)}{A(T_0,T_n)},\\qquad A(T_0,T_n)=\\sum_i\\tau_i DF(T_i)\\] over the forward swap's own schedule.\nHere \\((0.960-0.780)/4.20=0.180/4.20\\approx 4.29\\%\\).\nDerivation: a forward-start float leg with no spread telescopes to \\(DF(T_0)-DF(T_n)\\), the same identity as the spot case.<br>\n<b>Interviewer follow-up:</b> How sensitive is the forward rate to \\(DF(T_0)\\)? \\(\\partial S/\\partial DF(T_0)=1/A\\approx 0.24\\), so a 0.01 (one-point) move in the start DF moves the forward by about 24bp.",
   "tags": [
    "swaps",
    "forward_swap",
@@ -441,7 +441,7 @@
  {
   "type": "basic",
   "front": "Define the 10y SOFR swap spread and list two structural drivers that have pushed it negative. How would a trader be long the spread?",
-  "back": "<b>Answer:</b> The swap spread is the par swap rate minus the yield on a Treasury of matched maturity, so a negative spread means the swap rate is below the Treasury yield.\nDrivers: heavy Treasury supply that cheapens government bonds relative to swaps, and bank balance-sheet and leverage constraints (SLR-type rules) that make holding Treasuries costly for dealers. Hedging and asset-swap demand also shift the spread.\nLong the spread: receive the fixed swap rate and short the Treasury. The position gains if the spread widens, that is, if the swap rate rises relative to the Treasury yield.<br>\n<b>Interviewer follow-up:</b> Why would relief in balance-sheet rules narrow a negative spread? Easing the constraint lowers the cost of holding Treasuries on dealer balance sheets, which increases demand for them and pushes Treasury yields down relative to swaps. The size and timing of that effect are debated, so verify the current rule status before relying on it.",
+  "back": "<b>Answer:</b> The swap spread is the par swap rate minus the yield on a Treasury of matched maturity, so a negative spread means the swap rate is below the Treasury yield.\nDrivers: heavy Treasury supply that cheapens government bonds relative to swaps, and bank balance-sheet and leverage constraints (SLR-type rules) that make holding Treasuries costly for dealers. Hedging and asset-swap demand also shift the spread.\nLong the spread (DV01-matched): pay the fixed swap rate and buy the Treasury. The position gains if the spread widens, that is, if the swap rate rises relative to the Treasury yield. Receiving fixed against a short Treasury is the opposite trade.<br>\n<b>Interviewer follow-up:</b> Why would relief in balance-sheet rules narrow a negative spread? Easing the constraint lowers the cost of holding Treasuries on dealer balance sheets, which increases demand for them and pushes Treasury yields down relative to swaps. The US eSLR final rule was adopted on 25 November 2025 (published 1 December 2025), effective 1 April 2026, with early adoption from 1 January 2026. Its effect on the swap spread is debated, and the size and timing are not verified here.",
   "tags": [
    "swap_spreads",
    "treasuries",
@@ -462,8 +462,8 @@
  },
  {
   "type": "cloze",
-  "front": "LCH SwapClear moved USD discounting from {{c1::effective fed funds}} to {{c2::SOFR}} in {{c3::2020}}, with price alignment interest settling the difference between the two.",
-  "back": "Discounting switches change MTM without changing the cash position. PAI keeps the cleared trade's economics stable across the switch.",
+  "front": "LCH SwapClear moved USD discounting from {{c1::effective fed funds}} to {{c2::SOFR}} in {{c3::16 October 2020}}, with price alignment interest settling the difference between the two.",
+  "back": "Discounting switches change MTM without changing the cash position. PAI keeps the cleared trade's economics stable across the switch. Go-live was 16 October 2020; LCH reported completion on 20 October 2020.",
   "tags": [
    "clearing",
    "pai",
