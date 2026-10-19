@@ -607,7 +607,7 @@
  {
   "type": "basic",
   "front": "A market on the number of heads in 100 fair coin flips. How wide should you quote for 1 sigma?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
-  "back": "<b>Structure:</b> s_clt_normal_approx: binomial approximated by a normal.<br><b>Trigger:</b> A count of many independent fair trials.<br><b>Key move:</b> Mean \\(np=50\\). Sd \\(\\sqrt{np(1-p)}=5\\). Width is proportional to the sd, not to the range.<br><b>Answer:</b> Mid 50, 1-sigma width ±5. Two sigma (about 95%) is ±10, i.e. 40 to 60.",
+  "back": "<b>Structure:</b> s_clt_normal_approx: binomial approximated by a normal.<br><b>Trigger:</b> A count of many independent fair trials.<br><b>Key move:</b> Mean \\(np=50\\). Sd \\(\\sqrt{np(1-p)}=5\\). Width is proportional to the sd, not to the range.<br><b>Answer:</b> Mid 50, 1-sigma width ±5. Two sigma is ±10, i.e. 40 to 60 inclusive. The normal rule says about 95%, and the exact binomial probability of \\(40\\le X\\le 60\\) is 96.5%.",
   "tags": [
    "s_clt_normal_approx",
    "market_making",
