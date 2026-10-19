@@ -33,3 +33,5 @@ HTML and format checks: JSON valid; 30 cards per file; each card has exactly one
 - 18_desk_5 card 9: the premium and costs are illustrative inputs, not market data.
 - 18_desk_5 card 26: "open interest shows net buying or selling pressure" is a simplification of the auction imbalance.
 - The Long Gilt tick of £10 rests on third-party contract profiles, not the ICE specification.
+
+**Orchestrator correction (Opus review):** the verifier's change to 18_desk_5 card 24 was itself wrong — a protection seller is long credit and *loses* when spreads widen. Restored: explain −£270k, actual −£450k, residual −£180k.
