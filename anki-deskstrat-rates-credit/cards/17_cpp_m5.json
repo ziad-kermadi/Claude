@@ -1,0 +1,525 @@
+[
+ {
+  "type": "basic",
+  "front": "Why is <code>std::vector</code> the default container in C++, and what does its memory layout give you that a Python <code>list</code> does not?",
+  "back": "<b>Answer.</b> A vector is one contiguous heap buffer of <code>T</code> stored inline. <code>v[i]</code> is O(1), <code>push_back</code> is amortised O(1) because capacity grows geometrically, and insert or erase in the middle is O(n). A Python list holds pointers to separately allocated objects; a <code>vector&lt;double&gt;</code> is a flat array of doubles that the cache and vectorised loops stream through.<br><br>Code:<pre><code>#include &lt;iostream&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::vector&lt;double&gt; v{1.0, 2.0, 3.0};\n    std::cout &lt;&lt; \"&amp;v[1] - &amp;v[0] = \" &lt;&lt; (&amp;v[1] - &amp;v[0]) &lt;&lt; '\\n';   // elements are adjacent\n    v.push_back(4.0);      // amortised O(1); may reallocate and move every element\n    std::cout &lt;&lt; \"size=\" &lt;&lt; v.size() &lt;&lt; \" capacity&gt;=size: \" &lt;&lt; (v.capacity() &gt;= v.size()) &lt;&lt; '\\n';\n}</code></pre>Output:<pre><code>&amp;v[1] - &amp;v[0] = 1\nsize=4 capacity&gt;=size: 1</code></pre><b>Interview trap:</b> a <code>push_back</code> that reallocates invalidates every iterator, pointer and reference into the vector. Reserve first when pointers must stay valid.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_foundation",
+   "containers",
+   "vector",
+   "memory"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When is <code>std::deque</code> the right choice over <code>std::vector</code>, and what does it cost? Predict the output of this snippet.",
+  "back": "<b>Answer.</b> A deque gives O(1) <code>push_front</code>, <code>pop_front</code>, <code>push_back</code> and <code>pop_back</code>, and keeps O(1) random access. It is not one contiguous buffer: it is a sequence of fixed-size chunks behind an index, so iteration is slower than vector and elements are not contiguous across chunks.<br><br>Code:<pre><code>#include &lt;deque&gt;\n#include &lt;iostream&gt;\n\nint main() {\n    std::deque&lt;int&gt; d{2, 3};\n    d.push_front(1);                 // O(1) at the front\n    d.push_back(4);                  // O(1) amortised at the back\n    std::cout &lt;&lt; \"front=\" &lt;&lt; d.front() &lt;&lt; \" back=\" &lt;&lt; d.back() &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"d[2]=\" &lt;&lt; d[2] &lt;&lt; \" size=\" &lt;&lt; d.size() &lt;&lt; '\\n';\n    for (int x : d) std::cout &lt;&lt; x &lt;&lt; ' ';\n    std::cout &lt;&lt; '\\n';\n}</code></pre>Output:<pre><code>front=1 back=4\nd[2]=3 size=4\n1 2 3 4</code></pre><b>Interview trap:</b> using a deque as a path buffer gives up the contiguous layout that vectorised pricing loops want. Use a vector and a head index if you only pop from the front occasionally.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_foundation",
+   "containers",
+   "deque",
+   "complexity"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does <code>std::list</code> give you that <code>std::vector</code> cannot, and what does it cost? Predict the output.",
+  "back": "<b>Answer.</b> Given an iterator to a node, insert and erase are O(1) and do not move other elements; other iterators stay valid; <code>splice</code> relinks nodes in O(1). It has no random access (no <code>operator[]</code>), and every node is a separate allocation, so iteration is cache-hostile.<br><br>Code:<pre><code>#include &lt;iostream&gt;\n#include &lt;iterator&gt;\n#include &lt;list&gt;\n\nint main() {\n    std::list&lt;double&gt; px{100.0, 101.0, 102.0};\n    auto mid = std::next(px.begin());   // iterator to 101.0\n    px.insert(mid, 100.5);              // O(1): no element moves\n    px.push_front(99.0);                // O(1)\n    px.erase(mid);                      // removes 101.0; other iterators stay valid\n    for (double p : px) std::cout &lt;&lt; p &lt;&lt; ' ';\n    std::cout &lt;&lt; \"\\nsize=\" &lt;&lt; px.size() &lt;&lt; '\\n';\n    // px[0];  // does not compile: std::list has no operator[]\n}</code></pre>Output:<pre><code>99 100 100.5 102 \nsize=4</code></pre><b>Interview trap:</b> <code>std::sort</code> does not compile on a list because it needs random-access iterators; use the member <code>px.sort()</code>. For desk-sized data a sorted vector with a binary-search insert is often faster than a list because of locality.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_foundation",
+   "containers",
+   "list",
+   "complexity"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "In C++, what does <code>dv01[\"10Y\"]</code> do on a <code>std::map</code> when the key is missing? Predict the output and say why it is dangerous in risk code.",
+  "back": "<b>Answer.</b> <code>operator[]</code> inserts a value-initialised element (0.0 for a double) when the key is absent and returns a reference to it. A read has changed the container. Use <code>find</code> for a read where absence matters, or <code>at</code>, which throws <code>std::out_of_range</code>.<br><br>Code:<pre><code>#include &lt;iostream&gt;\n#include &lt;map&gt;\n#include &lt;string&gt;\n\nint main() {\n    std::map&lt;std::string, double&gt; dv01;\n    dv01[\"5Y\"] = 4.7;\n    std::cout &lt;&lt; \"size=\" &lt;&lt; dv01.size() &lt;&lt; '\\n';\n    double missing = dv01[\"10Y\"];          // operator[] inserts a value-initialised 0.0\n    std::cout &lt;&lt; \"missing=\" &lt;&lt; missing &lt;&lt; \" size=\" &lt;&lt; dv01.size() &lt;&lt; '\\n';\n    auto it = dv01.find(\"30Y\");            // find() never inserts\n    std::cout &lt;&lt; (it == dv01.end() ? \"not found\" : \"found\") &lt;&lt; \" size=\" &lt;&lt; dv01.size() &lt;&lt; '\\n';\n}</code></pre>Output:<pre><code>size=1\nmissing=0 size=2\nnot found size=2</code></pre><b>Interview trap:</b> a missing tenor read through <code>[]</code> returns zero DV01 and is then summed as a real bucket, so the risk report silently understates the exposure. Use <code>at()</code> or <code>find()</code> wherever absence is a bug.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_foundation",
+   "containers",
+   "map",
+   "bugs"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "<code>std::vector</code>: <code>operator[]</code> is {{c1::O(1)}}; <code>push_back</code> is amortised {{c2::O(1)}}; inserting in the middle is {{c3::O(n)}}.",
+  "back": "<b>Extra:</b> <code>std::list</code> insert at a known iterator is O(1), but random access is O(n). <code>std::map</code> and <code>std::set</code> are O(log n) for find, insert and erase, and iterate in key order. <code>std::unordered_map</code> is O(1) on average and O(n) in the worst case.<br><b>Interview trap:</b> an 'O(1) lookup' claim for unordered_map ignores the worst case from collisions and rehashing.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_foundation",
+   "containers",
+   "complexity"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with this loop? Predict what it prints under <code>g++ -std=c++20 -Wall -Wextra -O2</code> and explain the mechanism.",
+  "back": "<b>Actual output:</b><pre><code>5 -1 7</code></pre><b>Answer.</b> <code>erase(it)</code> invalidates <code>it</code> and every iterator at or after the erased position, so <code>++it</code> steps from an invalid iterator. The element after the first -1 slides into <code>it</code>, the loop steps past it, and the second -1 survives. The standard makes the whole loop undefined behaviour; this output is one manifestation, not a rule to rely on. Fix: take the iterator erase returns.<br><pre><code>#include &lt;iostream&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::vector&lt;int&gt; fills{5, -1, -1, 7};\n    for (auto it = fills.begin(); it != fills.end();) {\n        if (*it == -1) it = fills.erase(it);   // erase returns the next valid iterator\n        else ++it;\n    }\n    for (int f : fills) std::cout &lt;&lt; f &lt;&lt; ' ';\n    std::cout &lt;&lt; '\\n';\n}</code></pre>Output:<pre><code>5 7</code></pre><b>Interview trap:</b> 'it worked in my test' is not evidence for erasing inside a raw loop. The modern one-liner is <code>std::erase_if(fills, pred)</code>.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_vp_core",
+   "iterators",
+   "invalidation",
+   "vector",
+   "bugs"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "After <code>std::vector::push_back</code> reallocates, {{c1::all iterators, pointers and references}} into the vector are invalidated. For <code>std::deque</code>, <code>push_front</code> and <code>push_back</code> invalidate {{c2::all iterators but not references to existing elements}}.",
+  "back": "<b>Extra:</b> a vector push_back that does not reallocate invalidates only the end iterator. Insert and erase in the middle invalidate everything at or after the change point.<br><b>Interview trap:</b> code that caches a pointer into a vector and keeps appending is a use-after-free that appears only when the capacity boundary is crossed; tests pass and production fails.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_vp_core",
+   "iterators",
+   "invalidation",
+   "vector",
+   "deque"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For <code>std::list</code> and <code>std::map</code>, erase invalidates only {{c1::iterators to the erased element}}, and insert invalidates {{c2::no iterators}}. For <code>std::unordered_map</code>, a rehash invalidates {{c3::all iterators but not references or pointers to elements}}.",
+  "back": "<b>Extra:</b> node-based containers never move their elements, so references and pointers survive insert and erase. The unordered_map rule is why a cached iterator is unsafe across inserts even though a cached element pointer is not.<br><b>Interview trap:</b> caching <code>&amp;m.at(k)</code> is safe across a rehash but caching <code>m.begin()</code> is not; <code>reserve()</code> before a bulk load avoids the rehash.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_vp_core",
+   "iterators",
+   "invalidation",
+   "map",
+   "unordered_map"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with this code? Compile it with <code>-fsanitize=address</code> and state the report.",
+  "back": "<pre><code>#include &lt;iostream&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::vector&lt;double&gt; ladder{100.0, 101.0};   // capacity exactly 2\n    auto first = ladder.begin();\n    ladder.push_back(102.0);                     // reallocates: old buffer is freed\n    std::cout &lt;&lt; *first &lt;&lt; '\\n';                 // BUG: first is dangling\n}</code></pre><b>Actual report:</b> <code>AddressSanitizer: heap-use-after-free</code><b>Answer.</b> The capacity of <code>ladder</code> is 2, so <code>push_back</code> allocates a new buffer and frees the old one; <code>first</code> still points into the freed memory, and dereferencing it is a use-after-free. Fix: take the iterator after the last mutation, or hold an index.<br><b>Interview trap:</b> an invalid iterator is undefined behaviour, so it may print the old value on some builds. Reading a plausible value is not evidence the code is correct.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_vp_core",
+   "iterators",
+   "invalidation",
+   "vector",
+   "bugs"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Does <code>std::sort</code> keep the arrival order of equal keys? Predict the output of this stability check and state the fix.",
+  "back": "<b>Actual output:</b><pre><code>stable_sort keeps arrival order within desk: 1\nsort keeps arrival order within desk:        0\nfirst 6 of stable_sort: C3 C6 C9 C12 C15 C18</code></pre><b>Answer.</b> <code>std::sort</code> is not stable and may reorder equal keys. <code>std::stable_sort</code> keeps the relative order, usually with extra memory. For a multi-key sort, the cleanest choice is one comparator on the full key, here (desk, id), with <code>std::sort</code>.<br><b>Interview trap:</b> libstdc++'s <code>std::sort</code> falls back to insertion sort for small ranges (about 16 elements or fewer), which is stable. A unit test on six trades passes; a realistic 40-trade batch fails. Test at realistic sizes.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_vp_core",
+   "algorithms",
+   "sort",
+   "stability"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write the zero-rate lookup for a curve with pillars <code>t</code> and zero rates <code>z</code> using <code>std::lower_bound</code>. Predict the four printed values.",
+  "back": "<b>Answer.</b> <code>lower_bound</code> returns the first pillar with <code>t[i] &gt;= x</code>, so the bracketing segment is <code>[i-1, i]</code>; interpolate linearly in the rate, with flat extrapolation outside the pillars. By hand: at 0.5y the weight on the 1y pillar is (0.5-0.25)/0.75 = 1/3, so 4.10 - 0.1/3 = 4.0667; at 3.5y, 3.85 + 0.5 × (3.70 - 3.85) = 3.775.<br><br>Code:<pre><code>#include &lt;algorithm&gt;\n#include &lt;cstddef&gt;\n#include &lt;cstdio&gt;\n#include &lt;vector&gt;\n\n// Linear interpolation of a zero curve; t sorted ascending, flat extrapolation outside.\ndouble interp(const std::vector&lt;double&gt;&amp; t, const std::vector&lt;double&gt;&amp; z, double x) {\n    if (x &lt;= t.front()) return z.front();\n    if (x &gt;= t.back())  return z.back();\n    auto hi = std::lower_bound(t.begin(), t.end(), x);   // first pillar with t[i] &gt;= x\n    std::size_t i = static_cast&lt;std::size_t&gt;(hi - t.begin());\n    double w = (x - t[i - 1]) / (t[i] - t[i - 1]);\n    return z[i - 1] + w * (z[i] - z[i - 1]);\n}\n\nint main() {\n    std::vector&lt;double&gt; t{0.25, 1.0, 2.0, 5.0, 10.0};\n    std::vector&lt;double&gt; z{4.10, 4.00, 3.85, 3.70, 3.90};   // zero rates in %\n    for (double x : {0.5, 2.0, 3.5, 12.0})\n        std::printf(\"t=%.2f zero=%.4f\\n\", x, interp(t, z, x));\n}</code></pre>Output:<pre><code>t=0.50 zero=4.0667\nt=2.00 zero=3.8500\nt=3.50 zero=3.7750\nt=12.00 zero=3.9000</code></pre><b>Interview trap:</b> the front guard is what keeps <code>i-1</code> from being -1, which is undefined behaviour. Linear interpolation of zero rates gives kinks in the forward curve; linear interpolation of log discount factors gives piecewise-flat forwards. Say which you use and why.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_vp_core",
+   "algorithms",
+   "lower_bound",
+   "curves",
+   "interpolation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does this print, and why?",
+  "back": "<pre><code>#include &lt;iostream&gt;\n#include &lt;numeric&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::vector&lt;double&gt; dv01{0.5, 0.25, 0.75};   // bucket risks\n    double a = std::accumulate(dv01.begin(), dv01.end(), 0);     // init is int\n    double b = std::accumulate(dv01.begin(), dv01.end(), 0.0);   // init is double\n    std::cout &lt;&lt; \"int init:    \" &lt;&lt; a &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"double init: \" &lt;&lt; b &lt;&lt; '\\n';\n}</code></pre><b>Answer:</b><pre><code>int init:    0\ndouble init: 1.5</code></pre>The accumulator has the type of the initial value. With <code>0</code> (an int), each partial sum is truncated back to an int, so 0.5, 0.25 and 0.75 all collapse to 0. With <code>0.0</code> the sum is 1.5.<br><b>Interview trap:</b> there is no compiler warning and no exception. A port from Python that writes <code>accumulate(v, 0)</code> silently drops the fractional part of every DV01 bucket. Use <code>0.0</code> or a typed initial value.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_foundation",
+   "algorithms",
+   "accumulate",
+   "types"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Discount the cash flows of a 5% annual-coupon, 3-year bond at a flat 3% continuously compounded rate using <code>std::transform</code>. Predict the price per 100 face.",
+  "back": "<b>Answer.</b> DF(t) = exp(-r t), so each cash flow's PV is cf × DF. The first <code>std::transform</code> maps times to DFs (the <code>back_inserter</code> appends to an empty vector); the binary form multiplies cash flows by DFs. Check by hand: 5e^(-0.03) = 4.8522, 5e^(-0.06) = 4.7088, 105e^(-0.09) = 95.9628; sum 105.524.<br><br>Code:<pre><code>#include &lt;algorithm&gt;\n#include &lt;cmath&gt;\n#include &lt;iostream&gt;\n#include &lt;iterator&gt;\n#include &lt;numeric&gt;\n#include &lt;vector&gt;\n\nint main() {\n    const double r = 0.03;                        // flat continuously compounded rate\n    std::vector&lt;double&gt; t{1.0, 2.0, 3.0};         // payment times in years\n    std::vector&lt;double&gt; cf{5.0, 5.0, 105.0};      // 5% coupon bond cash flows\n    std::vector&lt;double&gt; df;\n    df.reserve(t.size());\n    std::transform(t.begin(), t.end(), std::back_inserter(df),\n                   [r](double ti) { return std::exp(-r * ti); });\n    std::vector&lt;double&gt; pv(cf.size());\n    std::transform(cf.begin(), cf.end(), df.begin(), pv.begin(),\n                   [](double c, double d) { return c * d; });      // binary transform\n    double price = std::accumulate(pv.begin(), pv.end(), 0.0);\n    std::cout.precision(6);\n    std::cout &lt;&lt; \"DF:    \"; for (double d : df) std::cout &lt;&lt; d &lt;&lt; ' ';\n    std::cout &lt;&lt; \"\\nPV:    \"; for (double p : pv) std::cout &lt;&lt; p &lt;&lt; ' ';\n    std::cout &lt;&lt; \"\\nPrice: \" &lt;&lt; price &lt;&lt; '\\n';\n}</code></pre>Output:<pre><code>DF:    0.970446 0.941765 0.913931 \nPV:    4.85223 4.70882 95.9628 \nPrice: 105.524</code></pre><b>Interview trap:</b> <code>std::transform</code> writes into the destination but does not resize it. Writing into <code>df.begin()</code> of an empty vector is undefined behaviour, which is why the code uses <code>back_inserter</code> or a pre-sized vector.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_foundation",
+   "algorithms",
+   "transform",
+   "discounting"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the annuity factor (PV01 per unit notional) for tenors 1 to 5 years at a flat 3% annual par rate, computed in one pass with <code>std::partial_sum</code>? Predict the table.",
+  "back": "<b>Answer.</b> The annual DF is 1/1.03^n and the annuity A(n) is the running sum of DFs, which is exactly what <code>partial_sum</code> computes. A(5) = 4.5797. Check: a flat 3% par curve must give par rate (1 - DF(5))/A(5) = (1 - 0.86261)/4.57970 = 3.000%.<br><br>Code:<pre><code>#include &lt;cmath&gt;\n#include &lt;cstddef&gt;\n#include &lt;iomanip&gt;\n#include &lt;iostream&gt;\n#include &lt;numeric&gt;\n#include &lt;vector&gt;\n\nint main() {\n    const double y = 0.03;                        // flat annual par yield\n    std::vector&lt;double&gt; df;\n    for (int n = 1; n &lt;= 5; ++n) df.push_back(1.0 / std::pow(1.0 + y, n));   // DF(n years)\n    std::vector&lt;double&gt; annuity(df.size());\n    std::partial_sum(df.begin(), df.end(), annuity.begin());               // running sum\n    std::cout &lt;&lt; std::fixed &lt;&lt; std::setprecision(4);\n    for (std::size_t i = 0; i &lt; df.size(); ++i)\n        std::cout &lt;&lt; i + 1 &lt;&lt; \"y  DF=\" &lt;&lt; df[i] &lt;&lt; \"  annuity=\" &lt;&lt; annuity[i] &lt;&lt; '\\n';\n}</code></pre>Output:<pre><code>1y  DF=0.9709  annuity=0.9709\n2y  DF=0.9426  annuity=1.9135\n3y  DF=0.9151  annuity=2.8286\n4y  DF=0.8885  annuity=3.7171\n5y  DF=0.8626  annuity=4.5797</code></pre><b>Used in the deck for:</b> the annuity measure in par swap rate and swap PV01.<br><b>Interview trap:</b> <code>partial_sum</code> is inclusive, so element i holds the sum through the (i+1)-th payment; the 1-year annuity is element 0, not element 1.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_foundation",
+   "algorithms",
+   "partial_sum",
+   "annuity"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How do you read a 99% one-day VaR from 1,000 scenario P&Ls with <code>std::nth_element</code> instead of a full sort? Predict what it prints.",
+  "back": "<b>Answer.</b> A 99% VaR is the loss at the 1% quantile: with 1,000 scenarios, the 10th worst outcome, at 0-based index 9. <code>nth_element</code> places that value at index 9 with everything smaller on its left, in O(n) on average, rather than O(n log n) for a full sort. The sorted reference agrees (-491.0), so VaR = 491.0.<br><br>Code:<pre><code>#include &lt;algorithm&gt;\n#include &lt;cstddef&gt;\n#include &lt;cstdio&gt;\n#include &lt;vector&gt;\n\nint main() {\n    // 1000 deterministic, distinct daily P&amp;L scenarios: {-500, ..., 499}\n    std::vector&lt;double&gt; pnl;\n    for (int i = 0; i &lt; 1000; ++i) pnl.push_back(static_cast&lt;double&gt;((i * 37) % 1000) - 500.0);\n    // 99% one-day VaR = loss at the 1% quantile = 10th worst of 1000 (0-based index 9)\n    const std::size_t k = 9;\n    std::vector&lt;double&gt; a = pnl;\n    std::nth_element(a.begin(), a.begin() + static_cast&lt;std::ptrdiff_t&gt;(k), a.end());\n    std::vector&lt;double&gt; b = pnl;\n    std::sort(b.begin(), b.end());\n    std::printf(\"nth_element 10th worst P&amp;L: %.1f\\n\", a[k]);\n    std::printf(\"full sort   10th worst P&amp;L: %.1f\\n\", b[k]);\n    bool left_ok = std::all_of(a.begin(), a.begin() + static_cast&lt;std::ptrdiff_t&gt;(k),\n                               [&amp;](double x) { return x &lt;= a[k]; });\n    std::printf(\"left partition all &lt;= q: %d\\n\", static_cast&lt;int&gt;(left_ok));\n    std::printf(\"99%% 1-day VaR = %.1f\\n\", -a[k]);\n}</code></pre>Output:<pre><code>nth_element 10th worst P&amp;L: -491.0\nfull sort   10th worst P&amp;L: -491.0\nleft partition all &lt;= q: 1\n99% 1-day VaR = 491.0</code></pre><b>Interview trap:</b> the off-by-one (index 10 is the 11th worst), the sign flip (VaR is quoted as a positive loss), and that a 99% figure from 1,000 scenarios rests on only 10 tail observations, so it is noisy.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_vp_core",
+   "algorithms",
+   "nth_element",
+   "var"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How do you sort a vector of trades by quantity with C++20 ranges, without writing a comparator? Predict the output.",
+  "back": "<b>Answer.</b> <code>std::ranges::sort(t, {}, &amp;Trade::qty)</code> takes the range directly and a projection (here a member pointer), with <code>ranges::less</code> as the comparator. The range overloads accept a container, not an iterator pair.<br><br>Code:<pre><code>#include &lt;algorithm&gt;\n#include &lt;iostream&gt;\n#include &lt;string&gt;\n#include &lt;vector&gt;\n\nstruct Trade { std::string id; double qty; };\n\nint main() {\n    std::vector&lt;Trade&gt; t{{\"A\", 5.0}, {\"B\", -2.0}, {\"C\", 9.0}};\n    std::ranges::sort(t, {}, &amp;Trade::qty);     // sort by a projection, no lambda needed\n    for (const auto&amp; x : t) std::cout &lt;&lt; x.id &lt;&lt; ' ' &lt;&lt; x.qty &lt;&lt; '\\n';\n}</code></pre>Output:<pre><code>B -2\nA 5\nC 9</code></pre><b>Interview trap:</b> the projection is applied during comparison; it is not stored. Use it for readability, not as a cache. <code>ranges::sort</code> still needs random-access iterators (next card).",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_foundation",
+   "algorithms",
+   "ranges",
+   "sort"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "<code>std::sort</code> requires {{c1::random-access}} iterators, which is why <code>std::list</code> provides its own {{c2::sort()}} member function.",
+  "back": "<b>Extra:</b> introsort needs O(1) jumps to the middle of a range. A list merge sort rearranges nodes in place instead.<br><b>Interview trap:</b> a list-based code path that calls <code>std::sort</code> fails to compile. The fix is the member sort, not a silent copy into a vector unless that copy is cheap.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_foundation",
+   "algorithms",
+   "iterators",
+   "sort"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What do <code>by_value()</code> and <code>by_ref()</code> return after <code>notional = 250</code>? Explain the capture rule.",
+  "back": "<pre><code>#include &lt;iostream&gt;\n\nint main() {\n    int notional = 100;\n    auto by_value = [notional] { return notional; };     // copies now\n    auto by_ref   = [&amp;notional] { return notional; };    // refers to the variable\n    notional = 250;\n    std::cout &lt;&lt; \"by value: \" &lt;&lt; by_value() &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"by ref:   \" &lt;&lt; by_ref() &lt;&lt; '\\n';\n}</code></pre>Output:<pre><code>by value: 100\nby ref:   250</code></pre><b>Answer.</b> A capture by value copies the variable when the lambda is created, so the closure keeps 100. A capture by reference stores a reference to the variable, so it sees 250.<br><b>Interview trap:</b> <code>[=]</code> inside a member function captures the <code>this</code> pointer, not the object, so a lambda that outlives the object reads freed memory. C++20 deprecates implicit capture of <code>this</code> by <code>[=]</code>. Capture what you name.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_foundation",
+   "lambdas",
+   "capture"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with <code>make_pricer</code>? State the sanitizer report, then give the fix and its output.",
+  "back": "<pre><code>#include &lt;functional&gt;\n#include &lt;iostream&gt;\n\nstd::function&lt;double()&gt; make_pricer(double spot) {\n    double bump = 0.01 * spot;\n    return [&amp;] { return spot + bump; };      // captures locals by reference\n}\n\nint main() {\n    auto f = make_pricer(100.0);\n    std::cout &lt;&lt; f() &lt;&lt; '\\n';                // BUG: spot and bump no longer exist\n}</code></pre><b>Actual report:</b> <code>AddressSanitizer: stack-use-after-return</code> (with <code>ASAN_OPTIONS=detect_stack_use_after_return=1</code>)<br><b>Answer.</b> <code>[&amp;]</code> captures <code>spot</code> and <code>bump</code> by reference. Both are locals that die when <code>make_pricer</code> returns, but the returned <code>std::function</code> keeps the references. Fix: capture by value.<br><pre><code>#include &lt;functional&gt;\n#include &lt;iostream&gt;\n\nstd::function&lt;double()&gt; make_pricer(double spot) {\n    double bump = 0.01 * spot;\n    return [spot, bump] { return spot + bump; };   // capture by value\n}\n\nint main() {\n    auto f = make_pricer(100.0);\n    std::cout &lt;&lt; f() &lt;&lt; '\\n';\n}</code></pre>Output:<pre><code>101</code></pre><b>Interview trap:</b> <code>std::function</code> copies the closure, not the storage it refers to. A stored lambda with reference captures is safe only while its referents live; for anything kept past the call, capture values.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_vp_core",
+   "lambdas",
+   "capture",
+   "dangling"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Each leg in this vector is meant to return 90, 100 and 110. What does it return, and what does the sanitizer report?",
+  "back": "<pre><code>#include &lt;functional&gt;\n#include &lt;iostream&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::vector&lt;std::function&lt;double()&gt;&gt; legs;\n    for (double k : {90.0, 100.0, 110.0})\n        legs.push_back([&amp;k] { return k; });        // BUG: captures the loop variable by reference\n    for (auto&amp; leg : legs) std::cout &lt;&lt; leg() &lt;&lt; ' ';\n    std::cout &lt;&lt; '\\n';\n}</code></pre><b>Actual report:</b> <code>AddressSanitizer: stack-use-after-scope</code><br><b>Answer.</b> The range-for variable <code>k</code> is a fresh local each iteration, destroyed at the end of it. The lambda captured its address, so each call reads dead storage. Fix: capture by value, <code>[k]</code>.<br><pre><code>#include &lt;functional&gt;\n#include &lt;iostream&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::vector&lt;std::function&lt;double()&gt;&gt; legs;\n    for (double k : {90.0, 100.0, 110.0})\n        legs.push_back([k] { return k; });        // capture by value\n    for (auto&amp; leg : legs) std::cout &lt;&lt; leg() &lt;&lt; ' ';\n    std::cout &lt;&lt; '\\n';\n}</code></pre>Output:<pre><code>90 100 110</code></pre><b>Interview trap:</b> the same bug appears with <code>[&amp;]</code> when building callbacks for a scenario grid. The build is clean under <code>-Wall -Wextra</code>, so the first sign is wrong numbers or a crash.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_vp_core",
+   "lambdas",
+   "capture",
+   "loops"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Predict the output. Why does <code>next_id</code> need <code>mutable</code>, and why does <code>counter</code> still print 0?",
+  "back": "<pre><code>#include &lt;iostream&gt;\n\nint main() {\n    auto next_id = [id = 1000]() mutable { return id++; };   // init-capture plus mutable state\n    std::cout &lt;&lt; next_id() &lt;&lt; ' ' &lt;&lt; next_id() &lt;&lt; ' ' &lt;&lt; next_id() &lt;&lt; '\\n';\n    int counter = 0;\n    auto bump = [counter]() mutable { return ++counter; };   // mutates its own copy\n    std::cout &lt;&lt; bump() &lt;&lt; ' ' &lt;&lt; bump() &lt;&lt; ' ' &lt;&lt; counter &lt;&lt; '\\n';\n}</code></pre>Output:<pre><code>1000 1001 1002\n1 2 0</code></pre><b>Answer.</b> The init-capture <code>id = 1000</code> creates a member of the closure. The call operator is const by default, so changing <code>id</code> needs <code>mutable</code>. The closure's own copy changes; the variable <code>counter</code> in <code>main</code> never does.<br><b>Interview trap:</b> a stateful lambda is copied when passed by value or wrapped in <code>std::function</code>, and each copy has its own state. A lambda used as a shared id counter is not shared between copies.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_foundation",
+   "lambdas",
+   "init_capture",
+   "mutable"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A trapezoid integrator takes a callback. Compare a template parameter with a <code>std::function</code> parameter for a quadrature or Monte Carlo inner loop. Predict the printed values.",
+  "back": "<pre><code>#include &lt;cmath&gt;\n#include &lt;functional&gt;\n#include &lt;iostream&gt;\n\n// Template: F is known at compile time, call is inlinable, no allocation.\ntemplate &lt;class F&gt;\ndouble trap_tpl(F f, double a, double b, int n) {\n    double h = (b - a) / n, s = 0.5 * (f(a) + f(b));\n    for (int i = 1; i &lt; n; ++i) s += f(a + i * h);\n    return s * h;\n}\n\n// std::function: type-erased, indirect call, may heap-allocate the callable.\ndouble trap_fn(const std::function&lt;double(double)&gt;&amp; f, double a, double b, int n) {\n    double h = (b - a) / n, s = 0.5 * (f(a) + f(b));\n    for (int i = 1; i &lt; n; ++i) s += f(a + i * h);\n    return s * h;\n}\n\nint main() {\n    auto g = [](double x) { return std::exp(-x * x); };\n    std::cout.precision(10);\n    std::cout &lt;&lt; \"template: \" &lt;&lt; trap_tpl(g, 0.0, 1.0, 1000) &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"function: \" &lt;&lt; trap_fn(g, 0.0, 1.0, 1000) &lt;&lt; '\\n';\n}</code></pre>Output:<pre><code>template: 0.7468240715\nfunction: 0.7468240715</code></pre><b>Answer.</b> Both print 0.7468240715, the trapezoid rule with 1,000 steps. The exact value is (√π/2)·erf(1) ≈ 0.7468241328, so the error is about -6×10⁻⁸, as the h²/12 error term predicts. The template version inlines the lambda and allocates nothing. <code>std::function</code> is type-erased and calls indirectly, and may allocate. Use the template in the hot loop; use <code>std::function</code> at a configuration boundary such as stored callbacks or plug-in models.<br><b>Interview trap:</b> passing a lambda to a <code>const std::function&amp;</code> parameter builds a temporary <code>std::function</code> at every call, so doing it inside a loop turns one conversion into one per iteration.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_vp_core",
+   "lambdas",
+   "std_function",
+   "templates",
+   "performance"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does <code>quote</code> return for a missing key, and what happens when <code>value()</code> is called on it? Predict each printed line.",
+  "back": "<pre><code>#include &lt;iostream&gt;\n#include &lt;map&gt;\n#include &lt;optional&gt;\n#include &lt;string&gt;\n\nstd::optional&lt;double&gt; quote(const std::map&lt;std::string, double&gt;&amp; book, const std::string&amp; id) {\n    auto it = book.find(id);\n    if (it == book.end()) return std::nullopt;\n    return it-&gt;second;\n}\n\nint main() {\n    std::map&lt;std::string, double&gt; book{{\"BOND_A\", 99.25}};\n    auto a = quote(book, \"BOND_A\");\n    auto b = quote(book, \"BOND_B\");\n    std::cout &lt;&lt; a.value_or(-1.0) &lt;&lt; ' ' &lt;&lt; b.value_or(-1.0) &lt;&lt; '\\n';\n    std::cout &lt;&lt; (b ? \"has value\" : \"empty\") &lt;&lt; '\\n';\n    try {\n        std::cout &lt;&lt; b.value() &lt;&lt; '\\n';\n    } catch (const std::bad_optional_access&amp; e) {\n        std::cout &lt;&lt; \"value() threw: \" &lt;&lt; e.what() &lt;&lt; '\\n';\n    }\n}</code></pre>Output:<pre><code>99.25 -1\nempty\nvalue() threw: bad optional access</code></pre><b>Answer.</b> <code>std::optional&lt;double&gt;</code> models 'a double or nothing' without a sentinel. <code>value_or</code> supplies a fallback; <code>value()</code> throws <code>std::bad_optional_access</code>; <code>*opt</code> on an empty optional is undefined behaviour.<br><b>Interview trap:</b> returning -1 as 'no quote' is a sentinel that becomes a real price the first time someone sums or compares. Use optional and make the empty path explicit at the call site.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_foundation",
+   "optional",
+   "types",
+   "errors"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Price the DV01 of a mixed book of a bond, a swap and a cash position with <code>std::variant</code> and <code>std::visit</code>. What does the program print?",
+  "back": "<pre><code>#include &lt;iostream&gt;\n#include &lt;variant&gt;\n#include &lt;vector&gt;\n\nstruct Bond { double face; double mod_dur; };      // DV01 = face * mod_dur * 1e-4\nstruct Swap { double notional; double annuity; };  // DV01 = notional * annuity * 1e-4\nstruct Cash { double amount; };                    // no rate sensitivity\n\ntemplate &lt;class... Ts&gt; struct overloaded : Ts... { using Ts::operator()...; };\ntemplate &lt;class... Ts&gt; overloaded(Ts...) -&gt; overloaded&lt;Ts...&gt;;\n\nusing Position = std::variant&lt;Bond, Swap, Cash&gt;;\n\ndouble dv01(const Position&amp; p) {\n    return std::visit(overloaded{\n        [](const Bond&amp; b) { return b.face * b.mod_dur * 1e-4; },\n        [](const Swap&amp; s) { return s.notional * s.annuity * 1e-4; },\n        [](const Cash&amp;)   { return 0.0; },\n    }, p);\n}\n\nint main() {\n    std::vector&lt;Position&gt; book{Bond{10'000'000, 4.5}, Swap{50'000'000, 4.1}, Cash{1'000'000}};\n    double total = 0.0;\n    for (const auto&amp; p : book) total += dv01(p);\n    std::cout &lt;&lt; \"index of Swap: \" &lt;&lt; book[1].index() &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"total DV01 = \" &lt;&lt; total &lt;&lt; '\\n';\n    if (auto* s = std::get_if&lt;Swap&gt;(&amp;book[1])) std::cout &lt;&lt; \"swap notional \" &lt;&lt; s-&gt;notional &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"holds Bond? \" &lt;&lt; std::holds_alternative&lt;Bond&gt;(book[1]) &lt;&lt; '\\n';\n}</code></pre>Output:<pre><code>index of Swap: 1\ntotal DV01 = 25000\nswap notional 5e+07\nholds Bond? 0</code></pre><b>Answer.</b> A variant holds exactly one of its alternatives: a type-safe tagged union. <code>std::visit</code> calls the handler for the active alternative; the <code>overloaded</code> idiom (lambdas plus a deduction guide) gives one handler per alternative. Check: 10,000,000 × 4.5 × 1e-4 = 4,500 and 50,000,000 × 4.1 × 1e-4 = 20,500; total 25,000. <code>index()</code> is 1 because the swap is the second alternative. The default stream format printed the notional as 5e+07; use <code>std::fixed</code> for desk output.<br><b>Interview trap:</b> <code>index()</code> depends on declaration order, so reordering the alternatives silently changes any code that switches on indices. Prefer <code>std::visit</code> or <code>get_if</code>; <code>std::get</code> throws <code>std::bad_variant_access</code> on the wrong alternative.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_vp_core",
+   "variant",
+   "visit",
+   "types"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "For a type with a constructor, what is the difference between <code>v.push_back(Trade{...})</code> and <code>v.emplace_back(...)</code>? Predict the output.",
+  "back": "<pre><code>#include &lt;iostream&gt;\n#include &lt;string&gt;\n#include &lt;utility&gt;\n#include &lt;vector&gt;\n\nstruct Trade {\n    std::string id;\n    double qty;\n    Trade(std::string i, double q) : id(std::move(i)), qty(q) { std::cout &lt;&lt; \"ctor \" &lt;&lt; id &lt;&lt; '\\n'; }\n    Trade(const Trade&amp; o) : id(o.id), qty(o.qty) { std::cout &lt;&lt; \"copy \" &lt;&lt; id &lt;&lt; '\\n'; }\n    Trade(Trade&amp;&amp; o) noexcept : id(std::move(o.id)), qty(o.qty) { std::cout &lt;&lt; \"move\\n\"; }\n};\n\nint main() {\n    std::vector&lt;Trade&gt; v;\n    v.reserve(4);                      // no reallocation below, so no extra moves\n    std::cout &lt;&lt; \"push_back:\\n\";\n    v.push_back(Trade{\"T1\", 5.0});     // builds a temporary, then moves it in\n    std::cout &lt;&lt; \"emplace_back:\\n\";\n    v.emplace_back(\"T2\", 7.0);         // constructs in place from the arguments\n    std::cout &lt;&lt; \"size=\" &lt;&lt; v.size() &lt;&lt; '\\n';\n}</code></pre>Output:<pre><code>push_back:\nctor T1\nmove\nemplace_back:\nctor T2\nsize=2</code></pre><b>Answer.</b> <code>push_back</code> takes a <code>T&amp;&amp;</code>, so the caller builds a temporary and the vector moves it in: construct, then move. <code>emplace_back</code> forwards the arguments and constructs the element in the vector's storage: one construction, no move. The output shows ctor then move for push_back, and a single ctor for emplace_back.<br><b>Interview trap:</b> emplace does not help if you already hold an object; it then copies. And a vector moves elements on growth only when the move constructor is <code>noexcept</code>; otherwise it copies, which is why <code>reserve</code> and a <code>noexcept</code> move both matter.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_vp_core",
+   "vector",
+   "emplace",
+   "move_semantics"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the difference between <code>reserve(n)</code> and <code>resize(n)</code> on a vector? What do the printed values show?",
+  "back": "<pre><code>#include &lt;iostream&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::vector&lt;double&gt; a;\n    a.reserve(3);                      // capacity only\n    std::cout &lt;&lt; \"reserve: size=\" &lt;&lt; a.size() &lt;&lt; \" capacity&gt;=3: \" &lt;&lt; (a.capacity() &gt;= 3) &lt;&lt; '\\n';\n    a.push_back(1.5);\n    std::cout &lt;&lt; \"after push: size=\" &lt;&lt; a.size() &lt;&lt; \" a[0]=\" &lt;&lt; a[0] &lt;&lt; '\\n';\n    std::vector&lt;double&gt; b;\n    b.resize(3);                       // size 3, three zeros\n    b.push_back(2.5);\n    std::cout &lt;&lt; \"resize: size=\" &lt;&lt; b.size() &lt;&lt; \" b[0]=\" &lt;&lt; b[0] &lt;&lt; \" b[3]=\" &lt;&lt; b[3] &lt;&lt; '\\n';\n}</code></pre>Output:<pre><code>reserve: size=0 capacity&gt;=3: 1\nafter push: size=1 a[0]=1.5\nresize: size=4 b[0]=0 b[3]=2.5</code></pre><b>Answer.</b> <code>reserve</code> changes capacity only; size stays 0. <code>resize</code> changes size and value-initialises the new elements to 0. After <code>resize(3)</code> and <code>push_back(2.5)</code>, the vector holds three zeros followed by 2.5, which is why <code>b[3]</code> is 2.5.<br><b>Interview trap:</b> the classic bug is to reserve and then index the vector as if it had elements. That is the next card.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_foundation",
+   "vector",
+   "reserve",
+   "resize"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with this code? State the assertion that <code>-D_GLIBCXX_ASSERTIONS</code> reports and the fix.",
+  "back": "<pre><code>#include &lt;iostream&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::vector&lt;double&gt; marks;\n    marks.reserve(3);            // capacity 3, size 0\n    marks[0] = 1.5;              // BUG: operator[] needs size &gt; 0, not capacity\n    std::cout &lt;&lt; marks[0] &lt;&lt; '\\n';\n}</code></pre><b>Reported:</b> <code>Assertion '__n &lt; this-&gt;size()' failed</code><br><b>Answer.</b> <code>reserve(3)</code> allocates capacity but leaves size at 0, and <code>operator[]</code> requires an index below size. Writing <code>marks[0]</code> is undefined behaviour; without the assertion it may appear to work. Fix: <code>push_back(1.5)</code>, or construct with <code>std::vector&lt;double&gt; marks(3)</code>, or <code>resize(3)</code>.<br><b>Interview trap:</b> Python has no separate capacity, so this bug has no direct analogue. In C++ capacity is an allocation detail; size is what indexing sees.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_vp_core",
+   "vector",
+   "reserve",
+   "bugs"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "<code>std::optional&lt;T&gt;</code> stores the value {{c1::inline, with no heap allocation}}. <code>value()</code> throws {{c2::std::bad_optional_access}} on an empty optional, and <code>value_or(x)</code> returns {{c3::x}} in that case.",
+  "back": "<b>Extra:</b> <code>*opt</code> on an empty optional is undefined behaviour, not an exception.<br><b>Interview trap:</b> <code>if (opt)</code> followed by <code>*opt</code> is fine; <code>*opt</code> without the check is undefined behaviour, which the compiler will not flag.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_foundation",
+   "optional",
+   "types"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does <code>std::remove</code> do to a vector, what does the erase-remove idiom add, and what is the C++20 replacement? Predict the printed sizes.",
+  "back": "<pre><code>#include &lt;algorithm&gt;\n#include &lt;iostream&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::vector&lt;int&gt; v{1, -1, 2, -1, 3};\n    std::vector&lt;int&gt; r = v;\n    auto new_end = std::remove(r.begin(), r.end(), -1);   // shifts survivors, size unchanged\n    std::cout &lt;&lt; \"after remove alone: size=\" &lt;&lt; r.size() &lt;&lt; '\\n';\n    r.erase(new_end, r.end());                             // erase-remove idiom\n    std::vector&lt;int&gt; b = v;\n    std::erase(b, -1);                                     // C++20 free function\n    std::vector&lt;int&gt; c = v;\n    std::erase_if(c, [](int x) { return x &lt; 0; });\n    std::cout &lt;&lt; \"idiom: size=\" &lt;&lt; r.size() &lt;&lt; \" std::erase: size=\" &lt;&lt; b.size()\n              &lt;&lt; \" erase_if: size=\" &lt;&lt; c.size() &lt;&lt; '\\n';\n    for (int x : c) std::cout &lt;&lt; x &lt;&lt; ' ';\n    std::cout &lt;&lt; '\\n';\n}</code></pre>Output:<pre><code>after remove alone: size=5\nidiom: size=3 std::erase: size=3 erase_if: size=3\n1 2 3</code></pre><b>Answer.</b> <code>std::remove</code> shifts the kept elements forward and returns the new logical end. It does not change the size, so the tail still holds moved-from values. <code>v.erase(new_end, v.end())</code> removes the tail. C++20 provides <code>std::erase(v, value)</code> and <code>std::erase_if(v, pred)</code>, which do both steps.<br><b>Interview trap:</b> never read past the new end after <code>std::remove</code>; those elements are valid but unspecified.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_foundation",
+   "vector",
+   "erase",
+   "algorithms"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why take <code>std::span&lt;const double&gt;</code> rather than <code>const std::vector&lt;double&gt;&amp;</code>? Predict the four printed values.",
+  "back": "<pre><code>#include &lt;iostream&gt;\n#include &lt;numeric&gt;\n#include &lt;span&gt;\n#include &lt;vector&gt;\n\ndouble total(std::span&lt;const double&gt; xs) {\n    return std::accumulate(xs.begin(), xs.end(), 0.0);\n}\n\nint main() {\n    std::vector&lt;double&gt; pnl{1.0, -2.0, 3.5, 0.5, 4.0};\n    double buckets[3] = {10.0, 20.0, 30.0};\n    std::cout &lt;&lt; total(pnl) &lt;&lt; '\\n';                                          // no copy\n    std::cout &lt;&lt; total(std::span&lt;const double&gt;(pnl).subspan(1, 3)) &lt;&lt; '\\n';   // view of 3 elements\n    std::cout &lt;&lt; total(buckets) &lt;&lt; '\\n';                                      // C array works too\n    std::cout &lt;&lt; \"size=\" &lt;&lt; std::span&lt;const double&gt;(pnl).size() &lt;&lt; '\\n';\n}</code></pre>Output:<pre><code>7\n2\n60\nsize=5</code></pre><b>Answer.</b> A span is a non-owning pointer plus a size. It accepts a vector, a C array or a subrange with no copy and no allocation. <code>subspan(1, 3)</code> is -2, 3.5, 0.5, which sums to 2.<br><b>Interview trap:</b> a span does not extend the lifetime of what it views. The next card shows where that bites.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_foundation",
+   "span",
+   "views",
+   "types"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with this program? Compile with <code>-fsanitize=address</code> and state the report. Why does the compiler accept it?",
+  "back": "<pre><code>#include &lt;iostream&gt;\n#include &lt;numeric&gt;\n#include &lt;span&gt;\n#include &lt;vector&gt;\n\ndouble total(std::span&lt;const double&gt; xs) {\n    return std::accumulate(xs.begin(), xs.end(), 0.0);\n}\n\nstd::vector&lt;double&gt; make_pnl() { return {1.0, -2.0, 3.5}; }\n\nint main() {\n    std::span&lt;const double&gt; view = make_pnl();   // BUG: the vector is destroyed at the end of this line\n    std::cout &lt;&lt; total(view) &lt;&lt; '\\n';\n}</code></pre><b>Actual report:</b> <code>AddressSanitizer: heap-use-after-free</code><br><b>Answer.</b> <code>make_pnl()</code> returns a temporary vector, which is destroyed at the end of the declaration. The element type is <code>const double</code>, and the C++20 span constructor accepts rvalue ranges for const element types, so the view points at freed memory without any compile error. Fix: keep the vector in a named variable for the span's lifetime.<br><b>Interview trap:</b> the same bug appears with <code>std::string_view s = std::string(...)</code>, and with functions returning a span of a local vector.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_vp_core",
+   "span",
+   "lifetime",
+   "dangling"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Predict the three printed lines. Which conversions truncate and which promote?",
+  "back": "<pre><code>#include &lt;chrono&gt;\n#include &lt;iostream&gt;\n\nusing namespace std::chrono;\nusing namespace std::chrono_literals;\n\nint main() {\n    seconds t{90};\n    minutes m = duration_cast&lt;minutes&gt;(t);      // explicit cast: 1.5 min truncates to 1\n    milliseconds ms = t + 250ms;                 // common type of seconds and milliseconds\n    std::cout &lt;&lt; m.count() &lt;&lt; \" min, \" &lt;&lt; ms.count() &lt;&lt; \" ms\\n\";\n    duration&lt;double, std::milli&gt; d = 1.5s;      // floating-point duration keeps the fraction\n    std::cout &lt;&lt; d.count() &lt;&lt; \" ms\\n\";\n    std::cout &lt;&lt; duration_cast&lt;seconds&gt;(2500ms).count() &lt;&lt; \" s\\n\";\n}</code></pre>Output:<pre><code>1 min, 90250 ms\n1500 ms\n2 s</code></pre><b>Answer.</b> <code>duration_cast</code> to an integer duration truncates toward zero: 90 s to minutes is 1. Adding seconds to milliseconds promotes to the common type, milliseconds. The <code>1.5s</code> literal is a floating-point duration, so converting it to a floating millisecond duration keeps the fraction: 1500 ms.<br><b>Interview trap:</b> measure elapsed time with <code>std::chrono::steady_clock</code>; <code>system_clock</code> can jump when the wall clock is adjusted.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_foundation",
+   "chrono",
+   "duration",
+   "conversions"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why does this not compile? State the compiler error and show an explicit conversion that does.",
+  "back": "<pre><code>#include &lt;chrono&gt;\n\nusing namespace std::chrono;\nusing namespace std::chrono_literals;\n\nint main() {\n    seconds s = 1.5s;    // does not compile: a floating-point duration would silently lose 0.5 s\n    return static_cast&lt;int&gt;(s.count());\n}</code></pre><b>Actual compiler error:</b> <code>conversion from ‘duration&lt;long double&gt;’ to non-scalar type ‘duration&lt;long int&gt;’ requested</code><br><b>Answer.</b> A floating-point duration does not convert implicitly to an integer tick count, because the fraction would be lost silently; the compiler forces an explicit cast. Fixed version:<pre><code>#include &lt;chrono&gt;\n#include &lt;iostream&gt;\n\nusing namespace std::chrono;\nusing namespace std::chrono_literals;\n\nint main() {\n    seconds s = duration_cast&lt;seconds&gt;(1.5s);            // explicit: truncates 1.5 s to 1 s\n    milliseconds ms = duration_cast&lt;milliseconds&gt;(1.5s);\n    std::cout &lt;&lt; s.count() &lt;&lt; \" s, \" &lt;&lt; ms.count() &lt;&lt; \" ms\\n\";\n}</code></pre>Output:<pre><code>1 s, 1500 ms</code></pre><b>Interview trap:</b> <code>duration_cast</code> truncates. For rounding use <code>std::chrono::round</code> (C++17) or a finer unit; a timestamp truncated to whole seconds is a silent error.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_vp_core",
+   "chrono",
+   "conversions",
+   "compile_errors"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Predict the output. Are two <code>mt19937_64</code> engines with the same seed reproducible, and what does a default-constructed <code>mt19937</code> produce?",
+  "back": "<pre><code>#include &lt;iostream&gt;\n#include &lt;random&gt;\n\nint main() {\n    std::mt19937_64 g1(42), g2(42), g3(43);\n    std::cout &lt;&lt; \"g1 first: \" &lt;&lt; g1() &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"g2 first: \" &lt;&lt; g2() &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"g3 first: \" &lt;&lt; g3() &lt;&lt; '\\n';\n    std::mt19937 d;                     // default-constructed: fixed seed 5489, not random\n    std::cout &lt;&lt; \"default mt19937 first: \" &lt;&lt; d() &lt;&lt; '\\n';\n}</code></pre>Output:<pre><code>g1 first: 13930160852258120406\ng2 first: 13930160852258120406\ng3 first: 517903087452778646\ndefault mt19937 first: 3499211612</code></pre><b>Answer.</b> The Mersenne Twister engine is deterministic: the same seed gives the same sequence on any conforming implementation. The first two lines match and the third differs. A default-constructed <code>mt19937</code> uses the fixed seed 5489, so its first output is the same on every run.<br><b>Interview trap:</b> a default-constructed engine is not random. A simulation that forgets to seed gives the same paths every run, which looks like stability. Seed from <code>std::random_device</code> in production and log the seed; do not assume <code>std::random_device</code> is non-deterministic on every platform.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_foundation",
+   "random",
+   "mt19937",
+   "seeding"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A regression test expects the first three normal draws from seed 2026 to be fixed. What does this print with g++ and libstdc++, and what could make it differ on another machine?",
+  "back": "<pre><code>#include &lt;iostream&gt;\n#include &lt;random&gt;\n\nint main() {\n    std::mt19937_64 gen(2026);\n    std::normal_distribution&lt;double&gt; z(0.0, 1.0);\n    for (int i = 0; i &lt; 3; ++i) std::cout &lt;&lt; z(gen) &lt;&lt; '\\n';\n}</code></pre>Output:<pre><code>1.10955\n-1.31188\n1.6161</code></pre><b>Answer.</b> The engine's output is exactly specified by the standard, but <code>std::normal_distribution</code> (and the uniform distributions) are not: their algorithms are implementation-defined, so libstdc++, libc++ and MSVC may produce different sequences from the same engine state. The values printed are libstdc++ values.<br><b>Interview trap:</b> a P&amp;L or VaR regression that passes on Linux can drift on a Windows build for this reason alone. Either pin the standard library, or generate the normal from the engine's uniform output yourself (Box–Muller or inverse CDF) so the transform lives in your code.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_vp_core",
+   "random",
+   "normal_distribution",
+   "reproducibility"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write a GBM Monte Carlo price for a European call (S0 = K = 100, r = 3%, σ = 20%, T = 1, 200,000 paths) and check it against Black–Scholes. What is printed?",
+  "back": "<pre><code>#include &lt;algorithm&gt;\n#include &lt;cmath&gt;\n#include &lt;cstdio&gt;\n#include &lt;random&gt;\n\nint main() {\n    const double S0 = 100.0, K = 100.0, r = 0.03, sigma = 0.20, T = 1.0;\n    const int N = 200000;\n    std::mt19937_64 gen(2026);                        // one engine, reused for every path\n    std::normal_distribution&lt;double&gt; z(0.0, 1.0);\n    double sum = 0.0, sumsq = 0.0;\n    for (int i = 0; i &lt; N; ++i) {\n        double ST = S0 * std::exp((r - 0.5 * sigma * sigma) * T + sigma * std::sqrt(T) * z(gen));\n        double payoff = std::exp(-r * T) * std::max(ST - K, 0.0);\n        sum += payoff;\n        sumsq += payoff * payoff;\n    }\n    double mean = sum / N;\n    double var = (sumsq / N - mean * mean) * N / (N - 1);   // unbiased sample variance\n    double se = std::sqrt(var / N);\n    auto Phi = [](double x) { return 0.5 * std::erfc(-x / std::sqrt(2.0)); };\n    double d1 = (std::log(S0 / K) + (r + 0.5 * sigma * sigma) * T) / (sigma * std::sqrt(T));\n    double d2 = d1 - sigma * std::sqrt(T);\n    double bs = S0 * Phi(d1) - K * std::exp(-r * T) * Phi(d2);\n    std::printf(\"MC  = %.4f +/- %.4f (1 s.e.)\\n\", mean, se);\n    std::printf(\"BS  = %.4f\\n\", bs);\n}</code></pre>Output:<pre><code>MC  = 9.3705 +/- 0.0314 (1 s.e.)\nBS  = 9.4134</code></pre><b>Answer.</b> Simulate \\( S_T = S_0\\exp\\big((r-\\tfrac12\\sigma^2)T+\\sigma\\sqrt{T}\\,Z\\big) \\), average \\( e^{-rT}(S_T-K)^+ \\), and report the sample standard error. Black–Scholes gives 9.4134 and the MC estimate is 9.3705 ± 0.0314; the 0.043 gap is about 1.4 standard errors, which is consistent. <br><b>Interview trap:</b> the error scales as \\( 1/\\sqrt{N} \\), so each extra decimal place costs 100 times the paths. Quote the standard error with every MC price; a price without an error bar is not a result.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_vp_core",
+   "monte_carlo",
+   "gbm",
+   "black_scholes"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with this Monte Carlo loop? Predict the printed standard error.",
+  "back": "<pre><code>#include &lt;algorithm&gt;\n#include &lt;cmath&gt;\n#include &lt;cstdio&gt;\n#include &lt;random&gt;\n\nint main() {\n    const double S0 = 100.0, K = 100.0, r = 0.03, sigma = 0.20, T = 1.0;\n    const int N = 10000;\n    double sum = 0.0, sumsq = 0.0;\n    for (int i = 0; i &lt; N; ++i) {\n        std::mt19937_64 gen(12345);                   // BUG: re-seeded on every path\n        std::normal_distribution&lt;double&gt; z(0.0, 1.0);\n        double ST = S0 * std::exp((r - 0.5 * sigma * sigma) * T + sigma * std::sqrt(T) * z(gen));\n        double payoff = std::exp(-r * T) * std::max(ST - K, 0.0);\n        sum += payoff;\n        sumsq += payoff * payoff;\n    }\n    double mean = sum / N;\n    double se = std::sqrt(std::max(0.0, sumsq / N - mean * mean) / N);\n    std::printf(\"estimate = %.4f, s.e. = %.6f\\n\", mean, se);\n}</code></pre>Output:<pre><code>estimate = 0.0000, s.e. = 0.000000</code></pre><b>Answer.</b> The engine is constructed inside the loop with a fixed seed, so every path draws the same Z. All payoffs are identical, the sample variance is zero, and the standard error is zero. The estimate of 0 is only because that one draw is out of the money; another seed would give a different estimate with the same zero error bar. Fix: construct the engine once, outside the loop.<br><b>Interview trap:</b> a standard error of exactly zero on a path-dependent estimate is always a bug, not precision. Assert that s.e. is positive in tests.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_vp_core",
+   "monte_carlo",
+   "random",
+   "bugs"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "<code>std::mt19937</code> produces {{c1::32-bit}} outputs and <code>std::mt19937_64</code> produces {{c2::64-bit}} outputs; the Mersenne Twister period is {{c3::2<sup>19937</sup> - 1}}.",
+  "back": "<b>Extra:</b> the state is 624 words for mt19937 and 312 words for mt19937_64. Copying an engine copies its state, so the copy replays the same sequence.<br><b>Interview trap:</b> a parallel Monte Carlo that copies one engine to every thread gives identical, perfectly correlated paths. Give each thread its own independent seed or stream.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_foundation",
+   "random",
+   "mt19937",
+   "parallel"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Predict the output. Why does changing <code>pnl[0]</code> after the view is built change the result?",
+  "back": "<pre><code>#include &lt;iostream&gt;\n#include &lt;ranges&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::vector&lt;double&gt; pnl{-3.0, 2.0, -1.5, 4.0, 0.5};\n    auto losses = pnl | std::views::filter([](double x) { return x &lt; 0; })\n                      | std::views::transform([](double x) { return -x; });\n    pnl[0] = -10.0;                      // views are lazy: the change is visible\n    for (double l : losses) std::cout &lt;&lt; l &lt;&lt; ' ';\n    std::cout &lt;&lt; \"\\ncount=\" &lt;&lt; std::ranges::distance(losses) &lt;&lt; '\\n';\n}</code></pre>Output:<pre><code>10 1.5 \ncount=2</code></pre><b>Answer.</b> Range views are lazy: <code>filter</code> and <code>transform</code> refer to the source and compute each element when iterated. Nothing is copied when the view is built. After <code>pnl[0] = -10</code> the first loss is 10; the losses are 10 and 1.5, a count of 2.<br><b>Interview trap:</b> <code>ranges::distance</code> on a filtered view walks the whole range, and each pass re-runs the predicate. Iterating a view repeatedly in a hot loop costs the predicate times the number of passes.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_vp_core",
+   "ranges",
+   "views",
+   "lazy"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the type of <code>it</code> here, and why is that useful? Predict the output.",
+  "back": "<pre><code>#include &lt;algorithm&gt;\n#include &lt;iostream&gt;\n#include &lt;ranges&gt;\n#include &lt;type_traits&gt;\n#include &lt;vector&gt;\n\nstd::vector&lt;int&gt; make() { return {1, 2, 3, 4}; }\n\nint main() {\n    auto it = std::ranges::find(make(), 3);     // the temporary dies, so no iterator is returned\n    std::cout &lt;&lt; \"result is ranges::dangling: \"\n              &lt;&lt; std::is_same_v&lt;decltype(it), std::ranges::dangling&gt; &lt;&lt; '\\n';\n    auto v = std::vector{1, 2, 3, 4};\n    auto ok = std::ranges::find(v, 3);          // lvalue: a real iterator\n    std::cout &lt;&lt; *ok &lt;&lt; '\\n';\n}</code></pre>Output:<pre><code>result is ranges::dangling: 1\n3</code></pre><b>Answer.</b> The range argument is a temporary, so the algorithm returns <code>std::ranges::dangling</code> instead of an iterator into a vector that dies at the end of the full expression. Dereferencing it does not compile. The lvalue version returns a real iterator.<br><b>Interview trap:</b> <code>ranges::dangling</code> guards only the return value of an algorithm. An iterator copied out of a container variable that is destroyed first is still a use-after-free.",
+  "tags": [
+   "cpp",
+   "m5_stl",
+   "lvl_vp_core",
+   "ranges",
+   "lifetime",
+   "iterators"
+  ]
+ }
+]
