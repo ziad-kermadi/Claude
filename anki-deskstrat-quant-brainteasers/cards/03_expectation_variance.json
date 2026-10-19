@@ -295,7 +295,7 @@
  {
   "type": "basic",
   "front": "Ten equally likely coupon types, drawn with replacement. Find the expected number of draws to collect 4 distinct types.",
-  "back": "<b>Answer:</b> \\(\\frac{1207}{252}\\approx 4.7897\\).<br><b>Structure:</b> memorylessness: each new distinct type is a geometric wait, and waits add by linearity.<br><b>Key move:</b> After \\(j\\) distinct types, the wait is geometric with success \\(\\frac{10-j}{10}\\), mean \\(\\frac{10}{10-j}\\). Sum over \\(j=0,1,2,3\\).<br><b>Working:</b> \\(1+\\frac{10}{9}+\\frac{10}{8}+\\frac{10}{7}=\\frac{1207}{252}\\).<br><b>Sanity check:</b> Collecting all 10 types gives \\(10H_{10}\\approx 29.29\\), so collecting 4 is much shorter.<br><b>Transfer:</b> Collect 3 of 10 equals \\(\frac{121}{36}\\).",
+  "back": "<b>Answer:</b> \\(\\frac{1207}{252}\\approx 4.7897\\).<br><b>Structure:</b> memorylessness: each new distinct type is a geometric wait, and waits add by linearity.<br><b>Key move:</b> After \\(j\\) distinct types, the wait is geometric with success \\(\\frac{10-j}{10}\\), mean \\(\\frac{10}{10-j}\\). Sum over \\(j=0,1,2,3\\).<br><b>Working:</b> \\(1+\\frac{10}{9}+\\frac{10}{8}+\\frac{10}{7}=\\frac{1207}{252}\\).<br><b>Sanity check:</b> Collecting all 10 types gives \\(10H_{10}\\approx 29.29\\), so collecting 4 is much shorter.<br><b>Transfer:</b> Collect 3 of 10 equals \\(\\frac{121}{36}\\).",
   "tags": [
    "s_memorylessness",
    "s_linearity_expectation",
@@ -318,7 +318,7 @@
  {
   "type": "basic",
   "front": "A stick of length 1 is broken at two independent uniform points into three pieces. Find the expected length of the shortest piece and of the longest piece.",
-  "back": "<b>Answer:</b> Shortest: \\(\\frac19\\approx 0.1111\\). Longest: \\(\\frac{11}{18}\\approx 0.6111\\).<br><b>Structure:</b> order statistics; the pieces are uniform spacings (Dirichlet(1,1,1)).<br><b>Key move:</b> For spacings, \\(P(\\min>t)=(1-3t)^2\\) on \\(0\\le t\\le\\frac13\\). For the longest, \\(E[\\max]=\\frac{1}{3}\\left(1+\\frac12+\\frac13\\right)\\).<br><b>Working:</b> \\(E[\\min]=\\int_0^{1/3}(1-3t)^2dt=\\frac19\\). Then \\(E[\\text{middle}]=1-\\frac19-\\frac{11}{18}=\\frac{5}{18}\\).<br><b>Sanity check:</b> Monte Carlo (\\(2\\times10^5\\) trials): shortest 0.1115, longest 0.6106.<br><b>Transfer:</b> Expected longest piece of \\(n\\) cuts is \\(\frac{H_{n+1}}{n+1}\\).",
+  "back": "<b>Answer:</b> Shortest: \\(\\frac19\\approx 0.1111\\). Longest: \\(\\frac{11}{18}\\approx 0.6111\\).<br><b>Structure:</b> order statistics; the pieces are uniform spacings (Dirichlet(1,1,1)).<br><b>Key move:</b> For spacings, \\(P(\\min>t)=(1-3t)^2\\) on \\(0\\le t\\le\\frac13\\). For the longest, \\(E[\\max]=\\frac{1}{3}\\left(1+\\frac12+\\frac13\\right)\\).<br><b>Working:</b> \\(E[\\min]=\\int_0^{1/3}(1-3t)^2dt=\\frac19\\). Then \\(E[\\text{middle}]=1-\\frac19-\\frac{11}{18}=\\frac{5}{18}\\).<br><b>Sanity check:</b> Monte Carlo (\\(2\\times10^5\\) trials): shortest 0.1115, longest 0.6106.<br><b>Transfer:</b> Expected longest piece of \\(n\\) cuts is \\(\\frac{H_{n+1}}{n+1}\\).",
   "tags": [
    "s_order_statistics",
    "s_geometric_probability",
@@ -330,7 +330,7 @@
  {
   "type": "basic",
   "front": "A stick of length 1 is broken at two independent uniform points into three pieces. Find the probability the three pieces can form a triangle.",
-  "back": "<b>Answer:</b> \\(\\frac14\\).<br><b>Structure:</b> geometric probability with complement: the three events 'piece \\(i\\ge\frac12\\)' are disjoint.<br><b>Key move:</b> A triangle needs every piece below \\(\\frac12\\). At most one piece can exceed \\(\\frac12\\), so \\(P(\\text{no triangle})=3\\cdot P(L_1\\ge\\frac12)\\). Each has probability \\((\\frac12)^2=\\frac14\\).<br><b>Working:</b> \\(1-3\\cdot\\frac14=\\frac14\\approx 0.25\\). Monte Carlo \\(0.2522\\).<br><b>Sanity check:</b> The 'at most one piece above half' argument is the same for any two i.i.d. uniform cuts. Only the threshold changes with more pieces.<br><b>Transfer:</b> Probability that a random point split into 3 pieces forms a triangle.",
+  "back": "<b>Answer:</b> \\(\\frac14\\).<br><b>Structure:</b> geometric probability with complement: the three events 'piece \\(i\\ge\\frac12\\)' are disjoint.<br><b>Key move:</b> A triangle needs every piece below \\(\\frac12\\). At most one piece can exceed \\(\\frac12\\), so \\(P(\\text{no triangle})=3\\cdot P(L_1\\ge\\frac12)\\). Each has probability \\((\\frac12)^2=\\frac14\\).<br><b>Working:</b> \\(1-3\\cdot\\frac14=\\frac14\\approx 0.25\\). Monte Carlo \\(0.2522\\).<br><b>Sanity check:</b> The 'at most one piece above half' argument is the same for any two i.i.d. uniform cuts. Only the threshold changes with more pieces.<br><b>Transfer:</b> Probability that a random point split into 3 pieces forms a triangle.",
   "tags": [
    "s_geometric_probability",
    "s_complement",
@@ -354,7 +354,7 @@
  {
   "type": "basic",
   "front": "Three fair dice are rolled. Find the expected maximum.",
-  "back": "<b>Answer:</b> \\(\\frac{119}{24}\\approx 4.9583\\).<br><b>Structure:</b> tail-sum formula with order statistics.<br><b>Key move:</b> \\(E[M]=\\sum_{k=1}^6\\left(1-\\left(\\tfrac{k-1}{6}\\right)^3\\right)\\).<br><b>Working:</b> \\(6-\\frac{0+1+8+27+64+125}{216}=6-\\frac{225}{216}=\\frac{119}{24}\\). Monte Carlo \\(4.963\\).<br><b>Sanity check:</b> Two dice: \\(\frac{161}{36}\u0007pprox 4.472\\). The extra die adds about half a point.<br><b>Transfer:</b> Expected minimum of three dice (use \\(P(\\min\\ge k)=((7-k)/6)^3\\)).",
+  "back": "<b>Answer:</b> \\(\\frac{119}{24}\\approx 4.9583\\).<br><b>Structure:</b> tail-sum formula with order statistics.<br><b>Key move:</b> \\(E[M]=\\sum_{k=1}^6\\left(1-\\left(\\tfrac{k-1}{6}\\right)^3\\right)\\).<br><b>Working:</b> \\(6-\\frac{0+1+8+27+64+125}{216}=6-\\frac{225}{216}=\\frac{119}{24}\\). Monte Carlo \\(4.963\\).<br><b>Sanity check:</b> Two dice: \\(\\frac{161}{36}\\approx 4.472\\). The extra die adds about half a point.<br><b>Transfer:</b> Expected minimum of three dice (use \\(P(\\min\\ge k)=((7-k)/6)^3\\)).",
   "tags": [
    "s_tail_sum",
    "s_order_statistics",
@@ -414,7 +414,7 @@
  {
   "type": "basic",
   "front": "Choose \\(p\\) uniformly from \\(\\{0.1,0.9\\}\\). Given \\(p\\), flip a \\(p\\)-coin five times and let \\(X\\) be the number of heads. Find \\(\\mathrm{Var}(X)\\).",
-  "back": "<b>Answer:</b> \\(\\frac{89}{20}=4.45\\).<br><b>Structure:</b> law of total variance: within-group noise plus between-group spread.<br><b>Key move:</b> \\(E[\\mathrm{Var}(X\\mid p)]=5E[p(1-p)]=5\\cdot0.09=0.45\\). \\(\\mathrm{Var}(E[X\\mid p])=25\\,\\mathrm{Var}(p)=25\\cdot0.16=4\\).<br><b>Working:</b> \\(0.45+4=4.45\\). Monte Carlo \\(4.4477\\).<br><b>Sanity check:</b> The between-group term dominates because \\(p\\) is far from \\(\frac12\\).<br><b>Transfer:</b> Same structure as the fair-versus-biased coin mixture (see recognise card).",
+  "back": "<b>Answer:</b> \\(\\frac{89}{20}=4.45\\).<br><b>Structure:</b> law of total variance: within-group noise plus between-group spread.<br><b>Key move:</b> \\(E[\\mathrm{Var}(X\\mid p)]=5E[p(1-p)]=5\\cdot0.09=0.45\\). \\(\\mathrm{Var}(E[X\\mid p])=25\\,\\mathrm{Var}(p)=25\\cdot0.16=4\\).<br><b>Working:</b> \\(0.45+4=4.45\\). Monte Carlo \\(4.4477\\).<br><b>Sanity check:</b> The between-group term dominates because \\(p\\) is far from \\(\\frac12\\).<br><b>Transfer:</b> Same structure as the fair-versus-biased coin mixture (see recognise card).",
   "tags": [
    "s_variance_decomposition",
    "s_conditional_expectation_tower",
@@ -461,7 +461,7 @@
  {
   "type": "basic",
   "front": "Ten rolls of a fair die. Let \\(N_1\\) and \\(N_2\\) be the counts of 1s and 2s. Find \\(\\mathrm{Cov}(N_1,N_2)\\) and \\(\\mathrm{Var}(N_1)\\).",
-  "back": "<b>Answer:</b> \\(\\mathrm{Cov}=-\\frac{5}{18}\\approx -0.2778\\); \\(\\mathrm{Var}(N_1)=\\frac{25}{18}\\approx1.3889\\).<br><b>Structure:</b> indicators over rolls; different values on the same roll are mutually exclusive.<br><b>Key move:</b> Rolls are independent, so cross-roll covariances are zero. For the same roll, \\(P(\\text{1 and 2})=0\\), so \\(\\mathrm{Cov}=0-\\frac16\\cdot\\frac16\\). Sum over 10 rolls.<br><b>Working:</b> \\(10\\cdot\\left(-\\frac1{36}\\right)=-\\frac5{18}\\). \\(\\mathrm{Var}(N_1)=10\\cdot\\frac16\\cdot\\frac56=\\frac{25}{18}\\). Monte Carlo gives \\(-0.2765\\).<br><b>Sanity check:</b> Negative covariance is expected: a larger count of 1s leaves fewer rolls for 2s.<br><b>Transfer:</b> Multinomial covariances are \\(-np_ip_j\\) for \\(i\ne j\\) (general form).",
+  "back": "<b>Answer:</b> \\(\\mathrm{Cov}=-\\frac{5}{18}\\approx -0.2778\\); \\(\\mathrm{Var}(N_1)=\\frac{25}{18}\\approx1.3889\\).<br><b>Structure:</b> indicators over rolls; different values on the same roll are mutually exclusive.<br><b>Key move:</b> Rolls are independent, so cross-roll covariances are zero. For the same roll, \\(P(\\text{1 and 2})=0\\), so \\(\\mathrm{Cov}=0-\\frac16\\cdot\\frac16\\). Sum over 10 rolls.<br><b>Working:</b> \\(10\\cdot\\left(-\\frac1{36}\\right)=-\\frac5{18}\\). \\(\\mathrm{Var}(N_1)=10\\cdot\\frac16\\cdot\\frac56=\\frac{25}{18}\\). Monte Carlo gives \\(-0.2765\\).<br><b>Sanity check:</b> Negative covariance is expected: a larger count of 1s leaves fewer rolls for 2s.<br><b>Transfer:</b> Multinomial covariances are \\(-np_ip_j\\) for \\(i\\ne j\\) (general form).",
   "tags": [
    "s_indicators",
    "s_linearity_expectation",
