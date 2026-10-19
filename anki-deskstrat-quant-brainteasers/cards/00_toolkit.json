@@ -1,0 +1,891 @@
+[
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>symmetry</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> Exchangeable draws (iid); a question whose answer must be equal across relabelled items; \"which is most likely\" when the labels are interchangeable; ranking ties.<br><b>Move:</b> Show that a relabelling maps the problem to itself, so the relevant probabilities or expectations are equal. Then use one sum constraint (total probability 1, or a known total expectation) to fix the value.<br><b>Example:</b> Three iid U(0,1) draws: each is equally likely to be the middle one, so \\(E[\\text{middle}]=\\tfrac13 E[\\text{sum}]=\\tfrac12\\).<br><b>Fails when:</b> Labels differ in law or information: unequal rates, a first mover, or a conditioned label. Symmetry then holds only within the subgroup that is still symmetric.",
+  "tags": [
+   "s_symmetry",
+   "combinatorics",
+   "probability",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Toolkit (linearity of expectation): {{c1::\\(E\\left[\\sum_i X_i\\right]=\\sum_i E[X_i]\\)}} holds with no assumption on how the \\(X_i\\) depend on each other.",
+  "back": "<b>Triggers:</b> \"Expected number of\"; a count; a sum of many dependent indicators; no distribution given or needed.<br><b>Move:</b> Write \\(X=\\sum_i I_i\\) and use \\(E[X]=\\sum_i P(I_i=1)\\). Dependence between the \\(I_i\\) is irrelevant for the mean.<br><b>Example:</b> Expected fixed points of a random permutation of n items: each item has probability \\(1/n\\) of staying put, so \\(E=n\\cdot\\tfrac1n=1\\) for every n.<br><b>Fails when:</b> It gives no \\(P(X=0)\\) and no variance without covariances. It does not commute with nonlinear functions: \\(E[\\max]\\neq\\max E\\), \\(E[1/X]\\neq 1/E[X]\\).",
+  "tags": [
+   "s_linearity_expectation",
+   "expectation",
+   "combinatorics",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>indicators</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> A count of \"how many distinct / how many pairs / how many hits\"; a quantity you can write as a sum of 0/1 events.<br><b>Move:</b> Define one indicator per candidate event, compute each probability (often by symmetry), then sum. Use pairwise indicators only when you need a variance.<br><b>Example:</b> Six rolls of a fair die, expected number of distinct faces: \\(I_f=1\\) if face f appears; \\(P=1-(5/6)^6\\); total \\(6(1-(5/6)^6)=\\tfrac{31031}{7776}\\approx 3.99\\).<br><b>Fails when:</b> When you need the distribution or variance of the count, not its mean. Then you must compute \\(P(I_i=I_j=1)\\) and the covariances.",
+  "tags": [
+   "s_indicators",
+   "probability",
+   "dice",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>first-step conditioning</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> A process moves between states, has absorbing outcomes, and asks for a probability of hitting one outcome before another, or an expected time to absorption.<br><b>Move:</b> Condition on the first move. Write one equation per state, each expressing the value as an average of the values one step later, then solve the linear system.<br><b>Example:</b> Fair walk on {0,...,4} from 1: \\(h_1=\\tfrac12(h_0+h_2)\\), \\(h_2=\\tfrac12(h_1+h_3)\\), \\(h_3=\\tfrac12(h_2+h_4)\\), with \\(h_0=0,h_4=1\\). Solution \\(h_1=\\tfrac14\\).<br><b>Fails when:</b> When the state does not capture what matters. \"Two heads in a row\" needs a state for 'last flip was H'; a state of only the head count gives wrong equations.",
+  "tags": [
+   "s_first_step_conditioning",
+   "probability",
+   "random_walk",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>recursion</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> A size-n problem reduces to size n-1 (or n-2) plus a simple extra step; a count that depends on n in a way you can peel one element off.<br><b>Move:</b> Write a(n) in terms of smaller cases, fix the initial values, then solve or find the pattern and prove it.<br><b>Example:</b> Derangements: \\(D(n)=(n-1)\\big(D(n-1)+D(n-2)\\big)\\) with \\(D(1)=0,D(2)=1\\). Then \\(D(3)=2\\) and \\(D(4)=3\\cdot 3=9\\).<br><b>Fails when:</b> When the recurrence needs a hidden extra parameter (the last outcome, the current position). Then enlarge the state, which usually becomes a Markov chain.",
+  "tags": [
+   "s_recursion",
+   "combinatorics",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>Markov chains</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> The future depends only on the current state; long-run fractions of time; stationary distribution; a process with a finite set of states such as weather, queues or inventory.<br><b>Move:</b> Write the transition matrix P, solve \\(\\pi P=\\pi\\) with \\(\\sum\\pi_i=1\\). For expected hitting times, use first-step conditioning.<br><b>Example:</b> Two states: \\(0\\to1\\) with probability 0.3 and \\(1\\to0\\) with probability 0.1. Balance gives \\(\\pi_0\\cdot0.3=\\pi_1\\cdot0.1\\), so \\(\\pi_0=\\tfrac14\\).<br><b>Fails when:</b> When the history matters and you have not enlarged the state. Reducible or periodic chains: the stationary distribution may be non-unique, and the time-average is then the right object.",
+  "tags": [
+   "s_markov_chain",
+   "markov",
+   "random_walk",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>complement</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> \"At least one\", \"not all\", \"some\"; the event is a union of many overlapping cases, while \"none\" is one intersection.<br><b>Move:</b> \\(P(A)=1-P(A^c)\\). Compute the complement, which is often a single product or count.<br><b>Example:</b> At least one ace in 5 cards from 52 without replacement: \\(1-\\binom{48}{5}/\\binom{52}{5}=\\tfrac{18472}{54145}\\approx0.341\\).<br><b>Fails when:</b> When the complement is no simpler (\"exactly one\"), or when the complement is not a product: without replacement it is \\(\\binom{48}{5}/\\binom{52}{5}\\), not \\((48/52)^5\\).",
+  "tags": [
+   "s_complement",
+   "combinatorics",
+   "probability",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>bijection</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> A count is hard to see directly, but a natural map exists to a set with an easy count: binary strings, lattice paths, stars and bars.<br><b>Move:</b> Find a map that is one-to-one and onto. Count the target set and transfer the number back.<br><b>Example:</b> k non-adjacent seats out of 10 in a row: subtract one seat per gap to map to k objects in 10-k+1 slots, giving \\(\\binom{8}{3}=56\\) for k=3.<br><b>Fails when:</b> When the map is not exactly one-to-one or not onto: ordered versus unordered pairs, boundary cases, or a map that double-counts.",
+  "tags": [
+   "s_bijection",
+   "combinatorics",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>stars and bars</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> Nonnegative integer solutions of \\(x_1+\\dots+x_k=n\\); identical items into distinct boxes; multisets.<br><b>Move:</b> \\(\\binom{n+k-1}{k-1}\\) solutions. A lower bound \\(x_i\\ge1\\) shifts to \\(\\binom{n-1}{k-1}\\). Upper bounds need inclusion-exclusion.<br><b>Example:</b> \\(x+y+z=10\\) with \\(x,y,z\\ge0\\): \\(\\binom{12}{2}=66\\). With \\(x,y,z\\ge1\\): \\(\\binom{9}{2}=36\\).<br><b>Fails when:</b> Upper bounds (each \\(\\le 4\\) gives 6, not \\(66\\) minus a naive count); distinguishable items (then \\(k^n\\)).",
+  "tags": [
+   "s_stars_bars",
+   "combinatorics",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>inclusion-exclusion</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> \"At least one of several overlapping conditions\"; integers divisible by one of several numbers; derangements; \"neither nor\".<br><b>Move:</b> \\(|\\bigcup A_i|=\\sum|A_i|-\\sum|A_i\\cap A_j|+\\cdots\\). Stop when the intersections are empty.<br><b>Example:</b> Integers 1 to 100 divisible by 2, 3 or 5: \\(50+33+20-16-10-6+3=74\\).<br><b>Fails when:</b> When intersections are messy. Truncating after a few terms gives bounds (Bonferroni), not the exact count.",
+  "tags": [
+   "s_inclusion_exclusion",
+   "combinatorics",
+   "probability",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Toolkit (Bayes): {{c1::\\(P(H\\mid E)=\\dfrac{P(E\\mid H)\\,P(H)}{P(E\\mid H)P(H)+P(E\\mid H^c)P(H^c)}\\)}}. The denominator is total probability.",
+  "back": "<b>Triggers:</b> \"Given that we observed\"; base rates; test accuracy; reversing a conditional; prior versus likelihood.<br><b>Move:</b> Write the posterior with the likelihood times prior over total probability. Expand the denominator over H and not-H.<br><b>Example:</b> Prevalence 1%, sensitivity 95%, false-positive 5%: \\(P(\\text{disease}\\mid +)=\\frac{0.0095}{0.0095+0.0495}=\\tfrac{19}{118}\\approx0.161\\).<br><b>Fails when:</b> When the likelihoods are not what the model says (selection, host behaviour in Monty Hall unspecified), or when the prior is unknown and you silently assume it.",
+  "tags": [
+   "s_bayes",
+   "probability",
+   "stats",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>invariants</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> A process changes state by fixed moves; \"can you reach X from Y\"; a quantity that never changes: a sum, a sum mod k, a weighted count.<br><b>Move:</b> Find a quantity Q(state) that every move preserves. If Q(start) differs from Q(goal), the goal is unreachable.<br><b>Example:</b> Board 1,...,10; replace a,b by \\(|a-b|\\). Since \\(a+b\\) and \\(|a-b|\\) have the same parity, the total's parity is invariant; the sum 55 is odd, so the last number is odd.<br><b>Fails when:</b> An invariant only rules out states. Reachability needs a construction. Check the invariant against every move type, including the one you forgot.",
+  "tags": [
+   "s_invariant",
+   "combinatorics",
+   "games",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>parity and colouring</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> Tiling a board with dominoes; a walk of \\(\\pm1\\) steps; a count that changes by one on each move; a colouring that pieces cover unequally.<br><b>Move:</b> Find a colouring or parity that every piece covers in a fixed pattern. Compare the counts of each colour in the region.<br><b>Example:</b> 8x8 board minus two opposite corners: both removed squares have the same colour, leaving 32 squares of one colour and 30 of the other. Dominoes cover one of each, so no tiling exists.<br><b>Fails when:</b> When pieces can cover unequal numbers of each colour (trominoes, unequal dominoes). Parity is necessary, not sufficient.",
+  "tags": [
+   "s_parity",
+   "combinatorics",
+   "dice",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>extremal arguments</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> \"Largest/smallest possible\"; \"consider the maximal element\"; smallest counterexample; closest pair.<br><b>Move:</b> Take the extremal object and show it must have a property that forces the structure or a contradiction.<br><b>Example:</b> Maximise \\(xyz\\) with \\(x+y+z=12\\), all nonnegative: the maximiser has \\(x=y=z=4\\) (if two differ, moving them towards each other raises the product), giving 64.<br><b>Fails when:</b> The extremum may not be attained (the supremum of \\(1-1/n\\) is 1, never reached). Boundary cases are often where the argument silently breaks.",
+  "tags": [
+   "s_extremal",
+   "optimisation",
+   "combinatorics",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>pigeonhole</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> \"Must two be the same\"; n+1 items in n boxes; some box must hold at least k items; an average argument.<br><b>Move:</b> Choose boxes so that two items in the same box give the required property.<br><b>Example:</b> Any 5 distinct integers from 1 to 8 contain two summing to 9: boxes \\(\\{1,8\\},\\{2,7\\},\\{3,6\\},\\{4,5\\}\\). Five items, four boxes.<br><b>Fails when:</b> No natural box partition exists. Pigeonhole gives existence only, not which pair or how many.",
+  "tags": [
+   "s_pigeonhole",
+   "combinatorics",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>backward induction</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> A finite sequential game or stopping problem with a known horizon; \"who wins under perfect play\".<br><b>Move:</b> Solve the last decision, then move backwards, at each node choosing the best action for the player to move.<br><b>Example:</b> Pile of 10, each player takes 1 or 2, the player who takes the last stone wins. Positions that are multiples of 3 lose for the player to move, so 10 is won by taking 1 (leaving 9).<br><b>Fails when:</b> Infinite horizons, simultaneous moves (induction gives no answer; you need an equilibrium), hidden information that breaks the subgame structure.",
+  "tags": [
+   "s_backward_induction",
+   "games",
+   "dynamic_programming",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>optional stopping</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> A stopping rule applied to a fair game; \"expected payoff if you stop when\"; a claim that a clever stopping time changes the mean.<br><b>Move:</b> For a martingale and a bounded stopping time, \\(E[M_\\tau]=M_0\\). Check the boundedness (or uniform integrability) before using it.<br><b>Example:</b> Fair \\(\\pm1\\) walk from 0 stopped on hitting \\(-10\\) or \\(+10\\): bounded in expectation, so \\(E[S_\\tau]=0\\).<br><b>Fails when:</b> Unbounded \\(\\tau\\): stop a fair walk at its first hit of +1. Then \\(S_\\tau=1\\) always, yet \\(S_0=0\\), so the naive equation fails.",
+  "tags": [
+   "s_optional_stopping",
+   "random_walk",
+   "games",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>martingales</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> A fair game; \"expected future value given the past is the present value\"; functions such as \\(S_n^2-n\\); hitting-time questions.<br><b>Move:</b> Find f with \\(E[f(\\text{next})\\mid\\text{now}]=f(\\text{now})\\), then apply optional stopping to f at the stopping time.<br><b>Example:</b> For a fair \\(\\pm1\\) walk, \\(S_n^2-n\\) is a martingale. Exit at \\(\\pm3\\): \\(E[\\tau]=E[S_\\tau^2]=9\\).<br><b>Fails when:</b> Biased steps (super- or sub-martingales), forgetting the \\(-n\\) correction, or applying the conditional expectation to a function that does not satisfy it.",
+  "tags": [
+   "s_martingale",
+   "random_walk",
+   "stochastic_calculus",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>reflection principle</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> A random walk or Brownian motion reaches a level a and you need where it ends; \"touches a level then ends below b\"; ballot counts.<br><b>Move:</b> Reflect the path after its first hit of a. Paths ending at x above a correspond one-to-one with paths ending at \\(2a-x\\). So \\(P(\\max\\ge a)=P(S_n\\ge a)+P(S_n>a)\\) for \\(\\pm1\\) steps.<br><b>Example:</b> Simple walk, 10 steps: \\(P(\\max\\ge3)=P(S_{10}\\ge3)+P(S_{10}>3)=\\tfrac{11}{32}\\approx0.344\\).<br><b>Fails when:</b> Asymmetric or non-unit steps (a jump of 2 skips the barrier); drift; two barriers, which need an infinite sum of images.",
+  "tags": [
+   "s_reflection",
+   "random_walk",
+   "combinatorics",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>geometric probability</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> Random points, lengths or chords in an interval, square or disk; \"distance between two random points\".<br><b>Move:</b> Write the event as a region of the sample space and compare areas or volumes. State the measure you are uniform in.<br><b>Example:</b> Two uniform points on [0,1] with \\(|X-Y|<\\tfrac12\\): the square minus two corner triangles of area \\(\\tfrac18\\) each gives \\(1-\\tfrac14=\\tfrac34\\).<br><b>Fails when:</b> Bertrand: a \"random chord\" of the unit circle that is longer than \\(\\sqrt3\\) has probability \\(\\tfrac13\\) with random endpoints, \\(\\tfrac12\\) with random radius, \\(\\tfrac14\\) with random midpoint. Always name the method.",
+  "tags": [
+   "s_geometric_probability",
+   "geometry",
+   "probability",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>order statistics</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> The maximum, minimum or k-th smallest of iid samples; ranks; expected range.<br><b>Move:</b> For iid U(0,1), the k-th smallest of n has mean \\(k/(n+1)\\) and law Beta(k, n+1−k). For other laws, transform by F first.<br><b>Example:</b> Median of 5 iid uniforms has mean \\(3/6=\\tfrac12\\); expected maximum of 4 is \\(4/5\\).<br><b>Fails when:</b> Samples that are not iid (ties, dependence, different laws). The formula is for uniforms after transformation only.",
+  "tags": [
+   "s_order_statistics",
+   "probability",
+   "stats",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>memorylessness</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> Exponential or geometric waiting times; \"given nothing has happened yet\"; races between independent clocks.<br><b>Move:</b> Residual wait has the law of a fresh wait. For a race, \\(P(i\\text{ first})=\\lambda_i/\\sum\\lambda_j\\), and the first arrival time is exponential with rate \\(\\sum\\lambda_j\\).<br><b>Example:</b> Independent exponential clocks at rates 2 and 3: the rate-2 clock rings first with probability \\(\\tfrac25\\), and the expected first arrival is \\(\\tfrac15\\).<br><b>Fails when:</b> Non-memoryless waits (uniform, deterministic, Gamma with shape above 1); length-biased sampling, such as the bus you happen to arrive at.",
+  "tags": [
+   "s_memorylessness",
+   "probability",
+   "distributions",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>generating functions</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> Counting ways to reach a total by adding independent contributions; a convolution; a recurrence visible in the coefficients.<br><b>Move:</b> Encode each choice as a power of x, multiply the series, and read the coefficient of \\(x^k\\).<br><b>Example:</b> Ordered rolls of three fair dice summing to 10: coefficient of \\(x^{10}\\) in \\((x+\\dots+x^6)^3\\) is 27.<br><b>Fails when:</b> Constraints that are not one additive total; dependent variables (the product of series is then wrong); cases where direct counting is simpler.",
+  "tags": [
+   "s_generating_function",
+   "dice",
+   "combinatorics",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>coupling</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> Comparing two distributions or processes; \"show probability at least/at most\"; monotone or stochastic dominance.<br><b>Move:</b> Build X and Y on one probability space so that \\(X\\le Y\\) pointwise. Then \\(P(X\\ge k)\\le P(Y\\ge k)\\) for every k.<br><b>Example:</b> \\(X\\sim\\mathrm{Bin}(10,0.3)\\), \\(Y\\sim\\mathrm{Bin}(10,0.5)\\): use common uniforms \\(U_i\\), set \\(X=\\#\\{U_i<0.3\\}\\), \\(Y=\\#\\{U_i<0.5\\}\\). Then \\(P(X\\ge5)\\approx0.150\\le P(Y\\ge5)\\approx0.623\\).<br><b>Fails when:</b> A coupling that does not preserve each marginal law proves nothing. Couplings give inequalities, rarely exact values.",
+  "tags": [
+   "s_coupling",
+   "probability",
+   "stats",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Toolkit (tail sum): for integer \\(X\\ge 0\\), {{c1::\\(E[X]=\\sum_{k\\ge 1}P(X\\ge k)\\)}}.",
+  "back": "<b>Triggers:</b> A nonnegative integer variable where \\(P(X\\ge k)\\) is easy; expected number of steps with geometric-type decay.<br><b>Move:</b> \\(E[X]=\\sum_{k\\ge1}P(X\\ge k)\\). Compute the survival function, not the full pmf.<br><b>Example:</b> Fair die: \\(E=\\sum_{k=1}^{6}P(X\\ge k)=\\tfrac{6+5+4+3+2+1}{6}=3.5\\).<br><b>Fails when:</b> Signed or non-integer variables need \\(\\int_0^\\infty P(X>t)\\,dt-\\int_{-\\infty}^0 P(X<t)\\,dt\\). Using \\(P(X=k)\\) instead of \\(P(X\\ge k)\\) is a common slip.",
+  "tags": [
+   "s_tail_sum",
+   "expectation",
+   "dice",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>change of measure</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> Estimating a rare event; \"conditioned on the walk reaching a level\"; importance sampling; likelihood ratios; Girsanov drift.<br><b>Move:</b> \\(E_P[f]=E_Q[f\\,dP/dQ]\\). Pick Q under which the event is typical, then correct with the likelihood ratio.<br><b>Example:</b> \\(P(Z>5)\\) for \\(Z\\sim N(0,1)\\): under \\(Q=N(5,1)\\) the event has probability 1/2, and \\(P(Z>5)=E_Q[\\mathbf 1\\{Z>5\\}e^{-5Z+12.5}]\\approx2.87\\times10^{-7}\\).<br><b>Fails when:</b> P must be absolutely continuous with respect to Q (Q must cover P's support). Poor choices of Q give weights with huge variance.",
+  "tags": [
+   "s_change_of_measure",
+   "probability",
+   "stochastic_calculus",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>replication (no-arbitrage pricing)</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> Pricing a payoff when a tradeable underlying and cash exist; \"fair price\", \"no arbitrage\", hedging, delta.<br><b>Move:</b> Find a self-financing portfolio of stock and cash that matches the payoff in every state. The price is the cost of that portfolio.<br><b>Example:</b> Stock 100 moves to 120 or 80, r=0, call strike 100 pays 20 or 0. Delta \\(=20/40=0.5\\), cash \\(=-40\\), price \\(=50-40=10\\).<br><b>Fails when:</b> Incomplete markets (more states than assets); real-world probabilities do not enter the price, so using them is wrong; transaction costs and unhedgeable risk break exact replication.",
+  "tags": [
+   "s_replication",
+   "options",
+   "stochastic_calculus",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>dimensional analysis</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> A formula with an unknown constant; \"how does the answer scale with a or n\"; a quick units sanity check.<br><b>Move:</b> Express the answer in the units of the inputs. Only one combination of parameters has the right units; fix the exponents and compute the dimensionless constant separately.<br><b>Example:</b> Brownian motion exits \\((-a,a)\\) in expected time \\(a^2\\): time has units of length squared, so the form is forced and the constant (here 1) comes from a martingale.<br><b>Fails when:</b> Dimensionless constants (\\(\\pi\\), \\(\\tfrac12\\), \\(\\log2\\)) are invisible to units. Dimensions fix scaling only.",
+  "tags": [
+   "s_dimensional_analysis",
+   "stochastic_calculus",
+   "mental_math",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>Taylor expansion</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> A small parameter; \\((1+x)^n\\) with \\(nx\\) small; logs and exponentials of small numbers; mental arithmetic; second-order effects.<br><b>Move:</b> Expand to first or second order and track the size of the dropped term.<br><b>Example:</b> \\(1.02^{10}\\approx1+10(0.02)+45(0.02)^2=1.218\\), against exact \\(1.21899\\).<br><b>Fails when:</b> When \\(nx\\) is not small (\\(1.5^{10}\\) needs exact arithmetic), or when the first-order term cancels so the second order decides the answer.",
+  "tags": [
+   "s_taylor",
+   "mental_math",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>Jensen's inequality</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> \\(E[f(X)]\\) versus \\(f(E[X])\\); \\(E[1/X]\\) versus \\(1/E[X]\\); convex option payoffs; expected maxima.<br><b>Move:</b> For convex f, \\(E f(X)\\ge f(EX)\\); for concave f the inequality reverses. For the size of the gap, expand: \\(E f(X)\\approx f(\\mu)+\\tfrac12 f''(\\mu)\\operatorname{Var}X\\).<br><b>Example:</b> X uniform on {1,2,3}: \\(E X=2\\), but \\(E[1/X]=\\tfrac{11}{18}\\approx0.611\\ge\\tfrac12\\).<br><b>Fails when:</b> The function is not convex on the whole range. Jensen gives the direction only, not the size.",
+  "tags": [
+   "s_convexity_jensen",
+   "expectation",
+   "stats",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>square-root time scaling</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> A random walk or diffusion; typical distance after n steps; the size of fluctuations over a horizon T; volatility scaling.<br><b>Move:</b> Variances add: \\(\\operatorname{Var}(S_n)=n\\), so typical size is \\(\\sqrt n\\) (or \\(\\sigma\\sqrt T\\)).<br><b>Example:</b> After 100 \\(\\pm1\\) steps the standard deviation is 10, and \\(E|S_{100}|\\approx7.96\\), close to \\(\\sqrt{2n/\\pi}\\approx7.98\\).<br><b>Fails when:</b> It describes the typical scale, not the mean; drift grows linearly; heavy-tailed steps change the exponent.",
+  "tags": [
+   "s_sqrt_time_scaling",
+   "random_walk",
+   "stochastic_calculus",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>Fermi estimation</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> An estimate with no data; \"how many X in city Y\"; an order-of-magnitude product of uncertain factors.<br><b>Move:</b> Decompose into a product of factors you can each estimate within a factor of about 2 or 3. Multiply and round to one significant figure.<br><b>Example:</b> Heartbeats in an 80-year life at 70 beats per minute: \\(80\\times365\\times24\\times60\\times70\\approx3\\times10^9\\).<br><b>Fails when:</b> One factor wrong by 10x makes the answer wrong by 10x. Fermi estimates are good to an order of magnitude, so do not quote precision.",
+  "tags": [
+   "s_fermi",
+   "mental_math",
+   "estimation",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>Kelly criterion</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> Repeated bets with an edge; bankroll growth; \"what fraction to bet\"; maximising long-run growth rather than expected wealth.<br><b>Move:</b> Maximise \\(E[\\log W]\\). For a bet paying b to 1 with win probability p, \\(f^*=p-\\frac{1-p}{b}\\).<br><b>Example:</b> p=0.6 at even money: \\(f^*=0.2\\). Expected log growth per bet is 0.0201 at 0.2, 0.0150 at 0.1 and 0.0147 at 0.3.<br><b>Fails when:</b> Uncertain p (bet less), correlated bets, and one-shot decisions or ruin constraints, where log utility is the wrong objective.",
+  "tags": [
+   "s_kelly_log_utility",
+   "betting",
+   "optimisation",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>eigen-decomposition</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> A linear recurrence \\(x_{n+1}=Ax_n\\); repeated matrix powers; Fibonacci-type growth; stationary vectors (eigenvalue 1 of a Markov matrix).<br><b>Move:</b> Find the dominant eigenvalue. Long-run growth is \\(\\lambda_{\\max}^n\\) times the component of the start along its eigenvector.<br><b>Example:</b> \\(a_n=2a_{n-1}+a_{n-2}\\) grows at ratio \\(1+\\sqrt2\\approx2.414\\). Fibonacci: \\(F_{20}=6765\\approx\\varphi^{20}/\\sqrt5\\).<br><b>Fails when:</b> Non-diagonalisable matrices (a Jordan block gives terms of the form \\(n\\lambda^n\\)); complex eigenvalues (oscillation); a start with zero component on the dominant eigenvector.",
+  "tags": [
+   "s_eigen",
+   "linear_algebra",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>Lagrange multipliers</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> Optimising under a constraint; \"maximise a product given a sum\"; closest point to the origin on a line; budget-constrained utility.<br><b>Move:</b> Set \\(\\nabla f=\\lambda\\nabla g\\) with the constraint, solve, then compare candidates including boundaries.<br><b>Example:</b> Maximise \\(xyz\\) with \\(x+y+z=12\\): \\(yz=xz=xy\\) forces \\(x=y=z=4\\), value 64.<br><b>Fails when:</b> Boundary optima are missed when you only solve the stationary equations. Inequality constraints need sign conditions (KKT). Non-convex problems have several critical points to compare.",
+  "tags": [
+   "s_lagrange",
+   "optimisation",
+   "linear_algebra",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Toolkit (tower property): {{c1::\\(E[X]=E\\big[E[X\\mid N]\\big]\\)}}. Condition on the variable that makes the inner expectation easy.",
+  "back": "<b>Triggers:</b> Nested randomness: a random number of trials; \"a random N, then ...\"; a sum with a random number of terms.<br><b>Move:</b> \\(E[X]=E[E[X\\mid N]]\\). Condition on the variable that makes the inner expectation easy, then average over it.<br><b>Example:</b> N uniform on {1,...,6}, then N fair coins: \\(E[\\text{heads}]=E[N/2]=\\tfrac74\\).<br><b>Fails when:</b> Conditioning on something that depends on the outcome you are computing. If N depends on the coin flips, \\(E[X\\mid N]\\) is no longer \\(N/2\\).",
+  "tags": [
+   "s_conditional_expectation_tower",
+   "probability",
+   "expectation",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>normal approximation (CLT)</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> A sum of many iid pieces; \"probability the total exceeds\" for large n; binomial tails with moderate n.<br><b>Move:</b> Standardise, then use the normal CDF with a continuity correction of \\(\\pm\\tfrac12\\) for integer-valued sums.<br><b>Example:</b> At least 60 heads in 100 flips: \\(\\Phi^c\\big((59.5-50)/5\\big)=\\Phi^c(1.9)\\approx0.0287\\), against exact 0.0284.<br><b>Fails when:</b> Far tails (large deviations) and skewed cases with small n or extreme p (use Poisson). Dependent summands need a variance adjustment.",
+  "tags": [
+   "s_clt_normal_approx",
+   "stats",
+   "probability",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>Poisson approximation</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> Many rare, roughly independent events; a count with small probability each; \\(P(X=0)\\approx e^{-np}\\).<br><b>Move:</b> \\(\\mathrm{Bin}(n,p)\\approx\\mathrm{Poisson}(np)\\) when p is small. Then use \\(P(X=0)=e^{-\\lambda}\\).<br><b>Example:</b> 1000 items, each defective with probability 0.001: \\(P(\\text{none})=0.999^{1000}\\approx0.3677\\) against \\(e^{-1}\\approx0.3679\\).<br><b>Fails when:</b> p not small (n=2, p=0.5); positive dependence or clustering (overdispersion); small-n exact probabilities.",
+  "tags": [
+   "s_poisson_approx",
+   "stats",
+   "probability",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Toolkit (variance decomposition): {{c1::\\(\\operatorname{Var}(X)=E[\\operatorname{Var}(X\\mid Y)]+\\operatorname{Var}(E[X\\mid Y])\\)}}.",
+  "back": "<b>Triggers:</b> The variance of a randomly chosen group or mixture; hierarchical models; a random number of terms; overdispersion.<br><b>Move:</b> \\(\\operatorname{Var}X=E[\\operatorname{Var}(X\\mid Y)]+\\operatorname{Var}(E[X\\mid Y])\\).<br><b>Example:</b> N uniform on 1..6, X = heads in N fair flips: \\(E[\\operatorname{Var}(X\\mid N)]=\\tfrac{7}{8}\\), \\(\\operatorname{Var}(E[X\\mid N])=\\tfrac{35}{48}\\), total \\(\\tfrac{77}{48}\\approx1.604\\).<br><b>Fails when:</b> Adding standard deviations instead of variances; conditioning on the wrong variable.",
+  "tags": [
+   "s_variance_decomposition",
+   "stats",
+   "probability",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>equilibrium (game theory)</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> Simultaneous strategic choice; \"best response\"; mixed strategies; value of a zero-sum game.<br><b>Move:</b> Find best responses. In a fully mixed equilibrium, make the opponent indifferent between their pure strategies and solve for the mix.<br><b>Example:</b> Matching pennies: if the opponent plays heads with probability p, the row player's payoff is indifferent when \\(p=\\tfrac12\\); both mix 1/2, value 0.<br><b>Fails when:</b> Multiple equilibria (which one?); sequential play, where commitment changes the outcome; equilibrium assumes common knowledge of rationality.",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "games",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>information design</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> A sender chooses what information a receiver gets before the receiver acts; \"design the experiment to maximise the sender's payoff\"; persuasion.<br><b>Move:</b> The optimal value is the concave envelope of the sender's payoff over posterior beliefs. Split the prior into posteriors that make the receiver just indifferent.<br><b>Example:</b> Prior \\(P(\\text{good})=\\tfrac13\\); the receiver acts iff posterior \\(\\ge\\tfrac12\\). Signal 'good' always in the good state and with probability \\(\\tfrac12\\) in the bad state: posterior \\(=\\tfrac12\\), and the receiver acts with probability \\(\\tfrac23\\), against 0 without information.<br><b>Fails when:</b> It assumes the sender can commit to a signal scheme (no commitment, no gain). Tie-breaking and the receiver's preferences must be specified.",
+  "tags": [
+   "s_information_design",
+   "games",
+   "stats",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for <i>dynamic programming</i>, and when does it fail?",
+  "back": "<b>Triggers:</b> Sequential decisions where a choice changes future options; \"maximise expected total\"; optimal stopping with re-rolls; path problems.<br><b>Move:</b> Define \\(V(\\text{state})=\\max_{\\text{action}}[\\text{immediate}+\\text{expected continuation}]\\). Solve from the end or tabulate.<br><b>Example:</b> Roll a fair die, may keep it or roll once more and keep the second roll: keep if the first roll is at least 4, else re-roll, so \\(V=\\tfrac{4+5+6}{6}+\\tfrac12\\cdot\\tfrac72=\\tfrac{17}{4}\\).<br><b>Fails when:</b> The state omits something relevant (history-dependent objectives such as probability of being the best); non-additive objectives; uncertain distributions (then use robust DP).",
+  "tags": [
+   "s_dynamic_programming",
+   "dice",
+   "optimisation",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair die is rolled until the first 6 appears. Expected number of rolls?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> First-step conditioning (memorylessness of the waiting time)<br><b>Trigger:</b> A waiting time with no memory: after any non-6 roll the situation is identical to the start.<br><b>Key move:</b> \\(E=1+\\tfrac56E\\), so \\(E=6\\).<br><b>Answer:</b> 6<br><b>Contrast:</b> Same die as the distinct-faces drill; that one asks for a count over faces, not a waiting time.",
+  "tags": [
+   "s_first_step_conditioning",
+   "s_memorylessness",
+   "dice",
+   "expectation",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Six rolls of a fair die. Expected number of distinct faces that appear?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Indicators with linearity of expectation<br><b>Trigger:</b> An expected count of distinct things: each face contributes a 0/1 event.<br><b>Key move:</b> \\(E=6\\,P(\\text{face appears})=6\\big(1-(5/6)^6\\big)\\).<br><b>Answer:</b> \\(\\tfrac{31031}{7776}\\approx3.991\\)<br><b>Contrast:</b> Same die as the waiting-time drill, but a sum over faces rather than a waiting time.",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "dice",
+   "expectation",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Fair coin, fortune starts at 3, each flip adds or subtracts 1. Probability you reach 10 before 0?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> First-step conditioning on a symmetric walk (linear harmonic function)<br><b>Trigger:</b> Two absorbing barriers and symmetric steps: the hitting probability is linear in the start.<br><b>Key move:</b> \\(h_k=k/10\\) solves \\(h_k=\\tfrac12(h_{k-1}+h_{k+1})\\) with \\(h_0=0,h_{10}=1\\).<br><b>Answer:</b> \\(\\tfrac{3}{10}\\)<br><b>Contrast:</b> Same walk as the expected-time drill, but the question is a hitting probability, not a time.",
+  "tags": [
+   "s_first_step_conditioning",
+   "s_martingale",
+   "random_walk",
+   "probability",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Same walk: fair coin, start at 3, absorbing at 0 and 10. Expected number of flips until absorption?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Martingale \\(S_n^2-n\\) with optional stopping<br><b>Trigger:</b> The question asks for a time. For a fair walk \\(S_n^2-n\\) is a martingale, so the time is the variance-like term.<br><b>Key move:</b> \\(E[\\tau]=E[S_\\tau^2]\\) gives \\(E[\\tau]=k(N-k)=3\\cdot7=21\\).<br><b>Answer:</b> \\(21\\)<br><b>Contrast:</b> Same walk as the hitting-probability drill; that one needs only S, not the martingale correction.",
+  "tags": [
+   "s_martingale",
+   "s_optional_stopping",
+   "random_walk",
+   "expectation",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Alice waits for HH, Bob waits for TH, a fair coin is flipped until one pattern appears. Probability Bob's pattern appears first?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Markov chain on the last flip (first-step conditioning)<br><b>Trigger:</b> Each pattern depends only on the last flip, so the state is the last flip.<br><b>Key move:</b> From last-flip H, Bob wins with probability \\(\\tfrac12\\); from last-flip T, Bob wins with probability 1. From the start, \\(P=\\tfrac12\\cdot\\tfrac12+\\tfrac12\\cdot1\\).<br><b>Answer:</b> \\(\\tfrac34\\)<br><b>Contrast:</b> HH against HT is a tie (1/2): the first H decides. The 3/4 is for TH.",
+  "tags": [
+   "s_markov_chain",
+   "s_first_step_conditioning",
+   "coins",
+   "markov",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Five cards from a 52-card deck, no replacement. Probability of at least one ace?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Complement<br><b>Trigger:</b> \"At least one\" is a union of many cases; \"no aces\" is one intersection.<br><b>Key move:</b> \\(1-\\binom{48}{5}/\\binom{52}{5}\\).<br><b>Answer:</b> \\(\\tfrac{18472}{54145}\\approx0.341\\)<br><b>Contrast:</b> With replacement the complement would be \\((48/52)^5\\), which is wrong here.",
+  "tags": [
+   "s_complement",
+   "combinatorics",
+   "probability",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Nonnegative integers \\(x,y,z\\) with \\(x+y+z=10\\). How many solutions?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Stars and bars<br><b>Trigger:</b> Nonnegative integer solutions of a fixed-total linear equation.<br><b>Key move:</b> \\(\\binom{n+k-1}{k-1}=\\binom{12}{2}\\).<br><b>Answer:</b> \\(66\\)<br><b>Contrast:</b> Same equation as the bounded-variables drill; the bound there changes the method.",
+  "tags": [
+   "s_stars_bars",
+   "combinatorics",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Same equation \\(x+y+z=10\\), but each of \\(x,y,z\\) is at most 4. How many solutions?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Inclusion-exclusion over stars and bars<br><b>Trigger:</b> An upper bound breaks the plain formula; the violating cases are easy to count.<br><b>Key move:</b> \\(\\binom{12}{2}-3\\binom{7}{2}+3\\binom{2}{2}=66-63+3\\). The solutions are permutations of (4,4,2) and (4,3,3).<br><b>Answer:</b> \\(6\\)<br><b>Contrast:</b> Same equation as the unbounded drill; the bound is the whole difference.",
+  "tags": [
+   "s_inclusion_exclusion",
+   "s_stars_bars",
+   "combinatorics",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Simple symmetric random walk from 0, ten steps of \\(\\pm1\\) with probability 1/2 each. Probability it reaches \\(+3\\) at some step?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Reflection principle<br><b>Trigger:</b> A path that touches a level, then the question is about the endpoint.<br><b>Key move:</b> \\(P(\\max\\ge3)=P(S_{10}\\ge3)+P(S_{10}>3)\\). Reflect the path after the first hit.<br><b>Answer:</b> \\(\\tfrac{11}{32}\\approx0.344\\)<br><b>Contrast:</b> Forgetting the \\(P(S_{10}>3)\\) term gives \\(0.172\\).",
+  "tags": [
+   "s_reflection",
+   "random_walk",
+   "combinatorics",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Three fair dice, ordered outcomes, total 10. How many outcomes?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Generating function (or bounded stars and bars)<br><b>Trigger:</b> Ways to reach a fixed total by adding independent dice values.<br><b>Key move:</b> Coefficient of \\(x^{10}\\) in \\((x+x^2+\\dots+x^6)^3\\).<br><b>Answer:</b> \\(27\\)<br><b>Contrast:</b> Stars and bars with upper bounds gives the same count; the generating function is quicker to modify.",
+  "tags": [
+   "s_generating_function",
+   "dice",
+   "combinatorics",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two independent uniformly random points on a circle. Probability the chord between them is longer than \\(\\sqrt3\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Geometric probability (choice of measure)<br><b>Trigger:</b> A random chord: the answer depends on how the chord is chosen.<br><b>Key move:</b> Endpoints uniform, so the angle gap is uniform on \\([0,\\pi]\\); the chord exceeds \\(\\sqrt3\\) when the gap exceeds \\(2\\pi/3\\).<br><b>Answer:</b> \\(\\tfrac13\\)<br><b>Contrast:</b> Random radius gives \\(\\tfrac12\\); random midpoint gives \\(\\tfrac14\\).",
+  "tags": [
+   "s_geometric_probability",
+   "geometry",
+   "probability",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Four iid uniform(0,1) draws. Expected maximum?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Order statistics<br><b>Trigger:</b> A maximum of iid samples. Linearity does not apply to a max.<br><b>Key move:</b> Max of n iid U(0,1) has mean \\(n/(n+1)\\).<br><b>Answer:</b> \\(\\tfrac45\\)<br><b>Contrast:</b> The expected sum is \\(2\\); the expected maximum is not a sum of expected values.",
+  "tags": [
+   "s_order_statistics",
+   "probability",
+   "stats",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Positive reals \\(x,y,z\\) with \\(x+y+z=12\\). Maximise \\(xyz\\).<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Lagrange multipliers (or AM-GM)<br><b>Trigger:</b> Optimise a product under a linear constraint.<br><b>Key move:</b> \\(yz=xz=xy\\) gives \\(x=y=z=4\\).<br><b>Answer:</b> \\(64\\)<br><b>Contrast:</b> Without the sum constraint there is no maximum.",
+  "tags": [
+   "s_lagrange",
+   "s_extremal",
+   "optimisation",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Three iid Exp(1) clocks. Probability the first clock rings first?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Symmetry (exchangeable clocks)<br><b>Trigger:</b> Identical laws: the labels are interchangeable.<br><b>Key move:</b> Each clock is equally likely to ring first.<br><b>Answer:</b> \\(\\tfrac13\\)<br><b>Contrast:</b> Look-alike with unequal rates in the next drill; there symmetry breaks.",
+  "tags": [
+   "s_symmetry",
+   "s_memorylessness",
+   "probability",
+   "distributions",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Three independent exponential clocks with rates 1, 2, 3. Probability the rate-1 clock rings first?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Memorylessness (race of exponentials)<br><b>Trigger:</b> Independent exponential waits in a race.<br><b>Key move:</b> \\(P(i\\text{ first})=\\lambda_i/\\sum_j\\lambda_j=1/6\\).<br><b>Answer:</b> \\(\\tfrac16\\)<br><b>Contrast:</b> Same race as the equal-rates drill, with unequal rates: symmetry is no longer available.",
+  "tags": [
+   "s_memorylessness",
+   "probability",
+   "distributions",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Random permutation of 10 items. Expected number of fixed points?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Indicators with linearity<br><b>Trigger:</b> A count of items with a property, each having probability \\(1/10\\).<br><b>Key move:</b> \\(E=10\\cdot\\tfrac1{10}\\).<br><b>Answer:</b> \\(1\\)<br><b>Contrast:</b> Same permutation as the no-fixed-point drill, but a mean rather than a probability of zero.",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "combinatorics",
+   "expectation",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Random permutation of 10 items. Probability that no item stays in its place?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Inclusion-exclusion (derangements)<br><b>Trigger:</b> \"No item in its place\" is an intersection of complements.<br><b>Key move:</b> \\(\\sum_{k=0}^{10}(-1)^k/k!=\\tfrac{16481}{44800}\\).<br><b>Answer:</b> \\(\\approx0.3679\\approx1/e\\)<br><b>Contrast:</b> Same permutation as the expected-fixed-points drill, but the event is zero fixed points.",
+  "tags": [
+   "s_inclusion_exclusion",
+   "combinatorics",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Any 5 distinct integers from \\(\\{1,\\dots,8\\}\\). Must two of them sum to 9?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Pigeonhole<br><b>Trigger:</b> Five items must land in fewer boxes than items.<br><b>Key move:</b> Boxes \\(\\{1,8\\},\\{2,7\\},\\{3,6\\},\\{4,5\\}\\): four boxes, five numbers.<br><b>Answer:</b> Yes.<br><b>Contrast:</b> Pigeonhole gives existence only.",
+  "tags": [
+   "s_pigeonhole",
+   "combinatorics",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Board shows 1 to 10. Repeat: erase two numbers \\(a,b\\) and write \\(|a-b|\\). Parity of the last number?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Invariant (parity of the sum)<br><b>Trigger:</b> A process of replacements with a quantity that may or may not be preserved.<br><b>Key move:</b> \\(a+b\\) and \\(|a-b|\\) have equal parity, so the sum's parity is invariant; \\(\\sum=55\\) is odd.<br><b>Answer:</b> Odd.<br><b>Contrast:</b> If you write \\(a+b\\) instead, the sum is exactly preserved (55), which fixes the number itself.",
+  "tags": [
+   "s_invariant",
+   "s_parity",
+   "combinatorics",
+   "games",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Roll a fair die. You may keep it, or roll once more and keep the second roll. Maximise expected score: value?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Dynamic programming (backward induction)<br><b>Trigger:</b> A sequential choice whose continuation value is known.<br><b>Key move:</b> Continuation value of one roll is 3.5, so keep if the first roll is at least 4: \\(\\tfrac{4+5+6}{6}+\\tfrac12\\cdot\\tfrac72\\).<br><b>Answer:</b> \\(\\tfrac{17}{4}=4.25\\)<br><b>Contrast:</b> Same die as the first two drills, with a different objective.",
+  "tags": [
+   "s_dynamic_programming",
+   "s_backward_induction",
+   "dice",
+   "optimisation",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Coin with 60% heads pays even money. Fraction of bankroll to bet to maximise long-run growth?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Kelly criterion<br><b>Trigger:</b> Repeated bets with an edge and a growth objective.<br><b>Key move:</b> \\(f^*=p-\\frac{1-p}{b}=0.6-0.4\\).<br><b>Answer:</b> \\(20\\%\\)<br><b>Contrast:</b> Look-alike: same bet, but the objective is expected wealth (next drill).",
+  "tags": [
+   "s_kelly_log_utility",
+   "betting",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Same bet (60% heads, even money). Fraction of bankroll to bet to maximise expected wealth after one bet?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Linearity of expectation (expected wealth is linear in the bet)<br><b>Trigger:</b> The objective is an expectation of wealth, which is linear in the stake.<br><b>Key move:</b> \\(E[W]=W(1+(2p-1)f)\\) increases in f, so the maximiser is \\(f=1\\).<br><b>Answer:</b> Bet everything (\\(f=1\\)).<br><b>Contrast:</b> Look-alike: the log-growth objective gives 20% (previous drill).",
+  "tags": [
+   "s_linearity_expectation",
+   "betting",
+   "expectation",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Stock at 100; next period 120 or 80; cash rate 0. Fair price of a call with strike 100?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Replication (no-arbitrage pricing)<br><b>Trigger:</b> A payoff that can be matched by stock and cash.<br><b>Key move:</b> Delta \\(=20/40=0.5\\); cash \\(=-40\\); price \\(=50-40\\).<br><b>Answer:</b> \\(10\\)<br><b>Contrast:</b> The real-world expected payoff with \\(P(\\text{up})=0.9\\) is 18; that is not the price.",
+  "tags": [
+   "s_replication",
+   "options",
+   "stochastic_calculus",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Roll a fair six-sided die to get N, then flip a fair coin N times. Expected number of heads?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Tower property<br><b>Trigger:</b> A random number of trials followed by a sum.<br><b>Key move:</b> \\(E[X]=E[E[X\\mid N]]=E[N/2]\\).<br><b>Answer:</b> \\(\\tfrac74\\)<br><b>Contrast:</b> Same experiment as the variance drill, asked for the mean.",
+  "tags": [
+   "s_conditional_expectation_tower",
+   "probability",
+   "expectation",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Same experiment (roll N, then flip N coins). Variance of the number of heads?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Variance decomposition<br><b>Trigger:</b> Variance of a mixture: within-N variance plus the variance of the conditional mean.<br><b>Key move:</b> \\(E[N]/4+\\operatorname{Var}(N)/4=\\tfrac78+\\tfrac{35}{48}\\).<br><b>Answer:</b> \\(\\tfrac{77}{48}\\approx1.604\\)<br><b>Contrast:</b> Look-alike: the mean is \\(\\tfrac74\\) (previous drill); the variance needs both terms.",
+  "tags": [
+   "s_variance_decomposition",
+   "probability",
+   "stats",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "100 fair coin flips. Probability of at least 60 heads?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Normal approximation with continuity correction<br><b>Trigger:</b> A binomial tail with n=100.<br><b>Key move:</b> \\(z=(59.5-50)/5=1.9\\); \\(\\Phi^c(1.9)\\approx0.0287\\).<br><b>Answer:</b> \\(\\approx0.028\\) (exact 0.0284)<br><b>Contrast:</b> Without the continuity correction, \\(z=2\\) gives 0.023.",
+  "tags": [
+   "s_clt_normal_approx",
+   "stats",
+   "probability",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "1000 items, each independently defective with probability 0.001. Probability no item is defective?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Poisson approximation<br><b>Trigger:</b> Many rare, roughly independent events; the zero count.<br><b>Key move:</b> \\(\\mathrm{Bin}(1000,0.001)\\approx\\mathrm{Poisson}(1)\\), so \\(P(0)\\approx e^{-1}\\).<br><b>Answer:</b> \\(\\approx0.368\\) (exact 0.3677)<br><b>Contrast:</b> A binomial that is well approximated; exact value available for check.",
+  "tags": [
+   "s_poisson_approx",
+   "stats",
+   "probability",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Test: 1% prevalence, 95% sensitivity, 5% false-positive rate. A patient tests positive. Probability the patient has the disease?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Bayes' rule<br><b>Trigger:</b> A conditional probability asked in the reverse direction, with base rates.<br><b>Key move:</b> \\(\\dfrac{0.0095}{0.0095+0.0495}\\).<br><b>Answer:</b> \\(\\tfrac{19}{118}\\approx0.161\\)<br><b>Contrast:</b> Reporting 95% is the base-rate error.",
+  "tags": [
+   "s_bayes",
+   "probability",
+   "stats",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Process: small cases, then guess and prove.</b><br>How many subsets of \\(\\{1,\\dots,n\\}\\) contain no two consecutive integers? Work out n = 1, 2, 3 by hand, then state the general answer and what you would prove.",
+  "back": "<b>Answer:</b> \\(F_{n+2}\\) (Fibonacci), so 144 for n=10.<br><b>Small cases:</b> n=1 gives 2 (empty set, {1}); n=2 gives 3; n=3 gives 5. The pattern 2, 3, 5 suggests \\(F_{n+2}\\); n=4 gives 8 when listed.<br><b>Prove:</b> split on whether n is in the set. If not, the rest is any valid subset of \\(\\{1,\\dots,n-1\\}\\): \\(a_{n-1}\\) ways. If n is in, n-1 is out, so the rest is valid on \\(\\{1,\\dots,n-2\\}\\): \\(a_{n-2}\\) ways. Hence \\(a_n=a_{n-1}+a_{n-2}\\).<br><b>Interview point:</b> say the small cases aloud, then the recurrence. A verified pattern plus a two-line proof beats a long unstructured calculation.",
+  "tags": [
+   "s_recursion",
+   "combinatorics",
+   "fmt_toolkit",
+   "process"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Process: test the formula at the extremes before trusting it.</b><br>The probability that a random permutation of n items has no fixed point is \\(\\sum_{k=0}^{n}(-1)^k/k!\\). Check it at n = 1 and n = 2, and as n grows. What should you see?",
+  "back": "<b>Answer:</b> n=1 gives 0; n=2 gives \\(1/2\\); large n approaches \\(1/e\\approx0.3679\\).<br><b>Why:</b> n=1: the only permutation fixes the item, so 0. n=2: one of the two permutations (the swap) has no fixed point, so \\(1/2\\). Large n: the sum is the series for \\(e^{-1}\\).<br><b>Use:</b> a sign error or an off-by-one in the sum fails at n=1 or n=2 immediately. Two checks in twenty seconds beat trusting the algebra.",
+  "tags": [
+   "s_inclusion_exclusion",
+   "combinatorics",
+   "fmt_toolkit",
+   "process"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Process: rephrase as a game against nature.</b><br>You pick one number from 1 to 6. A fair die is then rolled three times. You win if your number appears at least once. Set your choice against the outcomes. What is your win probability, and does your choice matter?",
+  "back": "<b>Answer:</b> \\(1-(5/6)^3=91/216\\approx0.421\\) for every choice, so the choice does not matter.<br><b>Setup:</b> you pick a row (one of six numbers); nature picks one of 216 equally likely roll triples. Each row has the same count of winning triples, \\(216-125=91\\).<br><b>Use:</b> writing the payoff table exposes symmetry. If every row is the same, the decision is irrelevant and you can skip the optimisation. If rows differ, compare them and choose by expectation or worst case.",
+  "tags": [
+   "s_symmetry",
+   "dice",
+   "games",
+   "fmt_toolkit",
+   "process"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Process: bound the answer before computing it.</b><br>23 people, 365 equally likely birthdays, no leap years. Probability that at least two share a birthday? Give a range from a union bound first, then the exact value.",
+  "back": "<b>Union bound:</b> there are \\(\\binom{23}{2}=253\\) pairs, each matching with probability \\(1/365\\), so \\(P\\le253/365\\approx0.693\\).<br><b>Exact:</b> \\(1-\\prod_{i=0}^{22}\\frac{365-i}{365}\\approx0.507\\).<br><b>Check:</b> the answer lies in [0,1], below the union bound, and close to one half. A value like 0.9 or 1.3 signals an error. Fix the range before the algebra.",
+  "tags": [
+   "s_complement",
+   "s_pigeonhole",
+   "combinatorics",
+   "probability",
+   "fmt_toolkit",
+   "process"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Process: when stuck on an expectation, write \\(E[X]=\\sum_{k\\ge1}P(X\\ge k)\\).</b><br>Let M be the maximum of three fair dice. Compute E[M] using only \\(P(M\\ge k)\\) for each k.",
+  "back": "<b>Answer:</b> \\(119/24\\approx4.958\\).<br><b>Move:</b> \\(P(M\\ge k)=1-\\big(\\tfrac{k-1}{6}\\big)^3\\) for k = 1,...,6. Sum: \\(6-\\dfrac{0+1+8+27+64+125}{216}=6-\\dfrac{225}{216}=\\dfrac{119}{24}\\).<br><b>Why it helps:</b> the full pmf of M needs six separate values; the tail sum needs only the simple complement \\(((k-1)/6)^3\\).<br><b>Check:</b> one die gives 3.5 and M is at most 6, so the answer must lie between them.",
+  "tags": [
+   "s_tail_sum",
+   "dice",
+   "expectation",
+   "fmt_toolkit",
+   "process"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Process: name the states, then write one equation per state.</b><br>A fair coin is flipped until HH appears. Expected number of flips?",
+  "back": "<b>Answer:</b> 6.<br><b>States:</b> A = no useful progress (last flip T or start); B = last flip was H.<br><b>Equations:</b> \\(A=1+\\tfrac12A+\\tfrac12B\\) (tails stay in A, heads go to B); \\(B=1+\\tfrac12A\\) (tails reset to A, heads finish).<br><b>Solve:</b> substituting gives \\(A=\\tfrac32+\\tfrac34A\\), so \\(A=6\\).<br><b>Process point:</b> the state is the longest useful suffix. For HT the H-loop changes (from B, another H keeps B), and the same method gives 4.",
+  "tags": [
+   "s_markov_chain",
+   "s_first_step_conditioning",
+   "coins",
+   "markov",
+   "fmt_toolkit",
+   "process"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Process: estimate the Monte Carlo error before you run it.</b><br>You simulate 10,000 trials to estimate a probability near 1/2. How accurate is the estimate, and how many trials give \\(\\pm0.001\\) at 95%?",
+  "back": "<b>Answer:</b> standard error \\(\\sqrt{p(1-p)/N}\\le\\sqrt{0.25/10^4}=0.005\\), so a 95% interval is about \\(\\pm0.01\\). For \\(\\pm0.001\\): \\(N\\approx(1.96\\cdot0.5/0.001)^2\\approx960{,}000\\).<br><b>Use:</b> a simulated '0.502 against 0.5' is noise at \\(N=10^4\\). Quote the standard error with any simulated number, and compare with a derivation only within about two standard errors.",
+  "tags": [
+   "s_clt_normal_approx",
+   "stats",
+   "mental_math",
+   "fmt_toolkit",
+   "process"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Process: after solving, change one assumption and recheck the argument.</b><br>Two aces drawn from a 52-card deck. Compare with and without replacement. Which step of the argument changes?",
+  "back": "<b>Without replacement:</b> \\((4/52)(3/51)=1/221\\). <b>With replacement:</b> \\((4/52)^2=1/169\\).<br><b>Changed step:</b> the second draw depends on the first. Without replacement the deck loses one ace and one card, so 3/51 replaces 4/52. The product formula needs independence, which holds only with replacement.<br><b>Process:</b> list each factor and ask which one depends on earlier draws. That factor is where a perturbation bites.",
+  "tags": [
+   "s_symmetry",
+   "s_indicators",
+   "combinatorics",
+   "probability",
+   "fmt_toolkit",
+   "process"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Process: write the sample space as a region with area.</b><br>A stick of length 1 is broken at two independent uniform points. Probability that the three pieces form a triangle?",
+  "back": "<b>Answer:</b> 1/4.<br><b>Sample space:</b> the two cut points as \\((a,b)\\) with \\(0<a<b<1\\). This is a triangle of area \\(1/2\\), and uniform probability is area divided by \\(1/2\\).<br><b>Event:</b> the pieces \\(a,\\ b-a,\\ 1-b\\) must all be below \\(1/2\\). That region has area \\(1/8\\), so \\(P=(1/8)/(1/2)=1/4\\).<br><b>Process:</b> most errors come from treating the cut points as an unordered pair on the square without normalising to the right area.",
+  "tags": [
+   "s_geometric_probability",
+   "geometry",
+   "probability",
+   "fmt_toolkit",
+   "process"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Process: bound first, then compute exactly.</b><br>Four fair die rolls. Probability that at least one shows a 6? Give a bound in ten seconds, then the exact answer.",
+  "back": "<b>Bound:</b> the union bound gives \\(P\\le4/6=2/3\\).<br><b>Exact:</b> \\(1-(5/6)^4=671/1296\\approx0.518\\).<br><b>Process:</b> the bound tells you whether an exact answer is plausible. A derived value above 2/3 means an error. The gap between 2/3 and 0.518 is the cost of overlapping events, which the union bound ignores.",
+  "tags": [
+   "s_complement",
+   "dice",
+   "probability",
+   "fmt_toolkit",
+   "process"
+  ]
+ }
+]

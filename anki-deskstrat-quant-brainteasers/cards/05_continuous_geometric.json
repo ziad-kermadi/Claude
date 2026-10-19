@@ -1,0 +1,887 @@
+[
+ {
+  "type": "basic",
+  "front": "Seven independent draws from \\(U(0,1)\\). What is the expected value of the 3rd smallest draw?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> \\(s\\_order\\_statistics\\): k-th order statistic of iid continuous draws.<br><b>Trigger:</b> iid continuous draws ranked, with a fixed rank index k.<br><b>Key move:</b> \\(U_{(k)} \\sim \\text{Beta}(k,\\, n-k+1)\\), so \\(E[U_{(k)}] = k/(n+1)\\).<br><b>Answer:</b> \\(3/8 = 0.375\\)",
+  "tags": [
+   "s_order_statistics",
+   "uniform",
+   "order_statistics",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X, Y\\) are iid \\(U(0,1)\\). What is \\(E[\\min(X,Y)\\cdot\\max(X,Y)]\\)?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> \\(s\\_order\\_statistics\\), with a product trick.<br><b>Trigger:</b> The product of the min and the max of two numbers is the product of the two numbers.<br><b>Key move:</b> \\(\\min\\cdot\\max = XY\\), so the expectation factorises by independence.<br><b>Answer:</b> \\(\\tfrac14\\)",
+  "tags": [
+   "s_order_statistics",
+   "uniform",
+   "order_statistics",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A chord of the unit circle is picked at random. Probability its length exceeds \\(\\sqrt3\\), the side of the inscribed equilateral triangle, under three readings of 'random': (a) two uniform endpoints; (b) a uniform distance from the centre; (c) a uniform midpoint in the disk.<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> \\(s\\_geometric\\_probability\\): the answer depends on the measure chosen.<br><b>Trigger:</b> The word 'random' does not fix a measure on chords; the event 'longer than \\(\\sqrt3\\)' has different probability under each.<br><b>Key move:</b> A chord is longer than \\(\\sqrt3\\) iff its distance from the centre is less than \\(1/2\\). Compare the measure of \\(\\{d\\lt 1/2\\}\\) in each model.<br><b>Answer:</b> (a) \\(1/3\\); (b) \\(1/2\\); (c) \\(1/4\\)",
+  "tags": [
+   "s_geometric_probability",
+   "bertrand",
+   "circle",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A taxi arrives after an independent \\(\\text{Exp}(1)\\) time and a bus after an independent \\(\\text{Exp}(2)\\) time (per minute). What is \\(P(\\text{taxi first})\\)?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> \\(s\\_memorylessness\\): competing exponential clocks.<br><b>Trigger:</b> Two independent exponential waiting times racing each other.<br><b>Key move:</b> \\(P(X\\lt Y)=\\lambda/(\\lambda+\\mu)\\) because the race restarts memorylessly.<br><b>Answer:</b> \\(1/3\\)",
+  "tags": [
+   "s_memorylessness",
+   "exponential",
+   "races",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A needle of length \\(3d\\) is dropped at random on a floor with parallel lines spaced \\(d\\) apart. What is the expected number of line crossings, and is \\(P(\\text{at least one crossing})\\) equal to it?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> \\(s\\_indicators\\): linearity of expectation over crossings.<br><b>Trigger:</b> A count of crossings whose indicators can be summed even though the needle may cross twice.<br><b>Key move:</b> Linearity gives \\(E[\\text{crossings}] = 2l/(\\pi d)\\) for any \\(l\\). Since the count can be 2 or 3, \\(P(\\ge 1) \\lt  E\\).<br><b>Answer:</b> \\(E = 6/\\pi \\approx 1.9099\\); the probability is strictly smaller, not equal.",
+  "tags": [
+   "s_indicators",
+   "s_geometric_probability",
+   "buffon",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(U_1,U_2,U_3\\) are iid \\(U(0,1)\\). What is \\(P(U_1+U_2+U_3 \\le 1)\\)?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> \\(s\\_geometric\\_probability\\): volume of a simplex (Irwin-Hall).<br><b>Trigger:</b> A sum of iid uniforms compared with a constant, in the unit cube.<br><b>Key move:</b> The region \\(x+y+z \\le 1\\) is a corner simplex of volume \\(1/3!\\).<br><b>Answer:</b> \\(1/6 \\approx 0.1667\\)",
+  "tags": [
+   "s_geometric_probability",
+   "uniform",
+   "irwin_hall",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(U_1, U_2, \\dots\\) are iid \\(U(0,1)\\). Let \\(N\\) be the number of draws until the running sum first exceeds 1. What is \\(E[N]\\)?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> \\(s\\_tail\\_sum\\): \\(E[N]=\\sum_{n\\ge0}P(N>n)\\).<br><b>Trigger:</b> A stopping time defined by a running sum crossing a level.<br><b>Key move:</b> \\(P(N>n)=P(U_1+\\dots+U_n\\le 1)=1/n!\\), so \\(E[N]=\\sum_{n\\ge0}1/n!\\).<br><b>Answer:</b> \\(e \\approx 2.71828\\)",
+  "tags": [
+   "s_tail_sum",
+   "uniform",
+   "irwin_hall",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(Z \\sim N(0,1)\\). What is \\(E|Z|\\)?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> \\(s\\_clt\\_normal\\_approx\\): half-normal moments.<br><b>Trigger:</b> An absolute value of a standard normal.<br><b>Key move:</b> \\(E|Z| = 2\\int_0^\\infty z\\varphi(z)\\,dz = 2\\varphi(0)\\).<br><b>Answer:</b> \\(\\sqrt{2/\\pi} \\approx 0.7979\\)",
+  "tags": [
+   "s_clt_normal_approx",
+   "normal",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\((X,Y)\\) standard bivariate normal with correlation \\(\\rho=1/2\\). What is \\(P(XY>0)\\), the probability that \\(X\\) and \\(Y\\) have the same sign?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> \\(s\\_geometric\\_probability\\): orthant probabilities of correlated normals.<br><b>Trigger:</b> Correlated normals and a sign event.<br><b>Key move:</b> Sheppard's formula: \\(P(XY>0) = \\tfrac12 + \\tfrac{1}{\\pi}\\arcsin\\rho\\).<br><b>Answer:</b> \\(\\tfrac12 + \\tfrac{\\pi/6}{\\pi} = \\tfrac23\\)",
+  "tags": [
+   "s_geometric_probability",
+   "normal",
+   "correlation",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X\\sim\\text{Exp}(1)\\) and \\(Y\\sim\\text{Exp}(3)\\) are independent. What is \\(E[\\min(X,Y)]\\)?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> \\(s\\_memorylessness\\): the minimum of independent exponentials is exponential.<br><b>Trigger:</b> The first of several independent exponential clocks.<br><b>Key move:</b> \\(\\min \\sim \\text{Exp}(\\lambda+\\mu)\\), so the mean is \\(1/(\\lambda+\\mu)\\).<br><b>Answer:</b> \\(1/4\\)",
+  "tags": [
+   "s_memorylessness",
+   "exponential",
+   "min",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A bus waiting time is exponential with mean 5 minutes. You have already waited 3 minutes. What is \\(P(\\text{wait} > 8 \\text{ min})\\)?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> \\(s\\_memorylessness\\).<br><b>Trigger:</b> An exponential waiting time conditioned on having survived to 3 minutes.<br><b>Key move:</b> \\(P(X>8\\mid X>3)=P(X>5)=e^{-5/5}\\).<br><b>Answer:</b> \\(e^{-1} \\approx 0.3679\\)",
+  "tags": [
+   "s_memorylessness",
+   "exponential",
+   "conditional",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X, Y\\) are iid \\(N(0,1)\\). What is \\(P(|X/Y|\\le 1)\\)?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> \\(s\\_geometric\\_probability\\): rotational symmetry gives a Cauchy ratio.<br><b>Trigger:</b> A ratio of two independent standard normals.<br><b>Key move:</b> \\((X,Y)\\) is rotationally symmetric, so \\(X/Y=\\tan\\theta\\) with \\(\\theta\\) uniform. \\(|\\tan\\theta|\\le 1\\) for half the angles.<br><b>Answer:</b> \\(1/2\\)",
+  "tags": [
+   "s_geometric_probability",
+   "cauchy",
+   "normal",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Evaluate \\(\\displaystyle\\int_{-\\infty}^{\\infty} x^2 e^{-x^2}\\,dx\\).<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> \\(s\\_generating\\_function\\): differentiate a Gaussian integral with respect to its parameter.<br><b>Trigger:</b> A Gaussian integral with a polynomial factor.<br><b>Key move:</b> Differentiate \\(\\int e^{-a x^2}dx=\\sqrt{\\pi/a}\\) with respect to \\(a\\), then set \\(a=1\\).<br><b>Answer:</b> \\(\\sqrt{\\pi}/2 \\approx 0.8862\\)",
+  "tags": [
+   "s_generating_function",
+   "gaussian_integral",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Eleven iid \\(U(0,1)\\) draws. What is the expected value of their maximum?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> \\(s\\_order\\_statistics\\).<br><b>Trigger:</b> The maximum of n iid continuous draws.<br><b>Key move:</b> \\(E[U_{(n)}] = n/(n+1)\\).<br><b>Answer:</b> \\(11/12 \\approx 0.9167\\)",
+  "tags": [
+   "s_order_statistics",
+   "uniform",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X, Y\\) are iid \\(N(0,1)\\). Given \\(X+Y=s\\), what are \\(E[X\\mid X+Y=s]\\) and \\(\\text{Var}(X\\mid X+Y=s)\\)?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> \\(s\\_clt\\_normal\\_approx\\): conditioning inside a bivariate normal.<br><b>Trigger:</b> Conditioning a Gaussian pair on their sum.<br><b>Key move:</b> By symmetry \\(E[X\\mid S]=S/2\\). Then \\(\\text{Var}=1-\\text{Cov}^2/\\text{Var}(S)=1-\\tfrac{1}{2}\\).<br><b>Answer:</b> \\(E=s/2\\), \\(\\text{Var}=1/2\\)",
+  "tags": [
+   "s_clt_normal_approx",
+   "normal",
+   "conditioning",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Buses arrive as a Poisson process with mean headway 10 minutes. You arrive at a uniform random time. What is the expected length of the headway interval you land in?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> \\(s\\_memorylessness\\) with the inspection (length-biasing) effect.<br><b>Trigger:</b> You arrive at a random time, so you land in an interval with probability proportional to its length.<br><b>Key move:</b> Length-biased mean: \\(E[X^2]/E[X]\\). For exponential \\(X\\), \\(E[X^2]=2\\cdot 10^2\\).<br><b>Answer:</b> \\(200/10 = 20\\) minutes",
+  "tags": [
+   "s_memorylessness",
+   "poisson",
+   "inspection_paradox",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Independent Poisson processes: type A at rate 2 per hour, type B at rate 3 per hour. What is \\(P(\\text{the next event is type A})\\)?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> \\(s\\_memorylessness\\): competing exponential clocks, i.e. superposition.<br><b>Trigger:</b> Merged independent Poisson streams.<br><b>Key move:</b> Superposition has rate \\(2+3\\); each event is type A with probability \\(\\lambda_A/(\\lambda_A+\\lambda_B)\\).<br><b>Answer:</b> \\(2/5\\)",
+  "tags": [
+   "s_memorylessness",
+   "poisson",
+   "superposition",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(U\\sim U(0,1)\\). What is \\(E[\\sqrt{U}]\\)?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> \\(s\\_change\\_of\\_measure\\): change of variables in the density.<br><b>Trigger:</b> A monotone transformation of a uniform variable.<br><b>Key move:</b> Density of \\(Y=\\sqrt U\\) is \\(2y\\) on \\([0,1]\\), so \\(E[Y]=\\int_0^1 2y^2\\,dy\\).<br><b>Answer:</b> \\(2/3 \\approx 0.6667\\)",
+  "tags": [
+   "s_change_of_measure",
+   "uniform",
+   "transformation",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Merge two independent Poisson processes with rates 3 and 1 per hour. What is the expected number of events in 2 hours?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> \\(s\\_linearity\\_expectation\\) applied to a superposed Poisson process.<br><b>Trigger:</b> Counting events in a merged process.<br><b>Key move:</b> Superposition gives rate \\(4\\); expected count \\(=4\\times 2\\).<br><b>Answer:</b> \\(8\\)",
+  "tags": [
+   "s_linearity_expectation",
+   "poisson",
+   "superposition",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A point is uniform in the unit disk. What is its expected distance from the centre?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> \\(s\\_geometric\\_probability\\): radial density from area.<br><b>Trigger:</b> A uniform point in a 2-d region with a radial function.<br><b>Key move:</b> Radial density is \\(2r\\) on \\([0,1]\\), so \\(E[r]=\\int_0^1 2r^2\\,dr\\).<br><b>Answer:</b> \\(2/3 \\approx 0.6667\\)",
+  "tags": [
+   "s_geometric_probability",
+   "disk",
+   "radial",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Five iid \\(U(0,1)\\) draws. What is the variance of the median?",
+  "back": "<b>Answer:</b> \\(\\tfrac{1}{28} \\approx 0.0357\\)<br><b>Structure:</b> \\(s\\_order\\_statistics\\): the median is the 3rd order statistic of 5.<br><b>Key move:</b> \\(U_{(3)} \\sim \\text{Beta}(3,3)\\); use the Beta variance formula.<br><b>Working:</b> \\(\\text{Var}=\\dfrac{\\alpha\\beta}{(\\alpha+\\beta)^2(\\alpha+\\beta+1)}=\\dfrac{9}{36\\cdot 7}=\\dfrac{1}{28}\\).<br><b>Sanity check:</b> Below the uniform variance \\(1/12\\), as expected for a central order statistic.<br><b>Transfer:</b> Minimum of 2 uniforms is \\(\\text{Beta}(1,2)\\), variance \\(1/18\\).",
+  "tags": [
+   "s_order_statistics",
+   "uniform",
+   "beta",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A stick of length 1 is broken at two independent uniform points. What is the probability that the three pieces form a triangle?",
+  "back": "<b>Answer:</b> \\(\\tfrac14\\)<br><b>Structure:</b> \\(s\\_geometric\\_probability\\) with complement; trigger: a triangle exists iff each piece is less than \\(1/2\\).<br><b>Key move:</b> Each piece is \\(\\ge 1/2\\) with probability \\(1/4\\). At most one piece can be that long, so the bad events are disjoint.<br><b>Working:</b> \\(P(\\text{bad}) = 3\\cdot\\tfrac14 = \\tfrac34\\), so \\(P(\\text{triangle}) = 1-\\tfrac34 = \\tfrac14\\).<br><b>Sanity check:</b> Monte Carlo \\(\\approx 0.2500\\).<br><b>Transfer:</b> Iid uniform lengths (not normalised) give \\(1/2\\); iid Exp(1) lengths give \\(1/4\\) (they normalise to a uniform split).",
+  "tags": [
+   "s_geometric_probability",
+   "s_complement",
+   "stick",
+   "uniform",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Five iid uniform points on a circle. What is the probability that all five lie in some semicircle?",
+  "back": "<b>Answer:</b> \\(\\tfrac{5}{16} = 0.3125\\)<br><b>Structure:</b> \\(s\\_symmetry\\) plus \\(s\\_geometric\\_probability\\); trigger: 'all in one half' is decided by a single reference point.<br><b>Key move:</b> Pick the point that is first clockwise of the others. The other four must lie in the semicircle that starts there.<br><b>Working:</b> \\(5\\cdot(1/2)^4 = 5/16\\), since the choice of reference point is disjoint.<br><b>Sanity check:</b> Formula \\(n/2^{n-1}\\) gives \\(3/4\\) at \\(n=3\\) and \\(1/2\\) at \\(n=4\\).<br><b>Transfer:</b> Triangle from three circle points contains the centre (twin card).",
+  "tags": [
+   "s_symmetry",
+   "s_geometric_probability",
+   "circle",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Alice and Bob each arrive at a uniform time between 12 and 1pm, and each waits 15 minutes for the other. What is the probability they meet?",
+  "back": "<b>Answer:</b> \\(\\tfrac{7}{16} = 0.4375\\)<br><b>Structure:</b> \\(s\\_geometric\\_probability\\); trigger: a region of the unit square cut by a band \\(|x-y|\\le 1/4\\).<br><b>Key move:</b> Meeting means \\(|X-Y|\\le 1/4\\). Subtract the two corner triangles of legs \\(3/4\\).<br><b>Working:</b> \\(1-2\\cdot\\tfrac12\\left(\\tfrac34\\right)^2 = 1-\\tfrac{9}{16}=\\tfrac{7}{16}\\).<br><b>Sanity check:</b> Monte Carlo \\(\\approx 0.4380\\).<br><b>Transfer:</b> Two uniform numbers within \\(1/4\\) of each other (twin card).",
+  "tags": [
+   "s_geometric_probability",
+   "meeting",
+   "uniform",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A chord is generated by choosing its midpoint uniformly in the unit disk. What is the probability the chord is longer than \\(\\sqrt3\\)?",
+  "back": "<b>Answer:</b> \\(\\tfrac14\\)<br><b>Structure:</b> \\(s\\_geometric\\_probability\\); trigger: a uniform point in a region defines the object.<br><b>Key move:</b> Chord length is \\(2\\sqrt{1-d^2}\\), so the chord exceeds \\(\\sqrt3\\) iff \\(d\\lt 1/2\\). Compare areas.<br><b>Working:</b> Area ratio \\(\\pi(1/2)^2/\\pi = 1/4\\).<br><b>Sanity check:</b> Monte Carlo \\(\\approx 0.2501\\).<br><b>Transfer:</b> Radius method (distance uniform on \\([0,1]\\)) gives \\(1/2\\); endpoint method gives \\(1/3\\).",
+  "tags": [
+   "s_geometric_probability",
+   "bertrand",
+   "disk",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A needle of length \\(d/2\\) is dropped at random on a floor with parallel lines spaced \\(d\\) apart. What is the probability it crosses a line?",
+  "back": "<b>Answer:</b> \\(\\tfrac{1}{\\pi} \\approx 0.3183\\)<br><b>Structure:</b> \\(s\\_geometric\\_probability\\) with \\(s\\_indicators\\) (crossing as an indicator of a distance condition).<br><b>Key move:</b> Crossing iff the distance from the centre to the nearest line is at most \\((l/2)|\\sin\\theta|\\). That distance is uniform on \\([0,d/2]\\).<br><b>Working:</b> With \\(d=1\\), \\(P=E[2h]=l\\,E|\\sin\\theta|\\) where \\(h=(l/2)|\\sin\\theta|\\). Since \\(E|\\sin\\theta|=2/\\pi\\), \\(P=2l/\\pi\\); rescale to \\(2l/(\\pi d)\\).<br><b>Sanity check:</b> Monte Carlo \\(\\approx 0.3179\\).<br><b>Transfer:</b> Needle longer than \\(d\\) can cross twice; expected crossings still \\(2l/(\\pi d)\\) (toolkit card).",
+  "tags": [
+   "s_geometric_probability",
+   "s_indicators",
+   "buffon",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Three independent exponential clocks with rates 1, 2 and 3 per minute start together. (a) What is the probability the rate-3 clock rings first? (b) What is the expected time until the first ring?",
+  "back": "<b>Answer:</b> (a) \\(\\tfrac12\\); (b) \\(\\tfrac16\\) minute<br><b>Structure:</b> \\(s\\_memorylessness\\); trigger: several independent exponential clocks racing.<br><b>Key move:</b> Total rate \\(6\\). Each clock wins with probability rate/total, and the first ring is \\(\\text{Exp}(6)\\).<br><b>Working:</b> \\(P=3/6\\); \\(E[\\min] = 1/6\\). Check: \\(1/6+2/6+3/6=1\\).<br><b>Sanity check:</b> Simulation: \\(0.5001\\) and \\(0.1668\\).<br><b>Transfer:</b> Rate-1 clock wins with prob \\(1/6\\) (perturbation card with rates tied to a race).",
+  "tags": [
+   "s_memorylessness",
+   "exponential",
+   "races",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Three machines fail independently with Exp(1) lifetimes. What is the expected time of the second failure?",
+  "back": "<b>Answer:</b> \\(\\tfrac56 \\approx 0.8333\\)<br><b>Structure:</b> \\(s\\_order\\_statistics\\) with \\(s\\_memorylessness\\): spacings of exponential order statistics are independent.<br><b>Key move:</b> First failure is \\(\\text{Exp}(3)\\), mean \\(1/3\\). After it, the two survivors are still Exp(1) by memorylessness, so the next gap is \\(\\text{Exp}(2)\\), mean \\(1/2\\).<br><b>Working:</b> \\(E[X_{(2)}] = \\tfrac13 + \\tfrac12 = \\tfrac56\\).<br><b>Sanity check:</b> Between \\(E[X_{(1)}]=1/3\\) and \\(E[X_{(3)}]=11/6\\). Monte Carlo \\(0.8333\\).<br><b>Transfer:</b> Time until all three fail is \\(11/6\\) (twin card).",
+  "tags": [
+   "s_order_statistics",
+   "s_memorylessness",
+   "exponential",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Independent Poisson processes: type A at rate 2 per hour, type B at rate 3 per hour. What is the probability that exactly two type A events occur before the first type B event?",
+  "back": "<b>Answer:</b> \\(\\tfrac{12}{125} = 0.096\\)<br><b>Structure:</b> \\(s\\_memorylessness\\) with superposition (\\(s\\_poisson\\_approx\\) not needed).<br><b>Key move:</b> Each event of the merged process is A with probability \\(2/5\\). The event sequence before the first B is geometric in A.<br><b>Working:</b> \\(P = (2/5)^2\\cdot(3/5) = 12/125\\).<br><b>Sanity check:</b> Simulation \\(0.0959\\).<br><b>Transfer:</b> Probability of exactly \\(k\\) A's first is \\((2/5)^k(3/5)\\); the sum over \\(k\\) is \\(1\\).",
+  "tags": [
+   "s_memorylessness",
+   "poisson",
+   "superposition",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A bus route runs with headways alternating 5 and 15 minutes. You arrive at a uniform random time. What is your expected wait?",
+  "back": "<b>Answer:</b> \\(6.25\\) minutes<br><b>Structure:</b> \\(s\\_memorylessness\\)-style inspection paradox; trigger: a random arrival lands in long gaps more often.<br><b>Key move:</b> Expected wait \\(=E[X^2]/(2E[X])\\). Here \\(E[X]=10\\), \\(E[X^2]=(25+225)/2=125\\).<br><b>Working:</b> \\(125/20 = 6.25\\).<br><b>Sanity check:</b> Monte Carlo \\(6.242\\). A regular 10-minute route gives \\(5\\).<br><b>Transfer:</b> Exponential headways with mean 10 give \\(10\\) (perturbation card).",
+  "tags": [
+   "s_memorylessness",
+   "poisson",
+   "inspection_paradox",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(U_1, U_2, \\dots\\) are iid \\(U(0,1)\\). Let \\(N\\) be the first \\(n\\) with \\(U_1+\\dots+U_n > 1\\). What is \\(P(N=3)\\)?",
+  "back": "<b>Answer:</b> \\(\\tfrac13\\)<br><b>Structure:</b> \\(s\\_tail\\_sum\\) with the simplex volume.<br><b>Key move:</b> \\(P(N>n)=P(S_n\\le 1)=1/n!\\), so \\(P(N=3)=P(N>2)-P(N>3)\\).<br><b>Working:</b> \\(\\tfrac12-\\tfrac16 = \\tfrac13\\).<br><b>Sanity check:</b> Monte Carlo \\(0.3336\\). Summing \\(P(N=n)\\) over \\(n\\) gives 1.<br><b>Transfer:</b> Expected value \\(E[N] = \\sum_{n\\ge0} 1/n! = e\\).",
+  "tags": [
+   "s_tail_sum",
+   "uniform",
+   "irwin_hall",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X, Y\\) are iid \\(\\text{Exp}(1)\\). What is \\(P(X+Y\\le 1)\\)?",
+  "back": "<b>Answer:</b> \\(1-2/e \\approx 0.2642\\)<br><b>Structure:</b> \\(s\\_generating\\_function\\): convolution is a product of transforms.<br><b>Key move:</b> Convolution density of the sum is \\(x e^{-x}\\) (Gamma(2,1)).<br><b>Working:</b> \\(\\int_0^1 x e^{-x}dx = \\left[-(x+1)e^{-x}\\right]_0^1 = 1-2e^{-1}\\).<br><b>Sanity check:</b> Monte Carlo \\(0.2644\\). It is less than \\(1/2\\) since the sum has mean 2.<br><b>Transfer:</b> Exp(1)+Exp(2) gives \\((1-1/e)^2\\) (perturbation card).",
+  "tags": [
+   "s_generating_function",
+   "convolution",
+   "exponential",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Evaluate \\(\\displaystyle\\int_{-\\infty}^{\\infty} x^4 e^{-x^2/2}\\,dx\\).",
+  "back": "<b>Answer:</b> \\(3\\sqrt{2\\pi} \\approx 7.5199\\)<br><b>Structure:</b> \\(s\\_clt\\_normal\\_approx\\): Gaussian moments.<br><b>Key move:</b> \\(\\int x^4 e^{-x^2/2}dx = \\sqrt{2\\pi}\\,E[Z^4]\\).<br><b>Working:</b> \\(E[Z^4]=3\\), so the integral is \\(3\\sqrt{2\\pi}\\).<br><b>Sanity check:</b> Gaussian kernel integrates to \\(\\sqrt{2\\pi}\\approx 2.5066\\); \\(3\\times 2.5066=7.5199\\).<br><b>Transfer:</b> Odd moments of \\(Z\\) vanish by symmetry.",
+  "tags": [
+   "s_clt_normal_approx",
+   "gaussian_integral",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\((X,Y)\\) standard bivariate normal with correlation \\(1/2\\). What is \\(P(X>0,\\ Y>0)\\)?",
+  "back": "<b>Answer:</b> \\(\\tfrac13\\)<br><b>Structure:</b> \\(s\\_geometric\\_probability\\): orthant probability.<br><b>Key move:</b> Same-sign events split equally between the two positive and the two negative quadrants, and \\(P(XY>0)=2/3\\) (Sheppard).<br><b>Working:</b> \\(P(X>0,Y>0)=\\tfrac14+\\tfrac{\\arcsin\\rho}{2\\pi} = \\tfrac14+\\tfrac{1}{12}=\\tfrac13\\).<br><b>Sanity check:</b> Monte Carlo \\(0.3334\\).<br><b>Transfer:</b> Independence (\\(\\rho=0\\)) gives \\(1/4\\).",
+  "tags": [
+   "s_geometric_probability",
+   "normal",
+   "correlation",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X, Y\\) standard normal with correlation \\(1/2\\). What is \\(E[\\max(X,Y)]\\)?",
+  "back": "<b>Answer:</b> \\(1/\\sqrt{2\\pi} \\approx 0.3989\\)<br><b>Structure:</b> \\(s\\_clt\\_normal\\_approx\\); trigger: a max of jointly normal variables.<br><b>Key move:</b> Write \\(\\max = \\tfrac{X+Y}{2} + \\tfrac{|X-Y|}{2}\\). Here \\(X-Y\\) is \\(N(0,1)\\) and \\(E[X+Y]=0\\).<br><b>Working:</b> \\(E\\max = \\tfrac12 E|X-Y| = \\tfrac12\\sqrt{2/\\pi} = 1/\\sqrt{2\\pi}\\).<br><b>Sanity check:</b> Monte Carlo \\(0.3994\\). For independent normals (\\(\\rho=0\\)) it is \\(1/\\sqrt\\pi\\).<br><b>Transfer:</b> With unequal means the formula changes (perturbation card).",
+  "tags": [
+   "s_clt_normal_approx",
+   "normal",
+   "max",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X, Y\\) iid \\(N(0,1)\\). Given \\(X+Y=1\\), what is \\(P(X>1)\\)?",
+  "back": "<b>Answer:</b> \\(1-\\Phi(1/\\sqrt2) \\approx 0.2398\\)<br><b>Structure:</b> \\(s\\_clt\\_normal\\_approx\\) with conditioning on a sum.<br><b>Key move:</b> Given the sum, \\(X \\sim N(1/2,\\,1/2)\\).<br><b>Working:</b> \\(P(X>1)=P\\!\\left(Z>\\dfrac{1/2}{\\sqrt{1/2}}\\right)=1-\\Phi(1/\\sqrt2)\\).<br><b>Sanity check:</b> Monte Carlo band estimate \\(0.245\\); the value is below \\(1/2\\) because the conditional mean is \\(1/2\\).<br><b>Transfer:</b> Brownian motion at times 1 and 2 (twin card).",
+  "tags": [
+   "s_clt_normal_approx",
+   "normal",
+   "conditioning",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X, Y\\) iid \\(N(0,1)\\). What is \\(P(|X/Y| > \\sqrt3)\\)?",
+  "back": "<b>Answer:</b> \\(\\tfrac13\\)<br><b>Structure:</b> \\(s\\_geometric\\_probability\\): ratio of normals is Cauchy, i.e. a tangent of a uniform angle.<br><b>Key move:</b> \\(X/Y=\\tan\\theta\\) with \\(\\theta\\) uniform on the circle. \\(|\\tan\\theta|>\\sqrt3\\) on arcs of total length \\(2\\pi/3\\).<br><b>Working:</b> \\(\\dfrac{2\\pi/3}{2\\pi}=\\tfrac13\\).<br><b>Sanity check:</b> Monte Carlo \\(0.3337\\). Cauchy: \\(P(|C|>\\sqrt3)=1-\\tfrac{2}{\\pi}\\arctan\\sqrt3 = \\tfrac13\\).<br><b>Transfer:</b> Correlated ratio is Cauchy with a shifted location (perturbation card).",
+  "tags": [
+   "s_geometric_probability",
+   "cauchy",
+   "normal",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X, Y\\) iid \\(\\text{Exp}(1)\\). What is \\(P\\!\\left(\\dfrac{X}{X+Y}\\le \\tfrac14\\right)\\)?",
+  "back": "<b>Answer:</b> \\(\\tfrac14\\)<br><b>Structure:</b> \\(s\\_change\\_of\\_measure\\): Jacobian of \\((x,y)\\mapsto(s,r)\\), with \\(s=x+y\\) and \\(r=x/s\\).<br><b>Key move:</b> Joint density of \\((S,R)\\) is \\(s e^{-s}\\) on \\(s>0\\), \\(r\\in(0,1)\\), and this factorises.<br><b>Working:</b> \\(f_{S,R}=s e^{-s}\\cdot 1\\), so \\(R\\sim U(0,1)\\) and \\(P(R\\le 1/4)=1/4\\).<br><b>Sanity check:</b> Monte Carlo \\(0.2504\\).<br><b>Transfer:</b> Two Exp(1) service times: the share of total time of the first one is uniform (twin card).",
+  "tags": [
+   "s_change_of_measure",
+   "exponential",
+   "jacobian",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(U, V\\) iid \\(U(0,1)\\). What is \\(P(UV\\le 1/4)\\)?",
+  "back": "<b>Answer:</b> \\(\\dfrac{1+\\ln 4}{4} \\approx 0.5966\\)<br><b>Structure:</b> \\(s\\_change\\_of\\_measure\\): conditioning on one factor.<br><b>Key move:</b> For \\(t\\in(0,1)\\): \\(P(UV\\le t)=\\int_0^1 \\min(1,\\,t/u)\\,du\\).<br><b>Working:</b> \\(=t+\\int_t^1 \\tfrac{t}{u}\\,du = t - t\\ln t\\). At \\(t=1/4\\): \\(\\tfrac14+\\tfrac14\\ln4\\).<br><b>Sanity check:</b> Monte Carlo \\(0.5964\\). Mean of \\(UV\\) is \\(1/4\\), so the median is below \\(1/4\\) only; this exceeds \\(1/4\\) as expected for a skewed product.<br><b>Transfer:</b> \\(-\\ln U\\) is \\(\\text{Exp}(1)\\) (toolkit card).",
+  "tags": [
+   "s_change_of_measure",
+   "uniform",
+   "product",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ten iid \\(U(0,1)\\) draws. What is the expected range (max minus min)?",
+  "back": "<b>Answer:</b> \\(\\tfrac{9}{11} \\approx 0.8182\\)<br><b>Structure:</b> \\(s\\_order\\_statistics\\).<br><b>Key move:</b> \\(E[U_{(n)}]-E[U_{(1)}] = \\tfrac{n}{n+1}-\\tfrac{1}{n+1}\\).<br><b>Working:</b> \\(\\tfrac{10}{11}-\\tfrac{1}{11} = \\tfrac{9}{11}\\).<br><b>Sanity check:</b> Monte Carlo \\(0.8182\\). Range is \\(0\\) as \\(n\\to 1\\), giving \\(0\\) at \\(n=1\\) as required.<br><b>Transfer:</b> Range of 2 uniforms is \\(1/3\\).",
+  "tags": [
+   "s_order_statistics",
+   "uniform",
+   "range",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Four iid exponential times, each with rate 2 per hour. What is the expected time until all four have occurred?",
+  "back": "<b>Answer:</b> \\(\\tfrac{25}{24} \\approx 1.0417\\) hours<br><b>Structure:</b> \\(s\\_memorylessness\\) with \\(s\\_order\\_statistics\\) (maximum of exponentials).<br><b>Key move:</b> Maximum of \\(n\\) iid Exp(\\(\\lambda\\)) has mean \\(H_n/\\lambda\\).<br><b>Working:</b> \\(H_4 = 25/12\\), so \\(E = (25/12)/2 = 25/24\\).<br><b>Sanity check:</b> Sum of spacings with rates \\(8,6,4,2\\): \\(1/8+1/6+1/4+1/2 = 25/24\\). Check.<br><b>Transfer:</b> Expected time for 3 iid Exp(1): \\(11/6\\).",
+  "tags": [
+   "s_memorylessness",
+   "s_order_statistics",
+   "exponential",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A stick of length 1 is cut at two independent uniform points. What is the probability that the leftmost piece is the longest?",
+  "back": "<b>Answer:</b> \\(\\tfrac13\\)<br><b>Structure:</b> \\(s\\_symmetry\\): exchangeable spacings.<br><b>Key move:</b> The three spacings are exchangeable, and ties have probability zero.<br><b>Working:</b> Each piece is equally likely to be the longest, so \\(P=1/3\\).<br><b>Sanity check:</b> Monte Carlo \\(0.3330\\).<br><b>Transfer:</b> Iid Exp(1) spacings normalise to the same law; only the position of the longest piece matters.",
+  "tags": [
+   "s_symmetry",
+   "stick",
+   "uniform",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "The same stick, cut at two independent uniform points. What is the expected length of the longest piece?",
+  "back": "<b>Answer:</b> \\(\\tfrac{11}{18} \\approx 0.6111\\)<br><b>Structure:</b> \\(s\\_order\\_statistics\\): maximum of exchangeable spacings.<br><b>Key move:</b> Use \\(P(\\max>t)\\) by inclusion-exclusion over the three spacings, then integrate.<br><b>Working:</b> \\(P(\\max>t)=3(1-t)^2-3(1-2t)_+^2+(1-3t)_+^2\\). Integrate over \\([0,1]\\): \\(1-\\tfrac12+\\tfrac19=\\tfrac{11}{18}\\).<br><b>Sanity check:</b> Monte Carlo \\(0.6110\\). Uniform spacing average would be \\(1/3\\), so a maximum above \\(1/2\\) is plausible.<br><b>Transfer:</b> General: \\(E[\\text{max of } n+1 \\text{ spacings}] = \\tfrac{1}{n+1}\\sum_{k=1}^{n+1}\\tfrac1k\\) (chain card).",
+  "tags": [
+   "s_order_statistics",
+   "stick",
+   "uniform",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two independent uniform points on a unit circle are joined by a chord. What is the probability the chord is longer than the side of the inscribed equilateral triangle?",
+  "back": "<b>Answer:</b> \\(\\tfrac13\\)<br><b>Structure:</b> \\(s\\_geometric\\_probability\\); trigger: an endpoint model fixes the chord measure.<br><b>Key move:</b> Chord longer than \\(\\sqrt3\\) iff the angular separation lies in \\((2\\pi/3, 4\\pi/3)\\).<br><b>Working:</b> Angular separation is uniform, so the probability is \\(\\tfrac{2\\pi/3}{2\\pi}=\\tfrac13\\).<br><b>Sanity check:</b> Monte Carlo \\(0.3332\\).<br><b>Transfer:</b> Uniform distance from centre gives \\(1/2\\); uniform midpoint in the disk gives \\(1/4\\) (recognition card).",
+  "tags": [
+   "s_geometric_probability",
+   "bertrand",
+   "circle",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Four iid \\(U(0,1)\\) draws. What is the probability that exactly two are below \\(1/2\\)?",
+  "back": "<b>Answer:</b> \\(\\tfrac38 = 0.375\\)<br><b>Structure:</b> \\(s\\_order\\_statistics\\) and \\(s\\_indicators\\): counting how many order statistics fall below a level.<br><b>Key move:</b> Each draw is below \\(1/2\\) with probability \\(1/2\\) independently, so the count is \\(\\text{Bin}(4,1/2)\\).<br><b>Working:</b> \\(\\binom42/2^4 = 6/16 = 3/8\\).<br><b>Sanity check:</b> Monte Carlo \\(0.3750\\).<br><b>Transfer:</b> Event \\(\\{U_{(2)}\\lt 1/2\\lt U_{(3)}\\}\\) is exactly this count event.",
+  "tags": [
+   "s_order_statistics",
+   "s_indicators",
+   "uniform",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(U_1, U_2\\) iid \\(U(0,1)\\). What is \\(E|U_1-U_2|\\)?",
+  "back": "<b>Answer:</b> \\(\\tfrac13\\)<br><b>Structure:</b> \\(s\\_order\\_statistics\\): \\(|U_1-U_2| = U_{(2)}-U_{(1)}\\).<br><b>Key move:</b> \\(E[U_{(2)}]=2/3\\) and \\(E[U_{(1)}]=1/3\\).<br><b>Working:</b> \\(\\tfrac23-\\tfrac13=\\tfrac13\\).<br><b>Sanity check:</b> Monte Carlo \\(0.3332\\).<br><b>Transfer:</b> Mean absolute difference of two uniforms (a range of two draws).",
+  "tags": [
+   "s_order_statistics",
+   "uniform",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Perturbed:</b> A stick is cut at a fixed point \\(1/3\\), then at an independent uniform point. What is \\(P(\\text{the three pieces form a triangle})\\)?",
+  "back": "<b>What breaks:</b> The argument 'at most one piece is \\(\\ge 1/2\\)' still holds, but the cut points are no longer both uniform, so the simple complement \\(1-3/4\\) is invalid.<br><b>Fix:</b> Condition on the uniform cut \\(y\\). Pieces are \\(1/3\\), \\(|y-1/3|\\), \\(1-\\max(1/3,y)\\). Need \\(y\\in(1/2,5/6)\\).<br><b>New answer:</b> \\(1/3\\) (versus \\(1/4\\) for two uniform cuts). Monte Carlo \\(0.3336\\).",
+  "tags": [
+   "s_geometric_probability",
+   "stick",
+   "perturbation",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Perturbed:</b> \\(X_1,X_2\\) iid with density \\(2x\\) on \\([0,1]\\). What is \\(E[\\min(X_1,X_2)]\\)?",
+  "back": "<b>What breaks:</b> The formula \\(E[U_{(1)}]=1/(n+1)\\) assumes \\(F(x)=x\\). Here \\(F(x)=x^2\\), so the uniform formula (\\(1/3\\)) is wrong.<br><b>Fix:</b> Use the survival function: \\(P(\\min>t)=(1-F(t))^2=(1-t^2)^2\\), so \\(E[\\min]=\\int_0^1(1-t^2)^2dt\\).<br><b>New answer:</b> \\(\\int_0^1 (1-2t^2+t^4)dt = 1-\\tfrac23+\\tfrac15 = \\tfrac{8}{15}\\approx 0.5333\\).",
+  "tags": [
+   "s_order_statistics",
+   "perturbation",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Perturbed:</b> Alice waits 15 minutes and Bob waits 30 minutes, each arriving uniformly in a one-hour window. What is \\(P(\\text{they meet})\\)?",
+  "back": "<b>What breaks:</b> The band is no longer symmetric about the diagonal. Subtract two corner triangles with legs \\(3/4\\) and \\(1/2\\) respectively.<br><b>Fix:</b> Meeting iff \\(Y-X\\in[-1/2,\\,1/4]\\). Complement: \\(\\tfrac12(1-\\tfrac14)^2+\\tfrac12(1-\\tfrac12)^2\\).<br><b>New answer:</b> \\(1-\\tfrac{9}{32}-\\tfrac{4}{32}=\\tfrac{19}{32}=0.59375\\). Monte Carlo \\(0.5942\\).",
+  "tags": [
+   "s_geometric_probability",
+   "meeting",
+   "perturbation",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Perturbed:</b> Three iid uniform points on a circle. What is \\(P(\\text{all three lie in some arc of length one-third of the circle})\\)?",
+  "back": "<b>What breaks:</b> The semicircle argument uses \\(f=1/2\\). For arc fraction \\(f\\), the reference point must be followed by others within \\(f\\).<br><b>Fix:</b> \\(P=n f^{\\,n-1}\\) for \\(f\\le 1/2\\), by choosing the first clockwise point as reference.<br><b>New answer:</b> \\(3\\cdot(1/3)^2 = 1/3\\). Monte Carlo \\(0.3335\\). The semicircle case gives \\(3/4\\).",
+  "tags": [
+   "s_geometric_probability",
+   "circle",
+   "perturbation",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Perturbed:</b> Buses arrive as a Poisson process with mean headway 10 minutes. You arrive at a uniform random time. What is your expected wait?",
+  "back": "<b>What breaks:</b> The 'half the headway' rule (\\(5\\) minutes for regular buses) fails: you are more likely to land in a long gap.<br><b>Fix:</b> Expected wait \\(=E[X^2]/(2E[X])\\). For exponential \\(X\\), \\(E[X^2]=200\\).<br><b>New answer:</b> \\(200/20 = 10\\) minutes.",
+  "tags": [
+   "s_memorylessness",
+   "poisson",
+   "inspection_paradox",
+   "perturbation",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Perturbed:</b> Bus arrival time is uniform on \\([0,10]\\) minutes after 0. You have waited 4 minutes. What is the expected remaining wait?",
+  "back": "<b>What breaks:</b> Memorylessness fails: a bounded uniform wait is not memoryless, so the remaining wait depends on elapsed time.<br><b>Fix:</b> Given survival past 4, the arrival is uniform on \\([4,10]\\). Remaining wait is \\(\\text{mean}-4\\).<br><b>New answer:</b> \\(7-4 = 3\\) minutes (not \\(5\\), and not the exponential answer).",
+  "tags": [
+   "s_memorylessness",
+   "uniform",
+   "perturbation",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Perturbed:</b> \\(V_1, V_2, \\dots\\) iid \\(U(0,2)\\). What is \\(E[N]\\), where \\(N\\) is the number of draws until the running sum first exceeds 1?",
+  "back": "<b>What breaks:</b> The uniform on \\((0,1)\\) is replaced, so the scale matters: the sum must exceed \\(1/2\\) in \\(U(0,1)\\) units.<br><b>Fix:</b> Scale: \\(V_i=2U_i\\), so \\(\\sum V_i>1\\) iff \\(\\sum U_i>1/2\\). Then \\(E[N]=\\sum_n P(\\sum U_i\\le 1/2)=\\sum_n (1/2)^n/n!\\).<br><b>New answer:</b> \\(e^{1/2}\\approx 1.6487\\) (versus \\(e\\)).",
+  "tags": [
+   "s_tail_sum",
+   "uniform",
+   "perturbation",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Perturbed:</b> \\(X\\sim\\text{Exp}(1)\\), \\(Y\\sim\\text{Exp}(2)\\) independent. What is \\(P(X+Y\\le 1)\\)?",
+  "back": "<b>What breaks:</b> The convolution is no longer Gamma(2,1) because the rates differ.<br><b>Fix:</b> Density of the sum is \\(2(e^{-x}-e^{-2x})\\). Integrate over \\([0,1]\\).<br><b>New answer:</b> \\(1-2e^{-1}+e^{-2}=(1-e^{-1})^2 \\approx 0.3996\\) (versus \\(0.2642\\) for equal rates).",
+  "tags": [
+   "s_generating_function",
+   "convolution",
+   "exponential",
+   "perturbation",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Perturbed:</b> \\(X\\sim\\text{Exp}(1)\\), \\(Y\\sim\\text{Exp}(2)\\) independent. What is \\(P\\!\\left(\\dfrac{X}{X+Y}\\le\\tfrac14\\right)\\)?",
+  "back": "<b>What breaks:</b> The share is no longer uniform when rates differ, so the answer \\(1/4\\) from the equal-rate case breaks.<br><b>Fix:</b> \\(P(X/(X+Y)\\le t)=P(Y>cX)\\) with \\(c=(1-t)/t\\). For \\(X\\sim\\text{Exp}(a)\\), \\(Y\\sim\\text{Exp}(b)\\): \\(P(Y>cX)=\\dfrac{a}{a+cb}\\). Here \\(a=1,b=2\\).<br><b>New answer:</b> \\(\\dfrac{1}{1+3\\cdot 2}=\\tfrac17 \\approx 0.1429\\). Monte Carlo \\(0.1427\\).",
+  "tags": [
+   "s_change_of_measure",
+   "exponential",
+   "perturbation",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Perturbed:</b> \\((X,Y)\\) standard normal, with \\(\\text{Corr}(X,Y)=0.6\\). What is \\(P(X/Y\\le 0)\\)?",
+  "back": "<b>What breaks:</b> The ratio is no longer a centred Cauchy: its location shifts to \\(\\rho\\), and its scale becomes \\(\\sqrt{1-\\rho^2}\\).<br><b>Fix:</b> \\(X/Y\\sim\\text{Cauchy}(\\rho,\\sqrt{1-\\rho^2})\\). Then \\(P(X/Y\\le 0)=\\tfrac12-\\tfrac1\\pi\\arctan(\\rho/\\sqrt{1-\\rho^2})\\).<br><b>New answer:</b> \\(\\tfrac12-\\tfrac1\\pi\\arctan(0.75)\\approx 0.2952\\). Monte Carlo \\(0.2953\\).",
+  "tags": [
+   "s_geometric_probability",
+   "cauchy",
+   "normal",
+   "perturbation",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Perturbed:</b> \\(X\\sim N(1,1)\\) and \\(Y\\sim N(0,1)\\) independent. What is \\(E[\\max(X,Y)]\\)?",
+  "back": "<b>What breaks:</b> The closed form \\(E\\max = \\theta/\\sqrt{2\\pi}\\) assumes zero means. Nonzero means shift the mass through \\(\\Phi\\).<br><b>Fix:</b> Clark's formula: \\(E\\max = \\mu_1\\Phi(\\alpha)+\\mu_2\\Phi(-\\alpha)+\\theta\\varphi(\\alpha)\\), with \\(\\theta=\\sqrt{\\sigma_1^2+\\sigma_2^2}=\\sqrt2\\) and \\(\\alpha=(\\mu_1-\\mu_2)/\\theta=1/\\sqrt2\\).<br><b>New answer:</b> \\(\\Phi(1/\\sqrt2)+\\sqrt2\\,\\varphi(1/\\sqrt2)\\approx 1.1996\\). Monte Carlo \\(1.2003\\).",
+  "tags": [
+   "s_clt_normal_approx",
+   "normal",
+   "max",
+   "perturbation",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Perturbed:</b> \\(V_1,V_2,V_3\\) iid \\(U(-1,1)\\). What is \\(P(V_1+V_2+V_3\\le 1)\\)?",
+  "back": "<b>What breaks:</b> The simplex argument needs nonnegative variables. With symmetric support, the sum is centred at 0 and the event is not a corner.<br><b>Fix:</b> Set \\(V_i = 2U_i-1\\). Then \\(\\sum V_i\\le 1 \\iff \\sum U_i\\le 2\\), and \\(P(\\sum U_i\\le 2)=1-P(\\sum U_i\\lt 1)\\) by \\(U\\mapsto 1-U\\).<br><b>New answer:</b> \\(1-\\tfrac16=\\tfrac56\\approx 0.8333\\) (versus \\(1/6\\) for \\(U(0,1)\\)).",
+  "tags": [
+   "s_geometric_probability",
+   "irwin_hall",
+   "perturbation",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Three points are placed independently and uniformly on the rim of a wheel. What is the probability the triangle they form contains the hub?",
+  "back": "<b>Classic:</b> Three uniform points on a circle; triangle contains the centre (rim = circle, hub = centre).<br><b>Mapping:</b> The hub lies inside iff the three points are not all in one semicircle. Use \\(1-3/4\\).<br><b>Answer:</b> \\(1/4\\)",
+  "tags": [
+   "s_geometric_probability",
+   "s_complement",
+   "circle",
+   "twin",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two sensors each fire once at a uniform random time in \\([0,1]\\) s. A coincidence detector trips if the two firings are within \\(0.25\\) s of each other. What is the probability it trips?",
+  "back": "<b>Classic:</b> The meeting problem, with 15-minute waits in an hour.<br><b>Mapping:</b> Firing times are \\(X,Y\\); trip iff \\(|X-Y|\\le 1/4\\). Area of the band in the unit square.<br><b>Answer:</b> \\(7/16\\)",
+  "tags": [
+   "s_geometric_probability",
+   "meeting",
+   "twin",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Three independent Exp(1) lengths \\(L_1,L_2,L_3\\). What is the probability they can be the sides of a non-degenerate triangle?",
+  "back": "<b>Classic:</b> The broken-stick triangle problem with two uniform cuts (answer \\(1/4\\)).<br><b>Mapping:</b> Normalising iid Exp(1) gives a uniform point on the simplex, the same law as stick spacings from two uniform cuts. The triangle test is scale-free.<br><b>Answer:</b> \\(1/4\\). Monte Carlo \\(0.2501\\). Note iid uniform lengths give \\(1/2\\) instead, so the classic mapping needs exponential, not uniform, lengths.",
+  "tags": [
+   "s_geometric_probability",
+   "stick",
+   "twin",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Three independent light bulbs with Exp(1) lifetimes. What is the expected time until all three have burnt out?",
+  "back": "<b>Classic:</b> Expected maximum of three iid Exp(1) variables, a coupon-style sum of exponential spacings.<br><b>Mapping:</b> \\(\\max = X_{(1)} + (X_{(2)}-X_{(1)}) + (X_{(3)}-X_{(2)})\\), with spacing means \\(1/3, 1/2, 1\\).<br><b>Answer:</b> \\(\\tfrac{11}{6}\\approx 1.8333\\).",
+  "tags": [
+   "s_memorylessness",
+   "s_order_statistics",
+   "exponential",
+   "twin",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A standard Brownian motion \\(W\\). Given \\(W_2=1\\), what are \\(E[W_1]\\) and \\(\\text{Var}(W_1)\\)?",
+  "back": "<b>Classic:</b> Conditional normal: \\(X,Y\\) iid \\(N(0,1)\\) given \\(X+Y=s\\) has \\(E[X]=s/2\\) and \\(\\text{Var}=1/2\\).<br><b>Mapping:</b> Set \\(X=W_1\\) and \\(Y=W_2-W_1\\), iid \\(N(0,1)\\); the condition is \\(X+Y=W_2=1\\).<br><b>Answer:</b> \\(E[W_1]=1/2\\), \\(\\text{Var}(W_1)=1/2\\).",
+  "tags": [
+   "s_clt_normal_approx",
+   "normal",
+   "twin",
+   "brownian",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two independent service times, each Exp(1) minutes, for customers A and B. What is \\(P\\!\\left(\\dfrac{A}{A+B}\\le \\tfrac14\\right)\\)?",
+  "back": "<b>Classic:</b> Breaking a unit stick at a uniform point: the fraction left of the cut is uniform.<br><b>Mapping:</b> With iid exponential service times, \\(A/(A+B)\\) is uniform on \\([0,1]\\), so \\(P(\\le 1/4)=1/4\\).<br><b>Answer:</b> \\(1/4\\). Monte Carlo \\(0.2504\\).",
+  "tags": [
+   "s_change_of_measure",
+   "exponential",
+   "uniform",
+   "twin",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A floor is laid with parallel boards of width \\(w\\). A stick of length \\(w\\) is dropped at random. What is the probability it lies across a seam?",
+  "back": "<b>Classic:</b> Buffon's needle with needle length equal to line spacing.<br><b>Mapping:</b> Board seams are parallel lines spaced \\(w\\) apart; the needle has \\(l=d\\).<br><b>Answer:</b> \\(2l/(\\pi d)=2/\\pi\\approx 0.6366\\). Monte Carlo \\(0.6358\\).",
+  "tags": [
+   "s_geometric_probability",
+   "buffon",
+   "twin",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Four people each pick a uniformly random time in the next hour, independently. What is the expected time of the third arrival?",
+  "back": "<b>Classic:</b> Expected third order statistic of four uniform draws on an interval.<br><b>Mapping:</b> \\(U_{(3)}\\) of \\(n=4\\) has mean \\(3/(n+1)\\) of the interval.<br><b>Answer:</b> \\(3/5\\) hour, i.e. 36 minutes.",
+  "tags": [
+   "s_order_statistics",
+   "uniform",
+   "twin",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>When should you reach for order statistics: \\(E[U_{(k)}]=k/(n+1)\\), and when does it fail?</b>",
+  "back": "<b>Triggers:</b> Iid draws from \\(U(0,1)\\) (or any continuous law after transforming by \\(F\\)); a question about a rank or a range.<br><b>Move:</b> Use \\(U_{(k)}\\sim\\text{Beta}(k,n-k+1)\\) and the spacings argument: spacings of \\(n\\) uniforms are exchangeable.<br><b>Canonical example:</b> Expected range of 10 uniforms is \\(9/11\\).<br><b>Failure mode:</b> Density is not uniform (e.g. \\(f=2x\\)): the formula is wrong. Use \\(P(\\min>t)=(1-F(t))^n\\). Also fails for dependent or non-identical draws.",
+  "tags": [
+   "s_order_statistics",
+   "uniform",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A waiting time \\(T\\) satisfies \\(P(T>s+t\\mid T>s)=P(T>t)\\) for all \\(s,t\\) exactly when \\(T\\) is {{c1::exponential}} (continuous) or {{c2::geometric}} (discrete).",
+  "back": "Triggers: a race with a constant hazard rate. Fails: a bounded uniform wait or any Gamma/Weibull with shape not 1. E.g. uniform on \\([0,10]\\) with 4 minutes elapsed: remaining mean is \\(3\\), not \\(5\\).",
+  "tags": [
+   "s_memorylessness",
+   "exponential",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Independent Poisson processes with rates \\(\\lambda_1,\\lambda_2\\) superpose to rate {{c1::\\(\\lambda_1+\\lambda_2\\)}}. Keeping each event independently with probability \\(p\\) thins the process to rate {{c2::\\(p\\lambda\\)}}.",
+  "back": "Triggers: 'which type comes next' is \\(\\lambda_i/\\sum\\lambda_j\\). Fails: dependent streams or time-varying rates (then use integrated intensity).",
+  "tags": [
+   "s_memorylessness",
+   "poisson",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For \\(n\\) iid \\(U(0,1)\\), \\(P(U_1+\\dots+U_n\\le x)\\) equals the Irwin-Hall CDF, and for \\(n=3\\), \\(P(\\text{sum}\\le 1)=\\) {{c1::\\(1/6\\)}} (simplex volume).",
+  "back": "Triggers: sum of uniforms against a threshold. Fails when the support is not \\((0,1)\\): rescale each variable first. E.g. \\(U(-1,1)\\) with threshold 1 gives \\(5/6\\).",
+  "tags": [
+   "s_geometric_probability",
+   "irwin_hall",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For \\(Z\\sim N(0,1)\\): \\(E[Z^{2k}]={{c1::(2k-1)!!}}\\), so \\(E[Z^4]={{c2::3}}\\) and \\(E[Z^6]={{c3::15}}\\). Odd moments are {{c4::0}}.",
+  "back": "Triggers: polynomial times Gaussian, or Gaussian integrals. Fails for non-centred normals: expand around the mean. Also \\(\\int x^2 e^{-x^2}dx=\\sqrt\\pi/2\\) by differentiating the parameter.",
+  "tags": [
+   "s_clt_normal_approx",
+   "gaussian_integral",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a needle of length \\(l\\) dropped on lines spaced \\(d\\) apart: \\(P(\\text{cross}) = {{c1::\\(2l/(\\pi d)\\)}}\\) when \\(l\\le d\\). For \\(l>d\\), the expected number of crossings is still {{c2::\\(2l/(\\pi d)\\)}} but \\(P\\) is smaller.",
+  "back": "Triggers: a count of line crossings. Linearity gives the expectation always. Fails for the probability when the needle can cross twice.",
+  "tags": [
+   "s_indicators",
+   "s_geometric_probability",
+   "buffon",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>When should you reach for change of variables (Jacobian) for \\(Y=g(X)\\), and when does it fail?</b>",
+  "back": "<b>Triggers:</b> A density of a transformed variable is asked for, or a ratio or product of random variables.<br><b>Move:</b> \\(f_Y(y)=\\sum_{x:g(x)=y} f_X(x)\\,|dx/dy|\\), summing over all preimages.<br><b>Canonical example:</b> \\(X\\sim N(0,1)\\), \\(Y=X^2\\): \\(f_Y(y)=2\\varphi(\\sqrt y)\\cdot\\tfrac{1}{2\\sqrt y}=e^{-y/2}/\\sqrt{2\\pi y}\\) (chi-square with 1 df).<br><b>Failure mode:</b> Non-monotone \\(g\\) needs the sum over branches, and the change of variables must be done for each. Ratios like \\(X/Y\\) need a joint transform, not just one Jacobian.",
+  "tags": [
+   "s_change_of_measure",
+   "jacobian",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>When should you reach for conditioning a Gaussian pair on a linear function, and when does it fail?</b>",
+  "back": "<b>Triggers:</b> A joint normal \\((X,Y)\\) and a question about \\(E[X\\mid L]\\) or a probability given \\(L=aX+bY\\) (sums, differences, Brownian increments).<br><b>Move:</b> Regression: \\(E[X\\mid L]=\\dfrac{\\text{Cov}(X,L)}{\\text{Var}(L)}L\\) and \\(\\text{Var}(X\\mid L)=\\text{Var}(X)-\\dfrac{\\text{Cov}(X,L)^2}{\\text{Var}(L)}\\).<br><b>Canonical example:</b> For iid \\(N(0,1)\\) with \\(L=X+Y\\): \\(E[X\\mid L=1]=1/2\\) and variance \\(1/2\\). Same as \\(E[W_1\\mid W_2=1]\\).<br><b>Failure mode:</b> If the conditioning variable is not linear in the Gaussians (e.g. \\(XY\\) or \\(|X|\\)), the conditional law is not normal; compute a direct integral.",
+  "tags": [
+   "s_clt_normal_approx",
+   "normal",
+   "conditioning",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: GAPS 1/3]</b> Context: 9 iid \\(U(0,1)\\) points on \\([0,1]\\) cut the interval into 10 gaps (the two end gaps included).<br>Expected length of the longest gap?",
+  "back": "<b>Answer:</b> \\(\\dfrac{H_{10}}{10}=\\dfrac{7381}{25200}\\approx 0.2929\\)<br><b>Structure:</b> \\(s\\_order\\_statistics\\); trigger: spacings of iid uniforms are exchangeable.<br><b>Key move:</b> Spacings are uniform on the simplex. \\(E[\\max] = \\tfrac{1}{m+1}\\sum_{k=1}^{m+1}\\tfrac1k\\) with \\(m=9\\).<br><b>Working:</b> \\(H_{10}=7381/2520\\), divided by \\(10\\). Monte Carlo \\(0.2929\\).<br><b>Sanity check:</b> \\(\\approx(\\ln 10+\\gamma)/10 = 0.2928\\).<br><b>Transfer:</b> Two cuts (\\(m=2\\)) gives \\(11/18\\), the stick case.",
+  "tags": [
+   "s_order_statistics",
+   "uniform",
+   "spacings",
+   "fmt_chain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: GAPS 2/3]</b> Context: 9 iid \\(U(0,1)\\) points on \\([0,1]\\) cut the interval into 10 gaps (the two end gaps included).<br>What is the probability that some gap exceeds \\(1/2\\)?",
+  "back": "<b>Answer:</b> \\(\\dfrac{10}{2^9}=\\dfrac{5}{256}\\approx 0.01953\\)<br><b>Structure:</b> \\(s\\_order\\_statistics\\) plus \\(s\\_complement\\): at most one gap can exceed \\(1/2\\).<br><b>Key move:</b> \\(P(\\text{gap}_i>t)=(1-t)^m\\). Gaps exceeding \\(1/2\\) are disjoint, so sum over the 10 gaps.<br><b>Working:</b> \\(10\\cdot(1/2)^9 = 10/512\\). Monte Carlo \\(0.01958\\).<br><b>Sanity check:</b> Small, as it should be: the typical gap is \\(0.1\\).<br><b>Transfer:</b> Stick case (\\(m=2\\), three pieces): \\(3\\cdot(1/2)^2=3/4\\).",
+  "tags": [
+   "s_order_statistics",
+   "s_complement",
+   "spacings",
+   "fmt_chain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: GAPS 3/3]</b> Context: 9 iid \\(U(0,1)\\) points on \\([0,1]\\) cut the interval into 10 gaps (the two end gaps included).<br>What is the probability that the first gap, from 0 to the leftmost point, exceeds \\(0.3\\)?",
+  "back": "<b>Answer:</b> \\(0.7^9 \\approx 0.04035\\)<br><b>Structure:</b> \\(s\\_order\\_statistics\\): a fixed gap has a Beta survival law.<br><b>Key move:</b> All nine points must lie beyond \\(0.3\\).<br><b>Working:</b> \\((1-0.3)^9\\). Monte Carlo \\(0.04036\\).<br><b>Sanity check:</b> Compare with the stick case (\\(m=2\\)): \\(0.7^2=0.49\\).<br><b>Transfer:</b> Any single fixed spacing: \\((1-t)^m\\), the survival of a Beta(1, m) variable.",
+  "tags": [
+   "s_order_statistics",
+   "uniform",
+   "spacings",
+   "fmt_chain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CIRCLE 1/3]</b> Context: iid uniform points on a circle.<br>With 3 points, what is the probability all lie in some semicircle?",
+  "back": "<b>Answer:</b> \\(\\tfrac34\\)<br><b>Structure:</b> \\(s\\_symmetry\\); trigger: 'in one half' is fixed by one reference point.<br><b>Key move:</b> Pick the first clockwise point; the other two must fall in the semicircle that starts there.<br><b>Working:</b> \\(3\\cdot(1/2)^2 = 3/4\\). Monte Carlo \\(0.7503\\).<br><b>Sanity check:</b> Two points always fit in a semicircle, so the value is 1 at \\(n=2\\) and drops to \\(3/4\\) at \\(n=3\\).<br><b>Transfer:</b> Triangle contains centre: \\(1/4\\).",
+  "tags": [
+   "s_symmetry",
+   "s_geometric_probability",
+   "circle",
+   "fmt_chain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CIRCLE 2/3]</b> Context: iid uniform points on a circle.<br>Now 4 points. What is the probability all lie in some semicircle?",
+  "back": "<b>Answer:</b> \\(\\tfrac12\\)<br><b>Structure:</b> \\(s\\_symmetry\\) with the reference-point argument.<br><b>Key move:</b> Same argument: \\(4\\cdot(1/2)^3\\).<br><b>Working:</b> \\(4\\cdot\\tfrac18 = \\tfrac12\\). Monte Carlo \\(0.4999\\).<br><b>Sanity check:</b> Decreasing in \\(n\\), as expected.<br><b>Transfer:</b> Five points: \\(5/16\\).",
+  "tags": [
+   "s_symmetry",
+   "s_geometric_probability",
+   "circle",
+   "fmt_chain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CIRCLE 3/3]</b> Context: iid uniform points on a circle.<br>General \\(n\\): give the probability and evaluate it at \\(n=6\\).",
+  "back": "<b>Answer:</b> \\(\\dfrac{n}{2^{n-1}}\\); at \\(n=6\\), \\(\\tfrac{3}{16}=0.1875\\)<br><b>Structure:</b> \\(s\\_symmetry\\) plus \\(s\\_geometric\\_probability\\).<br><b>Key move:</b> Reference-point argument: \\(n(1/2)^{n-1}\\), valid because the events for different reference points are disjoint.<br><b>Working:</b> \\(6/32=3/16\\). Monte Carlo \\(0.1872\\).<br><b>Sanity check:</b> At \\(n=1,2\\) the formula gives \\(1\\), which is correct since any one or two points fit in a semicircle.<br><b>Transfer:</b> Arcs of fraction \\(f\\): \\(n f^{n-1}\\) (perturbation card).",
+  "tags": [
+   "s_symmetry",
+   "s_geometric_probability",
+   "circle",
+   "fmt_chain"
+  ]
+ }
+]
