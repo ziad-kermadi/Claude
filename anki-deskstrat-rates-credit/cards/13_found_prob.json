@@ -454,7 +454,7 @@
  {
   "type": "basic",
   "front": "Two applications of Jensen to rates and options. (a) Show \\(\\mathbb E[(F_T-K)^+]\\ge(\\mathbb E[F_T]-K)^+\\). (b) With a random rate \\(r\\) taking 2% and 4% with equal probability, compare \\(\\mathbb E[1/(1+r)]\\) and \\(1/(1+\\mathbb E[r])\\). Which side benefits a holder of a long bond?",
-  "back": "<b>(a)</b> \\(x\\mapsto(x-K)^+\\) is convex. Jensen gives \\(\\mathbb E[(F_T-K)^+]\\ge(\\mathbb E F_T-K)^+\\). The gap is the time value that the option gains from volatility, with the forward held fixed.<br>\n<b>(b)</b> \\(\\mathbb E[1/(1+r)]=\\tfrac12(0.98039+0.96154)=0.970965\\), while \\(1/(1+0.03)=0.970874\\). The random-rate price is higher, by about 0.9bp of value per unit notional.<br>\n<b>Who benefits.</b> A long bond is convex in yield, so its expected value under rate uncertainty is above its value at the expected yield. Holding a convex position benefits from volatility, which is the usual long-gamma intuition.<br>\n<b>Interviewer follow-up:</b> is the convexity premium the same for a forward swap? No. A swap is linear in the rate, so Jensen gives zero, and the adjustment appears only through the annuity measure.<br>\n<b>Used in the deck for:</b> the convexity adjustment and the bond-versus-swap convexity comparison.",
+  "back": "<b>(a)</b> \\(x\\mapsto(x-K)^+\\) is convex. Jensen gives \\(\\mathbb E[(F_T-K)^+]\\ge(\\mathbb E F_T-K)^+\\). The gap is the time value that the option gains from volatility, with the forward held fixed.<br>\n<b>(b)</b> \\(\\mathbb E[1/(1+r)]=\\tfrac12(0.98039+0.96154)=0.970965\\), while \\(1/(1+0.03)=0.970874\\). The random-rate price is higher, by about 0.9bp of value per unit notional.<br>\n<b>Who benefits.</b> A long bond is convex in yield, so its expected value under rate uncertainty is above its value at the expected yield. Holding a convex position benefits from volatility, which is the usual long-gamma intuition.<br>\n<b>Interviewer follow-up:</b> is the convexity premium the same for a forward swap? No. A forward swap is linear in its swap rate, so no Jensen term arises from the rate alone. Convexity appears for payments set off a rate (CMS), and it is handled by the change of measure.<br>\n<b>Used in the deck for:</b> the convexity adjustment and the bond-versus-swap convexity comparison.",
   "tags": [
    "jensen",
    "convexity",
@@ -476,7 +476,7 @@
  {
   "type": "basic",
   "front": "Without a calculator, estimate \\(\\mathbb P(Z>1)\\), \\(\\mathbb P(Z>2)\\), \\(\\mathbb P(Z>3)\\) and \\(\\mathbb P(Z>2.33)\\) for a standard normal, using only the anchors 68/95/99.7.",
-  "back": "<b>Method.</b> \\(\\mathbb P(|Z|>1)=32\\%\\), so each tail is 16%: \\(\\mathbb P(Z>1)\\approx15.9\\%\\). \\(\\mathbb P(|Z|>2)=4.6\\%\\), so \\(\\mathbb P(Z>2)\\approx2.3\\%\\). \\(\\mathbb P(|Z|>3)=0.27\\%\\), so \\(\\mathbb P(Z>3)\\approx0.135\\%\\).<br>\n<b>Between anchors.</b> \\(\\mathbb P(Z>2.33)\\approx0.99\\%\\), which is the 1% tail. The tail falls by a factor of about 17 between 2σ and 3σ, so each extra σ step is roughly an order of magnitude or more.<br>\n<b>Used in the deck for:</b> scaling moves and checking that a quoted percentile is plausible.",
+  "back": "<b>Method.</b> \\(\\mathbb P(|Z|>1)=32\\%\\), so each tail is 16%: \\(\\mathbb P(Z>1)\\approx15.9\\%\\). \\(\\mathbb P(|Z|>2)=4.6\\%\\), so \\(\\mathbb P(Z>2)\\approx2.3\\%\\). \\(\\mathbb P(|Z|>3)=0.27\\%\\), so \\(\\mathbb P(Z>3)\\approx0.135\\%\\).<br>\n<b>Between anchors.</b> \\(\\mathbb P(Z>2.33)\\approx0.99\\%\\), which is the 1% tail. The tail falls by a factor of about 7 from 1σ to 2σ and about 17 from 2σ to 3σ.<br>\n<b>Used in the deck for:</b> scaling moves and checking that a quoted percentile is plausible.",
   "tags": [
    "normal_distribution",
    "mental_math",
@@ -557,7 +557,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: OU 2/3]</b> Vasicek with \\(r_0=2\\%\\), \\(\\theta=3\\%\\), \\(\\kappa=0.5\\), \\(\\sigma=1\\%\\) per root year. Compute \\(\\mathbb E[r_1]\\), \\(\\operatorname{sd}[r_1]\\) and \\(\\mathbb P(r_1<0)\\).",
-  "back": "<b>Mean.</b> \\(\\theta+(r_0-\\theta)e^{-0.5}=3\\%-1\\%\\times0.6065=2.393\\%\\).<br>\n<b>Variance.</b> \\(\\sigma^2(1-e^{-2\\kappa})/(2\\kappa)=10^{-4}(1-e^{-1})/1=6.32\\times10^{-5}\\). Standard deviation \\(0.795\\%\\).<br>\n<b>Negative probability.</b> \\(\\mathbb P(r_1<0)=\\Phi(-2.393/0.795)=\\Phi(-3.01)\\approx0.13\\%\\).<br>\n<b>Interviewer follow-up:</b> the long-run mean is 3%, but the one-year-ahead distribution is already fairly tight, and most of the mass sits near the forward. The Gaussian tail is the feature to discuss.<br>\n<b>Used in the deck for:</b> Vasicek and Hull–White case studies.",
+  "back": "<b>Mean.</b> \\(\\theta+(r_0-\\theta)e^{-0.5}=3\\%-1\\%\\times0.6065=2.393\\%\\).<br>\n<b>Variance.</b> \\(\\sigma^2(1-e^{-2\\kappa})/(2\\kappa)=10^{-4}(1-e^{-1})/1=6.32\\times10^{-5}\\). Standard deviation \\(0.795\\%\\).<br>\n<b>Negative probability.</b> \\(\\mathbb P(r_1<0)=\\Phi(-2.393/0.795)=\\Phi(-3.01)\\approx0.13\\%\\).<br>\n<b>Interviewer follow-up:</b> the one-year standard deviation is only 0.8%, so the expected path dominates over the horizon. The Gaussian tail is the feature to discuss.<br>\n<b>Used in the deck for:</b> Vasicek and Hull–White case studies.",
   "tags": [
    "ornstein_uhlenbeck",
    "vasicek",

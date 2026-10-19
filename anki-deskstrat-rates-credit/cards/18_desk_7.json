@@ -1,0 +1,388 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: LIMIT_BREACH 1/4]</b> Context: the desk's 5y key-rate DV01 limit is £200k/bp, current usage in that bucket is £195k/bp, and a client trade adds £12k/bp to the same bucket. It is 15:50. What is the post-trade utilisation, and what do you do before you execute?",
+  "back": "Headline: post-trade bucket DV01 is 195 + 12 = £207k/bp, utilisation 103.5%, excess £7k/bp. The trade cannot be booked at this size under the limit without a sanctioned exception.<br>\nBefore execution: (1) confirm the trade's DV01 on the risk system and on your own sensitivity calculation, and check which bucket the system assigns it to, because the bucketing convention can move DV01 between neighbouring buckets; (2) netting against an offsetting position in a different bucket changes the totals but does not cure the 5y limit; (3) look for a cure or a size that fits the headroom before quoting; (4) if the desk still wants the trade, the exception goes to the limit owner, not to a system override.<br>\n<i>Interviewer follow-up:</i> does the 15:50 timing change anything? No. Time pressure is the usual cause of breaches, so the rule is to size or price the trade to fit and only then talk to the limit owner.",
+  "tags": [
+   "limits",
+   "dv01",
+   "pre_trade_check",
+   "chain_limit_breach",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: LIMIT_BREACH 2/4]</b> Context: the desk is long £200k/bp of 5y DV01 and short £200k/bp of 10y DV01, a DV01-neutral 5s10s curve position. Total DV01 is zero, so a total-DV01 limit is untouched. Why do we run bucketed limits, and what is the P&amp;L if 5y yields rise 10bp with 10y unchanged?",
+  "back": "Headline: P&amp;L = 200k × (−10) = <b>−£2.0m</b>. The 10y leg does not move, so it contributes nothing; the 5y leg is long duration and loses when yields rise.<br>\nWhy bucket limits: a total-DV01 limit measures parallel exposure only. It is zero here while the desk carries a large curve-shape bet. A limit on each bucket bounds exposure to each segment of the curve, and therefore bounds steepening, flattening and single-segment moves.<br>\nPractice: the limit is set on the absolute DV01 in each bucket, not on the signed net, so the offsetting 10y leg does not create headroom for the 5y leg.<br>\n<i>Interviewer follow-up:</i> a 5y-only move is a rare shape, so why would it matter? Because a DV01-neutral curve trade is only neutral to a parallel move. If the desk's view or its hedge depends on the 5y segment behaving like the 10y, a single-segment move is the realistic loss.",
+  "tags": [
+   "limits",
+   "dv01",
+   "curve_risk",
+   "chain_limit_breach",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: LIMIT_BREACH 3/4]</b> Context: after the trade in step 1 the 5y bucket is at £207k/bp against a £200k/bp limit, and it is 16:30. The desk head suggests holding the excess overnight and fixing it tomorrow. What is wrong with this, what does the excess cost to carry, and what is the escalation sequence?",
+  "back": "Headline: holding the excess overnight is an unapproved exception. It also has a measurable cost: the £7k/bp excess loses £70k in a 10bp adverse move in 5y yields, which is an ordinary stress move rather than a tail.<br>\nEscalation sequence (typical practice; the firm's limit policy sets the exact rules): (1) report the breach before the close to the desk head and to the market risk / limit function, with the amount, bucket, cause and the proposed cure; (2) log it with timestamps; (3) agree a written plan with an end time: either a cure (hedge or reduce) or a time-limited approved exception; (4) do not make unilateral trades outside the approved cure; (5) if the agreed time passes without a cure, the breach goes up one level.<br>\nCarry cost check: 7,000 × 10 = £70k for a 10bp move. A 5bp daily move, roughly a normal day in 5y yields (approx.), costs about £35k of excess-driven loss.<br>\n<i>Interviewer follow-up:</i> why not wait for the next morning's liquidity? The limit is a risk appetite, and the market can move the book further overnight while nobody has agreed a plan.",
+  "tags": [
+   "limits",
+   "breach_escalation",
+   "chain_limit_breach",
+   "risk",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: LIMIT_BREACH 4/4]</b> Context: the 5y bucket excess is £7k/bp and the desk is long duration in that bucket. A 5y par swap at 4% has annuity about 4.5 per unit notional (approx.). Size the hedge that cures the excess, give the residual, and list what you check before executing.",
+  "back": "Headline: PV01 of a 5y par swap per £1m notional = 4.5 × £1m × 1bp = £450/bp. Required notional = 7,000 / 450 ≈ £15.6m. Hedge DV01 = 15.6m × 450 per £1m = £7,020/bp, so the bucket ends at 207k − 7.02k = £199.98k/bp, inside the limit by about £20/bp.<br>\nDirection: a long-duration bucket is hedged by paying fixed (negative DV01); confirm the sign in the system, since a sign slip doubles the excess instead of curing it.<br>\nChecks: (1) use the trade's actual schedule and the live curve to get the annuity, not the 4.5 approximation; (2) confirm the swap's DV01 lands in the 5y bucket, not split across 4y and 6y by the bucketing method; (3) execution cost: half the bid-offer on £15.6m plus the margin the new trade posts; (4) the hedge is itself a new trade and must fit its own limits.<br>\n<i>Interviewer follow-up:</i> why not use the 5y future? You can, and it is often cheaper to execute. The trade-off is that the future's DV01 depends on the cheapest-to-deliver bond, so the hedge carries basis and delivery risk that the swap does not.",
+  "tags": [
+   "limits",
+   "hedging",
+   "swaps",
+   "chain_limit_breach",
+   "desk_practice",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Scenario]</b> It is 16:15. A client wants to receive fixed on £60m 10y, the same direction as the desk's existing 10y bucket position. The 10y bucket is at £218k/bp against a £250k/bp limit. A 10y par swap has annuity about 8.1 (approx.). Walk through the pre-trade check and say what you would quote.",
+  "back": "Headline: the trade adds 60 × 810 = £48.6k/bp, taking the bucket to £266.6k/bp, or 106.6% of limit. It cannot be done at full size.<br>\nSteps: (1) get the PV01 from the actual schedule and curve (£810 per £1m at annuity 8.1); (2) headroom = 250 − 218 = £32k/bp, so the maximum notional is 32,000 / 810 ≈ £39.5m; (3) offer £39m at the standard price, and the balance only after the book has room; (4) a same-direction trade cannot be netted inside the bucket, so the only real cures are reducing the existing exposure or trading the other way; (5) if the client insists on the full size, price for the risk (a wider level reflecting the excess and its hedge cost) and send the exception to the limit owner for a time-limited approval. Do not hedge in another bucket and call it done: the 10y bucket is still over.<br>\n<i>Interviewer follow-up:</i> when is a trade in another bucket acceptable? Only when the limit framework explicitly nets that exposure, such as an approved curve limit. Netting across buckets to get under a bucket limit is the classic way a desk hides a breach.",
+  "tags": [
+   "pre_trade_check",
+   "client_trade",
+   "limits",
+   "scenario",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A 30y par swap at 4% fixed, semi-annual with accrual 0.5, has annuity (accrual times discount factors) about {{c1::17.4}}, so its PV01 per £1m notional is about {{c2::£1,738}} per bp.",
+  "back": "Check: annuity = 0.5 × Σ_{k=1}^{60} 1.02^(−k) = 17.38, so PV01 = 17.38 × £1m × 0.0001 = £1,738. The 30y annuity is about four times the 5y one, which is why long-end DV01 is bought in small notional and why a 30y bucket limit of £120k/bp is only about £70m of 30y swap.<br>\n<i>Used in:</i> bucket sizing and the conversion of client notionals into DV01 before any trade is priced.",
+  "tags": [
+   "swaps",
+   "pv01",
+   "annuity",
+   "mental_math",
+   "desk_practice",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Case study]</b> The desk has bucket DV01 limits of 2y £150k, 5y £200k, 10y £250k and 30y £120k per bp (total £720k). Find the worst-case P&amp;L the book can reach while every bucket stays inside its limit for (a) a parallel +25bp move and (b) a bear steepener with shocks of +20bp at 2y, +15bp at 5y, +5bp at 10y and 0 at 30y. Explain why the total-DV01 limit does not answer this question.",
+  "back": "Method: each bucket position can take either sign within its limit, so for a shock s_i the desk can pick the sign that loses most. Worst-case loss = Σ L_i × |s_i|.<br>\n(a) Parallel +25bp: 25 × (150 + 200 + 250 + 120)k = 25 × £720k = <b>£18.0m</b>. This is the total-DV01 bound: all buckets short duration.<br>\n(b) Bear steepener: 20 × 150k + 15 × 200k + 5 × 250k + 0 = 3.0m + 3.0m + 1.25m = <b>£7.25m</b>.<br>\nWhy total DV01 is not enough: a total limit of £720k is met by a book that is long 2y and short 10y, which has near-zero total DV01 but can lose £7.25m on the steepener above. Bucket limits are gross per segment, so they bound each segment; the worst case then depends on the scenario set.<br>\nWhere it breaks: the bound assumes the desk can take opposite signs in every bucket at full limit at the same time, which the hedging instruments and the curve correlation often do not allow. The realistic worst case is lower, so the scenario engine and a stress limit matter as much as the bucket limits.<br>\n<i>Interviewer follow-up:</i> so why have bucket limits at all? They cap gross curve exposure segment by segment and keep the desk's curve views inside what the risk function has approved. The worst-case number is the scenario engine's job.",
+  "tags": [
+   "limits",
+   "bucket_limits",
+   "case_study",
+   "stress",
+   "desk_practice",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Derivation]</b> A book has bucket DV01s d_i (£ per bp) at tenors t_i. Define a level exposure \\(L=\\sum_i d_i\\) and a slope exposure \\(S=\\sum_i d_i b_i\\) with stylised loadings \\(b_i=(t_i-10)/20\\). Show why bucket limits alone do not control the slope, and compute L and S for d = (2y +£100k, 5y +£150k, 10y −£120k, 30y +£50k).",
+  "back": "Derivation: a curve move is \\(\\Delta y_i=\\sum_k b_{ik}x_k\\), where \\(x_k\\) are factor moves (level, slope, curvature) and \\(b_{ik}\\) their loadings. The P&amp;L is \\(\\sum_i d_i\\Delta y_i=\\sum_k F_k x_k\\) with \\(F_k=\\sum_i d_i b_{ik}\\). So the exposure to factor k is a weighted sum of the bucket DV01s, and a bucket limit constrains each \\(d_i\\) separately, not \\(F_k\\).<br>\nNumbers: \\(L = 100 + 150 − 120 + 50 = £180\\text{k/bp}\\). Slope loadings b = (−0.40, −0.25, 0, +1.00), so \\(S = 100(-0.40) + 150(-0.25) + (-120)(0) + 50(1.00) = -40 - 37.5 + 0 + 50 = -£27.5\\text{k}\\) per unit of slope.<br>\nWhere it breaks: the (t−10)/20 loadings are stylised. Production factor limits take the loadings from a principal-components decomposition of the historical yield-change covariance, and the residual curvature exposure should be checked as well.<br>\n<i>Interviewer follow-up:</i> why would a desk with a level limit still get surprised? A book can have a modest level exposure and a large slope exposure, which bucket limits only show indirectly. Factor limits fill that gap.",
+  "tags": [
+   "limits",
+   "factor_risk",
+   "derivation",
+   "pca",
+   "desk_practice",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Case study]</b> The desk holds £400m nominal of one gilt, which is 40% of its gilt DV01 and is also the cheapest-to-deliver for the futures it uses. The bond trades about £1.2bn a day and the desk's realistic participation is 20% of daily volume without moving the price. (a) How many days to exit? (b) What liquidity horizon does that imply? (c) On a stress day volume halves. Recompute, and say what the limit should do.",
+  "back": "(a) 400 / (0.20 × 1,200) = 400 / 240 = <b>1.67 days</b>, so two days at the assumed participation.<br>\n(b) Round up to a 2-day liquidity horizon for the normal-market case.<br>\n(c) Stressed daily volume £600m: 400 / (0.20 × 600) = 3.33 days, so 4 days after rounding up. The exit time roughly doubles, and the desk's exit price gets worse at the same time.<br>\nWhat the limit should do: cap the single-bond share of DV01 (a concentration limit) and cap the stressed exit time, so that a 40% concentration does not become a 4-day exit in the stress case. The CTD status adds delivery-related concentration on top of the cash exit.<br>\n<i>Interviewer follow-up:</i> how would you reduce it without selling the bond? Hedge the bond's DV01 at the bucket level with a swap or a futures position, which removes the market exposure and leaves the basis risk and the bond's own liquidity risk in place. The concentration is then a basis problem, not a DV01 problem.",
+  "tags": [
+   "concentration_risk",
+   "liquidity",
+   "case_study",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Days to exit a position of size P at a participation rate p of average daily volume V is {{c1::P / (p × V)}}; with P = £400m, p = 20% and V = £1.2bn, this is about {{c2::1.67}} days.",
+  "back": "Stress version: halve V and the exit time doubles to 3.33 days. Limits should use the stressed V, not the spot average.<br>\n<i>Used in:</i> liquidity horizons for concentrated positions and the concentration limit on single bonds.",
+  "tags": [
+   "liquidity",
+   "concentration_risk",
+   "cloze",
+   "desk_practice",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Derivation]</b> Explain the square-root form of the liquidity-horizon add-on in expected shortfall. For a risk factor that cannot be exited between day \\(LH_{j-1}\\) and day \\(LH_j\\), why is its incremental stress scaled by \\(\\sqrt{(LH_j-LH_{j-1})/T}\\) for base horizon T? Then combine ES_10 = £4.0m (base), ES = £1.5m for the bucket with LH = 20 days, and ES = £0.8m for the bucket with LH = 40 days, with LH_1 = 10 days.",
+  "back": "Derivation: assume independent daily shocks with variance \\(\\sigma^2\\) per day. A shock over h days has variance \\(h\\sigma^2\\). A factor that is illiquid from day \\(LH_{j-1}\\) to \\(LH_j\\) adds the shock over those \\((LH_j-LH_{j-1})\\) days, with variance \\((LH_j-LH_{j-1})\\sigma^2\\). Relative to the base T-day shock with variance \\(T\\sigma^2\\), the standard-deviation ratio is \\(\\sqrt{(LH_j-LH_{j-1})/T}\\). Scaling the bucket's T-day ES by this ratio charges only the illiquid days, not the whole horizon.<br>\nNumbers: bucket LH = 20: \\(\\sqrt{(20-10)/10}=1\\), so add £1.5m. Bucket LH = 40: \\(\\sqrt{(40-20)/10}=\\sqrt2\\), so add 0.8 × 1.414 = £1.13m. Combining in quadrature: \\(\\sqrt{4.0^2+1.5^2+1.13^2}=\\sqrt{19.53}\\approx £4.42\\text{m}\\).<br>\nWhere it breaks: the square-root scaling assumes independent shocks and a stable distribution. Gap risk, a liquidity horizon that itself widens in stress, and correlated buckets all make a plain square root understate the add-on. Quadrature assumes zero correlation between the bucket terms.<br>\n<i>Interviewer follow-up:</i> why not just scale VaR by the square root of LH over 10? That applies the long horizon to the whole book and charges liquid positions for illiquid days. The increment charges only the days the position cannot be exited.",
+  "tags": [
+   "liquidity_horizon",
+   "derivation",
+   "expected_shortfall",
+   "risk",
+   "desk_practice",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "The desk has sold £50m of 5y single-name CDS protection, so it is long credit. The spread has widened since trade date and the position is marked at −£4m to the desk. Recovery is 40%. What is the jump-to-default of this position and how does it sit against a £30m JTD limit? Then say what changes on a recovery of 20%.",
+  "back": "Headline: JTD = (1 − R)N + V_desk, with V_desk the desk's MTM (negative = loss). Here 0.6 × 50 + (−4) = <b>£26m</b> loss on default, 87% of the £30m JTD limit.<br>\nWhy: on default the protection seller pays (1 − R)N = £30m and the position is extinguished. The mark was already −£4m, so the incremental loss is 30 − 4 = £26m.<br>\nAt R = 20%: 0.8 × 50 − 4 = £36m, above the limit. The recovery assumption for a credit limit has to be a stated, conservative choice, not the trader's view.<br>\n<i>Interviewer follow-up:</i> how does JTD differ from CS01? CS01 is P&amp;L per bp of spread widening; JTD is the jump on the default event. A 1bp CS01 can be small while the JTD is £26m, so limits need both.",
+  "tags": [
+   "credit",
+   "jtd",
+   "limits",
+   "single_name",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Case study]</b> The desk is long £50k/bp of DV01 in the 7y bucket and must hedge it. Compare (A) paying fixed in a 7y swap at a par rate of 4.00% (annuity 6.0, approx.), and (B) shorting cash gilts with modified duration 6.0, coupon 4.25%, and a rebate on the sale proceeds at 3.95%. For each, give the notional, the annual carry and the residual risk. Then say what a futures hedge would need instead.",
+  "back": "Notional for both: DV01 per £1m = 6.0 × £1m × 0.0001 = £600/bp, so notional = 50,000 / 600 = <b>£83.3m</b>.<br>\n(A) Pay-fixed swap: entered at par, so carry at inception is about zero. The costs are the bid-offer, the margin posted, and the discounting effect of the collateral curve. Residual: swap-spread and basis to the gilt curve.<br>\n(B) Short cash gilt: you owe the 4.25% coupon and earn the 3.95% rebate on the proceeds. Net carry = (3.95% − 4.25%) × £83.3m = <b>−£250k per year</b> (about −£21k per month), before any specialness. The bond is off-market on coupon, so the short costs carry. Residual: borrow availability and buy-back liquidity.<br>\n(C) Futures: the contract's DV01 is the cheapest-to-deliver DV01 divided by its conversion factor, so the contract count comes from the CTD, not from the bucket notional. Carry is embedded in the futures price through the CTD's cost of carry, and it is not a free number to quote from memory.<br>\n<i>Interviewer follow-up:</i> why does the swap show no carry while the short shows £250k a year? The swap's fixed rate is set at market, so it has no carry at inception. The short's coupon was fixed in the past and can be above the rebate, which is a real running cost.",
+  "tags": [
+   "hedging",
+   "carry",
+   "case_study",
+   "swaps",
+   "bonds",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Desk practice]</b> You have hedged a 10y gilt position with a receiver-neutral 10y swap, with a 10y gilt future, or with a short cash gilt. For each hedge, name the residual risk you still carry and the one check you run every day.",
+  "back": "Headline: no hedge is DV01-clean. The residuals sit in the spread between the hedge and the position.<br>\nSwap: the gilt-swap spread (the asset-swap spread) moves, so the swap leaves spread DV01 unhedged. Also the discounting curve of the swap (collateral and OIS) differs from the gilt's repo-implied discounting. Check: daily swap-spread DV01 on the book.<br>\nFuture: cheapest-to-deliver switching and delivery optionality change the future's DV01 and the basis to the cash gilt. Check: the current CTD and the gross and net basis, and the future's DV01 recomputed with that CTD.<br>\nShort cash gilt: repo specialness can spike, so the cost of borrowing the bond rises, and the short must be bought back in the market. Check: the bond's repo rate and borrow availability each morning.<br>\n<i>Interviewer follow-up:</i> which hedge would you switch away from into a delivery window? The future, because the CTD risk is the largest residual at that point. The swap or the cash bond takes over until the roll is complete.",
+  "tags": [
+   "hedging",
+   "futures",
+   "swaps",
+   "basis",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The minimum-variance hedge ratio of a position with yield-change vol \\(\\sigma_P\\) hedged by an instrument with yield-change vol \\(\\sigma_H\\) and correlation \\(\\rho\\) is \\(h^*=\\){{c1::\\(\\rho\\,\\sigma_P/\\sigma_H\\)}}; with \\(\\rho=0.9\\), \\(\\sigma_P=6\\)bp and \\(\\sigma_H=6.5\\)bp per day, \\(h^*\\approx\\){{c2::0.83}}.",
+  "back": "This is the regression beta of the position's yield change on the hedge's yield change. In DV01 terms the hedge DV01 is \\(h^*\\) times the position DV01. Used in: sizing bond-versus-swap and bond-versus-future hedges, and the regression that the hedge book reports as its beta.",
+  "tags": [
+   "hedging",
+   "min_variance",
+   "cloze",
+   "regression",
+   "desk_practice",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Derivation]</b> A position has P&amp;L \\(\\Delta P\\) with volatility \\(\\sigma_P\\), a hedge P&amp;L \\(\\Delta H\\) per unit hedge with volatility \\(\\sigma_H\\), and correlation \\(\\rho\\). Derive the minimum-variance hedge ratio \\(h^*\\) and the residual variance. Then give the hedge effectiveness at \\(\\rho=0.9\\) and say where the hedge breaks.",
+  "back": "Derivation: \\(\\mathrm{Var}(\\Delta P - h\\Delta H)=\\sigma_P^2-2h\\rho\\sigma_P\\sigma_H+h^2\\sigma_H^2\\). Setting the derivative to zero gives \\(h^*=\\rho\\sigma_P/\\sigma_H\\). Substituting back gives the minimum variance \\(\\sigma_P^2(1-\\rho^2)\\). The fraction of variance removed is \\(\\rho^2\\), which is the R² of the regression of \\(\\Delta P\\) on \\(\\Delta H\\).<br>\nNumbers at \\(\\rho=0.9\\): effectiveness = 0.81; residual standard deviation = \\(\\sigma_P\\sqrt{0.19}=0.436\\,\\sigma_P\\), so 6bp becomes 2.62bp.<br>\nWhere it breaks: (1) \\(h^*\\) is estimated from history, and in a regime change the correlation can fall and the hedge goes stale; (2) the derivation ignores carry and drift, and the tail: in stress, correlation can move towards one while volatility jumps, so the hedge can be right on average and wrong when it matters; (3) at short horizons the estimate is dominated by noise, so the horizon should match the rebalancing frequency.<br>\n<i>Interviewer follow-up:</i> an R² of 0.81 sounds good, so why isn't it enough for sign-off? The 19% left over is where the stress losses sit, and R² says nothing about how the residual behaves in the tail.",
+  "tags": [
+   "hedging",
+   "min_variance",
+   "derivation",
+   "hedge_effectiveness",
+   "desk_practice",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BOND_SWAP 1/3]</b> Context: a £30m nominal 10y gilt position with modified duration 8.0, so DV01 £24,000/bp. The desk hedges with a 10y swap using the minimum-variance ratio from daily data: gilt yield-change vol 6.0bp/day, swap 6.5bp/day, correlation 0.90. Find the hedge DV01, the residual daily P&amp;L standard deviation, and the 99% one-day residual.",
+  "back": "h* = 0.90 × 6.0 / 6.5 = 0.83. Hedge DV01 = 0.83 × £24,000 = <b>£19.9k/bp</b>, so the hedge runs at about 83% of the bond's DV01.<br>\nResidual yield vol = 6.0 × √(1 − 0.81) = 6.0 × 0.436 = 2.62bp/day. Daily residual P&amp;L standard deviation = DV01 × residual vol = 24,000 × 2.62 = <b>£62.8k</b>.<br>\n99% one-day (normal approximation, factor 2.33) = 2.33 × 62.8k = <b>£146k</b>. Real residuals are fat-tailed and the normal figure understates a stress day.<br>\n<i>Interviewer follow-up:</i> why use yield vol and not price vol? The hedge is sized in DV01, so the regression should be on yield changes at the same tenor. Price vol mixes in duration and makes the ratio hard to read.",
+  "tags": [
+   "chain_bond_swap",
+   "hedging",
+   "basis",
+   "min_variance",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BOND_SWAP 2/3]</b> Context: the same £30m gilt hedged with a 10y swap, with the hedge DV01 at 83% of the bond's £24k/bp. Over a week the gilt's spread to swaps widens by 5bp with the swap curve unchanged. What is the P&amp;L, and does the swap hedge help?",
+  "back": "Headline: P&amp;L = −24,000 × 5 = <b>−£120k</b>. The swap hedge does not help.<br>\nBreakdown: the rates component was hedged, but a spread move is not a rates move. Swap rates are unchanged, so the swap leg makes nothing, while the bond's yield rises by the 5bp of spread. The full bond DV01 is exposed to the spread.<br>\nSizing: the desk tracks swap-spread DV01 as its own line. Here it is £24k/bp of gilt-to-swap spread risk. That is managed with a spread instrument (a different bond, an asset-swap or a basis trade) or accepted within a limit, not with the 10y swap.<br>\n<i>Interviewer follow-up:</i> the regression gave a 0.9 correlation, so why did the hedge miss? The historical data mixed rate moves and spread moves. A long window dilutes the spread effect, so the hedge looked better than it is in a spread regime. Check the ratio in the regime you are actually trading.",
+  "tags": [
+   "chain_bond_swap",
+   "swap_spread",
+   "basis",
+   "hedging",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BOND_SWAP 3/3]</b> Context: the same £30m gilt versus 10y swap hedge. A risk review asks how well the hedge works and what would make you change it. Define hedge efficiency, compute it from step 1, and give the trigger you would use.",
+  "back": "Efficiency = 1 − Var(hedged P&amp;L) / Var(unhedged P&amp;L) = ρ² = 0.81. From step 1, the hedged residual is 2.62bp against 6.0bp unhedged: 1 − (2.62/6.0)² = 0.81.<br>\nMeasurement: a rolling regression of daily bond P&amp;L on hedge P&amp;L, over 60 to 120 days, gives the R² (efficiency) and the beta (the hedge ratio). The hedge is rebalanced when the beta moves outside a desk-set band or the R² falls below a threshold.<br>\nTrigger: when R² falls below the threshold, first check the data (stale curves, wrong tenor), then the regime (step 2's spread effect), then the instrument (a different tenor or a bond future). Accounting hedge tests are a separate measure, such as the older 80–125% offset window under IAS 39, and must not be mixed with the risk measure.<br>\n<i>Interviewer follow-up:</i> if efficiency is 81%, why is the P&amp;L still large on a bad week? Efficiency is relative to the unhedged variance. It says nothing about the factor the hedge does not cover, such as the 5bp spread move in step 2.",
+  "tags": [
+   "chain_bond_swap",
+   "hedge_effectiveness",
+   "risk_reporting",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Derivation]</b> The desk is long a 1y×10y ATM payer (£100m notional, annuity 8.0, normal vol 90bp) and wants to neutralise its gamma with a 1y×5y ATM payer (£100m notional, annuity 4.6, normal vol 95bp). Using normal-model Greeks, with \\(\\Gamma=A N \\varphi(0)/(\\sigma\\sqrt T)\\) in rate units and vega \\(=A N\\sqrt T\\varphi(0)\\) per unit of normal vol, derive the number of 1y×5y options, the delta to hedge in swaps, and the residual vega.",
+  "back": "Derivation: let \\(\\Gamma_p,\\Delta_p,V_p\\) be the position's Greeks and \\(\\Gamma_h,\\Delta_h,V_h\\) the hedge option's. Choose \\(n=-\\Gamma_p/\\Gamma_h\\) to clear gamma, then add a swap with DV01 \\(-(\\Delta_p+n\\Delta_h)\\) to clear delta. The residual vega is \\(V_p+nV_h\\).<br>\nNumbers (gamma in £ per bp², delta in £ per bp, vega in £ per bp of normal vol): \\(\\Gamma_p=800\\text{m}\\times0.3989/0.0090\\times10^{-8}=£355\\). \\(\\Gamma_h=460\\text{m}\\times0.3989/0.0095\\times10^{-8}=£193\\). So \\(n=-355/193=-1.84\\): sell 1.84 times the 1y×5y notional.<br>\nDelta: \\(\\Delta_p=800\\text{m}\\times0.5\\times10^{-4}=£40.0\\text{k}\\)/bp; \\(\\Delta_h=460\\text{m}\\times0.5\\times10^{-4}=£23.0\\text{k}\\)/bp. Residual after the option hedge is 40.0 − 1.84 × 23.0 = −£2.2k/bp, so add a 5y swap with DV01 about +£2.2k/bp, roughly £4.9m notional at £450 per £1m.<br>\nVega: \\(V_p=800\\text{m}\\times0.3989\\times10^{-4}=£31.9\\text{k}\\)/bp; \\(V_h=18.4\\text{k}\\). Residual = 31.9 − 1.84 × 18.4 ≈ <b>−£1.8k per bp of vol</b>. The gamma hedge has turned a gamma problem into a small short-vega residual.<br>\nWhere it breaks: these are ATM normal-model Greeks. Away from ATM the two options' gammas diverge, the hedge ratio moves with the forward and with time, and the residual has to be rebalanced.<br>\n<i>Interviewer follow-up:</i> how would you remove the −£1.8k vega? With a third option, or by accepting it within the vega limit. Adding the third option is only worth the cost if the vega limit is close.",
+  "tags": [
+   "gamma",
+   "vega",
+   "hedging",
+   "derivation",
+   "normal_model",
+   "desk_practice",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Case study]</b> The desk's gamma is hedged bucket by bucket: a 2y option and a 10y option. Before the hedge, the book has \\(\\Gamma_{22}=8{,}000\\), \\(\\Gamma_{10,10}=20{,}000\\) and cross-gamma \\(\\Gamma_{2,10}=-6{,}000\\), all in £ per bp². After single-bucket hedges, \\(\\Gamma_{22}\\) and \\(\\Gamma_{10,10}\\) are zero and the cross term remains. Measure the second-order P&amp;L under a 2s10s steepener of 2y −10bp and 10y +10bp, before and after the hedge, using \\(\\tfrac12\\sum_i\\sum_j\\Gamma_{ij}\\Delta y_i\\Delta y_j\\).",
+  "back": "Unhedged: ½[8,000 × 100 + 2 × (−6,000) × (−10)(10) + 20,000 × 100] = ½[800k + 1,200k + 2,000k] = <b>£2.0m</b>.<br>\nSingle-bucket hedged: ½[2 × (−6,000) × (−10)(10)] = <b>£0.6m</b>. The per-bucket hedges remove £1.4m of the £2.0m and leave 30% of the second-order P&amp;L in place.<br>\nWhy: the cross term is the piece a bucket hedge cannot see. Its sign is positive here because a negative cross-gamma and a 2s10s steepener multiply to a positive contribution. First-order delta hedging does nothing to it.<br>\nFix: a curve option (for example a 2s10s spread option) or a set of options whose gamma matrix offsets \\(\\Gamma_{2,10}\\). The risk report should show the full gamma matrix, not only the diagonal.<br>\n<i>Interviewer follow-up:</i> why does the desk's delta hedge not offset this? Delta is the first-order term. Cross-gamma is second-order, and a delta-neutral book can still lose on a curve shape.",
+  "tags": [
+   "cross_gamma",
+   "gamma",
+   "case_study",
+   "curve_risk",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The second-order P&amp;L of a multi-bucket book is \\(\\tfrac12\\sum_i\\sum_j\\Gamma_{ij}\\Delta y_i\\Delta y_j\\), and because the \\(ij\\) and \\(ji\\) entries are equal, an off-diagonal pair contributes {{c1::\\(\\Gamma_{ij}\\,\\Delta y_i\\,\\Delta y_j\\)}} in total.",
+  "back": "Check with the card on cross-gamma: \\(\\Gamma_{2,10}\\Delta y_2\\Delta y_{10}=(-6{,}000)(-10)(10)=£600\\text{k}\\). That is the residual left after the single-bucket hedges.<br>\n<i>Used in:</i> explaining why per-bucket gamma limits miss curve-shape P&amp;L.",
+  "tags": [
+   "cross_gamma",
+   "gamma",
+   "cloze",
+   "desk_practice",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Case study]</b> The book's vega is +£60k per bp of vol in the 1y expiry bucket and −£25k per bp in the 5y expiry bucket. Hedge with two instruments. H1, a 1y×5y payer, has vega [1,000, 200] £ per bp per unit in the (1y, 5y) buckets. H2, a 5y×5y payer, has vega [100, 800]. (a) Solve the hedge weights so both bucket vegas are zero. (b) Show the residual if you use only H1.",
+  "back": "(a) Solve M n = −V: 1,000 n1 + 100 n2 = −60,000 and 200 n1 + 800 n2 = 25,000. Solution: n1 = −64.7 and n2 = +47.4, so sell 64.7 units of H1 and buy 47.4 units of H2. Check: 1y bucket = 1,000(−64.7) + 100(47.4) + 60,000 = 0; 5y bucket = 200(−64.7) + 800(47.4) − 25,000 = 0.<br>\n(b) H1 only: n1 = −60,000 / 1,000 = −60. The 5y residual becomes −25,000 + 200 × (−60) = <b>−£37k per bp</b>. The one-instrument hedge fixes the 1y bucket and creates a larger exposure in the 5y bucket.<br>\nLesson: bucketed vega is a linear system, not a single-tenor hedge. Use instruments whose vega sits in the buckets you need.<br>\n<i>Interviewer follow-up:</i> how would you choose between this and a larger position in a cheaper instrument? Add the bid-offer and the liquidity of each option as a cost, and solve for the weights that minimise cost subject to the bucket limits, not only the zero-vega condition.",
+  "tags": [
+   "vega",
+   "hedging",
+   "bucketed_vega",
+   "case_study",
+   "desk_practice",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Case study]</b> The book's DV01 (£ per bp rise) is 2y −£120k, 5y +£60k, 10y −£150k and 30y +£40k. The stress scenario is a bear flattening: +150bp at 2y, +120bp at 5y, +100bp at 10y and +80bp at 30y. The stress limit is £15m. Estimate the stress P&amp;L from linear DV01s, give the utilisation, and state the caveat.",
+  "back": "Linear P&amp;L = Σ d_i s_i = (−120k)(150) + (60k)(120) + (−150k)(100) + (40k)(80) = −18.0 + 7.2 − 15.0 + 3.2 = <b>−£22.6m</b>. Utilisation = 22.6 / 15 = <b>151%</b>.<br>\nCaveat: a 150bp move is far outside the range where DV01 is accurate. Convexity, basis moves and any option exposure are missing, so the stress limit needs a full revaluation under the scenario. The linear number is the first-pass check.<br>\nAttribution: the 2y bucket contributes −£18.0m, about 80% of the total. Any cure has to start there, so a cure in the 30y bucket does not change the stress number much.<br>\nAction: a stress breach of this size is escalated the same day. Check the stress utilisation in the approval of every trade that adds front-end short duration.<br>\n<i>Interviewer follow-up:</i> why not just reduce the total DV01? A flattening stress is a curve bet. Total DV01 can be near zero and the stress loss can still be large, so the cure has to be on the 2y leg.",
+  "tags": [
+   "stress",
+   "limits",
+   "case_study",
+   "scenario",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Scenario]</b> It is 07:15. Overnight a central bank surprised with a hike. The front end moved +18bp and 10y moved +6bp. The book has DV01 of −£310k/bp in the 2y bucket and −£210k/bp in the 10y bucket. The daily loss limit is £5m. Give the first-pass P&amp;L and the steps before the open.",
+  "back": "First pass: P&amp;L = −310k × 18 − 210k × 6 = −5.58m − 1.26m = <b>−£6.84m</b>. That breaches the £5m daily loss limit by £1.84m before the open.<br>\nSteps: (1) check the first-pass number against the risk system's overnight run, which uses full revaluation and captures convexity and the curve's shape; (2) confirm the bucket DV01s, since a missing or stale trade can make the estimate wrong in either direction; (3) notify the desk head and the limit function before the open, with the number and the cause; (4) the loss is already in the P&amp;L, so the question is the position going forward. Any reduction of the short at the open is a risk decision agreed with the desk head, not a way to undo the loss; (5) have the explanation ready: the surprise, the desk's position, and the expected P&amp;L path through the day.<br>\n<i>Interviewer follow-up:</i> why not close the short at the open? Closing realises the move at the open price. The decision is about the expected value of what remains and about the limit's rules, and it is taken with the desk head, not at the desk's discretion.",
+  "tags": [
+   "scenario",
+   "loss_limit",
+   "limits",
+   "overnight",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Scenario]</b> It is 11:40. A volatility spike has pushed book gamma to £360 per bp² against a £400 per bp² limit (90% utilised). A client wants to buy a 1y×10y straddle. What do you check, and what is your answer?",
+  "back": "Headline: the straddle adds long gamma, and the headroom is £40 per bp². Size it, do not accept it at the client's size by default.<br>\nChecks: (1) the straddle's gamma in £ per bp² on the risk system, not its premium or notional. The two legs share a gamma at the same strike, so the straddle's gamma is the sum of the two legs; (2) headroom is 40 per bp²; (3) the straddle adds vega at the same moment vol is high, so check the vega limit and the cost of the vega; (4) a cross-bucket offset (selling gamma in a bucket with headroom) is only allowed if the limit framework nets it; check before using it; (5) pricing: after a vol spike the premium is rich, so the desk's answer may be to price the client wider.<br>\nAnswer: offer a size within the 40 headroom, or price the trade to pay for the gamma and the vega consumed, and send any excess to the limit owner. State the trade-off out loud: buying gamma after a spike is a long-vega bet that vol mean-reverts, not just a gamma position.<br>\n<i>Interviewer follow-up:</i> why not just sell the gamma back to the market? You can, at the market's bid-offer and at the current vol. If the desk's view is that vol will fall, the spike is the cheapest time to hold vega and a poor time to sell it.",
+  "tags": [
+   "scenario",
+   "gamma",
+   "limits",
+   "vega",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Scenario]</b> It is 16:15. The P&amp;L explain for the swaps and gilts book shows −£180k unexplained against the risk-based explain (delta and theta explained). Walk through how you find it, in the order you would check.",
+  "back": "Order of checks: (1) marks and time: stale or wrong close marks in one curve or one bond. Check the build time of each curve and the last-price timestamps; a curve built before the close can misstate P&amp;L by several bp. (2) Trades: a trade booked in the wrong bucket, the wrong direction, the wrong rate or date, or a trade in the P&amp;L that is missing from the risk. (3) Hedge mismatch: the hedge's P&amp;L is in the explain but its sensitivity sits in a different curve. Check the swap-spread and the CTD changes. (4) Model: a difference in day-count, roll or convexity treatment between the pricing and the explain.<br>\nConcrete test: if the 10y bucket DV01 is £210k/bp, a −£180k residual equals a 0.86bp error in the 10y close. Check the 10y curve mark first, because that is the simplest explanation that fits the size.<br>\nEscalation: a residual above the threshold is reported. An adjustment is booked only with the control function's approval, never to make the explain tie.<br>\n<i>Interviewer follow-up:</i> what does a persistent residual of one sign tell you? A one-signed residual over several days points to a model or data issue, such as a bias in the curve. A random residual is usually noise and a timing issue.",
+  "tags": [
+   "scenario",
+   "pnl_explain",
+   "reconciliation",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In Black–Scholes with zero rates, the PDE gives theta \\(= \\){{c1::\\(-\\tfrac12\\sigma^2S^2\\Gamma\\)}}, so a long-gamma book pays theta at a rate of {{c2::\\(\\tfrac12\\sigma^2S^2\\Gamma\\)}} per unit time.",
+  "back": "Why: the BS PDE with zero rate is \\(\\Theta+\\tfrac12\\sigma^2S^2\\Gamma=0\\). The delta-hedged daily gamma P&amp;L is \\(\\tfrac12\\Gamma(\\Delta S)^2\\), which on average equals the theta cost when realised vol equals implied vol.<br>\n<i>Used in:</i> the gamma limit and the theta budget. A gamma-long book makes money only when realised vol is above the implied vol it paid.",
+  "tags": [
+   "gamma",
+   "theta",
+   "cloze",
+   "desk_practice",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Define DV01 (PV01 in the swaps market) and CS01. For a 5y interest-rate swap, a 5y single-name CDS, and a 5y corporate bond whose yield is hedged in the gilt curve, which sensitivity sets the bucket limit, and why does the bond need both?",
+  "back": "Definitions: DV01 (or PV01 for swaps) is the change in PV for a +1bp rise in the rate or yield. CS01 is the change in PV for a +1bp rise in the credit spread (hazard rate). Limits use absolute values, so the sign shows only the direction of the P&amp;L.<br>\nChoice: the 5y swap sits in a DV01 (PV01) bucket at the 5y tenor. The 5y CDS sits in a CS01 bucket at its tenor and by name, with JTD as a separate event limit. The 5y bond needs DV01 in the rates buckets on the gilt curve and CS01 for its spread to swaps (the asset-swap spread), so that the spread leg is not hidden inside the rate bucket.<br>\n<i>Interviewer follow-up:</i> why does one bond show both? Its yield is the rate plus the spread, so a yield move is a mix of the two. Splitting the yield move into a rate and a spread is what allows each leg to be limited on its own.",
+  "tags": [
+   "dv01",
+   "cs01",
+   "pv01",
+   "limits",
+   "desk_practice",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Scenario]</b> It is 17:30. Your 1-day 99% VaR is £1.1m against a £1.5m limit. Your stress loss under the approved stress set is £16.0m against a £15m stress limit. A colleague says the book is fine because VaR is within limit. What do you say, and what do you do?",
+  "back": "Headline: the book is in breach of the stress limit. VaR inside its limit does not cure a stress breach.<br>\nWhy they disagree: VaR is a 99% normal-day loss estimated from recent volatility. The stress set is a severe scenario. A book that is short gamma, illiquid, or carrying a curve bet in a calm period can pass VaR and fail stress.<br>\nSteps: (1) report the stress breach today, with the scenario that drives it and the utilisation (16 / 15 = 107%); (2) identify the bucket and factor behind the scenario loss; (3) propose a cure that moves the stress number, such as reducing the position with the largest scenario loss or hedging that factor. A cure that only lowers VaR is not a cure; (4) check whether the gap comes from liquidity or convexity that VaR does not see; (5) escalate if the cure is not agreed by the agreed time.<br>\n<i>Interviewer follow-up:</i> which limit should bind? Both. A VaR-only policy lets the book carry the tail risk that the stress set exists to reveal.",
+  "tags": [
+   "scenario",
+   "var",
+   "stress",
+   "limits",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ }
+]
