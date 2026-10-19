@@ -250,6 +250,11 @@
    "brownian_motion",
    "ito_calculus",
    "fmt_solve"
+  ],
+  "hints": [
+   "Is \\(W_2\\) a Gaussian with a known variance, and what does that say about its even moments?",
+   "Standardise \\(W_2\\) to a unit-variance normal, then use the Gaussian fourth-moment identity.",
+   "Write \\(W_2=\\sqrt{2}\\,Z\\) with \\(Z\\sim N(0,1)\\), so \\(E[W_2^4]=(\\sqrt2)^4\\,E[Z^4]\\)."
   ]
  },
  {
@@ -261,6 +266,11 @@
    "brownian_motion",
    "mental_math",
    "fmt_solve"
+  ],
+  "hints": [
+   "The integral is a linear functional of the path. What does its variance look like in terms of the covariance function of \\(W\\)?",
+   "Write the variance as a double integral of the covariance kernel of \\(W\\) over the unit square.",
+   "\\(\\mathrm{Var}\\!\\left(\\int_0^1 W_s\\,ds\\right)=\\int_0^1\\!\\!\\int_0^1 \\mathrm{Cov}(W_s,W_t)\\,ds\\,dt\\)."
   ]
  },
  {
@@ -272,6 +282,11 @@
    "brownian_motion",
    "random_walk",
    "fmt_solve"
+  ],
+  "hints": [
+   "Can the running maximum be related to the endpoint, using what happens to the path after it first touches the level?",
+   "Apply the reflection principle at the first passage time of level \\(2\\).",
+   "Split \\(P(M_1\\ge 2)\\) into \\(\\{W_1\\ge 2\\}\\) and \\(\\{M_1\\ge 2,\\,W_1<2\\}\\), and reflect the second event after the first passage."
   ]
  },
  {
@@ -283,6 +298,11 @@
    "brownian_bridge",
    "brownian_motion",
    "fmt_solve"
+  ],
+  "hints": [
+   "Is there a closed-form tail for the maximum of the bridge? If so, how would you get its mean from that tail?",
+   "Use the layer-cake formula for a non-negative variable together with the reflection tail for the bridge maximum.",
+   "Write \\(E[M]=\\int_0^\\infty P(M\\ge a)\\,da\\) with \\(M=\\max_{0\\le t\\le1}B_t\\), and identify \\(P(M\\ge a)\\) from the bridge reflection argument."
   ]
  },
  {
@@ -294,6 +314,11 @@
    "ito_calculus",
    "brownian_motion",
    "fmt_solve"
+  ],
+  "hints": [
+   "Can \\(\\int_0^1 W\\,dW\\) be rewritten in closed form as a function of \\(W_1\\)?",
+   "Apply Ito's lemma to \\(W^2\\), then compute the variance of the resulting expression.",
+   "\\(d(W_t^2)=dt+2W_t\\,dW_t\\); integrate from \\(0\\) to \\(1\\) and solve for \\(\\int_0^1 W\\,dW\\)."
   ]
  },
  {
@@ -305,6 +330,11 @@
    "ito_calculus",
    "brownian_motion",
    "fmt_solve"
+  ],
+  "hints": [
+   "Which process built from \\(e^{W_t}\\) is a martingale, and what drift has to be removed from it?",
+   "Apply Ito's lemma to \\(e^{W_t}\\) and read off the \\(dt\\) term.",
+   "\\(d(e^{W_t})=e^{W_t}\\,dW_t+(\\cdots)\\,dt\\); the \\(dt\\) term comes from the second derivative of \\(\\exp\\)."
   ]
  },
  {
@@ -316,6 +346,11 @@
    "gbm",
    "ito_calculus",
    "fmt_solve"
+  ],
+  "hints": [
+   "For a geometric process, is \\(S_T\\) or \\(\\ln S_T\\) the simpler Gaussian object?",
+   "Apply Ito's lemma to \\(\\ln S\\), then use the lognormal mean and median formulas.",
+   "\\(d\\ln S_t=(\\mu-\\tfrac12\\sigma^2)\\,dt+\\sigma\\,dW_t\\), so \\(\\ln S_T\\) is Gaussian with a mean and variance you can read off."
   ]
  },
  {
@@ -327,6 +362,11 @@
    "ito_calculus",
    "volatility",
    "fmt_solve"
+  ],
+  "hints": [
+   "Can \\(W_T^2\\) be written as a constant plus a stochastic integral?",
+   "Use Ito's lemma on \\(W^2\\), then the Ito isometry to get the variance.",
+   "\\(W_T^2=T+2\\int_0^T W_t\\,dW_t\\), so \\(\\mathrm{Var}(W_T^2)=4\\int_0^T E[W_t^2]\\,dt\\)."
   ]
  },
  {
@@ -338,6 +378,11 @@
    "ito_calculus",
    "brownian_motion",
    "fmt_solve"
+  ],
+  "hints": [
+   "How does evaluating the integrand at a midpoint instead of the left endpoint change the chain rule?",
+   "Write the Stratonovich integral as the Ito integral plus a quadratic-variation correction.",
+   "\\(\\int_0^1 W\\circ dW=\\int_0^1 W\\,dW+\\tfrac12\\langle W\\rangle_1\\), where \\(\\langle W\\rangle_1\\) is the quadratic variation on \\([0,1]\\)."
   ]
  },
  {
@@ -349,6 +394,11 @@
    "ito_calculus",
    "gbm",
    "fmt_solve"
+  ],
+  "hints": [
+   "For each candidate, what must happen to the \\(dt\\) term of its Ito differential for it to be a martingale?",
+   "Apply Ito's lemma to each candidate and check whether its drift vanishes.",
+   "For \\(f(t,W)\\) the drift is \\(\\partial_t f+\\tfrac12\\partial_{WW}f\\); compute this for \\(f=W^3-3tW\\) first, then for the others."
   ]
  },
  {
@@ -360,6 +410,11 @@
    "s_martingale",
    "brownian_motion",
    "fmt_solve"
+  ],
+  "hints": [
+   "Is there a function of \\(W_t\\) and \\(t\\) that stays a martingale, so that stopping it gives an expectation of \\(\\tau\\)?",
+   "Use optional stopping on \\(W_t^2-t\\), after first finding the exit probabilities from \\(W\\) alone.",
+   "\\(E[\\tau]=E[W_\\tau^2]\\), where \\(W_\\tau\\in\\{-3,2\\}\\); the exit probabilities come from \\(E[W_\\tau]=0\\)."
   ]
  },
  {
@@ -371,6 +426,11 @@
    "pde",
    "brownian_motion",
    "fmt_solve"
+  ],
+  "hints": [
+   "Is \\(u\\) the conditional expectation of a function of the terminal value of a diffusion? What PDE does such an object satisfy?",
+   "Feynman-Kac: apply Ito's lemma to \\(u(t,W_t)\\) and require the \\(dt\\) coefficient to vanish.",
+   "Write \\(du=(u_t+\\tfrac12u_{xx})\\,dt+u_x\\,dW\\), so the martingale condition is \\(u_t+\\tfrac12u_{xx}=0\\); then compute \\(E[W_T^2\\mid W_t=x]\\)."
   ]
  },
  {
@@ -382,6 +442,11 @@
    "black_scholes",
    "risk_neutral",
    "fmt_solve"
+  ],
+  "hints": [
+   "Under the risk-neutral measure, what is the law of \\(S_T\\), and how can the payoff be split by the event \\(\\{S_T>K\\}\\)?",
+   "Use the change of measure to the stock numeraire for the stock term, and a Gaussian tail for the cash term.",
+   "\\(C=S_0N(d_1)-Ke^{-rT}N(d_2)\\) with \\(d_{1,2}=\\frac{\\ln(S_0/K)+(r\\pm\\sigma^2/2)T}{\\sigma\\sqrt T}\\); evaluate \\(d_1,d_2\\) first."
   ]
  },
  {
@@ -393,6 +458,11 @@
    "black_scholes",
    "pde",
    "fmt_solve"
+  ],
+  "hints": [
+   "Which portfolio built from the option and the stock is free of \\(dW\\), and what return must it earn?",
+   "Delta-hedge: form \\(\\Pi=V-V_S\\,S\\) and use Ito together with the no-arbitrage condition \\(d\\Pi=r\\Pi\\,dt\\).",
+   "After the \\(dW\\) terms cancel, \\(d\\Pi=(V_t+\\tfrac12\\sigma^2S^2V_{SS})\\,dt\\); set this equal to \\(r\\Pi\\,dt\\)."
   ]
  },
  {
@@ -404,6 +474,11 @@
    "greeks",
    "black_scholes",
    "fmt_solve"
+  ],
+  "hints": [
+   "The Greeks are derivatives of the Black-Scholes price. Which of them share the same density factor?",
+   "Differentiate the call formula with the normal density \\(\\varphi\\), and use \\(S\\varphi(d_1)=Ke^{-rT}\\varphi(d_2)\\) to simplify.",
+   "\\(\\Delta_C=N(d_1)\\) and \\(\\Gamma=\\varphi(d_1)/(S\\sigma\\sqrt T)\\); vega is \\(\\partial_\\sigma C\\), so per vol point you rescale by \\(0.01\\)."
   ]
  },
  {
@@ -415,6 +490,11 @@
    "digital",
    "greeks",
    "fmt_solve"
+  ],
+  "hints": [
+   "Is the digital the negative strike derivative of some option you already know? What does that imply for its spot sensitivity?",
+   "Use \\(\\text{digital}=-\\partial_K C\\), so its delta is a mixed second derivative of the call.",
+   "Digital \\(=e^{-rT}N(d_2)\\); compute \\(\\partial_S\\) of it using \\(\\partial_S d_2=1/(S\\sigma\\sqrt T)\\)."
   ]
  },
  {
@@ -426,6 +506,11 @@
    "greeks",
    "volatility",
    "fmt_solve"
+  ],
+  "hints": [
+   "When a delta-hedged option is rehedged continuously, which terms cancel and which second-order term survives?",
+   "Apply Ito to the option value with the delta hedge removed, keeping the \\(\\tfrac12\\Gamma\\,dS^2\\) term.",
+   "Hedged P&L rate \\(=\\tfrac12\\Gamma S^2(\\sigma_r^2-\\sigma_i^2)\\); integrate this over the three-month window."
   ]
  },
  {
@@ -437,6 +522,11 @@
    "options",
    "dividends",
    "fmt_solve"
+  ],
+  "hints": [
+   "Put-call parity links the call, the put, the spot and the discounted strike. What single unknown does it leave?",
+   "Solve parity for the forward factor \\(e^{-qT}\\).",
+   "\\(C-P=Se^{-qT}-Ke^{-rT}\\), so \\(e^{-qT}=\\dfrac{C-P+Ke^{-rT}}{S}\\)."
   ]
  },
  {
@@ -448,6 +538,11 @@
    "options",
    "arbitrage",
    "fmt_solve"
+  ],
+  "hints": [
+   "The combination \\(C(90)-2C(100)+C(110)\\) is a discrete second difference in strike. What is the shape of the payoff it replicates?",
+   "Recognise the payoff as a tent (butterfly) and price it with Black-Scholes at each strike.",
+   "Compute \\(C(K)=S\\,N(d_1(K))-Ke^{-rT}N(d_2(K))\\) for \\(K=90,100,110\\) separately, then combine with weights \\(1,-2,1\\)."
   ]
  },
  {
@@ -459,17 +554,27 @@
    "options",
    "digital",
    "fmt_solve"
+  ],
+  "hints": [
+   "How is the density of \\(S_T\\) at a given level linked to the curvature of call prices in the strike?",
+   "Breeden-Litzenberger: the discounted second strike derivative of the call gives the state-price density.",
+   "\\(f_T(K)\\approx e^{rT}\\dfrac{C(K+h)-2C(K)+C(K-h)}{h^2}\\) for a small step \\(h\\)."
   ]
  },
  {
   "type": "basic",
   "front": "Price a contract paying \\(S_T^2\\) at \\(T=1\\), with \\(S_0=100\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\), using a static strip of calls and puts.",
-  "back": "<b>Answer:</b> \\(\\approx 10941.74\\) (\\(=S_0^2e^{(r+\\sigma^2)T}\\)).<br><b>Structure:</b> Static replication of a convex payoff: \\(f''(K)=2\\) gives a strip; the forward \\(F\\) pins the linear part.<br><b>Key move:</b> \\(S^2=F^2+2F(S-F)+2(S-F)^2\\); with \\(f''=2\\), \\(f(S)=f(F)+f'(F)(S-F)+\\int_0^F 2(K-S)^+dK+\\int_F^\\infty 2(S-K)^+dK\\).<br><b>Working:</b> Using \\(F=S_0e^{rT}=105.127\\): \\(e^{-rT}F^2=10512.71\\); the strip adds \\(2\\int_0^F P\\,dK+2\\int_F^\\infty C\\,dK=429.03\\). Total \\(10941.74\\).<br><b>Sanity check:</b> \\(e^{-rT}E^Q[S_T^2]=S_0^2e^{(r+\\sigma^2)T}=10000e^{0.09}\\), matching; MC agrees.<br><b>Transfer:</b> Variance swap is the same idea with \\(f(S)=-2\\ln(S/F)\\).",
+  "back": "<b>Answer:</b> \\(\\approx 10941.74\\) (\\(=S_0^2e^{(r+\\sigma^2)T}\\)).<br><b>Structure:</b> Static replication of a convex payoff: \\(f''(K)=2\\) gives a strip; the forward \\(F\\) pins the linear part.<br><b>Key move:</b> \\(S^2=F^2+2F(S-F)+(S-F)^2\\); with \\(f''=2\\), \\(f(S)=f(F)+f'(F)(S-F)+\\int_0^F 2(K-S)^+dK+\\int_F^\\infty 2(S-K)^+dK\\).<br><b>Working:</b> Using \\(F=S_0e^{rT}=105.127\\): \\(e^{-rT}F^2=10512.71\\); the strip adds \\(2\\int_0^F P\\,dK+2\\int_F^\\infty C\\,dK=429.03\\). Total \\(10941.74\\).<br><b>Sanity check:</b> \\(e^{-rT}E^Q[S_T^2]=S_0^2e^{(r+\\sigma^2)T}=10000e^{0.09}\\), matching; MC agrees.<br><b>Transfer:</b> Variance swap is the same idea with \\(f(S)=-2\\ln(S/F)\\).",
   "tags": [
    "s_replication",
    "s_generating_function",
    "gbm",
    "fmt_solve"
+  ],
+  "hints": [
+   "Can \\(S_T^2\\) be priced from a static strip of vanilla options? What does the second derivative of the payoff have to do with it?",
+   "Static replication: write \\(f(S)=f(F)+f'(F)(S-F)+\\int\\) with weights \\(f''(K)\\) over puts below \\(F\\) and calls above \\(F\\).",
+   "Write \\(S_T^2=F^2+2F(S_T-F)+(S_T-F)^2\\) with \\(F=S_0e^{rT}\\), and price each piece under \\(Q\\)."
   ]
  },
  {
@@ -481,6 +586,11 @@
    "options",
    "digital",
    "fmt_solve"
+  ],
+  "hints": [
+   "Can \\(\\max(S_T,K)\\) be written as a stock plus a put, so that no expectation is needed?",
+   "Use \\(\\max(S,K)=S+(K-S)^+\\), then price the put with put-call parity.",
+   "Price \\(=S_0+P\\), where \\(P\\) is the put with the same strike and expiry; get \\(P\\) from parity with the call."
   ]
  },
  {
@@ -492,6 +602,11 @@
    "s_replication",
    "gbm",
    "fmt_solve"
+  ],
+  "hints": [
+   "Under \\(Q\\), what is the law of \\(\\ln S_T\\), and does a function of it have an explicit expectation?",
+   "\\(\\ln S_T\\) is Gaussian under \\(Q\\), so its expectation is the mean of that Gaussian, discounted.",
+   "\\(E^Q[\\ln S_T]=\\ln S_0+(r-\\tfrac12\\sigma^2)T\\); the price is \\(e^{-rT}\\) times this expectation."
   ]
  },
  {
@@ -503,6 +618,11 @@
    "options",
    "volatility",
    "fmt_solve"
+  ],
+  "hints": [
+   "At the choice date, what does put-call parity say about the difference between a call and a put with the same strike?",
+   "Put-call parity at time \\(t\\) reduces the max of the call and the put to a single call plus a put with a discounted strike.",
+   "\\(\\max(C_t,P_t)=C_t+\\big(Ke^{-r(T-t)}-S_t\\big)^+\\); price a call at \\(K\\) and a put at strike \\(Ke^{-r(T-t)}\\) expiring at \\(t\\)."
   ]
  },
  {
@@ -514,6 +634,11 @@
    "s_sqrt_time_scaling",
    "options",
    "fmt_solve"
+  ],
+  "hints": [
+   "With zero rates and an at-the-money strike, what does the symmetry of the normal distribution say about \\(d_1\\) and \\(d_2\\)?",
+   "Write the call as \\(S\\,(N(d_1)-N(-d_1))\\) and think about what the normal CDF does near zero.",
+   "\\(d_1=\\tfrac12\\sigma\\sqrt T\\), \\(d_2=-d_1\\), so \\(C=S\\big(2N(d_1)-1\\big)\\)."
   ]
  },
  {
@@ -525,6 +650,11 @@
    "s_sqrt_time_scaling",
    "brownian_motion",
    "fmt_solve"
+  ],
+  "hints": [
+   "What is the law of \\(W_1\\), and how would you write \\(E|W_1|\\) as an integral against its density?",
+   "Use the Gaussian density and the scaling \\(W_t\\overset{d}{=}\\sqrt t\\,W_1\\).",
+   "\\(E|W_1|=2\\int_0^\\infty x\\,\\varphi(x)\\,dx\\) with \\(\\varphi\\) the standard normal density; evaluate that integral."
   ]
  },
  {
@@ -536,6 +666,11 @@
    "black_scholes",
    "dividends",
    "fmt_solve"
+  ],
+  "hints": [
+   "With a continuous dividend yield, what is the effective drift of \\(S\\) under \\(Q\\), and what does that do to the forward?",
+   "Replace \\(S\\) by its ex-dividend forward \\(Se^{-qT}\\) in the Black-Scholes formula.",
+   "\\(d_{1,2}=\\dfrac{\\ln(S/K)+(r-q\\pm\\tfrac12\\sigma^2)T}{\\sigma\\sqrt T}\\); then \\(C=Se^{-qT}N(d_1)-Ke^{-rT}N(d_2)\\)."
   ]
  },
  {
@@ -547,6 +682,11 @@
    "greeks",
    "black_scholes",
    "fmt_solve"
+  ],
+  "hints": [
+   "Which PDE ties theta, gamma and delta together, and what does it reduce to when the rate is zero?",
+   "Use the Black-Scholes PDE \\(\\Theta+\\tfrac12\\sigma^2S^2\\Gamma+rS\\Delta-rV=0\\) at \\(r=0\\).",
+   "Write \\(\\Theta=-S\\varphi(d_1)\\sigma/(2\\sqrt T)\\) and \\(\\Gamma=\\varphi(d_1)/(S\\sigma\\sqrt T)\\), then evaluate at \\(d_1=\\sigma\\sqrt T/2\\)."
   ]
  },
  {
@@ -558,6 +698,11 @@
    "brownian_bridge",
    "brownian_motion",
    "fmt_solve"
+  ],
+  "hints": [
+   "Given the endpoint, what is the conditional law of an intermediate value of \\(W\\)? Think Gaussian conditioning.",
+   "Use the Gaussian conditioning formula, with the Brownian covariance \\(\\mathrm{Cov}(W_s,W_t)\\) as input.",
+   "\\(\\mathrm{Var}(W_s\\mid W_t)=\\mathrm{Var}(W_s)-\\dfrac{\\mathrm{Cov}(W_s,W_t)^2}{\\mathrm{Var}(W_t)}\\); substitute \\(s=\\tfrac12\\) and \\(t=1\\)."
   ]
  },
  {
@@ -569,6 +714,11 @@
    "s_change_of_measure",
    "brownian_motion",
    "fmt_perturb"
+  ],
+  "hints": [
+   "What breaks in a martingale argument when the process has drift? Is there a transformation that removes it?",
+   "Use a scale function: find \\(s(x)\\) such that \\(s(X_t)\\) is a martingale, then apply optional stopping to it.",
+   "For \\(X_t=W_t+\\mu t\\), try \\(s(x)=e^{-2\\mu x}\\); write \\(s(X_\\tau)\\) with \\(p\\) the probability of hitting \\(+1\\) first, and set its expectation equal to \\(s(0)\\)."
   ]
  },
  {
@@ -580,6 +730,11 @@
    "s_change_of_measure",
    "brownian_motion",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Is the reflection trick still available once the path has drift? What would a change of measure do to the endpoint?",
+   "Use Girsanov to move to a measure where the drift vanishes, then apply the zero-drift reflection formula with the density ratio.",
+   "Under \\(Q\\) with \\(\\tfrac{dQ}{dP}=\\exp(-\\mu W_1-\\tfrac12\\mu^2)\\), \\(X\\) is driftless; write \\(P(M_1\\ge 1)=E^Q[\\,\\mathbf 1_{\\{M_1\\ge 1\\}}\\,\\tfrac{dP}{dQ}\\,]\\)."
   ]
  },
  {
@@ -591,6 +746,11 @@
    "ito_calculus",
    "brownian_motion",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Compare the Ito differential of \\(X^2\\) with the zero-drift case. Which extra term appears, and what is its mean?",
+   "Apply Ito's lemma to \\(X_t^2\\) and take expectations; you will need \\(E[X_t]\\).",
+   "\\(\\tfrac{d}{dt}E[X_t^2]=2\\mu\\,E[X_t]+1\\) with \\(E[X_t]=\\mu t\\); integrate from \\(0\\) to \\(1\\)."
   ]
  },
  {
@@ -602,6 +762,11 @@
    "s_optional_stopping",
    "random_walk",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Is \\(S_n\\) still a fair game with \\(p=0.6\\)? Is there a power of a ratio of probabilities that is a martingale?",
+   "Use the exponential martingale \\((q/p)^{S_n}\\) and optional stopping at the two levels.",
+   "Let \\(\\rho=q/p\\); the martingale \\(\\rho^{S_n}\\) gives \\(P\\,\\rho^{1}+(1-P)\\,\\rho^{-2}=1\\), where \\(P\\) is the probability of hitting \\(+1\\) first."
   ]
  },
  {
@@ -613,6 +778,11 @@
    "brownian_bridge",
    "brownian_motion",
    "fmt_perturb"
+  ],
+  "hints": [
+   "When the endpoint is not zero, what changes in the reflection argument?",
+   "Reflect the path about the barrier level \\(a\\), with the endpoint shifted by the pinned value.",
+   "Write the pinned path as \\(b_t+ct\\) with \\(b\\) a Brownian bridge, then find the exponent that the reflection about \\(a\\) produces in terms of \\(a\\) and \\(c\\)."
   ]
  },
  {
@@ -624,6 +794,11 @@
    "black_scholes",
    "dividends",
    "fmt_perturb"
+  ],
+  "hints": [
+   "How does a dividend yield change the risk-neutral drift of the stock, and what does that do to the delta?",
+   "Replace \\(S\\) by \\(Se^{-qT}\\) in the price, and remember that the delta carries the discount factor.",
+   "\\(C=Se^{-qT}N(d_1)-Ke^{-rT}N(d_2)\\) with \\(d_1\\) built from \\(r-q\\); differentiate in \\(S\\) and collect the \\(N(d_1)\\) term."
   ]
  },
  {
@@ -635,6 +810,11 @@
    "stochastic_rates",
    "forward_measure",
    "fmt_perturb"
+  ],
+  "hints": [
+   "If the discount factor is random, which numeraire makes the forward the right martingale?",
+   "Use the forward measure and Black-76: the forward is \\(S_0/P(0,1)\\), and discounting is by \\(P(0,1)\\) rather than \\(e^{-rT}\\).",
+   "Price \\(=P(0,1)\\big[F\\,N(d_1)-K\\,N(d_2)\\big]\\), with \\(F=S_0/P(0,1)\\), \\(K=S_0\\), and \\(d_{1,2}\\) built from \\(\\sigma\\sqrt T\\); first compute \\(P(0,1)=E[e^{-\\bar R}]\\)."
   ]
  },
  {
@@ -646,6 +826,11 @@
    "greeks",
    "volatility",
    "fmt_perturb"
+  ],
+  "hints": [
+   "What does the Taylor argument for the hedge rely on, and is a 10% overnight move small in that sense?",
+   "Use the gamma approximation \\(\\tfrac12\\Gamma\\,\\Delta S^2\\) for the quadratic term, then compare it with a full repricing.",
+   "Hedged P&L \\(=C(90)-C(100)-\\Delta\\,(90-100)\\), with the hedge held at the pre-gap delta; write the quadratic estimate as the Taylor remainder."
   ]
  },
  {
@@ -657,6 +842,11 @@
    "american_options",
    "dividends",
    "fmt_perturb"
+  ],
+  "hints": [
+   "For a call on a non-dividend stock, why is early exercise never optimal, and which of those reasons fails once there is a yield?",
+   "Compare the carry: the dividend yield earned on the stock against the interest earned on the strike.",
+   "Exercise now gives \\(S-K\\), waiting gives \\(C\\); compare \\(Se^{-q\\tau}\\) with \\(Ke^{-r\\tau}\\) to decide when waiting costs more than it earns."
   ]
  },
  {
@@ -668,6 +858,11 @@
    "options",
    "volatility",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Can put-call parity still collapse the max into one call and one put when the two strikes differ?",
+   "No single parity relation applies. Write the value as an expectation of a max of two option values at the choice date.",
+   "Price \\(=e^{-rt}E^Q\\big[\\max\\big(C_t(110),\\,P_t(90)\\big)\\big]\\), where \\(C_t\\) and \\(P_t\\) are functions of \\(S_t\\) alone."
   ]
  },
  {
@@ -679,6 +874,11 @@
    "variance_swap",
    "volatility",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Does the static strip identity need continuous paths, or only the \\(Q\\)-expectation of a log-contract? Which leg of the hedge does the damage?",
+   "Separate the model-free strip, which prices \\(E^Q[-2\\ln(S_T/F)]\\), from the dynamic hedge that needs continuous paths.",
+   "The fair strike is \\(\\tfrac1T E^Q\\!\\big[\\int_0^T\\sigma_t^2\\,dt\\big]\\); compare it with \\(E^Q[-2\\ln(S_T/F)]/T\\) and ask which leg uses \\(dS/S\\)."
   ]
  },
  {
@@ -690,6 +890,11 @@
    "digital",
    "greeks",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Is the digital the strike derivative of a call? What does that say about the sign of its spot curvature?",
+   "Differentiate \\(e^{-rT}N(d_2)\\) twice in \\(S\\), keeping track of how \\(d_2\\) depends on \\(S\\).",
+   "\\(\\Gamma_D=\\partial_S^2\\big(e^{-rT}N(d_2)\\big)\\); with \\(\\partial_S d_2=1/(S\\sigma\\sqrt T)\\), write the first derivative as \\(e^{-rT}\\varphi(d_2)\\,\\partial_S d_2\\)."
   ]
  },
  {
@@ -701,6 +906,11 @@
    "pde",
    "brownian_motion",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Does the discount factor change the drift term of the PDE? What extra term does Ito produce when you multiply by \\(e^{-rt}\\)?",
+   "Apply Ito to the discounted process \\(e^{-rt}u(t,W_t)\\) and set the \\(dt\\) coefficient to zero.",
+   "\\(d\\big(e^{-rt}u\\big)=e^{-rt}\\big(u_t+\\tfrac12u_{xx}-ru\\big)\\,dt+\\dots\\); so the PDE is \\(u_t+\\tfrac12u_{xx}-ru=0\\)."
   ]
  },
  {
@@ -712,6 +922,11 @@
    "brownian_motion",
    "mental_math",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Is the fourth moment of a shifted Gaussian still \\(3\\sigma^4\\)? What extra terms come from the mean?",
+   "Expand \\((m+Z)^4\\) binomially around the Gaussian centre, and use the moments of the centred Gaussian \\(Z\\).",
+   "Write \\(X_2=m+Z\\) with \\(m=E[X_2]\\) and \\(Z\\) centred Gaussian with variance \\(v=\\mathrm{Var}(W_2)\\); then expand \\((m+Z)^4\\)."
   ]
  },
  {
@@ -723,6 +938,11 @@
    "s_optional_stopping",
    "random_walk",
    "fmt_twin"
+  ],
+  "hints": [
+   "Is the bankroll a fair game? If so, which quantity keeps its expectation at the stopping time?",
+   "Optional stopping on the martingale \\(W\\), with two absorbing levels.",
+   "\\(E[W_\\tau]=0\\) with \\(W_\\tau\\in\\{1,-2\\}\\); let \\(p\\) be the probability of stopping at \\(+1\\) and write \\(E[W_\\tau]\\) in terms of \\(p\\)."
   ]
  },
  {
@@ -734,6 +954,11 @@
    "s_martingale",
    "brownian_motion",
    "fmt_twin"
+  ],
+  "hints": [
+   "For a fair walk between two barriers, is there a martingale quadratic in \\(W\\) whose expectation gives the stopping time?",
+   "Use optional stopping on \\(W_t^2-t\\) at the exit time.",
+   "\\(E[\\tau]=E[W_\\tau^2]\\) with \\(W_\\tau\\in\\{3,-1\\}\\); find the exit probabilities from \\(E[W_\\tau]=0\\) first."
   ]
  },
  {
@@ -745,6 +970,11 @@
    "brownian_motion",
    "random_walk",
    "fmt_twin"
+  ],
+  "hints": [
+   "The question concerns the maximum over a time window. What symmetry handles the running maximum of a driftless path?",
+   "Apply the reflection principle at the level \\(+2\\) over the window \\([0,4]\\).",
+   "Write the reflection identity \\(P(M_4\\ge 2)=2\\,P(W_4\\ge 2)\\), then standardise \\(W_4\\) by its time-4 standard deviation."
   ]
  },
  {
@@ -756,6 +986,11 @@
    "brownian_bridge",
    "brownian_motion",
    "fmt_twin"
+  ],
+  "hints": [
+   "A path that starts and ends at zero is a bridge. What known law describes the tail of its maximum?",
+   "Use the Brownian-bridge maximum tail, which has a Gaussian-type exponent in the threshold.",
+   "Write \\(P(\\max_{t\\le1}B_t\\ge a)=\\exp(-c\\,a^2)\\) and determine \\(c\\) from the reflection argument for the bridge; then set \\(a\\) to the threshold in the question."
   ]
  },
  {
@@ -767,6 +1002,11 @@
    "options",
    "dividends",
    "fmt_twin"
+  ],
+  "hints": [
+   "What is the payoff of a long call and a short put at expiry, and what does it look like as a forward?",
+   "Put-call parity with continuous yields: the combination equals a forward on the stock.",
+   "\\(C-P=Se^{-qT}-Ke^{-rT}\\); substitute \\(S=100\\), \\(K=105\\), \\(T=\\tfrac12\\), \\(q\\) and \\(r\\) from the statement."
   ]
  },
  {
@@ -778,6 +1018,11 @@
    "ito_calculus",
    "brownian_motion",
    "fmt_twin"
+  ],
+  "hints": [
+   "Is this a sum of independent increments with deterministic weights? How does the variance of a weighted sum of independent terms behave?",
+   "Use the Ito isometry for a deterministic integrand, in its discrete form, where the variance adds the squared weights.",
+   "\\(\\mathrm{Var}=\\sum_i f_i^2\\,\\mathrm{Var}(\\Delta W_i)\\) with \\(f_i=i\\) and \\(\\mathrm{Var}(\\Delta W_i)=0.01\\); evaluate the sum of squares of the weights."
   ]
  },
  {
@@ -789,6 +1034,11 @@
    "options",
    "volatility",
    "fmt_twin"
+  ],
+  "hints": [
+   "Which parity identity lets you collapse the max of a call and a put at the choice date?",
+   "Put-call parity at \\(t=\\tfrac12\\): the chooser equals a call plus a put with a discounted strike that expires at \\(t\\).",
+   "Value \\(=C_0(100,1)+P_0\\big(100\\,e^{-r/2},\\tfrac12\\big)\\); evaluate both with Black-Scholes."
   ]
  },
  {
@@ -800,6 +1050,11 @@
    "options",
    "digital",
    "fmt_twin"
+  ],
+  "hints": [
+   "Which derivative of the call price in strike picks out the density at that strike?",
+   "Breeden-Litzenberger: take the second strike derivative of the discounted call price.",
+   "\\(\\partial_K C\\) involves \\(-e^{-rT}\\,\\mathbb P(S_T>K)\\); differentiate once more to isolate the density term \\(e^{-rT}f(K)\\)."
   ]
  },
  {
@@ -811,6 +1066,11 @@
    "s_convexity_jensen",
    "gbm",
    "fmt_twin"
+  ],
+  "hints": [
+   "Under which measure is \\(1/S\\) a martingale? Does the forward argument still work for an inverse price?",
+   "Change numeraire to the stock: the cash price is not \\(1/S_0\\) discounted, because \\(E[1/S_T]\\neq 1/E[S_T]\\).",
+   "Price \\(=e^{-rT}E^Q[1/S_T]\\); write the density \\(dQ^S/dQ=S_T/(S_0e^{rT})\\) and use it to relate the two expectations."
   ]
  },
  {
@@ -932,6 +1192,11 @@
    "black_scholes",
    "risk_neutral",
    "fmt_chain"
+  ],
+  "hints": [
+   "Starting from the lognormal law of \\(S_T\\), how do you split the payoff at the strike, and which truncated moment does the stock term need?",
+   "Use the change of measure to the stock numeraire for the stock term \\(E^Q[S_T\\mathbf 1_{\\{S_T>K\\}}]\\), and a plain Gaussian probability for the cash term.",
+   "Write \\(C=e^{-rT}\\big(E^Q[S_T\\mathbf 1_{\\{S_T>K\\}}]-K\\,Q(S_T>K)\\big)\\), and standardise both using the Gaussian law of \\(\\ln S_T\\)."
   ]
  },
  {
@@ -943,6 +1208,11 @@
    "black_scholes",
    "risk_neutral",
    "fmt_chain"
+  ],
+  "hints": [
+   "If the real-world drift changed, what would have to change in the replication argument for the price to stay put?",
+   "Girsanov: the market price of risk \\(\\theta=(\\mu-r)/\\sigma\\) removes the drift when you change to \\(Q\\).",
+   "\\(\\tfrac{dQ}{dP}=\\exp\\!\\big(-\\theta W_T-\\tfrac12\\theta^2T\\big)\\) with \\(\\theta=(\\mu-r)/\\sigma\\); the price is an expectation under \\(Q\\) only."
   ]
  },
  {
@@ -954,6 +1224,11 @@
    "black_scholes",
    "dividends",
    "fmt_chain"
+  ],
+  "hints": [
+   "Which term in the risk-neutral drift changes when the stock pays a yield, and how does that feed into the forward?",
+   "Replace the stock price by its ex-dividend value \\(S_0e^{-qT}\\), and the drift by \\(r-q\\).",
+   "Under \\(Q\\), \\(\\ln S_T\\sim N\\big(\\ln S_0+(r-q-\\tfrac12\\sigma^2)T,\\ \\sigma^2T\\big)\\); write \\(d_{1,2}\\) accordingly."
   ]
  },
  {
@@ -965,6 +1240,11 @@
    "variance_swap",
    "volatility",
    "fmt_chain"
+  ],
+  "hints": [
+   "If volatility is constant, is the realised variance over \\([0,T]\\) random at all?",
+   "Realised variance \\(\\frac1T\\int_0^T\\sigma_t^2\\,dt\\) is pathwise deterministic here, so the fair strike is its risk-neutral expectation.",
+   "Fair strike \\(=E^Q\\big[\\tfrac1T\\int_0^T\\sigma_t^2\\,dt\\big]\\); evaluate the integrand, which is constant in time."
   ]
  },
  {
@@ -976,6 +1256,11 @@
    "variance_swap",
    "volatility",
    "fmt_chain"
+  ],
+  "hints": [
+   "Which strikes get the largest weight in the strip formula, and how does that interact with the wing volatilities?",
+   "The strip is a weighted average of option prices across strikes, with weights that fall off in \\(K^2\\); compare the put wing with the call wing.",
+   "Write \\(K_{var}\\) as a weighted sum of strike-level terms with weights \\(\\propto \\Delta K/K^2\\), and separate the strikes below \\(F\\) from those above."
   ]
  },
  {
@@ -987,6 +1272,11 @@
    "variance_swap",
    "volatility",
    "fmt_chain"
+  ],
+  "hints": [
+   "How large is a 20% drop in log terms, and how does a jump make the log-contract differ from realised variance?",
+   "The strip prices \\(E^Q[-2\\ln(S_T/F)]\\), which is not the same object as the realised variance on a path with a jump.",
+   "Write the jump in log terms as \\(\\ln(1+J)\\) and compare the two quantities term by term, keeping only the leading correction in \\(J\\)."
   ]
  }
 ]
