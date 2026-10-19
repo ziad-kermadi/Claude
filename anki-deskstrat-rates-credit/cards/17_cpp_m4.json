@@ -12,7 +12,7 @@
   ]
  },
  {
-  "type": "what_wrong",
+  "type": "basic",
   "front": "What is wrong with this code? Give the diagnostic that g++ 13 reports.<br><pre><code>#include &lt;iostream&gt;\n\ntemplate &lt;typename T&gt;\nT maxof(T a, T b) {\n    return a &gt; b ? a : b;\n}\n\nint main() {\n    std::cout &lt;&lt; maxof(1, 2.0) &lt;&lt; '\\n';\n}</code></pre>",
   "back": "<b>Headline:</b> template argument deduction fails. Both parameters are the same <code>T</code>, and the compiler gets <code>int</code> from <code>1</code> and <code>double</code> from <code>2.0</code>. Deduction does not apply the int-to-double conversion, so there is no viable candidate.<br><b>g++ 13 output (key lines):</b><pre><code>s02.cpp:9:23: error: no matching function for call to ‘maxof(int, double)’\ns02.cpp:9:23: note:   deduced conflicting types for parameter ‘T’ (‘int’ and ‘double’)</code></pre><b>Fixes:</b> an explicit argument, <code>maxof&lt;double&gt;(1, 2.0)</code>, or two template parameters with <code>std::common_type_t&lt;A, B&gt;</code> as the return type.<br><b>Interview trap:</b> the deduction failure is in the call, not in the template definition, and the diagnostic is long. Look for the note line that says <i>deduced conflicting types</i>.",
   "tags": [
@@ -24,7 +24,7 @@
   ]
  },
  {
-  "type": "what_prints",
+  "type": "basic",
   "front": "What does this print? State the deduction rule for each call.<br><pre><code>#include &lt;iostream&gt;\n#include &lt;type_traits&gt;\n\ntemplate &lt;typename T&gt;\nvoid by_value(T) {\n    std::cout &lt;&lt; \"by_value: T=\" &lt;&lt; (std::is_const_v&lt;T&gt; ? \"const \" : \"\")\n              &lt;&lt; (std::is_pointer_v&lt;T&gt; ? \"pointer\" : \"non-pointer\") &lt;&lt; '\\n';\n}\n\ntemplate &lt;typename T&gt;\nvoid by_ref(T&amp;) {\n    std::cout &lt;&lt; \"by_ref:   T=\" &lt;&lt; (std::is_const_v&lt;T&gt; ? \"const \" : \"\")\n              &lt;&lt; (std::is_pointer_v&lt;T&gt; ? \"pointer\" : \"non-pointer\") &lt;&lt; '\\n';\n}\n\nint main() {\n    const int c = 5;\n    int arr[3] = {1, 2, 3};\n    by_value(c);\n    by_ref(c);\n    by_value(arr);\n    by_ref(arr);\n}</code></pre>",
   "back": "<b>Headline:</b> for a by-value parameter <code>T</code> drops top-level <code>const</code> and reference qualifiers. For <code>T&amp;</code> the <code>const</code> is kept, because it is part of the referred-to type.<br><b>Output:</b><pre><code>by_value: T=non-pointer\nby_ref:   T=const non-pointer\nby_value: T=pointer\nby_ref:   T=non-pointer</code></pre><code>by_value(c)</code>: <code>T</code> is <code>int</code>. <code>by_ref(c)</code>: <code>T</code> is <code>const int</code>. <code>by_value(arr)</code>: the array decays to <code>int*</code>, so <code>T</code> is a pointer. <code>by_ref(arr)</code>: <code>T</code> is <code>int[3]</code>, an array, not a pointer.<br><b>Interview trap:</b> <code>auto x = c;</code> and <code>auto&amp; x = c;</code> follow the same rules as these templates.<div class=\"fig\"><img src=\"17_cpp_m4_2_deduction.png\"><div class=\"cap\">By-value deduction drops top-level const and makes arrays pointers; by-reference keeps const and the array type.</div></div>",
   "tags": [
@@ -60,7 +60,7 @@
   ]
  },
  {
-  "type": "what_prints",
+  "type": "basic",
   "front": "What does this print, and why? (Compare with the previous card.)<br><pre><code>#include &lt;iostream&gt;\n#include &lt;utility&gt;\n\nvoid sink(int&amp;) { std::cout &lt;&lt; \"lvalue\\n\"; }\nvoid sink(int&amp;&amp;) { std::cout &lt;&lt; \"rvalue\\n\"; }\n\ntemplate &lt;typename T&gt;\nvoid relay(T&amp;&amp; x) {\n    sink(x);                 // missing std::forward\n}\n\nint main() {\n    int a = 1;\n    relay(a);\n    relay(42);\n}</code></pre>",
   "back": "<b>Headline:</b> <code>lvalue</code> twice. Inside <code>relay</code> the name <code>x</code> is an lvalue, so <code>sink(x)</code> always selects <code>sink(int&amp;)</code>, even when the caller passed <code>42</code>.<br><b>Output:</b><pre><code>lvalue\nlvalue</code></pre><b>Fix:</b> <code>sink(std::forward&lt;T&gt;(x))</code>.<br><b>Interview trap:</b> <code>T&amp;&amp;</code> is a forwarding reference only for a deduced <code>T</code> of that function. <code>std::vector&lt;T&gt;&amp;&amp;</code> is an ordinary rvalue reference, and forwarding does not apply to it in the same way.",
   "tags": [
@@ -72,7 +72,7 @@
   ]
  },
  {
-  "type": "what_prints",
+  "type": "basic",
   "front": "What does this program print, and why? Explain each of the three calls.<br><pre><code>#include &lt;iostream&gt;\n\ntemplate &lt;typename T&gt;\nvoid show(T) { std::cout &lt;&lt; \"generic template\\n\"; }\n\ntemplate &lt;&gt;\nvoid show&lt;int&gt;(int) { std::cout &lt;&lt; \"explicit specialization for int\\n\"; }\n\nvoid show(double) { std::cout &lt;&lt; \"non-template overload for double\\n\"; }\n\nint main() {\n    show(1);\n    show(2.0);\n    show(1.5f);\n}</code></pre>",
   "back": "<b>Headline:</b> a full specialization of a function template does not add an overload. It replaces the body for one set of template arguments, and the normal overload rules still apply to the other candidates.<br><b>Output:</b><pre><code>explicit specialization for int\nnon-template overload for double\ngeneric template</code></pre><code>show(1)</code>: <code>T=int</code>, so the specialization is used. <code>show(2.0)</code>: the template with <code>T=double</code> and the non-template overload both match exactly, and a non-template wins the tie. <code>show(1.5f)</code>: the template matches exactly with <code>T=float</code>, while the non-template needs a float-to-double promotion, so the template wins.<br><b>Interview trap:</b> prefer an overload to a full specialization of a function template. Specializations are easy to misplace, and they are invisible to overload resolution.",
   "tags": [
@@ -84,7 +84,7 @@
   ]
  },
  {
-  "type": "what_prints",
+  "type": "basic",
   "front": "What does this print? Which line would a naive pointer trait get wrong?<br><pre><code>#include &lt;iostream&gt;\n\ntemplate &lt;typename T&gt;\nstruct is_ptr { static constexpr bool value = false; };\n\ntemplate &lt;typename T&gt;\nstruct is_ptr&lt;T*&gt; { static constexpr bool value = true; };\n\nint main() {\n    std::cout &lt;&lt; is_ptr&lt;int&gt;::value &lt;&lt; '\\n';\n    std::cout &lt;&lt; is_ptr&lt;int*&gt;::value &lt;&lt; '\\n';\n    std::cout &lt;&lt; is_ptr&lt;int* const&gt;::value &lt;&lt; '\\n';\n    std::cout &lt;&lt; is_ptr&lt;const int*&gt;::value &lt;&lt; '\\n';\n}</code></pre>",
   "back": "<b>Headline:</b> the partial specialization <code>is_ptr&lt;T*&gt;</code> matches an unqualified pointer type. The top-level <code>const</code> in <code>int* const</code> makes it a different type, so it falls back to the primary template.<br><b>Output:</b><pre><code>0\n1\n0\n1</code></pre>Line 3 (<code>int* const</code>) prints 0. Line 4 (<code>const int*</code>, a pointer to a const int) prints 1, because it matches <code>T*</code> with <code>T=const int</code>.<br><b>Interview trap:</b> the standard <code>std::is_pointer</code> handles cv-qualified pointers. A hand-written trait does not, unless you strip cv first with <code>std::remove_cv_t</code> (on this build <code>std::is_pointer_v&lt;int* const&gt;</code> is true).",
   "tags": [
@@ -108,7 +108,7 @@
   ]
  },
  {
-  "type": "implement",
+  "type": "basic",
   "front": "Implement <code>my_remove_const&lt;T&gt;</code> and its alias <code>my_remove_const_t&lt;T&gt;</code> with partial specialization. Show it on <code>const int</code>, <code>int</code>, <code>const int*</code> and <code>int* const</code>, and predict the output.<br>",
   "back": "<pre><code>#include &lt;iostream&gt;\n#include &lt;type_traits&gt;\n\ntemplate &lt;typename T&gt;\nstruct my_remove_const { using type = T; };\n\ntemplate &lt;typename T&gt;\nstruct my_remove_const&lt;const T&gt; { using type = T; };\n\ntemplate &lt;typename T&gt;\nusing my_remove_const_t = typename my_remove_const&lt;T&gt;::type;\n\nint main() {\n    std::cout &lt;&lt; std::is_same_v&lt;my_remove_const_t&lt;const int&gt;, int&gt; &lt;&lt; '\\n';\n    std::cout &lt;&lt; std::is_same_v&lt;my_remove_const_t&lt;int&gt;, int&gt; &lt;&lt; '\\n';\n    std::cout &lt;&lt; std::is_same_v&lt;my_remove_const_t&lt;const int*&gt;, const int*&gt; &lt;&lt; '\\n';\n    std::cout &lt;&lt; std::is_same_v&lt;my_remove_const_t&lt;int* const&gt;, int*&gt; &lt;&lt; '\\n';\n}</code></pre><b>Output:</b><pre><code>1\n1\n1\n1</code></pre><b>Headline:</b> the partial specialization <code>my_remove_const&lt;const T&gt;</code> strips one top-level <code>const</code>. <code>const int*</code> is a non-const pointer to a const int, so nothing is stripped. <code>int* const</code> matches <code>const T</code> with <code>T=int*</code>.<br><b>Interview trap:</b> the standard version is <code>std::remove_const</code>. The follow-up is volatile: <code>std::remove_cv</code> strips both, and <code>std::remove_cvref</code> also strips the reference.",
   "tags": [
@@ -120,7 +120,7 @@
   ]
  },
  {
-  "type": "what_wrong",
+  "type": "basic",
   "front": "What is wrong with this code? Give the diagnostic that g++ 13 reports.<br><pre><code>#include &lt;iostream&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::vector&lt;bool&gt; flags{true, false};\n    bool* p = &amp;flags[0];\n    std::cout &lt;&lt; *p &lt;&lt; '\\n';\n}</code></pre>",
   "back": "<b>Headline:</b> <code>std::vector&lt;bool&gt;</code> is an explicit specialization of <code>std::vector</code> that packs bits. Its <code>operator[]</code> returns a proxy object, <code>std::vector&lt;bool&gt;::reference</code>, by value, so the address-of operator has nothing to take.<br><b>g++ 13 output (key lines):</b><pre><code>s11.cpp:6:23: error: taking address of rvalue [-fpermissive]\ns11.cpp:6:15: error: cannot convert ‘std::vector&lt;bool&gt;::reference*’ to ‘bool*’ in initialization</code></pre><b>Fix:</b> use <code>std::vector&lt;char&gt;</code> or <code>std::vector&lt;std::uint8_t&gt;</code>, or keep the value and do not take a pointer to it.<br><b>Interview trap:</b> <code>auto r = flags[0];</code> copies the proxy, not the bool, so later writes to the vector change <code>r</code>. Code that is generic over <code>T</code> hits this specialization silently.",
   "tags": [
@@ -156,7 +156,7 @@
   ]
  },
  {
-  "type": "what_wrong",
+  "type": "basic",
   "front": "What is wrong with this code? Give the key lines of the g++ 13 diagnostic and explain why the message is different from SFINAE.<br><pre><code>#include &lt;concepts&gt;\n#include &lt;iostream&gt;\n\ntemplate &lt;std::integral T&gt;\nT twice(T x) { return 2 * x; }\n\nint main() {\n    std::cout &lt;&lt; twice(2.5) &lt;&lt; '\\n';\n}</code></pre>",
   "back": "<b>Headline:</b> the constraint <code>integral&lt;double&gt;</code> is false, so the candidate is not viable.<br><b>Key lines of g++ 13 output:</b><pre><code>s14.cpp:8:23: error: no matching function for call to ‘twice(double)’\ns14.cpp:5:3: note: constraints not satisfied</code></pre><b>Fix:</b> change the constraint (for example <code>std::floating_point</code>) or add an overload, and do not call <code>twice</code> with a <code>double</code>.<br><b>Interview trap:</b> with <code>std::enable_if</code> you get a message about a missing <code>::type</code> in a default argument, which is much harder to read. The concept version names the failing predicate directly.",
   "tags": [
@@ -180,7 +180,7 @@
   ]
  },
  {
-  "type": "implement",
+  "type": "basic",
   "front": "Implement a concept <code>Priceable</code> that requires a member <code>price()</code> convertible to <code>double</code>. Use it to constrain <code>mark</code>, check it with <code>static_assert</code> for a type that satisfies it and one that does not, and predict the output.<br><pre><code>#include &lt;concepts&gt;\n#include &lt;iostream&gt;\n\ntemplate &lt;typename T&gt;\nconcept Priceable = requires(const T&amp; x) {\n    { x.price() } -&gt; std::convertible_to&lt;double&gt;;\n};\n\nstruct Bond {\n    double price() const { return 99.5; }\n};\n\nstruct Label {\n    const char* name() const { return \"x\"; }\n};\n\ntemplate &lt;Priceable T&gt;\ndouble mark(const T&amp; inst) { return inst.price() * 2.0; }\n\nstatic_assert(Priceable&lt;Bond&gt;);\nstatic_assert(!Priceable&lt;Label&gt;);\n\nint main() {\n    Bond b;\n    std::cout &lt;&lt; mark(b) &lt;&lt; '\\n';\n    std::cout &lt;&lt; Priceable&lt;Label&gt; &lt;&lt; '\\n';\n}</code></pre>",
   "back": "<b>Headline:</b> the <code>requires</code> expression checks that <code>x.price()</code> is valid and that its result converts to <code>double</code>. It checks the declaration only, not the value.<br><b>Output:</b><pre><code>199\n0</code></pre><b>Interview trap:</b> a concept cannot tell that <code>price()</code> returns something sensible. Semantic requirements (for example a positive price) still need unit tests.",
   "tags": [
@@ -192,7 +192,7 @@
   ]
  },
  {
-  "type": "trade_off",
+  "type": "basic",
   "front": "Trade-off: in a C++ pricing library, when do you constrain a template with SFINAE (<code>std::enable_if</code>) and when with C++20 concepts? Give the reasons and one case where SFINAE is still the right tool.",
   "back": "<b>Concepts:</b> the constraint is written once and read in the signature. Overloads are ranked by subsumption, and diagnostics name the failing predicate. Use them for all new C++20 code.<br><b>SFINAE:</b> still needed for code that must compile as C++17, and for trait classes that test a member with a <code>std::void_t</code>-style detection idiom, where a class template partial specialization is the cleanest form.<br><b>Interview trap:</b> a concept checks only what its <code>requires</code> expression states. Do not conclude a type is correct because it satisfies a concept.",
   "tags": [
@@ -204,7 +204,7 @@
   ]
  },
  {
-  "type": "what_prints",
+  "type": "basic",
   "front": "What does this print? Explain <code>sizeof...</code> and the fold expression.<br><pre><code>#include &lt;cstddef&gt;\n#include &lt;iostream&gt;\n\ntemplate &lt;typename... Ts&gt;\nconstexpr std::size_t count(Ts...) { return sizeof...(Ts); }\n\ntemplate &lt;typename... Ts&gt;\nauto sum(Ts... xs) { return (xs + ... + 0); }\n\nint main() {\n    std::cout &lt;&lt; count(1, 2.0, 'c') &lt;&lt; '\\n';\n    std::cout &lt;&lt; sum(1, 2, 3) &lt;&lt; '\\n';\n    std::cout &lt;&lt; sum(1.5, 2.25) &lt;&lt; '\\n';\n}</code></pre>",
   "back": "<b>Headline:</b> <code>sizeof...(Ts)</code> is the pack length, known at compile time. <code>(xs + ... + 0)</code> is a binary right fold: it expands to <code>xs1 + (xs2 + (... + 0))</code>.<br><b>Output:</b><pre><code>3\n6\n3.75</code></pre>The return type of <code>sum(1.5, 2.25)</code> is <code>double</code> because the elements are double. <code>sum()</code> with no argument returns the initial <code>int</code> 0.<br><b>Interview trap:</b> the return type is deduced from the arguments, so <code>sum()</code> and <code>sum(1.5)</code> return different types. An explicit return type removes that surprise.<br><b>Python vs C++:</b> Python's <code>*args</code> is a runtime tuple. A C++ pack is expanded at compile time, so no container exists unless you store one (for example in <code>std::tuple</code>).",
   "tags": [
@@ -216,7 +216,7 @@
   ]
  },
  {
-  "type": "what_wrong",
+  "type": "basic",
   "front": "What is wrong with this code? Give the g++ 13 diagnostic.<br><pre><code>#include &lt;iostream&gt;\n\ntemplate &lt;typename... Ts&gt;\nauto sum(Ts... xs) { return (xs + ...); }\n\nint main() {\n    std::cout &lt;&lt; sum() &lt;&lt; '\\n';\n}</code></pre>",
   "back": "<b>Headline:</b> a unary fold over <code>+</code> of an empty pack has no value. Only <code>&amp;&amp;</code> (true), <code>||</code> (false) and the comma operator (<code>void()</code>) have a defined value for an empty pack.<br><b>g++ 13 output:</b><pre><code>s19.cpp:4:35: error: fold of empty expansion over operator+</code></pre><b>Fix:</b> a binary fold with an initial value, <code>(xs + ... + 0)</code>.<br><b>Interview trap:</b> the template definition is accepted, and the error appears only when <code>sum&lt;&gt;</code> is instantiated with an empty pack.",
   "tags": [
@@ -240,7 +240,7 @@
   ]
  },
  {
-  "type": "implement",
+  "type": "basic",
   "front": "Implement <code>print_all(head, tail...)</code> that prints its arguments separated by single spaces, using one fold expression, and predict the output of the two calls.<br><pre><code>#include &lt;iostream&gt;\n#include &lt;string&gt;\n#include &lt;string_view&gt;\n\ntemplate &lt;typename T, typename... Ts&gt;\nvoid print_all(const T&amp; head, const Ts&amp;... tail) {\n    std::cout &lt;&lt; head;\n    ((std::cout &lt;&lt; ' ' &lt;&lt; tail), ...);\n    std::cout &lt;&lt; '\\n';\n}\n\nint main() {\n    print_all(1, 2.5, \"abc\");\n    print_all(std::string_view{\"done\"});\n}</code></pre>",
   "back": "<b>Headline:</b> the comma fold <code>((cout &lt;&lt; ' ' &lt;&lt; tail), ...)</code> applies the expression to each tail element in order. The second call passes an empty tail, which is valid: the comma fold of an empty pack is <code>void()</code>, so only the head is printed.<br><b>Output:</b><pre><code>1 2.5 abc\ndone</code></pre><b>Interview trap:</b> a user-defined type can overload the comma operator, and that changes what the fold does. Wrapping each operand in <code>static_cast&lt;void&gt;(...)</code> makes the fold use the built-in comma.",
   "tags": [
@@ -264,7 +264,7 @@
   ]
  },
  {
-  "type": "trade_off",
+  "type": "basic",
   "front": "Trade-off: virtual functions against CRTP for pricing kernels. What does each cost, and which would you use for the innermost Monte Carlo loop and for a book of heterogeneous trades? Python-vs-C++: how does this differ from Python method dispatch?",
   "back": "<b>Virtual:</b> one indirect call through a vtable pointer stored in each object. The compiler usually cannot inline across it, and objects are larger. It is the right tool for a heterogeneous book: a <code>std::vector&lt;std::unique_ptr&lt;Trade&gt;&gt;</code> that dispatches once per trade.<br><b>CRTP:</b> zero-overhead, inlinable, each derived type is a separate instantiation. It is the right tool for the innermost loop, where the product type is fixed at compile time.<br><b>Python:</b> every method call is a runtime lookup on the object. C++ virtual calls are cheaper, and CRTP removes the call entirely.<br><b>Interview trap:</b> \"virtual is slow\" is an overstatement. In a pricing loop the cost is usually the lost inlining and worse memory layout, so measure before choosing.<div class=\"fig\"><img src=\"17_cpp_m4_22_virtual_vs_crtp.png\"><div class=\"cap\">Virtual dispatch loads a vptr and calls through a vtable; CRTP calls the derived function directly.</div></div>",
   "tags": [
@@ -276,7 +276,7 @@
   ]
  },
  {
-  "type": "what_wrong",
+  "type": "basic",
   "front": "What is wrong with this code? Does it compile cleanly, and what does it print?<br><pre><code>#include &lt;iostream&gt;\n\ntemplate &lt;typename Derived&gt;\nstruct Instrument {\n    double pv(double rate) const {\n        return static_cast&lt;const Derived*&gt;(this)-&gt;pv_impl(rate);\n    }\n};\n\nstruct Swap : Instrument&lt;Swap&gt; {\n    double pv_impl(double rate) const { return 1000.0 * rate; }\n};\n\nstruct Bond : Instrument&lt;Swap&gt; {      // bug: wrong CRTP argument\n    double face = 100.0;\n    double pv_impl(double rate) const { return face / (1.0 + rate); }\n};\n\nint main() {\n    Bond b;\n    std::cout &lt;&lt; b.pv(0.05) &lt;&lt; '\\n';\n}</code></pre>",
   "back": "<b>Headline:</b> <code>Bond</code> names <code>Swap</code> as its CRTP argument. The base casts <code>this</code> (a <code>Bond</code>) to <code>Swap*</code>, and <code>Swap::pv_impl</code> runs on a <code>Bond</code> object. Nothing in the compiler flags this.<br><b>Output (undefined behaviour, do not rely on it):</b><pre><code>50</code></pre>The correct value is 95.2381, and <code>Bond::pv_impl</code> never runs. Under <code>-Wall -Wextra -O2</code> g++ 13 gives no diagnostic.<br><b>Fix:</b> <code>struct Bond : Instrument&lt;Bond&gt;</code>. To catch this at compile time, add a namespace-scope check after the definition: <code>static_assert(std::is_base_of_v&lt;Instrument&lt;Bond&gt;, Bond&gt;, \"CRTP argument must name this class\");</code>. With that check in place, g++ 13 reports (key line):<pre><code>error: static assertion failed: CRTP argument must name this class</code></pre><b>Interview trap:</b> a <code>static_assert</code> inside <code>Bond</code> does not work, because <code>Bond</code> is incomplete there. Place the check after the class.",
   "tags": [
@@ -288,7 +288,7 @@
   ]
  },
  {
-  "type": "implement",
+  "type": "basic",
   "front": "Implement a CRTP mixin <code>Counted&lt;Derived&gt;</code> that keeps a live-instance count for each derived type separately. Predict the output.<br><pre><code>#include &lt;iostream&gt;\n\ntemplate &lt;typename Derived&gt;\nstruct Counted {\n    static inline int live = 0;\n    Counted() { ++live; }\n    Counted(const Counted&amp;) { ++live; }\n    ~Counted() { --live; }\n};\n\nstruct Bond : Counted&lt;Bond&gt; {};\nstruct Swap : Counted&lt;Swap&gt; {};\n\nint main() {\n    Bond b1, b2;\n    Swap s1;\n    {\n        Bond tmp;\n        std::cout &lt;&lt; \"live bonds inside scope: \" &lt;&lt; Counted&lt;Bond&gt;::live &lt;&lt; '\\n';\n    }\n    std::cout &lt;&lt; \"live bonds: \" &lt;&lt; Counted&lt;Bond&gt;::live\n              &lt;&lt; \", live swaps: \" &lt;&lt; Counted&lt;Swap&gt;::live &lt;&lt; '\\n';\n}</code></pre>",
   "back": "<b>Headline:</b> <code>Counted&lt;Bond&gt;</code> and <code>Counted&lt;Swap&gt;</code> are different classes, so each has its own <code>static inline</code> member <code>live</code>. The copy constructor is needed so that copies are counted too.<br><b>Output:</b><pre><code>live bonds inside scope: 3\nlive bonds: 2, live swaps: 1</code></pre><b>Interview trap:</b> the counter is not thread-safe. Use <code>std::atomic&lt;int&gt;</code> if instances are created on several threads.",
   "tags": [
@@ -300,7 +300,7 @@
   ]
  },
  {
-  "type": "what_prints",
+  "type": "basic",
   "front": "What does this program print? Explain what <code>constexpr</code> guarantees and what it does not.<br><pre><code>#include &lt;iostream&gt;\n\nconstexpr long long fact(int n) {\n    long long r = 1;\n    for (int k = 2; k &lt;= n; ++k) r *= k;\n    return r;\n}\n\nstatic_assert(fact(5) == 120, \"compile-time check\");\n\nint main() {\n    constexpr long long f10 = fact(10);\n    std::cout &lt;&lt; f10 &lt;&lt; '\\n';\n    int n = 12;\n    std::cout &lt;&lt; fact(n) &lt;&lt; '\\n';\n}</code></pre>",
   "back": "<b>Headline:</b> <code>constexpr</code> means the function can be evaluated at compile time, not that it is. The <code>static_assert</code> and the <code>constexpr</code> local force compile-time evaluation. Calling the same function with a runtime <code>n</code> runs it at runtime.<br><b>Output:</b><pre><code>3628800\n479001600</code></pre><b>Interview trap:</b> a <code>constexpr</code> function that is called with a runtime value is an ordinary function, so nothing warns you that it ran at runtime. Use <code>consteval</code> (next card) when compile time is the requirement.",
   "tags": [
@@ -312,7 +312,7 @@
   ]
  },
  {
-  "type": "what_wrong",
+  "type": "basic",
   "front": "What is wrong with this code? Give the g++ 13 diagnostic.<br><pre><code>#include &lt;iostream&gt;\n\nconsteval long long fact(int n) {\n    long long r = 1;\n    for (int k = 2; k &lt;= n; ++k) r *= k;\n    return r;\n}\n\nint main() {\n    int n = 12;\n    std::cout &lt;&lt; fact(n) &lt;&lt; '\\n';\n}</code></pre>",
   "back": "<b>Headline:</b> <code>consteval</code> makes a function an immediate function: every call must be a constant expression. <code>n</code> is a runtime variable, so the call is rejected.<br><b>g++ 13 output (key lines):</b><pre><code>s27.cpp:11:23: error: the value of ‘n’ is not usable in a constant expression\ns27.cpp:10:9: note: ‘int n’ is not const</code></pre><b>Fix:</b> make <code>n</code> <code>constexpr</code>, or drop <code>consteval</code> and let the function run at runtime.<br><b>Interview trap:</b> use <code>consteval</code> for compile-time-only helpers, such as table builders. With <code>constexpr</code> the same mistake compiles silently and runs at runtime.",
   "tags": [
@@ -324,7 +324,7 @@
   ]
  },
  {
-  "type": "what_wrong",
+  "type": "basic",
   "front": "What is wrong with this code? Give the g++ 13 diagnostic. Why does it not compile under C++20, and what would you use instead?<br><pre><code>#include &lt;iostream&gt;\n#include &lt;vector&gt;\n\nconstexpr std::vector&lt;double&gt; curve{1.0, 0.95};\n\nint main() {\n    std::cout &lt;&lt; curve[1] &lt;&lt; '\\n';\n}</code></pre>",
   "back": "<b>Headline:</b> a <code>constexpr</code> variable must hold a constant. A <code>std::vector</code> allocates memory with <code>operator new</code>, which C++20 allows only for transient allocation inside a constant evaluation that is freed before it ends.<br><b>g++ 13 output (key line):</b><pre><code>/usr/include/c++/13/bits/allocator.h:195:52: error: ‘std::vector&lt;double&gt;(std::initializer_list&lt;double&gt;{((const double*)(&amp; const double [2]{1.0e+0, 9.4999999999999996e-1})), 2}, std::allocator&lt;double&gt;())’ is not a constant expression because it refers to a result of ‘operator new’</code></pre><b>Fix:</b> <code>std::array</code>, as in the table card. Note that libstdc++ accepts <code>constexpr double e = std::exp(1.0);</code> and <code>std::pow</code> as an extension, but the C++20 standard does not guarantee them to be <code>constexpr</code>, so do not rely on this for portable code.<br><b>Interview trap:</b> a <code>constexpr</code> container is only possible in C++20 if its memory is freed within the same constant evaluation.",
   "tags": [
@@ -348,7 +348,7 @@
   ]
  },
  {
-  "type": "implement",
+  "type": "basic",
   "front": "Write a <code>constexpr</code> function that builds the discount-factor table \\(\\mathrm{DF}(t) = (1+r)^{-t}\\) for \\(t=0,\\dots,5\\) at compile time, with a <code>static_assert</code> check, and predict the output for \\(r=5\\%\\).<br><pre><code>#include &lt;array&gt;\n#include &lt;cstddef&gt;\n#include &lt;iostream&gt;\n\nconstexpr std::array&lt;double, 6&gt; df_table(double r) {\n    std::array&lt;double, 6&gt; df{};\n    double growth = 1.0;\n    for (std::size_t t = 0; t &lt; df.size(); ++t) {\n        df[t] = 1.0 / growth;\n        growth *= (1.0 + r);\n    }\n    return df;\n}\n\nconstexpr auto table = df_table(0.05);\nstatic_assert(table[0] == 1.0);\nstatic_assert(table[1] &gt; 0.95 &amp;&amp; table[1] &lt; 0.96);\n\nint main() {\n    for (double d : table) std::cout &lt;&lt; d &lt;&lt; '\\n';\n}</code></pre>",
   "back": "<b>Headline:</b> the table is computed by multiplication, not by <code>std::pow</code>, which the C++20 standard does not guarantee to be <code>constexpr</code>. Each entry is \\(1/(1+r)^t\\), and the array sits in constant storage with no runtime cost.<br><b>Output:</b><pre><code>1\n0.952381\n0.907029\n0.863838\n0.822702\n0.783526</code></pre>Check: \\(1/1.05 = 0.952381\\), \\(1/1.05^2 = 0.907029\\), \\(1/1.05^5 = 0.783526\\).<br><b>Interview trap:</b> a large compile-time table costs compile time and binary size. Use <code>constexpr</code> for small fixed tables, and a runtime loop for curve-dependent tables.",
   "tags": [
@@ -360,7 +360,7 @@
   ]
  },
  {
-  "type": "what_prints",
+  "type": "basic",
   "front": "What does this program print? Explain each line.<br><pre><code>#include &lt;iostream&gt;\n#include &lt;type_traits&gt;\n\nint main() {\n    using A = int[3];\n    std::cout &lt;&lt; std::is_same_v&lt;std::decay_t&lt;A&gt;, int*&gt; &lt;&lt; '\\n';\n    std::cout &lt;&lt; std::is_same_v&lt;std::decay_t&lt;const int&amp;&gt;, int&gt; &lt;&lt; '\\n';\n    std::cout &lt;&lt; std::is_same_v&lt;std::remove_cvref_t&lt;const int&amp;&gt;, int&gt; &lt;&lt; '\\n';\n    std::cout &lt;&lt; std::is_same_v&lt;std::remove_const_t&lt;const int*&gt;, int*&gt; &lt;&lt; '\\n';\n    std::cout &lt;&lt; std::is_same_v&lt;std::remove_const_t&lt;const int* const&gt;, const int*&gt; &lt;&lt; '\\n';\n}</code></pre>",
   "back": "<b>Headline:</b> <code>std::decay_t</code> turns arrays into pointers, removes references, and removes cv-qualifiers. <code>std::remove_cvref_t</code> removes cv and references but not array-ness. <code>std::remove_const_t</code> acts on the pointer itself, not on the pointee.<br><b>Output:</b><pre><code>1\n1\n1\n0\n1</code></pre>Line 4: <code>const int*</code> is a non-const pointer to a const int, so <code>remove_const</code> leaves it unchanged. Line 5: <code>const int* const</code> loses its top-level const and becomes <code>const int*</code>.<br><b>Interview trap:</b> the usual bug is a <code>const</code> on the pointee being read as a <code>const</code> on the pointer. Read the declaration from right to left.",
   "tags": [
@@ -372,7 +372,7 @@
   ]
  },
  {
-  "type": "implement",
+  "type": "basic",
   "front": "Implement a trait <code>is_container&lt;T&gt;</code> that is true when <code>T</code> has a <code>value_type</code> and <code>begin()</code>/<code>end()</code>, using the <code>void_t</code> detection idiom. Predict the output for <code>std::vector&lt;int&gt;</code>, <code>int</code> and <code>double*</code>.<br><pre><code>#include &lt;iostream&gt;\n#include &lt;type_traits&gt;\n#include &lt;utility&gt;\n#include &lt;vector&gt;\n\ntemplate &lt;typename T, typename = void&gt;\nstruct is_container : std::false_type {};\n\ntemplate &lt;typename T&gt;\nstruct is_container&lt;T, std::void_t&lt;typename T::value_type,\n                                   decltype(std::declval&lt;T&amp;&gt;().begin()),\n                                   decltype(std::declval&lt;T&amp;&gt;().end())&gt;&gt;\n    : std::true_type {};\n\nint main() {\n    std::cout &lt;&lt; is_container&lt;std::vector&lt;int&gt;&gt;::value &lt;&lt; '\\n';\n    std::cout &lt;&lt; is_container&lt;int&gt;::value &lt;&lt; '\\n';\n    std::cout &lt;&lt; is_container&lt;double*&gt;::value &lt;&lt; '\\n';\n}</code></pre>",
   "back": "<b>Headline:</b> the partial specialization's arguments are decltype expressions. If any of them fails to substitute, the specialization is removed and the primary template (false) applies.<br><b>Output:</b><pre><code>1\n0\n0</code></pre><b>Interview trap:</b> older compilers did not handle the naive <code>void_t</code> alias correctly (CWG 1558). The standard <code>std::void_t</code> works on current compilers. In C++20 a <code>requires</code> expression or a concept is the cleaner form of the same test.",
   "tags": [
@@ -384,7 +384,7 @@
   ]
  },
  {
-  "type": "what_prints",
+  "type": "basic",
   "front": "What does this program print? Explain why the discarded branch does not cause an error for <code>int</code>.<br><pre><code>#include &lt;iostream&gt;\n#include &lt;string&gt;\n#include &lt;type_traits&gt;\n\nstruct Bond {\n    std::string name() const { return \"UKT 4.25 2034\"; }\n};\n\ntemplate &lt;typename T&gt;\nstd::string describe(const T&amp; x) {\n    if constexpr (std::is_integral_v&lt;T&gt;) {\n        return \"integer \" + std::to_string(x);\n    } else {\n        return \"instrument \" + x.name();\n    }\n}\n\nint main() {\n    std::cout &lt;&lt; describe(42) &lt;&lt; '\\n';\n    std::cout &lt;&lt; describe(Bond{}) &lt;&lt; '\\n';\n}</code></pre>",
   "back": "<b>Headline:</b> <code>if constexpr</code> inside a template discards the branch whose condition is false, and a discarded branch is not instantiated. For <code>int</code>, <code>x.name()</code> is never checked.<br><b>Output:</b><pre><code>integer 42\ninstrument UKT 4.25 2034</code></pre><b>Interview trap:</b> with a plain <code>if</code> the same program fails to compile for <code>int</code>, because both branches are instantiated. <code>if constexpr</code> only discards inside a template, and only when the condition depends on a template parameter.",
   "tags": [
@@ -408,7 +408,7 @@
   ]
  },
  {
-  "type": "what_prints",
+  "type": "basic",
   "front": "What does this program print, and what does it say about the size of an empty policy?<br><pre><code>#include &lt;iostream&gt;\n\nstruct Empty {};\n\nstruct WithBase : Empty {\n    double x;\n};\n\nstruct WithMember {\n    Empty e;\n    double x;\n};\n\nint main() {\n    std::cout &lt;&lt; \"sizeof(Empty)      = \" &lt;&lt; sizeof(Empty) &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"sizeof(WithBase)   = \" &lt;&lt; sizeof(WithBase) &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"sizeof(WithMember) = \" &lt;&lt; sizeof(WithMember) &lt;&lt; '\\n';\n}</code></pre>",
   "back": "<b>Headline:</b> an empty class takes at least one byte. As an empty base, the compiler can overlap it with the first member (empty base optimisation), so <code>WithBase</code> is 8 bytes. As a member it takes its own byte and padding, so <code>WithMember</code> is 16.<br><b>Output:</b><pre><code>sizeof(Empty)      = 1\nsizeof(WithBase)   = 8\nsizeof(WithMember) = 16</code></pre><b>Interview trap:</b> <code>[[no_unique_address]]</code> (C++20) gives the member form the same saving, but support depends on the compiler. Stateless policies should be empty bases or use this attribute.",
   "tags": [
@@ -432,7 +432,7 @@
   ]
  },
  {
-  "type": "what_prints",
+  "type": "basic",
   "front": "What does this program print? What does it say about the cost of <code>std::function</code>?<br><pre><code>#include &lt;functional&gt;\n#include &lt;iostream&gt;\n\nint main() {\n    double k = 0.5;\n    auto lam = [k](double x) { return k * x; };\n    std::function&lt;double(double)&gt; f = lam;\n    std::cout &lt;&lt; \"sizeof(lambda)        = \" &lt;&lt; sizeof(lam) &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"sizeof(std::function) = \" &lt;&lt; sizeof(f) &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"f(4) = \" &lt;&lt; f(4.0) &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"lam(4) = \" &lt;&lt; lam(4.0) &lt;&lt; '\\n';\n}</code></pre>",
   "back": "<b>Headline:</b> <code>std::function</code> is a type-erased wrapper. Here the lambda captures one <code>double</code>, so it is 8 bytes, and the wrapper is 32 bytes on this build (libstdc++, g++ 13). Calls through it are indirect and cannot be inlined.<br><b>Output:</b><pre><code>sizeof(lambda)        = 8\nsizeof(std::function) = 32\nf(4) = 2\nlam(4) = 2</code></pre><b>Interview trap:</b> the 32 is a library detail, not a rule. Captures above the implementation's small-buffer size go to the heap, so a big lambda passed through <code>std::function</code> into a hot loop can cost allocations as well as indirection.",
   "tags": [
@@ -444,7 +444,7 @@
   ]
  },
  {
-  "type": "trade_off",
+  "type": "basic",
   "front": "Trade-off: a numerical integrator that is called with a payoff in an inner Monte Carlo loop. Compare taking the payoff as a template parameter <code>F</code> with taking it as <code>std::function&lt;double(double)&gt;</code>. Which do you choose, and when is the other one better?",
   "back": "<b>Template parameter:</b> every distinct lambda gets its own instantiation, so the call inlines into the loop. The cost is code size and compile time per callable type.<br><b>std::function:</b> one instantiation serves every callable with that signature. It can be stored in a container, a class member or a configuration, and chosen at runtime from a trade blotter, at the cost of an indirect call per evaluation and possible heap allocation.<br><b>Interview trap:</b> the indirect call is often small next to the work in the loop body. Profile first, because the real loss is usually the blocked inlining in the innermost loop.",
   "tags": [
@@ -456,7 +456,7 @@
   ]
  },
  {
-  "type": "trade_off",
+  "type": "basic",
   "front": "Python vs C++: a Python function <code>def price(inst): return inst.pv()</code> and the C++ template <code>template&lt;class I&gt; double price(const I&amp; i) { return i.pv(); }</code>. When does each one fail, and what does the failure look like?",
   "back": "<b>Python:</b> a missing method fails at runtime, on the call that reaches it, with an <code>AttributeError</code>.<br><b>C++ template:</b> the function is checked per instantiation. A missing <code>pv</code> fails at compile time at the call site, and the diagnostic names the missing member. There are no runtime type errors, but the message can be long: a concept on <code>I</code> states the requirement once and gives a clean error.<br><b>Interview trap:</b> a template is not a function that accepts all types. Its body is checked only for the types you instantiate, so an unused path can hide an error until something uses it.",
   "tags": [
@@ -468,7 +468,7 @@
   ]
  },
  {
-  "type": "what_wrong",
+  "type": "basic",
   "front": "What is wrong with this two-file program? The header declares <code>sq</code>, <code>sq.cpp</code> defines it, and <code>main.cpp</code> calls it. Give the linker's message and the two fixes.<br><b>main.cpp:</b><pre><code>#include &lt;iostream&gt;\n\ntemplate &lt;typename T&gt; T sq(T x);   // declaration only\n\nint main() {\n    std::cout &lt;&lt; sq(3) &lt;&lt; '\\n';\n}</code></pre><b>sq.cpp:</b><pre><code>template &lt;typename T&gt;\nT sq(T x) { return x * x; }</code></pre>",
   "back": "<b>Headline:</b> <code>main.cpp</code> cannot see the definition, so it cannot instantiate <code>sq&lt;int&gt;</code>. <code>sq.cpp</code> never instantiates it either, so no object file defines the symbol and the link fails.<br><b>Linker output (key line):</b><pre><code>s40_main.cpp:(.text.startup+0x1e): undefined reference to `int sq&lt;int&gt;(int)'</code></pre><b>Fix 1 (usual):</b> put the definition in the header, so every translation unit can instantiate it. <b>Fix 2:</b> keep the definition in <code>sq.cpp</code> and add an explicit instantiation <code>template int sq&lt;int&gt;(int);</code>. With the explicit instantiation the two-file program links and prints 9 (verified with g++ 13).<br><b>Interview trap:</b> an explicit instantiation covers only the types you list. Header definitions cost compile time in every translation unit, and <code>extern template</code> declarations in the header, with one explicit instantiation in a <code>.cpp</code>, avoid repeated instantiation in every translation unit.",
   "tags": [

@@ -242,7 +242,7 @@
  },
  {
   "type": "basic",
-  "front": "<b>Context: the 5-year 5% bond at 98.00 has a current yield of 5.10%, a YTM of 5.46%, and a 2-point discount to amortise over five years. Break the YTM into income and pull to par, and state the approximate-yield formula.",
+  "front": "Context: the 5-year 5% bond at 98.00 has a current yield of 5.10%, a YTM of 5.46%, and a 2-point discount to amortise over five years. Break the YTM into income and pull to par, and state the approximate-yield formula.",
   "back": "<b>Current yield</b> \\(= C/P = 5/98 = 5.10\\%\\). This is income only.<br>\n<b>Approximate yield:</b> \\(\\text{YTM}\\approx \\dfrac{C + (100-P)/n}{(100+P)/2} = \\dfrac{5.00+0.40}{99} = 5.45\\%\\), close to the exact 5.46% (semi-annual basis).<br>\n<b>Decomposition:</b> the gap between YTM and current yield is the pull to par. The 2-point discount adds 0.40 per year, which is about 0.4% of the price base, on top of the 5.10% income.<br>\n<b>Why it matters:</b> a discount bond's return relies on the price converging to par. Holding it at constant yield, the price rises about 0.4 per year through pull to par, and that is the carry the desk earns.<br>\n<b>Used in the deck for:</b> carry and roll-down cards and the premium-versus-discount bond cards.",
   "tags": [
    "ytm",
