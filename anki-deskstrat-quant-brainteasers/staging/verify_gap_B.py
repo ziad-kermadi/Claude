@@ -84,6 +84,7 @@ P_even = sum(comb(n, k) * p**k * q_**(n - k) for k in range(0, n + 1, 2))
 report(3, "P(even heads) = 33/64 (binomial sum)", F(33, 64), P_even)
 report(3, "(1+(q-p)^n)/2 identity", F(33, 64), (1 + (q_ - p) ** n) / 2)
 report(3, "G(-1) = (q-p)^5 = 1/32", F(1, 32), (q_ - p) ** n)
+report(3, "P(odd heads) = 31/64", F(31, 64), 1 - P_even)
 heads = (RNG.random((N, n)) < 0.25).sum(axis=1)
 pe = float(np.mean(heads % 2 == 0)); se = math.sqrt(pe * (1 - pe) / N)
 mc_check(3, "MC P(even heads)", F(33, 64), pe, se, N)
@@ -147,6 +148,12 @@ report(4, "E[sum] = 7 for the Sicherman pair (mean of each die)", 7, F(sum(A_f),
 p5 = F(3, 10)
 P_gt = 1 - (1 - p5) ** 2  # Y > X iff at least one of the two extra flips is heads
 report(5, "P(Y > X) = 1 - (7/10)^2 = 51/100", F(51, 100), P_gt)
+p_indep = sum(comb(10, x_) * p5**x_ * (1 - p5) ** (10 - x_) *
+              sum(comb(12, y_) * p5**y_ * (1 - p5) ** (12 - y_) for y_ in range(x_ + 1, 13))
+              for x_ in range(11))
+report(5, "independent copies: P(Y>X) = 0.5174, not 0.51", 1,
+       1 if abs(float(p_indep) - 0.5174) < 5e-5 and abs(float(p_indep) - 0.51) > 0.005 else 0,
+       extra=f"(exact {float(p_indep):.5f})")
 report(5, "E[Y - X] = 2 * 3/10", F(3, 5), 2 * p5)
 ok_tail = True
 for t in range(-1, 13):
@@ -204,27 +211,36 @@ report(6, "independent bits: exact first-meeting time 149504/63", F(149504, 63),
 TI = 100000
 
 
-def indep_bit_times(T_, rng, n_, cap=10**6):
-    Xa = np.zeros((T_, n_), dtype=bool)
-    Ya = np.ones((T_, n_), dtype=bool)
-    times = np.full(T_, -1)
+def indep_k_times(T_, rng, n_, cap=10**6):
+    """Lumped chain: k = number of disagreeing coordinates (exact by symmetry of the coordinates).
+    Pick a disagreeing coordinate (prob k/n): fresh independent bits agree w.p. 1/2 (k -> k-1).
+    Pick an agreeing coordinate: fresh bits disagree w.p. 1/2 (k -> k+1)."""
+    k = np.full(T_, n_)
+    times = np.zeros(T_, dtype=np.int64)
     active = np.arange(T_)
     t = 0
     while active.size and t < cap:
         t += 1
-        c = rng.integers(0, n_, size=active.size)
-        Xa[active, c] = rng.random(active.size) < 0.5
-        Ya[active, c] = rng.random(active.size) < 0.5
-        agree = np.all(Xa[active] == Ya[active], axis=1)
-        times[active[agree]] = t
-        active = active[~agree]
+        kk = k[active]
+        pick_dis = rng.random(active.size) < kk / n_
+        newdis = rng.random(active.size) < 0.5
+        dec = (pick_dis & ~newdis).astype(np.int64)
+        inc = ((~pick_dis) & newdis).astype(np.int64)
+        kk = kk - dec + inc
+        k[active] = kk
+        done = kk == 0
+        times[active[done]] = t
+        active = active[~done]
     return times
 
 
-ti = indep_bit_times(TI, RNG, n6)
-assert (ti >= 0).all()
-mc_check(6, "MC independent-bit first meeting (mean)", F(149504, 63), float(ti.mean()),
+ti = indep_k_times(TI, RNG, n6)
+assert (ti > 0).all()
+mc_check(6, "MC independent-bit first meeting (lumped chain)", F(149504, 63), float(ti.mean()),
          float(ti.std(ddof=1) / math.sqrt(TI)), TI)
+report(6, "first meeting / coalescence ratio ~ 81", 81, round(float(F(149504, 63) / (n6 * H10))),
+       extra="(2372.8 / 29.29)")
+report(6, "10(ln 10 + gamma) ~ 28.8", 28.8, round(10 * (math.log(10) + 0.5772156649), 1))
 
 # ---------------- card 7: CFTP on {0,1,2,3}, monotone reflecting walk ----------------
 def step(xv, u):
@@ -238,6 +254,7 @@ for xv in range(4):
 unif = [F(1, 4)] * 4
 piP = [sum(unif[i] * Pm[i][j] for i in range(4)) for j in range(4)]
 report(7, "uniform is stationary (exact piP = pi)", 1, 1 if piP == unif else 0)
+report(7, "reflected walk: P(0 -> 0) = 1/2", F(1, 2), Pm[0][0])
 
 
 def cftp_sample(rng):
@@ -356,6 +373,9 @@ mc_check(10, "1/e rule (m=3) E[rank]: formula vs MC", E_rule, float(rule_e.mean(
          float(rule_e.std(ddof=1) / math.sqrt(Np)), Np)
 report(10, "1/e rule is NOT optimal for E[rank]: E_rule > optimum", 1, 1 if E_rule > V_opt else 0,
        extra=f"(E_rule={float(E_rule):.4f})")
+report(10, "E_rule exact = 569/200", F(569, 200), E_rule)
+rel2_hired = any(policy[k][2] for k in range(2, nS + 1))
+report(10, "optimal expected-rank rule hires a relative 2nd-best at some k", 1, 1 if rel2_hired else 0)
 
 # ---------------- card 11: house selling, c = 0.02, offers U(0,1), first offer free ----------------
 c11 = 0.02
@@ -385,6 +405,8 @@ W1 = F(7, 2); W2 = cont(W1); W3 = cont(W2); W4 = cont(W3)
 report(12, "V with 2 rolls = 17/4", F(17, 4), W2)
 report(12, "V with 3 rolls = 14/3", F(14, 3), W3)
 report(12, "V with 4 rolls = 89/18", F(89, 18), W4)
+report(12, "first-roll threshold W_3 = 14/3: accept faces 5 and 6 only", 1,
+       1 if [x_ for x_ in range(1, 7) if x_ >= W3] == [5, 6] else 0)
 Nd = 200000
 tot = np.zeros(Nd); active = np.ones(Nd, bool)
 th = {4: float(W3), 3: float(W2), 2: float(W1)}
