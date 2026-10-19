@@ -306,13 +306,13 @@
  },
  {
   "type": "basic",
-  "front": "<b>Scenario: it is 07:55 on a UK CPI release day.</b> The release is at 07:00 and has already come out. Consensus was 3.0% year on year and the print is 3.4%. The desk holds a receiver of 2-year RPI-linked inflation (not CPI) and a 10-year gilt long. Walk through what the strat checks in the first 15 minutes after the print and what the desk does about the hedge.",
-  "back": "<b>Answer:</b> the strat checks what the print says about the index, and what it does to each leg, in this order:<ol>\n<li><b>Which index moved:</b> a CPI print is not an RPI print. Confirm the instrument's index and the lag, because the linker's cash flow is set by RPI with its own lag, not by the headline CPI.</li>\n<li><b>Surprise size:</b> 0.4pp above consensus. Compare with the desk's expected move: the market-implied move on breakevens and on the front end.</li>\n<li><b>Breakeven and real rate split:</b> a higher CPI print lifts breakevens and, if the central bank reacts, pushes up nominal yields. Split the move into the nominal and the real leg.</li>\n<li><b>Hedge the book:</b> the linker receiver is long inflation, so it gains if inflation expectations rise. The nominal 10-year long loses if nominal yields rise. Set the DV01 on each leg to the desk's limit, and decide whether to hedge the nominal leg against the breakeven leg with a swap.</li>\n</ol>\n<b>Interviewer follow-up:</b> Why is a CPI surprise not a direct RPI surprise? The two indices have different weights and the formula effect that drives RPI-CPI wedge. The wedge moves separately from the headline print.",
+  "front": "<b>Scenario: it is 13:40 on a Thursday in late October.</b> A UK defined-benefit pension scheme's LDI manager calls and wants to <b>receive fixed on £150m of 30-year sterling swaps</b> to lock in long-end yields after a rally. The scheme's trigger is a funding-level test that lifts its hedge ratio if yields rise. Walk through what the strat does before quoting.",
+  "back": "<b>Answer:</b> the scheme is a long-dated receiver. It wants to receive fixed on 30y, so it is buying duration, and the desk is the payer.<br><br>\nSteps:<ol>\n<li><b>Size the risk:</b> DV01 on £150m of 30-year swap is about \\(150\\text{m} \\times 17 \\times 10^{-4} \\approx \\text{£}255\\text{k}\\) per bp (modified duration approx. 17, check against the curve).</li>\n<li><b>Choose the instrument:</b> swap, gilt or a mix. A swap gives no index-linked cash flow and avoids the gilt repo; a gilt uses the balance sheet and the repo. Check the 30y swap-gilt spread before choosing.</li>\n<li><b>Price and liquidity:</b> the 30y point is illiquid. Quote with a wider spread, and check the desk's limit on the long end.</li>\n<li><b>Collateral and margin:</b> a receiver's margin moves with yields. A 30bp sell-off on £255k per bp is about £7.7m of variation margin; confirm the scheme's collateral and its CSA terms before the trade.</li>\n<li><b>Hedge the desk's side:</b> the desk's payer is short duration. Hedge at the 30y point or with a 10y/30y curve trade, and keep the residual in the curve limit.</li>\n</ol>\n<b>Interviewer follow-up:</b> Why does the scheme's trigger matter to the desk? The trigger makes the client's demand procyclical. The desk may see more flow after a rally, and should expect the demand to appear when the long end is already rich.",
   "tags": [
-   "inflation",
-   "event_risk",
+   "pension_hedging",
+   "long_end",
    "scenario",
-   "linkers",
+   "swaps",
    "lvl_vp_core"
   ]
  },
@@ -364,11 +364,11 @@
  },
  {
   "type": "cloze",
-  "front": "On an SSA swapped issuance where the issuer receives fixed from the dealer and pays floating (SONIA plus spread), the dealer is {{c1::payer of fixed}} and hedges by {{c2::receiving fixed}} in the swap or gilt market.",
-  "back": "The direction is the dealer's view of its own net position. The effect on swap spreads depends on the wider flow.",
+  "front": "A benchmark fixing order is executed at the {{c1::published fixing price}}, not at the desk's mark, so the desk's risk between the order and the fix is in {{c2::the hedge timing}} and in the {{c3::size of the order against the market}}.",
+  "back": "Practical point for a large fixing day: hedge the expected fill with the desk's own mark, and check the fixing methodology before the day, not on the day.",
   "tags": [
-   "ssa",
-   "swapped_issuance",
+   "fixing",
+   "execution",
    "convention",
    "lvl_vp_core",
    "cloze"
