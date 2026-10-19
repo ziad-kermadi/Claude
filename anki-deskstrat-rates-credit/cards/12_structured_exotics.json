@@ -7,7 +7,8 @@
    "callable",
    "structured",
    "chain_callable",
-   "funding"
+   "funding",
+   "lvl_foundation"
   ]
  },
  {
@@ -19,7 +20,8 @@
    "swaptions",
    "bermudan",
    "chain_callable",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -30,7 +32,8 @@
    "callable",
    "negative_convexity",
    "chain_callable",
-   "exercise"
+   "exercise",
+   "lvl_vp_core"
   ]
  },
  {
@@ -42,7 +45,8 @@
    "vega",
    "swaptions",
    "flows",
-   "chain_callable"
+   "chain_callable",
+   "lvl_stretch"
   ]
  },
  {
@@ -54,7 +58,8 @@
    "steepener",
    "copula",
    "chain_cms_spread",
-   "vol"
+   "vol",
+   "lvl_vp_core"
   ]
  },
  {
@@ -65,7 +70,8 @@
    "cms_spread",
    "convexity",
    "chain_cms_spread",
-   "forward"
+   "forward",
+   "lvl_vp_core"
   ]
  },
  {
@@ -77,7 +83,8 @@
    "copula",
    "correlation",
    "model_risk",
-   "chain_cms_spread"
+   "chain_cms_spread",
+   "lvl_stretch"
   ]
  },
  {
@@ -88,7 +95,8 @@
    "range_accrual",
    "digital",
    "corridor",
-   "chain_range_accrual"
+   "chain_range_accrual",
+   "lvl_vp_core"
   ]
  },
  {
@@ -100,7 +108,8 @@
    "digital",
    "call_spread",
    "chain_range_accrual",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -112,7 +121,8 @@
    "smile",
    "skew",
    "digital",
-   "chain_range_accrual"
+   "chain_range_accrual",
+   "lvl_stretch"
   ]
  },
  {
@@ -123,7 +133,8 @@
    "tarn",
    "path_dependence",
    "knockout",
-   "chain_tarn"
+   "chain_tarn",
+   "lvl_vp_core"
   ]
  },
  {
@@ -134,7 +145,8 @@
    "tarn",
    "path_dependence",
    "vega",
-   "chain_tarn"
+   "chain_tarn",
+   "lvl_vp_core"
   ]
  },
  {
@@ -146,7 +158,8 @@
    "monte_carlo",
    "lsm",
    "chain_tarn",
-   "numerics"
+   "numerics",
+   "lvl_vp_core"
   ]
  },
  {
@@ -157,7 +170,8 @@
    "autocall",
    "rates",
    "bermudan",
-   "chain_autocall"
+   "chain_autocall",
+   "lvl_vp_core"
   ]
  },
  {
@@ -168,7 +182,8 @@
    "autocall",
    "knock_in",
    "skew",
-   "chain_autocall"
+   "chain_autocall",
+   "lvl_vp_core"
   ]
  },
  {
@@ -179,7 +194,8 @@
    "autocall",
    "case_study",
    "chain_autocall",
-   "expected_life"
+   "expected_life",
+   "lvl_vp_core"
   ]
  },
  {
@@ -190,7 +206,8 @@
    "callable",
    "derivation",
    "bermudan",
-   "funding"
+   "funding",
+   "lvl_stretch"
   ]
  },
  {
@@ -201,7 +218,8 @@
    "digital",
    "smile",
    "derivation",
-   "range_accrual"
+   "range_accrual",
+   "lvl_stretch"
   ]
  },
  {
@@ -212,7 +230,8 @@
    "cms_spread",
    "copula",
    "derivation",
-   "bachelier"
+   "bachelier",
+   "lvl_stretch"
   ]
  },
  {
@@ -224,7 +243,8 @@
    "monte_carlo",
    "derivation",
    "tarn",
-   "numerics"
+   "numerics",
+   "lvl_vp_core"
   ]
  },
  {
@@ -235,7 +255,8 @@
    "prdc",
    "quanto",
    "fx",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -246,7 +267,8 @@
    "cppi",
    "gap_risk",
    "derivation",
-   "dynamics"
+   "dynamics",
+   "lvl_vp_core"
   ]
  },
  {
@@ -257,7 +279,8 @@
    "callable",
    "case_study",
    "funding",
-   "bermudan"
+   "bermudan",
+   "lvl_vp_core"
   ]
  },
  {
@@ -268,7 +291,8 @@
    "callable",
    "vega",
    "case_study",
-   "flows"
+   "flows",
+   "lvl_vp_core"
   ]
  },
  {
@@ -279,7 +303,8 @@
    "cms_spread",
    "correlation",
    "case_study",
-   "reserve"
+   "reserve",
+   "lvl_vp_core"
   ]
  },
  {
@@ -290,7 +315,8 @@
    "range_accrual",
    "case_study",
    "digital",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -301,7 +327,8 @@
    "tarn",
    "case_study",
    "path_dependence",
-   "toy_model"
+   "toy_model",
+   "lvl_vp_core"
   ]
  },
  {
@@ -312,7 +339,8 @@
    "inflation",
    "yoy",
    "case_study",
-   "bachelier"
+   "bachelier",
+   "lvl_vp_core"
   ]
  },
  {
@@ -323,7 +351,8 @@
    "cppi",
    "gap_risk",
    "case_study",
-   "guarantee"
+   "guarantee",
+   "lvl_vp_core"
   ]
  },
  {
@@ -334,7 +363,8 @@
    "structured_notes",
    "case_study",
    "funding",
-   "economics"
+   "economics",
+   "lvl_vp_core"
   ]
  },
  {
@@ -345,7 +375,8 @@
    "prdc",
    "fx",
    "structured",
-   "exotics"
+   "exotics",
+   "lvl_stretch"
   ]
  },
  {
@@ -356,7 +387,8 @@
    "inflation",
    "yoy",
    "lag",
-   "convention"
+   "convention",
+   "lvl_stretch"
   ]
  },
  {
@@ -367,7 +399,8 @@
    "cpdo",
    "credit",
    "leverage",
-   "failure"
+   "failure",
+   "lvl_vp_core"
   ]
  },
  {
@@ -378,7 +411,8 @@
    "cso",
    "correlation",
    "tranches",
-   "credit"
+   "credit",
+   "lvl_stretch"
   ]
  },
  {
@@ -389,7 +423,8 @@
    "structured_notes",
    "fair_value",
    "day1_pnl",
-   "accounting"
+   "accounting",
+   "lvl_vp_core"
   ]
  },
  {
@@ -400,7 +435,8 @@
    "valuation",
    "level3",
    "ipv",
-   "model_risk"
+   "model_risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -411,7 +447,8 @@
    "reserve",
    "model_risk",
    "valuation",
-   "correlation"
+   "correlation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -422,7 +459,8 @@
    "risk_recycling",
    "hedging",
    "exotics",
-   "remarking"
+   "remarking",
+   "lvl_vp_core"
   ]
  },
  {
@@ -433,7 +471,8 @@
    "callable",
    "cloze",
    "bermudan",
-   "convention"
+   "convention",
+   "lvl_foundation"
   ]
  },
  {
@@ -443,7 +482,8 @@
   "tags": [
    "cppi",
    "cloze",
-   "gap_risk"
+   "gap_risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -454,7 +494,8 @@
    "inflation",
    "cloze",
    "yoy",
-   "lag"
+   "lag",
+   "lvl_vp_core"
   ]
  },
  {
@@ -464,7 +505,8 @@
   "tags": [
    "tarn",
    "cloze",
-   "knockout"
+   "knockout",
+   "lvl_vp_core"
   ]
  },
  {
@@ -475,7 +517,8 @@
    "lsm",
    "cloze",
    "monte_carlo",
-   "bounds"
+   "bounds",
+   "lvl_vp_core"
   ]
  },
  {
@@ -486,7 +529,8 @@
    "prdc",
    "quanto",
    "cloze",
-   "fx"
+   "fx",
+   "lvl_vp_core"
   ]
  },
  {
@@ -497,7 +541,8 @@
    "zero_coupon_callable",
    "cloze",
    "formosa",
-   "convexity"
+   "convexity",
+   "lvl_stretch"
   ]
  }
 ]

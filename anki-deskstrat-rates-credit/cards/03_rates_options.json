@@ -7,7 +7,8 @@
    "black76",
    "lognormal",
    "negative_rates",
-   "conventions"
+   "conventions",
+   "lvl_foundation"
   ]
  },
  {
@@ -18,7 +19,8 @@
    "bachelier",
    "normal_model",
    "derivation",
-   "atm"
+   "atm",
+   "lvl_vp_core"
   ]
  },
  {
@@ -29,7 +31,8 @@
    "atm",
    "mental_math",
    "normal_model",
-   "bachelier"
+   "bachelier",
+   "lvl_foundation"
   ]
  },
  {
@@ -40,7 +43,8 @@
    "vol_conversion",
    "mental_math",
    "normal_model",
-   "lognormal"
+   "lognormal",
+   "lvl_vp_core"
   ]
  },
  {
@@ -51,7 +55,8 @@
    "vol_conversion",
    "atm",
    "lognormal",
-   "normal_model"
+   "normal_model",
+   "lvl_foundation"
   ]
  },
  {
@@ -62,7 +67,8 @@
    "vol_conversion",
    "smile",
    "normal_model",
-   "conventions"
+   "conventions",
+   "lvl_vp_core"
   ]
  },
  {
@@ -72,7 +78,8 @@
   "tags": [
    "shifted_lognormal",
    "negative_rates",
-   "models"
+   "models",
+   "lvl_vp_core"
   ]
  },
  {
@@ -83,7 +90,8 @@
    "normal_model",
    "negative_rates",
    "regime",
-   "conventions"
+   "conventions",
+   "lvl_vp_core"
   ]
  },
  {
@@ -93,7 +101,8 @@
   "tags": [
    "greeks",
    "normal_model",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -104,7 +113,8 @@
    "caps_floors",
    "caplets",
    "bootstrapping",
-   "vol_stripping"
+   "vol_stripping",
+   "lvl_vp_core"
   ]
  },
  {
@@ -115,7 +125,8 @@
    "caps_floors",
    "parity",
    "swaps",
-   "no_arbitrage"
+   "no_arbitrage",
+   "lvl_vp_core"
   ]
  },
  {
@@ -125,7 +136,8 @@
   "tags": [
    "caps_floors",
    "parity",
-   "swaps"
+   "swaps",
+   "lvl_foundation"
   ]
  },
  {
@@ -136,7 +148,8 @@
    "caps_floors",
    "rfr",
    "compounding",
-   "convexity"
+   "convexity",
+   "lvl_vp_core"
   ]
  },
  {
@@ -147,7 +160,8 @@
    "caps_floors",
    "vol_term_structure",
    "stripping",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -158,7 +172,8 @@
    "swaptions",
    "annuity_measure",
    "black",
-   "pricing"
+   "pricing",
+   "lvl_vp_core"
   ]
  },
  {
@@ -169,7 +184,8 @@
    "swaptions",
    "payer_receiver",
    "parity",
-   "conventions"
+   "conventions",
+   "lvl_vp_core"
   ]
  },
  {
@@ -180,7 +196,8 @@
    "swaptions",
    "atm",
    "mental_math",
-   "normal_model"
+   "normal_model",
+   "lvl_foundation"
   ]
  },
  {
@@ -191,7 +208,8 @@
    "swaptions",
    "straddle",
    "greeks",
-   "trade_off"
+   "trade_off",
+   "lvl_vp_core"
   ]
  },
  {
@@ -202,7 +220,8 @@
    "swaptions",
    "vol_cube",
    "interpolation",
-   "no_arbitrage"
+   "no_arbitrage",
+   "lvl_vp_core"
   ]
  },
  {
@@ -213,7 +232,8 @@
    "swaptions",
    "vega_bucketing",
    "hedging",
-   "risk"
+   "risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -224,7 +244,8 @@
    "swaptions",
    "implied_vol",
    "data_quality",
-   "conventions"
+   "conventions",
+   "lvl_vp_core"
   ]
  },
  {
@@ -234,7 +255,8 @@
   "tags": [
    "sabr",
    "parameters",
-   "smile"
+   "smile",
+   "lvl_foundation"
   ]
  },
  {
@@ -244,7 +266,8 @@
   "tags": [
    "sabr",
    "backbone",
-   "beta"
+   "beta",
+   "lvl_vp_core"
   ]
  },
  {
@@ -255,7 +278,8 @@
    "sabr",
    "hagan",
    "approximation",
-   "arbitrage"
+   "arbitrage",
+   "lvl_vp_core"
   ]
  },
  {
@@ -266,7 +290,8 @@
    "sabr",
    "arbitrage",
    "density",
-   "breeden_litzenberger"
+   "breeden_litzenberger",
+   "lvl_stretch"
   ]
  },
  {
@@ -277,7 +302,8 @@
    "sabr",
    "arbitrage",
    "breeden_litzenberger",
-   "density"
+   "density",
+   "lvl_foundation"
   ]
  },
  {
@@ -288,7 +314,8 @@
    "sabr",
    "free_boundary",
    "zabr",
-   "models"
+   "models",
+   "lvl_stretch"
   ]
  },
  {
@@ -299,7 +326,8 @@
    "sabr",
    "skew",
    "curvature",
-   "parameters"
+   "parameters",
+   "lvl_vp_core"
   ]
  },
  {
@@ -310,7 +338,8 @@
    "sabr",
    "beta",
    "normal_model",
-   "negative_rates"
+   "negative_rates",
+   "lvl_vp_core"
   ]
  },
  {
@@ -321,7 +350,8 @@
    "sabr",
    "negative_rates",
    "calibration",
-   "shifted"
+   "shifted",
+   "lvl_vp_core"
   ]
  },
  {
@@ -332,7 +362,8 @@
    "sabr",
    "hedging",
    "calibration",
-   "smile_dynamics"
+   "smile_dynamics",
+   "lvl_stretch"
   ]
  },
  {
@@ -343,7 +374,8 @@
    "smile_dynamics",
    "sticky_strike",
    "sticky_delta",
-   "delta"
+   "delta",
+   "lvl_vp_core"
   ]
  },
  {
@@ -354,7 +386,8 @@
    "vanna",
    "volga",
    "normal_model",
-   "greeks"
+   "greeks",
+   "lvl_vp_core"
   ]
  },
  {
@@ -365,7 +398,8 @@
    "greeks",
    "theta",
    "vega",
-   "normal_model"
+   "normal_model",
+   "lvl_vp_core"
   ]
  },
  {
@@ -376,7 +410,8 @@
    "gamma",
    "theta",
    "pde",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -387,7 +422,8 @@
    "delta_hedging",
    "pnl",
    "realised_implied",
-   "gamma_pnl"
+   "gamma_pnl",
+   "lvl_vp_core"
   ]
  },
  {
@@ -398,7 +434,8 @@
    "vol_of_vol",
    "correlation_risk",
    "spread_options",
-   "risk"
+   "risk",
+   "lvl_stretch"
   ]
  },
  {
@@ -409,7 +446,8 @@
    "hjm",
    "no_arbitrage",
    "drift",
-   "multifactor"
+   "multifactor",
+   "lvl_vp_core"
   ]
  },
  {
@@ -420,7 +458,8 @@
    "hjm",
    "markovian",
    "hull_white",
-   "models"
+   "models",
+   "lvl_vp_core"
   ]
  },
  {
@@ -430,7 +469,8 @@
   "tags": [
    "hull_white",
    "bond_price",
-   "mean_reversion"
+   "mean_reversion",
+   "lvl_vp_core"
   ]
  },
  {
@@ -441,7 +481,8 @@
    "hull_white",
    "mean_reversion",
    "vol_term_structure",
-   "correlation"
+   "correlation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -452,7 +493,8 @@
    "hull_white",
    "calibration",
    "swaptions",
-   "limitations"
+   "limitations",
+   "lvl_vp_core"
   ]
  },
  {
@@ -463,7 +505,8 @@
    "bermudan",
    "trees",
    "pde",
-   "backward_induction"
+   "backward_induction",
+   "lvl_vp_core"
   ]
  },
  {
@@ -474,7 +517,8 @@
    "bermudan",
    "exercise_boundary",
    "optionality",
-   "early_exercise"
+   "early_exercise",
+   "lvl_vp_core"
   ]
  },
  {
@@ -485,7 +529,8 @@
    "bermudan",
    "monte_carlo",
    "lsm",
-   "trade_off"
+   "trade_off",
+   "lvl_vp_core"
   ]
  },
  {
@@ -496,7 +541,8 @@
    "lmm",
    "bgm",
    "terminal_measure",
-   "drift"
+   "drift",
+   "lvl_stretch"
   ]
  },
  {
@@ -507,7 +553,8 @@
    "lmm",
    "calibration",
    "caplets",
-   "swaptions"
+   "swaptions",
+   "lvl_vp_core"
   ]
  },
  {
@@ -518,7 +565,8 @@
    "lmm",
    "rank_reduction",
    "pca",
-   "correlation"
+   "correlation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -529,7 +577,8 @@
    "lmm",
    "calibration",
    "correlation",
-   "bermudan"
+   "bermudan",
+   "lvl_stretch"
   ]
  },
  {
@@ -540,7 +589,8 @@
    "slv",
    "cheyette",
    "smile",
-   "models"
+   "models",
+   "lvl_stretch"
   ]
  },
  {
@@ -551,7 +601,8 @@
    "cms",
    "convexity",
    "forward_measure",
-   "convexity_adjustment"
+   "convexity_adjustment",
+   "lvl_vp_core"
   ]
  },
  {
@@ -562,7 +613,8 @@
    "cms",
    "static_replication",
    "smile",
-   "convexity"
+   "convexity",
+   "lvl_vp_core"
   ]
  },
  {
@@ -573,7 +625,8 @@
    "cms_spread",
    "correlation",
    "spread_options",
-   "risk"
+   "risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -584,7 +637,8 @@
    "cms_spread",
    "copula",
    "marginals",
-   "models"
+   "models",
+   "lvl_vp_core"
   ]
  },
  {
@@ -595,7 +649,8 @@
    "copula",
    "tail_dependence",
    "cms_spread",
-   "models"
+   "models",
+   "lvl_foundation"
   ]
  },
  {
@@ -606,7 +661,8 @@
    "range_accrual",
    "short_vol",
    "digitals",
-   "structured"
+   "structured",
+   "lvl_vp_core"
   ]
  },
  {
@@ -617,7 +673,8 @@
    "tarn",
    "path_dependence",
    "knockout",
-   "structured"
+   "structured",
+   "lvl_vp_core"
   ]
  },
  {
@@ -628,7 +685,8 @@
    "callable",
    "bermudan",
    "structured",
-   "vol"
+   "vol",
+   "lvl_vp_core"
   ]
  },
  {
@@ -639,7 +697,8 @@
    "sabr",
    "backbone",
    "hedging",
-   "negative_rates"
+   "negative_rates",
+   "lvl_stretch"
   ]
  }
 ]

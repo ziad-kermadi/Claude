@@ -7,7 +7,8 @@
    "chain_sabr_arb",
    "sabr",
    "arbitrage",
-   "density"
+   "density",
+   "lvl_vp_core"
   ]
  },
  {
@@ -18,7 +19,8 @@
    "chain_sabr_arb",
    "sabr",
    "arbitrage",
-   "density"
+   "density",
+   "lvl_stretch"
   ]
  },
  {
@@ -29,7 +31,8 @@
    "chain_sabr_arb",
    "sabr",
    "free_boundary",
-   "calibration"
+   "calibration",
+   "lvl_stretch"
   ]
  },
  {
@@ -40,7 +43,8 @@
    "chain_sabr_arb",
    "sabr",
    "arbitrage",
-   "pde"
+   "pde",
+   "lvl_stretch"
   ]
  },
  {
@@ -51,7 +55,8 @@
    "chain_sabr_arb",
    "sabr",
    "risk",
-   "hedging"
+   "hedging",
+   "lvl_stretch"
   ]
  },
  {
@@ -62,7 +67,8 @@
    "chain_berm_switch",
    "bermudan",
    "exercise_boundary",
-   "hull_white"
+   "hull_white",
+   "lvl_vp_core"
   ]
  },
  {
@@ -73,7 +79,8 @@
    "chain_berm_switch",
    "bermudan",
    "calibration",
-   "hull_white"
+   "hull_white",
+   "lvl_vp_core"
   ]
  },
  {
@@ -84,7 +91,8 @@
    "chain_berm_switch",
    "bermudan",
    "mean_reversion",
-   "risk"
+   "risk",
+   "lvl_stretch"
   ]
  },
  {
@@ -95,7 +103,8 @@
    "chain_berm_switch",
    "bermudan",
    "switch_option",
-   "bounds"
+   "bounds",
+   "lvl_stretch"
   ]
  },
  {
@@ -106,7 +115,8 @@
    "chain_berm_switch",
    "bermudan",
    "monte_carlo",
-   "switch_option"
+   "switch_option",
+   "lvl_vp_core"
   ]
  },
  {
@@ -117,7 +127,8 @@
    "derivation",
    "bachelier",
    "normal_model",
-   "measure_change"
+   "measure_change",
+   "lvl_vp_core"
   ]
  },
  {
@@ -129,7 +140,8 @@
    "greeks",
    "vega",
    "theta",
-   "normal_model"
+   "normal_model",
+   "lvl_vp_core"
   ]
  },
  {
@@ -140,7 +152,8 @@
    "derivation",
    "swaptions",
    "put_call_parity",
-   "annuity_measure"
+   "annuity_measure",
+   "lvl_vp_core"
   ]
  },
  {
@@ -151,7 +164,8 @@
    "derivation",
    "hjm",
    "no_arbitrage",
-   "drift"
+   "drift",
+   "lvl_vp_core"
   ]
  },
  {
@@ -162,7 +176,8 @@
    "derivation",
    "hull_white",
    "bond_price",
-   "affine"
+   "affine",
+   "lvl_vp_core"
   ]
  },
  {
@@ -173,7 +188,8 @@
    "derivation",
    "lmm",
    "spot_measure",
-   "drift"
+   "drift",
+   "lvl_stretch"
   ]
  },
  {
@@ -184,7 +200,8 @@
    "derivation",
    "cms",
    "static_replication",
-   "carr_madan"
+   "carr_madan",
+   "lvl_stretch"
   ]
  },
  {
@@ -195,7 +212,8 @@
    "derivation",
    "sabr",
    "hagan",
-   "normal_model"
+   "normal_model",
+   "lvl_stretch"
   ]
  },
  {
@@ -206,7 +224,8 @@
    "derivation",
    "hull_white",
    "swap_rate_vol",
-   "mean_reversion"
+   "mean_reversion",
+   "lvl_vp_core"
   ]
  },
  {
@@ -217,7 +236,8 @@
    "case_study",
    "swaptions",
    "normal_model",
-   "greeks"
+   "greeks",
+   "lvl_vp_core"
   ]
  },
  {
@@ -228,7 +248,8 @@
    "case_study",
    "delta_hedging",
    "pnl",
-   "realised_implied"
+   "realised_implied",
+   "lvl_vp_core"
   ]
  },
  {
@@ -239,7 +260,8 @@
    "case_study",
    "caps_floors",
    "caplets",
-   "bootstrapping"
+   "bootstrapping",
+   "lvl_vp_core"
   ]
  },
  {
@@ -250,7 +272,8 @@
    "case_study",
    "bermudan",
    "bounds",
-   "switch_option"
+   "switch_option",
+   "lvl_vp_core"
   ]
  },
  {
@@ -261,7 +284,8 @@
    "case_study",
    "vega_bucketing",
    "hedging",
-   "swaptions"
+   "swaptions",
+   "lvl_vp_core"
   ]
  },
  {
@@ -272,7 +296,8 @@
    "case_study",
    "sabr",
    "hagan",
-   "normal_model"
+   "normal_model",
+   "lvl_vp_core"
   ]
  },
  {
@@ -283,7 +308,8 @@
    "sabr",
    "hagan",
    "derivation",
-   "normal_model"
+   "normal_model",
+   "lvl_vp_core"
   ]
  },
  {
@@ -294,7 +320,8 @@
    "lmm",
    "spot_measure",
    "drift",
-   "derivation"
+   "derivation",
+   "lvl_stretch"
   ]
  },
  {
@@ -305,7 +332,8 @@
    "bermudan",
    "switch_option",
    "bounds",
-   "no_arbitrage"
+   "no_arbitrage",
+   "lvl_vp_core"
   ]
  },
  {
@@ -316,7 +344,8 @@
    "hjm",
    "hull_white",
    "drift",
-   "no_arbitrage"
+   "no_arbitrage",
+   "lvl_vp_core"
   ]
  },
  {
@@ -327,7 +356,8 @@
    "hull_white",
    "bond_price",
    "mean_reversion",
-   "affine"
+   "affine",
+   "lvl_foundation"
   ]
  }
 ]

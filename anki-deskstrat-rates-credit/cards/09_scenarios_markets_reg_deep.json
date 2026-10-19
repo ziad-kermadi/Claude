@@ -8,7 +8,8 @@
    "chain",
    "gilts",
    "execution",
-   "desk_strat"
+   "desk_strat",
+   "lvl_vp_core"
   ]
  },
  {
@@ -20,7 +21,8 @@
    "chain",
    "inventory",
    "skew",
-   "market_making"
+   "market_making",
+   "lvl_vp_core"
   ]
  },
  {
@@ -32,7 +34,8 @@
    "chain",
    "futures",
    "hedge_ratio",
-   "gilts"
+   "gilts",
+   "lvl_vp_core"
   ]
  },
  {
@@ -44,7 +47,8 @@
    "chain",
    "basis",
    "hedge_effectiveness",
-   "gilts"
+   "gilts",
+   "lvl_vp_core"
   ]
  },
  {
@@ -56,7 +60,8 @@
    "chain",
    "tca",
    "markouts",
-   "adverse_selection"
+   "adverse_selection",
+   "lvl_vp_core"
   ]
  },
  {
@@ -68,7 +73,8 @@
    "chain",
    "delta",
    "capital",
-   "regulation"
+   "regulation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -80,7 +86,8 @@
    "chain",
    "correlation",
    "scenarios",
-   "capital"
+   "capital",
+   "lvl_stretch"
   ]
  },
  {
@@ -92,7 +99,8 @@
    "chain",
    "curvature",
    "gamma",
-   "capital"
+   "capital",
+   "lvl_vp_core"
   ]
  },
  {
@@ -104,7 +112,8 @@
    "chain",
    "pla",
    "ima",
-   "regulation"
+   "regulation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -116,7 +125,8 @@
    "chain",
    "ccp",
    "initial_margin",
-   "liquidity"
+   "liquidity",
+   "lvl_vp_core"
   ]
  },
  {
@@ -128,7 +138,8 @@
    "chain",
    "ccp",
    "procyclicality",
-   "margin"
+   "margin",
+   "lvl_vp_core"
   ]
  },
  {
@@ -140,7 +151,8 @@
    "chain",
    "dash_for_cash",
    "liquidity",
-   "fire_sale"
+   "fire_sale",
+   "lvl_vp_core"
   ]
  },
  {
@@ -152,7 +164,8 @@
    "chain",
    "repo",
    "haircuts",
-   "funding"
+   "funding",
+   "lvl_vp_core"
   ]
  },
  {
@@ -164,7 +177,8 @@
    "chain",
    "liquidity_buffer",
    "stress",
-   "funding"
+   "funding",
+   "lvl_vp_core"
   ]
  },
  {
@@ -175,7 +189,8 @@
    "avellaneda_stoikov",
    "derivation",
    "market_making",
-   "utility"
+   "utility",
+   "lvl_stretch"
   ]
  },
  {
@@ -186,7 +201,8 @@
    "avellaneda_stoikov",
    "derivation",
    "market_making",
-   "spread"
+   "spread",
+   "lvl_stretch"
   ]
  },
  {
@@ -197,7 +213,8 @@
    "almgren_chriss",
    "derivation",
    "execution",
-   "impact"
+   "impact",
+   "lvl_stretch"
   ]
  },
  {
@@ -208,7 +225,8 @@
    "square_root_law",
    "derivation",
    "market_impact",
-   "execution"
+   "execution",
+   "lvl_vp_core"
   ]
  },
  {
@@ -219,7 +237,8 @@
    "frtb_sbm",
    "derivation",
    "aggregation",
-   "capital"
+   "capital",
+   "lvl_vp_core"
   ]
  },
  {
@@ -231,7 +250,8 @@
    "derivation",
    "ead",
    "counterparty_credit",
-   "regulation"
+   "regulation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -242,7 +262,8 @@
    "pnl_attribution",
    "derivation",
    "greeks",
-   "risk"
+   "risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -254,7 +275,8 @@
    "case_study",
    "curve",
    "greeks",
-   "carry"
+   "carry",
+   "lvl_vp_core"
   ]
  },
  {
@@ -266,7 +288,8 @@
    "case_study",
    "inventory",
    "market_making",
-   "swaps"
+   "swaps",
+   "lvl_vp_core"
   ]
  },
  {
@@ -278,7 +301,8 @@
    "case_study",
    "capital",
    "sa_ccr",
-   "pricing"
+   "pricing",
+   "lvl_stretch"
   ]
  },
  {
@@ -290,7 +314,8 @@
    "var",
    "case_study",
    "lvar",
-   "risk"
+   "risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -300,7 +325,8 @@
   "tags": [
    "avellaneda_stoikov",
    "derivation",
-   "market_making"
+   "market_making",
+   "lvl_vp_core"
   ]
  },
  {
@@ -310,7 +336,8 @@
   "tags": [
    "almgren_chriss",
    "derivation",
-   "execution"
+   "execution",
+   "lvl_vp_core"
   ]
  },
  {
@@ -320,7 +347,8 @@
   "tags": [
    "square_root_law",
    "derivation",
-   "market_impact"
+   "market_impact",
+   "lvl_vp_core"
   ]
  },
  {
@@ -331,7 +359,8 @@
    "sa_ccr",
    "ead",
    "convention",
-   "counterparty_credit"
+   "counterparty_credit",
+   "lvl_vp_core"
   ]
  },
  {
@@ -341,7 +370,8 @@
   "tags": [
    "pnl_attribution",
    "greeks",
-   "mental_math"
+   "mental_math",
+   "lvl_foundation"
   ]
  }
 ]

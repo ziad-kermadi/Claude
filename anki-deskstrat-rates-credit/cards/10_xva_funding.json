@@ -8,7 +8,8 @@
    "dva",
    "closeout",
    "bilateral",
-   "chain_closeout"
+   "chain_closeout",
+   "lvl_stretch"
   ]
  },
  {
@@ -19,7 +20,8 @@
    "cva",
    "closeout",
    "survival",
-   "chain_closeout"
+   "chain_closeout",
+   "lvl_stretch"
   ]
  },
  {
@@ -31,7 +33,8 @@
    "dva",
    "closeout",
    "case_study",
-   "chain_closeout"
+   "chain_closeout",
+   "lvl_vp_core"
   ]
  },
  {
@@ -42,7 +45,8 @@
    "dva",
    "wrong_way_risk",
    "hedging",
-   "chain_closeout"
+   "chain_closeout",
+   "lvl_stretch"
   ]
  },
  {
@@ -53,7 +57,8 @@
    "collateral",
    "csa",
    "threshold",
-   "chain_mpor"
+   "chain_mpor",
+   "lvl_vp_core"
   ]
  },
  {
@@ -64,7 +69,8 @@
    "collateral",
    "mpor",
    "exposure",
-   "chain_mpor"
+   "chain_mpor",
+   "lvl_vp_core"
   ]
  },
  {
@@ -76,7 +82,8 @@
    "mpor",
    "pfe",
    "case_study",
-   "chain_mpor"
+   "chain_mpor",
+   "lvl_vp_core"
   ]
  },
  {
@@ -87,7 +94,8 @@
    "collateral",
    "mpor",
    "regulatory",
-   "chain_mpor"
+   "chain_mpor",
+   "lvl_vp_core"
   ]
  },
  {
@@ -98,7 +106,8 @@
    "fva",
    "funding",
    "convention",
-   "chain_fva"
+   "chain_fva",
+   "lvl_vp_core"
   ]
  },
  {
@@ -109,7 +118,8 @@
    "fva",
    "funding",
    "discounting",
-   "chain_fva"
+   "chain_fva",
+   "lvl_vp_core"
   ]
  },
  {
@@ -120,7 +130,8 @@
    "fva",
    "case_study",
    "funding",
-   "chain_fva"
+   "chain_fva",
+   "lvl_vp_core"
   ]
  },
  {
@@ -132,7 +143,8 @@
    "hull_white",
    "burgard_kjaer",
    "convention",
-   "chain_fva"
+   "chain_fva",
+   "lvl_stretch"
   ]
  },
  {
@@ -143,7 +155,8 @@
    "mva",
    "initial_margin",
    "funding",
-   "chain_mva"
+   "chain_mva",
+   "lvl_vp_core"
   ]
  },
  {
@@ -154,7 +167,8 @@
    "mva",
    "initial_margin",
    "simm",
-   "chain_mva"
+   "chain_mva",
+   "lvl_vp_core"
   ]
  },
  {
@@ -166,7 +180,8 @@
    "regression",
    "simm",
    "monte_carlo",
-   "chain_mva"
+   "chain_mva",
+   "lvl_stretch"
   ]
  },
  {
@@ -178,7 +193,8 @@
    "capital",
    "hurdle",
    "convention",
-   "chain_kva"
+   "chain_kva",
+   "lvl_vp_core"
   ]
  },
  {
@@ -190,7 +206,8 @@
    "fva",
    "double_counting",
    "capital",
-   "chain_kva"
+   "chain_kva",
+   "lvl_vp_core"
   ]
  },
  {
@@ -201,7 +218,8 @@
    "kva",
    "case_study",
    "capital",
-   "chain_kva"
+   "chain_kva",
+   "lvl_vp_core"
   ]
  },
  {
@@ -213,7 +231,8 @@
    "delta",
    "hedging",
    "rates",
-   "chain_cva_hedge"
+   "chain_cva_hedge",
+   "lvl_vp_core"
   ]
  },
  {
@@ -225,7 +244,8 @@
    "gamma",
    "cross_gamma",
    "rates",
-   "chain_cva_hedge"
+   "chain_cva_hedge",
+   "lvl_stretch"
   ]
  },
  {
@@ -238,7 +258,8 @@
    "cds",
    "proxy",
    "basis",
-   "chain_cva_hedge"
+   "chain_cva_hedge",
+   "lvl_vp_core"
   ]
  },
  {
@@ -249,7 +270,8 @@
    "cva",
    "derivation",
    "expected_loss",
-   "closeout"
+   "closeout",
+   "lvl_vp_core"
   ]
  },
  {
@@ -262,7 +284,8 @@
    "cva",
    "pde",
    "derivation",
-   "burgard_kjaer"
+   "burgard_kjaer",
+   "lvl_stretch"
   ]
  },
  {
@@ -273,7 +296,8 @@
    "mpor",
    "brownian_bridge",
    "derivation",
-   "exposure"
+   "exposure",
+   "lvl_stretch"
   ]
  },
  {
@@ -284,7 +308,8 @@
    "wrong_way_risk",
    "derivation",
    "copula",
-   "cva"
+   "cva",
+   "lvl_stretch"
   ]
  },
  {
@@ -295,7 +320,8 @@
    "incremental_xva",
    "euler",
    "derivation",
-   "netting"
+   "netting",
+   "lvl_vp_core"
   ]
  },
  {
@@ -306,7 +332,8 @@
    "aad",
    "sensitivities",
    "monte_carlo",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -318,7 +345,8 @@
    "epe",
    "eepe",
    "basel",
-   "convention"
+   "convention",
+   "lvl_foundation"
   ]
  },
  {
@@ -329,7 +357,8 @@
    "pfe",
    "exposure",
    "risk_measure",
-   "limits"
+   "limits",
+   "lvl_vp_core"
   ]
  },
  {
@@ -340,7 +369,8 @@
    "mpor",
    "regulatory",
    "collateral",
-   "cloze"
+   "cloze",
+   "lvl_stretch"
   ]
  },
  {
@@ -351,7 +381,8 @@
    "colva",
    "csa",
    "discounting",
-   "collateral"
+   "collateral",
+   "lvl_vp_core"
   ]
  },
  {
@@ -362,7 +393,8 @@
    "colva",
    "csa",
    "optionality",
-   "cloze"
+   "cloze",
+   "lvl_stretch"
   ]
  },
  {
@@ -373,7 +405,8 @@
    "accounting",
    "ifrs13",
    "fva",
-   "dva"
+   "dva",
+   "lvl_vp_core"
   ]
  },
  {
@@ -384,7 +417,8 @@
    "regulatory",
    "sa_cva",
    "cva",
-   "hedging"
+   "hedging",
+   "lvl_vp_core"
   ]
  },
  {
@@ -395,7 +429,8 @@
    "fx",
    "cva",
    "delta",
-   "cross_currency"
+   "cross_currency",
+   "lvl_vp_core"
   ]
  },
  {
@@ -406,7 +441,8 @@
    "pnl_explain",
    "xva_desk",
    "greeks",
-   "residual"
+   "residual",
+   "lvl_vp_core"
   ]
  },
  {
@@ -417,7 +453,8 @@
    "dva",
    "fba",
    "double_counting",
-   "bilateral"
+   "bilateral",
+   "lvl_vp_core"
   ]
  },
  {
@@ -428,7 +465,8 @@
    "kva",
    "convention",
    "capital",
-   "cloze"
+   "cloze",
+   "lvl_vp_core"
   ]
  },
  {
@@ -439,7 +477,8 @@
    "brownian_bridge",
    "derivation",
    "mpor",
-   "cloze"
+   "cloze",
+   "lvl_stretch"
   ]
  },
  {
@@ -450,7 +489,8 @@
    "exposure",
    "basel",
    "eepe",
-   "cloze"
+   "cloze",
+   "lvl_vp_core"
   ]
  },
  {
@@ -461,7 +501,8 @@
    "cds",
    "cs01",
    "hedging",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -472,7 +513,8 @@
    "incremental_xva",
    "marginal",
    "standalone",
-   "netting"
+   "netting",
+   "lvl_vp_core"
   ]
  },
  {
@@ -483,7 +525,8 @@
    "fva",
    "symmetric",
    "funding",
-   "cloze"
+   "cloze",
+   "lvl_foundation"
   ]
  },
  {
@@ -494,7 +537,8 @@
    "mva",
    "case_study",
    "initial_margin",
-   "funding"
+   "funding",
+   "lvl_vp_core"
   ]
  },
  {
@@ -505,7 +549,8 @@
    "cva",
    "case_study",
    "epe",
-   "approximation"
+   "approximation",
+   "lvl_vp_core"
   ]
  }
 ]

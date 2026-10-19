@@ -7,7 +7,8 @@
    "linkers",
    "uk_gilts",
    "indexation",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -18,7 +19,8 @@
    "linkers",
    "uk_gilts",
    "convention",
-   "indexation"
+   "indexation",
+   "lvl_foundation"
   ]
  },
  {
@@ -29,7 +31,8 @@
    "linkers",
    "index_ratio",
    "derivation",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -40,7 +43,8 @@
    "linkers",
    "index_ratio",
    "convention",
-   "dv01"
+   "dv01",
+   "lvl_vp_core"
   ]
  },
  {
@@ -51,7 +55,8 @@
    "linkers",
    "mental_math",
    "accrued",
-   "index_ratio"
+   "index_ratio",
+   "lvl_foundation"
   ]
  },
  {
@@ -62,7 +67,8 @@
    "real_rates",
    "breakeven",
    "mental_math",
-   "fisher"
+   "fisher",
+   "lvl_vp_core"
   ]
  },
  {
@@ -73,7 +79,8 @@
    "breakeven",
    "linkers",
    "inflation_risk_premium",
-   "liquidity"
+   "liquidity",
+   "lvl_vp_core"
   ]
  },
  {
@@ -84,7 +91,8 @@
    "rpi_cpi",
    "breakeven",
    "scenario",
-   "linkers"
+   "linkers",
+   "lvl_vp_core"
   ]
  },
  {
@@ -95,7 +103,8 @@
    "rpi_cpi",
    "formula_effect",
    "derivation",
-   "index_construction"
+   "index_construction",
+   "lvl_vp_core"
   ]
  },
  {
@@ -106,7 +115,8 @@
    "rpi_reform",
    "rpi_cpi",
    "convention",
-   "linkers"
+   "linkers",
+   "lvl_vp_core"
   ]
  },
  {
@@ -117,7 +127,8 @@
    "rpi_reform",
    "linkers",
    "derivation",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -128,7 +139,8 @@
    "rpi_cpi",
    "rpi_reform",
    "inflation_swaps",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -139,7 +151,8 @@
    "inflation_swaps",
    "yoy",
    "zc",
-   "curve_construction"
+   "curve_construction",
+   "lvl_vp_core"
   ]
  },
  {
@@ -150,7 +163,8 @@
    "yoy",
    "zc",
    "mental_math",
-   "curve_construction"
+   "curve_construction",
+   "lvl_vp_core"
   ]
  },
  {
@@ -161,7 +175,8 @@
    "convexity",
    "yoy",
    "derivation",
-   "inflation_swaps"
+   "inflation_swaps",
+   "lvl_stretch"
   ]
  },
  {
@@ -172,7 +187,8 @@
    "zc",
    "convexity",
    "inflation_swaps",
-   "yoy"
+   "yoy",
+   "lvl_stretch"
   ]
  },
  {
@@ -183,7 +199,8 @@
    "seasonality",
    "curve_construction",
    "rpi",
-   "estimation"
+   "estimation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -194,7 +211,8 @@
    "seasonality",
    "breakeven",
    "scenario",
-   "carry"
+   "carry",
+   "lvl_vp_core"
   ]
  },
  {
@@ -205,7 +223,8 @@
    "curve_construction",
    "bootstrap",
    "fixings",
-   "seasonality"
+   "seasonality",
+   "lvl_vp_core"
   ]
  },
  {
@@ -216,7 +235,8 @@
    "interpolation",
    "curve_construction",
    "derivation",
-   "zc"
+   "zc",
+   "lvl_vp_core"
   ]
  },
  {
@@ -227,7 +247,8 @@
    "real_rates",
    "curve_construction",
    "model_risk",
-   "linkers"
+   "linkers",
+   "lvl_vp_core"
   ]
  },
  {
@@ -238,7 +259,8 @@
    "tips",
    "oat",
    "linkers",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -249,7 +271,8 @@
    "tips",
    "convention",
    "indexation",
-   "linkers"
+   "linkers",
+   "lvl_foundation"
   ]
  },
  {
@@ -260,7 +283,8 @@
    "tips",
    "deflation_floor",
    "caps_floors",
-   "mental_math"
+   "mental_math",
+   "lvl_stretch"
   ]
  },
  {
@@ -271,7 +295,8 @@
    "caps_floors",
    "yoy",
    "convention",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -282,7 +307,8 @@
    "jarrow_yildirim",
    "derivation",
    "zc",
-   "real_rates"
+   "real_rates",
+   "lvl_stretch"
   ]
  },
  {
@@ -293,7 +319,8 @@
    "sabr",
    "jarrow_yildirim",
    "caps_floors",
-   "model_risk"
+   "model_risk",
+   "lvl_stretch"
   ]
  },
  {
@@ -304,7 +331,8 @@
    "lpi",
    "caps_floors",
    "ldi",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -315,7 +343,8 @@
    "ldi",
    "lpi",
    "scenario",
-   "linkers"
+   "linkers",
+   "lvl_vp_core"
   ]
  },
  {
@@ -326,7 +355,8 @@
    "trade_idea",
    "breakeven",
    "ldi",
-   "seasonality"
+   "seasonality",
+   "lvl_vp_core"
   ]
  },
  {
@@ -337,7 +367,8 @@
    "trade_idea",
    "breakeven",
    "dv01",
-   "real_rates"
+   "real_rates",
+   "lvl_vp_core"
   ]
  },
  {
@@ -348,7 +379,8 @@
    "basis",
    "linkers",
    "trade_idea",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -359,7 +391,8 @@
    "rpi_reform",
    "scenario",
    "breakeven",
-   "linkers"
+   "linkers",
+   "lvl_vp_core"
   ]
  },
  {
@@ -370,7 +403,8 @@
    "carry",
    "rolldown",
    "real_rates",
-   "breakeven"
+   "breakeven",
+   "lvl_vp_core"
   ]
  },
  {
@@ -381,7 +415,8 @@
    "mental_math",
    "zc",
    "inflation_swaps",
-   "dv01"
+   "dv01",
+   "lvl_foundation"
   ]
  },
  {
@@ -392,7 +427,8 @@
    "dv01",
    "breakeven",
    "derivation",
-   "jarrow_yildirim"
+   "jarrow_yildirim",
+   "lvl_vp_core"
   ]
  },
  {
@@ -403,7 +439,8 @@
    "lpi",
    "caps_floors",
    "derivation",
-   "ldi"
+   "ldi",
+   "lvl_vp_core"
   ]
  },
  {
@@ -414,7 +451,8 @@
    "fixings",
    "convention",
    "interpolation",
-   "linkers"
+   "linkers",
+   "lvl_vp_core"
   ]
  },
  {
@@ -425,7 +463,8 @@
    "model_risk",
    "real_rates",
    "curve_construction",
-   "linkers"
+   "linkers",
+   "lvl_vp_core"
   ]
  },
  {
@@ -436,7 +475,8 @@
    "put_call_parity",
    "caps_floors",
    "yoy",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -447,7 +487,8 @@
    "rpi_cpi",
    "formula_effect",
    "convention",
-   "rpi_reform"
+   "rpi_reform",
+   "lvl_foundation"
   ]
  },
  {
@@ -458,7 +499,8 @@
    "seasonality",
    "curve_construction",
    "derivation",
-   "rpi"
+   "rpi",
+   "lvl_foundation"
   ]
  }
 ]

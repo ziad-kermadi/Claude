@@ -7,7 +7,8 @@
    "chain_rpi_reform",
    "rpi_reform",
    "rpi_cpi",
-   "inflation_swaps"
+   "inflation_swaps",
+   "lvl_vp_core"
   ]
  },
  {
@@ -18,7 +19,8 @@
    "chain_rpi_reform",
    "rpi_reform",
    "inflation_swaps",
-   "scenario"
+   "scenario",
+   "lvl_stretch"
   ]
  },
  {
@@ -29,7 +31,8 @@
    "chain_rpi_reform",
    "rpi_reform",
    "trade_idea",
-   "rpi_cpi"
+   "rpi_cpi",
+   "lvl_stretch"
   ]
  },
  {
@@ -40,7 +43,8 @@
    "chain_rpi_reform",
    "basis",
    "rpi_reform",
-   "linkers"
+   "linkers",
+   "lvl_vp_core"
   ]
  },
  {
@@ -51,7 +55,8 @@
    "chain_rpi_reform",
    "rpi_reform",
    "linkers",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -62,7 +67,8 @@
    "chain_seasonality",
    "seasonality",
    "carry",
-   "linkers"
+   "linkers",
+   "lvl_vp_core"
   ]
  },
  {
@@ -73,7 +79,8 @@
    "chain_seasonality",
    "carry",
    "seasonality",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -84,7 +91,8 @@
    "chain_seasonality",
    "seasonality",
    "breakeven",
-   "trade_idea"
+   "trade_idea",
+   "lvl_vp_core"
   ]
  },
  {
@@ -95,7 +103,8 @@
    "chain_seasonality",
    "carry",
    "seasonality",
-   "case_study"
+   "case_study",
+   "lvl_vp_core"
   ]
  },
  {
@@ -106,7 +115,8 @@
    "derivation",
    "linkers",
    "indexation",
-   "jarrow_yildirim"
+   "jarrow_yildirim",
+   "lvl_stretch"
   ]
  },
  {
@@ -117,7 +127,8 @@
    "derivation",
    "real_rates",
    "breakeven",
-   "inflation_risk_premium"
+   "inflation_risk_premium",
+   "lvl_stretch"
   ]
  },
  {
@@ -128,7 +139,8 @@
    "derivation",
    "convexity",
    "yoy",
-   "jarrow_yildirim"
+   "jarrow_yildirim",
+   "lvl_stretch"
   ]
  },
  {
@@ -139,7 +151,8 @@
    "derivation",
    "zc",
    "convexity",
-   "inflation_swaps"
+   "inflation_swaps",
+   "lvl_stretch"
   ]
  },
  {
@@ -150,7 +163,8 @@
    "derivation",
    "lpi",
    "caps_floors",
-   "put_call_parity"
+   "put_call_parity",
+   "lvl_vp_core"
   ]
  },
  {
@@ -161,7 +175,8 @@
    "derivation",
    "dv01",
    "breakeven",
-   "trade_idea"
+   "trade_idea",
+   "lvl_vp_core"
   ]
  },
  {
@@ -172,7 +187,8 @@
    "derivation",
    "caps_floors",
    "yoy",
-   "dv01"
+   "dv01",
+   "lvl_vp_core"
   ]
  },
  {
@@ -183,7 +199,8 @@
    "derivation",
    "dv01",
    "breakeven",
-   "linkers"
+   "linkers",
+   "lvl_vp_core"
   ]
  },
  {
@@ -194,7 +211,8 @@
    "derivation",
    "caps_floors",
    "convention",
-   "model_risk"
+   "model_risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -205,7 +223,8 @@
    "derivation",
    "breakeven",
    "convexity",
-   "inflation_swaps"
+   "inflation_swaps",
+   "lvl_vp_core"
   ]
  },
  {
@@ -216,7 +235,8 @@
    "put_call_parity",
    "lpi",
    "caps_floors",
-   "convention"
+   "convention",
+   "lvl_foundation"
   ]
  },
  {
@@ -227,7 +247,8 @@
    "derivation",
    "caps_floors",
    "convention",
-   "model_risk"
+   "model_risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -238,7 +259,8 @@
    "linkers",
    "indexation",
    "derivation",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -249,7 +271,8 @@
    "case_study",
    "linkers",
    "index_ratio",
-   "accrued"
+   "accrued",
+   "lvl_vp_core"
   ]
  },
  {
@@ -260,7 +283,8 @@
    "case_study",
    "inflation_swaps",
    "dv01",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -271,7 +295,8 @@
    "case_study",
    "real_rates",
    "breakeven",
-   "relative_value"
+   "relative_value",
+   "lvl_vp_core"
   ]
  },
  {
@@ -282,7 +307,8 @@
    "case_study",
    "lpi",
    "caps_floors",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -293,7 +319,8 @@
    "case_study",
    "carry",
    "seasonality",
-   "linkers"
+   "linkers",
+   "lvl_vp_core"
   ]
  },
  {
@@ -304,7 +331,8 @@
    "case_study",
    "dv01",
    "breakeven",
-   "trade_idea"
+   "trade_idea",
+   "lvl_vp_core"
   ]
  },
  {
@@ -315,7 +343,8 @@
    "case_study",
    "zc",
    "convexity",
-   "inflation_swaps"
+   "inflation_swaps",
+   "lvl_stretch"
   ]
  },
  {
@@ -326,7 +355,8 @@
    "case_study",
    "caps_floors",
    "dv01",
-   "yoy"
+   "yoy",
+   "lvl_vp_core"
   ]
  }
 ]
