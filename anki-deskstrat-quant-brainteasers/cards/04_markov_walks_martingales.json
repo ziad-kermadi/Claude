@@ -9,6 +9,9 @@
    "random_walk",
    "coin",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f04_gamblers_ruin_paths"
   ]
  },
  {
@@ -19,6 +22,9 @@
    "s_markov_chain",
    "coin",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f04_hh_run_chain"
   ]
  },
  {
@@ -30,6 +36,9 @@
    "random_walk",
    "cycle",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f04_ring_hit"
   ]
  },
  {
@@ -40,6 +49,9 @@
    "s_reflection",
    "random_walk",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f04_reflection_max10"
   ]
  },
  {
@@ -62,6 +74,9 @@
    "s_recursion",
    "dice",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f04_tail_bars"
   ]
  },
  {
@@ -93,6 +108,9 @@
    "s_martingale",
    "urn",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f04_polya_tree"
   ]
  },
  {
@@ -104,6 +122,9 @@
    "random_walk_graph",
    "knight",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f04_knight_degree"
   ]
  },
  {
@@ -114,6 +135,9 @@
    "s_markov_chain",
    "random_walk",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f04_birth_death"
   ]
  },
  {
@@ -125,6 +149,9 @@
    "betting",
    "coin",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f04_doubling_cap"
   ]
  },
  {
@@ -137,6 +164,9 @@
    "penney",
    "coin",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f04_ht_hh_race"
   ]
  },
  {
@@ -177,6 +207,9 @@
    "s_reflection",
    "random_walk",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f04_first_visit_1_5"
   ]
  },
  {
@@ -198,6 +231,9 @@
    "s_linearity_expectation",
    "dice",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f04_coupon_phases"
   ]
  },
  {
@@ -225,6 +261,9 @@
    "Once the walk has taken one step, is the remaining problem the same problem with a different starting fortune?",
    "Look at \\(S_n\\) itself: it is a martingale, so stopping it at the two barriers lets you use optional stopping. Find a second martingale built from \\(S_n\\) that involves \\(n\\).",
    "Optional stopping on \\(S_n\\): \\(E[S_T]=S_0\\) with \\(S_T\\in\\{0,7\\}\\) and \\(P=P(S_T=7)\\). Write this as one equation in \\(P\\)."
+  ],
+  "figs_back": [
+   "f04_ruin_chain"
   ]
  },
  {
@@ -286,6 +325,9 @@
    "Does the target have a partial match with itself at its start? Which of the two patterns could restart partway through after a failure?",
    "Use Conway's leading-number rule: \\(E=\\sum 2^k\\) over the self-overlap lengths \\(k\\) of the pattern.",
    "\\(E[\\text{HTH}]=\\sum_{k\\in O_{\\text{HTH}}}2^k\\) and \\(E[\\text{HHT}]=\\sum_{k\\in O_{\\text{HHT}}}2^k\\). List \\(O\\) for each pattern, then compare."
+  ],
+  "figs_back": [
+   "f04_overlap_htx"
   ]
  },
  {
@@ -412,6 +454,9 @@
    "Think about the long-run share of time the walk spends at each square. Is that share related to how many moves are available from each square?",
    "Return time to a square equals \\(1/\\pi(v)\\), where \\(\\pi(v)=\\deg(v)/\\sum_u\\deg(u)\\) is the stationary probability of a random walk on a graph.",
    "Write \\(\\sum_u\\deg(u)\\) as a sum over all \\(64\\) squares of the board, then divide by the degree of the centre square."
+  ],
+  "figs_back": [
+   "f04_knight_degree"
   ]
  },
  {
@@ -428,6 +473,9 @@
    "On a line, is there a simpler balance condition between neighbouring states than the full set of equations? What probability flow crosses each edge?",
    "Detailed balance on each edge: \\(\\pi_k p_{k,k+1}=\\pi_{k+1}p_{k+1,k}\\). Then the return time to \\(0\\) is \\(1/\\pi_0\\).",
    "Write the detailed-balance equation for the edge between \\(0\\) and \\(1\\): \\(\\pi_0\\cdot p_{01}=\\pi_1\\cdot p_{10}\\). Fill in \\(p_{01}\\) and \\(p_{10}\\) from the statement."
+  ],
+  "figs_back": [
+   "f04_birth_death"
   ]
  },
  {
@@ -459,6 +507,9 @@
    "How does the chance that the walk ever reaches level \\(3\\) compare with the chance that it ends at or above \\(3\\)? Think about what happens after the first time it touches \\(3\\).",
    "Reflection principle: \\(P(M_n\\ge a)=2P(S_n\\gt a)+P(S_n=a)\\). Check whether \\(S_n=a\\) is even possible for the given \\(n\\) and \\(a\\).",
    "\\(P(M_8\\ge3)=2P(S_8\\gt3)+P(S_8=3)\\). Before computing, state the parity of \\(S_8\\) and check which values it can take."
+  ],
+  "figs_back": [
+   "f04_reflection_max8"
   ]
  },
  {
@@ -474,6 +525,9 @@
    "For the walk to be at \\(+2\\) for the first time at step \\(4\\), what must the walk have done at step \\(3\\)? Which earlier paths are excluded?",
    "First-passage formula: \\(P(T_a=n)=\\frac{a}{n}P(S_n=a)\\) (the hitting-time theorem).",
    "\\(P(T_2=4)=\\frac{2}{4}P(S_4=2)\\). Write \\(P(S_4=2)\\) as \\(\\binom{4}{k}/2^4\\) for the number \\(k\\) of up-steps, and find \\(k\\)."
+  ],
+  "figs_back": [
+   "f04_first_visit_2_4"
   ]
  },
  {
@@ -489,6 +543,9 @@
    "If the walk must end at a positive level and never touch zero, is there a standard counting result for paths that stay on one side of the axis?",
    "Ballot theorem: the number of paths from \\(0\\) to \\(a\\) in \\(n\\) steps that stay strictly positive is given by a ballot count with \\(a\\) and \\(n\\).",
    "Count the paths \\(=\\frac{a}{n}\\binom{n}{(n+a)/2}\\) with \\(a\\) the end level and \\(n\\) the number of steps, then divide by the total number of paths \\(2^n\\)."
+  ],
+  "figs_back": [
+   "f04_ballot"
   ]
  },
  {
@@ -565,6 +622,9 @@
    "Does the population grow or shrink on average each generation? How does that decide whether extinction is certain?",
    "Extinction probability \\(q\\) satisfies \\(G(q)=q\\) for the offspring generating function \\(G\\), and is the smallest root in \\([0,1]\\).",
    "\\(G(s)=\\sum_k p_k s^k\\). Write \\(G(s)\\) from the offspring law, then set \\(G(q)=q\\) and collect terms."
+  ],
+  "figs_back": [
+   "f04_gw_fixed"
   ]
  },
  {
@@ -611,6 +671,9 @@
    "Is there a quantity built from the square of the position that, after compensating for time, has zero expected drift?",
    "Use \\(S_n^2-n\\) as a martingale and optional stopping: the expectation of \\(S_T^2\\) at the stopping time equals \\(E[T]\\).",
    "\\(E[S_T^2]=E[T]\\) with \\(S_T\\in\\{-2,5\\}\\). Write \\(P(S_T=5)=p\\), and use \\(E[S_T]=0\\) to set up an equation for \\(p\\)."
+  ],
+  "figs_back": [
+   "f04_two_barrier"
   ]
  },
  {
@@ -627,6 +690,9 @@
    "The earlier formula used absorbing barriers at both ends. What changes at a reflecting end, and what happens to the walk on each step there?",
    "Use first-step analysis: write the expected time from each state in terms of its neighbours, with the reflecting end as a special equation.",
    "Write the first-step equation for an interior state \\(i\\), and separately the equation for state \\(0\\), where the step is deterministic."
+  ],
+  "figs_back": [
+   "f04_reflect_hit5"
   ]
  },
  {
@@ -643,6 +709,9 @@
    "The fair-coin weights are powers of \\(2\\). With unequal probabilities, what should each self-overlap weight become?",
    "With bias, each self-overlap of length \\(k\\) contributes \\(1/P(\\text{prefix of length }k)\\) rather than \\(2^k\\).",
    "\\(E[\\text{HH}]=\\sum_{k\\in O}\\frac{1}{P(\\text{prefix}_k)}\\), with \\(O\\) the self-overlap lengths of HH. Write each \\(P(\\text{prefix}_k)\\) in terms of \\(p=P(H)\\)."
+  ],
+  "figs_back": [
+   "f04_hh_run_biased"
   ]
  },
  {
@@ -659,6 +728,9 @@
    "With a biased coin, does the race depend only on how the patterns overlap, or do the individual letter probabilities matter too?",
    "Track progress with a small Markov chain on the states given by the longest suffix that matches a prefix of either pattern, and solve first-step equations with weights \\(p\\) and \\(q\\).",
    "Let \\(w_s\\) be the probability that THH appears first from state \\(s\\). Write the equation for \\(w_{\\varnothing}\\) (no progress yet) in terms of \\(p\\) and \\(q\\)."
+  ],
+  "figs_back": [
+   "f04_penney_biased_chain"
   ]
  },
  {
@@ -690,6 +762,9 @@
    "Compute the mean number of children per individual. Does the population grow on average, and does that change which root of the extinction equation to choose?",
    "Extinction probability is the smallest root of \\(G(q)=q\\) in \\([0,1]\\). Check whether the mean is above one before choosing a root.",
    "\\(G(s)=\\sum_k p_k s^k\\). Write \\(G(q)=q\\) for this offspring law as an equation in \\(q\\)."
+  ],
+  "figs_back": [
+   "f04_gw_critical"
   ]
  },
  {
@@ -754,6 +829,9 @@
    "With a fair coin the stopped wealth had zero mean. Which probability changes when the coin is biased, and what does that do to the all-losses outcome?",
    "Compute the expected profit from the stopping outcomes: a win at some round gives a fixed net gain, and losing every round gives a fixed net loss with a small probability.",
    "\\(E[\\text{profit}]=P(\\text{win})\\cdot(\\text{net gain on a win})+P(\\text{all lose})\\cdot(\\text{net loss})\\). Write each factor in terms of \\(q\\), the probability of tails."
+  ],
+  "figs_back": [
+   "f04_doubling_biased"
   ]
  },
  {
@@ -802,6 +880,9 @@
    "With a fair coin the race between HT and HH is symmetric. What decides it once the first head appears, and do tails before the first head matter?",
    "Condition on the first H. From that point the race is decided by one-step outcomes, so set up a first-step equation for the win probability.",
    "Let \\(W\\) be the win probability from the state just after an H. Write \\(W=p\\cdot(\\text{value after H})+q\\cdot(\\text{value after T})\\) and fill in what each outcome leads to."
+  ],
+  "figs_back": [
+   "f04_ht_hh_biased"
   ]
  },
  {
@@ -834,6 +915,9 @@
    "Suppose the robot is at shelf \\(k\\) and the far end is at some distance ahead. Can you write the expected time from each shelf in terms of its neighbours, including what happens at the near wall?",
    "First-step analysis with a boundary condition: the far end is the target, and the near end sends the robot inward with certainty.",
    "Let \\(E_k\\) be the expected time from shelf \\(k\\). Write \\(E_k=1+\\tfrac12(E_{k-1}+E_{k+1})\\) for interior shelves and the separate equation for the wall shelf."
+  ],
+  "figs_back": [
+   "f04_corridor9"
   ]
  },
  {
@@ -851,6 +935,9 @@
    "The chance of three heads depends on an unknown bias \\(p\\). How do you compute a probability when it depends on a quantity with a known distribution?",
    "Condition on \\(p\\): \\(P(\\text{three heads}\\mid p)=p^3\\). Then average over the prior by integrating.",
    "\\(P=\\int_0^1 p^3\\,f(p)\\,dp\\), where \\(f\\) is the prior density. Write the integrand explicitly."
+  ],
+  "figs_back": [
+   "f04_polya_tree"
   ]
  },
  {
@@ -866,6 +953,9 @@
    "Given the final tally, every ordering of the votes is equally likely. How many orderings are there in total, and which of them keep A in front throughout?",
    "Structural feature: a count where one candidate stays strictly ahead is a walk that never returns to the axis. Count the orderings that avoid a return to the axis, and divide by the total number of orderings.",
    "Setup: the total is \\(\\binom{a+b}{a}\\). Write the favourable count as a difference of two binomials, one for all orderings and one for orderings that touch the tie, and evaluate for \\(a=7\\), \\(b=3\\)."
+  ],
+  "figs_back": [
+   "f04_ballot"
   ]
  },
  {
@@ -911,6 +1001,9 @@
    "What is the average number of sons per man, and does that average tell you anything about whether the line can persist?",
    "Let \\(q\\) be the probability that the line ends. Condition on the number of sons of the first man: each son's line must end independently.",
    "\\(q=\\sum_k p_k q^k\\). Write this equation for \\(q\\) using the probabilities \\(p_0\\) and \\(p_2\\) from the statement, and collect terms."
+  ],
+  "figs_back": [
+   "f04_gw_fixed"
   ]
  },
  {
@@ -926,6 +1019,9 @@
    "Split the event by where the balance ends after the 10 bets. Which endings are easy to compute directly?",
    "Structural feature: paths that reach level 4 and then finish lower can be paired with other paths by flipping their remainder after the first arrival. Count the endpoints of the paired paths.",
    "Setup: write \\(P(M_{10}\\ge 4)\\) as \\(P(S_{10}\\ge 4)\\) plus the probability of paths that touched 4 and end below it, and count those endpoints after the flip."
+  ],
+  "figs_back": [
+   "f04_reflection_max10"
   ]
  },
  {
@@ -957,6 +1053,9 @@
    "s_game_theory_equilibrium",
    "penney",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f04_penney_cycle"
   ]
  },
  {
@@ -1027,6 +1126,9 @@
    "The coin is now biased. Is there a function of the position that stays unchanged on average each step, so that you can stop at both boundaries?",
    "Use the exponential martingale \\(r^{X_n}\\) with \\(r=q/p\\), and apply optional stopping at the two barriers.",
    "\\(E[r^{X_T}]=r^{X_0}\\) with \\(X_T\\in\\{0,12\\}\\). Write this as \\(r^4=P\\cdot r^{12}+(1-P)\\cdot r^{0}\\) and solve for \\(P\\)."
+  ],
+  "figs_back": [
+   "f04_ruin_curve"
   ]
  },
  {
@@ -1059,6 +1161,9 @@
    "For a general bias, is there a function of the form \\(c^{x}\\) for a suitable constant \\(c\\) that is a martingale? What happens to that constant as the bias disappears?",
    "Use the exponential martingale with \\(r=q/p\\) and optional stopping at \\(0\\) and \\(N\\), which gives a linear equation for the exit probability.",
    "Write \\(E[r^{X_T}]=r^{X_0}\\) with \\(r=q/p\\) and \\(X_T\\in\\{0,N\\}\\), and let \\(P_N\\) be the exit probability at \\(N\\)."
+  ],
+  "figs_back": [
+   "f04_ruin_curve"
   ]
  },
  {
@@ -1091,6 +1196,9 @@
    "Your opponent has switched patterns. Which candidate reply is most likely to appear first against THH? Can you compare candidates using the same rule?",
    "Compare the candidates pairwise with the odds rule, and choose the one that gives the best odds against THH.",
    "Pick one candidate \\(A\\) and write its four correlations against \\(B=\\)THH, then the odds \\((c_{BB}-c_{BA}):(c_{AA}-c_{AB})\\)."
+  ],
+  "figs_back": [
+   "f04_penney_cycle"
   ]
  },
  {
@@ -1107,6 +1215,9 @@
    "If every sequence can be beaten by another, what does that say about a single best sequence? Try following which pattern beats which, starting from any one of them.",
    "The beats relation is not transitive, so the best-reply graph has a cycle, and no pure reply is optimal against everything.",
    "Build a directed graph on the four sequences with an edge from each pattern to the one that beats it. Write out the edges and look for a closed loop."
+  ],
+  "figs_back": [
+   "f04_penney_cycle"
   ]
  }
 ]
