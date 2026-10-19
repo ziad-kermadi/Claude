@@ -252,13 +252,14 @@
  },
  {
   "type": "basic",
-  "front": "After a succession event, what does the 2014 definitions concept of a \"Narrowed Reference Obligation\" do, and why is it needed?",
-  "back": "After a succession the successor may have obligations whose ranking, currency or maturity differ from the original reference obligation. Without a narrowing mechanism the CDS could end up referencing a broader pool than the one the protection was written on.<br>\nThe Narrowed Reference Obligation concept (approx.; unverified) restricts the CDS to a narrower obligation of the successor, so that the contract's exposure does not expand after the succession. The exact mechanics are defined in the clause text, so verify the operative wording in the 2014 Definitions before relying on it in an interview answer.<br>\n<b>Interviewer follow-up:</b> Why is this a basis risk? Two CDS on the same name can then reference different obligations after succession, so the hedge and the trade can diverge.",
   "tags": [
-   "credit_events",
    "isda_2014",
+   "reference_obligation",
+   "convention",
    "succession"
-  ]
+  ],
+  "front": "What is the <b>Standard Reference Obligation (SRO)</b> introduced by the 2014 ISDA Credit Derivatives Definitions, and what problem does it solve?",
+  "back": "<b>Headline:</b> ISDA (via the Determinations Committee) publishes an SRO list giving one designated reference obligation per entity and seniority level. Contracts electing \"Standard Reference Obligation\" automatically reference it, and it is replaced if it is redeemed or no longer eligible.<br><b>Problem solved:</b> under 2003 Definitions each trade carried its own reference obligation. When that bond matured, was repaid, or became the obligation of another entity after a succession, trades on the same name could end up with different (or no) reference obligations. That fragmented liquidity and created basis between economically identical trades. A single, centrally maintained SRO keeps the seniority level and fungibility consistent across the market.<br><b>Related 2014 changes:</b> no more Orphaned Reference Entity problem when the RO is repaid; succession now traces Relevant Obligations (bonds and loans) with a look-back period of 90 days for succession events; asset package delivery for financials and sovereigns.<br><b>Interviewer follow-up:</b> Why does the RO matter if all deliverable obligations rank pari passu? It sets the seniority level (senior vs subordinated) of the contract, and that decides which obligations are deliverable and which auction applies."
  },
  {
   "type": "basic",
