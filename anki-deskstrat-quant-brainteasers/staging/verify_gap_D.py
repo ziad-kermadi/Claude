@@ -135,9 +135,9 @@ def card4():
         Kv = mp.mpf(Kv)
         return mp.sqrt(2 * mp.diff(lambda t: C(Kv, t), T0) / (Kv * Kv * mp.diff(lambda k: C(k, T0), Kv, 2)))
     h = mp.mpf("0.01")
-    skew_loc = (sloc_at(100 + h) - sloc_at(100 - h)) / (2 * h) * 100 / 100   # per unit K/100 move
-    skew_loc_m = skew_loc * 100                                             # per unit m (K = 100(1+m))
-    check(4, "local-vol skew per unit m at ATM", -2.0, skew_loc_m, 2e-3)
+    # m = K/100 - 1, so dK = 100 dm
+    skew_per_m = (sloc_at(100 + h) - sloc_at(100 - h)) / (2 * h) * 100
+    check(4, "local-vol skew per unit m at ATM", -2.0, skew_per_m, 2e-3)
 
 
 # ---------- card 5: forward vol, flat smile, sigma(T)=0.20+0.05T ----------
@@ -221,8 +221,6 @@ def card7():
     xT = np.concatenate(xT)
     intx = np.concatenate(intx)
     rT = xT + phi[-1]
-    disc = np.exp(-np.trapezoid(np.concatenate([np.zeros((1,))]) if False else np.ones(1), [0, 1]) * 0 - (f * T + 0 * intx))
-    # bond fit via r directly
     cov = np.cov(xT, intx)[0, 1]
     se_cov = float(np.std(xT * intx) / math.sqrt(n))
     check(7, "Cov(x_T, int x) = sigma^2(1-e^{-kT})^2/(2k^2) (MC bp)", conv * 1e4,
@@ -231,6 +229,7 @@ def card7():
     # bond fit: E[exp(-int r)] with r = x + phi
     intr = intx + np.trapezoid(phi, t_grid)
     mc_line(7, "Vasicek bond fit E[exp(-int r)] = exp(-fT)", np.exp(-intr), math.exp(-f * T), 4.0)
+    # the rate fitted to the curve: E[exp(-int r)] is e^{-fT} only with this phi(t)
 
 
 # ---------- card 8: payment-timing identity under Ho-Lee (value of L(T1) paid at T2) ----------
@@ -261,8 +260,6 @@ def card8():
         vals.append(disc * (1 / PT1T2 - 1))
     vals = np.concatenate(vals)
     mc_line(8, "E[D(0,T2)(1/P(T1,T2)-1)] = P(0,T1)-P(0,T2)", vals, rhs, 4.0)
-    check(8, "forward rate on [T1,T2] unchanged: (P1/P2-1)/tau (%)",
-          (P(0, T1) / P(0, T2) - 1) / tau * 100, (P(0, T1) / P(0, T2) - 1) / tau * 100, 0)
 
 
 # ---------- card 9: quanto forward, S0=100, sS=25%, sX=10%, rho=0.5, rf=2%, T=2 ----------
