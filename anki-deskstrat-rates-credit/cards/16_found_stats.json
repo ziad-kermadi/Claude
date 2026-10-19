@@ -1,0 +1,578 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PCA_CURVE 1/4]</b> Context: daily yield changes in 2y, 5y and 10y (bp) have covariance matrix\n\\(\\Sigma=\\begin{pmatrix}42&32&26\\\\32&36&32\\\\26&32&42\\end{pmatrix}\\) bp². Show that the equal-weight (level) vector \\(q_1=(1,1,1)/\\sqrt3\\) has variance 100 bp², and that the slope vector \\(q_2=(-1,0,1)/\\sqrt2\\) has variance 16 bp².",
+  "back": "<b>Answer:</b> \\(q^\\top\\Sigma q\\) for a unit vector \\(q\\) is the variance of the portfolio \\(q^\\top\\Delta y\\). The sum of all nine entries is \\(120+2(32+26+32)=300\\), so \\(q_1^\\top\\Sigma q_1=300/3=100\\) bp² (level sd 10 bp/day). For the slope, \\(q_2^\\top\\Sigma q_2=(42+42-2\\cdot26)/2=16\\) bp² (sd 4 bp/day).<br>\n<b>Intuition:</b> a vector with unit length has no scale of its own, so its variance measures how much of the curve's total motion lies along that direction. Total variance is \\(\\operatorname{tr}\\Sigma=42+36+42=120\\) bp², and the level direction already carries 100 of it.<br>\n<b>Formula:</b> \\(\\operatorname{Var}(q^\\top\\Delta y)=q^\\top\\Sigma q\\), with \\(\\|q\\|=1\\).<br>\n<b>Used in the deck for:</b> the eigen-decomposition in the next card and factor-exposure accounting.",
+  "tags": [
+   "pca",
+   "yield_curve",
+   "covariance",
+   "chain_pca_curve",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PCA_CURVE 2/4]</b> Context: same \\(\\Sigma\\) as card 1/4 (2y, 5y, 10y daily changes, bp²). Show that \\(q_1=(1,1,1)/\\sqrt3\\), \\(q_2=(-1,0,1)/\\sqrt2\\) and \\(q_3=(1,-2,1)/\\sqrt6\\) are eigenvectors of \\(\\Sigma\\), give the eigenvalues, and the share of total variance carried by PC1 and by PC1+PC2.",
+  "back": "<b>Answer:</b> Direct multiplication:\n\\(\\Sigma(1,1,1)^\\top=(100,100,100)^\\top=100\\,(1,1,1)^\\top\\); \\(\\Sigma(-1,0,1)^\\top=(-16,0,16)^\\top=16\\,(-1,0,1)^\\top\\); \\(\\Sigma(1,-2,1)^\\top=(4,-8,4)^\\top=4\\,(1,-2,1)^\\top\\).\nSo the eigenvalues are \\(\\lambda=100,16,4\\). They sum to 120, which equals \\(\\operatorname{tr}\\Sigma\\).<br>\nPC1 explains \\(100/120=83.3\\%\\) of variance, PC1+PC2 explain \\(116/120=96.7\\%\\), and all three give 100%.<br>\n<b>Intuition:</b> a symmetric matrix has orthogonal eigenvectors, and \\(\\lambda_k\\) is the variance of the portfolio along \\(q_k\\). Ordering by \\(\\lambda\\) gives the principal components.<br>\n<b>Interviewer follow-up:</b> \"Why do two factors usually suffice?\" Because the first two eigenvalues dominate the trace. Real government curves put about 90% or more in PC1, and three factors typically explain above 99%.",
+  "tags": [
+   "pca",
+   "eigen",
+   "yield_curve",
+   "chain_pca_curve",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PCA_CURVE 3/4]</b> Context: same \\(\\Sigma\\) (2y, 5y, 10y daily changes, bp²). A DV01-neutral 2s10s steepener is long 10y and short 2y with equal DV01, so its exposure vector in yield changes is \\(w=(-1,0,1)\\). Compute its daily variance and decompose it across the three principal components.",
+  "back": "<b>Answer:</b> \\(w^\\top\\Sigma w=42+42-2\\cdot26=32\\) bp², so the sd is \\(\\sqrt{32}\\approx5.66\\) bp per unit of exposure.<br>\nLoadings: \\(w\\cdot q_1=0\\), \\(w\\cdot q_2=(1+1)/\\sqrt2=\\sqrt2\\), \\(w\\cdot q_3=(-1+1)/\\sqrt6=0\\). Variance decomposition is \\(\\sum_k\\lambda_k(w\\cdot q_k)^2=0+16\\cdot2+0=32\\). The steepener is 100% PC2 (slope).<br>\n<b>Intuition:</b> a DV01-neutral steepener has no level exposure by construction, and its curvature exposure is also zero because it is linear in the tenors. All of its risk is slope.<br>\n<b>Desk use:</b> set the slope limit on the 5.66 bp sd of this exposure, not on the 10y outright vol.<br>\n<b>Interviewer follow-up:</b> \"A 2y-5y-10y butterfly \\((1,-2,1)\\) has variance 24 bp². Which factor is it?\" Curvature, with \\(24=6\\cdot4\\), so it is \\(\\sqrt6\\,q_3\\) with \\(\\lambda_3=4\\).",
+  "tags": [
+   "pca",
+   "hedging",
+   "yield_curve",
+   "chain_pca_curve",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PCA_CURVE 4/4]</b> Context: the same 3x3 covariance (level 100, slope 16, curvature 4 bp²) is estimated from 250 days of daily changes. Q: which principal components are stable under sampling noise, and what do you tell a risk manager about the curvature factor?",
+  "back": "<b>Answer:</b> Eigenvectors move under perturbation \\(E\\) of \\(\\Sigma\\) by roughly \\(\\|E\\|/\\delta\\), where \\(\\delta\\) is the eigenvalue gap that separates the eigenvector from its neighbours (Davis–Kahan). The gap between PC1 and PC2 is 84 bp², which is large, so the level factor is stable. The gap between PC2 and PC3 is 12 bp², and PC3 itself is only 4 bp², so its sampling error is large relative to its size. Curvature is the least stable factor.<br>\n<b>Desk answer:</b> set hard limits on level and slope only. Report curvature as residual, not hedged. Bootstrap the eigenvectors with a block bootstrap to get confidence intervals, and check that the sign convention is fixed (for example, level loadings positive) before comparing across dates.<br>\n<b>Interviewer follow-up:</b> \"What reduces the noise?\" A longer window, EWMA weighting if the regime has changed, or shrinkage of \\(\\Sigma\\) toward a structured target. Each one trades bias for variance.",
+  "tags": [
+   "pca",
+   "sampling_error",
+   "risk_management",
+   "chain_pca_curve",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PSD_FIX 1/4]</b> Context: a 3x3 correlation matrix assembled from pairwise estimates has \\(\\rho_{12}=0.9\\), \\(\\rho_{23}=0.9\\), \\(\\rho_{13}=-0.9\\). Q: is it a valid correlation matrix? Show the test and exhibit the portfolio that breaks it.",
+  "back": "<b>Answer:</b> No. The determinant is \\(\\det C=1+2\\rho_{12}\\rho_{23}\\rho_{13}-\\rho_{12}^2-\\rho_{23}^2-\\rho_{13}^2=1-1.458-2.430=-2.888<0\\). The eigenvalues are \\(-0.8,\\,1.9,\\,1.9\\) and sum to 3 (the trace), so one is negative.<br>\nExplicit witness: \\(w=(1,-1,1)/\\sqrt3\\) gives \\(w^\\top Cw=\\frac13\\bigl(3+2(-0.9-0.9-0.9)\\bigr)=-0.8\\). A variance cannot be negative, so no set of random variables has these correlations.<br>\n<b>Intuition:</b> if \\(X_1\\approx X_2\\) and \\(X_2\\approx X_3\\) at correlation 0.9, then \\(X_1\\) and \\(X_3\\) must be strongly positively correlated, not −0.9.<br>\n<b>Interviewer follow-up:</b> \"How does this arise with 250 days of data?\" Each pairwise estimate uses a different sample (missing data, different windows), so the matrix need not be PSD even though each entry is a valid estimate.",
+  "tags": [
+   "correlation",
+   "psd",
+   "linear_algebra",
+   "chain_psd_fix",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PSD_FIX 2/4]</b> Context: the matrix \\(C\\) from 1/4 has \\(\\rho_{12}=0.9\\), \\(\\rho_{23}=0.9\\), \\(\\rho_{13}=-0.9\\) and eigenvalues \\(-0.8,1.9,1.9\\). Q: apply the quick fix (set negative eigenvalues to zero, rebuild, rescale to unit diagonal). What is the result, and what is wrong with it?",
+  "back": "<b>Answer:</b> Clipping gives eigenvalues \\(0,1.9,1.9\\). After rebuilding and rescaling the diagonal to 1, the matrix is \\(\\begin{pmatrix}1&0.5&-0.5\\\\0.5&1&0.5\\\\-0.5&0.5&1\\end{pmatrix}\\), with eigenvalues \\(0,1.5,1.5\\).<br>\nProblems: (i) it is only positive semidefinite, with a zero eigenvalue, so a Cholesky factor in exact arithmetic fails at the last pivot; (ii) all three pairs moved by 0.4, so the Frobenius distance from \\(C\\) is \\(\\sqrt{2\\cdot3\\cdot0.4^2}=\\sqrt{0.96}\\approx0.98\\); (iii) clip-and-rescale is not in general the nearest correlation matrix.<br>\n<b>Interviewer follow-up:</b> \"What is the first thing to check after a fix?\" Whether the fix moved the exposures you care about. Here it moved every pair by the same 0.4, so the repaired matrix is not a small perturbation of the estimate.",
+  "tags": [
+   "correlation",
+   "psd",
+   "eigen",
+   "chain_psd_fix",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PSD_FIX 3/4]</b> Context: the matrix \\(C\\) from 1/4 needs a repair to the nearest correlation matrix in the Frobenius norm \\(\\|X\\|_F=\\sqrt{\\sum X_{ij}^2}\\). Q: describe Higham's alternating-projection algorithm, what it converges to, and when a weighted version is preferred.",
+  "back": "<b>Answer:</b> Let \\(S\\) be the PSD cone and \\(U\\) the set of matrices with unit diagonal. Alternate the projections \\(P_S\\) (clip eigenvalues at zero) and \\(P_U\\) (reset diagonal to 1). Dykstra's correction (Higham, 2002) makes the iterates converge to the unique Frobenius-nearest point in \\(S\\cap U\\). Without the correction, the limit need not be the nearest point.<br>\nFor this 3x3 case the plain iteration reaches a matrix with entries \\(\\pm0.5\\), which coincides with the clip-and-rescale of card 2/4. This is a coincidence of the example, not a general result.<br>\n<b>Weighted version:</b> use \\(\\|W\\circ(X-C)\\|_F\\) with weights \\(W\\) when some pairwise correlations are estimated from more data or are more important to the book. The projection onto \\(U\\) is then no longer the simple diagonal reset, and you need a weighted nearest-matrix routine.<br>\n<b>Interviewer follow-up:</b> \"Why is Frobenius the default norm?\" It is easy and gives an unbiased-looking distortion across entries, but it is arbitrary; the weights are a modelling choice.",
+  "tags": [
+   "correlation",
+   "psd",
+   "numerical_methods",
+   "chain_psd_fix",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PSD_FIX 4/4]</b> Context: the non-PSD matrix \\(C\\) (\\(\\rho_{12}=0.9\\), \\(\\rho_{23}=0.9\\), \\(\\rho_{13}=-0.9\\)) is passed to a Monte Carlo engine that draws correlated normals via \\(z=Lg\\), where \\(LL^\\top=C\\) is computed by Cholesky. Q: what happens, and what is the production fix?",
+  "back": "<b>Answer:</b> The Cholesky recursion gives \\(L_{11}=1\\), \\(L_{21}=0.9\\), \\(L_{22}=\\sqrt{1-0.81}=0.436\\), \\(L_{31}=-0.9\\), \\(L_{32}=(0.9+0.81)/0.436=3.923\\). The last pivot is \\(L_{33}^2=1-0.81-3.923^2=-15.2<0\\), so the factorisation fails, or silently produces NaN in code that does not check.<br>\n<b>Production fix:</b> (i) validate the matrix before simulation and refuse to run; (ii) repair to the nearest correlation matrix (card 3/4) and log the Frobenius distance; (iii) for factor simulation, use \\(X=Q\\sqrt{\\Lambda_+}\\,g\\) so that the negative eigenvalue is dropped by construction; (iv) shrink the estimate toward a structured target (for example a one-factor correlation) before any of the above.<br>\n<b>Where it breaks:</b> a repair that is silent hides a data problem. A large Frobenius distance means the inputs are inconsistent and need fixing upstream.",
+  "tags": [
+   "correlation",
+   "cholesky",
+   "monte_carlo",
+   "chain_psd_fix",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: HEDGE_BETA 1/3]</b> Context: daily changes of a cash bond yield \\(\\Delta y_S\\) have sd 8 bp and those of a futures-implied yield \\(\\Delta y_F\\) have sd 6.5 bp, with correlation 0.9. Q: find the minimum-variance hedge ratio \\(h\\) in \\(\\Delta y_S-h\\,\\Delta y_F\\), the residual sd, and the share of variance removed.",
+  "back": "<b>Answer:</b> \\(h^*=\\rho\\,\\sigma_S/\\sigma_F=0.9\\times8/6.5=1.108\\). Hedged variance is \\(\\sigma_S^2(1-\\rho^2)=64\\times0.19=12.16\\) bp², so the residual sd is 3.49 bp. That removes \\(\\rho^2=81\\%\\) of variance and leaves 44% of the sd.<br>\n<b>Intuition:</b> \\(h^*\\) is the OLS slope of \\(\\Delta y_S\\) on \\(\\Delta y_F\\) because \\(\\operatorname{Cov}/\\operatorname{Var}=\\rho\\sigma_S/\\sigma_F\\). Hedge effectiveness is the regression \\(R^2\\).<br>\n<b>Interviewer follow-up:</b> \"This hedge ratio is in yield units. What is the DV01-neutral ratio?\" \\(h_{\\text{DV01}}=h\\cdot\\text{DV01}_S/\\text{DV01}_F\\). The yield ratio and the DV01 ratio differ by the duration ratio, which is the first thing to check when a hedge ratio looks wrong.",
+  "tags": [
+   "hedging",
+   "regression",
+   "beta",
+   "chain_hedge_beta",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: HEDGE_BETA 2/3]</b> Context: the true relationship is \\(\\Delta y_S=\\beta\\,x^*+\\varepsilon\\) with \\(\\beta=1\\). The regressor you observe is \\(x=x^*+u\\), a proxy with measurement noise whose variance equals the variance of \\(x^*\\). You run OLS of \\(\\Delta y_S\\) on \\(x\\). Q: what does the slope converge to, and what is the desk consequence?",
+  "back": "<b>Answer:</b> \\(\\operatorname{plim}\\hat b=\\beta\\cdot\\dfrac{\\operatorname{Var}(x^*)}{\\operatorname{Var}(x^*)+\\operatorname{Var}(u)}=\\beta\\cdot\\tfrac12=0.5\\). The slope is halved; this is attenuation or regression dilution.<br>\n<b>Intuition:</b> noise in the regressor spreads the signal across a wider \\(x\\) distribution, so the covariance with \\(y\\) is diluted while the variance of \\(x\\) is inflated.<br>\n<b>Desk consequence:</b> a hedge built from a noisy proxy (for example a futures contract that is not the CTD) is under-sized by half in this example, and the hedged book has a larger residual than the regression suggests.<br>\n<b>Fix:</b> use the true instrument, instrumental variables, or Deming regression when both variables are noisy.",
+  "tags": [
+   "hedging",
+   "regression",
+   "measurement_error",
+   "chain_hedge_beta",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: HEDGE_BETA 3/3]</b> Context: a 250-day OLS regression of \\(\\Delta y_S\\) on \\(\\Delta y_F\\) gives slope \\(b=1.108\\), residual sd 3.49 bp and \\(\\sigma_F=6.5\\) bp. Q: give the standard error of \\(b\\) and a 95% interval, then list the conditions under which you would not trust this hedge ratio.",
+  "back": "<b>Answer:</b> Under homoskedastic i.i.d. errors \\(\\operatorname{SE}(b)=s_e/(\\sigma_F\\sqrt T)=3.49/(6.5\\times\\sqrt{250})=0.034\\). The 95% interval is \\(1.108\\pm0.067\\), so about \\([1.04,\\,1.17]\\).<br>\n<b>Conditions to distrust it:</b> (i) the errors are heteroskedastic (vol regimes), so use robust errors; (ii) residuals are autocorrelated, so use Newey–West; (iii) the slope changes across sub-windows, which signals a regime or a CTD switch; (iv) the \\(R^2\\) is unstable out of sample.<br>\n<b>Interviewer follow-up:</b> \"A narrow interval means the hedge ratio is precise. Why is that not sufficient?\" Precision of the estimate is not the same as stability of the relationship; the interval says nothing about regime change.",
+  "tags": [
+   "hedging",
+   "regression",
+   "standard_error",
+   "chain_hedge_beta",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: UNIT_ROOT 1/3]</b> Context: two independent random walks \\(x_t=\\sum_{s\\le t}\\varepsilon_s\\) and \\(y_t=\\sum_{s\\le t}\\eta_s\\) are regressed by OLS, \\(y_t=a+bx_t+u_t\\). Q: what do the t-statistic on \\(b\\) and \\(R^2\\) look like across repeated simulations, and what does the Durbin–Watson statistic say?",
+  "back": "<b>Answer:</b> Simulation with 1,000 replications: at \\(T=100\\), \\(|t|>1.96\\) in about 78% of runs; at \\(T=1000\\), in about 93%. The median \\(R^2\\) is about 0.18 at both sample sizes, and does not shrink as \\(T\\) grows; the 90th percentile is about 0.61. Durbin–Watson is near 0 because the residuals are themselves a random walk.<br>\n<b>Why:</b> the residual \\(u_t\\) is I(1), so its variance grows with \\(t\\). The usual standard error assumes i.i.d. residuals and is far too small.<br>\n<b>Interviewer follow-up:</b> \"Granger and Newbold (1974) named this. What is the diagnostic?\" A high \\(R^2\\) combined with DW well below 2 is the warning sign. Test the residuals for a unit root (ADF) or difference the series.",
+  "tags": [
+   "unit_root",
+   "spurious_regression",
+   "time_series",
+   "chain_unit_root",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: UNIT_ROOT 2/3]</b> Context: the augmented Dickey–Fuller regression is \\(\\Delta y_t=\\alpha+\\gamma\\,y_{t-1}+\\sum_{j=1}^{p}\\delta_j\\Delta y_{t-j}+\\varepsilon_t\\). Q: state \\(H_0\\) and \\(H_1\\), and explain why the t-statistic on \\(\\gamma\\) is not compared with Student-t critical values.",
+  "back": "<b>Answer:</b> \\(H_0:\\gamma=0\\), i.e. \\(\\varphi=1+\\gamma=1\\), a unit root. \\(H_1:\\gamma<0\\), a stationary AR(1) with \\(\\varphi<1\\). The lagged differences \\(p\\) whiten the residuals, which is typically chosen by an information criterion.<br>\nUnder \\(H_0\\) the t-statistic converges to a functional of Brownian motion (the Dickey–Fuller distribution), not to a normal. The 5% asymptotic critical value is about \\(-2.86\\) with a constant, \\(-3.41\\) with a constant and trend, and \\(-1.95\\) without deterministic terms; the 1% value with a constant is about \\(-3.43\\).<br>\n<b>Where it breaks:</b> the test has low power when \\(\\varphi\\) is close to 1 in a short sample, and it cannot separate \\(\\varphi=0.97\\) from 1 reliably at 250 observations. Structural breaks also bias it toward non-rejection.",
+  "tags": [
+   "unit_root",
+   "adf",
+   "hypothesis_testing",
+   "chain_unit_root",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: UNIT_ROOT 3/3]</b> Context: a daily log-spread between two bonds has an OLS AR(1) coefficient \\(\\hat\\varphi=0.97\\) over 250 days and the ADF test does not reject a unit root at 5%. Q: why might the spread still be a tradable mean-reverter, and what do you check before trading it?",
+  "back": "<b>Answer:</b> The standard error of \\(\\hat\\varphi\\) is roughly \\(\\sqrt{(1-\\varphi^2)/T}\\approx0.015\\), so 0.97 sits about two standard errors below 1. The data are consistent with a half-life that ranges from about 15 to about 45 days, which is too wide to separate a fast reverter from a random walk.<br>\n<b>Checks:</b> (i) report the confidence interval of the half-life, not the point estimate; (ii) check that the implied half-life fits inside the holding horizon and the stop-loss; (iii) test the spread out of sample and in a second period; (iv) confirm that the economic link (shared CTD, shared repo) is not a regime that might end.<br>\n<b>Interviewer follow-up:</b> \"What does a failed ADF test imply for the trade?\" Nothing definitive. Non-rejection is absence of evidence, and the trade should be sized for a random walk unless the mean reversion is validated.",
+  "tags": [
+   "unit_root",
+   "mean_reversion",
+   "half_life",
+   "chain_unit_root",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: OVERLAP_SE 1/3]</b> Context: daily returns \\(r_t\\) are i.i.d. with sd \\(\\sigma\\). You form 5-day overlapping returns \\(R_t=\\sum_{j=0}^{4}r_{t-j}\\) over \\(T\\) days and report the mean with the naive standard error \\(\\operatorname{sd}(R)/\\sqrt T\\). Q: what is the naive SE, what is the true SE, and by what factor is the naive one wrong?",
+  "back": "<b>Answer:</b> \\(\\operatorname{Var}(R_t)=5\\sigma^2\\), so the naive SE is \\(\\sqrt5\\,\\sigma/\\sqrt T\\). The mean of the overlapping series is \\(\\frac1T\\sum_tR_t\\approx\\frac5T\\sum_t r_t\\), which has variance \\(25\\sigma^2/T\\). The true SE is \\(5\\sigma/\\sqrt T\\).<br>\nThe naive SE is too small by \\(\\sqrt5\\approx2.24\\). Simulation with \\(T=1000\\): the sd of the overlapping mean is 0.156 against a naive 0.071, and the true value 0.158.<br>\n<b>Intuition:</b> the 1,000 overlapping observations are not 1,000 independent draws; each daily return appears in five of them.<br>\n<b>Interviewer follow-up:</b> \"What about non-overlapping 5-day returns?\" Then the count is \\(T/5=200\\) and the naive SE is correct, at the cost of 80% of the data.",
+  "tags": [
+   "overlapping_returns",
+   "standard_error",
+   "time_series",
+   "chain_overlap_se",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: OVERLAP_SE 2/3]</b> Context: the same 5-day overlapping returns \\(R_t=\\sum_{j=0}^4 r_{t-j}\\) from i.i.d. daily returns with variance \\(\\sigma^2\\). Q: derive the autocovariance \\(\\gamma_k=\\operatorname{Cov}(R_t,R_{t+k})\\) and state the Newey–West lag that the overlap requires.",
+  "back": "<b>Derivation:</b> \\(R_t\\) and \\(R_{t+k}\\) share \\(5-k\\) daily returns for \\(0\\le k\\le4\\), so \\(\\gamma_k=(5-k)\\sigma^2\\). For \\(k\\ge5\\) they share nothing, so \\(\\gamma_k=0\\).<br>\nThe long-run variance is \\(\\gamma_0+2\\sum_{k\\ge1}\\gamma_k=5\\sigma^2+2(4+3+2+1)\\sigma^2=25\\sigma^2\\), which agrees with card 1/3.<br>\n<b>Lag requirement:</b> the autocovariances are nonzero up to lag \\(h-1=4\\), so the Newey–West lag must be at least 4 for a 5-day overlap. A lag of 3 leaves out a non-zero term.<br>\n<b>Where it breaks:</b> the estimator is consistent only if the lag grows with \\(T\\). Card 3/3 shows the finite-sample shrinkage.",
+  "tags": [
+   "overlapping_returns",
+   "newey_west",
+   "derivation",
+   "chain_overlap_se",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: OVERLAP_SE 3/3]</b> Context: 5-day overlapping returns from i.i.d. daily data, \\(T=1000\\), true long-run variance \\(25\\sigma^2\\). Q: Newey–West with Bartlett weights \\(w_k=1-\\frac{k}{L+1}\\). What fraction of the true variance does each lag recover, and what lag would you choose?",
+  "back": "<b>Answer:</b> the estimate is \\(\\gamma_0+2\\sum_{k=1}^{L}w_k\\gamma_k\\) in units of \\(\\sigma^2\\). Fraction of 25 recovered: \\(L=0\\): 20%; \\(L=1\\): 36%; \\(L=2\\): 49%; \\(L=4\\): 68%; \\(L=6\\): 77%; \\(L=8\\): 82%; \\(L=20\\): 92%.<br>\nThe Newey–West (1994) plug-in rule gives \\(\\lfloor4(T/100)^{2/9}\\rfloor=6\\) for \\(T=1000\\), which recovers only 77%.<br>\n<b>Intuition:</b> the Bartlett weights shrink the terms, so even the right lag under-corrects. Use a lag well beyond \\(h-1\\), or a kernel without the shrinkage, and report the sensitivity to \\(L\\).<br>\n<b>Interviewer follow-up:</b> \"What is the cost of a larger lag?\" More variance in the estimate itself and a higher chance of a negative variance with some kernels; the bias-variance choice is explicit.",
+  "tags": [
+   "overlapping_returns",
+   "newey_west",
+   "finite_sample",
+   "chain_overlap_se",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> Derive the OLS normal equations for \\(y=X\\beta+\\varepsilon\\) and the simple-regression slope and intercept. Show every step.",
+  "back": "Minimise \\(S(b)=(y-Xb)^\\top(y-Xb)\\). Expand: \\(S=y^\\top y-2b^\\top X^\\top y+b^\\top X^\\top Xb\\). Then \\(\\partial S/\\partial b=-2X^\\top y+2X^\\top Xb=0\\), so \\(X^\\top Xb=X^\\top y\\) and \\(\\hat\\beta=(X^\\top X)^{-1}X^\\top y\\) when \\(X^\\top X\\) is invertible.<br>\nSimple regression with a constant: the first normal equation gives \\(\\hat a=\\bar y-\\hat b\\bar x\\); the second gives \\(\\hat b=\\operatorname{Cov}(x,y)/\\operatorname{Var}(x)\\).<br>\n<b>Worked check:</b> \\(x=1,\\dots,5\\), \\(y=(2.1,3.9,6.2,7.8,10.1)\\). \\(\\bar x=3\\), \\(\\bar y=6.02\\), \\(S_{xy}=19.9\\), \\(S_{xx}=10\\), so \\(\\hat b=1.99\\), \\(\\hat a=0.05\\).<br>\n<b>Where it breaks:</b> \\(X^\\top X\\) is singular under perfect collinearity, so the solution is not unique. If \\(E[x\\varepsilon]\\neq0\\), the estimator is biased and consistent only for a different object. The normal equations hold in any sample, so their algebra does not test the model.",
+  "tags": [
+   "regression",
+   "ols",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> Show that in a simple regression with intercept, \\(R^2=\\rho_{xy}^2\\), and that \\(R^2=1-\\text{SSR}/\\text{SST}\\) splits the total variation into explained and unexplained parts.",
+  "back": "Let \\(\\hat y_i=\\hat a+\\hat b x_i\\) and \\(e_i=y_i-\\hat y_i\\). OLS residuals are orthogonal to the regressors and to the constant, so \\(\\sum e_i=0\\) and \\(\\sum e_i\\hat y_i=0\\). Then \\(\\text{SST}=\\sum(y_i-\\bar y)^2=\\sum(\\hat y_i-\\bar y)^2+\\sum e_i^2=\\text{SSE}+\\text{SSR}\\).<br>\nUsing \\(\\hat b=S_{xy}/S_{xx}\\): \\(\\text{SSE}=\\hat b^2S_{xx}=S_{xy}^2/S_{xx}\\), so \\(R^2=\\text{SSE}/\\text{SST}=S_{xy}^2/(S_{xx}S_{yy})=\\rho^2\\).<br>\n<b>Check:</b> for the toy data of the OLS card, \\(R^2=0.9973\\) and \\(\\rho^2=0.9973\\).<br>\n<b>Where it breaks:</b> \\(R^2\\) never falls when a regressor is added, so compare adjusted \\(R^2\\). A high \\(R^2\\) between two trending series proves nothing; the unit-root chain gives median \\(R^2\\approx0.18\\) for independent random walks with an unreliable t-stat.",
+  "tags": [
+   "regression",
+   "r_squared",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> Derive the minimum-variance hedge ratio \\(h^*\\) that minimises \\(\\operatorname{Var}(\\Delta S-h\\,\\Delta F)\\), and the minimum variance itself.",
+  "back": "Expand: \\(V(h)=\\sigma_S^2-2h\\,\\operatorname{Cov}(\\Delta S,\\Delta F)+h^2\\sigma_F^2\\). The first-order condition is \\(V'(h)=-2\\operatorname{Cov}+2h\\sigma_F^2=0\\), so \\(h^*=\\operatorname{Cov}/\\sigma_F^2=\\rho\\sigma_S/\\sigma_F\\). Second derivative \\(2\\sigma_F^2>0\\), so it is a minimum.<br>\nSubstituting back: \\(V(h^*)=\\sigma_S^2-\\rho^2\\sigma_S^2=\\sigma_S^2(1-\\rho^2)\\). The minimum-variance hedge therefore removes exactly \\(\\rho^2\\) of variance, which is the regression \\(R^2\\).<br>\n<b>Where it breaks:</b> \\(h^*\\) uses unconditional moments, so it is wrong when volatility or correlation change. Use a rolling or EWMA estimate, or a time-varying (Kalman or DCC) hedge. It also ignores the DV01 conversion, which is a separate step.",
+  "tags": [
+   "hedging",
+   "regression",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> Under heteroskedastic errors \\(\\operatorname{Var}(\\varepsilon_i)=\\sigma_i^2\\), derive the sandwich covariance of the OLS estimator and show that it reduces to \\(\\sigma^2(X^\\top X)^{-1}\\) when the errors are homoskedastic.",
+  "back": "Write \\(\\hat\\beta-\\beta=(X^\\top X)^{-1}X^\\top\\varepsilon\\). Then \\(\\operatorname{Var}(\\hat\\beta\\mid X)=(X^\\top X)^{-1}X^\\top\\,\\operatorname{diag}(\\sigma_i^2)\\,X\\,(X^\\top X)^{-1}\\), which is the sandwich \\(A^{-1}BA^{-1}\\) with \\(A=X^\\top X\\) and \\(B=\\sum_i\\sigma_i^2x_ix_i^\\top\\).<br>\nReplace \\(\\sigma_i^2\\) by \\(e_i^2\\) to get the White (HC0) estimator. If \\(\\sigma_i^2=\\sigma^2\\), then \\(B=\\sigma^2A\\) and the sandwich collapses to \\(\\sigma^2A^{-1}\\).<br>\nOLS stays unbiased under exogeneity; only the covariance is wrong.<br>\n<b>Where it breaks:</b> HC0 is biased downward in small samples, so use HC3 or a leverage correction. Serially correlated errors need a HAC (Newey–West) \\(B\\), not HC.",
+  "tags": [
+   "regression",
+   "heteroskedasticity",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> For \\(n\\) i.i.d. observations \\(x_i\\sim N(\\mu,\\sigma^2)\\), derive the maximum-likelihood estimators of \\(\\mu\\) and \\(\\sigma^2\\), and their expected values.",
+  "back": "Log-likelihood: \\(\\ell=-\\tfrac n2\\log(2\\pi\\sigma^2)-\\tfrac1{2\\sigma^2}\\sum_i(x_i-\\mu)^2\\). \\(\\partial\\ell/\\partial\\mu=0\\) gives \\(\\hat\\mu=\\bar x\\). \\(\\partial\\ell/\\partial\\sigma^2=0\\) gives \\(\\hat\\sigma^2=\\frac1n\\sum_i(x_i-\\bar x)^2\\).<br>\nSince \\(\\mathbb E\\sum(x_i-\\bar x)^2=(n-1)\\sigma^2\\), we get \\(\\mathbb E\\hat\\sigma^2=\\frac{n-1}{n}\\sigma^2\\). The MLE underestimates variance by the factor \\((n-1)/n\\); at \\(n=10\\) that is 10%.<br>\n<b>Where it breaks:</b> the MLE is biased for \\(\\sigma^2\\) but consistent. Use \\(1/(n-1)\\) for an unbiased estimate, and remember that the bias is relevant for short VaR look-backs.",
+  "tags": [
+   "mle",
+   "estimation",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> Show that the first principal component is the solution of \\(\\max_w w^\\top\\Sigma w\\) subject to \\(w^\\top w=1\\), that the maximiser is the top eigenvector, and that the maximum equals its eigenvalue.",
+  "back": "Lagrangian: \\(\\mathcal L=w^\\top\\Sigma w-\\lambda(w^\\top w-1)\\). \\(\\partial\\mathcal L/\\partial w=2\\Sigma w-2\\lambda w=0\\), so \\(\\Sigma w=\\lambda w\\): \\(w\\) is an eigenvector and \\(w^\\top\\Sigma w=\\lambda w^\\top w=\\lambda\\). The largest \\(\\lambda\\) gives the maximum, so PC1 is the top eigenvector and captures the largest variance.<br>\nSubsequent PCs add orthogonality constraints \\(w^\\top q_k=0\\), which gives the successive eigenvectors (Courant–Fischer).<br>\n<b>Where it breaks:</b> the solution depends on the scaling of \\(\\Sigma\\). PCA on raw bp covariances is dominated by the most volatile tenor, while PCA on correlations is scale-free. Near-equal eigenvalues make the eigenvectors unstable (chain PCA 4/4).",
+  "tags": [
+   "pca",
+   "eigen",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> Newton's method solves \\(f(x)=0\\) by \\(x_{n+1}=x_n-f(x_n)/f'(x_n)\\). Show that the error satisfies \\(e_{n+1}\\approx\\frac{f''(x^*)}{2f'(x^*)}e_n^2\\). Then check it on a yield: \\(100/(1+y)^3=91\\), starting from \\(y_0=2\\%\\).",
+  "back": "<b>Derivation:</b> Let \\(e_n=x_n-x^*\\). Taylor-expand \\(0=f(x^*)=f(x_n)-e_nf'(x_n)+\\tfrac12e_n^2f''(\\xi)\\). Divide by \\(f'(x_n)\\) and note that \\(x_{n+1}-x^*=e_n-f(x_n)/f'(x_n)\\), which gives \\(e_{n+1}=\\frac{f''(\\xi)}{2f'(x_n)}e_n^2\\), so the convergence is quadratic.<br>\n<b>Yield check:</b> \\(f(y)=100(1+y)^{-3}-91\\). The iterates are \\(y_1=3.1662\\%\\), \\(y_2=3.19361\\%\\), and the root is \\(3.19363\\%\\). The errors are \\(|e_0|=1.19\\%\\), \\(|e_1|=2.7\\times10^{-4}\\), \\(|e_2|=1.4\\times10^{-7}\\). The ratio \\(|e_2|/e_1^2\\approx1.9\\) matches \\(|f''/(2f')|=2/(1+y)\\approx1.94\\).<br>\n<b>Where it breaks:</b> \\(f'\\) close to zero, or a start point far from the root, sends Newton far away. Bond-yield solvers start from the previous day's yield and fall back to bisection when the step leaves the bracket.",
+  "tags": [
+   "numerical_methods",
+   "newton",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> For a strategy with i.i.d. normal returns, per-period mean \\(\\mu\\), sd \\(\\sigma\\) and \\(\\theta=\\mu/\\sigma\\), derive the large-sample variance of the sample Sharpe ratio \\(\\hat\\theta\\) over \\(T\\) periods using the delta method.",
+  "back": "Sample mean and variance: \\(\\operatorname{Var}(\\hat\\mu)=\\sigma^2/T\\), \\(\\operatorname{Var}(\\hat\\sigma^2)=2\\sigma^4/T\\) (normal kurtosis 3), and \\(\\operatorname{Cov}(\\hat\\mu,\\hat\\sigma^2)=0\\) (zero skew).<br>\n\\(\\hat\\theta=\\hat\\mu/\\hat\\sigma\\). The gradients are \\(\\partial\\theta/\\partial\\mu=1/\\sigma\\) and \\(\\partial\\theta/\\partial(\\sigma^2)=-\\mu/(2\\sigma^3)\\). So \\(\\operatorname{Var}(\\hat\\theta)=\\frac{1}{\\sigma^2}\\frac{\\sigma^2}{T}+\\frac{\\mu^2}{4\\sigma^6}\\frac{2\\sigma^4}{T}=\\frac{1+\\theta^2/2}{T}\\).<br>\nFor \\(Y\\) years of daily data with annual Sharpe \\(SR\\), the standard error is about \\(\\sqrt{(1+SR^2/2)/Y}\\).<br>\n<b>Where it breaks:</b> fat tails inflate \\(\\operatorname{Var}(\\hat\\sigma^2)\\), negative skew makes \\(\\hat\\mu\\) and \\(\\hat\\sigma^2\\) correlated, and autocorrelation changes the effective sample size. The formula is a lower bound in those cases.",
+  "tags": [
+   "sharpe",
+   "estimation",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> For a loss \\(L\\sim N(0,\\sigma^2)\\) at confidence \\(\\alpha\\), derive the expected shortfall \\(\\mathrm{ES}_\\alpha=\\mathbb E[L\\mid L\\ge\\mathrm{VaR}_\\alpha]\\) in closed form, and evaluate it at 99%.",
+  "back": "Let \\(z=\\Phi^{-1}(\\alpha)\\) so \\(\\mathrm{VaR}_\\alpha=\\sigma z\\). Then \\(\\mathrm{ES}_\\alpha=\\frac{1}{1-\\alpha}\\int_{z}^{\\infty}\\sigma x\\,\\varphi(x)\\,dx\\). The integral is \\(\\int_z^\\infty x\\varphi(x)\\,dx=\\varphi(z)\\), since \\(\\varphi'(x)=-x\\varphi(x)\\). So \\(\\mathrm{ES}_\\alpha=\\sigma\\,\\varphi(z)/(1-\\alpha)\\).<br>\nAt 99%: \\(z=2.326\\), \\(\\varphi(z)=0.02665\\), so \\(\\mathrm{ES}=2.665\\sigma\\), which is \\(1.146\\times\\) VaR. At 97.5%: \\(\\mathrm{ES}=2.338\\sigma\\).<br>\n<b>Where it breaks:</b> the ratio ES/VaR depends on the tail model. For a fat-tailed distribution the ratio is larger, so a normal-based ES understates the tail. The VaR and ES case below shows the Student-\\(t_4\\) effect.",
+  "tags": [
+   "var",
+   "expected_shortfall",
+   "risk",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> For an \\(n\\times k\\) matrix \\(X\\) with singular values \\(\\sigma_1\\ge\\dots\\ge\\sigma_k>0\\), show that \\(\\operatorname{cond}(X^\\top X)=\\operatorname{cond}(X)^2\\). Then evaluate both for three yield regressors with pairwise correlation 0.98.",
+  "back": "SVD: \\(X=U\\Sigma V^\\top\\), so \\(X^\\top X=V\\Sigma^2V^\\top\\). Its eigenvalues are \\(\\sigma_i^2\\), so \\(\\operatorname{cond}(X^\\top X)=(\\sigma_1/\\sigma_k)^2=\\operatorname{cond}(X)^2\\).<br>\nFor standardised regressors \\(X^\\top X=nR\\), with eigenvalues of \\(R\\) equal to \\(2.96,\\,0.02,\\,0.02\\). So \\(\\operatorname{cond}(X^\\top X)=148\\) and \\(\\operatorname{cond}(X)=12.2\\).<br>\n<b>Where it breaks:</b> forming \\(X^\\top X\\) squares the condition number, so each digit of conditioning costs two digits of accuracy. Solve with QR or SVD. In double precision with \\(\\operatorname{cond}(X^\\top X)\\approx10^{16}\\), the normal equations return no correct digits.",
+  "tags": [
+   "numerical_methods",
+   "regression",
+   "condition_number",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> For \\(x_t=\\varphi x_{t-1}+\\varepsilon_t\\) with \\(|\\varphi|<1\\) and innovation variance \\(\\sigma^2\\), derive the stationary variance, the autocorrelation at lag \\(k\\), and the half-life of a shock. Evaluate for \\(\\varphi=0.97\\).",
+  "back": "Stationarity gives \\(\\operatorname{Var}(x)=\\varphi^2\\operatorname{Var}(x)+\\sigma^2\\), so \\(\\operatorname{Var}(x)=\\sigma^2/(1-\\varphi^2)\\). Multiplying by \\(x_{t-k}\\) and taking expectations gives \\(\\rho_k=\\varphi^{k}\\).<br>\nA shock's expected effect decays as \\(\\varphi^h\\). The half-life solves \\(\\varphi^h=\\tfrac12\\), so \\(h=-\\ln2/\\ln\\varphi\\approx\\ln2/(1-\\varphi)\\) for \\(\\varphi\\) near 1.<br>\nFor \\(\\varphi=0.97\\): exact \\(h=22.8\\) days, and the approximation gives 23.1. The stationary variance is \\(1/(1-0.9409)=16.9\\) times the innovation variance, so the stationary sd is about 4.1 times the innovation sd.<br>\n<b>Where it breaks:</b> \\(\\hat\\varphi\\) is biased downward in short samples, and the approximation error grows as \\(\\varphi\\) moves away from 1. Report the half-life with a confidence interval.",
+  "tags": [
+   "time_series",
+   "ar1",
+   "half_life",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: overlapping 5-day returns and significance.</b> A strategy earns a mean of 2 bp per 5-day window over \\(T=750\\) daily observations. Daily returns are i.i.d. with sd 4 bp. Compare the t-statistic from the naive standard error with the correct one, and say what the result means.",
+  "back": "<b>Step 1, naive:</b> \\(\\operatorname{sd}(R^{(5)})=\\sqrt5\\times4=8.94\\) bp, so the naive SE is \\(8.94/\\sqrt{750}=0.327\\) bp and \\(t=2/0.327=6.1\\).<br>\n<b>Step 2, correct:</b> the true SE is \\(h\\sigma/\\sqrt T=5\\times4/\\sqrt{750}=0.730\\) bp, so \\(t=2.74\\).<br>\n<b>Step 3, interval:</b> the 95% interval is \\(2\\pm1.96\\times0.730=[0.57,\\,3.43]\\) bp, about 2.2 times wider than the naive interval.<br>\n<b>Sanity check:</b> the ratio of the two t-statistics is \\(\\sqrt5=2.24\\), as derived. The result is still significant at 5%, but a claim of \\(t\\approx6\\) would be wrong by more than a factor of two.",
+  "tags": [
+   "overlapping_returns",
+   "standard_error",
+   "case_study",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: butterfly variance in the PCA basis.</b> Using the covariance \\(\\Sigma\\) of 2y, 5y and 10y daily changes (diagonal 42, 36, 42 bp²; off-diagonals 32, 26, 32), a DV01-neutral 2s5s10s butterfly is long 2y and 10y and short twice the 5y, so \\(w=(1,-2,1)\\). Compute its daily sd and decompose it on the principal components.",
+  "back": "<b>Variance:</b> \\(w^\\top\\Sigma w=42+4\\cdot36+42+2(-2\\cdot32+26-2\\cdot32)=228-204=24\\) bp², so the sd is 4.90 bp per unit.<br>\n<b>Decomposition:</b> \\(w\\cdot q_1=(1-2+1)/\\sqrt3=0\\), \\(w\\cdot q_2=(-1+0+1)/\\sqrt2=0\\), \\(w\\cdot q_3=(1+4+1)/\\sqrt6=\\sqrt6\\). The variance is \\(\\lambda_3\\cdot6=4\\times6=24\\), entirely curvature.<br>\n<b>Desk meaning:</b> a butterfly that is DV01-neutral and duration-neutral carries pure curvature risk. It does not move with the level or the slope, so a level or slope hedge does not reduce it. A limit on butterflies is a curvature limit.",
+  "tags": [
+   "pca",
+   "butterfly",
+   "hedging",
+   "case_study",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: VaR and ES on £2m daily sd, normal versus fat-tailed.</b> A book has daily P&amp;L sd £2.0m. (a) Compute 99% VaR and ES under a normal. (b) Scale to 10 days with the square-root rule. (c) Repeat with a Student-\\(t_4\\) distribution rescaled to the same sd. State which figure you would present to risk committee and why.",
+  "back": "<b>(a) Normal:</b> \\(\\mathrm{VaR}_{99}=2.326\\times2.0=£4.65\\)m, \\(\\mathrm{ES}_{99}=2.665\\times2.0=£5.33\\)m.<br>\n<b>(b) 10-day:</b> \\(\\sqrt{10}\\times4.65=£14.7\\)m VaR, which assumes i.i.d. daily P&amp;L and no autocorrelation.<br>\n<b>(c) Student-\\(t_4\\), same sd:</b> the standardised scale is \\(\\sqrt{(\\nu-2)/\\nu}=0.707\\). The 99% quantile of \\(t_4\\) is 3.747, so \\(\\mathrm{VaR}_{99}=3.747\\times0.707\\times2.0=£5.30\\)m. Its ES is \\(3.69\\sigma=£7.38\\)m, which is 38% above the normal ES.<br>\n<b>Presentation:</b> show both. The normal figure hides a 38% gap in expected tail loss at the same sd. The 10-day figure should be stress-tested, since it is only as good as the independence assumption.<br>\n<b>Interviewer follow-up:</b> \"Why is the ES more sensitive to the model than the VaR here?\" ES averages the tail beyond the quantile, so it depends on the whole tail shape, not just one point.",
+  "tags": [
+   "var",
+   "expected_shortfall",
+   "fat_tails",
+   "case_study",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: bootstrapping a mean with serial correlation.</b> Daily returns follow an AR(1) with \\(\\varphi=0.2\\) and \\(T=1000\\). (a) By what factor does an i.i.d. bootstrap understate the standard error of the mean? (b) Choose a block length and say why a stationary bootstrap is a common alternative.",
+  "back": "<b>(a)</b> The long-run variance of an AR(1) relative to its marginal variance is \\((1+\\varphi)/(1-\\varphi)=1.2/0.8=1.5\\). The i.i.d. bootstrap resamples as if the returns were independent, so it understates the SE by \\(\\sqrt{1.5}=1.22\\), and the 95% interval is about 18% too narrow.<br>\n<b>(b)</b> A moving-block bootstrap with block length near \\(T^{1/3}=10\\) keeps the within-block dependence. The stationary bootstrap (Politis and Romano) draws geometric blocks with mean length \\(1/p\\), so the block length is random and the resampled series stays stationary. Choose \\(1/p\\) of about 10 here and check that the interval is stable across block lengths of 5 to 20.<br>\n<b>Where it breaks:</b> blocks that are too short miss dependence; blocks that are too long leave few distinct blocks and the interval becomes noisy.",
+  "tags": [
+   "bootstrap",
+   "autocorrelation",
+   "standard_error",
+   "case_study",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: half-life and the time to revert.</b> A daily spread has stationary sd 4 bp and AR(1) coefficient \\(\\varphi=0.97\\). Entry is at \\(+8\\) bp (2 sd). Compute the innovation sd, the half-life, and the expected number of days for the conditional mean to fall from 8 bp to 2 bp.",
+  "back": "<b>Innovation sd:</b> \\(\\sigma_\\varepsilon=4\\sqrt{1-\\varphi^2}=4\\times0.243=0.97\\) bp.<br>\n<b>Half-life:</b> \\(-\\ln2/\\ln0.97=22.8\\) days.<br>\n<b>Time to 2 bp:</b> the conditional mean is \\(\\varphi^h\\times8\\). Setting \\(8\\varphi^h=2\\) gives \\(h=\\ln4/(-\\ln0.97)=45.5\\) days.<br>\n<b>Desk use:</b> the expected time to go from 8 bp to 2 bp is about twice the half-life, so a 30-day time-stop would exit before the expected reversion. The conditional mean is not the path; the daily innovation sd is 0.97 bp.<br>\n<b>Interviewer follow-up:</b> \"What if \\(\\varphi\\) is 0.955 instead?\" The half-life falls to 15 days and the time from 8 bp to 2 bp drops to about 30 days, a third shorter, which is why the CI on \\(\\varphi\\) matters for sizing.",
+  "tags": [
+   "mean_reversion",
+   "half_life",
+   "time_series",
+   "case_study",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: best of 100 strategies by chance.</b> A researcher tests 100 zero-skill strategies over 5 years and reports the best one. (a) What Sharpe would the best one show by chance? (b) What Bonferroni threshold on the t-statistic applies at 5% family-wise error? (c) Is a 5-year track-record Sharpe of 0.5 significant on its own?",
+  "back": "<b>(a)</b> Under the null the annual Sharpe SE is \\(\\sqrt{1/5}=0.447\\). The expected maximum of 100 standard normals is about 2.51 (simulated; the \\(\\sqrt{2\\ln N}\\) asymptotic gives 3.03 and overstates it at this \\(N\\)). So the best of 100 has an expected annual Sharpe of about \\(2.51\\times0.447=1.12\\) by luck alone.<br>\n<b>(b)</b> Two-sided per-test level \\(0.05/100=0.0005\\) gives \\(|z|=3.48\\).<br>\n<b>(c)</b> A Sharpe of 0.5 with SE \\(\\sqrt{(1+0.125)/5}=0.474\\) gives \\(t=1.05\\), well short of 1.96 and far short of 3.48.<br>\n<b>Interviewer follow-up:</b> \"What do you ask for before believing a backtest?\" The number of trials that were run, the out-of-sample period that was never looked at, and a deflated Sharpe that accounts for the search.",
+  "tags": [
+   "multiple_testing",
+   "sharpe",
+   "overfitting",
+   "case_study",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: collinear curve regressors.</b> You regress a position's daily P&amp;L on 2y, 5y and 10y yield changes, which are standardised and pairwise correlated at 0.98. Compute the condition number of the regressor matrix, the variance inflation factors, and the effect on the standard errors.",
+  "back": "<b>Eigenvalues</b> of the correlation matrix: \\(2.96,\\,0.02,\\,0.02\\). So \\(\\operatorname{cond}(X^\\top X)=148\\) and \\(\\operatorname{cond}(X)=12.2\\).<br>\n<b>VIF:</b> the diagonal of \\(R^{-1}\\) is 33.4 for each regressor. The standard error of each coefficient is inflated by \\(\\sqrt{33.4}=5.8\\) relative to uncorrelated regressors with the same residual variance.<br>\n<b>Fix:</b> regress on the principal components (orthogonal by construction) or on level, slope and curvature, then map the coefficients back. Ridge is another option, at the price of bias.<br>\n<b>Interviewer follow-up:</b> \"Does high collinearity bias the coefficients?\" Under exogeneity, no. It makes them imprecise and unstable across samples, which is the more dangerous outcome for a hedge.",
+  "tags": [
+   "regression",
+   "collinearity",
+   "condition_number",
+   "case_study",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: Cholesky for three correlated normals.</b> Target correlation matrix \\(C\\) has all off-diagonal correlations 0.5. Derive the lower-triangular factor \\(L\\) with \\(LL^\\top=C\\), then generate \\(z=Lg\\) from i.i.d. \\(g\\sim N(0,I)\\) and state the resulting correlation.",
+  "back": "<b>Factor:</b> \\(L_{11}=1\\), \\(L_{21}=0.5\\), \\(L_{22}=\\sqrt{1-0.25}=0.866\\), \\(L_{31}=0.5\\), \\(L_{32}=(0.5-0.25)/0.866=0.289\\), \\(L_{33}=\\sqrt{1-0.25-0.083}=0.816\\).<br>\n\\(L=\\begin{pmatrix}1&0&0\\\\0.5&0.866&0\\\\0.5&0.289&0.816\\end{pmatrix}\\). Check: row 3 times row 2 gives \\(0.25+0.25=0.5\\), and row 3 times itself gives \\(0.25+0.083+0.667=1\\).<br>\n<b>Result:</b> \\(\\operatorname{Cov}(z)=LL^\\top=C\\), so the simulated pairs have correlation 0.5, and the sample correlations converge to it at rate \\(1/\\sqrt N\\).<br>\n<b>Where it breaks:</b> if \\(C\\) is not positive definite (see the PSD chain), the Cholesky pivot is zero or negative and the factor does not exist.",
+  "tags": [
+   "cholesky",
+   "monte_carlo",
+   "correlation",
+   "case_study",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Under exogeneity OLS remains {{c1::unbiased}}, but with heteroskedastic errors the naive standard errors are {{c2::biased}}, and the fix is the sandwich (White) covariance.",
+  "back": "OLS unbiasedness needs \\(E[\\varepsilon\\mid X]=0\\). The covariance needs \\(\\operatorname{Var}(\\varepsilon\\mid X)\\), which is what the sandwich estimates.",
+  "tags": [
+   "regression",
+   "heteroskedasticity",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The Newey–West Bartlett weight at lag \\(k\\) is \\(w_k=\\){{c1::\\(1-\\frac{k}{L+1}\\)}}, and for \\(h\\)-period overlapping returns the lag must be at least {{c2::\\(h-1\\)}}.",
+  "back": "For 5-day overlap, \\(\\gamma_k=(5-k)\\sigma^2\\) for \\(k\\le4\\), so the lag must reach 4. Bartlett weights shrink the sum, so a longer lag is usually used in practice.",
+  "tags": [
+   "newey_west",
+   "overlapping_returns",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a standardised regression matrix \\(X\\), \\(\\operatorname{cond}(X^\\top X)=\\){{c1::\\(\\operatorname{cond}(X)^2\\)}}, which is why the normal equations are numerically {{c2::worse}} than QR or SVD.",
+  "back": "Forming \\(X^\\top X\\) squares the singular values, so the ratio of largest to smallest eigenvalue is squared.",
+  "tags": [
+   "numerical_methods",
+   "condition_number",
+   "cloze",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A minimum-variance hedge with correlation \\(\\rho\\) leaves residual variance {{c1::\\(\\sigma_S^2(1-\\rho^2)\\)}}, and the regression \\(R^2\\) of the hedge equals {{c2::\\(\\rho^2\\)}}.",
+  "back": "The minimum of \\(\\sigma_S^2-2h\\rho\\sigma_S\\sigma_F+h^2\\sigma_F^2\\) over \\(h\\) is \\(\\sigma_S^2(1-\\rho^2)\\), attained at \\(h^*=\\rho\\sigma_S/\\sigma_F\\).",
+  "tags": [
+   "hedging",
+   "regression",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The Gaussian MLE of the variance divides by \\(n\\), so its expected value is \\(\\sigma^2\\) times {{c1::\\((n-1)/n\\)}}, which is biased low.",
+  "back": "Dividing by \\(n-1\\) gives the unbiased estimator. The MLE is still consistent.",
+  "tags": [
+   "mle",
+   "estimation",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The augmented Dickey–Fuller null hypothesis is {{c1::a unit root, \\(\\gamma=0\\)}}, and its 5% asymptotic critical value with a constant is about {{c2::-2.86}}.",
+  "back": "Under the null the t-statistic follows the Dickey–Fuller distribution, not Student-t, so the critical value is more negative than 1.645 or 1.96 would suggest.",
+  "tags": [
+   "unit_root",
+   "adf",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For \\(Y\\) years of i.i.d. data, the annualised Sharpe ratio has standard error about {{c1::\\(\\sqrt{(1+SR^2/2)/Y}\\)}}, which at \\(SR=0\\) reduces to {{c2::\\(1/\\sqrt Y\\)}}.",
+  "back": "Derived by the delta method on the sample mean and variance. The formula assumes normal i.i.d. returns and is a lower bound when tails are fat.",
+  "tags": [
+   "sharpe",
+   "estimation",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a simple root, Newton's method converges {{c1::quadratically}}, with error satisfying \\(e_{n+1}\\approx\\){{c2::\\(\\frac{f''(x^*)}{2f'(x^*)}e_n^2\\)}}.",
+  "back": "Taylor expansion of \\(f\\) about the root. The number of correct digits roughly doubles each step once the iterate is close.",
+  "tags": [
+   "numerical_methods",
+   "newton",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a positive-definite \\(\\Sigma\\), every Cholesky pivot is {{c1::strictly positive}}; a zero pivot means \\(\\Sigma\\) is only {{c2::positive semidefinite (singular)}}.",
+  "back": "The pivots are the squared diagonal entries of \\(L\\) after elimination. A zero pivot means a linear combination of the variables has zero variance.",
+  "tags": [
+   "cholesky",
+   "psd",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Covariance versus correlation matrix for PCA.</b> When should you run PCA on the covariance matrix and when on the correlation matrix? Use the example \\(\\Sigma\\) with diagonal 42, 36, 42 bp² and correlations 0.82, 0.62, 0.82.",
+  "back": "<b>Answer:</b> PCA on \\(\\Sigma\\) gives factors in bp, and its variance split is dominated by the most volatile tenors. PCA on \\(R=D^{-1/2}\\Sigma D^{-1/2}\\) gives standardised factors with equal weight per tenor.<br>\nFor this example, the eigenvalues of \\(R\\) are 2.51, 0.38 and 0.11, so the shares are 83.8%, 12.7% and 3.5%. The eigenvalues of \\(\\Sigma\\) give 83.3%, 13.3% and 3.3%. The difference is small here because the vols are similar; it grows when one tenor is much more volatile.<br>\n<b>Use:</b> run PCA on \\(\\Sigma\\) when the factor is needed in bp of P&amp;L (hedging, limits). Run it on \\(R\\) to study co-movement independent of vol regime.<br>\n<b>Used in the deck for:</b> the PCA curve chain and the choice of scale for factor limits.",
+  "tags": [
+   "pca",
+   "covariance",
+   "correlation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Information ratio and the fundamental law.</b> Define the information ratio, compute it for \\(\\alpha=1.5\\%\\) and tracking error \\(\\omega=5\\%\\), and state the fundamental law of active management with an example.",
+  "back": "<b>Definition:</b> \\(\\mathrm{IR}=\\alpha/\\omega\\), where \\(\\alpha\\) is the annualised active return and \\(\\omega\\) the annualised tracking error (sd of active return). Here \\(\\mathrm{IR}=0.3\\).<br>\nSharpe measures excess return over cash per unit total vol; IR measures active return per unit of deviation from the benchmark.<br>\n<b>Fundamental law (Grinold, 1989):</b> \\(\\mathrm{IR}\\approx\\mathrm{IC}\\sqrt{\\mathrm{BR}}\\), where IC is the information coefficient (correlation of forecasts with outcomes) and BR is the number of independent bets per year. For IC 0.05 and 100 independent bets, \\(\\mathrm{IR}\\approx0.5\\).<br>\n<b>Used in the deck for:</b> sizing relative-value books and judging whether a signal can carry the tracking-error budget.",
+  "tags": [
+   "active_management",
+   "information_ratio",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>AR(1) stationarity and the spread's sd.</b> For \\(x_t=\\varphi x_{t-1}+\\varepsilon_t\\), state the stationarity condition and the stationary variance. With \\(\\varphi=0.97\\) and innovation sd 1 bp, what is the sd of \\(x_t\\)?",
+  "back": "<b>Answer:</b> stationarity requires \\(|\\varphi|<1\\). The stationary variance is \\(\\sigma^2/(1-\\varphi^2)\\). With \\(\\varphi=0.97\\), \\(1-\\varphi^2=0.0591\\), so the variance is 16.9 times the innovation variance. The sd is \\(\\sqrt{16.9}=4.1\\) bp.<br>\n<b>Intuition:</b> the spread's level sd is set by how long shocks persist. A spread near a unit root has a large sd for the same daily noise, which is why z-scores based on the stationary sd are only useful once \\(\\varphi\\) is validated.<br>\n<b>Used in the deck for:</b> the stationary sd in the half-life case and the choice of z-score entry thresholds.",
+  "tags": [
+   "time_series",
+   "ar1",
+   "stationarity",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Adjusted \\(R^2\\) with many regressors.</b> Define adjusted \\(R^2\\) and compute it for \\(n=60\\) observations, \\(k=10\\) regressors and \\(R^2=0.30\\). Why is it preferred to raw \\(R^2\\) when choosing hedge regressors?",
+  "back": "<b>Definition:</b> \\(\\bar R^2=1-(1-R^2)\\dfrac{n-1}{n-k-1}\\). For the numbers above, \\(\\bar R^2=1-0.70\\times59/49=1-0.843=0.157\\).<br>\nRaw \\(R^2\\) never decreases when a regressor is added, even a pure noise one. The adjusted version penalises extra parameters, so it can fall when a regressor adds no information.<br>\n<b>Caveat:</b> it is still in-sample. For hedge selection, check out-of-sample \\(R^2\\) on a later window, since a noise regressor can be picked by chance from many candidates.<br>\n<b>Used in the deck for:</b> choosing among candidate hedge instruments and multi-factor regressions.",
+  "tags": [
+   "regression",
+   "r_squared",
+   "model_selection",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Gaussian AR(1) maximum likelihood.</b> Show that conditional maximum likelihood for \\(x_t=\\varphi x_{t-1}+\\varepsilon_t\\) with Gaussian \\(\\varepsilon\\) gives the OLS estimate \\(\\hat\\varphi=\\sum x_tx_{t-1}/\\sum x_{t-1}^2\\), and say when this differs from exact likelihood.",
+  "back": "Conditional on \\(x_{t-1}\\), \\(x_t\\sim N(\\varphi x_{t-1},\\sigma^2)\\). The conditional log-likelihood is \\(-\\frac{1}{2\\sigma^2}\\sum_t(x_t-\\varphi x_{t-1})^2\\) plus constants. Maximising in \\(\\varphi\\) minimises the sum of squares, which is the OLS regression of \\(x_t\\) on \\(x_{t-1}\\) without an intercept.<br>\n<b>Where it differs:</b> the exact likelihood includes the first observation, with variance \\(\\sigma^2/(1-\\varphi^2)\\). The difference is one term in \\(T\\) and matters only in short samples or near a unit root.",
+  "tags": [
+   "mle",
+   "ar1",
+   "estimation",
+   "lvl_foundation"
+  ]
+ }
+]
