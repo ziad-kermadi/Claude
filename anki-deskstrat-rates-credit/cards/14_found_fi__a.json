@@ -102,8 +102,8 @@
  },
  {
   "type": "cloze",
-  "front": "SONIA accrues on {{c1::ACT/365F}}; SOFR and €STR accrue on {{c2::ACT/360}}; UK gilts accrue on {{c3::ACT/ACT ICMA}}.",
-  "back": "US corporate bonds are normally on 30/360. The day count is part of the instrument: the same 5% gives a different accrual on each basis, and comparing rates across bases needs a conversion (ACT/360 to ACT/365F multiplies the rate by 365/360).",
+  "front": "UK gilts accrue on {{c1::ACT/ACT ICMA}}; German Bunds accrue on {{c2::ACT/ACT ICMA}}; US corporate bonds accrue on {{c3::30/360}}.",
+  "back": "SONIA, SOFR and €STR are on ACT/365F, ACT/360 and ACT/360 respectively, so the money-market and bond bases differ. The day count is part of the instrument: the same 5% gives a different accrual on each basis, and comparing rates across bases needs a conversion (ACT/360 to ACT/365F multiplies the rate by 365/360).",
   "tags": [
    "foundations",
    "day_count",
@@ -277,7 +277,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: DURATION 2/4]</b> Context: the same bond, \\(D_{Mac}=2.8594\\), price 100, yield 5.00%. Derive modified duration and use it to estimate the price change for a +100bp move.",
-  "back": "<b>Answer:</b> \\(D_{mod}=2.7232\\). For a +100bp move, \\(\\Delta P/P\\approx-2.72\\%\\), or about \\(-2.72\\) points.<br><b>Intuition:</b> Modified duration is the elasticity of price to yield: the percentage price change per unit change in yield. It is Macaulay duration rescaled by the compounding factor.<br><b>Formula:</b> \\( D_{mod}=\\dfrac{D_{Mac}}{1+y/m} \\), \\( \\dfrac{\\Delta P}{P}\\approx -D_{mod}\\,\\Delta y \\).<br><b>Worked example:</b> \\(2.8594/1.05=2.7232\\); \\(-2.7232\\times0.01=-2.72\\%\\). Full repricing at 6.00% gives 97.3270, a change of \\(-2.67\\%\\). The 0.05-point gap is convexity (card 4).<br><b>Where it breaks:</b> for a semi-annual bond divide by \\(1+y/2\\), not by \\(1+y\\). The approximation is linear, so it always overstates the loss on a rate rise.<br><b>Used in the deck for:</b> every P&L and hedge estimate in the govies and swaps cards.",
+  "back": "<b>Answer:</b> \\(D_{mod}=2.7232\\). For a +100bp move, \\(\\Delta P/P\\approx-2.72\\%\\), or about \\(-2.72\\) points.<br><b>Intuition:</b> Modified duration is the elasticity of price to yield: the percentage price change per unit change in yield. It is Macaulay duration rescaled by the compounding factor.<br><b>Formula:</b> \\( D_{mod}=\\dfrac{D_{Mac}}{1+y/m} \\), \\( \\dfrac{\\Delta P}{P}\\approx -D_{mod}\\,\\Delta y \\).<br><b>Worked example:</b> \\(2.8594/1.05=2.7232\\); \\(-2.7232\\times0.01=-2.72\\%\\). Full repricing at 6.00% gives 97.3270, a change of \\(-2.67\\%\\). The 0.05-point gap is convexity (card 4).<br><b>Where it breaks:</b> for a semi-annual bond divide by \\(1+y/2\\), not by \\(1+y\\). For option-free bonds the linear approximation always overstates the loss on a rate rise.<br><b>Used in the deck for:</b> every P&L and hedge estimate in the govies and swaps cards.",
   "tags": [
    "foundations",
    "duration",

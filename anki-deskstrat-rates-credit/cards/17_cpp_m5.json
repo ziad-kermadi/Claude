@@ -1,0 +1,527 @@
+[
+ {
+  "type": "basic",
+  "front": "C++ containers for a Python programmer: what do <code>std::array</code>, <code>std::vector</code>, <code>std::deque</code> and <code>std::list</code> store, and which of them support <code>operator[]</code>? Predict the output of the snippet below.<br><pre><code>#include &lt;array&gt;\n#include &lt;deque&gt;\n#include &lt;iostream&gt;\n#include &lt;list&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::array&lt;double, 3&gt; a{1.0, 2.0, 3.0};   // fixed size, no heap allocation\n    std::vector&lt;double&gt; v{1.0, 2.0, 3.0};     // contiguous, grows at the back\n    std::deque&lt;double&gt; d{1.0, 2.0, 3.0};      // chunked, O(1) at both ends\n    std::list&lt;double&gt; l{1.0, 2.0, 3.0};       // doubly linked, one node per element\n    v.push_back(4.0);\n    d.push_front(0.0);\n    l.push_front(0.0);\n    std::cout &lt;&lt; sizeof(a) &lt;&lt; ' ' &lt;&lt; v.size() &lt;&lt; ' ' &lt;&lt; d.front() &lt;&lt; ' ' &lt;&lt; l.front() &lt;&lt; '\\n';\n    std::cout &lt;&lt; v[2] &lt;&lt; ' ' &lt;&lt; d[2] &lt;&lt; '\\n';   // random access: array, vector, deque\n    // std::cout &lt;&lt; l[2];                       // does not compile: list has no operator[]\n}</code></pre>",
+  "back": "<b>Headline:</b> <code>array</code> is fixed-size storage with no heap allocation; <code>vector</code> is one contiguous heap block that grows at the back; <code>deque</code> is a sequence of fixed-size blocks, O(1) at both ends, random access but not contiguous; <code>list</code> is a doubly linked list, one heap node per element, O(1) insert and erase at a known position, no random access.<br><b>Output:</b><pre><code>24 4 0 0\n3 2</code></pre>The <code>sizeof(a)</code> is 3 doubles = 24 bytes. <code>d</code> is <code>{0,1,2,3}</code> after <code>push_front</code>, so <code>d[2]</code> is 2.<br><b>Interview trap:</b> a Python list is a dynamic array, so people assume <code>std::list</code> is the analogue. In C++ it is the rarely-fast choice: every element is a separate heap node, and iteration chases pointers. Default to <code>vector</code>.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_foundation",
+   "containers",
+   "vector",
+   "list"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Big-O of the core containers. {{c1::push_back on a std::vector is amortised O(1)}}; lookup in a {{c2::std::map is O(log n)}}; lookup in a {{c3::std::unordered_map is O(1) on average and O(n) in the worst case}}.",
+  "back": "<table><tr><th>Container</th><th>Index / access</th><th>Insert or erase</th><th>Find</th><th>Notes</th></tr><tr><td>vector</td><td>O(1)</td><td>O(1) amortised at back; O(n) in middle</td><td>O(n) unsorted</td><td>contiguous</td></tr><tr><td>deque</td><td>O(1)</td><td>O(1) at both ends; O(n) middle</td><td>O(n)</td><td>blocked storage</td></tr><tr><td>list</td><td>none</td><td>O(1) given an iterator</td><td>O(n)</td><td>node per element</td></tr><tr><td>array</td><td>O(1)</td><td>n/a (fixed size)</td><td>O(n)</td><td>stack storage</td></tr><tr><td>map / set</td><td>none</td><td>O(log n)</td><td>O(log n)</td><td>red-black tree, ordered</td></tr><tr><td>unordered_map / set</td><td>none</td><td>O(1) average</td><td>O(1) average, O(n) worst</td><td>hash table</td></tr><tr><td>priority_queue</td><td>top O(1)</td><td>push and pop O(log n)</td><td>n/a</td><td>binary heap over a vector</td></tr></table>",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_foundation",
+   "containers",
+   "big_o"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What are <code>std::stack</code>, <code>std::queue</code> and <code>std::priority_queue</code>, what do they wrap by default, and what does this code print?<br><pre><code>#include &lt;functional&gt;\n#include &lt;iostream&gt;\n#include &lt;queue&gt;\n#include &lt;stack&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::stack&lt;int&gt; s;                       // adaptor over std::deque by default\n    s.push(1); s.push(2); s.push(3);\n    std::cout &lt;&lt; \"stack top \" &lt;&lt; s.top() &lt;&lt; '\\n';\n    s.pop();\n    std::cout &lt;&lt; \"stack top \" &lt;&lt; s.top() &lt;&lt; '\\n';\n\n    std::priority_queue&lt;int&gt; maxq;           // std::less: max-heap over std::vector\n    std::priority_queue&lt;int, std::vector&lt;int&gt;, std::greater&lt;int&gt;&gt; minq;   // min-heap\n    for (int x : {5, 1, 4, 2}) { maxq.push(x); minq.push(x); }\n    std::cout &lt;&lt; \"max:\";\n    while (!maxq.empty()) { std::cout &lt;&lt; ' ' &lt;&lt; maxq.top(); maxq.pop(); }\n    std::cout &lt;&lt; \"\\nmin:\";\n    while (!minq.empty()) { std::cout &lt;&lt; ' ' &lt;&lt; minq.top(); minq.pop(); }\n    std::cout &lt;&lt; '\\n';\n}</code></pre>",
+  "back": "<b>Headline:</b> they are container adaptors: a restricted interface over an underlying sequence. <code>stack</code> and <code>queue</code> wrap a <code>deque</code> by default. <code>priority_queue</code> wraps a <code>vector</code> as a binary heap; the default comparator <code>std::less</code> gives a max-heap, and <code>std::greater</code> gives a min-heap.<br><b>Output:</b><pre><code>stack top 3\nstack top 2\nmax: 5 4 2 1\nmin: 1 2 4 5</code></pre>The adaptors expose no iterators and no <code>operator[]</code>.<br><b>Interview trap:</b> you cannot remove or re-prioritise an arbitrary element in a <code>priority_queue</code>. Dijkstra-style code pushes a fresh entry and skips stale ones on pop (lazy deletion).",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_foundation",
+   "adaptors",
+   "priority_queue"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Both a <code>std::vector&lt;double&gt;</code> and a <code>std::list&lt;double&gt;</code> of length 10 million are O(n) to sum. Why is the vector loop usually several times faster?",
+  "back": "<b>Headline:</b> Big-O hides the constant, and the constant is set by memory layout. A vector is one contiguous block, so consecutive elements share cache lines (64 bytes on x86, so 8 doubles per line), and the hardware prefetcher streams them. A list element is a separate heap node that holds two pointers (16 bytes of overhead) plus the value, and each step is a dependent load that often misses cache.<br>Contiguity also lets the compiler vectorise the loop with SIMD.<br><b>Interview trap:</b> 'why vector, not list?' is answered by cache behaviour, not by complexity. Insertion in the middle of a vector is O(n) and still often wins for n up to a few thousand, because memmove is fast.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_foundation",
+   "vector",
+   "cache",
+   "memory_layout"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Predict the capacity sequence of a <code>std::vector&lt;int&gt;</code> under 20 <code>push_back</code> calls, and what does <code>reserve</code> change? Code and output below (g++ 13, libstdc++).<br><pre><code>#include &lt;iostream&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::vector&lt;int&gt; v;\n    std::cout &lt;&lt; \"initial capacity \" &lt;&lt; v.capacity() &lt;&lt; '\\n';\n    std::size_t last = v.capacity();\n    for (int i = 1; i &lt;= 20; ++i) {\n        v.push_back(i);\n        if (v.capacity() != last) {\n            last = v.capacity();\n            std::cout &lt;&lt; \"size \" &lt;&lt; v.size() &lt;&lt; \" -&gt; capacity \" &lt;&lt; last &lt;&lt; '\\n';\n        }\n    }\n    std::vector&lt;int&gt; r;\n    r.reserve(20);\n    std::cout &lt;&lt; \"reserve(20): capacity \" &lt;&lt; r.capacity() &lt;&lt; \", size \" &lt;&lt; r.size() &lt;&lt; '\\n';\n    for (int i = 0; i &lt; 20; ++i) r.push_back(i);\n    std::cout &lt;&lt; \"after 20 push_back: capacity \" &lt;&lt; r.capacity() &lt;&lt; '\\n';\n}</code></pre>",
+  "back": "<b>Headline:</b> capacity doubles when it is exhausted (1, 2, 4, 8, 16, 32 here). <code>reserve(n)</code> changes capacity, not size, and it does not change <code>size()</code>.<br><b>Output:</b><pre><code>initial capacity 0\nsize 1 -&gt; capacity 1\nsize 2 -&gt; capacity 2\nsize 3 -&gt; capacity 4\nsize 5 -&gt; capacity 8\nsize 9 -&gt; capacity 16\nsize 17 -&gt; capacity 32\nreserve(20): capacity 20, size 0\nafter 20 push_back: capacity 20</code></pre>The growth factor is an implementation choice (libstdc++ and libc++ use 2; MSVC uses 1.5), so the exact sequence is not part of the standard.<br><b>Interview trap:</b> <code>r.reserve(20); r[0] = 1;</code> compiles and is undefined behaviour, because no element exists. Reserve is a capacity hint, not a resize. Use <code>resize</code> or <code>push_back</code>.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_vp_core",
+   "vector",
+   "capacity",
+   "reserve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive why <code>push_back</code> is amortised O(1) on a <code>std::vector</code> that doubles its capacity when full. Give the total number of element moves for <code>n</code> pushes.",
+  "back": "<b>Derivation.</b> A reallocation happens when the size reaches a power of two, at sizes \\(1,2,4,\\dots,2^k\\) with \\(2^k\\le n\\). Each such reallocation copies (or moves) every element that exists at that time:<br>\\[\\text{moves}\\le \\sum_{j=0}^{k}2^j = 2^{k+1}-1 < 2n.\\]Add the \\(n\\) placements and the total is below \\(3n\\), so the amortised cost per <code>push_back</code> is at most 3 moves: \\(O(1)\\).<br>For a general growth factor \\(g>1\\), the copy total is about \\(n\\,g/(g-1)\\): \\(g=2\\) gives \\(2n\\), \\(g=1.5\\) gives \\(3n\\). Any constant \\(g>1\\) is amortised O(1).<br><b>Where it breaks:</b> if the element type's move constructor is not <code>noexcept</code>, <code>vector</code> copies on reallocation (it uses <code>move_if_noexcept</code> to keep the strong exception guarantee), which can turn each reallocation into an expensive copy.<br><b>Interviewer follow-up:</b> why does the standard not fix the growth factor? Because it only requires amortised constant time, which any constant factor above 1 gives.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_vp_core",
+   "vector",
+   "amortised",
+   "derivation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "<code>std::map</code> and <code>std::set</code> are implemented as a {{c1::red-black tree}}, so lookup, insert and erase are {{c2::O(log n) worst case}}, and iteration visits keys in {{c3::sorted order}}.",
+  "back": "The tree gives a worst-case height bound of about \\(2\\log_2(n+1)\\), which is why the worst case is O(log n) with no hashing. Keys need a strict weak ordering (<code>operator&lt;</code> or a comparator), not equality alone. You get <code>lower_bound</code>, <code>upper_bound</code> and range scans for free.<br>Cost: one heap node per element with three pointers and a colour, so memory and cache behaviour are worse than a vector. An order book depth ladder is the natural use: the first element is the best price.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_vp_core",
+   "map",
+   "red_black_tree",
+   "ordered"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For <code>std::unordered_map</code> the load factor is {{c1::size divided by bucket_count}}, the default <code>max_load_factor</code> is {{c2::1.0}}, and an insert that would exceed it triggers a {{c3::rehash into a larger bucket array, which costs O(n)}}.",
+  "back": "Code showing the defaults, the load factor bound, and <code>reserve</code>:<br><pre><code>#include &lt;iostream&gt;\n#include &lt;unordered_map&gt;\n\nint main() {\n    std::unordered_map&lt;int, int&gt; m;\n    std::cout &lt;&lt; \"max_load_factor \" &lt;&lt; m.max_load_factor() &lt;&lt; '\\n';\n    for (int i = 0; i &lt; 100; ++i) m[i] = i;\n    std::cout &lt;&lt; \"size \" &lt;&lt; m.size() &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"load_factor &lt;= max_load_factor: \" &lt;&lt; std::boolalpha\n              &lt;&lt; (m.load_factor() &lt;= m.max_load_factor()) &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"bucket_count &gt;= size: \" &lt;&lt; (m.bucket_count() &gt;= m.size()) &lt;&lt; '\\n';\n    m.reserve(1000);   // rehash now, so the bulk insert that follows does not rehash\n    std::cout &lt;&lt; \"after reserve(1000): bucket_count &gt;= 1000: \" &lt;&lt; (m.bucket_count() &gt;= 1000) &lt;&lt; '\\n';\n}</code></pre><br><b>Output:</b><pre><code>max_load_factor 1\nsize 100\nload_factor &lt;= max_load_factor: true\nbucket_count &gt;= size: true\nafter reserve(1000): bucket_count &gt;= 1000: true</code></pre>Average lookup is O(1) only if the hash spreads keys. libstdc++ uses separate chaining (linked nodes behind each bucket), so a collision adds a list walk.<br><b>Interview trap:</b> keys that are floating-point arithmetic results are a bad hash key. <code>0.1+0.2</code> and <code>0.3</code> are different doubles and hash to different buckets. For prices, key by integer ticks.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_vp_core",
+   "unordered_map",
+   "hash",
+   "load_factor"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What are the iterator categories of the standard library? Which one does <code>std::sort</code> require, and what does this snippet print?<br><pre><code>#include &lt;algorithm&gt;\n#include &lt;iostream&gt;\n#include &lt;iterator&gt;\n#include &lt;list&gt;\n#include &lt;type_traits&gt;\n#include &lt;vector&gt;\n\nint main() {\n    using VecIt  = std::vector&lt;int&gt;::iterator;\n    using ListIt = std::list&lt;int&gt;::iterator;\n    std::cout &lt;&lt; std::is_same_v&lt;std::iterator_traits&lt;VecIt&gt;::iterator_category,\n                                std::random_access_iterator_tag&gt; &lt;&lt; '\\n';\n    std::cout &lt;&lt; std::is_same_v&lt;std::iterator_traits&lt;ListIt&gt;::iterator_category,\n                                std::bidirectional_iterator_tag&gt; &lt;&lt; '\\n';\n    std::vector&lt;int&gt; v{3, 1, 2};\n    std::sort(v.begin(), v.end());            // needs random access (it + n, it[i])\n    std::list&lt;int&gt; l{3, 1, 2};\n    // std::sort(l.begin(), l.end());         // does not compile: list iterators are bidirectional\n    l.sort();                                 // member sort relinks nodes\n    for (int x : v) std::cout &lt;&lt; x &lt;&lt; ' ';\n    std::cout &lt;&lt; '\\n';\n    for (int x : l) std::cout &lt;&lt; x &lt;&lt; ' ';\n    std::cout &lt;&lt; '\\n';\n}</code></pre>",
+  "back": "<b>Headline:</b> input, output, forward, bidirectional, random access (C++20 adds contiguous). Random access means <code>it + n</code>, <code>it[i]</code> and <code>it1 - it2</code> in O(1). <code>std::sort</code> needs random access, so it works on <code>vector</code>, <code>deque</code> and <code>array</code>, not on <code>list</code>. <code>list</code> is bidirectional and provides its own member <code>sort()</code>.<br><b>Output:</b><pre><code>1\n1\n1 2 3 \n1 2 3 </code></pre>The first two lines are the <code>is_same_v</code> checks against the iterator tags.<br><b>Interview trap:</b> with C++20 ranges, <code>std::ranges::sort</code> needs a random-access range too. A <code>std::sort</code> on a <code>list</code> does not compile, and the error message is long: look for the iterator concept, not the template.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_foundation",
+   "iterators",
+   "categories",
+   "random_access"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Iterator invalidation: a {{c1::std::vector push_back that reallocates}} invalidates all iterators, pointers and references; <code>erase</code> on a vector invalidates iterators {{c2::at and after the erased position}}; an <code>unordered_map</code> {{c3::rehash invalidates iterators but not references to elements}}.",
+  "back": "<table><tr><th>Operation</th><th>Invalidates</th></tr><tr><td>vector push_back (reallocates)</td><td>all iterators, pointers, references</td></tr><tr><td>vector push_back (no reallocation)</td><td>only end()</td></tr><tr><td>vector insert / erase</td><td>at and after the point of change</td></tr><tr><td>list insert</td><td>nothing</td></tr><tr><td>list erase</td><td>only the erased element</td></tr><tr><td>map / set insert</td><td>nothing</td></tr><tr><td>map / set erase</td><td>only the erased element</td></tr><tr><td>unordered_map insert (rehash)</td><td>all iterators; references and pointers survive</td></tr><tr><td>unordered_map erase</td><td>only the erased element</td></tr></table>Rule of thumb: an iterator held across a modifying call is dead unless the table says otherwise.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_vp_core",
+   "iterator_invalidation",
+   "vector",
+   "unordered_map"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "This loop erases the even numbers from a vector. What is wrong with it, and what does it do when run?<br><pre><code>#include &lt;iostream&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::vector&lt;int&gt; v{1, 2, 3, 4, 5, 6};\n    for (auto it = v.begin(); it != v.end(); ++it) {\n        if (*it % 2 == 0) {\n            v.erase(it);          // it now refers to the element that shifted into this slot\n        }                         // ...and the ++it below skips it, then runs past the end\n    }\n    for (int x : v) std::cout &lt;&lt; x &lt;&lt; ' ';\n    std::cout &lt;&lt; '\\n';\n}</code></pre>",
+  "back": "<b>Headline:</b> <code>v.erase(it)</code> invalidates <code>it</code>, and the element that moves into its slot is then skipped by <code>++it</code>. The loop also keeps going after the end is reached, so the program has undefined behaviour.<br>Run as written (g++ 13, <code>-O2</code>), it segfaults (exit code 139). Built with <code>-fsanitize=address</code>, AddressSanitizer reports <code>heap-buffer-overflow</code> with a READ of size 4 at line 7, the <code>*it</code> dereference.<br>The expected output would be <code>1 3 5</code>; the code gives no such guarantee.<br><b>Interview trap:</b> 'it works on my small test' proves nothing about undefined behaviour. Fix it with the erase-return idiom, the erase-remove idiom or <code>std::erase_if</code> (next card).",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_vp_core",
+   "iterator_invalidation",
+   "erase",
+   "undefined_behaviour"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Give the correct way to remove elements from a <code>std::vector</code>, a <code>std::map</code> and a <code>std::unordered_map</code> while filtering. What does the snippet print?<br><pre><code>#include &lt;algorithm&gt;\n#include &lt;iostream&gt;\n#include &lt;map&gt;\n#include &lt;string&gt;\n#include &lt;unordered_map&gt;\n#include &lt;vector&gt;\n\nint main() {\n    // A: erase(it) returns the iterator to the next element\n    std::vector&lt;int&gt; a{1, 2, 3, 4, 5, 6};\n    for (auto it = a.begin(); it != a.end(); ) {\n        if (*it % 2 == 0) it = a.erase(it);\n        else ++it;\n    }\n    for (int x : a) std::cout &lt;&lt; x &lt;&lt; ' ';\n    std::cout &lt;&lt; '\\n';\n\n    // B: erase-remove idiom (pre-C++20)\n    std::vector&lt;int&gt; b{1, 2, 3, 4, 5, 6};\n    b.erase(std::remove_if(b.begin(), b.end(), [](int x) { return x % 2 == 0; }), b.end());\n    for (int x : b) std::cout &lt;&lt; x &lt;&lt; ' ';\n    std::cout &lt;&lt; '\\n';\n\n    // C: C++20 std::erase_if works on vector, deque, list, map, unordered_map, set, string\n    std::vector&lt;int&gt; c{1, 2, 3, 4, 5, 6};\n    std::erase_if(c, [](int x) { return x % 2 == 0; });\n    for (int x : c) std::cout &lt;&lt; x &lt;&lt; ' ';\n    std::cout &lt;&lt; '\\n';\n\n    // map: erase(it) also returns the next iterator\n    std::map&lt;int, std::string&gt; m{{1, \"a\"}, {2, \"b\"}, {3, \"c\"}};\n    for (auto it = m.begin(); it != m.end(); ) {\n        if (it-&gt;first == 2) it = m.erase(it);\n        else ++it;\n    }\n    for (const auto&amp; [k, s] : m) std::cout &lt;&lt; k &lt;&lt; s &lt;&lt; ' ';\n    std::cout &lt;&lt; '\\n';\n\n    std::unordered_map&lt;int, int&gt; u{{1, 10}, {2, 20}, {3, 30}, {4, 40}};\n    std::size_t removed = std::erase_if(u, [](const auto&amp; kv) { return kv.second &gt; 25; });\n    std::cout &lt;&lt; \"unordered removed \" &lt;&lt; removed &lt;&lt; \", left \" &lt;&lt; u.size() &lt;&lt; '\\n';\n}</code></pre>",
+  "back": "<b>Headline:</b> three correct forms. (A) <code>it = v.erase(it)</code>, which returns the next valid iterator, with the increment only in the else branch. (B) the erase-remove idiom, <code>v.erase(std::remove_if(...), v.end())</code>, which predates C++20. (C) <code>std::erase_if(container, pred)</code> (C++20), which works on vector, deque, list, map, unordered_map, set and string, and returns the number of elements removed.<br><b>Output:</b><pre><code>1 3 5 \n1 3 5 \n1 3 5 \n1a 3c \nunordered removed 2, left 2</code></pre>For a map, <code>erase(it)</code> returns the iterator after the erased element, since C++11, so the same pattern applies.<br><b>Interview trap:</b> <code>m.erase(it++)</code> is the correct C++03 idiom for a map. The same expression on a vector skips an element, because the erase shifts the next one into the slot just vacated. <code>v.erase(std::unique(...))</code> with one argument compiles and erases only one element; the two-argument form is needed.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_vp_core",
+   "erase",
+   "erase_if",
+   "idioms"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "<code>std::stable_sort</code> is a {{c1::merge sort}} that keeps equal elements in their input order. <code>std::sort</code> is an {{c2::introsort}} and is {{c3::not stable}}.",
+  "back": "<b>Complexity:</b> <code>sort</code> is O(N log N) comparisons. <code>stable_sort</code> is N log N with enough extra memory, and N log² N without it. libstdc++'s introsort is quicksort, switches to heapsort when the recursion depth exceeds about 2 log₂ n, and uses insertion sort for short runs. Output of the snippet:<br><pre><code>#include &lt;algorithm&gt;\n#include &lt;iostream&gt;\n#include &lt;vector&gt;\n\nstruct Trade { int id; int desk; };\n\nint main() {\n    std::vector&lt;Trade&gt; trades;\n    for (int i = 0; i &lt; 40; ++i) trades.push_back({100 + i, (i * 7) % 3});  // desks 0,1,2\n    auto byDesk = [](const Trade&amp; a, const Trade&amp; b) { return a.desk &lt; b.desk; };\n\n    auto s1 = trades;\n    std::sort(s1.begin(), s1.end(), byDesk);            // introsort: not stable\n    auto s2 = trades;\n    std::stable_sort(s2.begin(), s2.end(), byDesk);     // merge sort: ties keep input order\n\n    std::cout &lt;&lt; \"stable_sort, desk 0 ids:\";\n    for (const auto&amp; t : s2) if (t.desk == 0) std::cout &lt;&lt; ' ' &lt;&lt; t.id;\n    std::cout &lt;&lt; \"\\nsort,        desk 0 ids:\";\n    for (const auto&amp; t : s1) if (t.desk == 0) std::cout &lt;&lt; ' ' &lt;&lt; t.id;\n    std::cout &lt;&lt; '\\n';\n}</code></pre><br><b>Output:</b><pre><code>stable_sort, desk 0 ids: 100 103 106 109 112 115 118 121 124 127 130 133 136 139\nsort,        desk 0 ids: 100 121 118 124 115 127 112 130 109 133 106 136 103 139</code></pre>For a multi-key sort, sort by the secondary key first and then <code>stable_sort</code> by the primary key, or write a comparator with an explicit tie-break.<br><b>Interview trap:</b> in this libstdc++ build <code>sort</code> is insertion sort up to 16 elements and keeps the order there, so a small test looks stable. At 17 or more elements it does not. Test with realistic sizes.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_vp_core",
+   "sort",
+   "stable_sort",
+   "introsort"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How do you get the 99% VaR and the 99% expected shortfall from 10,000 scenario P&amp;Ls without sorting all of them? Code and output below (P&amp;L in GBP k).<br><pre><code>#include &lt;algorithm&gt;\n#include &lt;cstdio&gt;\n#include &lt;vector&gt;\n\nint main() {\n    // 10,000 scenario P&amp;Ls in GBP k: values -4999..5000 in a fixed permutation (7919 is coprime to 10000)\n    std::vector&lt;double&gt; pnl(10000);\n    for (int i = 0; i &lt; 10000; ++i) pnl[i] = (i * 7919) % 10000 - 4999.0;\n\n    const std::size_t k = 100;                      // 1% of 10,000 = the 101st smallest P&amp;L is the 1% quantile\n    std::nth_element(pnl.begin(), pnl.begin() + k, pnl.end());\n    const double q1 = pnl[k];                       // value at 1% quantile: 101st worst outcome\n    double tail = 0.0;\n    for (std::size_t i = 0; i &lt; k; ++i) tail += pnl[i];   // the 100 worst strictly below the quantile\n    std::printf(\"1%% quantile P&amp;L = %.1f k\\n\", q1);\n    std::printf(\"99%% VaR = %.1f k\\n\", -q1);\n    std::printf(\"99%% ES  = %.1f k\\n\", -tail / k);\n}</code></pre>",
+  "back": "<b>Headline:</b> <code>std::nth_element(first, first+k, last)</code> places the k-th smallest element at position k, with everything before it no larger and everything after it no smaller. Average cost is linear, against n log n for a full sort; at n = 10,000 that is roughly 13 times fewer comparisons, ignoring constants.<br>Here the 1% quantile is the 101st smallest (index 100). VaR is the negative of that P&amp;L, and ES is the average of the worst 1% outcomes, which are the 100 values below index 100.<br><b>Output:</b><pre><code>1% quantile P&amp;L = -4899.0 k\n99% VaR = 4899.0 k\n99% ES  = 4949.5 k</code></pre>Check: the worst 100 values are \\(-4999,\\dots,-4900\\), whose mean is \\(-4949.5\\).<br><b>Interviewer follow-up:</b> why does the quantile convention matter? Index \\(\\lfloor\\alpha n\\rfloor\\) and interpolated quantiles differ by one or more scenarios at 99% with small samples.<br><b>Interview trap:</b> after <code>nth_element</code> the two sides are only partitioned, not sorted, so do not read \"the 2nd worst\" from them. For several quantiles from one sample, sort once or call <code>nth_element</code> on the shrinking subrange.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_vp_core",
+   "nth_element",
+   "var",
+   "quantile"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "<code>std::partial_sort(first, middle, last)</code> leaves the {{c1::smallest (middle - first) elements}} sorted at the front, at cost {{c2::O(N log M)}} where M is the size of the front block.",
+  "back": "Compared with the alternatives for a top-10 of a million values: <code>partial_sort</code> is about N log 10; <code>nth_element</code> then <code>sort</code> on the front 10 is O(N) plus 10 log 10; a full <code>sort</code> is N log N. The elements behind <code>middle</code> are in unspecified order. Use <code>partial_sort</code> when the front block must be ordered and the rest does not matter.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_vp_core",
+   "partial_sort",
+   "nth_element",
+   "top_k"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Pillar times of a zero curve are t = {0.25, 0.5, 1, 2, 5, 10} years. For x = 0.5, what do <code>lower_bound</code> and <code>upper_bound</code> return, and how do you find the bracketing segment for linear interpolation? Output below.<br><pre><code>#include &lt;algorithm&gt;\n#include &lt;iostream&gt;\n#include &lt;vector&gt;\n\n// index i with t[i] &lt;= x &lt; t[i+1], clamped to a valid segment\nstd::size_t bracket(const std::vector&lt;double&gt;&amp; t, double x) {\n    auto ub = std::upper_bound(t.begin(), t.end(), x);\n    std::size_t i = static_cast&lt;std::size_t&gt;(ub - t.begin());\n    i = (i == 0) ? 0 : i - 1;\n    return std::min(i, t.size() - 2);\n}\n\nint main() {\n    std::vector&lt;double&gt; t{0.25, 0.5, 1.0, 2.0, 5.0, 10.0};   // pillar times in years\n    for (double x : {0.1, 0.5, 1.5, 10.0, 12.0}) {\n        auto lb = std::lower_bound(t.begin(), t.end(), x);\n        auto ub = std::upper_bound(t.begin(), t.end(), x);\n        std::cout &lt;&lt; \"x=\" &lt;&lt; x &lt;&lt; \"  lower_bound=\" &lt;&lt; (lb - t.begin())\n                  &lt;&lt; \"  upper_bound=\" &lt;&lt; (ub - t.begin())\n                  &lt;&lt; \"  bracket=\" &lt;&lt; bracket(t, x) &lt;&lt; '\\n';\n    }\n}</code></pre>",
+  "back": "<b>Headline:</b> <code>lower_bound</code> returns the first element not less than x (index 1 for x = 0.5). <code>upper_bound</code> returns the first element greater than x (index 2). They differ only when x equals a pillar. For interpolation, the segment is <code>upper_bound - 1</code>, so x = 0.5 uses the pillars 0.5 and 1, with the helper clamping at both ends.<br><b>Output:</b><pre><code>x=0.1  lower_bound=0  upper_bound=0  bracket=0\nx=0.5  lower_bound=1  upper_bound=2  bracket=1\nx=1.5  lower_bound=3  upper_bound=3  bracket=2\nx=10  lower_bound=5  upper_bound=6  bracket=4\nx=12  lower_bound=6  upper_bound=6  bracket=4</code></pre>Both run in O(log n) on a sorted vector. For x beyond the last pillar, the helper clamps to the last segment, which is extrapolation and must be a deliberate choice.<br><b>Interview trap:</b> <code>lower_bound(x) - 1</code> is the common off-by-one. For x exactly on a pillar it picks the segment to the left, which changes the interpolated value at every pillar.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_vp_core",
+   "lower_bound",
+   "upper_bound",
+   "interpolation",
+   "curves"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why can <code>std::reduce</code> and <code>std::accumulate</code> give different doubles for the same data <code>{1e16, 1.0, -1e16}</code>? Code and output below.<br><pre><code>#include &lt;iostream&gt;\n#include &lt;numeric&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::vector&lt;double&gt; v{1e16, 1.0, -1e16};\n    double leftToRight = std::accumulate(v.begin(), v.end(), 0.0);   // ((0+1e16)+1)-1e16\n    double regrouped   = (v[0] + v[2]) + v[1];                        // (1e16-1e16)+1\n    double viaReduce   = std::reduce(v.begin(), v.end(), 0.0);\n    std::cout &lt;&lt; \"accumulate: \" &lt;&lt; leftToRight &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"regrouped:  \" &lt;&lt; regrouped &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"reduce:     \" &lt;&lt; viaReduce &lt;&lt; '\\n';\n}</code></pre>",
+  "back": "<b>Headline:</b> <code>accumulate</code> is a strict left fold, so it computes \\(((0+10^{16})+1)-10^{16}\\). Near \\(10^{16}\\) the double spacing is 2, so \\(10^{16}+1\\) rounds back to \\(10^{16}\\) and the sum is 0. <code>reduce</code> may group the operations in any order because it requires an associative and commutative operation. The regrouping \\((10^{16}-10^{16})+1\\) gives 1.<br><b>Output:</b><pre><code>accumulate: 0\nregrouped:  1\nreduce:     0</code></pre>In this libstdc++ build <code>reduce</code> happened to run left to right and printed 0; the standard permits 1.<br><b>Interview trap:</b> <code>std::reduce</code> with <code>std::execution::par_unseq</code> can change its result with thread count, so a risk number can differ between runs. For reproducible aggregation use <code>accumulate</code>, a fixed-tree pairwise sum, or Kahan compensation.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_stretch",
+   "accumulate",
+   "reduce",
+   "floating_point",
+   "summation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does this snippet compute and print? Explain the roles of <code>std::transform</code> and <code>std::inner_product</code>.<br><pre><code>#include &lt;algorithm&gt;\n#include &lt;cstdio&gt;\n#include &lt;numeric&gt;\n#include &lt;vector&gt;\n\nint main() {\n    // P&amp;L in GBP for a +1bp parallel move in the 2y, 5y, 10y buckets\n    std::vector&lt;double&gt; pnlPerBp{-1200.0, -800.0, 300.0};\n    std::vector&lt;double&gt; shiftBp{5.0, -3.0, 2.0};\n    double pnl = std::inner_product(pnlPerBp.begin(), pnlPerBp.end(), shiftBp.begin(), 0.0);\n    std::vector&lt;double&gt; decimal(shiftBp.size());\n    std::transform(shiftBp.begin(), shiftBp.end(), decimal.begin(),\n                   [](double b) { return b / 10000.0; });\n    std::printf(\"P&amp;L = %.1f GBP\\n\", pnl);\n    for (double d : decimal) std::printf(\"%.4f \", d);\n    std::printf(\"\\n\");\n}</code></pre>",
+  "back": "<b>Headline:</b> <code>inner_product</code> is a fold of pairwise products: \\(\\sum_i a_i b_i\\) plus <code>init</code>. Here <code>a</code> is GBP P&amp;L per +1bp in each bucket and <code>b</code> is the parallel shift in bp, so the result is the scenario P&amp;L: \\((-1200)(5)+(-800)(-3)+(300)(2)=-3000\\).<br><code>transform</code> applies a unary function and writes into an output range, so the shifts are converted to decimal rates (5bp becomes 0.0005).<br><b>Output:</b><pre><code>P&amp;L = -3000.0 GBP\n0.0005 -0.0003 0.0002</code></pre>Both are single-pass, O(n), and read the inputs once.<br><b>Interview trap:</b> the type of <code>init</code> is the accumulator type. Passing <code>0</code> instead of <code>0.0</code> makes the sum an <code>int</code>, so every partial result is truncated. Always pass a double.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_foundation",
+   "inner_product",
+   "transform",
+   "pnl"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does this snippet print, and what does <code>std::unique</code> and <code>std::partition</code> actually guarantee?<br><pre><code>#include &lt;algorithm&gt;\n#include &lt;iostream&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::vector&lt;int&gt; v{3, 3, 1, 1, 2, 2, 3, 1};\n    v.erase(std::unique(v.begin(), v.end()), v.end());     // only adjacent duplicates\n    for (int x : v) std::cout &lt;&lt; x &lt;&lt; ' ';\n    std::cout &lt;&lt; '\\n';\n\n    std::vector&lt;int&gt; w{5, 2, 8, 1, 9, 4};\n    auto mid = std::partition(w.begin(), w.end(), [](int x) { return x % 2 == 0; });\n    std::cout &lt;&lt; \"evens: \" &lt;&lt; (mid - w.begin()) &lt;&lt; '\\n';   // count is deterministic; order is not\n    bool allEvenFirst = std::all_of(w.begin(), mid, [](int x) { return x % 2 == 0; });\n    std::cout &lt;&lt; \"first block all even: \" &lt;&lt; std::boolalpha &lt;&lt; allEvenFirst &lt;&lt; '\\n';\n}</code></pre>",
+  "back": "<b>Headline:</b> <code>std::unique</code> removes only consecutive duplicates, so it needs sorted input for a full dedupe. The first output line shows <code>3 1 2 3 1</code>, which keeps the non-adjacent 3 and 1 that reappear. <code>std::partition</code> reorders so that elements satisfying the predicate come first, returns an iterator to the start of the second block, and is not stable.<br><b>Output:</b><pre><code>3 1 2 3 1 \nevens: 3\nfirst block all even: true</code></pre>The count of evens is deterministic. The order inside each block is not part of the contract, so do not print it. Use <code>std::stable_partition</code> when order matters.<br><b>Interview trap:</b> <code>v.erase(std::unique(v.begin(), v.end()));</code> compiles and erases one element, not the duplicates. Use the two-argument erase.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_vp_core",
+   "partition",
+   "unique",
+   "what_does_it_print"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What do these two lambdas print, and what is the difference between capturing by value and by reference?<br><pre><code>#include &lt;iostream&gt;\n\nint main() {\n    int spread = 10;                                  // bp\n    auto byValue = [spread]() { return spread; };     // copies spread at creation\n    auto byRef   = [&amp;spread]() { return spread; };    // aliases the variable\n    spread = 25;\n    std::cout &lt;&lt; \"by value: \" &lt;&lt; byValue() &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"by ref:   \" &lt;&lt; byRef() &lt;&lt; '\\n';\n}</code></pre>",
+  "back": "<b>Headline:</b> a by-value capture copies the variable when the lambda is created, and the copy is const inside the lambda unless it is <code>mutable</code>. A by-reference capture holds an alias, so the lambda sees later changes. The output is <code>by value: 10</code> and <code>by ref: 25</code>.<br>A reference capture is only safe while the variable outlives the lambda.<br><b>Interview trap:</b> <code>[=]</code> copies every name the body uses, but a <code>this</code> member copies the pointer, not the object. Since C++20, implicit capture of <code>this</code> through <code>[=]</code> is deprecated.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_foundation",
+   "lambda",
+   "capture",
+   "lifetime"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why does the <code>mutable</code> lambda compile while the commented-out line would not? What does the program print?<br><pre><code>#include &lt;iostream&gt;\n\nint main() {\n    int calls = 0;\n    auto counter = [calls]() mutable { return ++calls; };   // mutates its own copy\n    // auto bad = [calls]() { return ++calls; };            // does not compile: const in non-mutable lambda\n    std::cout &lt;&lt; counter() &lt;&lt; ' ' &lt;&lt; counter() &lt;&lt; ' ' &lt;&lt; counter() &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"outer calls = \" &lt;&lt; calls &lt;&lt; '\\n';\n}</code></pre>",
+  "back": "<b>Headline:</b> a by-value capture is a const member of the closure unless the lambda is <code>mutable</code>. A mutable closure changes its own copy, and that state persists across calls to the same closure object. The outer variable is untouched. The output is <code>1 2 3</code> then <code>outer calls = 0</code>.<br><b>Interview trap:</b> copying a stateful lambda forks its state. A <code>std::function</code> that holds a copy and a second copy of it have independent counters.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_foundation",
+   "lambda",
+   "mutable",
+   "state"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with <code>makeCounter</code>, and what do the runtime tools report?<br><pre><code>#include &lt;functional&gt;\n#include &lt;iostream&gt;\n\nstd::function&lt;int()&gt; makeCounter() {\n    int start = 10;                          // local\n    return [&amp;start]() { return ++start; };   // captured by reference: dangles on return\n}\n\nint main() {\n    auto f = makeCounter();\n    std::cout &lt;&lt; f() &lt;&lt; '\\n';                // undefined behaviour\n}</code></pre>",
+  "back": "<b>Headline:</b> <code>[&amp;start]</code> captures a local by reference. The returned <code>std::function</code> outlives the frame, so the call reads a dead stack slot. This is undefined behaviour.<br>The plain binary happened to print <code>1</code> (correct would be 11). GCC warns about the uninitialised read at <code>-Wall</code>. Under AddressSanitizer with <code>ASAN_OPTIONS=detect_stack_use_after_return=1</code> it reports <code>stack-use-after-return</code> at line 6, the <code>++start</code>.<br>Fix: capture by value, <code>[start]() mutable { return ++start; }</code>.<br><b>Interview trap:</b> the same bug appears with lambdas handed to <code>std::thread</code>, to async callbacks, or stored in a container of event handlers. Capture by value or own the state with <code>std::shared_ptr</code>.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_stretch",
+   "lambda",
+   "dangling",
+   "undefined_behaviour",
+   "sanitizers"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A member function returns a lambda. Compare the captures <code>[this]</code> and <code>[*this]</code>. What does the code print?<br><pre><code>#include &lt;functional&gt;\n#include &lt;iostream&gt;\n\nstruct Position {\n    int qty = 100;\n    std::function&lt;int()&gt; live()     { return [this]() { return qty; }; }\n    std::function&lt;int()&gt; snapshot() { return [*this]() { return qty; }; }   // C++17: copies *this\n};\n\nint main() {\n    Position p;\n    auto live = p.live();\n    auto snap = p.snapshot();\n    p.qty = 250;\n    std::cout &lt;&lt; \"live:     \" &lt;&lt; live() &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"snapshot: \" &lt;&lt; snap() &lt;&lt; '\\n';\n}</code></pre>",
+  "back": "<b>Headline:</b> <code>[this]</code> stores the object's address, so the lambda reads the current value. <code>[*this]</code> (C++17) copies the whole object when the lambda is created, so it keeps the old value. The output is <code>live: 250</code> and <code>snapshot: 100</code>.<br><b>Interview trap:</b> <code>[this]</code> dangles if the object is destroyed or moved while the lambda is alive. It is the same lifetime rule as reference capture, and an asynchronous callback is the usual place it fails. <code>[*this]</code> copies, so it is wrong for types that cannot be copied cheaply.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_vp_core",
+   "lambda",
+   "this",
+   "capture"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compare a template parameter, a plain function pointer and <code>std::function</code> as the way to pass a callback into a pricer's inner loop. Which can inline, which allocates, and what do the sizes print?<br><pre><code>#include &lt;functional&gt;\n#include &lt;iostream&gt;\n\ntemplate &lt;class F&gt;\ndouble applyTemplate(F f, double x) { return f(x); }          // inlined, no type erasure\n\ndouble applyFnPtr(double (*f)(double), double x) { return f(x); }   // one indirect call\n\ndouble applyStdFunction(const std::function&lt;double(double)&gt;&amp; f, double x) { return f(x); }\n\nint main() {\n    auto sq = [](double x) { return x * x; };                  // captureless\n    double scale = 2.0;\n    auto scaled = [scale](double x) { return scale * x; };     // has state\n    std::cout &lt;&lt; applyTemplate(sq, 3.0) &lt;&lt; ' ' &lt;&lt; applyFnPtr(sq, 3.0) &lt;&lt; ' '\n              &lt;&lt; applyStdFunction(scaled, 3.0) &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"sizeof(std::function&lt;double(double)&gt;) = \" &lt;&lt; sizeof(std::function&lt;double(double)&gt;) &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"sizeof(scaled) = \" &lt;&lt; sizeof(scaled) &lt;&lt; '\\n';\n}</code></pre>",
+  "back": "<b>Headline:</b> a template parameter is inlined with no indirection, but each lambda type generates its own copy of the code. A function pointer costs one indirect call, and only a captureless lambda converts to one. <code>std::function</code> is type-erased: every call is indirect, and a closure larger than the implementation's small buffer (16 bytes in libstdc++) is heap-allocated.<br><b>Output:</b><pre><code>9 9 6\nsizeof(std::function&lt;double(double)&gt;) = 32\nsizeof(scaled) = 8</code></pre>The <code>std::function</code> object itself is 32 bytes in libstdc++.<br><b>Interview trap:</b> <code>std::function</code> in an innermost loop blocks inlining and vectorisation. Template the hot path, and use <code>std::function</code> only at configuration boundaries.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_vp_core",
+   "std_function",
+   "performance",
+   "templates",
+   "function_pointer"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<code>std::sort</code> is called on 40 values in {0,1,2} with the comparator <code>[](int a, int b) { return a &lt;= b; }</code>. What happens, and why?<br><pre><code>#include &lt;algorithm&gt;\n#include &lt;iostream&gt;\n#include &lt;random&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::mt19937 g(7);\n    std::vector&lt;int&gt; v(40);\n    for (auto&amp; x : v) x = g() % 3;                                              // 0..2, many duplicates\n    std::sort(v.begin(), v.end(), [](int a, int b) { return a &lt;= b; });        // not a strict weak ordering\n    std::cout &lt;&lt; \"sorted \" &lt;&lt; v.size() &lt;&lt; \" elements\\n\";\n}</code></pre>",
+  "back": "<b>Headline:</b> a comparator must be a strict weak ordering: irreflexive (<code>comp(a,a)</code> is false), transitive, and with transitive incomparability. <code>&lt;=</code> breaks irreflexivity, and libstdc++'s partition loop relies on a sentinel that this comparator can run past. The result is undefined behaviour.<br>Observed: at <code>-O2</code> the program segfaults (exit code 139), with no output. With <code>-D_GLIBCXX_DEBUG</code> libstdc++ stops with <code>Error: comparison doesn't meet irreflexive requirements, assert(!(a &lt; a)).</code><br><b>Interview trap:</b> the bug needs duplicates and enough elements to reach the partition loop. A test on distinct values passes, which is why it reaches production. Use <code>&lt;</code>, or a key with an explicit tie-break.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_vp_core",
+   "comparator",
+   "strict_weak_ordering",
+   "undefined_behaviour"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write a hash for a trade key (trade id string plus yyyymmdd date) for <code>std::unordered_map</code>. What must hold for correctness, and what does this code print?<br><pre><code>#include &lt;cstddef&gt;\n#include &lt;iostream&gt;\n#include &lt;string&gt;\n#include &lt;unordered_map&gt;\n\nstruct TradeKey {\n    std::string tradeId;\n    int date;                                         // yyyymmdd\n    bool operator==(const TradeKey&amp; o) const { return date == o.date &amp;&amp; tradeId == o.tradeId; }\n};\n\nstruct TradeKeyHash {\n    std::size_t operator()(const TradeKey&amp; k) const noexcept {\n        std::size_t h = std::hash&lt;std::string&gt;{}(k.tradeId);\n        h ^= std::hash&lt;int&gt;{}(k.date) + 0x9e3779b97f4a7c15ULL + (h &lt;&lt; 6) + (h &gt;&gt; 2);\n        return h;\n    }\n};\n\nint main() {\n    std::unordered_map&lt;TradeKey, double, TradeKeyHash&gt; pv;\n    pv[{\"T1\", 20261019}] = 1250.5;\n    pv[{\"T1\", 20261020}] = -80.0;\n    pv[{\"T1\", 20261019}] += 10.0;\n    std::cout &lt;&lt; pv.size() &lt;&lt; ' ' &lt;&lt; pv[{\"T1\", 20261019}] &lt;&lt; '\\n';\n}</code></pre>",
+  "back": "<b>Headline:</b> the hash must agree with <code>operator==</code>: equal keys must produce equal hashes. Hash every field that <code>==</code> compares, and no others. The combine step here is the boost-style mix. Output: <code>2 1260.5</code>, i.e. two keys and the updated value.<br><b>Interview trap:</b> a hash that ignores the date sends every trade of one id into one bucket. Lookups then become O(n) and the bug is invisible in correctness tests. Also, never put a mutable field in a key that lives in a hash map.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_vp_core",
+   "unordered_map",
+   "hash",
+   "custom_key"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Choose the price-level container for one side of a limit order book. Compare <code>std::map</code> with <code>std::unordered_map</code>, and show how to read the best bid and the top levels. What does the code print?<br><pre><code>#include &lt;cstdint&gt;\n#include &lt;functional&gt;\n#include &lt;iostream&gt;\n#include &lt;map&gt;\n\n// Prices as integer ticks, quantities in lots\nint main() {\n    std::map&lt;std::int64_t, std::int64_t, std::greater&lt;&gt;&gt; bids;   // best bid = begin()\n    std::map&lt;std::int64_t, std::int64_t&gt; asks;                   // best ask = begin()\n    bids[10050] = 300; bids[10048] = 150; bids[10049] = 500;\n    asks[10052] = 200; asks[10053] = 400;\n    bids[10049] = 200;                                           // level partially traded\n    bids.erase(10048);                                           // level cancelled\n    auto bestBid = bids.begin();\n    auto bestAsk = asks.begin();\n    std::cout &lt;&lt; \"best bid \" &lt;&lt; bestBid-&gt;first &lt;&lt; \" x \" &lt;&lt; bestBid-&gt;second &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"best ask \" &lt;&lt; bestAsk-&gt;first &lt;&lt; \" x \" &lt;&lt; bestAsk-&gt;second &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"spread \" &lt;&lt; (bestAsk-&gt;first - bestBid-&gt;first) &lt;&lt; \" ticks\\n\";\n    int n = 0;\n    for (const auto&amp; [px, q] : bids) {                           // depth in price order\n        std::cout &lt;&lt; px &lt;&lt; ':' &lt;&lt; q &lt;&lt; ' ';\n        if (++n == 2) break;\n    }\n    std::cout &lt;&lt; '\\n';\n}</code></pre>",
+  "back": "<b>Headline:</b> the book needs ordered depth, a best price, and fast updates at arbitrary levels. A <code>std::map</code> with <code>std::greater</code> keeps bids in descending price order, so the best bid is <code>begin()</code> in O(1), and an update is O(log n). An <code>unordered_map</code> is O(1) for level lookup but gives no order, so the best price needs a scan or a separate heap. Production books often combine both: a hash for price to level, plus a cached best level.<br><b>Output:</b><pre><code>best bid 10050 x 300\nbest ask 10052 x 200\nspread 2 ticks\n10050:300 10049:200 </code></pre>Keys are integer ticks, so equal prices always compare and hash equal.<br><b>Interview trap:</b> <code>bids[price]</code> inserts a default entry if the level is missing, which creates phantom zero-size levels. Query with <code>find</code>, and erase levels that drop to zero.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_vp_core",
+   "order_book",
+   "map",
+   "unordered_map",
+   "design"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why return <code>std::optional&lt;double&gt;</code> for a missing quote instead of a sentinel such as -1.0? What do <code>value_or</code>, <code>has_value</code>, <code>value()</code> and <code>operator*</code> do when empty? Code and output below.<br><pre><code>#include &lt;iostream&gt;\n#include &lt;optional&gt;\n#include &lt;string&gt;\n\nstd::optional&lt;double&gt; lookupQuote(const std::string&amp; id) {\n    if (id == \"BUND10Y\") return 2.31;                  // percent\n    return std::nullopt;                               // explicit \"no value\", not a -1 sentinel\n}\n\nint main() {\n    auto q1 = lookupQuote(\"BUND10Y\");\n    auto q2 = lookupQuote(\"UNKNOWN\");\n    std::cout &lt;&lt; q1.value_or(-1.0) &lt;&lt; ' ' &lt;&lt; q2.value_or(-1.0) &lt;&lt; '\\n';\n    std::cout &lt;&lt; std::boolalpha &lt;&lt; q2.has_value() &lt;&lt; '\\n';\n    try {\n        std::cout &lt;&lt; q2.value() &lt;&lt; '\\n';\n    } catch (const std::bad_optional_access&amp; e) {\n        std::cout &lt;&lt; \"caught: \" &lt;&lt; e.what() &lt;&lt; '\\n';\n    }\n}</code></pre>",
+  "back": "<b>Headline:</b> an <code>optional</code> carries an explicit 'no value' state, so the type system makes callers handle it. <code>value_or(d)</code> returns the fallback. <code>value()</code> throws <code>std::bad_optional_access</code>. <code>operator*</code> on an empty optional is undefined behaviour and does not throw.<br><b>Output:</b><pre><code>2.31 -1\nfalse\ncaught: bad optional access</code></pre><b>Interviewer follow-up:</b> what is the cost? Typically one extra flag byte plus alignment padding, with no heap allocation.<br><b>Interview trap:</b> a legitimate 0.0 is a value, not 'empty', so do not test <code>if (q)</code> when the stored type can be zero. Test <code>has_value()</code>.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_foundation",
+   "optional",
+   "error_handling"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Model heterogeneous instruments in one container with <code>std::variant</code>. How do you dispatch on the alternative, and what does a wrong <code>std::get</code> do? Code and output below.<br><pre><code>#include &lt;iostream&gt;\n#include &lt;variant&gt;\n#include &lt;vector&gt;\n\nstruct Bond { double cleanPrice; };\nstruct Swap { double parRatePct; };\nstruct Cds  { double spreadBp; };\nusing Instrument = std::variant&lt;Bond, Swap, Cds&gt;;\n\ntemplate &lt;class... Ts&gt; struct Overloaded : Ts... { using Ts::operator()...; };\ntemplate &lt;class... Ts&gt; Overloaded(Ts...) -&gt; Overloaded&lt;Ts...&gt;;\n\nint main() {\n    std::vector&lt;Instrument&gt; book{Bond{98.5}, Swap{3.25}, Cds{120.0}};\n    for (const auto&amp; ins : book) {\n        std::visit(Overloaded{\n            [](const Bond&amp; b) { std::cout &lt;&lt; \"bond clean \" &lt;&lt; b.cleanPrice &lt;&lt; '\\n'; },\n            [](const Swap&amp; s) { std::cout &lt;&lt; \"swap par \" &lt;&lt; s.parRatePct &lt;&lt; \"%\\n\"; },\n            [](const Cds&amp; c)  { std::cout &lt;&lt; \"cds \" &lt;&lt; c.spreadBp &lt;&lt; \"bp\\n\"; }}, ins);\n    }\n    std::cout &lt;&lt; std::get&lt;Swap&gt;(book[1]).parRatePct &lt;&lt; '\\n';\n    try {\n        std::get&lt;Bond&gt;(book[1]);\n    } catch (const std::bad_variant_access&amp; e) {\n        std::cout &lt;&lt; \"bad access: \" &lt;&lt; e.what() &lt;&lt; '\\n';\n    }\n}</code></pre>",
+  "back": "<b>Headline:</b> <code>std::visit</code> calls a function object chosen by the active alternative. The usual form is an overload set built from lambdas. The compiler checks exhaustiveness, so a missing alternative fails at compile time. <code>std::get&lt;T&gt;</code> on the wrong alternative throws <code>std::bad_variant_access</code>.<br><b>Output:</b><pre><code>bond clean 98.5\nswap par 3.25%\ncds 120bp\n3.25\nbad access: std::get: wrong index for variant</code></pre>The variant stores its alternatives inline, with no heap allocation and no vtable. Its size is the largest alternative plus the index.<br><b>Interview trap:</b> the variant's size is its largest alternative plus the index, so one large alternative makes every element of a <code>vector&lt;variant&gt;</code> that large. Box the large alternatives, for example with <code>unique_ptr</code>.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_vp_core",
+   "variant",
+   "visit",
+   "polymorphism"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What do these structured bindings print, and which loop changes the map?<br><pre><code>#include &lt;iostream&gt;\n#include &lt;map&gt;\n#include &lt;string&gt;\n#include &lt;tuple&gt;\n\nstd::tuple&lt;double, double, int&gt; priceAndRisk() { return {99.25, 4.1, 3}; }\n\nint main() {\n    auto [price, duration, bucket] = priceAndRisk();\n    std::cout &lt;&lt; price &lt;&lt; ' ' &lt;&lt; duration &lt;&lt; ' ' &lt;&lt; bucket &lt;&lt; '\\n';\n\n    std::map&lt;std::string, double&gt; quotes{{\"2y\", 3.10}, {\"10y\", 3.85}};\n    for (const auto&amp; [tenor, rate] : quotes) std::cout &lt;&lt; tenor &lt;&lt; '=' &lt;&lt; rate &lt;&lt; ' ';\n    std::cout &lt;&lt; '\\n';\n\n    for (auto [tenor, rate] : quotes) rate += 1.0;    // binds a copy: map unchanged\n    for (auto&amp; [tenor, rate] : quotes) rate += 0.5;    // binds a reference: map changed\n    std::cout &lt;&lt; quotes[\"2y\"] &lt;&lt; '\\n';\n}</code></pre>",
+  "back": "<b>Headline:</b> <code>auto [a, b, c] = f();</code> binds names to the members of the returned tuple, struct or array. <code>auto</code> copies, <code>auto&amp;</code> references, and <code>const auto&amp;</code> references read-only. A loop with <code>auto [k, v]</code> copies each pair, so only the <code>auto&amp;</code> loop changes the map.<br><b>Output:</b><pre><code>99.25 4.1 3\n10y=3.85 2y=3.1 \n3.6</code></pre>The output <code>3.6</code> is <code>3.10 + 0.5</code>, since the first loop's +1.0 went to a copy.<br><b>Interview trap:</b> in C++17 a structured binding cannot be captured by a lambda; C++20 allows it. Binding a type with the wrong number of members, or with private ones, is a compile error.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_foundation",
+   "structured_bindings",
+   "tuple",
+   "map"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write a pipeline that keeps the positive P&amp;Ls, scales them by 1.5 and takes three, using C++20 ranges. What does it print, and when is each element computed?<br><pre><code>#include &lt;iostream&gt;\n#include &lt;ranges&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::vector&lt;double&gt; pnl{120.0, -40.0, 75.5, -12.0, 300.0, 18.0};\n    auto view = pnl | std::views::filter([](double x) { return x &gt; 0; })\n                    | std::views::transform([](double x) { return x * 1.5; })\n                    | std::views::take(3);\n    for (double x : view) std::cout &lt;&lt; x &lt;&lt; ' ';\n    std::cout &lt;&lt; '\\n';\n}</code></pre>",
+  "back": "<b>Headline:</b> <code>std::views::filter | std::views::transform | std::views::take</code> composes into one lazy range. Nothing is computed until the loop asks for the next element, and each element flows through filter then transform one at a time. No intermediate vector is allocated, and <code>take</code> stops the pipeline after three hits.<br><b>Output:</b><pre><code>180 113.25 450</code></pre>A view does not own its data. It is a cheap object with begin and end, not a container.<br><b>Interview trap:</b> views are not cached. Iterating a view twice repeats the work (see the next card). A view over a temporary container dangles (see the card after next).",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_vp_core",
+   "ranges",
+   "views",
+   "lazy"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does this snippet print, and what does it say about evaluation of ranges views?<br><pre><code>#include &lt;iostream&gt;\n#include &lt;ranges&gt;\n#include &lt;vector&gt;\n\nint main() {\n    int predCalls = 0;\n    std::vector&lt;int&gt; xs{1, 2, 3, 4, 5, 6};\n    auto even = xs | std::views::filter([&amp;](int x) { ++predCalls; return x % 2 == 0; });\n    int sum = 0;\n    for (int x : even) sum += x;\n    std::cout &lt;&lt; \"pass 1: sum \" &lt;&lt; sum &lt;&lt; \", predicate calls \" &lt;&lt; predCalls &lt;&lt; '\\n';\n    for (int x : even) sum += x;                  // nothing is cached: the view recomputes\n    std::cout &lt;&lt; \"pass 2: sum \" &lt;&lt; sum &lt;&lt; \", predicate calls \" &lt;&lt; predCalls &lt;&lt; '\\n';\n\n}</code></pre>",
+  "back": "<b>Headline:</b> the first pass calls the predicate once per element (6 calls). The second pass calls it 4 more times for elements 3 to 6. <code>filter_view</code> caches only <code>begin()</code>, the first match, so the search for the first match is not repeated, but the rest of the sequence is recomputed on each traversal.<br><b>Output:</b><pre><code>pass 1: sum 12, predicate calls 6\npass 2: sum 24, predicate calls 10</code></pre>Each traversal re-runs everything that has side effects or is expensive. A <code>std::vector</code> copy (or <code>std::ranges::to</code> in C++23) evaluates it once.<br><b>Interview trap:</b> a counter inside a predicate or a transform reports the number of traversals, not the number of elements. Materialise the result if the function is expensive and the range is used more than once.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_stretch",
+   "ranges",
+   "lazy",
+   "side_effects"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the type of <code>std::ranges::find(make(), 2)</code> when <code>make()</code> returns a <code>std::vector&lt;int&gt;</code> by value? Why, and what does the snippet print?<br><pre><code>#include &lt;algorithm&gt;\n#include &lt;iostream&gt;\n#include &lt;ranges&gt;\n#include &lt;type_traits&gt;\n#include &lt;vector&gt;\n\nstd::vector&lt;int&gt; make() { return {1, 2, 3}; }\n\nint main() {\n    auto it = std::ranges::find(make(), 2);      // argument is an rvalue, not a borrowed range\n    static_assert(std::is_same_v&lt;decltype(it), std::ranges::dangling&gt;);\n    std::cout &lt;&lt; \"result type is std::ranges::dangling: no iterator to dereference\\n\";\n\n    std::vector&lt;int&gt; v = make();\n    auto it2 = std::ranges::find(v, 2);          // lvalue: returns a real iterator\n    std::cout &lt;&lt; *it2 &lt;&lt; '\\n';\n}</code></pre>",
+  "back": "<b>Headline:</b> <code>std::ranges::dangling</code>, a placeholder type with no dereference operator. A vector rvalue is not a <code>borrowed_range</code>: the iterator would point into a container that is destroyed at the end of the full expression, so the standard returns a placeholder instead of an iterator. Writing <code>*it</code> does not compile.<br><b>Output:</b><pre><code>result type is std::ranges::dangling: no iterator to dereference\n2</code></pre>The lvalue <code>v</code> is a borrowed range, so <code>find</code> returns a real iterator.<br><b>Interview trap:</b> the non-ranges <code>std::find(make().begin(), make().end(), 2)</code> compiles, but its two iterators come from two different temporary vectors, and both are dangling. That is silent undefined behaviour, which the ranges version is designed to prevent.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_stretch",
+   "ranges",
+   "dangling",
+   "borrowed_range"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does this <code>std::chrono</code> snippet print, and which rules does it show about durations and calendar days?<br><pre><code>#include &lt;chrono&gt;\n#include &lt;iostream&gt;\n\nint main() {\n    using namespace std::chrono;\n    using namespace std::chrono_literals;\n    milliseconds ms = 1500ms;\n    std::cout &lt;&lt; duration_cast&lt;seconds&gt;(ms).count() &lt;&lt; '\\n';     // truncates\n    std::cout &lt;&lt; duration_cast&lt;seconds&gt;(-ms).count() &lt;&lt; '\\n';    // truncates toward zero\n    std::cout &lt;&lt; (2h + 30min).count() &lt;&lt; '\\n';                   // common type is minutes\n    sys_days start = sys_days{2026y / March / 20d};\n    sys_days ref   = sys_days{2026y / January / 1d};\n    std::cout &lt;&lt; (start - ref).count() &lt;&lt; \" days after 1 Jan 2026\\n\";\n    std::cout &lt;&lt; weekday{start} &lt;&lt; '\\n';\n}</code></pre>",
+  "back": "<b>Headline:</b> <code>duration_cast</code> truncates toward zero, so <code>1500ms</code> becomes 1 second and <code>-1500ms</code> becomes -1. Mixed units are converted to the common type, here minutes, so <code>2h + 30min</code> counts 150. A <code>sys_days</code> is a time point counting days since the epoch, so subtracting two of them gives a day count. 2026-03-20 is 78 days after 1 January 2026 and is a Friday.<br><b>Output:</b><pre><code>1\n-1\n150\n78 days after 1 Jan 2026\nFri</code></pre><b>Interviewer follow-up:</b> how do you floor a negative duration to whole seconds? Use <code>floor&lt;seconds&gt;</code>, which rounds down, instead of <code>duration_cast</code>.<br><b>Interview trap:</b> <code>duration_cast</code> is truncation, not floor. For a date rule, always use calendar types (<code>year_month_day</code>) rather than counting 30-day months.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_foundation",
+   "chrono",
+   "duration",
+   "dates"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Generate quarterly coupon dates from 31 January 2026 with C++20 calendar types. What do the naive and the end-of-month approaches print?<br><pre><code>#include &lt;chrono&gt;\n#include &lt;iostream&gt;\n\nusing namespace std::chrono;\n\nint main() {\n    year_month_day start{2026y / January / 31d};\n    for (int k = 1; k &lt;= 3; ++k) {\n        year_month_day d = start + months{k};         // keeps day 31: invalid in Feb and Apr\n        std::cout &lt;&lt; \"naive \" &lt;&lt; k &lt;&lt; \": \" &lt;&lt; d &lt;&lt; (d.ok() ? \" ok\" : \" invalid\") &lt;&lt; '\\n';\n    }\n    for (int k = 1; k &lt;= 3; ++k) {\n        year_month ym = year_month{start.year(), start.month()} + months{k};\n        year_month_day_last eom = ym.year() / ym.month() / last;   // last day of that month\n        std::cout &lt;&lt; \"eom \" &lt;&lt; k &lt;&lt; \": \" &lt;&lt; year_month_day{eom} &lt;&lt; '\\n';\n    }\n}</code></pre>",
+  "back": "<b>Headline:</b> adding months to a <code>year_month_day</code> keeps the day number. 31 February and 31 April do not exist, so the naive results are invalid and <code>ok()</code> returns false. The end-of-month convention uses <code>year_month_day_last</code>, which gives the last day of the target month.<br><b>Output:</b><pre><code>naive 1: 2026-02-31 is not a valid date invalid\nnaive 2: 2026-03-31 ok\nnaive 3: 2026-04-31 is not a valid date invalid\neom 1: 2026-02-28\neom 2: 2026-03-31\neom 3: 2026-04-30</code></pre>A production schedule also needs business-day adjustment (for example modified following), a holiday calendar, and an explicit rule for whether the end-of-month property is kept.<br><b>Interview trap:</b> generating each date from the previous one loses the end-of-month property. Chaining 31 Jan, 28 Feb, then 28 Mar gives the wrong later dates. Always build the k-th date from the anchor date and k months.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_vp_core",
+   "chrono",
+   "year_month_day",
+   "schedules",
+   "end_of_month"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why use <code>std::mt19937_64</code> rather than <code>rand()</code> for Monte Carlo, and what is still not reproducible across standard libraries? Code and output below.<br><pre><code>#include &lt;cstdio&gt;\n#include &lt;random&gt;\n\nint main() {\n    std::mt19937_64 eng(42);                          // engine output is fully specified by the standard\n    std::normal_distribution&lt;double&gt; nd(0.0, 1.0);    // distribution algorithm is implementation-defined\n    std::printf(\"first engine output: %llu\\n\", static_cast&lt;unsigned long long&gt;(eng()));\n    for (int i = 0; i &lt; 3; ++i) std::printf(\"normal %d: %.6f\\n\", i, nd(eng));\n}</code></pre>",
+  "back": "<b>Headline:</b> <code>rand()</code> keeps one hidden global state shared by all callers, has a guaranteed maximum of only 32767, and its low bits are weak on some platforms. <code>mt19937_64</code> is a 64-bit Mersenne Twister with a period of 2^19937 minus 1, and its output sequence is fully specified by the standard. The same seed gives the same integers on every conforming implementation.<br><b>Output:</b><pre><code>first engine output: 13930160852258120406\nnormal 0: 1.301080\nnormal 1: 0.717408\nnormal 2: 0.158268</code></pre>The distributions are different: the algorithm behind <code>std::normal_distribution</code> is implementation-defined. libstdc++ and libc++ produce different normals from the same engine state, so the same seed does not give the same risk numbers across compilers.<br><b>Interview trap:</b> 'I set the seed, so the run is reproducible' holds only on one standard library. Pin the toolchain, or generate the uniforms and transform them yourself (next card).",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_vp_core",
+   "random",
+   "mt19937",
+   "reproducibility"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How do you make Monte Carlo normals bit-reproducible across compilers, and what can still break reproducibility even after you do it? Code and output below.<br><pre><code>#include &lt;cmath&gt;\n#include &lt;cstdio&gt;\n#include &lt;random&gt;\n\n// Uniform in (0,1) from the top 53 bits of the 64-bit engine output\ndouble uniform01(std::mt19937_64&amp; g) {\n    return ((g() &gt;&gt; 11) + 0.5) * (1.0 / 9007199254740992.0);   // 2^53\n}\n\nint main() {\n    constexpr double pi = 3.14159265358979323846;\n    std::mt19937_64 g(42);\n    for (int i = 0; i &lt; 3; ++i) {\n        double u1 = uniform01(g), u2 = uniform01(g);\n        double z = std::sqrt(-2.0 * std::log(u1)) * std::cos(2.0 * pi * u2);   // Box-Muller\n        std::printf(\"z %d: %.6f\\n\", i, z);\n    }\n}</code></pre>",
+  "back": "<b>Headline:</b> take the engine's raw 64-bit output, which is specified exactly, and build the uniform yourself: \\(u=((x\\gg 11)+0.5)/2^{53}\\in(0,1)\\). Then apply Box-Muller: \\(z=\\sqrt{-2\\ln u_1}\\cos(2\\pi u_2)\\). Do not use <code>uniform_real_distribution</code> or <code>normal_distribution</code>, because both are implementation-defined.<br><b>Output:</b><pre><code>z 0: -0.481218\nz 1: 0.494584\nz 2: 0.374554</code></pre>What still breaks it: <code>std::log</code> and <code>std::cos</code> come from the system math library, which is not required to be correctly rounded, so the last bit can differ between libms. Compiler options such as <code>-ffast-math</code> and FMA contraction change rounding too.<br><b>Interview trap:</b> the fix for a last-bit difference is a tolerance in the regression test, not a different seed. Document which math library produced the golden numbers.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_stretch",
+   "random",
+   "reproducibility",
+   "box_muller",
+   "portability"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with <code>deskLabel</code>, and what does the program do when run?<br><pre><code>#include &lt;iostream&gt;\n#include &lt;string&gt;\n#include &lt;string_view&gt;\n\nstd::string_view deskLabel(int desk) {\n    std::string s = \"desk-\" + std::to_string(desk);\n    return s;                                  // view of a local: dangles on return\n}\n\nint main() {\n    std::string_view ok = \"rates-gbp\";         // view of a string literal: static storage\n    std::cout &lt;&lt; ok &lt;&lt; '\\n';\n    std::string_view bad = deskLabel(3);\n    std::cout &lt;&lt; bad &lt;&lt; '\\n';                  // undefined behaviour\n}</code></pre>",
+  "back": "<b>Headline:</b> <code>std::string_view</code> is a non-owning pointer and length. <code>deskLabel</code> returns a view of a local <code>std::string</code>, which is destroyed on return, so the view dangles. This is undefined behaviour.<br>The plain binary printed <code>rates-gbp</code> and then a garbage line (its contents vary). With <code>-fsanitize=address</code> and <code>ASAN_OPTIONS=detect_stack_use_after_return=1</code>, the sanitizer reports <code>stack-use-after-return</code> on the read in <code>fwrite</code>.<br>Fix: return <code>std::string</code> by value.<br><b>Interview trap:</b> <code>std::string_view sv = std::string(\"x\") + y;</code> dangles at the semicolon. A view of a string literal is safe because the literal has static storage. A <code>string_view</code> is not null-terminated, so it cannot be passed to C APIs through <code>data()</code> without a length.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_vp_core",
+   "string_view",
+   "dangling",
+   "undefined_behaviour"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does <code>std::format</code> print for these format strings? It is C++20 and is available in g++ 13 through <code>&lt;format&gt;</code>.<br><pre><code>#include &lt;format&gt;\n#include &lt;iostream&gt;\n\nint main() {\n    double yield = 3.8567;\n    int dv01 = 12345;\n    std::cout &lt;&lt; std::format(\"{:.4f}% | {:&gt;10} | {:&lt;4}| {:08.2f}\", yield, dv01, \"2y\", -1.5) &lt;&lt; '\\n';\n    std::cout &lt;&lt; std::format(\"{:e}\", 1234.5) &lt;&lt; '\\n';\n    std::cout &lt;&lt; std::format(\"{0} bp = {1:.4f}\", 25, 0.0025) &lt;&lt; '\\n';\n}</code></pre>",
+  "back": "<b>Headline:</b> a replacement field is <code>{index:spec}</code>, where the spec gives fill, alignment, width, zero padding, precision and type. The format string is checked at compile time, so a malformed spec is a compile error, not a runtime exception.<br><b>Output:</b><pre><code>3.8567% |      12345 | 2y  | -0001.50\n1.234500e+03\n25 bp = 0.0025</code></pre><code>{:&gt;10}</code> right-aligns to width 10, <code>{:08.2f}</code> pads with zeros to width 8, and <code>{:e}</code> gives scientific notation.<br><b>Interview trap:</b> <code>std::format</code> does not insert thousands separators unless you use the locale-aware <code>L</code> form. For a DV01 report, format grouping explicitly.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_foundation",
+   "format",
+   "string_formatting",
+   "cpp20"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "After holding a reference, an iterator and a pointer to elements of an <code>std::unordered_map</code>, you insert 1000 elements. Which of them are still valid? Code and output below.<br><pre><code>#include &lt;iostream&gt;\n#include &lt;unordered_map&gt;\n\nint main() {\n    std::unordered_map&lt;int, double&gt; m{{1, 1.5}};\n    double&amp; ref = m[1];\n    auto it = m.find(1);\n    (void)it;                                  // iterator: do NOT use after a rehash\n    for (int k = 2; k &lt; 1000; ++k) m[k] = k;   // several rehashes\n    std::cout &lt;&lt; \"size \" &lt;&lt; m.size() &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"ref \" &lt;&lt; ref &lt;&lt; '\\n';        // references and pointers survive rehash\n}</code></pre>",
+  "back": "<b>Headline:</b> a rehash invalidates all iterators, but it does not invalidate pointers or references to elements, because the nodes are not moved. The reference <code>ref</code> is still valid and prints <code>1.5</code>. The iterator <code>it</code> must not be used after the inserts.<br><b>Output:</b><pre><code>size 999\nref 1.5</code></pre>This is the opposite of <code>std::vector</code>, where reallocation moves every element and invalidates references as well.<br><b>Interview trap:</b> 'the reference survives' is a property of node-based containers, not of inserts in general. Erasing that element still invalidates the reference, and a vector gives no such guarantee on insert.",
+  "tags": [
+   "cpp",
+   "stl",
+   "lvl_stretch",
+   "unordered_map",
+   "iterator_invalidation",
+   "references",
+   "rehash"
+  ]
+ }
+]
