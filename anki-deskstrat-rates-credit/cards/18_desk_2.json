@@ -344,32 +344,34 @@
  },
  {
   "type": "basic",
-  "front": "[Chain: CMS_L3 1/3] Context: a book of one £100m long 1y-expiry 10s2s CMS spread call, strike 1.00%. Forwards: 10y CMS 4.20%, 2y CMS 3.10%. Normal vols 100bp (10y) and 85bp (2y). Desk correlation 0.60. Discount factor 0.9615. Mark the trade and say why it is Level 3.<br>Explain the marking model and the result.",
+  "front": "<b>[Chain: CMS_L3 1/3]</b> Context: a book of one £100m long 1y-expiry 10s2s CMS spread call, strike 1.00%. Forwards: 10y CMS 4.20%, 2y CMS 3.10%. Normal vols 100bp (10y) and 85bp (2y). Desk correlation 0.60. Discount factor 0.9615. Mark the trade and say why it is Level 3.<br>Explain the marking model and the result.",
   "back": "<b>Headline:</b> marked at \\(\\text{PV} \\approx £371.9\\text{k}\\), which is 38.7bp of notional (Level 3, because the 10y-2y correlation has no observable market at this tenor).<br>\n<b>Spread forward and vol:</b> \\(F_s = 4.20\\% - 3.10\\% = 1.10\\%\\). Spread vol: \\(\\sigma_s = \\sqrt{\\sigma_1^2+\\sigma_2^2-2\\rho\\sigma_1\\sigma_2} = \\sqrt{1.00^2 + 0.85^2 - 2(0.60)(1.00)(0.85)}\\times 10^{-2} = 83.8\\)bp.<br>\n<b>Bachelier price:</b> \\(d = (F_s-K)/(\\sigma_s\\sqrt{T}) = 0.10/0.838 = 0.119\\). Price \\(= (F_s-K)\\Phi(d) + \\sigma_s\\sqrt{T}\\phi(d) = 0.10\\%\\times0.547 + 0.838\\%\\times0.396 \\approx 38.7\\)bp. PV \\(= 0.9615\\times£100\\text{m}\\times 0.00387 \\approx £371.9\\text{k}\\).<br>\n<b>Why Level 3:</b> the spread vol depends on the correlation, and the desk's \\(\\rho = 0.60\\) is an internal estimate. No tradeable, time-matched price pins it down. Convexity and measure adjustments are assumed to be in the forwards (approx.; state this in the model documentation).<br>\n<b>Interviewer follow-up:</b> what is the correlation sensitivity? About -£37k to -£39k per 0.10 of \\(\\rho\\) near 0.60, so the correlation is the main unobservable driver.",
   "tags": [
    "desk_practice",
    "case_study",
    "cms_spread",
    "level3",
-   "lvl_vp_core"
+   "lvl_vp_core",
+   "chain_cms_l3"
   ]
  },
  {
   "type": "basic",
-  "front": "[Chain: STALE_CDS 1/2] Context: a 5y single-name, the desk is short protection on $25m, with a 100bp contract coupon. The desk mark is 180bp, from a last trade three weeks ago. A broker IPV quote is 215bp. Compute the seller's MTM under both marks, and the IPV break.",
-  "back": "<b>Headline:</b> the break is about £351k, and the desk's stale mark is the problem.<br>\n<b>Method:</b> flat 4% discounting, recovery 40%, \\(\\lambda = s/(1-R)\\), quarterly premium with accrual on default. RPV01 is 4.20 at 180bp and 4.14 at 215bp.<br>\n<b>Seller MTM = -(s_mkt - s_contract) x RPV01 x N:</b> at 180bp, \\(-(0.80\\%)\\times 4.20\\times\\$25\\text{m} \\approx -\\$840\\text{k}\\). At 215bp, \\(-(1.15\\%)\\times 4.14\\times\\$25\\text{m} \\approx -\\$1.19\\text{m}\\).<br>\n<b>IPV break:</b> \\(\\$1.19\\text{m} - \\$0.84\\text{m} \\approx \\$351\\text{k}\\), which is about 35bp of spread on an RPV01 of about 4.2 with $25m. CS01 at 180bp is about $10.5k per bp.<br>\n<b>Interviewer follow-up:</b> the break is 35bp. Is the desk's mark the only stale point? Check the timestamps of both sides. A stale mark that moves only on an index move is wrong by the name-specific part, which is the next card.",
+  "front": "<b>[Chain: STALE_CDS 1/2]</b> Context: a 5y single-name, the desk is short protection on $25m, with a 100bp contract coupon. The desk mark is 180bp, from a last trade three weeks ago. A broker IPV quote is 215bp. Compute the seller's MTM under both marks, and the IPV break.",
+  "back": "<b>Headline:</b> the break is about £351k, and the desk's stale mark is the problem.<br>\n<b>Method:</b> flat 4% discounting, recovery 40%, \\(\\lambda = s/(1-R)\\), quarterly premium with accrual on default. RPV01 is 4.20 at 180bp and 4.14 at 215bp.<br>\n<b>Seller MTM = -(s_mkt - s_contract) x RPV01 x N:</b> at 180bp, \\(-(0.80\\%)\\times 4.20\\times\\$25\\text{m} \\approx -\\$840\\text{k}\\). At 215bp, \\(-(1.15\\%)\\times 4.14\\times\\$25\\text{m} \\approx -\\$1.19\\text{m}\\).<br>\n<b>IPV break:</b> \\(\\$1.19\\text{m} - \\$0.84\\text{m} \\approx \\$351\\text{k}\\), which is the 35bp spread move on the position (about $367k at the 180bp RPV01, and $351k once each side uses its own RPV01). CS01 at 180bp is about $10.5k per bp.<br>\n<b>Interviewer follow-up:</b> the break is 35bp. Is the desk's mark the only stale point? Check the timestamps of both sides. A stale mark that moves only on an index move is wrong by the name-specific part, which is the next card.",
   "tags": [
    "desk_practice",
    "case_study",
    "cds",
    "ipv",
    "stale_mark",
-   "lvl_vp_core"
+   "lvl_vp_core",
+   "chain_stale_cds"
   ]
  },
  {
   "type": "basic",
-  "front": "[Chain: WING 1/2] Context: month-end. The desk is long £1bn nominal of a 1y×10y payer swaption struck 200bp out of the money (forward 3.50%, strike 5.50%). Annuity 8.1, normal vol 100bp in the market. The desk's wing mark is 70bp, unchanged since an older vol regime. Compute the mismark and say what the vega approximation would have said.",
+  "front": "<b>[Chain: WING 1/2]</b> Context: month-end. The desk is long £1bn nominal of a 1y×10y payer swaption struck 200bp out of the money (forward 3.50%, strike 5.50%). Annuity 8.1, normal vol 100bp in the market. The desk's wing mark is 70bp, unchanged since an older vol regime. Compute the mismark and say what the vega approximation would have said.",
   "back": "<b>Headline:</b> the wing is understated by about £652k on a full revaluation. A vega shortcut gives about £1.31m, which is roughly double, and that is the trap.<br>\n<b>Full revaluation:</b> at 100bp the value is \\(8.1\\times 0.0688\\%\\times £1\\text{bn} \\approx £688\\text{k}\\). At 70bp it is about £36k. The difference is about £652k.<br>\n<b>Vega shortcut:</b> at 100bp the vega is \\(A\\,N\\sqrt{T}\\,\\phi(d)\\) with \\(d = -2.0\\) and \\(\\phi(-2)=0.054\\), so about £43.7k per bp, times 30bp, gives £1.31m. The shortcut assumes vega stays at its 100bp value across the move. On a far out-of-the-money wing vega falls as vol falls, so the shortcut overstates the move.<br>\n<b>How it was found:</b> the month-end IPV compared the wing with a broker wing quote and with a smile fit, and both were about 30bp higher. The stale wing had carried the old regime through the strike grid.<br>\n<b>Interviewer follow-up:</b> why is the vega shortcut dangerous in a month-end P&amp;L? It is the number a trader will quote in the room, and it overstates the adjustment by about 2x for this move. Use full revaluation for mismarks that large.",
   "tags": [
    "desk_practice",
@@ -377,12 +379,13 @@
    "vol",
    "wing",
    "month_end",
-   "lvl_vp_core"
+   "lvl_vp_core",
+   "chain_wing"
   ]
  },
  {
   "type": "basic",
-  "front": "[Chain: CMS_L3 2/3] Context: same £100m 10s2s spread call, desk mark 38.7bp (PV £371.9k at \\(\\rho = 0.60\\)). The independent evidence supports \\(\\rho = 0.60\\) with a standard error of 0.10. Size the correlation reserve at 90% one-sided, and say which side of the band it sits on.",
+  "front": "<b>[Chain: CMS_L3 2/3]</b> Context: same £100m 10s2s spread call, desk mark 38.7bp (PV £371.9k at \\(\\rho = 0.60\\)). The independent evidence supports \\(\\rho = 0.60\\) with a standard error of 0.10. Size the correlation reserve at 90% one-sided, and say which side of the band it sits on.",
   "back": "<b>Headline:</b> the reserve is about <b>£54k</b>, taken on the side that lowers the call's value, which is the higher-\\(\\rho\\) side.<br>\n<b>Bounds:</b> \\(\\rho \\pm 1.2816\\times0.10\\) gives 0.472 and 0.728.<br>\n<b>Full revaluation at the bounds:</b> at \\(\\rho = 0.728\\) the PV is about £317.9k, so the reserve is \\(£371.9\\text{k} - £317.9\\text{k} \\approx £54\\text{k}\\). At \\(\\rho = 0.472\\) the PV is about £418k, a gain of about £46k. The reserve is taken on the adverse side only.<br>\n<b>Why the sides differ:</b> the price is convex in \\(\\rho\\) through the spread vol, so the two bounds are not symmetric around the mark.<br>\n<b>Interviewer follow-up:</b> why not use the 0.45 to 0.75 band from the broker range? A range of quotes is a dispersion of views, not a statistical bound. State which one you used, and whether the consensus is inside it.",
   "tags": [
    "desk_practice",
@@ -390,37 +393,40 @@
    "cms_spread",
    "correlation",
    "prudent_valuation",
-   "lvl_stretch"
+   "lvl_stretch",
+   "chain_cms_l3"
   ]
  },
  {
   "type": "basic",
-  "front": "[Chain: CMS_L3 3/3] Context: the £54k correlation reserve on the call. The book has 40 more 10s2s spread options in other strikes, all marked on the same \\(\\rho\\). (a) How do you apportion the reserve across trades? (b) Does the reserve diversify across trades? (c) How does it unwind?",
+  "front": "<b>[Chain: CMS_L3 3/3]</b> Context: the £54k correlation reserve on the call. The book has 40 more 10s2s spread options in other strikes, all marked on the same \\(\\rho\\). (a) How do you apportion the reserve across trades? (b) Does the reserve diversify across trades? (c) How does it unwind?",
   "back": "<b>Headline:</b> one parameter, one uncertainty. Every trade that depends on the same \\(\\rho\\) adds to the same exposure and does not diversify against the others.<br>\n<ul>\n<li><b>(a) Measure at book level:</b> revalue the whole correlation-dependent book at the bounds, with full revaluation, not by scaling one trade. Apportion the book reserve to trades only for reporting, using each trade's share of the correlation sensitivity.</li>\n<li><b>(b) Diversification:</b> it applies only across independent uncertainties, for example a 10y-2y correlation and a separate, unrelated parameter. The same \\(\\rho\\) on forty trades is one uncertainty, not forty.</li>\n<li><b>(c) Unwind:</b> the reserve falls when a time-matched, executable price appears for the tenor, when a hedge with an observable instrument is put on, or when trades mature or terminate. Each release is documented and approved by valuation control.</li>\n</ul>\n<b>Interviewer follow-up:</b> a trader says the correlation is clearly 0.6 and wants no reserve. The answer: a view is not an observable input. The reserve stays until a time-matched source supports the view.",
   "tags": [
    "desk_practice",
    "case_study",
    "cms_spread",
    "prudent_valuation",
-   "lvl_stretch"
+   "lvl_stretch",
+   "chain_cms_l3"
   ]
  },
  {
   "type": "basic",
-  "front": "[Chain: STALE_CDS 2/2] Context: over the same three weeks the index moved +10bp. The desk's mark is 180bp, the broker quote is 215bp, and the desk's last trade is dated three weeks ago. Decompose the 35bp break and decide what to book.",
-  "back": "<b>Headline:</b> about 10bp of the move is market, and about 25bp is name-specific. The stale mark was not index-adjusted, and the quote needs a check before it is accepted.<br>\n<ul>\n<li><b>Index-driven part:</b> with an index beta of about 1 (approx.), the mark should have moved to 190bp. That is about \\(10\\text{bp}\\times4.2\\times\\$25\\text{m}\\approx \\$105\\text{k}\\) of the break.</li>\n<li><b>Name-specific residual:</b> about 25bp, roughly \\(25\\text{bp}\\times4.1\\times\\$25\\text{m}\\approx \\$260\\text{k}\\).</li>\n<li><b>Checks before booking:</b> is the broker quote dated today and from more than one dealer? Is there name news? Is the bond-CDS basis consistent with 215bp? If the quote is itself stale, it is not an IPV source.</li>\n<li><b>Decision:</b> if the quote is current and supported, adjust to 215bp and book the break through P&amp;L. If not, hold an IPV reserve on the residual and escalate the quote issue.</li>\n</ul>\n<b>Interviewer follow-up:</b> what is the risk of accepting the broker quote blindly? A single stale or off-market quote can move the mark by hundreds of thousands. Always check the quote's date and its source count.",
+  "front": "<b>[Chain: STALE_CDS 2/2]</b> Context: over the same three weeks the index moved +10bp. The desk's mark is 180bp, the broker quote is 215bp, and the desk's last trade is dated three weeks ago. Decompose the 35bp break and decide what to book.",
+  "back": "<b>Headline:</b> about 10bp of the move is market, and about 25bp is name-specific. The stale mark was not index-adjusted, and the quote needs a check before it is accepted.<br>\n<ul>\n<li><b>Index-driven part:</b> with an index beta of about 1 (approx.), the mark should have moved to 190bp. That is about \\(10\\text{bp}\\times4.2\\times\\$25\\text{m}\\approx \\$105\\text{k}\\) of the break.</li>\n<li><b>Name-specific residual:</b> about 25bp, roughly \\(25\\text{bp}\\times4.1\\times\\$25\\text{m}\\approx \\$255\\text{k}\\).</li>\n<li><b>Checks before booking:</b> is the broker quote dated today and from more than one dealer? Is there name news? Is the bond-CDS basis consistent with 215bp? If the quote is itself stale, it is not an IPV source.</li>\n<li><b>Decision:</b> if the quote is current and supported, adjust to 215bp and book the break through P&amp;L. If not, hold an IPV reserve on the residual and escalate the quote issue.</li>\n</ul>\n<b>Interviewer follow-up:</b> what is the risk of accepting the broker quote blindly? A single stale or off-market quote can move the mark by hundreds of thousands. Always check the quote's date and its source count.",
   "tags": [
    "desk_practice",
    "case_study",
    "cds",
    "ipv",
    "stale_mark",
-   "lvl_stretch"
+   "lvl_stretch",
+   "chain_stale_cds"
   ]
  },
  {
   "type": "basic",
-  "front": "[Chain: WING 2/2] Context: the strikes 5.00%, 5.25% and 5.50% (25bp spacing) on the same 1y×10y expiry, with consistent normal vols 102bp, 101bp and 100bp, give a butterfly of about +5.1bp of notional. With the 5.50% wing at 70bp, the butterfly becomes negative. What does a negative butterfly tell you, and how does it change the mark?",
+  "front": "<b>[Chain: WING 2/2]</b> Context: the strikes 5.00%, 5.25% and 5.50% (25bp spacing) on the same 1y×10y expiry, with consistent normal vols 102bp, 101bp and 100bp, give a butterfly of about +5.1bp of notional. With the 5.50% wing at 70bp, the butterfly becomes negative. What does a negative butterfly tell you, and how does it change the mark?",
   "back": "<b>Headline:</b> a negative butterfly means the surface implies a negative probability density. That is an arbitrage, so the wing is wrong, not merely a different view.<br>\n<b>Test:</b> for equally spaced strikes \\(K-h, K, K+h\\), the butterfly \\(C(K-h) - 2C(K) + C(K+h)\\) must be non-negative. Here \\(25.88 - 2\\times13.81 + 0.36 \\approx -1.4\\)bp of notional at 70bp, against \\(25.88-2\\times13.81+6.88 \\approx +5.1\\)bp when the wing is 100bp.<br>\n<b>What to do:</b> the wing mark must be corrected to a value that keeps the butterfly non-negative, and the correction is measured by full revaluation (see the previous card). A negative butterfly is a hard flag in the IPV, not a tolerance question.<br>\n<b>Interviewer follow-up:</b> the trader says the wing is \"illiquid, so the arbitrage check does not apply\". What is the answer? Illiquidity makes the value uncertain, but it does not make a negative-density surface valid. Use the arbitrage check as a boundary and reserve for the uncertainty inside the boundary.",
   "tags": [
    "desk_practice",
@@ -428,7 +434,8 @@
    "vol",
    "arbitrage",
    "wing",
-   "lvl_stretch"
+   "lvl_stretch",
+   "chain_wing"
   ]
  },
  {

@@ -1,0 +1,525 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: FLOW 1/4]</b> Context: a client receives fixed on a 5y GBP SONIA swap, executed with the dealer at 16:05 on trade date T. Walk through the front-to-back stages in order and state what each one produces.",
+  "back": "<b>Answer:</b> execution, capture, enrichment, confirmation or affirmation, clearing (if cleared) or bilateral collateral set-up, settlement, lifecycle, risk and P&amp;L, reporting.<ul><li><b>Execution:</b> price, notional, direction, time stamp.</li><li><b>Capture:</b> one trade record with an internal id in the booking system.</li><li><b>Enrichment:</b> legal entity (LEI), calendars, CSA and netting set, clearing flag. Static data is pulled and validated.</li><li><b>Confirmation:</b> terms matched with the counterparty.</li><li><b>Clearing or collateral:</b> novation to the CCP, or CSA-governed bilateral margin.</li><li><b>Settlement:</b> cash flows with value dates.</li><li><b>Lifecycle:</b> fixings, resets, coupons, amendments, terminations.</li><li><b>Risk and P&amp;L:</b> PV, DV01 and buckets in the EOD run.</li><li><b>Reporting:</b> UTI-keyed records to a trade repository.</li></ul><b>Interviewer follow-up:</b> which stage can make the economics wrong, and which stage first shows a regulatory breach? (The economics are fixed at capture. A regulatory breach usually surfaces at reporting.)",
+  "tags": [
+   "desk_practice",
+   "lvl_foundation",
+   "trade_flow",
+   "chain_flow"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: FLOW 2/4]</b> Context: the 5y SONIA swap from the previous card is enriched at capture with a payment calendar, a CSA and the clearing flag. Enrichment fills the payment calendar with a TARGET-only calendar instead of London. What breaks, and how does it show up downstream?",
+  "back": "<b>Answer:</b> payment and value dates are generated on the wrong holiday calendar. On days when London is closed and TARGET is open, or the reverse, the payment date and the accrual end date move.<br><b>Quantify:</b> £100m at 4.5% on ACT/365F. A one-day slip costs about £100m × 4.5% / 365 ≈ £12.3k of interest.<br><b>Downstream:</b> the settlement instruction goes out with a value date the counterparty does not expect, so the affirmation or the payment fails. Reporting can also carry a value date that does not match the confirmation.<br><b>Control:</b> calendars are static data keyed by currency and centre, not typed per trade. Enrichment should reject a calendar outside the approved set, and ops should reconcile value dates against the confirm.<br><b>Interviewer follow-up:</b> why does a trade across two centres need more than one calendar? (The payment date uses the payment centre, the fixing uses its own centre, and the accrual uses the business-day convention on the trade's calendars.)",
+  "tags": [
+   "desk_practice",
+   "lvl_vp_core",
+   "trade_flow",
+   "static_data",
+   "chain_flow"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: FLOW 3/4]</b> Context: the same 5y SONIA swap. The booking says ACT/360 on the fixed leg. The counterparty's confirmation says ACT/365F and 4.00%. Who checks what, and what must happen before any cash moves?",
+  "back": "<b>Answer:</b> the affirmation step compares the economic terms field by field: rate, notional, dates, day count, calendar, business-day convention, index, payment lag, compounding and stub. A difference is a break. Nothing is affirmed or paid until it is resolved.<br><b>Resolution:</b> decide which side is right from the agreed term sheet. If the booking is wrong, correct it under the same trade id and send an amended confirmation. Do not accept the counterparty's document without reading it.<br><b>P&amp;L footprint:</b> the correction changes the PV. It must be booked and labelled as a booking correction, not as market P&amp;L. A day-count error on £100m at 4.00% overpays about £55.6k a year on the fixed leg (100m × 4% × 5/360).<br><b>Interviewer follow-up:</b> if the trade has already paid on the wrong basis, what do you do? (Compute the cash difference, settle it as a correction under the same trade id, and record the reason.)",
+  "tags": [
+   "desk_practice",
+   "lvl_vp_core",
+   "confirmation",
+   "booking",
+   "chain_flow"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: FLOW 4/4]</b> Context: a 5y SONIA swap with DV01 of about £40k per bp was captured in the front-office risk system on day T but never reached the back-office booking system. On T+1 a booking break appears. What do the risk and the cash show, and how do you resolve it?",
+  "back": "<b>Answer:</b> the front-office risk includes the trade, so the desk's position and P&amp;L carry its DV01. The back office has no confirm, no settlement and no collateral for it. The two systems disagree about the same book.<br><b>Example:</b> a 2bp move on the day gives 2 × £40k = £80k in risk P&amp;L that no cash or confirm reflects.<br><b>Resolution:</b> (1) find the missing or duplicated trade id and check the interface log for a dropped or rejected message; (2) confirm with the counterparty that the trade exists and on which terms; (3) book it in the back office with the same id and terms, or cancel the front-office duplicate; (4) re-run risk and confirm the day's P&amp;L is explained after the fix.<br><b>Interviewer follow-up:</b> why are there separate systems of record for the front and back office? (The front office owns the economics and risk. The back office owns confirmation, settlement and collateral. Reconciliation is the control that ties them together.)",
+  "tags": [
+   "desk_practice",
+   "lvl_vp_core",
+   "booking",
+   "reconciliation",
+   "chain_flow"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What fields must be booked for a 10y GBP SONIA swap (receive fixed, annual fixed leg on ACT/365F, compounded SONIA on the float) so that the cash flows can be generated with no ambiguity?",
+  "back": "<b>Answer:</b> the trade is complete only when every schedule and cash-flow driver is explicit.<ul><li><b>Direction:</b> payer or receiver. It sets the sign of the DV01.</li><li><b>Notional and currency,</b> with any amortisation schedule.</li><li><b>Trade, effective and maturity dates,</b> with the business-day convention (typically Modified Following) and the calendars (London, plus any other).</li><li><b>Fixed leg:</b> rate, frequency, ACT/365F, payment lag.</li><li><b>Float leg:</b> SONIA, compounded in arrears, with the observation method (lookback or observation shift, and the number of days), spread (zero for a plain swap) and rate cut-off.</li><li><b>Clearing:</b> cleared flag, CCP, clearing member.</li><li><b>Legal and collateral:</b> the two legal entities (LEI), netting set and CSA.</li><li><b>Identifier:</b> the UTI for reporting.</li></ul><b>Interviewer follow-up:</b> which field alone turns a receiver into a payer, and what does it do to the DV01 sign? (Direction. Payer and receiver of the same swap have DV01 of opposite sign.)",
+  "tags": [
+   "desk_practice",
+   "lvl_foundation",
+   "booking",
+   "sonia",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A compounded SONIA swap uses a 5-business-day lookback. Why does the lookback make the coupon known before the period ends, and what changes in booking and operations?",
+  "back": "<b>Answer:</b> with a lookback of d business days, the rate used for accrual day i is the SONIA published on day i minus d. The rates used for the last d accrual days were therefore observed before the period ends.<br><b>Consequence:</b> the full coupon is computable d business days before the period end. Operations can compute and validate the amount before the payment date.<br><b>Booking:</b> store the observation method and the number of days on the trade. The lookback counts business days on the trade's calendar. An incorrect lookback gives a small amount error, mostly on the last few days.<br><b>Value:</b> the lookback moves timing more than level. Its effect on PV is small and is handled in projection and the curve, not by a separate adjustment.<br><b>Interviewer follow-up:</b> how does an observation shift differ from a lookback? (A lookback shifts only the rate. An observation shift moves the rate and its day-count weight together. Check the trade definition for which one applies.)",
+  "tags": [
+   "desk_practice",
+   "lvl_vp_core",
+   "sonia",
+   "lifecycle",
+   "convention"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "After novation, a cleared SONIA swap is replaced by {{c1::a trade with the CCP}} and a {{c2::mirror trade with the clearing member or the client}}. The economic terms are unchanged, but the trade is margined with {{c3::variation margin settled daily in cash}} and discounted on {{c4::the CCP's collateral curve}}.",
+  "back": "Novation changes the counterparties, not the economic terms. Fields to check after clearing: clearing flag, CCP, clearing member, UTI and reporting. The PV can differ from the bilateral PV because discounting follows the CCP's collateral curve (see the CCP basis card).",
+  "tags": [
+   "desk_practice",
+   "lvl_vp_core",
+   "clearing",
+   "booking"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A structured desk sells a 10NC2 callable fixed-rate note. Compare three ways to book it: a dedicated structured-product trade type, generic payoff scripting, and decomposition into linked standard trades. What are the trade-offs?",
+  "back": "<ul><li><b>Dedicated trade type:</b> quick to book and standard to risk-map. Limited to the features the template supports, so a new feature needs a system change.</li><li><b>Generic payoff scripting:</b> the payoff is written as code or a schedule in the trading system. Flexible for new features. The risk: the risk engine must support every primitive the script uses, and a bug in the script is silent because the PV still looks plausible.</li><li><b>Decomposition:</b> host bond plus a Bermudan swaption, or a set of linked swaps and swaptions, each booked as a standard trade. Risk is precise by instrument and the hedge mapping is clean. The note's P&amp;L, capital and lifecycle must be aggregated across the set.</li></ul>Controls for scripting: version control on the payoff, change approval, and a regression test on fixed market data. The same market must give the same PV unless the version changed on purpose.<br><b>Interviewer follow-up:</b> which would you use for a 10NC2 the issuer can call? (Decomposition, or a script that represents the call as an explicit Bermudan exercise, so the call date generates a lifecycle event and an unwind of the hedge.)",
+  "tags": [
+   "desk_practice",
+   "lvl_vp_core",
+   "booking",
+   "structured_notes",
+   "systems"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "The hedges of a callable note (swaps and swaptions traded with dealers and cleared at a CCP) are booked as separate trades. Why, and what happens to the hedges when the note is called?",
+  "back": "<b>Answer:</b> the hedges trade in the market. They need their own confirmations, clearing and collateral, and they are risk-managed as market positions in their own right.<br><b>Linking:</b> the hedge relationship is recorded as a link between the note and its hedge trades, so risk, P&amp;L attribution and the call lifecycle can see both.<br><b>On a call:</b> the issuer pays the call price on the call date and the note's remaining coupons stop. The hedge then has no exposure to hedge, unless only part of it is unwound. A booking that closes the note but leaves the swaps open leaves a naked delta and vega.<br><b>Check:</b> each day, compare the note's sensitivities with the sum of linked hedges by bucket. Any residual above tolerance is a control exception.<br><b>Interviewer follow-up:</b> if the call is exercised and part of the hedge is still needed, what do you keep? (Only the exposure the note still carries after the call. Re-hedge the residual with a trade that matches it, and unwind the rest.)",
+  "tags": [
+   "desk_practice",
+   "lvl_vp_core",
+   "booking",
+   "hedging",
+   "structured_notes"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A structuring desk sells a note to a client through the issuer entity in London. The rates desk hedges it in a different legal entity. How is the internal mirror trade booked, and what does it do to P&amp;L and capital?",
+  "back": "<b>Answer:</b> the structuring desk and the rates desk trade with each other through an internal trade, usually booked at a transfer price set by policy, for example mid plus a charge. Each desk's P&amp;L then shows its own economics.<br><b>Legal entities:</b> if the issuer and the hedge sit in different legal entities, the internal trade is an intercompany trade. It must be eliminated at group level. Capital and external reporting use external trades only.<br><b>Break risk:</b> if one side is booked and the other is missing, the group holds an unmatched internal trade. Internal trades are reconciled like external ones.<br><b>Effect:</b> the transfer price moves P&amp;L between desks, not for the bank as a whole. A wrong transfer price is a desk-level problem and a control problem.<br><b>Interviewer follow-up:</b> why not book the mirror at mid? (Then the structuring desk gets no credit for the structuring margin. The transfer price carries that margin by policy.)",
+  "tags": [
+   "desk_practice",
+   "lvl_stretch",
+   "booking",
+   "intercompany",
+   "structured_notes"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Name the static data a plain rates trade depends on, and for each item say which part of the trade it drives.",
+  "back": "<ul><li><b>Legal entity and LEI:</b> counterparty identity, netting set, reporting.</li><li><b>CSA:</b> collateral currency, threshold, minimum transfer amount, eligible collateral, rate paid on cash collateral. Drives collateral and the discount curve.</li><li><b>Calendars:</b> accrual and payment dates.</li><li><b>Business-day convention and day counts:</b> accrual amounts and dates.</li><li><b>Index definitions and fixing source:</b> what is fixed, where, when, and the fallback.</li><li><b>Standing settlement instructions (SSIs):</b> where the cash goes. Drives settlement only.</li><li><b>Clearing:</b> CCP, clearing member, cleared-trade terms.</li></ul><b>Interviewer follow-up:</b> which static fields affect valuation, and which affect only settlement? (CSA and fixing set valuation through discounting and cash-flow amounts. SSIs affect settlement only.)",
+  "tags": [
+   "desk_practice",
+   "lvl_foundation",
+   "static_data",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A CSA is booked with USD as the collateral currency on a trade that is collateralised in GBP. Walk through the valuation, collateral and cash consequences.",
+  "back": "<b>Answer:</b> the collateral currency sets the discount curve for the trade's PV. The trade is now discounted on a USD-based curve, not the SONIA-based one, so the PV changes.<br><b>Valuation:</b> the PV change is approximately the DV01 times the basis between the two discount curves. For £100m 10y, DV01 is about £81k per bp, so a 20bp basis is roughly £1.6m. The sign depends on the trade (approx.).<br><b>Collateral:</b> margin calls are in USD while the counterparty expects GBP. Collateral in the wrong currency needs an FX leg, which adds FX risk and cost.<br><b>Process:</b> the two sides compute different exposures, so a margin dispute follows. A daily margin reconciliation detects it.<br><b>Interviewer follow-up:</b> does the discount basis matter for an uncollateralised trade? (It does, but through the funding or unsecured curve rather than a CSA rate. A wrong CSA is a problem only for collateralised trades.)",
+  "tags": [
+   "desk_practice",
+   "lvl_vp_core",
+   "static_data",
+   "collateral"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Static data controls three different things. The {{c1::calendar}} sets the payment and accrual dates, the {{c2::CSA}} sets the collateral and the discount curve, and the {{c3::standing settlement instructions}} set where the cash is sent.",
+  "back": "A wrong calendar shifts cash by days. A wrong CSA changes the PV and the margin. A wrong settlement instruction sends a payment to the wrong account, which is a payment-control incident. Each needs a different control and a different owner.",
+  "tags": [
+   "desk_practice",
+   "lvl_vp_core",
+   "static_data",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Long-form versus short-form confirmations: what does each reference, and how is a trade under an ISDA Master confirmed?",
+  "back": "<b>Answer:</b> a long-form confirmation writes every term into the document. A short-form confirmation records the trade-specific terms and refers to the standard definitions: the 2006 ISDA Definitions for rates and the 2014 ISDA Credit Derivatives Definitions for credit. Both sit under the ISDA Master Agreement and its Schedule, with the CSA governing collateral.<br><b>In practice:</b> most rates trades are confirmed electronically against a short-form template. Bespoke or structured trades may need a long-form where the standard definitions do not cover the payoff.<br><b>Interviewer follow-up:</b> what is the risk of an unconfirmed trade? (The terms can be disputed, so the trade may not be enforceable as the desk priced it, and margin may be disputed. Regulation also sets timing rules for confirmation.)",
+  "tags": [
+   "desk_practice",
+   "lvl_vp_core",
+   "confirmation",
+   "isda"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "OTC confirmations are matched on electronic platforms such as {{c1::DTCC Deriv/SERV and MarkitWire}}. The {{c2::ISDA Master Agreement}} with a {{c3::Credit Support Annex}} governs netting and collateral. Credit derivatives trade under the {{c4::2014 ISDA Credit Derivatives Definitions}}.",
+  "back": "The matching platform compares the two sides' terms, and unmatched trades are queued for resolution. For interview purposes, name the platforms and the documents; do not claim details of platform features you have not used.",
+  "tags": [
+   "desk_practice",
+   "lvl_foundation",
+   "confirmation",
+   "isda"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What happens when a SONIA swap is cleared at a CCP such as LCH SwapClear? Describe the novation, the initial and variation margin, and what stands behind the trade if a clearing member defaults.",
+  "back": "<b>Answer:</b> at novation the CCP becomes the counterparty to both sides. The trades are matched and the bilateral exposure is replaced by cleared trades.<br><b>Variation margin:</b> the mark-to-market change is settled in cash every day, in the trade currency, so the trade's value is reset to zero each day.<br><b>Initial margin:</b> posted by each clearing member and sized to cover the potential loss on close-out over a margin period of risk. It is a buffer. It does not settle the day's MTM.<br><b>Default waterfall (simplified):</b> the defaulter's resources first, then the CCP's own contribution, then the other members' default-fund contributions. The exact order is set by the CCP's rulebook.<br><b>Interviewer follow-up:</b> why does a cleared swap need less bilateral CSA negotiation? (Counterparty credit risk to each dealer is replaced by risk to the CCP, and collateral is standardised.)",
+  "tags": [
+   "desk_practice",
+   "lvl_foundation",
+   "clearing",
+   "collateral"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A cleared £100m 10y receiver swap has DV01 of about £81k per bp. Overnight, rates fall 10bp. How much variation margin moves, in which direction, and why does initial margin not offset it?",
+  "back": "<b>Answer:</b> a receiver loses value when rates fall. The loss is approximately DV01 × 10bp = £81k × 10 ≈ £0.81m, so the desk pays about £0.8m of VM to the CCP.<br><b>Settlement:</b> VM is settled in cash on the day's margin call, in the trade currency, against the CCP's mark.<br><b>Why IM does not offset it:</b> IM is a buffer for the potential loss over a future margin period. It is posted and held, and it is returned only when the exposure falls. A day's VM payment does not reduce it.<br><b>Interviewer follow-up:</b> what moves IM on the same day? (A rise in volatility or a larger position. The CCP recomputes IM from its risk model, so a volatility spike raises IM, not VM.)",
+  "tags": [
+   "desk_practice",
+   "lvl_vp_core",
+   "clearing",
+   "collateral",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Under EMIR (EU and UK) and Dodd-Frank (US), the clearing obligation covers {{c1::specified interest rate swap classes and index CDS}} for in-scope counterparties, such as {{c2::financial counterparties and above-threshold non-financials}}. {{c3::Single-name CDS}} is not subject to the mandate.",
+  "back": "Mandates are defined as classes in the regulators' rules, and the list changes over time, so check the current scope before quoting it. The mandate decides whether a trade must be cleared. It does not decide which CCP is used.",
+  "tags": [
+   "desk_practice",
+   "lvl_vp_core",
+   "clearing",
+   "regulation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "The same £100m 10y SONIA swap is cleared at two CCPs whose discount curves differ by about 1.5bp in parallel. What is the PV difference, and what does it mean for moving or backloading the trade?",
+  "back": "<b>Answer:</b> the CCP basis is the PV difference of one trade cleared at two CCPs. The approximate value is DV01 × 1.5bp = £81k × 1.5 ≈ £122k. The sign depends on the trade and on which CCP is the reference.<br><b>Desk implication:</b> moving a trade between CCPs (a transfer or a backloading) shows a PV jump that is not market P&amp;L. The desk must either price the move as a cost or record the move as its own P&amp;L line.<br><b>Why the curves differ:</b> each CCP discounts on the curve implied by its own margin and collateral terms, so the same cash flows have different PVs.<br><b>Interviewer follow-up:</b> how would you hedge the CCP basis? (You largely do not hedge it with a swap. It is a cost and a decision variable: choose where to clear, and price the transfer.)",
+  "tags": [
+   "desk_practice",
+   "lvl_stretch",
+   "clearing",
+   "ccp_basis"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is portfolio compression, for example through TriOptima's triReduce service? Why do banks run it, and what is the cash footprint for the desk?",
+  "back": "<b>Answer:</b> compression takes offsetting trades of the same economics among participants and replaces them with a smaller set. Gross notional and trade count fall, and the net risk is kept.<br><b>Why banks do it:</b> gross notional drives the leverage exposure measure, so lowering it adds leverage-ratio headroom. Under SA-CCR, exposure at default depends on notional and netting-set composition, so compressing lowers capital. It also cuts operational load and CCP margin on cleared portfolios.<br><b>Cash footprint:</b> the desk pays or receives the PV of each terminated trade. At mid the net is close to zero. The desk's P&amp;L is the bid-offer or cross-pricing on the terminated set.<br><b>Interviewer follow-up:</b> which measure does compression change most, PV or gross notional? (Gross notional. Net PV and net DV01 barely change.)",
+  "tags": [
+   "desk_practice",
+   "lvl_vp_core",
+   "compression",
+   "capital"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A compression cycle removes offsetting 10y swaps. Which risks stay the same, which can change, and what should a risk manager check afterwards?",
+  "back": "<b>Answer:</b> net DV01 by bucket is preserved if the offsets are exact. Non-linear trades with different strikes do not net exactly, so vega, gamma and the exposure profile change.<br><b>What can change:</b> the counterparty mix (novations change who holds the trade), the netting-set composition (which drives SA-CCR and the CVA allocation), CCP margin on cleared portfolios, and any residual basis between offsetting trades.<br><b>Checks:</b> net DV01 and vega by bucket before and after; counterparty exposures and CVA allocation; margin before and after; any unmatched residual in the cycle.<br><b>Interviewer follow-up:</b> why can a compression cycle be a capital win but a risk loss? (Capital depends on gross notional and netting. If the non-linear residual is not matched exactly, the vega or gamma profile changes even though the notional has fallen.)",
+  "tags": [
+   "desk_practice",
+   "lvl_stretch",
+   "compression",
+   "risk"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: FIXING 1/3]</b> Context: a 6-month SONIA-compounded leg on £50m, ACT/365F. Explain what is determined on which day, and what operations need in order to pay the coupon.",
+  "back": "<b>Answer:</b> SONIA is published each London business day for the previous business day. The coupon is determined once the last observation in the period is known, using the compounded product \\(N\\left(\\prod_i (1 + r_i d_i/365) - 1\\right)\\), with the observations and lookback as the trade defines them. The daily SONIA history is the data source.<br><b>What ops needs:</b> the complete daily fixing set for the period after the lookback, the day count, notional, rate cut-off and payment date. The coupon is computed a few days before the payment date so the cash can be validated.<br><b>Compare:</b> a term-rate coupon is fixed once at the start of the period. A compounded RFR coupon is not known until the end, which changes the timing of the risk and the cash.<br><b>Interviewer follow-up:</b> on £50m at a flat 4.00% over 182 days, what is the coupon? (About £997k: 50m × 4% × 182/365.)",
+  "tags": [
+   "desk_practice",
+   "lvl_foundation",
+   "lifecycle",
+   "fixing",
+   "chain_fixing"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: FIXING 2/3]</b> Context: the same £50m 6-month SONIA-compounded leg. A daily SONIA fixing is missing for 5 days in the period. Operations carries the last published value forward. The published rate on those days was 4.25%, and the carried-forward value was 4.20%. What is the coupon error, and what is the control failure?",
+  "back": "<b>Answer:</b> error ≈ N × Δr × days / 365 = £50m × 0.05% × 5 / 365 ≈ £342. The compounding makes it slightly larger, but the order of magnitude is right. The payer of SONIA pays about £342 too little.<br><b>Control failure:</b> the fixing feed does not alert on a missing day, and the fallback is applied silently. Every trade with a missing day should raise an exception.<br><b>What to check:</b> the fallback provisions for a missing rate in the confirm, the rate cut-off, and whether the feed was late or the day is a genuine gap.<br><b>Interviewer follow-up:</b> why does a small error on one trade still need a fix? (The same error repeated across trades, or on the last observation day, adds up. The root cause is in the process, which makes it a finding in its own right.)",
+  "tags": [
+   "desk_practice",
+   "lvl_vp_core",
+   "lifecycle",
+   "fixing",
+   "chain_fixing",
+   "case_study"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: FIXING 3/3]</b> Context: the missed-fixing error on the £50m leg is found two days after the coupon was paid. Describe the correction: cash, booking, reporting and P&amp;L.",
+  "back": "<b>Answer:</b> recompute the coupon from the official fixings. The difference is paid as a correction in the trade currency, plus interest on the difference from the payment date to the correction date, paid by the party that was short. Operations agrees the amount with the counterparty before paying.<br><b>Booking:</b> record the correction as a lifecycle event under the same trade id, with the reason. Do not overwrite the historic fixing silently.<br><b>Reporting:</b> a change to the cash flows may be a reportable modification under the repository's rules. Check the UTI lineage.<br><b>P&amp;L:</b> the correction is a realised cash item for the period. Book it against that period, not as market P&amp;L, and log the root cause.<br><b>Interviewer follow-up:</b> why is a missed fixing found on a payment day more serious than one found a week early? (The wrong amount has already been paid, so the counterparty holds the cash and a correction carries interest and relationship cost.)",
+  "tags": [
+   "desk_practice",
+   "lvl_stretch",
+   "lifecycle",
+   "fixing",
+   "chain_fixing"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SWPT_EX 1/3]</b> Context: a European payer swaption on a 10y SONIA swap, notional £100m, strike 4.00%. At expiry the 10y swap rate is 4.50% and the annuity of the underlying is 8.0. What do physical and cash settlement give the holder?",
+  "back": "<b>Answer:</b> physical settlement: the holder exercises and enters the underlying 10y swap as payer at 4.00%. At expiry the swap is worth the same as the cash amount, so the economics match, apart from bid-offer and funding of the entered swap.<br><b>Cash settlement:</b> the holder receives N × annuity × (S − K) = £100m × 8.0 × 0.005 = £4.0m, computed with the par-rate method in the confirm, and the option is extinguished.<br><b>Where it matters:</b> the cash amount depends on the annuity method. Check which one the confirm uses before quoting an amount.<br><b>Interviewer follow-up:</b> for a receiver swaption at the same numbers, what is the payoff? (Zero. The strike of 4.00% is below the forward of 4.50%, so the receiver is out of the money.)",
+  "tags": [
+   "desk_practice",
+   "lvl_foundation",
+   "swaptions",
+   "settlement",
+   "chain_swpt_ex"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SWPT_EX 2/3]</b> Context: the same European payer swaption. What are the exercise notice, the cut-off time and the automatic exercise threshold, and what happens if the holder does not notify?",
+  "back": "<b>Answer:</b> the holder gives notice of exercise to the seller by the cut-off time on the expiry date, as defined in the confirm. Many confirms also set an automatic exercise threshold: an in-the-money option above the threshold is exercised without notice. The cut-off and the threshold are trade terms, not market conventions, so read the confirm.<br><b>If no notice and no auto-exercise:</b> the option expires. The holder loses the in-the-money value and the seller keeps the premium.<br><b>Desk controls:</b> an exercise calendar per option, notice tracking, and a check on the counterparty's intent before the cut-off. A missed notice is a loss event.<br><b>Interviewer follow-up:</b> what does the seller have to do before the cut-off? (Have the swap or the cash amount ready to deliver, since notice can arrive late in the day.)",
+  "tags": [
+   "desk_practice",
+   "lvl_vp_core",
+   "swaptions",
+   "lifecycle",
+   "chain_swpt_ex"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SWPT_EX 3/3]</b> Context: the same exercise logic, now for a Bermudan call on a callable note. The note is hedged with a receiver swap of £100m 8y, DV01 about £67k per bp, with a half bid-offer of 0.5bp. The issuer calls at a coupon date. What must the desk do to the swap hedge, and what does it cost?",
+  "back": "<b>Answer:</b> on the call notice, confirm the call date, the call price and the notice validity. The note stops at the call. The swap hedge that protected the note's rate exposure is no longer needed for that exposure, so it is unwound, or the residual exposure is re-hedged.<br><b>Cost:</b> the unwind is at market mid plus or minus the half bid-offer. Approximately 0.5bp × DV01 = 0.5 × £67k ≈ £34k.<br><b>Booking:</b> record the call as a lifecycle event on the note. Book the unwind as a standard trade with its own UTI, cleared or settled like any other.<br><b>Interviewer follow-up:</b> if the issuer calls but the desk keeps a residual exposure, how do you decide what to keep? (Keep only the exposure the note still carries after the call. Re-hedge the residual with a trade that matches it, not with the original hedge.)",
+  "tags": [
+   "desk_practice",
+   "lvl_stretch",
+   "swaptions",
+   "callable",
+   "hedging",
+   "case_study",
+   "chain_swpt_ex"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CREDIT_EVT 1/3]</b> Context: you hold single-name CDS positions, some cash-settled and some physically settled. Walk through the process from a potential credit event to cash settlement, and say what the desk does at each step.",
+  "back": "<b>Answer:</b><ol><li>A potential credit event is identified. A credit event notice, or a notice of publicly available information, goes to the ISDA Determinations Committee (DC), which decides whether a credit event has occurred.</li><li>If the DC resolves a credit event, an auction is set up for cash-settled trades under the auction protocol, using the Standard Reference Obligation (SRO) under the 2014 definitions.</li><li>The auction produces a final price. Cash-settled trades pay notional × (1 − final price) to the protection buyer, ignoring accrued premium for this step.</li><li>Physically settled trades require the buyer to deliver an eligible obligation under the physical settlement steps.</li></ol><b>Desk actions:</b> monitor notices and DC decisions, list affected trades by settlement method and by index exposure, check the restructuring and deliverable terms, and reconcile the auction result to the cash.<br><b>Interviewer follow-up:</b> why does the desk not use its own recovery assumption for cash settlement? (The cash amount is fixed by the auction price, which is the market's recovery. The desk's model does not set it.)",
+  "tags": [
+   "desk_practice",
+   "lvl_vp_core",
+   "credit_events",
+   "cds",
+   "chain_credit_evt"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CREDIT_EVT 2/3]</b> Context: you are protection buyer on $25m of a single-name 5y CDS. A credit event is confirmed and the auction final price is 35 (per 100). Your previous mark on the protection was $16.0m. What is the cash settlement and the P&amp;L, ignoring accrued premium and costs?",
+  "back": "<b>Answer:</b> cash to the protection buyer = $25m × (1 − 0.35) = $16.25m.<br><b>P&amp;L:</b> cash received minus previous mark = $16.25m − $16.0m = +$0.25m, ignoring accrued premium, costs and settlement timing.<br><b>Check:</b> the auction price is the market's recovery, so the P&amp;L on settlement is the gap between the mark and the auction, not a recovery assumption. A large gap is a model or data issue to investigate.<br><b>Interviewer follow-up:</b> what would a 20-point gap between the desk's mark and the final price mean? (The mark used a price or recovery assumption that was wrong. Check the recovery input and the curve before the event, and record the attribution. A 20-point gap on $25m is $5m.)",
+  "tags": [
+   "desk_practice",
+   "lvl_vp_core",
+   "credit_events",
+   "case_study",
+   "chain_credit_evt"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CREDIT_EVT 3/3]</b> Context: the reference entity of your single-name trades merges into a successor, and the Determinations Committee rules that a succession event has occurred. What happens to the single-name trades, to the desk's index exposure and to the hedges?",
+  "back": "<b>Answer:</b> the DC determines whether a succession event has occurred and which entity or entities are the successors. Single-name trades then reference the successor, with notional allocated under the definitions. The economic terms (spread, notional, maturity) carry over.<br><b>Desk actions:</b> re-map the trades to the successor, check the new entity's curve, deliverable obligations and restructuring terms, and update reference data. A successor of different credit quality changes the trade's CS01, and the hedge no longer matches it.<br><b>Index:</b> index constituents follow the index rules. The desk recomputes index exposure and the index-to-single-name basis, and checks the index documentation for when the change takes effect.<br><b>Interviewer follow-up:</b> what is the risk if the successor is weaker? (The protection now covers a different credit. The hedge no longer offsets the exposure, so the basis and the CS01 must be re-hedged.)",
+  "tags": [
+   "desk_practice",
+   "lvl_stretch",
+   "credit_events",
+   "succession",
+   "chain_credit_evt"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A novation needs the consent of {{c1::all three parties}} (the transferring party, the remaining party and the new party) and releases the {{c2::transferring party}}. An assignment of rights alone needs {{c3::the other party's consent}} and does not transfer the {{c4::obligations}}.",
+  "back": "Novation transfers the whole contract. Assignment of rights leaves the transferor liable for the obligations. A partial termination is different again: it reduces notional and settles the terminated part at its PV. Check the exact wording in the ISDA Master and the confirm.",
+  "tags": [
+   "desk_practice",
+   "lvl_foundation",
+   "termination",
+   "isda"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A £100m 10y SONIA swap has an MTM of +£2.4m to the dealer. The dealer terminates 40% of the notional at mid with the counterparty. What cash moves, what is the P&amp;L, and what DV01 is left? Assume DV01 is about £81k per bp at £100m and the bid-offer is 1bp.",
+  "back": "<b>Answer:</b> the terminated 40% is worth 0.4 × £2.4m = £0.96m at mid, paid to the dealer.<br><b>Cost:</b> the half bid-offer (0.5bp) on the terminated DV01 of 0.4 × £81k = £32.4k per bp costs 0.5 × £32.4k ≈ £16k. Cash to the dealer ≈ £0.94m.<br><b>P&amp;L:</b> cash received minus previous mark on the terminated part = £0.94m − £0.96m ≈ −£16k. This is the bid-offer cost. At mid the P&amp;L is zero.<br><b>Remaining position:</b> DV01 of 60% of £81k ≈ £49k per bp. Remaining MTM is 0.6 × £2.4m = £1.44m at mid.<br><b>Interviewer follow-up:</b> why is the P&amp;L on a partial termination not simply the cash received? (The cash includes the value of the terminated part, which was already in the mark. Only the difference from the previous mark is P&amp;L.)",
+  "tags": [
+   "desk_practice",
+   "lvl_vp_core",
+   "termination",
+   "case_study",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What goes into the unwind price of a collateralised 10y swap? Give the components and say which ones are usually small.",
+  "back": "<b>Answer:</b><ul><li>Mid PV of the trade at current curves.</li><li>Bid-offer: the cost of the hedges that close the risk, about half the bid-offer (in bp) × DV01. For a £50m 10y with DV01 about £40k per bp and a full bid-offer of 1bp, that is 0.5bp × £40k ≈ £20k.</li><li>XVA: the change in CVA and DVA on the trade, and FVA on any uncollateralised residual.</li><li>Capital: KVA, if the unwind releases capital.</li><li>Margin and collateral implications, and the agreed unwind terms.</li></ul>For a collateralised trade the XVA and funding parts are usually small. Bid-offer on the DV01 is the main term.<br><b>Interviewer follow-up:</b> a counterparty asks for a mid unwind. What are you pricing? (The mid PV only. The unwind must still cover hedge cost, the XVA change and any capital effect, unless the desk decides otherwise and records it.)",
+  "tags": [
+   "desk_practice",
+   "lvl_stretch",
+   "termination",
+   "unwind",
+   "xva"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the difference, in booking and P&amp;L, between amending a trade and cancelling and rebooking it?",
+  "back": "<b>Answer:</b> an amendment keeps the trade id and lineage. The PV change from the amended term is a booking adjustment or a commercial amount, and it must be labelled as such. Cancel-and-rebook terminates the old trade at its PV and books a new trade at current market with a new trade date. The new trade's value against mid is then a P&amp;L item.<br><b>Reporting:</b> an amendment is reported as a modification under the same UTI. Cancel-and-rebook creates a termination and a new trade with a new UTI, so the repository sees two events.<br><b>Choice:</b> amend for small term changes the counterparty agrees to. Cancel-and-rebook when the change is material, when the CCP cannot accept the amendment, or when the new terms cannot be carried by the original trade.<br><b>Interviewer follow-up:</b> how does a desk stop a booking amendment hiding a trading loss? (Compare the PV change to mid, check who approved it, and show amendment P&amp;L as a separate line for review.)",
+  "tags": [
+   "desk_practice",
+   "lvl_vp_core",
+   "booking",
+   "amendment",
+   "pnl"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case:</b> a £100m 10y SONIA swap, dealer receives fixed at 3.80%, DV01 about £81k per bp. The fixed rate is amended to 3.85% and the change is settled in cash at mid. How much cash moves, which way, and what P&amp;L does the dealer book?",
+  "back": "<b>Answer:</b> the PV change to the dealer ≈ N × Δrate × annuity = £100m × 0.0005 × 8.11 ≈ £405k. The dealer now receives 5bp more, so the trade is worth £405k more to the dealer. For a value-neutral amendment at mid, the dealer pays the counterparty about £405k.<br><b>P&amp;L:</b> at mid the dealer's P&amp;L is zero. If the dealer pays less than £405k, the difference is a gain against mid. If it pays more, it is a loss.<br><b>Check:</b> DV01 × 5bp ≈ £81k × 5 ≈ £405k. A difference of more than a few thousand means the annuity or curve used for the amendment is wrong.<br><b>Interviewer follow-up:</b> how should a concession in the amendment cash appear in the P&amp;L? (As a separate line: the difference between the amendment cash and the mid PV change. It must not be mixed into market P&amp;L.)",
+  "tags": [
+   "desk_practice",
+   "lvl_stretch",
+   "amendment",
+   "case_study",
+   "pnl"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "At concept level, what do EMIR (and UK EMIR) derivatives reporting and MiFIR transaction reporting require? Who reports, to whom, and by when?",
+  "back": "<b>Answer:</b> EMIR derivatives reporting requires each counterparty to report the details and lifecycle events of its OTC and listed derivatives to a trade repository, for example DTCC's Global Trade Repository. Both counterparties report, and the repository pairs the two sides. The reporting deadline is T+1.<br><b>MiFIR transaction reporting</b> is a per-transaction report to the national competent authority, sent through an approved reporting mechanism, for financial instruments admitted to trading or traded on a venue, and for derivatives whose underlying is in scope. The deadline is also T+1, and the report carries venue and execution detail.<br><b>Interviewer follow-up:</b> why can one trade need reports under both regimes? (The scopes overlap but are not the same. Derivatives reporting covers all trades for the repository. Transaction reporting gives the regulator instrument-level detail.)",
+  "tags": [
+   "desk_practice",
+   "lvl_vp_core",
+   "reporting",
+   "regulation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Each legal entity is identified by its {{c1::LEI}}. Each transaction has a {{c2::UTI}}, generated by a designated party under the reporting {{c3::hierarchy}}, and the repository pairs the two sides using it. A {{c4::missing or mismatched UTI}} leaves the two sides unpaired.",
+  "back": "Every later event (amendment, termination, compression) must reference the same UTI, or the repository shows an orphan. The LEI is static data. A wrong LEI on the booking reports the wrong party. The UTI generation rule depends on the jurisdiction, so check the applicable rule before generating one.",
+  "tags": [
+   "desk_practice",
+   "lvl_vp_core",
+   "reporting",
+   "identifiers"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A curve snap is a {{c1::consistent set of market data captured at one fixed time}}. The {{c2::risk, P&amp;L and valuation runs}} must use the same snap so that P&amp;L can be explained. A {{c3::different snap}} for the risk run and the P&amp;L run shows up as an unexplained residual.",
+  "back": "The snap covers quotes, fixings, FX, volatilities and the inputs to the curve build. If a quote is stale at the snap, flag it and record the fallback used. A rerun must use the original snap. A rerun on a new snap silently changes the numbers and breaks the audit trail.",
+  "tags": [
+   "desk_practice",
+   "lvl_foundation",
+   "market_data",
+   "snap"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "At the snap, the 10y GBP swap rate has moved 15bp while the 9y and 11y swaps moved about 0.5bp and the 10y gilt futures did not move. Name three checks and the likely cause.",
+  "back": "<b>Answer:</b> the 10y swap quote is an outlier against its neighbours and against the futures. The likely causes are a stale, mistyped or wrongly tagged quote, or a bad print from the source.<br><b>Checks:</b> (1) timestamp and source: is the quote fresh, from the expected contributor, and inside the bid-offer? (2) cross-checks: the 9y and 11y, the futures or cash bond, and the curve's smoothness and butterflies. (3) instrument: the right tenor, day count and currency.<br><b>Action:</b> if the input is bad, replace it with the last good quote or the consensus under the desk's policy, record the exception, and re-snap. Do not let a bad point into the curve silently. One bad input creates a kink that moves the whole curve and the risk.<br><b>Interviewer follow-up:</b> why does a 15bp move in one tenor matter more for risk than for P&amp;L? (Risk is bucketed, so the 10y DV01 is wrong. P&amp;L also mismatches the book, so the residual is a data issue and not a trade effect.)",
+  "tags": [
+   "desk_practice",
+   "lvl_vp_core",
+   "market_data",
+   "data_quality"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Which Bloomberg function would you use for: a gilt's Z-spread, a 10y EUR swap's PV and DV01, a CDS upfront and running spread, and an option's implied volatility from a volatility cube? Give a one-line description of each function you use.",
+  "back": "<b>Answer:</b> YAS for the gilt's Z-spread (yield and spread analysis for bonds). SWPM for the swap's PV and DV01 (swap manager). CDSW for the CDS upfront and running spread (CDS valuation). VCUB for the swaption volatility from the cube.<br><b>Full set you may be asked to place:</b> YAS: yield and spread analysis for bonds. SWPM: swap pricing and cash flows. CDSW: CDS pricing and valuation. OVML: option valuation given a volatility. VCUB: swaption or cap volatility cube. ALLQ: all dealer quotes for a security. BVAL: Bloomberg's evaluated price for a security. GP: price chart. DES: security description. FLDS: field search, to find which data field holds a value.<br><b>Interviewer follow-up:</b> YAS gives a Z-spread that is 3bp different from the desk's own spread. What do you check first? (The discount curve used, the day count and settlement date, and whether the price basis is clean or dirty.)",
+  "tags": [
+   "desk_practice",
+   "lvl_foundation",
+   "bloomberg",
+   "systems"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Describe the EOD batch in order. What runs first, what depends on what, and which checkpoints must pass before the desks see numbers?",
+  "back": "<b>Answer:</b><ol><li>Snap: capture market data at the agreed time.</li><li>Data quality: missing, stale and outlier checks. The snap is signed off or flagged.</li><li>Curve build, per currency and collateral basis.</li><li>Trade population freeze: the set of trades as at the cut-off.</li><li>Valuation and sensitivities: PV, DV01, buckets and vega in the risk run.</li><li>P&amp;L: today's PV minus yesterday's frozen PV, adjusted for cash flows and new trades, and attributed to factors.</li><li>XVA, limits, and reports to desks, risk and finance.</li></ol><b>Dependencies:</b> curves before pricing, the frozen population before valuation, and yesterday's frozen PV before P&amp;L.<br><b>Checkpoints:</b> trade counts and totals against the previous day, PV change against the market move, and the P&amp;L explain residual.<br><b>Interviewer follow-up:</b> why must P&amp;L use the same trade population as yesterday's frozen PV? (Otherwise trades added or removed during the day show up as market P&amp;L. New trades should appear as their own new-trade component.)",
+  "tags": [
+   "desk_practice",
+   "lvl_vp_core",
+   "eod",
+   "batch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "At 18:40 the EUR curve build fails on one input. What do you do, and what must not happen?",
+  "back": "<b>Answer:</b> stop the dependent steps and identify the failing input. Decide with risk control whether to fix the input and rerun from the failed step on the same snap, or to use the prior day's curve under a documented override.<br><b>Must not happen:</b> (1) a partial risk run, where some EUR trades are priced on today's curve and others on yesterday's, because sensitivities and P&amp;L then mix dates and cannot be explained; (2) a silent rerun on a different snap; (3) publishing the failed output as if it were valid.<br><b>Communication:</b> tell the desks and risk control the time and status, and the deadline for any report or margin call that depends on the run.<br><b>Interviewer follow-up:</b> how do you know a rerun is safe? (It uses the same snap with the fix. Compare the new totals and the P&amp;L explain against the previous day, and sign off only when the residual is inside tolerance.)",
+  "tags": [
+   "desk_practice",
+   "lvl_vp_core",
+   "eod",
+   "batch",
+   "controls"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A trade with trade date T is booked at 17:30 on day T, after the population freeze and the snap. How does it show in the P&amp;L, and what do you do so that T's numbers are right?",
+  "back": "<b>Answer:</b> the trade is outside T's frozen population, so its PV and DV01 are not in T's valuation and risk. On T+1 it appears as a new-trade component, and any residual that the new-trade term does not explain shows up as unexplained P&amp;L.<br><b>Fix:</b> book the trade with the late-booking flag and the correct as-of trade date. Re-run the affected valuation and risk for T against T's snap, so the trade appears in T's risk and P&amp;L. Record the late booking as an exception with its reason.<br><b>Check:</b> the T+1 P&amp;L explain should show the trade's new-trade component, and the residual after that should be market noise.<br><b>Interviewer follow-up:</b> why is a late booking a control issue and not just a numbers issue? (The position was held unpriced and unreported for part of the period, which can hide a trading or timing problem.)",
+  "tags": [
+   "desk_practice",
+   "lvl_stretch",
+   "eod",
+   "booking",
+   "controls"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is a front-to-back break? Give three break types with an example, how breaks are aged, and the resolution path.",
+  "back": "<b>Answer:</b> a break is a mismatch between two sources that should agree: the front office and the back office, the bank and the counterparty, or risk and the finance ledger.<br><b>Types:</b> (1) booking breaks: a trade in one system but not the other, or different terms, such as a notional that differs between systems; (2) cash breaks: an expected payment and the actual receipt or account entry differ in amount, date or account; (3) valuation or position breaks: risk and the finance ledger hold different positions or prices.<br><b>Ageing:</b> each break is aged from the day it first appeared. Older breaks escalate to the desk head and to control, with a named owner.<br><b>Resolution path:</b> identify the source of the mismatch, decide which side is right from the agreed terms, correct the wrong system with an audit trail, and confirm the break clears the next day.<br><b>Interviewer follow-up:</b> why is an old break riskier than a new one? (A long-standing break usually means a real unhedged position, a missed payment or a wrong economic term, and each carries P&amp;L and capital.)",
+  "tags": [
+   "desk_practice",
+   "lvl_vp_core",
+   "reconciliation",
+   "breaks"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "It is 16:15. The P&amp;L explain shows £180k unexplained on a book with DV01 of £410k per bp, long rates, after a 2bp rally. Walk through how you find the residual.",
+  "back": "<b>Answer:</b> expected from DV01: £410k × 2 = £820k. Booked P&amp;L: £1.0m. Unexplained: £180k.<br><b>Steps:</b><ol><li>Check the snap: do risk and P&amp;L use the same market data and time? A snap mismatch causes residuals.</li><li>Check the trade population: trades booked or amended intraday, and whether they are in both runs.</li><li>Carry and roll-down: P&amp;L includes accrual and roll, which a DV01 explain does not, so the explain must include them.</li><li>Second order: convexity over 2bp is small, but check gamma on any options.</li><li>Other factors: basis (swap spread, gilt-swap), volatility, FX and inflation. A move in a factor left out of the explain is a common cause.</li><li>Curve build: a residual concentrated in one bucket points at the input that moved unexpectedly.</li></ol>If the residual is still above tolerance, escalate with the attribution by factor. Sign off only once it is explained or formally accepted.<br><b>Interviewer follow-up:</b> which of these steps is fastest to rule out? (The snap and the trade population. They take minutes and cause most residuals.)",
+  "tags": [
+   "desk_practice",
+   "lvl_stretch",
+   "pnl",
+   "reconciliation",
+   "scenario"
+  ]
+ }
+]
