@@ -1,0 +1,359 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: NEG_BASIS 1/5]</b> Context: 5y bond bought at an asset-swap spread of 150bp; 5y CDS protection bought at 120bp; basis = CDS minus bond = -30bp.<br>Set up the trade cash flows. What is the running carry before funding, which credit risks remain, and what is the sign of the basis?",
+  "back": "Long the bond via the asset swap receives the floating leg plus 150bp; long CDS protection pays 120bp. Net running carry is about +30bp per year on notional before funding, so the trade is long a positive carry against a negative basis.<br>\nCredit risk of the bond is largely offset by the protection, because both are exposed to the same issuer's default. What remains is (i) the basis itself (the CDS and asset swap can move apart), (ii) recovery mismatch at default (the CDS pays on the auction price, the bond pays its own realised price), (iii) counterparty risk on the protection seller, and (iv) funding.<br>\n<b>Interviewer follow-up:</b> Which of these risks is the trade actually paid for? The basis is the compensation; the others are costs the trader is carrying.",
+  "tags": [
+   "credit_basis",
+   "neg_basis",
+   "chain_neg_basis",
+   "trade"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: NEG_BASIS 2/5]</b> Context: 5y bond bought at an asset-swap spread of 150bp; 5y CDS protection bought at 120bp; basis = CDS minus bond = -30bp.<br>The bond is financed in repo. How does the funding leg change the carry of the trade?",
+  "back": "Carry is approximately ASW minus CDS, minus (repo rate minus the floating index) times the funded amount, minus hedging and margin costs. The asset swap pays the floating leg flat on the risk-free rate (for a GBP bond, SONIA-based), so any difference between the repo rate on the bond and that index is a funding basis that comes straight out of the carry.<br>\nExample: repo at SONIA + 10bp on 10m gives a 10bp drag, so the 30bp basis becomes about 20bp of net carry. Special repo (bond trading tight in repo) can add carry, but specialness is itself unstable.<br>\n<b>Interviewer follow-up:</b> Why is the negative basis not simply \"arbitrage\" when the carry depends on repo? Because the cash bond must be financed for the life of the trade, and haircut changes or a failed roll turn the funding leg into a forced sale.",
+  "tags": [
+   "credit_basis",
+   "neg_basis",
+   "chain_neg_basis",
+   "funding",
+   "repo"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: NEG_BASIS 3/5]</b> Context: 5y bond bought at an asset-swap spread of 150bp; 5y CDS protection bought at 120bp; basis = CDS minus bond = -30bp.<br>The trader owns one specific bond, but the CDS auction price is set by the cheapest deliverable obligation. What is the P&L across default as a function of the trader's own bond price?",
+  "back": "Let the trader's bond recover its own price \\(P_{own}\\) (per 100), and let the auction settle at \\(P_{auc} = \\min_j P_j\\) over eligible deliverables. The CDS pays \\((100 - P_{auc})\\) per 100 notional; the bond delivers \\(P_{own}\\).<br>\nNet P&L across default per 100 notional, ignoring carry and the asset-swap unwind, is \\(P_{own} + (100 - P_{auc}) - 100 = P_{own} - P_{auc}\\).<br>\nIf the trader's bond is itself an eligible deliverable, then \\(P_{auc} \\le P_{own}\\) by construction, so this term is never negative: the trader holds a long option on the cheapest deliverable. Numbers: \\(P_{own}=40\\), \\(P_{auc}=35\\) gives +5 points, or +$500k on $10m.<br>\nIf the bond is not eligible (for example a different maturity or ranking), the sign is undetermined and the mismatch becomes a genuine basis risk.<br>\n<b>Interviewer follow-up:</b> Does a negative basis mean the trader is paid for this option? Only partly. The CDS spread is set by the market for the cheapest-deliverable option, so a negative basis means the bond is cheap relative to a delivery-option-inclusive CDS. The trade's return is then the basis plus whatever the option is worth on default, and both can reverse in stress.",
+  "tags": [
+   "credit_basis",
+   "neg_basis",
+   "chain_neg_basis",
+   "ctd",
+   "credit_events"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: NEG_BASIS 4/5]</b> Context: 5y bond bought at an asset-swap spread of 150bp; 5y CDS protection bought at 120bp; basis = CDS minus bond = -30bp.<br>Stress: the bond's asset-swap spread widens to 250bp and the CDS widens to 170bp (basis now -80bp). Bond spread duration about 4.5, CDS RPV01 about 4.4, notional 10m. What is the mark-to-market before any default, and what happens with margin?",
+  "back": "Bond MTM: \\(-100\\text{bp} \\times 4.5 \\times $10\\text{m} \\times 10^{-4} = -$450\\text{k}\\).<br>\nCDS protection bought, MTM: \\(+50\\text{bp} \\times 4.4 \\times $10\\text{m} \\times 10^{-4} = +$220\\text{k}\\).<br>\nNet mark: about -$230k with no default. Carry earned at 30bp is $30k per year, so the loss equals about 7.7 years of carry.<br>\nVariation margin on the CDS leg moves cash to the trader (they are the protection buyer and the spread rose) which helps funding, but the bond is funded in repo where haircuts and margin calls rise in stress. The forced-selling feedback is what turns a mark into a realised loss.<br>\n<b>Interviewer follow-up:</b> Why does the basis widen in stress? The bond is a funded, capital-intensive asset, so dealers and levered holders are forced to sell, while the index and CDS remain the hedging venue.",
+  "tags": [
+   "credit_basis",
+   "neg_basis",
+   "chain_neg_basis",
+   "stress",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: NEG_BASIS 5/5]</b> Context: 5y bond bought at an asset-swap spread of 150bp; 5y CDS protection bought at 120bp; basis = CDS minus bond = -30bp.<br>Given the stress numbers from the previous card, how long must the basis trade be held and how much must it be leveraged for the arbitrage to be worth the risk?",
+  "back": "Breakeven time to recover a mark-to-market loss \\(M\\) from carry \\(c\\) per year: \\(T = M/c\\). Here \\(M = $230\\text{k}\\) and \\(c = $30\\text{k}\\) per year, so \\(T \\approx 7.7\\) years on the 10m position, which is longer than the 5y tenor.<br>\nSo the trade only pays if the basis converges without a forced unwind, or if the position is financed with no mark-to-market-linked margin. Leverage on a 30bp carry raises the return on equity but moves the breakeven proportionally: a 4x levered book needs the same 7.7 years on mark, but the margin calls arrive earlier.<br>\n<b>Interviewer follow-up:</b> What is the tail-risk hedge? Hedging the basis with the index reduces spread-direction risk, but not the basis risk, which is what the stress loss is made of.",
+  "tags": [
+   "credit_basis",
+   "neg_basis",
+   "chain_neg_basis",
+   "risk",
+   "stress"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: IDX_BASIS 1/5]</b> Context: CDX-style IG index at 65bp; intrinsic spread implied by its 125 constituents is 58bp; index basis = +7bp.<br>Which side of the index-versus-constituent trade captures the 7bp, and what is its running carry per 10m of index notional?",
+  "back": "Sell index protection (receive 65bp) and buy protection on the constituents with weights matched to the index (pay 58bp equivalent). Carry is +7bp on the index notional, so \\(+$7\\text{k}\\) per year on 10m.<br>\nIntrinsic spread is approximately the notional-weighted average of constituent par spreads when tenors and recoveries are common. It is not a simple average once constituents have different survival profiles, because the RPV01 weights and the defaulted names shift the effective weights.<br>\n<b>Interviewer follow-up:</b> Why is the trade sized in RPV01-matched notional and not by face? Because CS01 on each leg depends on its own spread level; equal face is not equal spread risk.",
+  "tags": [
+   "index_basis",
+   "idx_basis",
+   "chain_idx_basis",
+   "trade",
+   "indices"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: IDX_BASIS 2/5]</b> Context: CDX-style IG index at 65bp; intrinsic spread implied by its 125 constituents is 58bp; index basis = +7bp.<br>A constituent defaults one day after the trade is put on. Show that the default is almost fully hedged, and what changes in the position afterwards.",
+  "back": "Short index protection: the seller pays \\((1-R)/N\\) of index notional on the defaulting name, with \\(N = 125\\), so \\(0.6/125 = 0.48\\%\\) at \\(R=40\\%\\). Bought constituent protection: the buyer receives \\((1-R)\\) times its own notional. If that notional is \\(1/125\\) of the index, both legs cancel exactly.<br>\nAfter the default, both legs amortise by 1/125: the index factor becomes 124/125, the constituent protection is gone, and the surviving hedge must be re-sized. The carry shrinks by 1/125 of its prior value. The residual mismatch is any difference in recovery between the index settlement and the constituent auction.<br>\n<b>Interviewer follow-up:</b> Is the trade default-neutral? Only if the recovery on the index and on the name agree; with a recovery mismatch the residual is (R_index - R_name) times the defaulted notional.",
+  "tags": [
+   "index_basis",
+   "idx_basis",
+   "chain_idx_basis",
+   "defaults",
+   "jtd"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: IDX_BASIS 3/5]</b> Context: CDX-style IG index at 65bp; intrinsic spread implied by its 125 constituents is 58bp; index basis = +7bp.<br>The 7bp arbitrage is \"free money\" on paper. Why does it persist at scale? Quantify with 1bn of index notional.",
+  "back": "On 1bn index notional, 7bp is \\($700\\text{k}\\) per year. The gross number is not the net number: the trade needs roughly 125 single-name legs, each with its own bid-offer and its own inventory risk.<br>\nIllustrative cost: if each leg carries a half bid-offer of about 0.5bp of running spread on its share, the average drag is around 0.5bp, leaving about 6.5bp. Add balance-sheet charges for holding 125 single-name CDS against a netted index position, and the sub-10bp basis may not clear the hurdle in normal markets. This is approximate and depends on the desk's netting and capital.<br>\n<b>Interviewer follow-up:</b> Why does the basis persist if the cost is small? Capacity: the arbitrage is only worth a balance sheet when it is large, and its size is limited by the constituent liquidity it needs.",
+  "tags": [
+   "index_basis",
+   "idx_basis",
+   "chain_idx_basis",
+   "trade_costs",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: IDX_BASIS 4/5]</b> Context: CDX-style IG index at 65bp; intrinsic spread implied by its 125 constituents is 58bp; index basis = +7bp.<br>In a stress the basis goes from +7bp to +15bp (index wider than intrinsic). The arbitrage is short index protection. Who is pushing the index wide, and what is the MTM of the trade on 10m of index notional with RPV01 about 4.5?",
+  "back": "Index protection is the liquid, cheap venue for hedging, so clients who want to buy protection bid up the index; dealers who sell index protection demand a premium for scarce balance sheet. Single-name protection is harder to source in size, so the single-name leg does not move up as fast.<br>\nMTM on the sold index for an 8bp widening of the basis (index moving up relative to names) on 10m with RPV01 4.5: \\(10\\text{m} \\times 4.5 \\times 8\\text{bp} \\times 10^{-4}\\) ≈ $36k loss if the constituents do not follow. The arbitrageur is short the index exactly where the clients are buying.<br>\n<b>Interviewer follow-up:</b> Is a wide index always a buying opportunity? Only if the trader can fund the position through the widening; the basis can overshoot before it converges.",
+  "tags": [
+   "index_basis",
+   "idx_basis",
+   "chain_idx_basis",
+   "stress",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: IDX_BASIS 5/5]</b> Context: CDX-style IG index at 65bp; intrinsic spread implied by its 125 constituents is 58bp; index basis = +7bp.<br>The index is rebalanced on the next roll: one constituent is replaced, and the intrinsic spread changes. What does the trader have to re-hedge, and why does a rebalance create basis P&L that is not spread risk?",
+  "back": "The new constituent has a different spread, recovery and RPV01. The intrinsic changes by roughly \\((s_{new} - s_{old})/N\\) on the equal-weight basis, but the old name's CDS position is closed at its market price, which may differ from its intrinsic contribution. The gap is realised P&L on the roll, not spread risk.<br>\nAlso the index series rolls to new maturity: the old series' basis and the new series' basis can differ by the roll basis (liquidity and maturity), so the trader must cross both.<br>\n<b>Interviewer follow-up:</b> Is the arbitrage hedged across a roll? Not perfectly; it is hedged in spread and default risk for the current series, and the roll is a separate basis trade.",
+  "tags": [
+   "index_basis",
+   "idx_basis",
+   "chain_idx_basis",
+   "roll",
+   "hedging"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BASECORR 1/5]</b> Context: one-factor Gaussian copula calibrated to a 5y CDX-style index with market quotes on 0-3%, 0-7%, 0-15%, 0-100% tranches.<br>Define base correlation and explain why it is defined on equity tranches \\([0,K]\\) rather than on each tranche.",
+  "back": "The base correlation at detachment \\(K\\), \\(\\rho(K)\\), is the single correlation in the one-factor copula that reprices the equity tranche \\([0,K]\\) to its market price, with the same index spread and recovery. Each \\([0,K]\\) tranche has a single payoff exposure, so it can be inverted for one number.<br>\nA non-equity tranche \\([K_1,K_2]\\) is the difference of two equity tranches, \\(EL[K_1,K_2] = EL[0,K_2] - EL[0,K_1]\\), so it can be priced from the base curve at two points. This is what makes the base curve the natural object.<br>\n<b>Interviewer follow-up:</b> Why not invert each tranche to its own implied correlation? The mezzanine tranche has no unique implied correlation in the copula: its EL is not monotone in correlation, so the inversion can have zero or two solutions (see the mezz card in this deck).",
+  "tags": [
+   "base_correlation",
+   "base_corr",
+   "chain_base_corr",
+   "tranches",
+   "copula"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BASECORR 2/5]</b> Context: one-factor Gaussian copula calibrated to a 5y CDX-style index with market quotes on 0-3%, 0-7%, 0-15%, 0-100% tranches.<br>Market base correlations usually rise with detachment (for example 25% at 3%, 40% at 7%, 60% at 15%). Why is that consistent with the copula, and what constraint must the base curve satisfy?",
+  "back": "The rising shape is the skew: senior tranches are priced as if default dependence is higher in the tail. A single-correlation copula underprices senior protection relative to the equity tranche, so the base curve compensates by pushing \\(\\rho(K)\\) up.<br>\nNo-arbitrage constraint: the expected loss of each equity tranche \\(EL[0,K]\\) must be non-decreasing in \\(K\\), and every non-equity tranche must have non-negative EL, \\(EL[K_1,K_2] \\ge 0\\). Interpolating \\(\\rho(K)\\) between quoted points can violate this if the curve falls too steeply between two strikes, producing a negative-priced mezzanine tranche.<br>\n<b>Interviewer follow-up:</b> How do you enforce it? Interpolate the expected loss curve (or the base correlation in a monotone way) and check each tranche EL is positive and the tranche sum reconciles.",
+  "tags": [
+   "base_correlation",
+   "base_corr",
+   "chain_base_corr",
+   "skew",
+   "arbitrage"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BASECORR 3/5]</b> Context: one-factor Gaussian copula calibrated to a 5y CDX-style index with market quotes on 0-3%, 0-7%, 0-15%, 0-100% tranches.<br>Index spread moves up by 1bp. What is the delta of the 3-7% mezzanine tranche to the index, and should base correlation be held fixed when you compute it?",
+  "back": "Delta to the index is \\(\\partial V_{3\\text{-}7}/\\partial S_I\\) with the base correlations held at their quoted points, expressed as an index notional: \\(N_I = \\frac{\\partial V_{3\\text{-}7}/\\partial S_I}{RPV01_I \\times 1\\text{bp}}\\).<br>\nTwo conventions exist. Sticky strike holds \\(\\rho(K)\\) fixed at each detachment, so the index move changes only the tranche's market-implied loss. Sticky delta moves \\(\\rho(K)\\) with the index so the implied correlation is re-based. Delta under sticky strike is the standard hedging convention in the copula; the two can differ materially for mezzanine tranches, where the tranche's sensitivity depends on where correlation sits on the hump.<br>\n<b>Interviewer follow-up:</b> Which convention would a risk manager use for a hedge over a 1bp move? Sticky strike is the default for small moves; sticky delta is the check for stress.",
+  "tags": [
+   "base_correlation",
+   "base_corr",
+   "chain_base_corr",
+   "delta",
+   "hedging"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BASECORR 4/5]</b> Context: one-factor Gaussian copula calibrated to a 5y CDX-style index with market quotes on 0-3%, 0-7%, 0-15%, 0-100% tranches.<br>Why does one base correlation hedge (for example one index tranche sold against another) not neutralise the book's correlation risk?",
+  "back": "Each point on the base curve is an independent risk factor, so the book's correlation exposure is a vector \\((\\partial V/\\partial \\rho(K_1), \\dots, \\partial V/\\partial \\rho(K_n))\\) — a Corr01 by detachment. A single hedge instrument neutralises one component.<br>\nTo hedge the vector, choose n instruments whose Corr01 vectors are independent, e.g. long equity tranche against short senior tranche, and solve the linear system for the notionals so the total Corr01 at each detachment is zero. Two instruments hedge two components; they leave the curve shape (slope and curvature in \\(K\\)) exposed.<br>\n<b>Interviewer follow-up:</b> Why do desks still say \"correlation hedged\" with a long-short equity-senior book? Because it is hedged at the two detachments that carry most of the vega; the residual is the mezzanine slope risk.",
+  "tags": [
+   "base_correlation",
+   "base_corr",
+   "chain_base_corr",
+   "correlation",
+   "hedging"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BASECORR 5/5]</b> Context: one-factor Gaussian copula calibrated to a 5y CDX-style index with market quotes on 0-3%, 0-7%, 0-15%, 0-100% tranches.<br>One constituent defaults (125 names, recovery 40%). What happens to the equity tranche 0-3% and why does a correlation hedge built on that tranche move?",
+  "back": "The default removes \\((1-R)/125 = 0.48\\%\\) of index notional as loss. Against a 3% equity tranche, that is \\(0.48/3 = 16\\%\\) of its notional consumed in one name.<br>\nAfter the default, the equity tranche's remaining notional is 2.52% of the original index and its attachment in terms of surviving names shifts. The base correlation curve is re-calibrated to the new index factor, so the \\(\\rho(3\\%)\\) point can move even though no spread moved. The correlation hedge therefore carries a jump-to-default component that is not in the Corr01 vector.<br>\n<b>Interviewer follow-up:</b> How do you measure it? Compute the book's P&L with one name removed and the base curve re-calibrated to the reduced index, not a shifted curve.",
+  "tags": [
+   "base_correlation",
+   "base_corr",
+   "chain_base_corr",
+   "jtd",
+   "tranches"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> A 5y CDS has flat hazard \\(\\lambda\\), flat continuously compounded rate \\(r\\), recovery \\(R\\), and premium accrued on default. Derive the par spread. Compare quarterly discrete premiums with the continuous limit.",
+  "back": "<b>Step 1 (premium leg per unit spread).</b> With payments at \\(t_i\\) and survival \\(Q(t)=e^{-\\lambda t}\\), the scheduled premium is \\(\\sum_i \\tau\\, DF(t_i) Q(t_i)\\). Premium accrued on default in period \\(i\\) is approximately \\(\\frac{\\tau}{2} DF(t_{mid}) (Q(t_{i-1}) - Q(t_i))\\), i.e. default assumed at mid-period.<br>\n<b>Step 2 (protection leg).</b> \\((1-R)\\sum_i DF(t_{mid}) (Q(t_{i-1}) - Q(t_i))\\), with settlement at default.<br>\n<b>Step 3 (par).</b> Par spread \\(s = (1-R)\\sum DF(Q_{i-1}-Q_i) \\,/\\, \\sum \\tau DF Q_i + \\text{accrued term}\\).<br>\n<b>Step 4 (continuous limit).</b> With continuous premium and full accrual, the premium annuity is \\(\\int_0^T DF(t)Q(t)\\,dt = (1-e^{-(r+\\lambda)T})/(r+\\lambda)\\), and the protection is \\((1-R)\\lambda\\int_0^T e^{-(r+\\lambda)t}dt\\). The ratio is \\(s = (1-R)\\lambda\\) exactly, independent of \\(r\\).<br>\n<b>Numbers</b> (5y, \\(\\lambda=5\\%\\), \\(R=40\\%\\), \\(r=3\\%\\)): discrete quarterly without accrual 303.0bp; with accrued on default 301.1bp; continuous limit 300.0bp. RPV01 discrete with accrual 4.106 versus continuous 4.121.<br>\n<b>Where it breaks:</b> the identity \\(s=\\lambda(1-R)\\) needs flat hazard and continuous premium. Piecewise-flat hazard (what the market curve bootstraps to) makes the par an average of the segment spreads weighted by the annuity, not the segment hazard times loss.",
+  "tags": [
+   "cds",
+   "derivation",
+   "pricing",
+   "accrued_on_default"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> Under the ISDA standard CDS model, write the upfront of a single-name CDS with par spread \\(s\\) and standard coupon \\(c\\). Who pays the upfront when \\(s > c\\)? Check the sign at 500bp.",
+  "back": "<b>Step 1 (model).</b> The ISDA standard model bootstraps a piecewise-flat hazard curve from the par spreads of the standard tenors, using ACT/360 and the IMM schedule, with a common discount curve. The model is not a closed form: the risky annuity \\(RPV01\\) is computed on the bootstrapped curve.<br>\n<b>Step 2 (value to the protection buyer).</b> \\(V_{buyer} = PV_{prot} - PV_{prem}(c) = s\\cdot RPV01 - c\\cdot RPV01 = (s-c)\\,RPV01\\) per unit notional (using \\(PV_{prot}=s\\,RPV01\\) at fair spread).<br>\n<b>Step 3 (upfront).</b> The buyer pays \\(U = (s-c)\\,RPV01\\) for the contract to be fair at coupon \\(c\\), plus the accrued premium from the last coupon date (ACT/360), which is cash and not part of \\(U\\).<br>\n<b>Numbers.</b> \\(s=300\\)bp, \\(c=100\\)bp, \\(RPV01 \\approx 4.106\\) (flat \\(\\lambda=5\\%\\), \\(R=40\\%\\), 5y): \\(U = 0.02 \\times 4.106 = 8.21\\) points, or $821k on $10m. At \\(c=500\\)bp the sign flips: \\(U = -8.21\\) points, so the seller pays the buyer.<br>\n<b>Where it breaks:</b> \\(RPV01\\) depends on the bootstrapped curve, which is itself calibrated to the quoted spread, so a change in the quoted convention (for example moving from par to upfront quotes) changes the hazard as well as the value. The linear formula is exact given \\(RPV01\\); the approximation risk sits in the curve, not the formula.",
+  "tags": [
+   "cds",
+   "derivation",
+   "pricing",
+   "convention",
+   "isda"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> Derive the forward par spread of a CDS starting at \\(T_1\\) and maturing at \\(T_2\\), under flat hazard \\(\\lambda\\), flat rate \\(r\\), recovery \\(R\\), continuous premium. What does your result say about the shape of the forward curve?",
+  "back": "<b>Step 1.</b> Let \\(\\Delta = e^{-(r+\\lambda)T_1} - e^{-(r+\\lambda)T_2}\\). Forward protection leg: \\((1-R)\\lambda\\int_{T_1}^{T_2} e^{-(r+\\lambda)t}dt = (1-R)\\lambda\\,\\Delta/(r+\\lambda)\\).<br>\n<b>Step 2.</b> Forward premium annuity: \\(\\int_{T_1}^{T_2} e^{-(r+\\lambda)t}dt = \\Delta/(r+\\lambda)\\) (survival and discounting combined into one exponent under flat hazard).<br>\n<b>Step 3.</b> Forward spread = ratio = \\((1-R)\\lambda\\), independent of \\(T_1\\), \\(T_2\\) and \\(r\\).<br>\n<b>Consequence.</b> Under flat hazard the forward par curve is flat at \\(\\lambda(1-R)\\) and equals the spot par spread. Any slope in the forward curve is therefore evidence of a term structure in hazard, not of the rate curve.<br>\n<b>Where it breaks:</b> the flat-forward result needs the same hazard in \\([T_1,T_2]\\) and the forward premium to be continuous; discrete premiums and the accrual correction add a few tenths of a basis point. With a time-varying hazard the forward equals the hazard-weighted average over the window, which is why forwards are used to read term structure.",
+  "tags": [
+   "cds",
+   "derivation",
+   "forward",
+   "term_structure"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> A knockout payer option on a CDS index with \\(N\\) equal-weight names, common hazard \\(\\lambda\\), recovery \\(R\\), flat rate \\(r\\), expiry \\(T\\). Derive the front-end protection (FEP) value. Why must it be added to the Black value of the surviving index, and what does the decomposition look like for a one-month expiry?",
+  "back": "<b>Convention.</b> Under a knockout, the first default among the \\(N\\) names extinguishes the option and the holder receives the protection on the defaulted name, \\((1-R)/N\\) of index notional, paid at default. Otherwise the option pays its Black payoff at \\(T\\).<br>\n<b>Step 1 (first-default intensity).</b> With independent names of hazard \\(\\lambda\\), the first default has intensity \\(N\\lambda\\).<br>\n<b>Step 2 (FEP value).</b> \\(FEP = \\int_0^T \\frac{1-R}{N}\\,N\\lambda\\,e^{-N\\lambda t}\\,e^{-rt}\\,dt = \\frac{(1-R)\\lambda}{N\\lambda + r}\\left(1-e^{-(N\\lambda+r)T}\\right)\\).<br>\n<b>Step 3 (decomposition).</b> Value = FEP + \\(P(\\text{no default before }T)\\times\\) (Black value on the surviving index), with \\(P = e^{-N\\lambda T}\\).<br>\n<b>Numbers.</b> \\(N=125\\), \\(\\lambda=5\\%\\), \\(R=40\\%\\), \\(r=3\\%\\). For \\(T=1\\)m: FEP ≈ 0.195% of index notional and \\(P(\\text{no default}) \\approx 0.59\\). For \\(T=1\\)y: FEP ≈ 0.477% (≈ \\((1-R)/N = 0.48\\%\\)) and \\(P \\approx 0.002\\), so the option is almost entirely FEP.<br>\n<b>Where it breaks:</b> the Black term must use the forward spread of survivors, not the full index forward, otherwise the defaulted names are double counted. Heterogeneous hazards, default correlation and the exact knockout wording in a given contract change the convention; this derivation assumes independent homogeneous names.",
+  "tags": [
+   "index_options",
+   "fep",
+   "derivation",
+   "knockout"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> Derive the expected loss of a tranche \\([A,B]\\) in the large homogeneous pool limit of the one-factor Gaussian copula with pool default probability \\(p\\), correlation \\(\\rho\\), recovery \\(R\\). Evaluate for \\(p=5\\%\\), \\(R=40\\%\\), \\(\\rho=0.3\\).",
+  "back": "<b>Step 1 (conditional default).</b> Given market factor \\(M\\sim N(0,1)\\), each name defaults with \\(p(M)=\\Phi\\big((\\Phi^{-1}(p)-\\sqrt{\\rho}\\,M)/\\sqrt{1-\\rho}\\big)\\), independently.<br>\n<b>Step 2 (LHP).</b> With infinitely many names, the pool loss given \\(M\\) is deterministic: \\(L(M) = (1-R)\\,p(M)\\).<br>\n<b>Step 3 (tranche loss).</b> Tranche loss is \\(\\min\\big((L-A)^+, B-A\\big)\\); the expected loss as a fraction of tranche notional is \\(EL[A,B] = \\frac{1}{B-A}\\,E_M\\big[\\min((L(M)-A)^+,\\,B-A)\\big]\\).<br>\n<b>Numbers.</b> Unconditional pool EL is \\((1-R)p = 3.0\\%\\). Results: 0-3% tranche 54.1% of notional; 3-7% 19.6%; 7-15% 5.8%; 15-100% 0.15% (quadrature). Check: \\(0.03(54.1)+0.04(19.6)+0.08(5.8)+0.85(0.15)\\%\\) = 3.00% of index.<br>\n<b>Where it breaks:</b> at \\(N=125\\) granularity noise matters for the equity tranche; the LHP ignores it. The Gaussian copula's thin tails and a single \\(\\rho\\) mis-price senior and mezzanine tranches, which is why base correlation is needed.",
+  "tags": [
+   "tranches",
+   "derivation",
+   "copula",
+   "lhp"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> Derive the jump-to-default P&L of a single-name CDS position with notional \\(N\\), recovery \\(R\\) and mark-to-market \\(V\\) to the holder. Apply it to a 5s10s steepener on one issuer where the 10y protection bought has moved from 150bp to 160bp.",
+  "back": "<b>Step 1.</b> At default, a protection buyer receives \\(N(1-R)\\) and the contract terminates. The mark \\(V\\) that existed just before default is lost.<br>\n<b>Step 2.</b> P&L at default \\(= N(1-R) - V\\). This is the JTD. For a fresh at-par trade \\(V = 0\\) and JTD \\(= N(1-R)\\). For a seller of protection the sign of both terms flips.<br>\n<b>Step 3 (MTM for a buyer).</b> \\(V = (s_{mkt} - c)\\,RPV01\\,N\\).<br>\n<b>Step 4 (numbers).</b> \\(RPV01_{10y} \\approx 7.69\\) at 150bp, \\(R=40\\%\\). Spread moves 150 to 160bp, so \\(V_{10} = (0.0160-0.0150)\\times 7.69 \\times 10\\text{m} = $76.9\\text{k}\\). JTD of the 10y bought leg = \\(6.00\\text{m} - 0.077\\text{m} = 5.92\\text{m}\\). If the 5y sold leg is at par (\\(V=0\\)) its JTD is \\(-6.00\\text{m}\\). Book JTD = \\(-$77\\text{k}\\), not zero.<br>\n<b>Where it breaks:</b> the equal-notional JTD neutrality holds only at inception. Any move in the legs makes \\(V\\neq 0\\) and shifts the book's JTD. Different recoveries on the legs (for example a sub-debt versus senior contract) break the equal-notional rule even at inception.",
+  "tags": [
+   "cds",
+   "derivation",
+   "jtd",
+   "curve_trades"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study:</b> A 5y CDS on a distressed name quotes 300bp running; the standard coupon is 100bp. Convert to points upfront. Use RPV01 about 4.11 (flat \\(\\lambda=5\\%\\), \\(R=40\\%\\)). Check the answer with the opposite coupon.",
+  "back": "<b>Step 1.</b> Spread-coupon gap: \\(s - c = 3.00\\% - 1.00\\% = 2.00\\%\\).<br>\n<b>Step 2.</b> Upfront \\(= (s-c)\\times RPV01 = 0.0200 \\times 4.106 = 0.0821\\), i.e. <b>8.21 points</b> paid by the protection buyer, excluding accrued.<br>\n<b>Step 3.</b> On $10m notional: \\(8.21\\% \\times 10\\text{m} = $821\\text{k}\\), plus accrued on the premium from the last coupon date.<br>\n<b>Step 4 (sanity).</b> Rule of thumb: each 1bp of running spread gap is about 0.041 points at this RPV01. Paying 100bp running on a name worth 300bp means the buyer is underpaying by 200bp a year for about 4.1 years of effective duration, so about 8 points.<br>\n<b>Step 5 (check).</b> At a 500bp coupon, \\(U = (0.03-0.05)\\times4.106 = -8.21\\) points: the seller pays the buyer 8.21 points. The coupon is a convention; the economic value is the same up to the coupon-to-upfront mapping.",
+  "tags": [
+   "cds",
+   "case_study",
+   "upfront",
+   "convention",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study:</b> You buy 10m of 5y protection at 100bp (RPV01 about 4.46). After one month the 4y-11m point, linearly interpolated between 4y at 90bp and 5y at 100bp, is 99.2bp (RPV01 about 4.39). Compute the one-month carry and roll.",
+  "back": "<b>Step 1 (carry).</b> Premium paid: \\(10\\text{m} \\times 1\\% / 12 = $8{,}333\\) (cash outflow for the protection buyer).<br>\n<b>Step 2 (roll-down).</b> The position is marked as (spread at remaining tenor minus contract coupon) times RPV01: \\((0.0099167 - 0.0100) \\times 4.39 \\times 10\\text{m} = -$3{,}661\\). Roll-down costs the buyer because the curve slopes up.<br>\n<b>Step 3 (total).</b> \\(-8{,}333 - 3{,}661 \\approx -$12.0\\text{k}\\) per month,.<br>\n<b>Step 4 (sanity).</b> Annual carry of 100bp on 10m is $100k. The roll adds about 0.8bp of spread drift per month on a 10bp per year slope. Carry dominates unless the slope is steep.<br>\n<b>Interviewer follow-up:</b> What makes it a roll cost rather than a curve move? The position itself gets shorter, so the spread it is marked at moves along the curve even with no market move.",
+  "tags": [
+   "cds",
+   "case_study",
+   "carry",
+   "roll",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study:</b> Single name at 150bp (5y RPV01 4.3) is hedged with iTraxx Main at 70bp (RPV01 4.5). Name notional 10m. Spread beta is 1.6 in percentage terms. Size the index hedge and check the P&L for a 10bp index widening.",
+  "back": "<b>Step 1 (bp beta).</b> Percent beta \\(\\beta=1.6\\) means \\(\\%\\Delta S_n = 1.6\\times\\%\\Delta S_I\\). A 1bp index move is \\(1/70 = 1.43\\%\\), so the name moves \\(1.6\\times 1.43\\% \\times 150 = 3.43\\)bp. The bp beta is \\(\\beta S_n/S_I = 3.43\\).<br>\n<b>Step 2 (notional).</b> Name CS01 \\(= 10\\text{m}\\times 4.3\\times 10^{-4} = $4{,}300\\) per bp. Index hedge notional \\(N_I\\) with CS01 \\(N_I \\times 4.5\\times 10^{-4}\\) must equal \\(3.43\\times$4{,}300 = $14{,}750\\) per index bp, so \\(N_I = $32.8\\)m.<br>\n<b>Step 3 (P&L check).</b> A 10bp index widening gives the name +34.3bp: long-protection P&L \\(\\approx 10\\text{m}\\times 4.3\\times 0.00343 = $147\\text{k}\\). The index sold leg loses \\(32.8\\text{m}\\times4.5\\times 0.0010 = $147\\text{k}\\). Net zero to first order.<br>\n<b>Step 4 (sanity).</b> A 2.1x notional ratio on the index looks large but comes from the 150/70 spread ratio times beta 1.6, which is the economic point: a high-spread name is much more index-sensitive in bp.<br>\n<b>Where it breaks:</b> beta is estimated and unstable; the name-specific move is not captured; the hedge is delta-only and does not cover the name's idiosyncratic jump.",
+  "tags": [
+   "cds",
+   "case_study",
+   "beta",
+   "hedging",
+   "index"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study:</b> Negative basis trade on 10m: bond bought at par with ASW 150bp; 5y CDS protection bought at 120bp; carry 30bp. Default happens at year 2. Recovery on the bond is 35; the CDS auction settles at 40 (assume the bond is not a deliverable in the auction, so the auction price is not capped by it). Compute the P&L across default with and without the recovery mismatch.",
+  "back": "<b>Step 1 (carry to default).</b> \\(10\\text{m}\\times 0.30\\% \\times 2 = $60\\text{k}\\).<br>\n<b>Step 2 (case with matching recovery at 35).</b> Bond recovers \\(3.5\\text{m}\\). CDS pays \\((1-0.35)\\times 10\\text{m} = 6.5\\text{m}\\). Principal flow: \\(3.5 + 6.5 - 10 = 0\\). Total P&L = $60k carry.<br>\n<b>Step 3 (mismatch at auction 40).</b> CDS pays \\((1-0.40)\\times 10\\text{m} = 6.0\\text{m}\\). Principal flow: \\(3.5 + 6.0 - 10 = -0.5\\text{m}\\). Total P&L = \\(60\\text{k} - 500\\text{k} = -$440\\text{k}\\).<br>\n<b>Step 4 (sanity).</b> The mismatch equals the difference in recovery times notional: \\(0.05\\times 10\\text{m} = $500\\text{k}\\). Carry of $60k is about 1/8 of the loss; a 5-point auction-versus-bond difference wipes out about 17 years of carry at 30bp on 10m.<br>\n<b>Interviewer follow-up:</b> What is the asset-swap unwind at default? It is a separate cash flow and depends on the swap's terms; it is omitted here, so the result is the principal-plus-carry P&L only.",
+  "tags": [
+   "cds",
+   "case_study",
+   "basis",
+   "recovery",
+   "default"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study:</b> A 5s10s steepener on one issuer: 5y protection at 120bp (RPV01 4.42), 10y protection at 150bp (RPV01 7.69), recovery 40%. Size the trade JTD-neutral and compute its carry, CS01 and the P&L of a 10bp parallel widening. Then compare with CS01-neutral sizing.",
+  "back": "<b>Step 1 (JTD-neutral).</b> Buy 10y protection and sell 5y protection, both at par at inception. JTD = \\(N(1-R)\\) per leg, so \\(N_{10} = N_5\\). Take \\(N_5 = N_{10} = 10\\text{m}\\); net JTD = 0.<br>\n<b>Step 2 (carry).</b> Pay \\(1.50\\%\\times 10\\text{m} = $150\\text{k}\\), receive \\(1.20\\%\\times 10\\text{m} = $120\\text{k}\\). Carry = \\(-$30\\text{k}\\) per year, \\(-$2.5\\text{k}\\) per month.<br>\n<b>Step 3 (CS01).</b> 5y: \\(10\\text{m}\\times 4.42\\times10^{-4} = $4{,}420\\)/bp. 10y: \\(10\\text{m}\\times 7.69\\times10^{-4} = $7{,}690\\)/bp. Net long-10y CS01 is \\($3{,}270\\)/bp.<br>\n<b>Step 4 (parallel +10bp).</b> P&L = \\(+10\\times 3{,}270 = +$32.7\\text{k}\\). The JTD-neutral trade is not a spread-neutral trade; it is long the 10y.<br>\n<b>Step 5 (CS01-neutral alternative).</b> \\(N_{10} = N_5\\times 4.42/7.69 = 0.575\\,N_5 = 5.75\\)m. Carry becomes \\(+$120\\text{k} - 1.50\\%\\times 5.75\\text{m} = +$34\\text{k}\\) per year, but net JTD = \\(0.6\\times(5.75 - 10) = -$2.55\\)m, i.e. a short-default position.<br>\n<b>Interviewer follow-up:</b> Which to choose? If you are trading the curve shape and want to be default-neutral, JTD-neutral with negative carry. If you want spread-neutral carry, accept a -$2.55m default exposure.",
+  "tags": [
+   "curve_trades",
+   "case_study",
+   "jtd",
+   "carry",
+   "cs01"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a flat hazard \\(\\lambda\\) and continuous premium accrual, the par CDS spread is exactly \\(\\{{c1::\\lambda(1-R)\\}}\\), and the risk-free rate {{c2::cancels}} out of the ratio.",
+  "back": "Derived in the flat-hazard par derivation card. Discrete quarterly premiums with accrued-on-default move the 5y par by about 1bp at \\(\\lambda=5\\%\\) (301.1bp vs 300.0bp).",
+  "tags": [
+   "cds",
+   "derivation",
+   "credit_triangle"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Under the ISDA standard model the upfront of a CDS with par spread \\(s\\) and coupon \\(c\\) is {{c1::\\((s-c)\\times RPV01\\)}}, and the protection buyer {{c2::pays}} it when \\(s > c\\).",
+  "back": "Plus accrued premium from the last coupon date (ACT/360) paid in cash. Sign flips when the coupon is above the par spread (the seller pays the buyer).",
+  "tags": [
+   "cds",
+   "upfront",
+   "convention",
+   "isda"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a homogeneous pool of \\(N\\) names with common hazard \\(\\lambda\\), the first default has intensity {{c1::\\(N\\lambda\\)}}, so the front-end protection on a knockout index option is approximately {{c2::\\((1-R)/N\\)}} of index notional when \\(N\\lambda T\\) is large.",
+  "back": "With \\(N=125\\), \\(\\lambda=5\\%\\), \\(R=40\\%\\): \\((1-R)/N = 0.48\\%\\). For a 1y expiry the FEP is about 0.477%, and the probability that no default occurs is about 0.2%, so the option is almost pure FEP.",
+  "tags": [
+   "index_options",
+   "fep",
+   "knockout"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A protection buyer's jump-to-default P&L is {{c1::\\(N(1-R) - V\\)}}, where \\(V\\) is the {{c2::mark-to-market to the holder}} of the contract just before default.",
+  "back": "The \\(-V\\) term is the trap: a book that is \"JTD-neutral\" at inception is not JTD-neutral after the legs move. For a 10y leg with \\(V = $77\\)k the JTD is $5.92m rather than $6.00m.",
+  "tags": [
+   "cds",
+   "jtd",
+   "risk"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In the large-pool limit of the one-factor Gaussian copula the conditional loss given market factor \\(M\\) is {{c1::\\((1-R)\\,\\Phi\\big((\\Phi^{-1}(p)-\\sqrt{\\rho}M)/\\sqrt{1-\\rho}\\big)\\)}}, and the tranche EL is the expectation of the tranche payoff divided by {{c2::\\(B-A\\)}}.",
+  "back": "Pool EL \\((1-R)p\\) at \\(M\\) integrated gives the unconditional loss. The tranche EL is non-monotone in \\(\\rho\\) for mezzanine tranches, which is why base correlation is used.",
+  "tags": [
+   "tranches",
+   "copula",
+   "lhp"
+  ]
+ }
+]

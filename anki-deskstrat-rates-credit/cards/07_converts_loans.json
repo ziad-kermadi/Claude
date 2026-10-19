@@ -10,12 +10,14 @@
   ]
  },
  {
-  "type": "cloze",
-  "front": "Parity \\(= \\) {{c1::conversion ratio x share price}}. Conversion premium \\(= \\) {{c2::bond price / parity - 1}}. Conversion price \\(= \\) {{c3::face / conversion ratio}}.",
-  "back": "Parity is the immediate conversion value of the bond. A buyer paying above parity needs the stock to rise, net of the coupon pickup, to break even on the premium.",
+  "type": "basic",
+  "front": "A convertible trades at 1,020 with a 2% annual coupon on 1,000 face. The conversion ratio is 12.5, the stock is 75, and the dividend is 1.5% of the share price per year (1.125 per share). What is the payback period on the conversion premium, using static income only?",
+  "back": "Premium in dollars: \\(1{,}020 - 12.5 \\times 75 = 1{,}020 - 937.5 = 82.5\\) per bond.<br>\nIncome pick-up: coupon \\(20.00\\) minus dividend forgone \\(12.5 \\times 1.125 = 14.06\\), so \\(5.94\\) per year.<br>\nPayback \\(= 82.5 / 5.94 \\approx 13.9\\) years (approx., ignoring discounting, parity moves and any change in the dividend). The premium is not recovered within a 5-year horizon.<br>\nHeadline: the premium pays for the embedded option and any floor support, not for income. Payback is a sanity check on carry, not a valuation.<br>\n<b>Interviewer follow-up:</b> Why buy a convertible with a 14-year payback? Because the option's expected value, which depends on realised against implied vol, can exceed the premium. A long payback alone does not make the bond expensive.",
   "tags": [
    "convertibles",
-   "convention"
+   "payback",
+   "carry",
+   "mental_math"
   ]
  },
  {
@@ -200,22 +202,24 @@
   ]
  },
  {
-  "type": "cloze",
-  "front": "All-in coupon with a SOFR floor = {{c1::max(SOFR, floor)}} + {{c2::margin}}. With a 0.50% floor and forward SOFR at 0.20%, the borrower pays {{c3::0.30%}} more per annum than the unfloored coupon for that period.",
-  "back": "The floor is a strip of floorlets. Its value to the lender rises as forwards fall. In a CLO, loans with floors funding liabilities with zero floors create a basis that matters when rates fall.",
+  "type": "basic",
+  "front": "A CLO holds loans with a 0.50% SOFR floor, and its liabilities have zero floors. Pool 400 at margin 3.50%, debt 360 at margin 1.60%, and next year's SOFR forward is a flat 0.20%. Compute the annual income from the floor and state what it does and does not hedge.",
+  "back": "Asset coupon with the floor: \\((\\max(0.20\\%, 0.50\\%) + 3.50\\%) \\times 400 = 16.00\\). Without the floor it would be \\((0.20\\% + 3.50\\%) \\times 400 = 14.80\\). The floor adds \\(1.20\\) a year.<br>\nLiability cost: \\((0.20\\% + 1.60\\%) \\times 360 = 6.48\\), since zero floors do not bind. The mismatch is a long-floorlet position for the equity, worth most when forwards are below the floor.<br>\nFloor income is an asset-side option paid exactly when rates fall. It does not hedge the liabilities, which keep their floating cost. Value the residual as a strip of floorlets, using forwards and a vol surface.<br>\n<b>Interviewer follow-up:</b> Why do managers accept this basis? The floor protects income in a rates-down scenario, which is the scenario where liability spreads and the loan's prepayment behaviour are most stressed. The basis is a deliberate exposure, to be measured, not a hedge gap to be ignored.",
   "tags": [
    "loans",
    "floors",
-   "convention"
+   "clo",
+   "basis",
+   "mental_math"
   ]
  },
  {
   "type": "basic",
-  "front": "A 3-year term loan is priced at 99 with a 350bp margin on quarterly SOFR resets. Estimate the discount margin. Explain how it differs from spread-to-maturity.",
-  "back": "Discount margin (DM) is the margin that discounts the loan's cash flows, assuming the index stays at the current forward curve, to the price.<br>\nApproximately: DM \\(\\approx\\) margin \\(+\\) discount / life. The 1 point discount over a 3-year convention life (approx.) is about 33bp per year, so DM \\(\\approx 350 + 33 \\approx 383\\)bp.<br>\nDifferences: DM is a margin over the reference rate and is the comparable measure for floating-rate loans. Spread-to-maturity is measured to the stated maturity against a fixed-rate benchmark. For loans, DM usually uses the convention or the next call date, not the legal maturity.<br>\n<b>Interviewer follow-up:</b> How does DM change if the loan trades above par? The discount becomes a premium. DM is then measured to the earliest likely call date, so the convention life shortens and DM falls.",
+  "front": "A 3-year loan is priced at 99 with a 350bp margin on quarterly SOFR resets, flat forward SOFR of 4.00%, and a 3-year convention life. Estimate the discount margin, and say why the shortcut of one point over three years (33bp) is not accurate.",
+  "back": "Use the annuity: \\(A = \\sum \\tau\\,DF_i \\approx 2.65\\) years at the solution, since each cash flow is discounted at about 7.9%. DM \\(\\approx 350 + 100/2.65 \\approx 350 + 37.7 = 388\\)bp. An exact solve gives 387.8bp.<br>\nWhy 33bp is wrong: the shortcut divides the discount by the life, which assumes no discounting. The annuity is shorter than the life, so the correct add-on is larger.<br>\nIf the loan trades above par, the discount becomes a premium and the convention life shortens to the earliest likely call date, which lowers the DM for the same price difference.<br>\n<b>Interviewer follow-up:</b> What changes if the forward curve is not flat? Use the forward curve and solve the same identity. The flat-curve answer is a shortcut only.",
   "tags": [
    "loans",
-   "pricing",
+   "discount_margin",
    "convention",
    "mental_math"
   ]
@@ -298,35 +302,38 @@
   ]
  },
  {
-  "type": "cloze",
-  "front": "CLO pool quality is managed through the {{c1::weighted average rating factor (WARF)}}, the {{c2::diversity score}} and a cap on {{c3::CCC-rated assets}}. Assets above the CCC cap are typically counted at {{c4::market value}} in the par tests.",
-  "back": "WARF is a weighted average of Moody's rating factors, so a higher WARF means a lower pool rating. The diversity score estimates the number of independent obligors equivalent to the pool. Both feed the rating agency's capacity to rate the notes.",
+  "type": "basic",
+  "front": "A CLO pool is 40% in B2 (WARF factor 2,720), 40% in Ba3 (1,766) and 20% in Caa1 (4,770), using Moody's factor values (approx.; check the deal's own table). Compute the WARF. If the 10% of Caa1 that is cut is moved to Ba3, what is the new WARF?",
+  "back": "WARF \\(= 0.4 \\times 2{,}720 + 0.4 \\times 1{,}766 + 0.2 \\times 4{,}770 = 1{,}088 + 706.4 + 954 = 2{,}748\\).<br>\nAfter the move: B2 40%, Ba3 50%, Caa1 10%. WARF \\(= 1{,}088 + 883 + 477 = 2{,}448\\), a fall of 300.<br>\nThe WARF is linear in rating factors, so the Caa1 cut reduces it by \\(0.10 \\times (4{,}770 - 1{,}766) = 300\\). A separate CCC bucket limit is tested on its own, so a WARF pass does not cure a CCC excess.<br>\n<b>Interviewer follow-up:</b> Why do managers still trade into CCC names? The WARF test allows a margin, and CCC exposure is paid for in spread. The binding constraint is usually the CCC bucket and the diversity score, not the average.",
   "tags": [
    "clo",
    "rating",
-   "convention"
+   "warf",
+   "mental_math"
   ]
  },
  {
   "type": "basic",
-  "front": "Explain how the reinvestment period affects CLO equity. Which dominates in a tight primary market: spread compression on new loans, or prepayment and repricing of the existing pool?",
-  "back": "During reinvestment, principal proceeds from repayments, prepayments and sales buy new loans. Equity earns the excess spread on those purchases.<br>\nSpread compression: new loans priced tighter than the existing pool reduce the excess spread, and the effect is magnified by leverage. Prepayment: repaid loans shorten the weighted average life and reduce future spread income. Repricing of the existing pool lowers its margins.<br>\nIn a tight primary market, the reinvestment drag and repricing both reduce equity income. Liability resets or refinancings that lower the debt spread offset part of this.<br>\n<b>Interviewer follow-up:</b> Why does a CLO reset help equity? It lowers the liability spread on the existing pool, which raises the excess spread, at the cost of an extended reinvestment period and a new non-call.",
+  "front": "A CLO has a 400 pool at S+350 and 40 of equity (10% of capital). In one year 60 of loan repayments are reinvested at S+300, not S+350. Quantify the lost spread income and the impact on the equity cash yield. What is the most common offset?",
+  "back": "Lost income: \\(60 \\times 0.50\\% = 0.30\\) a year. As a share of equity capital, \\(0.30 / 40 = 0.75\\%\\) a year.<br>\nOffset: liability refinancing or reset. Reducing the 360 of debt from 1.60% to 1.40% saves \\(360 \\times 0.20\\% = 0.72\\) a year, more than the lost reinvestment spread. A reset costs an extended reinvestment period and a new non-call, so the trade-off is income now against optionality later.<br>\nHeadline: each unit of reinvestment compression costs equity about its spread differential times turnover, and leverage magnifies it.<br>\n<b>Interviewer follow-up:</b> Why does leverage magnify a spread drop that is small on the asset side? Equity keeps the whole asset spread less the debt cost, so a 50bp drop on 60 of new assets is a 0.75-point drop on the equity's 40. A debt saving of 20bp on 360 is larger than the asset loss, which is why resets get done.",
   "tags": [
    "clo",
    "reinvestment",
    "equity",
-   "trade_off"
+   "reset",
+   "mental_math"
   ]
  },
  {
   "type": "basic",
-  "front": "Who is paid in a CLO, and what constrains the manager's incentives? Name two structural differences between European and US CLOs.",
-  "back": "Payments: a senior management fee on the par of the pool (basis points), and a subordinated (incentive) fee paid from the waterfall after equity reaches its hurdle.<br>\nConstraints: risk retention. The US risk retention rule and the EU Securitisation Regulation both require the sponsor to hold 5% of the credit risk (approx.), horizontally or vertically.<br>\nEuropean nuances: (1) EUR assets and liabilities usually reference EURIBOR, with floors that differ between the loans and the notes, which creates a floor basis. (2) European deals rely heavily on the diversity score and rating-agency tests, with different trading and CCC-bucket restrictions. Check the deal documents for the exact limits.<br>\n<b>Interviewer follow-up:</b> How does the sub fee change manager behaviour? It rewards the manager for equity cash flow above the hurdle, so it can encourage risk-taking in the equity tail.",
+  "front": "A CLO has a 500 pool, senior fees of 0.15% of the pool per year, and 50 of equity. Residual cash after all debt interest and senior fees, before the subordinated fee, is 6.50 in a year. The subordinated fee is 20% of equity distributions above a 10% annual hurdle on equity (illustrative). Compute both fees and say how this changes manager incentives.",
+  "back": "Senior fee: \\(0.15\\% \\times 500 = 0.75\\) a year, paid ahead of equity.<br>\nSubordinated fee: hurdle \\(= 10\\% \\times 50 = 5.00\\). Excess \\(= 6.50 - 5.00 = 1.50\\). Fee \\(= 20\\% \\times 1.50 = 0.30\\). Below the hurdle the fee is zero.<br>\nIncentive: the manager is paid a call-like share of equity cash above the hurdle and nothing below it. That rewards risk in the equity tail, since the downside is borne by equity and the upside is shared with the manager. Risk retention (5% approx., US and EU) limits this, but does not remove it.<br>\n<b>Interviewer follow-up:</b> Where do US and European structures differ on this? Terms differ in the fee hurdle, the CCC and trading limits, and the currency basis of floors, so the same headline spread can give a different equity outcome. Check the indenture, not the summary.",
   "tags": [
    "clo",
    "manager",
-   "regulation",
-   "structure"
+   "fees",
+   "incentives",
+   "mental_math"
   ]
  },
  {

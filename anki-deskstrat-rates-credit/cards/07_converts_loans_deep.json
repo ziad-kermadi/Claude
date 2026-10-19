@@ -1,0 +1,355 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CB arb 1/4]</b> Long 100 convertibles (face 1,000, conversion ratio 12.5, stock 80, bond at 1,060), with a model delta of 7.75 shares per bond. What is the hedge, and what risk does the book carry after it?",
+  "back": "Hedge: short \\(100 \\times 7.75 = 775\\) shares, notional \\(775 \\times 80 = 62{,}000\\). Net delta is zero at inception. The book is long the embedded option, and what remains is gamma (long), vega (long), credit spread (long, CS01), rates, and borrow and dividend carry.<br>\nWhy model delta and not parity: parity (\\(12.5 \\times 80 = 1{,}000\\)) is only the value at conversion. Delta is below the ratio when the call is not deep in the money and the floor does not move with the stock, so hedging on parity over-hedges.<br>\n<b>Interviewer follow-up:</b> Why is the book long gamma if it is delta-neutral? The bond's delta rises as the stock rises, because the call moves into the money. The book therefore has to sell stock into rallies and buy on falls. That convexity is what the next card monetises.",
+  "tags": [
+   "cb_arb",
+   "chain",
+   "convertibles",
+   "hedging",
+   "greeks"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CB arb 2/4]</b> The 100-bond book from the previous card has a position gamma of 25 shares per $1 move. Realised vol is 40%, implied is 30%, and the stock is at 80. What is the expected gamma P&L per year, and what rule governs the rebalancing?",
+  "back": "\\[\\mathbb{E}[\\text{gamma P\\&L}] = \\tfrac12\\,\\Gamma S^2(\\sigma_r^2-\\sigma_i^2) = \\tfrac12 \\times 25 \\times 80^2 \\times (0.16-0.09) = 5{,}600 \\text{ per year}\\]\nThat is 56 per bond, or about 5.3% of the 1,060 bond price.<br>\nRebalancing: each $1 move resets the hedge by 25 shares. The scalp buys stock after falls and sells after rises, so each move earns \\(\\tfrac12\\Gamma(\\Delta S)^2\\), less the cost of crossing the spread. A rebalancing band of plus or minus k shares trades hedge error against cost. The optimal band widens with transaction cost and with gamma (approx.; the standard result for band hedging).<br>\n<b>Interviewer follow-up:</b> With zero drift, where does the expected gamma P&L come from? It is the Ito correction. The scalp earns the realised variance on the book's gamma and pays the implied variance embedded in the price. The expectation is the difference of variances, not a drift.",
+  "tags": [
+   "cb_arb",
+   "chain",
+   "gamma",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CB arb 3/4]</b> The 100-bond book has a spread sensitivity of 35 (price units) per 1bp of credit spread. A 5-year CDS has a risky annuity of 4.2 per unit notional. What CDS notional hedges the spread, and why does the hedge leave residual risk?",
+  "back": "CDS CS01 per unit notional \\(\\approx 4.2 \\times 10^{-4}\\) per bp. Required notional \\(\\approx 35 / (4.2 \\times 10^{-4}) \\approx 83{,}300\\), about 83% of the 100,000 bond face. The desk buys protection, since it is long the bond's credit.<br>\nResidual risk: (i) basis between bond and CDS spreads (cheapest-to-deliver, liquidity, and a floor discounted off the bond curve); (ii) recovery mismatch between the CDS auction recovery and the convertible's effective loss; (iii) cross-gamma: credit widening and stock falls tend to arrive together, so the delta hedge moves in the same stress as the credit hedge.<br>\n<b>Interviewer follow-up:</b> Why can the equity short not hedge the spread? The short stock has no spread sensitivity. It offsets delta only, so the credit leg needs its own instrument.",
+  "tags": [
+   "cb_arb",
+   "chain",
+   "credit",
+   "hedging"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CB arb 4/4]</b> The book is short 775 shares at 80 (notional 62,000) with a borrow fee of 0.5%. The borrow is recalled and the fee rises to 25% (approx.). The stock then rallies 10% to 88 before the desk can cover. Quantify the annual borrow cost before and after, and the loss on the hedge leg. Name two episodes where this failure mode occurred.",
+  "back": "Borrow cost: \\(62{,}000 \\times 0.5\\% = 310\\) a year, rising to \\(62{,}000 \\times 25\\% = 15{,}500\\) a year (155 per bond). Forced buy-in at 88 costs \\(775 \\times 8 = 6{,}200\\), crystallised in cash immediately. The bond gain is only a mark, and depends on the bond bid, which may not move up at the same time.<br>\nEpisodes (approx., verify details before quoting): the May 2005 downgrades of GM and Ford to sub-investment grade, which hit convertible prices and forced de-leveraging across the arbitrage community; and autumn 2008, when prime-broker margin tightening, forced sales of converts and the US short-sale restriction on financial stocks (September 2008) removed the ability to hedge.<br>\n<b>Interviewer follow-up:</b> Why do both legs fail together? Liquidity is the common factor. A recall or margin call forces the stock hedge to close while the bond bid is withdrawn. The defence is to size the short against borrow availability and to stress the borrow fee, not only the price.",
+  "tags": [
+   "cb_arb",
+   "chain",
+   "borrow",
+   "liquidity",
+   "history"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CLO equity 1/4]</b> Pool of 500 par at SOFR+350 (SOFR hedged). Senior notes 400 at S+150, mezzanine 50 at S+500, equity 50 at par, senior fees 0.5% of pool per year. Ignore losses. What is the equity cash yield over SOFR, and what is the senior OC ratio?",
+  "back": "Pool interest \\(500 \\times 3.50\\% = 17.50\\). Senior interest \\(400 \\times 1.50\\% = 6.00\\). Mezzanine \\(50 \\times 5.00\\% = 2.50\\). Fees \\(0.5\\% \\times 500 = 2.50\\). Residual to equity 6.50, which is 13.0% of 50 over SOFR. Senior OC \\(= 500/400 = 125\\%\\) against a 120% trigger.<br>\nThis is a before-loss yield. Defaults, reinvestment spread compression, OID drag and cash diversion all reduce the realised IRR, so 13% is a ceiling, not an expectation.<br>\n<b>Interviewer follow-up:</b> Why does 13% overstate the equity return? Equity is the first-loss tranche. Losses are absorbed by equity first, so 5 of principal loss is 10% of equity capital.",
+  "tags": [
+   "clo_equity",
+   "chain",
+   "clo",
+   "structure",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CLO equity 2/4]</b> Same deal (senior OC 125%, trigger 120%). In one quarter, 25 par of loans default and are excluded from the OC numerator, with recovery not yet received. Compute the senior OC ratio and the interest diversion needed to cure, with the cure applied as a paydown of senior notes.",
+  "back": "Performing par 475, so OC \\(= 475/400 = 118.75\\%\\), a breach. Cure: divert interest \\(x\\) to pay down the senior notes so that \\(475/(400-x) \\ge 1.20\\). Hence \\(400-x \\le 395.83\\), so \\(x \\ge 4.17\\). About 4.17 of interest is redirected from the junior waterfall to senior principal until the test is passed.<br>\n<b>Interviewer follow-up:</b> Does the test count defaults at zero? It depends on the indenture's treatment of defaulted obligations: excluded at par, or valued at market or recovery. The answer changes with it. The numbers here assume exclusion at zero.",
+  "tags": [
+   "clo_equity",
+   "chain",
+   "oc_test",
+   "waterfall",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CLO equity 3/4]</b> The 25 par of defaulted loans now earn no interest, and the 4.17 diversion has been applied. Compute the equity's year-1 distribution and the run-rate for years 2 to 4.",
+  "back": "Interest on performing par \\(475 \\times 3.50\\% = 16.63\\). Less senior 6.00, mezzanine 2.50 and fees 2.50 (fees on the original pool) gives 5.63 before diversion. Less the 4.17 diversion gives 1.46 for year 1. Years 2 to 4 run at 5.63 a year, 0.875 below the base 6.50, which is the lost interest on 25 par at 3.50%.<br>\nSanity: year-1 shortfall \\(= 6.50 - 1.46 = 5.04 = 0.875 + 4.17\\).<br>\n<b>Interviewer follow-up:</b> Why is the diversion worse for equity than the lost interest? The diverted cash is equity's cash today. It goes to senior principal, and equity recovers it only at maturity, through a smaller senior claim. Equity is in effect funding deleveraging at its own return.",
+  "tags": [
+   "clo_equity",
+   "chain",
+   "oc_test",
+   "equity",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CLO equity 4/4]</b> Equity invests 50 at par, and the deal is bullet at year 4. Assume 40% recovery on the 25 par default (a principal loss of 15) and no further defaults. Compute the equity IRR without and with the event, and the terminal distribution.",
+  "back": "Base flows: −50, 6.50, 6.50, 6.50, 56.50 (50 back plus the last coupon), so IRR = 13.0%.<br>\nStress: at maturity the pool gives 475 performing plus 10 recovery = 485. Senior after the 4.17 paydown is 395.83, and mezzanine is 50. Terminal residual \\(= 485 - 395.83 - 50 = 39.17\\). Flows: −50, 1.46, 5.63, 5.63, 5.63 + 39.17 = 44.79. IRR ≈ 3.9%.<br>\nNet: one 5% default bucket at 60% loss cuts the IRR by about 9 points. The 15 principal loss is 30% of the 50 of equity.<br>\n<b>Interviewer follow-up:</b> Why is the IRR so sensitive? The pool is about 10 times the equity, so a principal loss hits a small capital base. The cash diversion adds to it through lost timing.",
+  "tags": [
+   "clo_equity",
+   "chain",
+   "irr",
+   "scenario",
+   "case_study"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: LME uptier 1/4]</b> A company has a 1,000 pari first-lien TLB. Lenders holding 600 (60%, enough to amend pro rata and priority provisions under the credit agreement) fund 100 of new money and exchange their 600 into a new super-senior tranche at par (simplified). Non-participants hold 400 of the old tranche. Describe the post-deal structure and who is primed.",
+  "back": "Super-senior: 700 (600 exchanged plus 100 new money). The old first lien of 400 is now contractually junior to the super-senior. Non-participants are primed by the exchange, not subordinated by a new security.<br>\nThe exchange needs only the required-lender majority if the agreement lets a majority amend pro rata sharing and priority. All-lender \"sacred right\" provisions block it. Economically it is a transfer from non-participants to participants, funded by the new money.<br>\n<b>Interviewer follow-up:</b> Why does the 60% group matter? The majority threshold is the only gate when no sacred right protects priority. A group below the threshold must bring in more lenders before the exchange can proceed.",
+  "tags": [
+   "lme",
+   "chain",
+   "uptier",
+   "distressed",
+   "covenants"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: LME uptier 2/4]</b> Post-deal enterprise value is 900 (800 operating value plus 100 of new cash). Without the deal, EV is 800 against 1,000 of pari claims. Compute non-participant recovery in each case and the value transfer.",
+  "back": "With the uptier: super-senior 700 is paid in full, and 200 is left for the 400 non-participants, a 50% recovery. Without the deal: \\(800/1{,}000 = 80\\%\\) pari for all. Non-participants' 400 recovers 320 without the deal and 200 with it. Transfer = 120.<br>\nParticipants put in 600 of claims (worth 480 at 80%) and 100 of cash, and receive 700 back. Net gain \\(= 700 - 480 - 100 = 120\\).<br>\n<b>Interviewer follow-up:</b> Is any value created? Only if the new money has positive NPV at enterprise level. The 120 is a transfer, so the deal is zero-sum for the enterprise and its cost falls on non-participants.",
+  "tags": [
+   "lme",
+   "chain",
+   "recovery",
+   "waterfall",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: LME uptier 3/4]</b> A non-participant loan has a one-year horizon. It pays a coupon of 8 only if there is no default. The probability of a further default in the year is 35%, with recovery of 50 in that case. The discount rate is 10%. Estimate today's price.",
+  "back": "\\[P = \\frac{(1-p)(100+c) + p\\,R}{1+r} = \\frac{0.65 \\times 108 + 0.35 \\times 50}{1.10} = \\frac{70.2 + 17.5}{1.10} \\approx 79.7\\]\nThe price sits between recovery and par, set by the default probability. The coupon is paid only in the no-default branch.<br>\n<b>Interviewer follow-up:</b> Why not price it as expected recovery plus coupon? The default branch is one state, and the no-default branch carries par plus coupon. A single expected-recovery number mixes probability with severity.",
+  "tags": [
+   "lme",
+   "chain",
+   "loans",
+   "pricing",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: LME uptier 4/4]</b> The next restructuring is a second uptier that primes the non-participants further, and recovery in default falls to 25 (from 50). Recompute the price, and give the sensitivity to recovery and to default probability.",
+  "back": "\\(P = (70.2 + 0.35 \\times 25)/1.10 = 78.95/1.10 \\approx 71.8\\), an 8-point fall. Sensitivities: \\(\\partial P/\\partial R = p/(1+r) \\approx 0.32\\) per point of recovery. \\(\\partial P/\\partial p = (R-108)/(1+r) \\approx -52.7\\) per unit probability, so about −0.53 per point of default probability at R = 50.<br>\nThe priming option the sponsor holds against non-participants shows up in p and R. Price it as a probability, not as a one-off event.<br>\n<b>Interviewer follow-up:</b> What reduces the option's value? Tighter documents (sacred rights, pro rata sharing, narrow open-market purchase definitions) and litigation outcomes. The Fifth Circuit's 2024 Serta ruling narrowed the open-market purchase exception. Courts differ, so treat the legal risk as a probability.",
+  "tags": [
+   "lme",
+   "chain",
+   "loans",
+   "pricing",
+   "scenario"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> Derive the share delta of a no-call convertible from the Tsiveriotis-Fernandes split \\(V = U + E\\), assuming default is not stock-linked. Parameters: face \\(F = 1{,}000\\), ratio \\(\\rho = 12.5\\), stock \\(S = 80\\), \\(\\sigma = 30\\%\\), \\(r = 3\\%\\), \\(q = 0\\), \\(T = 3\\) years. Give the delta in shares per bond.",
+  "back": "\\[E = \\rho\\, C_{BS}(S, K, T, r, \\sigma), \\qquad K = F/\\rho.\\]\nThe equity component is a call on \\(\\rho\\) shares struck at \\(F\\), discounted at \\(r\\), as in TF. The debt component \\(U\\) is discounted at \\(r+s\\). Its stock delta is zero when recovery does not depend on \\(S\\). Therefore\n\\[\\Delta_V = \\rho\\,N(d_1) + \\frac{\\partial U}{\\partial S}, \\qquad d_1 = \\frac{\\ln(S/K) + (r+\\sigma^2/2)T}{\\sigma\\sqrt{T}}.\\]\nNumbers: \\(K = 80\\), so \\(\\ln(S/K)=0\\). \\(d_1 = (0.03+0.045)\\times 3 / (0.3\\sqrt{3}) = 0.225/0.5196 = 0.433\\). \\(N(d_1) = 0.6675\\). \\(\\Delta = 12.5 \\times 0.6675 = 8.34\\) shares per bond, about 67% of the ratio.<br>\n<b>Where it breaks:</b> TF assumes a constant spread independent of \\(S\\). With a stock-linked hazard, \\(\\partial U/\\partial S \\ne 0\\). When conversion is optimal the constraint binds and \\(\\Delta = \\rho\\), not \\(\\rho N(d_1)\\). The 7.75 used in the arb chain is a desk delta after issuer-call and credit adjustments, not this pure-option figure.<br>\n<b>Interviewer follow-up:</b> Why \\(N(d_1)\\) and not \\(N(d_2)\\)? \\(N(d_1)\\) is the share delta. \\(N(d_2)\\) is the risk-neutral probability of exercise, which appears in the price but not in the delta.",
+  "tags": [
+   "convertibles",
+   "derivation",
+   "tsiveriotis_fernandes",
+   "greeks",
+   "pricing"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> Derive the first-order sensitivity of a bond floor to its credit spread. Floor \\(P(s) = \\sum_t c_t e^{-(r+s)t}\\), 5-year, 4% annual coupon on 1,000 face, redeemed at 1,000, continuous compounding, \\(r = 3\\%\\), \\(s = 2\\%\\). Give the change per bp.",
+  "back": "Differentiate term by term, using \\(\\partial_s e^{-(r+s)t} = -t\\,e^{-(r+s)t}\\):\n\\[\\frac{\\partial P}{\\partial s} = -\\sum_t t\\,c_t e^{-yt} = -D_m P, \\qquad y = r+s = 5\\%.\\]\nHere \\(D_m\\) is the modified duration at \\(y\\). Numbers: \\(P = 951.37\\) and \\(D_m = 4.62\\). So \\(\\partial P/\\partial s = -4{,}395\\) per unit of \\(s\\), which is \\(-0.44\\) per bp.<br>\n<b>Where it breaks:</b> a constant \\(s\\) is wrong for a convertible if the hazard is stock-linked. Recovery of face versus par matters on default. The second-order error is about \\(\\tfrac12 P_{ss}(\\Delta s)^2\\), negligible for 1bp but not for 100bp.<br>\n<b>Interviewer follow-up:</b> Why does the floor's spread risk equal duration times price? The floor is a straight bond, so its spread risk is spread duration. The option part has its own credit sensitivity only through the stock-to-credit cross term.",
+  "tags": [
+   "convertibles",
+   "credit",
+   "derivation",
+   "cds",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> Derive the closed-form price of a zero-coupon bond (face \\(F\\), maturity \\(T\\)) under a constant hazard \\(\\lambda\\), recovery \\(R\\) of face on default, risk-free rate \\(r\\), and default independent of rates. Evaluate for \\(F=1{,}000\\), \\(T=5\\), \\(r=3\\%\\), \\(\\lambda=5\\%\\), \\(R=40\\%\\).",
+  "back": "The price is the expected discounted payoff. The default time \\(\\tau\\) has density \\(\\lambda e^{-\\lambda t}\\). The payoff is \\(F\\) if \\(\\tau > T\\), and \\(RF\\) at \\(\\tau\\) if \\(\\tau \\le T\\):\n\\[P = F e^{-(r+\\lambda)T} + \\int_0^T \\lambda R F\\, e^{-(r+\\lambda)t}\\,dt = F e^{-(r+\\lambda)T} + \\frac{\\lambda R F}{r+\\lambda}\\big(1-e^{-(r+\\lambda)T}\\big).\\]\nNumbers: \\(e^{-0.4} = 0.6703\\). The first term is 670.3. The second is \\((0.05 \\times 0.4 \\times 1{,}000)/0.08 \\times 0.3297 = 82.4\\). Total \\(P = 752.7\\), against 860.7 risk-free.<br>\n<b>Where it breaks:</b> constant hazard ignores the term structure and any stock-linked default. Recovery as a fraction of face is right for a zero, but a convertible's recovery depends on seniority and accrued. Correlation with rates changes the discounting in the default branch.<br>\n<b>Interviewer follow-up:</b> The credit triangle gives a spread of \\(\\lambda(1-R) = 300\\)bp. Why does the exact spread from this price come out lower? The default leg is discounted at \\(r+\\lambda\\), and the maturity is finite. The continuously compounded yield spread from the closed form is about 268bp.",
+  "tags": [
+   "credit",
+   "derivation",
+   "cds",
+   "recovery",
+   "pricing"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> A floater pays index plus margin \\(m\\) on par, with the index forward flat at \\(f\\), accrual \\(\\tau\\) per period and \\(n\\) periods. Show that the price satisfies \\(P(y) - 100 = (m-y)A(y)\\), where \\(A(y) = \\sum_i \\tau\\,DF_i(y)\\) and \\(DF_i(y) = (1+(f+y)\\tau)^{-i}\\). Derive the discount margin and evaluate it for a price of 99, a 350bp margin, \\(f = 4.00\\%\\), and 3 years quarterly.",
+  "back": "The floater price is \\(P = \\sum_i (f+m)\\tau\\,DF_i + DF_n\\) per 100. A par bond with coupon \\(f+y\\) satisfies \\(100 = \\sum_i (f+y)\\tau\\,DF_i + DF_n\\), the same discounting. Subtracting gives \\(P - 100 = (m-y)\\sum_i \\tau\\,DF_i = (m-y)A(y)\\). Solving gives \\(y = m + (100-P)/A(y)\\). This is exact once \\(A\\) is evaluated at the solution.<br>\nNumbers: \\(A = 2.649\\) at the solution, so the discount adds \\(100\\text{bp}/2.649 = 37.7\\)bp to the margin. \\(DM = 387.7\\)bp. Using \\(A\\) at the margin gives 387.5bp, so the error is negligible here.<br>\n<b>Where it breaks:</b> a non-flat forward curve (use the curve, not a flat rate). A binding floor, since the coupon becomes \\(\\max(f,\\text{floor})+m\\) and the identity picks up the \\((\\text{floor}-f)\\) term. OID and call dates change the convention life.<br>\n<b>Interviewer follow-up:</b> Why does one point over three years not give 33bp? Each cash flow is discounted at about 7.9%, so the annuity is about 2.65 years, not 3. The 1/life shortcut ignores this.",
+  "tags": [
+   "loans",
+   "derivation",
+   "discount_margin",
+   "convention",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> Derive the variance of the discretely rebalanced gamma P&L over horizon \\(T\\) with step \\(\\Delta t\\), when realised and implied vol are both \\(\\sigma\\). Evaluate for \\(\\Gamma = 25\\) shares per $1 (the 100-bond book), \\(S = 80\\), \\(\\sigma = 40\\%\\), \\(T = 1\\) year and \\(\\Delta t = 1/252\\).",
+  "back": "Per step, with \\(\\Delta S = S\\sigma\\sqrt{\\Delta t}\\,Z\\) and \\(Z \\sim N(0,1)\\), the hedged P&L is\n\\[X_k = \\tfrac12\\Gamma(\\Delta S)^2 - \\tfrac12\\Gamma S^2\\sigma^2\\Delta t = \\tfrac12\\Gamma S^2\\sigma^2\\Delta t\\,(Z_k^2 - 1).\\]\nIts mean is zero. \\(\\text{Var}(Z^2-1) = 2\\), so \\(\\text{Var}(X_k) = \\tfrac12\\Gamma^2S^4\\sigma^4\\Delta t^2\\). Summing over \\(N = T/\\Delta t\\) independent steps:\n\\[\\text{Var} = \\tfrac12\\Gamma^2S^4\\sigma^4\\,T\\,\\Delta t.\\]\nNumbers: \\(\\Gamma^2 = 625\\), \\(S^4 = 4.096\\times 10^{7}\\), \\(\\sigma^4 = 0.0256\\). \\(\\text{Var} = 1.30\\times 10^6\\), so the standard deviation is about 1,140 a year, or about 11 per bond.<br>\n<b>Where it breaks:</b> Gaussian increments. Gaps and default produce fat tails that the variance formula misses. Transaction costs and the drift of gamma between rebalances are excluded.<br>\n<b>Interviewer follow-up:</b> Why does rebalancing more often help? The variance falls in proportion to \\(\\Delta t\\), so the standard deviation falls with \\(\\sqrt{\\Delta t}\\). Frequency changes the noise but not the expected gamma P&L, which is set by realised against implied variance.",
+  "tags": [
+   "gamma",
+   "derivation",
+   "convertible_arb",
+   "hedging",
+   "numerics"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> Derive the CLO equity return as a function of asset yield, debt cost, fees and leverage. Assets \\(A = 400\\) at all-in 7.50% (SOFR 4.00% plus 350bp), debt \\(D = 360\\) at 5.60% (SOFR plus 160bp), fees 1% of assets per year, equity \\(E = 40\\). Give \\(r_E\\) and the break-even annual loss rate.",
+  "back": "Equity income is asset income less fees less debt cost: \\(E\\,r_E = A(r_A - f) - D\\,r_D\\). With \\(D = A - E\\) and \\(L = A/E\\):\n\\[r_E = L(r_A - f) - (L-1)\\,r_D.\\]\nNumbers: \\(L = 10\\). \\(r_E = 10 \\times 6.50\\% - 9 \\times 5.60\\% = 65.0\\% - 50.4\\% = 14.6\\%\\). Check: \\((400 \\times 6.5\\% - 360 \\times 5.6\\%)/40 = (26.0 - 20.16)/40 = 14.6\\%\\).<br>\nBreak-even annual loss \\(\\ell\\), as a fraction of assets and ignoring timing, is where \\(r_E = 0\\): \\(\\ell = (r_A - f) - \\tfrac{L-1}{L}r_D = 6.50\\% - 0.9 \\times 5.60\\% = 1.46\\%\\).<br>\n<b>Where it breaks:</b> leverage is not constant, since OC and IC diversion changes \\(D\\). Loss timing and recoveries matter. Equity is an option on the pool, so its expected return is not the return at the mean loss.<br>\n<b>Interviewer follow-up:</b> Why does the default rate, not the spread, drive CLO equity? At 10x leverage, each 1% of asset loss costs 10% of equity. An annual loss of 1.46% of the pool erases the 14.6% return at this spread.",
+  "tags": [
+   "clo",
+   "derivation",
+   "leverage",
+   "equity",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study:</b> A convertible desk is long 100 bonds (face 1,000, ratio 12.5, bond at 1,050, stock at 80, so parity is 1,000 and the premium is 5%). The model delta is 7.75 shares per bond and gamma is 0.25 shares per bond per $1. The stock rises 5% to 84. The desk hedges at inception and then re-hedges. Compute the bond and hedge P&L and the rebalance trade.",
+  "back": "Inception: short \\(100 \\times 7.75 = 775\\) shares.<br>\nStep 1, bond: first order \\(100 \\times 7.75 \\times 4 = 3{,}100\\). Second order \\(\\tfrac12 \\times 100 \\times 0.25 \\times 4^2 = 200\\). Total bond gain 3,300, taking the bond from 1,050 to 1,083.<br>\nStep 2, hedge: the short 775 shares lose \\(775 \\times 4 = 3{,}100\\).<br>\nStep 3, net: +200 before costs and carry, equal to \\(\\tfrac12\\Gamma(\\Delta S)^2\\).<br>\nStep 4, rebalance: delta is now 8.75 per bond, so target short is 875. Sell 100 more shares at 84.<br>\nSanity: parity moved from 1,000 to 1,050 (+50 per bond). The bond moved +33, about 66% of the parity move. This matches the average delta of \\((7.75+8.75)/2 = 8.25\\) shares times 4 points, which is 33 per bond.<br>\n<b>Interviewer follow-up:</b> Why is the net gain positive if the book was delta-neutral? The book is long gamma. The bond's gain exceeds its first-order delta, and the linear short does not offset that convexity, so the 200 is kept.",
+  "tags": [
+   "convertibles",
+   "case_study",
+   "hedging",
+   "gamma",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study:</b> A 3-year TLB with a 350bp margin on quarterly resets, priced at 99 (one point OID). Three-year convention life, flat forward SOFR at 4.00%, and a 0.50% floor that does not bind. Solve for the discount margin. Then repeat if forward SOFR falls to 0.20%, so the floor binds.",
+  "back": "Quarterly coupon at forward: \\((4.00\\% + 3.50\\%) \\times 0.25 = 1.875\\) per 100. Solve \\(99 = \\sum_{i=1}^{12} \\frac{1.875}{(1+(4.00\\%+y)/4)^i} + \\frac{100}{(1+(4.00\\%+y)/4)^{12}}\\) for \\(y\\). Result: \\(y \\approx 387.8\\)bp. Sanity: \\(A = 2.649\\), so \\(100/2.649 = 37.7\\)bp plus 350 gives 387.7bp.<br>\nFloor binding (forward 0.20%): the coupon is \\(0.50\\% + 3.50\\% = 4.00\\%\\), which is 0.30 above the unfloored 3.70%. The same price then implies DM \\(\\approx 415.7\\)bp, about 30bp more. The floor's effect on DM is therefore additive in the coupon.<br>\nFinal: DM \\(\\approx 388\\)bp with the floor out of the money, and \\(\\approx 416\\)bp when the floor binds at 0.20% forward. A one-point-over-three-years shortcut gives 33bp, which understates the annuity effect.<br>\n<b>Interviewer follow-up:</b> Why does a floor raise the DM at a fixed price? When the index is low, the floor raises the coupon the borrower pays, so the lender earns more at the same price. DM quotes at low rates can mislead for this reason.",
+  "tags": [
+   "loans",
+   "case_study",
+   "discount_margin",
+   "floors",
+   "oid"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study:</b> A CLO has performing par of 475 after 25 par of defaults (recovery not yet received). Senior notes are 400, and the OC trigger is 120%. The CCC bucket is 40 par. The CCC cap is 7.5% of performing par, and excess CCC is counted at market value 60. Compute the OC ratio and the interest diversion needed to cure.",
+  "back": "CCC cap \\(= 7.5\\% \\times 475 = 35.63\\). Excess \\(= 40 - 35.63 = 4.38\\). Haircut \\(= 4.38 \\times (1 - 0.60) = 1.75\\). Numerator \\(= 475 - 1.75 = 473.25\\). OC \\(= 473.25/400 = 118.3\\%\\), against 120%: a breach, about 1.7 points short.<br>\nCure: pay x from interest so that \\(473.25/(400-x) = 1.20\\). Then \\(400-x = 394.38\\), so \\(x = 5.63\\).<br>\nSanity: without the CCC haircut the numerator is 475 and the cure is 4.17. The haircut adds \\(1.75/1.20 = 1.46\\), and \\(4.17 + 1.46 = 5.63\\).<br>\n<b>Interviewer follow-up:</b> Can a CLO breach on migration alone? Yes. The CCC haircut is a par-test penalty that bites with no default at all, so a CLO can fail the test when assets migrate into CCC, before any loss is realised.",
+  "tags": [
+   "clo",
+   "case_study",
+   "oc_test",
+   "ccc",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study:</b> Enterprise value at emergence is 620. Claims are: administrative and professional fees 30 (paid first), DIP 100 (super-priority), first-lien TLB 450 (secured), second-lien notes 200 (secured), senior unsecured notes 250, and general unsecured 50 (pari with senior unsecured). Compute each class's recovery and the fulcrum security. Then find the EV at which the fulcrum moves to the senior unsecured notes.",
+  "back": "Waterfall: admin 30 leaves 590. DIP 100 (100%) leaves 490. First lien 450 (100%) leaves 40. Second lien 200 gets \\(40/200 = 20\\%\\). Senior unsecured and general unsecured get 0%.<br>\nFulcrum: the second lien, the most senior class not paid in full, which would receive the reorganised equity under the plan.<br>\nThe fulcrum moves to senior unsecured once the second lien is paid in full: EV \\(\\ge 30 + 100 + 450 + 200 = 780\\). At EV 800, 20 is left for the 250 of senior unsecured, an 8% recovery, which makes them the fulcrum.<br>\nSanity: \\(620 = 30 + 100 + 450 + 40\\), so the recoveries sum to EV.<br>\n<b>Interviewer follow-up:</b> Why does DIP size matter for the fulcrum? Each dollar of super-priority DIP sits ahead of every prepetition claim. A large DIP relative to collateral value moves the fulcrum up the capital structure.",
+  "tags": [
+   "distressed",
+   "case_study",
+   "recovery",
+   "waterfall",
+   "fulcrum"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study:</b> A mandatory convertible with par 100, a stock floor \\(S_L = 60\\) and a cap \\(S_U = 75\\). Give the shares delivered and the payoff at \\(S = 50\\), 70 and 90, and express the payoff in calls and puts.",
+  "back": "Shares delivered: \\(100/60 = 1.667\\) for \\(S \\le 60\\), \\(100/S\\) for \\(60 < S < 75\\), and \\(100/75 = 1.333\\) for \\(S \\ge 75\\).<br>\n\\(S = 50\\): 1.667 shares, value 83.3. \\(S = 70\\): 1.429 shares, value 100.0. \\(S = 90\\): 1.333 shares, value 120.0.<br>\nDecomposition: \\(\\text{Payoff} = 100 + \\tfrac{100}{75}\\max(S-75, 0) - \\tfrac{100}{60}\\max(60-S, 0)\\). The holder is long calls struck at 75 and short puts struck at 60, per the par amount.<br>\nSanity: the payoff is continuous at both bounds, since \\(1.667 \\times 60 = 100\\) and \\(1.333 \\times 75 = 100\\).<br>\n<b>Interviewer follow-up:</b> What is the holder's payoff slope? It is 1.667 below 60, zero between 60 and 75, and 1.333 above 75. The holder is flat in the corridor and short the downside below 60.",
+  "tags": [
+   "convertibles",
+   "mandatory",
+   "payoff",
+   "case_study",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study:</b> A CLO pool of 500 at SOFR+350 (hedged), senior 400 at S+150, mezzanine 50 at S+500, equity 50, fees 0.5% of pool. Four-year bullet, annual default rate (CDR) on performing par, 60% recovery, no reinvestment, and no OC or IC diversion. Find the CDR at which equity receives exactly its 50 back in undiscounted cash (zero IRR).",
+  "back": "Annual cash to equity before losses, on the full pool: \\(17.50 - 6.00 - 2.50 - 2.50 = 6.50\\). Each year's defaults reduce interest on performing par and lose \\(60\\%\\) of the defaulted principal.<br>\nSolving numerically: the breakeven CDR is about 3.0% a year. The cumulative four-year default rate is \\(1 - 0.97^4 \\approx 11.5\\%\\).<br>\nSanity: 3% CDR at 40% loss is 1.2% of pool principal a year, or 6 par. That is nearly all of the 6.5 cash yield, so equity has little margin. OC diversion would lower the breakeven further.<br>\n<b>Interviewer follow-up:</b> Why use breakeven CDR rather than spread? The spread is earned only on performing par. Equity return is set by the default rate and severity, so the breakeven is the more informative number.",
+  "tags": [
+   "clo",
+   "case_study",
+   "equity",
+   "defaults",
+   "scenario"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study:</b> A convertible bond trades at 92.00, with a 2% annual coupon on 1,000 face, a holder put at 100 in 2 years, and a maturity in 5 years. Compute yield-to-put and yield-to-maturity (annual compounding, flat). Which yield should the holder use?",
+  "back": "YTP: solve \\(92 = \\tfrac{2}{1+y} + \\tfrac{102}{(1+y)^2}\\), giving \\(y \\approx 6.39\\%\\).<br>\nYTM: solve \\(92 = \\sum_{t=1}^{5} \\tfrac{2}{(1+y)^t} + \\tfrac{100}{(1+y)^5}\\), giving \\(y \\approx 3.79\\%\\).<br>\nThe put is at the holder's option, so a rational holder exercises it when it gives a higher yield. Here the holder's relevant yield is YTP, 6.39%. The 8-point discount is earned over 2 years, not 5.<br>\n<b>Where it breaks:</b> the put is only as good as the issuer's ability to pay, so its value is credit-linked. The conversion option is ignored in these yields.<br>\n<b>Interviewer follow-up:</b> Why is a put handled as a maximum over exercise dates while a call is a minimum? A call is the issuer's option, so the holder gets the worst case. A put is the holder's option, so the holder takes the best case.",
+  "tags": [
+   "convertibles",
+   "case_study",
+   "yield",
+   "convention",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For constant hazard \\(\\lambda\\) and recovery \\(R\\), the credit spread is approximately {{c1::\\(\\lambda(1-R)\\)}}. For \\(\\lambda = 5\\%\\), \\(R = 40\\%\\), this gives {{c2::300bp}}, but the exact continuously compounded zero-coupon spread at 5 years is about {{c3::268bp}}.",
+  "back": "The triangle is a small-hazard approximation. The exact price discounts the default leg at \\(r+\\lambda\\), and the finite maturity matters. Quote the closed-form number, not the triangle.",
+  "tags": [
+   "credit",
+   "convention",
+   "cds",
+   "recovery"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A 1bp widening of the discount spread changes a bond floor's price by approximately {{c1::\\(-D_m P \\times 10^{-4}\\)}}. For \\(D_m = 4.62\\) and \\(P = 951\\), this is {{c2::−0.44}} per bp per 1,000 face.",
+  "back": "First-order Taylor expansion in \\(s\\). The option part of a convertible adds credit sensitivity only through a stock-linked hazard.",
+  "tags": [
+   "convertibles",
+   "credit",
+   "greeks",
+   "convention"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a flat index \\(f\\), the exact floater identity is \\(P - 100 = (m-y)\\,A(y)\\) with \\(A(y) = \\sum_i \\tau\\,DF_i(y)\\). Solving gives \\(y = m + (100-P)/A\\), so one point over an annuity of 2.65 years adds about {{c1::38bp}} to the margin.",
+  "back": "The identity holds exactly for a par floater discounted at the same index and accrual. The 1/life shortcut understates the effect (33bp here) because the annuity is shorter than the life.",
+  "tags": [
+   "loans",
+   "discount_margin",
+   "convention",
+   "derivation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "With daily rebalancing and realised equal to implied vol, the hedged P&L has mean zero and variance {{c1::\\(\\tfrac12\\Gamma^2 S^4\\sigma^4 T\\,\\Delta t\\)}}, so its standard deviation scales with {{c2::\\(\\sqrt{\\Delta t}\\)}}.",
+  "back": "Each step contributes \\(\\tfrac12\\Gamma S^2\\sigma^2\\Delta t\\,(Z^2-1)\\), and \\(\\text{Var}(Z^2-1) = 2\\).",
+  "tags": [
+   "gamma",
+   "derivation",
+   "convertible_arb",
+   "numerics"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "After an uptier with enterprise value \\(EV\\), non-participant recovery is {{c1::\\(\\min\\big(1,\\ \\max(EV - \\text{super-senior claims}, 0)/\\text{non-participant claims}\\big)\\)}}. For \\(EV = 900\\), super-senior 700 and 400 of non-participant claims, this is {{c2::50%}}.",
+  "back": "Super-senior claims are paid first. Participants' gain against the no-deal recovery is the value transfer from non-participants.",
+  "tags": [
+   "lme",
+   "recovery",
+   "waterfall",
+   "convention"
+  ]
+ }
+]
