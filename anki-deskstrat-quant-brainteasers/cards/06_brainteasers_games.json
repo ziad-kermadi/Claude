@@ -48,9 +48,9 @@
    "fmt_twin"
   ],
   "hints": [
-   "Is this the same move as the chameleon problem with piles in place of colours?",
-   "Reuse the mod 3 invariant of the chameleon problem: each move leaves the residues of pile differences unchanged.",
-   "Write the pile sizes as \\((13,15,17)\\) and the move as \\((-1,-1,+2)\\); compute each pile size modulo 3."
+   "Each move takes one stone from two piles and adds two to the third. Which combinations of pile sizes change by the same amount every move?",
+   "Structural feature: each move changes the pile sizes by \\((-1,-1,+2)\\), so look for a linear combination of the sizes that does not change, or changes only by a multiple of a fixed number.",
+   "Setup: track the differences between pile sizes after one move. Which of them change by a multiple of a fixed integer, and what does that say about reaching two empty piles?"
   ]
  },
  {
@@ -127,9 +127,9 @@
    "fmt_twin"
   ],
   "hints": [
-   "Which earlier card asks the same question about the same toggles?",
-   "Count the integers with an odd number of divisors by the same pairing argument used for the lockers.",
-   "List the \\(n\\le 1000\\) with an odd number of divisors, starting from \\(1,4,9\\) and checking \\(\\tau(n)\\) for the next few values."
+   "How do the positive divisors of \\(n\\) group into pairs, and can every divisor find a different partner?",
+   "Which divisors are left without a partner under the pairing \\(d\\leftrightarrow n/d\\), and what must \\(n\\) look like for that to happen?",
+   "Setup: once you know which \\(n\\le 1000\\) have an unpaired divisor, count them by checking when the relevant root is an integer, and stop at the largest such root that keeps \\(n\\) within 1000."
   ]
  },
  {
@@ -146,7 +146,7 @@
   ],
   "hints": [
    "What is the smallest and largest possible handshake count for one person, and can both occur in the same party?",
-   "Use pigeonhole on the handshake counts; show that the extreme values 0 and \\(n-1\\) cannot both occur.",
+   "Names the move: pigeonhole on the handshake counts. Compare the number of possible values with the number of people, after checking which values can occur together.",
    "Let \\(d_i\\) be the number of handshakes of person \\(i\\), so \\(0\\le d_i\\le n-1\\); suppose all \\(d_i\\) are distinct and look at the person with the most handshakes."
   ]
  },
@@ -285,9 +285,9 @@
    "fmt_twin"
   ],
   "hints": [
-   "Is a lamp here just a hat with a different name? What one-bit summary can the back person call?",
-   "Reuse the parity code from the hat problem, with lamp on as 1 and lamp off as 0.",
-   "Let \\(L_i\\in\\{0,1\\}\\) be lamp \\(i\\) (1 = on) and \\(P=\\sum_{i\\le 99} L_i \\bmod 2\\); write what the person at position \\(k\\) can deduce."
+   "Each person's state is one of two values, and each person sees everyone in front. What single summary of the people in front could the back person announce?",
+   "Structural feature: each person needs only one bit from the call, and the call can summarise everything in front. Ask what that summary must add up to in order to fix the next person's state.",
+   "Setup: let \\(L_i\\in\\{0,1\\}\\) be the lamp states, and let the call be a function of the lamps in front. Write the condition that person \\(k\\) can deduce his own lamp from the call and the lamps he sees."
   ]
  },
  {
@@ -418,7 +418,7 @@
   ],
   "hints": [
    "What is special about lighting a rope at both ends at once compared with lighting it at one end?",
-   "Light both ends of one rope and one end of the other at time zero, then use the moment the first rope finishes to start the second end of the other.",
+   "Names the move: a rope lit at both ends finishes at a time that does not depend on where the rate is fast or slow. Use that as a timer, and ask what the second rope can do while it runs.",
    "Set up: rope A lit at both ends and rope B lit at one end at time 0; write when A finishes and how much of B is left at that moment."
   ]
  },
@@ -505,8 +505,8 @@
   ],
   "hints": [
    "How many different outcomes can \\(r\\) rats' deaths produce, and what does each rat's death tell you?",
-   "Give each bottle a binary code and let each rat test one bit of that code, so the dead rats spell the bottle's number.",
-   "Number the bottles \\(0\\) to \\(999\\), write each in binary, and let rat \\(i\\) drink every bottle whose \\(i\\)-th bit is 1."
+   "Names the move: encode the bottles so that each rat's death is one digit of a code. How many digits are needed to tell 1000 bottles apart?",
+   "Setup: the death patterns of \\(r\\) rats form a set of size \\(2^r\\). Require that this set can label all 1000 bottles, and find the smallest \\(r\\)."
   ]
  },
  {
@@ -601,9 +601,9 @@
    "fmt_twin"
   ],
   "hints": [
-   "Which classic game with heaps is this the same as, and what plays the role of each heap?",
-   "Name the classic heap game this maps to, and use its winning test on the three bowl sizes.",
-   "Write the bowl sizes \\(3,4,5\\) in binary and compute their bitwise XOR."
+   "Each turn touches exactly one bowl and removes any positive amount. Can the three bowls be treated as independent games whose outcomes combine?",
+   "Structural feature: a single bowl on its own is a simple game that the player to move always wins by emptying it. Ask what combination of the bowls' values decides the whole position.",
+   "Setup: for each bowl, find a value that measures it, then combine the three values with one operation and test whether the result is zero."
   ]
  },
  {
@@ -676,7 +676,7 @@
   "hints": [
    "Does the argument for an equal deck depend on the two colours being equal in number?",
    "Use the same martingale argument; only the starting fraction of red cards changes.",
-   "Set \\(p_0\\) equal to red cards divided by total cards for 30 red and 20 black, then write the win probability as \\(E[p_T]\\)."
+   "Setup: write the starting fraction of red cards from the two colour counts, then the win probability as its expectation at the stopping time."
   ]
  },
  {
@@ -779,8 +779,8 @@
    "fmt_twin"
   ],
   "hints": [
-   "Is this the same problem as an earlier card, with houses in place of applicants?",
-   "Use the threshold rule from the classic interview problem: skip the first block, then buy the first house better than all seen.",
+   "Each house is judged only against those already seen. Does buying a house depend on anything except its rank so far, and what would make skipping early useful?",
+   "Structural feature: a house is the best overall exactly when it beats every earlier house, and the early houses serve only as a benchmark. Ask how the benchmark's size trades off against the chance the best one comes later.",
    "Let \\(r\\) be the number of houses to skip; write the success probability as a sum over the position \\(i\\) of the best house."
   ]
  },
@@ -905,9 +905,9 @@
    "fmt_twin"
   ],
   "hints": [
-   "How does the iterated argument for the two-thirds game change if the target is one half?",
+   "Each player can assume the others also restrict their picks. If the winner is the one closest to a fixed fraction of the average, what is the largest pick that can still win once everyone restricts to a range?",
    "Repeat iterated elimination with the new fraction and count the rounds needed to shrink the range below one.",
-   "Let \\(M_0=100\\) and \\(M_{t+1}=\\tfrac12 M_t\\); track \\(M_t\\) round by round."
+   "Setup: let \\(M_t\\) be the largest pick that survives round \\(t\\), with \\(M_0=100\\). Write \\(M_{t+1}\\) as a fixed multiple of \\(M_t\\) and find that multiple from the target fraction."
   ]
  },
  {
@@ -967,8 +967,8 @@
   ],
   "hints": [
    "Under first price, what happens to your surplus if you bid exactly your value?",
-   "Assume the rival bids half his value, then maximise your expected surplus over the bid.",
-   "Write the win probability of bid \\(b\\) as \\(P(\\text{rival's bid}<b)\\) with the rival bidding \\(x/2\\), and the expected surplus as \\((v-b)\\cdot P\\)."
+   "Assume the rival uses some increasing bid function, and maximise your expected surplus over your bid. What does the first-order condition require?",
+   "Write the win probability of bid \\(b\\) as \\(P(\\text{rival's bid}<b)\\) for a rival bidding \\(\\beta(x)\\), and the expected surplus as \\((v-b)\\cdot P\\)."
   ]
  },
  {
@@ -1105,9 +1105,9 @@
    "fmt_twin"
   ],
   "hints": [
-   "Does the five-sailor method still work with three merchants, and what replaces the divisor five?",
-   "Use the same backward congruence with divisor 3: each night removes one coin and divides the rest into three heaps.",
-   "Write the nightly map \\(N\\mapsto \\tfrac23(N-1)\\), which needs \\(N\\equiv 1 \\pmod 3\\), and test candidates forward through three nights."
+   "Each night removes one coin and then splits the rest equally. What must the pile look like before each night for the split to be exact, and how does that constrain the count?",
+   "Structural feature: each night the remaining coins must divide into equal parts, so the pile is constrained by a congruence at every night. Work backwards one night at a time.",
+   "Setup: let \\(N\\) be the pile before a night. Write the pile after that night as a function of \\(N\\), and the condition for the morning pile to split evenly, then test small starting values."
   ]
  },
  {
