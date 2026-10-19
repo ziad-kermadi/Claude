@@ -1,32 +1,28 @@
 # Session state (auto-saved — last known reality)
 
-_Updated: 2026-10-19 19:51:32_  ·  branch: `claude/quant-deck-cpp-training-0rix4z`
+_Updated: 2026-10-19 19:52:28_  ·  branch: `claude/quant-deck-cpp-training-0rix4z`
 
 ## Uncommitted changes
 ```
  M .anchor/session-state.md
- M anki-deskstrat-rates-credit/cards/16_found_stats.json
- M anki-deskstrat-rates-credit/cards/17_cpp_m2.json
 ```
 
 Diff stat:
 ```
- .anchor/session-state.md                           | 68 +-----------------
- .../cards/16_found_stats.json                      | 82 +++++++++++-----------
- anki-deskstrat-rates-credit/cards/17_cpp_m2.json   | 66 ++++++++---------
- 3 files changed, 77 insertions(+), 139 deletions(-)
+ .anchor/session-state.md | 25 +------------------------
+ 1 file changed, 1 insertion(+), 24 deletions(-)
 ```
 
 ## Recent commits
 ```
+b08e5fc Layered explanations: stats, C++ m3/m4, desk 4; fix stale winner's-curse figure
+ebc8f79 Add govies diagrams and mapping; fix sell-down loss probability; layering: C++ m2, desk 3 and 6
+d1fff85 Layered explanations: C++ modules 1,2,5,6; desk practice 2,5
 b337c56 WIP: layering pass in progress
 2e339e5 WIP: layering pass in progress
 c263c59 Record layered-explanation rule in CLAUDE.md and SPEC.md; add layering checker
 2f2df48 WIP: govies diagrams in progress
 40a46fe Fact-check fixes: govies top-up
-59914e7 WIP: govies verification in progress
-c1b6634 WIP: govies verification in progress
-3d4d8da Normalise card types; fix markdown bold and unbalanced tag
 ```
 
 ## Resume
