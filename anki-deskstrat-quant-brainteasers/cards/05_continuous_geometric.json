@@ -34,7 +34,7 @@
  },
  {
   "type": "basic",
-  "front": "A taxi arrives after an independent \\(\\text{Exp}(1)\\) time and a bus after an independent \\(\\text{Exp}(2)\\) time (per minute). What is \\(P(\\text{taxi first})\\)?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "front": "A taxi arrives after an independent time with rate 1 per minute, \\(\\text{Exp}(1)\\), and a bus after an independent time with rate 2 per minute, \\(\\text{Exp}(2)\\). What is \\(P(\\text{taxi first})\\)?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
   "back": "<b>Structure:</b> \\(s\\_memorylessness\\): competing exponential clocks.<br><b>Trigger:</b> Two independent exponential waiting times racing each other.<br><b>Key move:</b> \\(P(X\\lt Y)=\\lambda/(\\lambda+\\mu)\\) because the race restarts memorylessly.<br><b>Answer:</b> \\(1/3\\)",
   "tags": [
    "s_memorylessness",
@@ -99,7 +99,7 @@
  },
  {
   "type": "basic",
-  "front": "\\(X\\sim\\text{Exp}(1)\\) and \\(Y\\sim\\text{Exp}(3)\\) are independent. What is \\(E[\\min(X,Y)]\\)?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "front": "\\(X\\sim\\text{Exp}(1)\\) and \\(Y\\sim\\text{Exp}(3)\\) are independent, with \\(\\text{Exp}(\\lambda)\\) meaning rate \\(\\lambda\\). What is \\(E[\\min(X,Y)]\\)?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
   "back": "<b>Structure:</b> \\(s\\_memorylessness\\): the minimum of independent exponentials is exponential.<br><b>Trigger:</b> The first of several independent exponential clocks.<br><b>Key move:</b> \\(\\min \\sim \\text{Exp}(\\lambda+\\mu)\\), so the mean is \\(1/(\\lambda+\\mu)\\).<br><b>Answer:</b> \\(1/4\\)",
   "tags": [
    "s_memorylessness",
@@ -417,7 +417,7 @@
  {
   "type": "basic",
   "front": "\\(U, V\\) iid \\(U(0,1)\\). What is \\(P(UV\\le 1/4)\\)?",
-  "back": "<b>Answer:</b> \\(\\dfrac{1+\\ln 4}{4} \\approx 0.5966\\)<br><b>Structure:</b> \\(s\\_change\\_of\\_measure\\): conditioning on one factor.<br><b>Key move:</b> For \\(t\\in(0,1)\\): \\(P(UV\\le t)=\\int_0^1 \\min(1,\\,t/u)\\,du\\).<br><b>Working:</b> \\(=t+\\int_t^1 \\tfrac{t}{u}\\,du = t - t\\ln t\\). At \\(t=1/4\\): \\(\\tfrac14+\\tfrac14\\ln4\\).<br><b>Sanity check:</b> Monte Carlo \\(0.5964\\). Mean of \\(UV\\) is \\(1/4\\), so the median is below \\(1/4\\) only; this exceeds \\(1/4\\) as expected for a skewed product.<br><b>Transfer:</b> \\(-\\ln U\\) is \\(\\text{Exp}(1)\\) (toolkit card).",
+  "back": "<b>Answer:</b> \\(\\dfrac{1+\\ln 4}{4} \\approx 0.5966\\)<br><b>Structure:</b> \\(s\\_change\\_of\\_measure\\): conditioning on one factor.<br><b>Key move:</b> For \\(t\\in(0,1)\\): \\(P(UV\\le t)=\\int_0^1 \\min(1,\\,t/u)\\,du\\).<br><b>Working:</b> \\(=t+\\int_t^1 \\tfrac{t}{u}\\,du = t - t\\ln t\\). At \\(t=1/4\\): \\(\\tfrac14+\\tfrac14\\ln4\\).<br><b>Sanity check:</b> Monte Carlo \\(0.5964\\). Since \\(P(UV\\le 1/4)\\approx 0.597>1/2\\), the median of \\(UV\\) lies below \\(1/4\\), consistent with a right-skewed product whose mean is \\(1/4\\).<br><b>Transfer:</b> \\(-\\ln U\\) is \\(\\text{Exp}(1)\\) (toolkit card).",
   "tags": [
    "s_change_of_measure",
    "uniform",
@@ -546,7 +546,7 @@
  },
  {
   "type": "basic",
-  "front": "<b>Perturbed:</b> Buses arrive as a Poisson process with mean headway 10 minutes. You arrive at a uniform random time. What is your expected wait?",
+  "front": "<b>Perturbed:</b> Buses normally run every 10 minutes exactly. Now suppose they arrive as a Poisson process with mean headway 10 minutes instead. You arrive at a uniform random time. What is your expected wait?",
   "back": "<b>What breaks:</b> The 'half the headway' rule (\\(5\\) minutes for regular buses) fails: you are more likely to land in a long gap.<br><b>Fix:</b> Expected wait \\(=E[X^2]/(2E[X])\\). For exponential \\(X\\), \\(E[X^2]=200\\).<br><b>New answer:</b> \\(200/20 = 10\\) minutes.",
   "tags": [
    "s_memorylessness",
@@ -558,7 +558,7 @@
  },
  {
   "type": "basic",
-  "front": "<b>Perturbed:</b> Bus arrival time is uniform on \\([0,10]\\) minutes after 0. You have waited 4 minutes. What is the expected remaining wait?",
+  "front": "<b>Perturbed:</b> Bus arrival time (instead of exponential) is uniform on \\([0,10]\\) minutes after 0. You have waited 4 minutes. What is the expected remaining wait?",
   "back": "<b>What breaks:</b> Memorylessness fails: a bounded uniform wait is not memoryless, so the remaining wait depends on elapsed time.<br><b>Fix:</b> Given survival past 4, the arrival is uniform on \\([4,10]\\). Remaining wait is \\(\\text{mean}-4\\).<br><b>New answer:</b> \\(7-4 = 3\\) minutes (not \\(5\\), and not the exponential answer).",
   "tags": [
    "s_memorylessness",
@@ -580,7 +580,7 @@
  },
  {
   "type": "basic",
-  "front": "<b>Perturbed:</b> \\(X\\sim\\text{Exp}(1)\\), \\(Y\\sim\\text{Exp}(2)\\) independent. What is \\(P(X+Y\\le 1)\\)?",
+  "front": "<b>Perturbed:</b> \\(X\\sim\\text{Exp}(1)\\), \\(Y\\sim\\text{Exp}(2)\\) independent, with \\(\\text{Exp}(\\lambda)\\) meaning rate \\(\\lambda\\). What is \\(P(X+Y\\le 1)\\)?",
   "back": "<b>What breaks:</b> The convolution is no longer Gamma(2,1) because the rates differ.<br><b>Fix:</b> Density of the sum is \\(2(e^{-x}-e^{-2x})\\). Integrate over \\([0,1]\\).<br><b>New answer:</b> \\(1-2e^{-1}+e^{-2}=(1-e^{-1})^2 \\approx 0.3996\\) (versus \\(0.2642\\) for equal rates).",
   "tags": [
    "s_generating_function",
@@ -592,7 +592,7 @@
  },
  {
   "type": "basic",
-  "front": "<b>Perturbed:</b> \\(X\\sim\\text{Exp}(1)\\), \\(Y\\sim\\text{Exp}(2)\\) independent. What is \\(P\\!\\left(\\dfrac{X}{X+Y}\\le\\tfrac14\\right)\\)?",
+  "front": "<b>Perturbed:</b> \\(X\\sim\\text{Exp}(1)\\), \\(Y\\sim\\text{Exp}(2)\\) independent, with \\(\\text{Exp}(\\lambda)\\) meaning rate \\(\\lambda\\). What is \\(P\\!\\left(\\dfrac{X}{X+Y}\\le\\tfrac14\\right)\\)?",
   "back": "<b>What breaks:</b> The share is no longer uniform when rates differ, so the answer \\(1/4\\) from the equal-rate case breaks.<br><b>Fix:</b> \\(P(X/(X+Y)\\le t)=P(Y>cX)\\) with \\(c=(1-t)/t\\). For \\(X\\sim\\text{Exp}(a)\\), \\(Y\\sim\\text{Exp}(b)\\): \\(P(Y>cX)=\\dfrac{a}{a+cb}\\). Here \\(a=1,b=2\\).<br><b>New answer:</b> \\(\\dfrac{1}{1+3\\cdot 2}=\\tfrac17 \\approx 0.1429\\). Monte Carlo \\(0.1427\\).",
   "tags": [
    "s_change_of_measure",
@@ -821,7 +821,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: GAPS 1/3]</b> Context: 9 iid \\(U(0,1)\\) points on \\([0,1]\\) cut the interval into 10 gaps (the two end gaps included).<br>Expected length of the longest gap?",
-  "back": "<b>Answer:</b> \\(\\dfrac{H_{10}}{10}=\\dfrac{7381}{25200}\\approx 0.2929\\)<br><b>Structure:</b> \\(s\\_order\\_statistics\\); trigger: spacings of iid uniforms are exchangeable.<br><b>Key move:</b> Spacings are uniform on the simplex. \\(E[\\max] = \\tfrac{1}{m+1}\\sum_{k=1}^{m+1}\\tfrac1k\\) with \\(m=9\\).<br><b>Working:</b> \\(H_{10}=7381/2520\\), divided by \\(10\\). Monte Carlo \\(0.2929\\).<br><b>Sanity check:</b> \\(\\approx(\\ln 10+\\gamma)/10 = 0.2928\\).<br><b>Transfer:</b> Two cuts (\\(m=2\\)) gives \\(11/18\\), the stick case.",
+  "back": "<b>Answer:</b> \\(\\dfrac{H_{10}}{10}=\\dfrac{7381}{25200}\\approx 0.2929\\)<br><b>Structure:</b> \\(s\\_order\\_statistics\\); trigger: spacings of iid uniforms are exchangeable.<br><b>Key move:</b> Spacings are uniform on the simplex. \\(E[\\max] = \\tfrac{1}{m+1}\\sum_{k=1}^{m+1}\\tfrac1k\\) with \\(m=9\\).<br><b>Working:</b> \\(H_{10}=7381/2520\\), divided by \\(10\\). Monte Carlo \\(0.2929\\).<br><b>Sanity check:</b> \\(H_{10}\\approx \\ln 10+\\gamma+\\tfrac{1}{20}\\), so the value is \\(\\approx 0.2930\\).<br><b>Transfer:</b> Two cuts (\\(m=2\\)) gives \\(11/18\\), the stick case.",
   "tags": [
    "s_order_statistics",
    "uniform",

@@ -17,6 +17,10 @@ SUBDECKS = {
     "08_stats_regression_ml": "8 Statistics, Regression & ML",
     "09_linalg_calculus_pde": "9 Linear Algebra, Calculus & PDE",
     "10_mental_math_fermi_mm": "10 Mental Maths, Fermi & Market Making",
+    "11_rebuild_connect": "11 Rebuild from First Principles",
+    "12_debug_wrong_solutions": "12 Debug the Wrong Solution",
+    "13_estimate_generate": "13 Estimate First & Invent Problems",
+    "14_coding_numerics": "14 Code It & Verify",
 }
 
 def did(name):
@@ -31,6 +35,8 @@ code,pre{font-family:Consolas,monospace;font-size:15px;background:rgba(128,128,1
 pre{padding:8px;overflow-x:auto}
 hr#answer{margin:12px 0}
 .src{font-size:12px;color:#888;margin-top:10px}
+details.hint{margin:6px 0;padding:4px 8px;border-left:3px solid #a05a00;background:rgba(160,90,0,.07)}
+summary{cursor:pointer;color:#a05a00;font-size:14px}
 .prompt{font-size:13px;color:#a05a00;margin-top:8px}
 """
 
@@ -53,7 +59,7 @@ CLOZE = genanki.Model(
                 "afmt": "{{cloze:Text}}<br><hr id=answer>{{Extra}}"}],
     css=CSS)
 
-_TAG = re.compile(r'</?(b|i|br|ul|ol|li|code|pre|table|tr|td|th|thead|tbody|sup|sub|u|p|div|span|em|strong|hr)\b[^>]*>', re.I)
+_TAG = re.compile(r'</?(b|i|br|ul|ol|li|code|pre|table|tr|td|th|thead|tbody|sup|sub|u|p|div|span|em|strong|hr|details|summary)\b[^>]*>', re.I)
 
 def _math(m):
     return m.group(0).replace('<', ' \\lt ').replace('>', ' \\gt ')
@@ -96,6 +102,10 @@ for f in sorted(glob.glob(os.path.join(D, "cards", "*.json"))):
         struct.update(t for t in tags if t.startswith("s_"))
         topic = SUBDECKS[key]
         guid = genanki.guid_for("quantcore", c["front"])
+        hints = c.get("hints") or []
+        if hints and c["type"] == "basic":
+            c = dict(c, front=c["front"] + "".join(
+                f"<details class='hint'><summary>Hint {i}</summary>{h}</details>" for i, h in enumerate(hints, 1)))
         if c["type"] == "cloze":
             note = genanki.Note(CLOZE, fields=[clean(c["front"]), clean(c.get("back", "")), topic], tags=tags, guid=guid)
         else:

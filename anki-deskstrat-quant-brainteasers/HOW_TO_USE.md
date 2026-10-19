@@ -26,6 +26,28 @@ Import `DeskStrat_Quant_Brainteasers_VP_London.apkg` into Anki. It lands under `
 6. **Weekly recognition-only sprint.** Search `tag:fmt_recognise`, set a 20-second timer per card, and only name the structure. This is what fast recognition in an interview needs.
 7. **Mock-interview mode** (last two weeks). Search `tag:fmt_chain` or `tag:fmt_perturb` and answer out loud as if speaking to the interviewer: answer first, then reasoning, then a sanity check.
 
+## v2: rebuild, don't recall
+The deck is built so you can **regenerate** answers from a blank page. Recognising an answer when you see it is not the goal.
+
+| Card type | Tag | What you do | Why (evidence) |
+|---|---|---|---|
+| Rebuild | `fmt_rebuild` | Derive a canonical result from a minimal seed on paper. Only the *move* is worth memorising. | Generation effect (Slamecka & Graf 1978) |
+| Connect | `fmt_connect` | Derive result B from result A, so one remembered result regenerates many | Elaboration builds an integrated schema (Dunlosky et al. 2013) |
+| Debug | `fmt_debug` | Find the single wrong line in a confident but wrong solution | Erroneous examples improve transfer (Große & Renkl 2007; Adams et al. 2014) |
+| Estimate first | `fmt_estimate` | Bounds and limiting cases in 30 seconds, before any algebra | This is the interviewer's sanity check, practised ahead of time |
+| Generate | `fmt_generate` | Invent a problem that *forces* a given structure | Producing examples shows you understand the structure's boundaries |
+| Code | `fmt_code` | Write the 10 lines that verify the answer | Interviews often end with "now simulate it" |
+| Hint ladders | `hints` on problem cards | Open hints only when stuck: 1 is a question, 2 names the move, 3 sets up the first line | Faded scaffolding (Renkl & Atkinson 2003) |
+
+**Grading rule (strict):**
+- Solved without opening a hint: **Good**.
+- Needed hint 1 or 2: **Hard**.
+- Needed hint 3, or saw the back: **Again**.
+
+**Rebuild sessions.** Twice a week, search `tag:fmt_rebuild` and do 5 cards on blank paper with the screen hidden. Only flip once you have a full derivation or are truly stuck. A result you can rebuild is one you no longer need to remember.
+
+**Error log.** Search `tag:err_*` to see your recurring error types. The **Smell** line on each debug card is a detector to run on your own live answers.
+
 ## Suggested settings
 - New cards per day: 25 (about 800 cards takes roughly 5 weeks to introduce). Maximum reviews: 300.
 - Use FSRS with desired retention 0.90. Raise it to 0.95 in the final two weeks.
