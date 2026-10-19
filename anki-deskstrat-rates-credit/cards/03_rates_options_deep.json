@@ -234,7 +234,7 @@
  {
   "type": "basic",
   "front": "<b>Case: caplet stripping from two flat caps.</b> Annual-reset caps at strike 2.50%. The 2y cap is quoted at 60bp flat and the 3y cap at 58bp flat. The first caplet's fixing is set at 3.10% with \\(P(0,1)=0.9600\\). \\(P(0,2)=0.9230\\), \\(P(0,3)=0.8870\\). Forwards: 2.90% for the 1y fixing and 3.00% for the 2y fixing. Strip the caplet vols.",
-  "back": "1. The first caplet is deterministic: \\(0.9600\\times(3.10\\%-2.50\\%)=0.576\\%\\) of notional.<br>\n2. The 2y cap is the first caplet plus caplet 1 at 60bp. Caplet 1 is \\(0.9230\\times\\mathrm{Bach}(2.90\\%,2.50\\%,60\\text{bp},1y)=0.453\\%\\), so the cap is 1.029%. Stripping gives caplet 1 a vol of 60bp exactly.<br>\n3. The 3y cap at 58bp flat totals 1.587%. Caplet 1 at 58bp is worth less than at 60bp, so the 3y quote cannot be used directly for caplet 2 at 58bp.<br>\n4. Caplet 2 value = 3y cap minus first caplet minus caplet 1 at 60bp = \\(1.587\\%-0.576\\%-0.453\\%=0.558\\%\\).<br>\n5. Solve \\(0.9\\text{-}ish\\) discount-adjusted Bachelier for \\(\\sigma_2\\): \\(\\sigma_2=56.6\\)bp.<br>\n<b>Sanity check:</b> caplet 2 lies below the 58bp flat quote, because the 60bp caplet 1 absorbs more of the 2y premium. This is the bootstrap effect, not a market inconsistency.<br>\n<b>Where it breaks:</b> the flat quotes must share the same strike and conventions. A kink like this is a sign to smooth the caplet curve before using it for exotic pricing.",
+  "back": "1. The first caplet is deterministic: \\(0.9600\\times(3.10\\%-2.50\\%)=0.576\\%\\) of notional.<br>\n2. The 2y cap is the first caplet plus caplet 1 at 60bp. Caplet 1 is \\(0.9230\\times\\mathrm{Bach}(2.90\\%,2.50\\%,60\\text{bp},1y)=0.453\\%\\), so the cap is 1.029%. Stripping gives caplet 1 a vol of 60bp exactly.<br>\n3. The 3y cap at 58bp flat totals 1.587%. Caplet 1 at 58bp is worth less than at 60bp, so the 3y quote cannot be used directly for caplet 2 at 58bp.<br>\n4. Caplet 2 value = 3y cap minus first caplet minus caplet 1 at 60bp = \\(1.587\\%-0.576\\%-0.453\\%=0.558\\%\\).<br>\n5. Solve \\(P(0,3)\\,\\mathrm{Bach}(3.00\\%,2.50\\%,\\sigma_2,2y)=0.558\\%\\) for \\(\\sigma_2\\): \\(\\sigma_2=56.6\\)bp.<br>\n<b>Sanity check:</b> caplet 2 lies below the 58bp flat quote, because the 60bp caplet 1 absorbs more of the 2y premium. This is the bootstrap effect, not a market inconsistency.<br>\n<b>Where it breaks:</b> the flat quotes must share the same strike and conventions. A kink like this is a sign to smooth the caplet curve before using it for exotic pricing.",
   "tags": [
    "case_study",
    "caps_floors",
@@ -277,7 +277,7 @@
  },
  {
   "type": "cloze",
-  "front": "For the \\(\\beta=0\\) SABR at leading order, the normal vol is \\(\\sigma_N=\\alpha\\,\\{{c1::\\zeta/x(\\zeta)}\\}\\), with \\(x(\\zeta)=\\{{c2::\\int_0^\\zeta dv/\\sqrt{1-2\\rho v+v^2}}\\}\\). At the money the factor equals {{c3::1}}, so ATM normal vol is \\(\\alpha\\).",
+  "front": "For the \\(\\beta=0\\) SABR at leading order, the normal vol is \\(\\sigma_N=\\alpha\\,{{c1::\\zeta/x(\\zeta)}}\\), with \\(x(\\zeta)={{c2::\\int_0^\\zeta dv/\\sqrt{1-2\\rho v+v^2} }}\\). At the money the factor equals {{c3::1}}, so ATM normal vol is \\(\\alpha\\).",
   "back": "Closed form: \\(x(\\zeta)=\\ln\\big[(\\sqrt{1-2\\rho\\zeta+\\zeta^2}+\\zeta-\\rho)/(1-\\rho)\\big]\\). The factor \\(\\zeta/x(\\zeta)\\) is the segment average of an effective local normal vol. See the derivation card.",
   "tags": [
    "sabr",
@@ -310,7 +310,7 @@
  },
  {
   "type": "cloze",
-  "front": "In one-factor Hull-White with loading \\(\\sigma(t,T)=\\sigma e^{-a(T-t)}\\), the HJM drift is \\(\\alpha(t,T)=\\{{c1::\\sigma^2e^{-a(T-t)}(1-e^{-a(T-t)})/a}}\\).",
+  "front": "In one-factor Hull-White with loading \\(\\sigma(t,T)=\\sigma e^{-a(T-t)}\\), the HJM drift is \\(\\alpha(t,T)={{c1::\\sigma^2e^{-a(T-t)}(1-e^{-a(T-t)})/a}}\\).",
   "back": "Obtained from \\(\\sigma(t,T)\\int_t^T\\sigma(t,u)\\,du\\). Compare the derivation card: the drift is fixed by the volatility loading, with no free parameter.",
   "tags": [
    "hjm",
