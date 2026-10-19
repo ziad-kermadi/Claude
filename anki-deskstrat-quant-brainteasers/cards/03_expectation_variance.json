@@ -241,6 +241,11 @@
    "hat_check",
    "derangements",
    "fmt_solve"
+  ],
+  "hints": [
+   "Each person either gets their own hat or not. Can \"nobody gets their own hat\" be written as an alternating sum over which people do get theirs?",
+   "Inclusion-exclusion over the set of people who get their own hat. For the moments, the number of matches is a sum of indicators.",
+   "Let \\(I_i=\\mathbf 1[\\text{person } i \\text{ gets own hat}]\\) and \\(M=\\sum_i I_i\\). Write \\(P(\\text{no match})=\\sum_{j=0}^{4}(-1)^j\\,\\frac{N_j}{4!}\\), where \\(N_j\\) counts permutations fixing a given set of \\(j\\) people."
   ]
  },
  {
@@ -253,6 +258,11 @@
    "s_linearity_expectation",
    "cycles",
    "fmt_solve"
+  ],
+  "hints": [
+   "Build the permutation by reading items in order. When does item \\(i\\) start a new cycle, and does that decision depend on the other items?",
+   "Feller coupling: item \\(i\\) is the largest label in its cycle with a probability that depends only on \\(i\\). Write the cycle count as a sum of these indicators, then use the variance of a sum of independent Bernoullis.",
+   "Let \\(J_i=\\mathbf 1[i\\text{ is the largest in its cycle}]\\), so \\(C=\\sum_{i=1}^4 J_i\\). Write \\(E[C]=\\sum_i P(J_i=1)\\), and write \\(\\mathrm{Var}(C)\\) as a sum of marginal variances, justified by independence."
   ]
  },
  {
@@ -265,6 +275,11 @@
    "permutations",
    "ascents",
    "fmt_solve"
+  ],
+  "hints": [
+   "Ascents only compare neighbouring entries. What is the chance one adjacent pair is an ascent, and which pairs of comparisons share an entry?",
+   "Indicators on adjacent pairs. Only neighbouring indicators (sharing an entry) are correlated, so the variance gets covariance terms only for adjacent pairs.",
+   "Let \\(A_k=\\mathbf 1[\\pi_k<\\pi_{k+1}]\\) for \\(k=1,2,3\\), so \\(A=\\sum_k A_k\\). Then \\(\\mathrm{Var}(A)=\\sum_k\\mathrm{Var}(A_k)+2\\sum_k\\mathrm{Cov}(A_k,A_{k+1})\\), and \\(\\mathrm{Cov}(A_1,A_2)=P(A_1A_2=1)-P(A_1=1)P(A_2=1)\\)."
   ]
  },
  {
@@ -277,6 +292,11 @@
    "coupon_collector",
    "variance",
    "fmt_solve"
+  ],
+  "hints": [
+   "Split the wait into stages. After \\(j\\) distinct faces have appeared, how long until the next new face, and do the stages depend on each other?",
+   "Coupon-collector stages: each phase is geometric, and by memorylessness the phases are independent. Means and variances add.",
+   "Let \\(G_j\\) be the rolls spent going from \\(j-1\\) to \\(j\\) distinct faces, so \\(G_j\\sim\\mathrm{Geom}(p_j)\\) where \\(p_j\\) is the chance a roll shows one of the \\(7-j\\) unseen faces. Write \\(E[T]=\\sum_{j=1}^6E[G_j]\\) and \\(\\mathrm{Var}(T)=\\sum_{j=1}^6\\mathrm{Var}(G_j)\\)."
   ]
  },
  {
@@ -289,6 +309,11 @@
    "coupon_collector",
    "unequal_probabilities",
    "fmt_solve"
+  ],
+  "hints": [
+   "Could the time until all three types appear be built from times until some subset of types appears? What does \"the first of a subset of types\" look like?",
+   "Inclusion-exclusion over nonempty subsets of types. The wait until any type in \\(S\\) appears is geometric, with the sum of those types' probabilities as success probability.",
+   "For each nonempty set \\(S\\), let \\(p_S=\\sum_{i\\in S}p_i\\). Write \\(E[T]=\\sum_{S\\ne\\emptyset}(-1)^{|S|+1}\\frac{1}{p_S}\\), and list the seven subsets grouped by size."
   ]
  },
  {
@@ -300,6 +325,11 @@
    "s_linearity_expectation",
    "coupon_collector",
    "fmt_solve"
+  ],
+  "hints": [
+   "When you already hold \\(j\\) distinct types, what fraction of draws give a new type? Does the wait for the next new type depend on the history?",
+   "Geometric phases with memorylessness. The expected total is a sum of phase means, one phase per new type.",
+   "Let \\(W_j\\) be the wait after \\(j\\) distinct types, with success probability \\(q_j=\\frac{10-j}{10}\\). Write \\(E[T]=\\sum_{j=0}^{3}E[W_j]\\) and identify \\(E[W_j]\\) from \\(q_j\\)."
   ]
  },
  {
@@ -312,6 +342,11 @@
    "distinct_values",
    "variance",
    "fmt_solve"
+  ],
+  "hints": [
+   "Count the values that never appear rather than the values that do. For one specific value, what is the chance that all five draws avoid it?",
+   "Indicators for absence: let \\(A_v\\) mark that value \\(v\\) never appears. The distinct count is 6 minus a sum of these, and the pairwise terms come from avoiding two values at once.",
+   "Let \\(A_v=\\mathbf 1[v\\text{ absent}]\\), so \\(D=6-\\sum_{v=1}^6A_v\\). Write \\(P(A_v=1)\\) and \\(P(A_uA_v=1)\\) for \\(u\\ne v\\) using the number of allowed values on each draw, then expand \\(\\mathrm{Var}(D)\\) into variances and covariances."
   ]
  },
  {
@@ -324,6 +359,11 @@
    "broken_stick",
    "spacings",
    "fmt_solve"
+  ],
+  "hints": [
+   "Three pieces from two cuts are exchangeable spacings. For the shortest piece, what does the event \"every piece is longer than \\(t\\)\" look like in the square of cut positions?",
+   "Spacings of uniform cuts are symmetric. Use the survival function of the shortest piece, \\(P(L_1>t)\\), and integrate it over \\(t\\). For the longest piece, use the order-statistic structure of the spacings.",
+   "Let \\(L_1\\le L_2\\le L_3\\) be the sorted pieces. Write \\(E[L_1]=\\int_0^1P(L_1>t)\\,dt\\), and write \\(P(L_1>t)\\) as the area of the region of cut pairs in the unit square where all three pieces exceed \\(t\\)."
   ]
  },
  {
@@ -336,6 +376,11 @@
    "broken_stick",
    "triangle",
    "fmt_solve"
+  ],
+  "hints": [
+   "A triangle needs every piece below half the stick. How many pieces can be longer than half at the same time?",
+   "Complement with disjoint events: the bad events \"piece \\(i\\) exceeds one half\" cannot overlap, so the probability of their union is a plain sum.",
+   "Let \\(E_i=\\{\\text{piece } i\\ge\\tfrac12\\}\\). Since the \\(E_i\\) are disjoint, \\(P(\\text{triangle})=1-\\sum_i P(E_i)\\). Identify the region of the two cut points in the unit square where \\(E_1\\) holds."
   ]
  },
  {
@@ -348,6 +393,11 @@
    "s_linearity_expectation",
    "dice",
    "fmt_solve"
+  ],
+  "hints": [
+   "The expected value of a maximum or minimum of small integers can be built from threshold events. Which events \"max at least \\(k\\)\" and \"min at least \\(k\\)\" are easiest to count?",
+   "Tail-sum formula for nonnegative integer variables: \\(E[X]=\\sum_{k\\ge1}P(X\\ge k)\\). Apply it to the max through \\(P(\\max\\le k-1)\\) and to the min through \\(P(\\min\\ge k)\\). The identity \\(\\max+\\min=\\) sum of the two dice gives a check.",
+   "Write \\(E[\\max]=\\sum_{k=1}^{6}P(\\max\\ge k)=\\sum_{k=1}^{6}\\bigl(1-P(\\max\\le k-1)\\bigr)\\), and use \\(P(\\max\\le k-1)=P(X_1\\le k-1)^2\\) for two independent dice."
   ]
  },
  {
@@ -360,6 +410,11 @@
    "dice",
    "expected_max",
    "fmt_solve"
+  ],
+  "hints": [
+   "Same method as the two-dice case. Which threshold tail is cleanest, and how does having three independent dice change the probability that all of them are below \\(k\\)?",
+   "Tail-sum formula over thresholds. The maximum's CDF is the product of the three single-die CDFs, since the dice are independent.",
+   "Write \\(E[M]=\\sum_{k=1}^{6}P(M\\ge k)\\) and \\(P(M\\le k-1)=P(X_1\\le k-1)^3\\), so \\(P(M\\ge k)=1-P(M\\le k-1)\\)."
   ]
  },
  {
@@ -372,6 +427,11 @@
    "optimal_stopping",
    "dice",
    "fmt_solve"
+  ],
+  "hints": [
+   "Work backwards from the last roll. With one roll left, what is the best you can do, and what threshold does that create for the roll before it?",
+   "Backward induction (dynamic programming) on the number of rolls remaining. At each stage compare keeping the value with the expected value of rolling again.",
+   "Let \\(V_r\\) be the best expected payoff with \\(r\\) rolls left, so \\(V_1=E[X]\\) for one fair die and \\(V_r=E[\\max(X,V_{r-1})]\\). Compute \\(V_2\\) by checking which faces beat \\(V_1\\)."
   ]
  },
  {
@@ -384,6 +444,11 @@
    "s_first_step_conditioning",
    "random_walk",
    "fmt_solve"
+  ],
+  "hints": [
+   "Wald's identity relates the expected stopped sum to the expected number of steps. Does the stopping rule depend only on the past, and what would that let you compute?",
+   "Optional stopping (Wald): \\(E[S_N]=E[X]\\,E[N]\\). So the work reduces to finding \\(E[N]\\), by a first-step recursion on the running total.",
+   "Let \\(m(s)\\) be the expected number of further rolls from running total \\(s<10\\). Then \\(m(s)=1+\\frac16\\sum_{k=1}^6m(s+k)\\) with \\(m(s)=0\\) for \\(s\\ge10\\). The answer is \\(E[X]\\cdot m(0)\\)."
   ]
  },
  {
@@ -395,6 +460,11 @@
    "st_petersburg",
    "utility",
    "fmt_solve"
+  ],
+  "hints": [
+   "Group the outcomes by the value of \\(K\\). Does each level \\(k\\le 20\\) contribute the same amount to the expectation, and what happens to the outcomes beyond the cap?",
+   "Linearity over levels: each uncapped level contributes \\(P(K=k)\\times\\)payoff, and the capped tail adds one lump term.",
+   "Write \\(E[\\text{payoff}]=\\sum_{k=1}^{20}2^{k}P(K=k)+2^{20}P(K>20)\\), and simplify each term using \\(P(K=k)=2^{-k}\\)."
   ]
  },
  {
@@ -407,6 +477,11 @@
    "utility",
    "bankroll",
    "fmt_solve"
+  ],
+  "hints": [
+   "The expected payoff is infinite, so the usual expectation-maximising rule cannot set the price. What objective replaces it, and what must the fee leave unchanged?",
+   "Log-utility indifference: the fee \\(c\\) is defined by equating expected log wealth after paying it with the current log wealth. There is no closed form, so solve numerically.",
+   "Define \\(g(c)=\\sum_{k\\ge1}2^{-k}\\log(1000-c+2^k)-\\log 1000\\), and find the root \\(g(c)=0\\) by bisection on \\(c\\) in the interval \\((0,1000)\\)."
   ]
  },
  {
@@ -418,6 +493,11 @@
    "s_conditional_expectation_tower",
    "mixtures",
    "fmt_solve"
+  ],
+  "hints": [
+   "Can the variance be split into a part from flipping a coin with known \\(p\\) and a part from \\(p\\) itself being random?",
+   "Law of total variance: \\(\\mathrm{Var}(X)=E[\\mathrm{Var}(X\\mid p)]+\\mathrm{Var}(E[X\\mid p])\\), with \\(X\\mid p\\) binomial.",
+   "Given \\(p\\), \\(X\\sim\\mathrm{Bin}(5,p)\\), so \\(\\mathrm{Var}(X\\mid p)=5p(1-p)\\) and \\(E[X\\mid p]=5p\\). Write \\(\\mathrm{Var}(X)=5\\,E[p(1-p)]+25\\,\\mathrm{Var}(p)\\) and compute the two terms for \\(p\\) uniform on \\(\\{0.1,0.9\\}\\)."
   ]
  },
  {
@@ -430,6 +510,11 @@
    "random_sum",
    "dice",
    "fmt_solve"
+  ],
+  "hints": [
+   "Condition on the random count \\(N\\) first. Given \\(N\\), what are the sum's mean and variance, and what extra spread comes from \\(N\\) itself?",
+   "Random sum (compound) formulas: condition on \\(N\\). Use the tower property for the mean and the law of total variance for the variance.",
+   "Let \\(X\\) be one die roll. Write \\(E[S]=E[N]\\,E[X]\\) and \\(\\mathrm{Var}(S)=E[N]\\,\\mathrm{Var}(X)+\\mathrm{Var}(N)\\,E[X]^2\\), then compute \\(E[N]\\), \\(\\mathrm{Var}(N)\\), \\(E[X]\\) and \\(\\mathrm{Var}(X)\\) for the given uniform distributions."
   ]
  },
  {
@@ -442,6 +527,11 @@
    "beta",
    "gamma",
    "fmt_solve"
+  ],
+  "hints": [
+   "What is the distribution of \\(X/(X+Y)\\) when \\(X\\) and \\(Y\\) are independent gamma variables with the same scale? Is that ratio independent of their sum?",
+   "Beta-gamma relationship: the ratio \\(X/(X+Y)\\) is Beta distributed, with parameters given by the gamma shapes. The Beta mean is a simple function of the two parameters.",
+   "Let \\(B=X/(X+Y)\\). Identify the Beta parameters \\(\\alpha,\\beta\\) from the shapes of \\(X\\) and \\(Y\\), then write \\(E[B]\\) in terms of \\(\\alpha\\) and \\(\\beta\\)."
   ]
  },
  {
@@ -454,6 +544,11 @@
    "sampling",
    "finite_population",
    "fmt_solve"
+  ],
+  "hints": [
+   "Compare this with drawing with replacement. Which part of the variance changes when draws cannot repeat, and which population variance do you need?",
+   "Finite-population correction: \\(\\mathrm{Var}(\\bar X)=\\frac{\\sigma^2}{n}\\cdot\\frac{N-n}{N-1}\\), where \\(\\sigma^2\\) uses divisor \\(N\\).",
+   "With \\(N=10\\) and \\(n=3\\), write \\(\\sigma^2=\\frac1N\\sum_{x=1}^{10}(x-\\mu)^2\\) for the population \\(\\{1,\\dots,10\\}\\), and then apply the correction factor \\(\\frac{N-n}{N-1}\\)."
   ]
  },
  {
@@ -466,6 +561,11 @@
    "multinomial",
    "dice",
    "fmt_solve"
+  ],
+  "hints": [
+   "Do counts of different faces on the same roll interact? Consider what happens across different rolls, and what happens within one roll.",
+   "Indicators per roll: sum over the ten rolls. Covariance is zero across independent rolls. Within one roll, indicators of different faces are mutually exclusive, so their covariance is negative.",
+   "Write \\(N_1=\\sum_{t=1}^{10}\\mathbf 1[R_t=1]\\) and \\(N_2=\\sum_{t=1}^{10}\\mathbf 1[R_t=2]\\), so \\(\\mathrm{Cov}(N_1,N_2)=\\sum_t\\mathrm{Cov}(\\mathbf 1[R_t=1],\\mathbf 1[R_t=2])\\). Evaluate one term using \\(P(R_t=1\\text{ and }R_t=2)=0\\)."
   ]
  },
  {
@@ -477,6 +577,11 @@
    "dice",
    "inequalities",
    "fmt_solve"
+  ],
+  "hints": [
+   "Compare the average of \\(1/X\\) with \\(1/E[X]\\). Which way does a convex function push an average, and what does a direct computation require here?",
+   "Jensen's inequality for the convex function \\(f(x)=1/x\\). Direct computation is easy because \\(X\\) is uniform on six values.",
+   "Write \\(E[1/X]=\\frac16\\sum_{x=1}^{6}\\frac1x\\), and compare it with \\(\\frac{1}{E[X]}\\) where \\(E[X]\\) is the mean of the fair die."
   ]
  },
  {
@@ -488,6 +593,11 @@
    "s_markov_chain",
    "coin_patterns",
    "fmt_solve"
+  ],
+  "hints": [
+   "After a head, what matters for the next flip? Is there a state that remembers \"I just saw a head\", and one that does not?",
+   "First-step analysis with two states: start, and \"last flip was H\". Solve the two linear equations for the expected remaining flips.",
+   "Let \\(a\\) be the expected remaining flips from start and \\(b\\) from \"just saw H\". The first equation is \\(a=1+\\tfrac12a+\\tfrac12b\\)."
   ]
  },
  {
@@ -499,6 +609,11 @@
    "s_markov_chain",
    "coin_patterns",
    "fmt_solve"
+  ],
+  "hints": [
+   "Which two-flip patterns can overlap with themselves? After a head, does a tail finish the pattern while a head leaves you in the same state?",
+   "First-step analysis with states start and \"after H\". From \"after H\", a tail completes the pattern and a head keeps you there.",
+   "Let \\(b\\) be the expected remaining flips from \"after H\". The first equation is \\(b=1+\\tfrac12 b\\), and then write the start-state equation \\(a=1+\\tfrac12a+\\tfrac12b\\)."
   ]
  },
  {
@@ -510,6 +625,11 @@
    "s_tail_sum",
    "expected_max",
    "fmt_solve"
+  ],
+  "hints": [
+   "The maximum is below \\(x\\) exactly when which event holds for every draw? Write the distribution function of the maximum first.",
+   "Order statistics: the CDF of the maximum of \\(n\\) i.i.d. uniforms is the \\(n\\)th power of the single-draw CDF. Use the tail integral for the expectation.",
+   "Write \\(P(M\\le x)=x^9\\) for \\(0\\le x\\le1\\), and \\(E[M]=\\int_0^1P(M>x)\\,dx=\\int_0^1\\bigl(1-x^9\\bigr)\\,dx\\)."
   ]
  },
  {
@@ -522,6 +642,11 @@
    "dice",
    "coupon_collector",
    "fmt_solve"
+  ],
+  "hints": [
+   "The time until both faces have appeared is the later of two first-appearance times. Can the maximum of two waiting times be written with a minimum and a sum?",
+   "Max = sum minus min for two waiting times. Each single wait is geometric. The minimum waits for either face, so it is geometric with a larger success probability.",
+   "Let \\(T_1,T_2\\) be the first appearance times of faces 1 and 2. Write \\(E[\\max(T_1,T_2)]=E[T_1]+E[T_2]-E[\\min(T_1,T_2)]\\), and identify the success probability of \\(\\min(T_1,T_2)\\)."
   ]
  },
  {
@@ -534,6 +659,11 @@
    "permutations",
    "cycles",
    "fmt_solve"
+  ],
+  "hints": [
+   "Count the potential 2-cycles rather than the permutations. For one fixed pair of items, what fraction of permutations contain that 2-cycle?",
+   "Linearity over potential cycles: the expected number of 2-cycles is a sum over pairs, and each pair's probability comes from counting permutations that contain it.",
+   "Let \\(N_2\\) be the number of 2-cycles. Write \\(E[N_2]=\\sum_{\\{a,b\\}}P(\\pi\\text{ contains the 2-cycle }(a\\,b))\\), summing over the \\(\\binom{10}{2}\\) pairs, and count the permutations that contain a fixed 2-cycle."
   ]
  },
  {
@@ -546,6 +676,11 @@
    "permutations",
    "peaks",
    "fmt_solve"
+  ],
+  "hints": [
+   "For a fixed interior position, what is the chance its value is the largest of three specific values? Does the rest of the permutation matter?",
+   "Indicators for each interior position. A peak needs the middle of three values to be the largest, which depends only on the relative order of those three.",
+   "Let \\(P_i=\\mathbf 1[\\pi(i-1)<\\pi(i)>\\pi(i+1)]\\) for \\(i=2,\\dots,5\\). Write \\(E[\\text{peaks}]=\\sum_{i=2}^{5}E[P_i]\\), and compute each term from the relative order of three values."
   ]
  },
  {
@@ -558,6 +693,11 @@
    "dice",
    "pairs",
    "fmt_solve"
+  ],
+  "hints": [
+   "Count pairs of rolls rather than faces. For one specific pair of rolls, what is the chance they show the same face?",
+   "Indicator for each unordered pair of rolls. By linearity, the expected count is the number of pairs times the match probability.",
+   "Let \\(I_{ij}=\\mathbf 1[R_i=R_j]\\) for \\(1\\le i<j\\le 5\\). Write \\(E[\\text{pairs}]=\\sum_{i<j}P(R_i=R_j)\\)."
   ]
  },
  {
@@ -569,6 +709,11 @@
    "s_memorylessness",
    "dice",
    "fmt_solve"
+  ],
+  "hints": [
+   "After the first roll, does the chance that the next roll repeats the last one depend on how you got there?",
+   "Memorylessness: each new roll is a fresh geometric trial with the same success probability, so the wait after the first roll is geometric.",
+   "Let \\(T\\) be the total number of rolls and \\(G\\) the number of further rolls after the first. Then \\(T=1+G\\), where \\(G\\sim\\mathrm{Geom}(p)\\) and \\(p\\) is the chance a roll matches the previous one."
   ]
  },
  {
@@ -581,6 +726,11 @@
    "fixed_points",
    "random_function",
    "fmt_perturb"
+  ],
+  "hints": [
+   "When each item's target is chosen independently, are the events \"item \\(i\\) is fixed\" still linked to each other? Re-check what the covariance term relied on.",
+   "Indicators with independence: when the indicators are independent, the covariances vanish, so the variance is the sum of the marginal variances.",
+   "Let \\(I_i=\\mathbf 1[f(i)=i]\\). Write \\(\\mathrm{Var}(F)=\\sum_i\\mathrm{Var}(I_i)+\\sum_{i\\ne j}\\mathrm{Cov}(I_i,I_j)\\), then decide which covariance terms are zero for independent targets."
   ]
  },
  {
@@ -593,6 +743,11 @@
    "cycles",
    "parity",
    "fmt_perturb"
+  ],
+  "hints": [
+   "The parity constraint removes some permutations. Which cycle types survive, and how many permutations of each type are there?",
+   "The Feller independence no longer applies to the restricted set, so count the permutations by cycle type rather than use the coupling.",
+   "Let \\(\\mathcal E\\) be the 12 even permutations of \\(\\{1,2,3,4\\}\\). Sort them by cycle type, then write \\(E[C]=\\frac1{12}\\sum_{\\pi\\in\\mathcal E}c(\\pi)\\), where \\(c(\\pi)\\) is the number of cycles of \\(\\pi\\)."
   ]
  },
  {
@@ -605,6 +760,11 @@
    "runs",
    "biased_coin",
    "fmt_perturb"
+  ],
+  "hints": [
+   "A run boundary occurs at each position where consecutive flips differ. What is the chance of a change at a single position under the new coin?",
+   "Linearity over the nine adjacent pairs: runs equal one plus the number of changes. Only the probability of a change in one pair is different now.",
+   "Let \\(D_i=\\mathbf 1[X_i\\ne X_{i+1}]\\) for \\(i=1,\\dots,9\\), so \\(\\text{runs}=1+\\sum_iD_i\\). Write \\(P(D_i=1)\\) using \\(P(H)=\\tfrac13\\) and \\(P(T)=\\tfrac23\\)."
   ]
  },
  {
@@ -617,6 +777,11 @@
    "coupon_collector",
    "unequal_probabilities",
    "fmt_perturb"
+  ],
+  "hints": [
+   "The phases are no longer identical. Does the wait for a new type depend on which types you already hold? Could you count over subsets instead?",
+   "Inclusion-exclusion over subsets of types, using the fact that the wait until any type in a subset appears is geometric.",
+   "For a nonempty set \\(S\\) of types, let \\(p_S\\) be the total probability of those types. Write \\(E[T]=\\sum_{S\\ne\\emptyset}(-1)^{|S|+1}\\frac1{p_S}\\), and list the subsets by size, treating type 1 separately."
   ]
  },
  {
@@ -629,6 +794,11 @@
    "sampling",
    "finite_population",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Compare how the draws depend on each other under the two schemes. What factor in the variance formula comes from draws not repeating?",
+   "With replacement the draws are i.i.d., so the variance of the sample mean is the population variance divided by \\(n\\). The finite-population factor disappears.",
+   "Write \\(\\mathrm{Var}(\\bar X)=\\frac1n\\mathrm{Var}(X_1)\\) for i.i.d. draws, and identify the population variance \\(\\sigma^2\\) that plays the role of \\(\\mathrm{Var}(X_1)\\)."
   ]
  },
  {
@@ -641,6 +811,11 @@
    "beta",
    "exchangeability",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Symmetry no longer applies, because \\(Y\\) has a different range. How can the expectation be written as a double integral over the two densities?",
+   "Direct integration of the joint density, since symmetry fails. The density of \\(Y\\) on \\((0,2)\\) is constant.",
+   "Write \\(E\\!\\left[\\frac{X}{X+Y}\\right]=\\int_0^1\\!\\!\\int_0^2\\frac{x}{x+y}\\,f_Y(y)\\,dy\\,dx\\) with \\(f_Y\\) the density of \\(Y\\), then evaluate the inner integral over \\(y\\) first."
   ]
  },
  {
@@ -652,6 +827,11 @@
    "s_markov_chain",
    "coin_patterns",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Which states need to remember the last flip? With a biased coin, how do the transition probabilities change between the two states?",
+   "First-step analysis with states \"start\" and \"after H\". The transition probabilities depend on \\(p=P(H)\\).",
+   "Let \\(a\\) be the expected remaining flips from start and \\(b\\) from \"after H\". Write \\(a=1+p\\,b+(1-p)\\,a\\) and \\(b=1+(1-p)\\,a\\), then solve for \\(a\\)."
   ]
  },
  {
@@ -664,6 +844,11 @@
    "optimal_stopping",
    "dice",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Work backwards from the last roll. With a cost paid on each reroll, how does the value of rerolling compare with keeping at each stage?",
+   "Backward induction with a per-reroll cost: at each stage compare keeping \\(x\\) with the expected continuation value less the cost.",
+   "Let \\(V(x,r)\\) be the optimal value holding \\(x\\) with \\(r\\) rerolls left, with \\(V(x,0)=x\\) and \\(V(x,r)=\\max\\bigl(x,\\;-\\tfrac12+E[V(Y,r-1)]\\bigr)\\). Start from \\(E[V(X,2)]\\)."
   ]
  },
  {
@@ -676,6 +861,11 @@
    "records",
    "ties",
    "fmt_perturb"
+  ],
+  "hints": [
+   "With continuous draws the chance that draw \\(i\\) is a record is \\(\\frac1i\\). Ties break that. When can draw \\(i\\) beat all earlier draws?",
+   "Indicators for records: draw \\(i\\) is a record when it strictly exceeds the running maximum of the earlier draws. Condition on that maximum's value.",
+   "Let \\(R_i=\\mathbf 1[X_i>\\max_{j<i}X_j]\\), so the record count is \\(\\sum_{i=1}^5R_i\\). Write \\(P(R_i=1)=\\sum_k P\\bigl(\\max_{j<i}X_j=k\\bigr)\\,P(X_i>k)\\)."
   ]
  },
  {
@@ -688,6 +878,11 @@
    "ties",
    "ascents",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Ties are neither ascents nor descents. When both values come from the same die, what is the chance that one adjacent pair is strictly increasing?",
+   "Linearity over the adjacent pairs. Each pair's probability counts ordered outcomes \\((a,b)\\) with \\(a<b\\) out of all equally likely outcomes.",
+   "Let \\(A_k=\\mathbf 1[X_{k+1}>X_k]\\) for \\(k=1,2,3\\), so \\(E[\\text{ascents}]=\\sum_kP(A_k=1)\\). Count the favourable ordered pairs \\((a,b)\\) with \\(a<b\\) on \\(\\{1,\\dots,6\\}\\)."
   ]
  },
  {
@@ -700,6 +895,11 @@
    "conditional_expectation",
    "hat_check",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Conditioning on at least one match changes the distribution of the count. Can the conditional expectation be rewritten using the unconditional one?",
+   "Conditional expectation: \\(E[F\\mid F\\ge1]=E[F\\,\\mathbf 1[F\\ge1]]/P(F\\ge1)\\). Since \\(F=0\\) on the complement, the numerator is just \\(E[F]\\).",
+   "Write \\(E[F\\mid F\\ge1]=\\dfrac{E[F]}{P(F\\ge1)}\\), and get \\(P(F\\ge1)\\) from the given \\(P(\\text{nobody gets own hat})\\)."
   ]
  },
  {
@@ -712,6 +912,11 @@
    "records",
    "twin",
    "fmt_twin"
+  ],
+  "hints": [
+   "Relabel the line by height. What does a person being visible mean in terms of the running maximum of the people in front of them?",
+   "Records of a random permutation: count positions that are running maxima, using indicators. Each position's probability depends only on the relative rank among the people in front.",
+   "Let \\(V_i=\\mathbf 1[\\text{person } i\\text{ is taller than everyone before}]\\), so the count is \\(\\sum_{i=1}^5V_i\\). Write \\(P(V_i=1)\\) in terms of the rank of person \\(i\\) among the first \\(i\\)."
   ]
  },
  {
@@ -724,6 +929,11 @@
    "hat_check",
    "permutations",
    "fmt_twin"
+  ],
+  "hints": [
+   "Each guest matches only their own coat. Which pairs of guests can influence each other's chance of a match?",
+   "Indicators for fixed points: linearity for the mean, and the variance expansion with pairwise covariances, which are all equal by symmetry.",
+   "Let \\(I_g=\\mathbf 1[\\text{guest } g\\text{ gets their own coat}]\\) and \\(F=\\sum_gI_g\\). Write \\(\\mathrm{Var}(F)=\\sum_g\\mathrm{Var}(I_g)+\\sum_{g\\ne h}\\mathrm{Cov}(I_g,I_h)\\), and compute the marginal and the pairwise joint probabilities."
   ]
  },
  {
@@ -735,6 +945,11 @@
    "s_linearity_expectation",
    "coupon_collector",
    "fmt_twin"
+  ],
+  "hints": [
+   "While you hold \\(j\\) distinct monsters, what fraction of boxes gives you a new one? Do the waits for successive new monsters depend on each other?",
+   "Coupon-collector phases: each new monster is a geometric wait, and by memorylessness the phases are independent. Means and variances add.",
+   "Let \\(G_j\\) be the boxes needed to get from \\(j-1\\) to \\(j\\) distinct monsters, with success probability \\(\\frac{7-j}{6}\\). Write \\(E[T]=\\sum_{j=1}^6E[G_j]\\) and \\(\\mathrm{Var}(T)=\\sum_{j=1}^6\\mathrm{Var}(G_j)\\)."
   ]
  },
  {
@@ -747,6 +962,11 @@
    "broken_stick",
    "triangle",
    "fmt_twin"
+  ],
+  "hints": [
+   "What must be true of the largest piece for all three to be at most one half? Could two different pieces both exceed one half?",
+   "Disjoint complements: the bad events \"piece \\(i\\) exceeds one half\" cannot overlap, so the probability of their union is a plain sum.",
+   "Let \\(E_i=\\{\\text{piece } i>\\tfrac12\\}\\). Since the \\(E_i\\) are disjoint, \\(P(\\text{all}\\le\\tfrac12)=1-\\sum_iP(E_i)\\). Compute \\(P(E_1)\\) from the two cut points."
   ]
  },
  {
@@ -760,6 +980,11 @@
    "pattern_waiting",
    "twin",
    "fmt_twin"
+  ],
+  "hints": [
+   "Can a partial match of this pattern overlap with itself when it fails? Could the last symbol of a failed attempt start the next one?",
+   "Pattern waiting time with no self-overlap: the expected wait is the reciprocal of the probability that the pattern completes at a given position.",
+   "Let \\(p\\) be the chance that two consecutive rolls equal \\((6,1)\\). With no self-overlap, the expected wait is \\(1/p\\), so compute \\(p\\) from the number of outcomes per roll."
   ]
  },
  {
@@ -771,6 +996,11 @@
    "s_backward_induction",
    "optimal_stopping",
    "fmt_twin"
+  ],
+  "hints": [
+   "This is the same structure as the three-roll dice game. What is the best threshold at the last offer, and how does that change the choice at the previous one?",
+   "Backward induction over the offers remaining, with a threshold rule at each stage.",
+   "Let \\(W_r\\) be the best value with \\(r\\) offers left, so \\(W_1=E[X]\\) for one uniform offer and \\(W_r=E[\\max(X,W_{r-1})]\\). Compute \\(W_2\\) by comparing each offer with \\(W_1\\)."
   ]
  },
  {
@@ -783,6 +1013,11 @@
    "exchangeability",
    "twin",
    "fmt_twin"
+  ],
+  "hints": [
+   "Does the actual distribution matter here, or only some symmetry between the services?",
+   "Exchangeability: the services are i.i.d., so each service's share of the total has the same expectation.",
+   "Write \\(\\sum_{i=1}^5E\\!\\left[\\frac{X_i}{S_5}\\right]=E\\!\\left[\\frac{S_5}{S_5}\\right]\\), then use that the five terms are equal."
   ]
  },
  {
@@ -795,6 +1030,11 @@
    "coupon_collector",
    "twin",
    "fmt_twin"
+  ],
+  "hints": [
+   "This is a coupon-collector problem that stops after a fixed number of distinct kinds. How many phases are there, and what is the success probability of each?",
+   "Geometric phases for new kinds, added by linearity, stopping after the third distinct kind.",
+   "Let \\(G_j\\) be the packs needed to get the \\(j\\)th new kind, with success probability \\(\\frac{10-(j-1)}{10}\\) for \\(j=1,2,3\\). Write \\(E[\\text{packs}]=\\sum_{j=1}^{3}E[G_j]\\)."
   ]
  },
  {
@@ -899,6 +1139,11 @@
    "hat_check",
    "chain",
    "fmt_chain"
+  ],
+  "hints": [
+   "Which tool counts outcomes with no fixed point by alternating over sets of people who do get their own hat?",
+   "Inclusion-exclusion over the sets of people forced to match.",
+   "Let \\(A_i\\) be the event that person \\(i\\) gets their own hat. Write \\(P(\\text{none})=\\sum_{j=0}^{4}(-1)^j\\sum_{|S|=j}P\\bigl(\\bigcap_{i\\in S}A_i\\bigr)\\)."
   ]
  },
  {
@@ -911,6 +1156,11 @@
    "hat_check",
    "chain",
    "fmt_chain"
+  ],
+  "hints": [
+   "Pick out the one person who matches. What must the other three avoid, and how does that connect to the previous card?",
+   "Choose the fixed person first, then count derangements of the other people. This is a counting argument with a chosen index.",
+   "Write \\(P(\\text{exactly one})=\\dfrac{4\\cdot D_3}{4!}\\), where \\(D_3\\) counts permutations of 3 people with no fixed point. Work out \\(D_3\\) by listing or by inclusion-exclusion."
   ]
  },
  {
@@ -923,6 +1173,11 @@
    "hat_check",
    "chain",
    "fmt_chain"
+  ],
+  "hints": [
+   "The previous card used a finite alternating sum. What happens to that sum as the number of people grows?",
+   "Inclusion-exclusion over \\(n\\) people. For \\(n=10\\) truncate at \\(j=10\\); the limit is an alternating exponential series.",
+   "Write \\(P_n=\\sum_{j=0}^{n}\\frac{(-1)^j}{j!}\\) as the probability of no fixed point. Evaluate \\(P_{10}\\) term by term, then take \\(n\\to\\infty\\) in the same series."
   ]
  },
  {
@@ -936,6 +1191,11 @@
    "edge_case",
    "chain",
    "fmt_chain"
+  ],
+  "hints": [
+   "For one person, how many pairs of distinct people exist, and does the covariance argument have anything to work with? Check the same question with two people.",
+   "Variance expansion: covariance terms exist only for pairs of distinct people. For very small \\(n\\), the count can be deterministic or take only two values.",
+   "For \\(n=1\\), write \\(F=\\mathbf 1[\\text{person 1 gets own hat}]\\) and decide whether \\(F\\) is random. For \\(n=2\\), list the two permutations and compute \\(E[F^2]\\)."
   ]
  }
 ]

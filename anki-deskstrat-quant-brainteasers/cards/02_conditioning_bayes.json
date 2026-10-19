@@ -19,6 +19,11 @@
    "s_complement",
    "monty_hall",
    "fmt_solve"
+  ],
+  "hints": [
+   "Before the reveal, what does the host's choice depend on, and what does he know that you do not? Would the reveal look the same whichever door hides the car?",
+   "Condition on the host's action as an observation: compare how likely this exact reveal is under each possible location of the car, rather than treating the remaining doors as equally likely.",
+   "Let \\(c\\) be the car's door and \\(r\\) the reveal. Write \\(P(c=j\\mid r)\\propto P(r\\mid c=j)\\,P(c=j)\\) for door 1 and for the unopened door \\(j\\)."
   ]
  },
  {
@@ -29,6 +34,11 @@
    "s_bayes",
    "monty_hall",
    "fmt_perturb"
+  ],
+  "hints": [
+   "What step in the standard argument relies on the host knowing where the car is? What changes for your odds if his choice is random?",
+   "Condition on the exact event you observed, a goat behind door 2, and compare how often that event happens under each car location, since the host's choice is now random.",
+   "\\(P(\\text{car}=j\\mid\\text{opens }2)\\propto P(\\text{opens }2\\mid\\text{car}=j)\\cdot\\tfrac13\\) for \\(j=1,2,3\\); the three likelihoods come from the host's random choice rule."
   ]
  },
  {
@@ -39,6 +49,11 @@
    "s_bayes",
    "monty_hall",
    "fmt_perturb"
+  ],
+  "hints": [
+   "When the car is behind your door, does the host still have a choice to make? Does that choice tell you anything about where the car is?",
+   "Use the likelihood of the observed reveal under each car location. The host's rule gives a different probability in each case, so weight the prior by these likelihoods.",
+   "\\(P(\\text{car}=j\\mid\\text{opens }2)\\propto P(\\text{opens }2\\mid\\text{car}=j)\\cdot\\tfrac13\\) for \\(j\\in\\{1,2,3\\}\\), with the three likelihoods read off the host's habit."
   ]
  },
  {
@@ -60,6 +75,11 @@
    "s_symmetry",
    "monty_hall",
    "fmt_twin"
+  ],
+  "hints": [
+   "Is the pharmacist's discard a random event that could happen whatever the cure's location, or is it constrained by where the cure is?",
+   "This is the same structure as a host who must avoid the prize. Condition on which bottle was discarded, not on the two remaining bottles being symmetric.",
+   "Let \\(d\\) be the discarded bottle and \\(c\\in\\{2,3\\}\\) the cure's bottle. Write \\(P(c\\mid d)\\propto P(d\\mid c)\\,P(c)\\) and compare the two values of \\(c\\)."
   ]
  },
  {
@@ -71,6 +91,11 @@
    "s_symmetry",
    "monty_hall",
    "fmt_solve"
+  ],
+  "hints": [
+   "Does the host's random choice of empty doors favour any of the unopened doors over the others, and how much probability is left for door 1?",
+   "Condition on the observed reveal. Because the host's choice is symmetric across the unopened doors, the posterior over them depends only on how the reveal's likelihood compares with door 1's.",
+   "\\(P(\\text{car}=j\\mid\\text{obs})\\propto P(\\text{obs}\\mid\\text{car}=j)\\,P(\\text{car}=j)\\) for door 1 and for each unopened door \\(j\\neq1\\); compare the likelihoods of the reveal."
   ]
  },
  {
@@ -92,6 +117,11 @@
    "s_symmetry",
    "boy_girl",
    "fmt_solve"
+  ],
+  "hints": [
+   "Does the statement identify a particular kind of child, or only the family? How many distinct kinds of child are there once birthdays are included?",
+   "Count outcomes as pairs of child types, not pairs of sexes. Counting the event 'at least one child is a boy born on a Tuesday' directly, or by its complement, is the cleanest route.",
+   "Let each child have \\(N\\) equally likely types. Then \\(P(\\text{both boys}\\mid A)=\\dfrac{|\\{\\text{both boys}\\}\\cap A|}{|A|}\\), where \\(A\\) is the event 'at least one boy born on a Tuesday', counted over the \\(N^2\\) ordered pairs of types."
   ]
  },
  {
@@ -102,6 +132,11 @@
    "s_bayes",
    "boy_girl",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Does the information say 'the family has a boy', or 'the child you sampled is a boy'? Does the sampling procedure treat all families equally?",
+   "Enumerate (family, sampled child) pairs rather than families. A family with two boys can produce the observed event in two different ways.",
+   "Let the sample space be pairs \\((f,c)\\), with \\(f\\) a family and \\(c\\in\\{1,2\\}\\) the sampled child, each pair equally likely. Let \\(E\\) be the event that the sampled child is a boy; then \\(P(\\text{other is a boy}\\mid E)=\\dfrac{\\#\\{(f,c)\\in E:\\ \\text{other child is a boy}\\}}{\\#E}\\)."
   ]
  },
  {
@@ -112,6 +147,11 @@
    "s_bayes",
    "boy_girl",
    "fmt_solve"
+  ],
+  "hints": [
+   "Which outcomes does the conditioning remove, and what does that do to the denominator?",
+   "Condition on 'at least one boy' by removing only the single all-girls outcome from the sample space. The event of interest is then the single all-boys outcome.",
+   "\\(P(\\text{all boys}\\mid\\geq1\\text{ boy})=\\dfrac{P(\\text{all boys})}{P(\\geq1\\text{ boy})}\\). Express \\(P(\\geq1\\text{ boy})\\) through its complement, then evaluate for \\(n\\) fair children."
   ]
  },
  {
@@ -122,6 +162,11 @@
    "s_bayes",
    "boy_girl",
    "fmt_twin"
+  ],
+  "hints": [
+   "Is the information about a particular day, or about the set of days? What is the sample space of two-day weather patterns?",
+   "List the equally likely two-day patterns, then restrict to those consistent with 'rained at least once' and pick out the one where it rained on both days.",
+   "\\(P(\\text{RR}\\mid\\text{not DD})=\\dfrac{P(\\text{RR})}{P(\\text{not DD})}\\), with each pattern having probability \\(\\tfrac14\\); write \\(P(\\text{not DD})\\) as a sum over the remaining patterns."
   ]
  },
  {
@@ -142,6 +187,11 @@
    "s_bayes",
    "dice",
    "fmt_chain"
+  ],
+  "hints": [
+   "Once you know at least one die is a six, how many outcomes remain in the sample space? How many of those have a six on both dice?",
+   "Count outcomes in the conditioned set rather than multiplying single-die probabilities. Restrict to the outcomes containing at least one six and check which of them show two sixes.",
+   "\\(P(\\text{both }6\\mid\\geq1\\text{ six})=\\dfrac{\\#\\{(6,6)\\}}{\\#\\{(a,b):\\ a=6\\text{ or }b=6\\}}\\)."
   ]
  },
  {
@@ -152,6 +202,11 @@
    "s_bayes",
    "dice",
    "fmt_chain"
+  ],
+  "hints": [
+   "Does the new information point at a particular die or at a set of outcomes? What does that imply for the second die?",
+   "Name the conditioned event as 'the first die shows a six' and check whether that information touches the second die at all.",
+   "\\(P(\\text{both }6\\mid\\text{die }1=6)=P(\\text{die }2=6\\mid\\text{die }1=6)\\); the second factor follows from how the two dice relate."
   ]
  },
  {
@@ -162,6 +217,11 @@
    "s_bayes",
    "dice",
    "fmt_chain"
+  ],
+  "hints": [
+   "Which is easier to count here, the outcomes with at least one six or the outcomes with none? How could the complement help with the denominator?",
+   "Use the complement. 'At least one six' is the complement of 'no six', so the denominator follows from the no-six count. The numerator is the single all-sixes outcome.",
+   "\\(P(\\text{all }6\\mid\\geq1\\text{ six})=\\dfrac{P(\\text{all }6)}{1-P(\\text{no }6)}\\), with \\(P(\\text{no }6)\\) for three fair dice."
   ]
  },
  {
@@ -173,6 +233,11 @@
    "dice",
    "s_complement",
    "fmt_chain"
+  ],
+  "hints": [
+   "Generalise the previous count. What is the complement of 'at least one six' for \\(n\\) dice, and how many outcomes does it contain?",
+   "Divide the probability of all sixes by one minus the probability of no sixes. The complement is what simplifies the denominator.",
+   "\\(P(\\text{all }6\\mid\\geq1\\text{ six})=\\dfrac{P(\\text{all }6)}{1-P(\\text{no }6)}\\), with each probability written for \\(n\\) fair dice; then simplify."
   ]
  },
  {
@@ -183,6 +248,11 @@
    "s_bayes",
    "dice",
    "fmt_solve"
+  ],
+  "hints": [
+   "The information is a function of the outcome, namely the sum. Which outcomes have that sum, and how many of them contain a six?",
+   "Condition on the sum: list the outcomes with the given sum and count those that contain a six. The law of total probability over the sums gives a useful check.",
+   "\\(P(\\text{six}\\mid S=s)=\\dfrac{\\#\\{(a,b):\\ a+b=s,\\ a=6\\text{ or }b=6\\}}{\\#\\{(a,b):\\ a+b=s\\}}\\), once for \\(s=7\\) and once for \\(s=11\\)."
   ]
  },
  {
@@ -214,6 +284,11 @@
    "s_conditional_expectation_tower",
    "two_envelopes",
    "fmt_solve"
+  ],
+  "hints": [
+   "Which ordered pairs can produce the amount you see, and does the observed amount tell you which of the equally likely outcomes you are in?",
+   "Tabulate the four equally likely ordered outcomes and condition on \\(A=a\\) for each value separately. Do not reuse the symmetric-split formula across values.",
+   "\\(E[B\\mid A=a]=\\dfrac{\\sum_{(x,y):\\,x=a} y\\,P(x,y)}{\\sum_{(x,y):\\,x=a} P(x,y)}\\), evaluated at \\(a=1,2,4\\)."
   ]
  },
  {
@@ -224,6 +299,11 @@
    "s_bayes",
    "two_envelopes",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Does the policy depend only on the amount you see? What does the known upper bound on \\(x\\) tell you when \\(a>100\\)?",
+   "Split the expectation into two cases, holding the smaller envelope or the larger. For each case, sum over the pairs \\((x,2x)\\) that produce the observed amount under the policy.",
+   "\\(E[\\text{gain}]=\\dfrac{1}{200}\\Big[\\sum_{x\\le100}x\\;-\\;\\sum_{x:\\,2x\\le100}x\\Big]\\), where the first sum is over smaller-envelope cases and the second over larger-envelope cases that the policy switches from."
   ]
  },
  {
@@ -254,6 +334,11 @@
    "s_bayes",
    "bertrand_box",
    "fmt_solve"
+  ],
+  "hints": [
+   "Is the drawn object a box or a coin? What does a uniform choice of box imply about the faces you might see?",
+   "Count the faces, not the boxes. Once you see gold, list the equally likely gold faces and check which box each one belongs to.",
+   "\\(P(GG\\mid G)=\\dfrac{\\#\\{\\text{gold faces in }GG\\}}{\\#\\{\\text{gold faces}\\}}\\), with the faces equally likely across all three boxes."
   ]
  },
  {
@@ -264,6 +349,11 @@
    "s_bayes",
    "bertrand_box",
    "fmt_perturb"
+  ],
+  "hints": [
+   "The earlier count gave every face equal weight. What in the new box prior breaks that, and what should replace the counting?",
+   "Weight each box by its prior probability times the chance of drawing gold from it, then condition on gold having been observed.",
+   "\\(P(B\\mid G)\\propto P(B)\\cdot\\dfrac{g(B)}{2}\\), where \\(g(B)\\) is the number of gold coins in box \\(B\\), then normalise over the three boxes."
   ]
  },
  {
@@ -274,6 +364,11 @@
    "s_bayes",
    "bertrand_box",
    "fmt_twin"
+  ],
+  "hints": [
+   "Is the marble you drew chosen uniformly from the jars or from the marbles? Which unit does the 'red' evidence count?",
+   "Condition on the marble drawn, not the jar. List the equally likely marbles, find the red ones, and see which jar each red marble belongs to.",
+   "\\(P(\\text{other red}\\mid\\text{red drawn})=\\dfrac{\\#\\{\\text{red marbles in an all-red jar}\\}}{\\#\\{\\text{red marbles}\\}}\\), counted over all six marbles."
   ]
  },
  {
@@ -296,6 +391,11 @@
    "s_information_design",
    "prisoners",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Does the guard's answer depend on who is pardoned? What is the probability of saying 'B' under each pardon case?",
+   "Treat the guard's statement as a signal. Compute its likelihood under each possible pardon, then update A's prior of 1/3 by Bayes' rule.",
+   "\\(P(A\\text{ pardoned}\\mid\\text{says }B)\\propto P(\\text{says }B\\mid A\\text{ pardoned})\\cdot\\tfrac13\\), and the same form for B and C with their own likelihoods."
   ]
  },
  {
@@ -316,6 +416,11 @@
    "s_bayes",
    "base_rate",
    "fmt_solve"
+  ],
+  "hints": [
+   "Which two groups contribute positive results, and how large is each group relative to the other?",
+   "Use Bayes' rule with the prevalence as the prior and both error rates as likelihoods. The odds form is a shortcut: multiply prior odds by the likelihood ratio.",
+   "\\(P(D\\mid +)=\\dfrac{P(+\\mid D)\\,P(D)}{P(+\\mid D)\\,P(D)+P(+\\mid\\bar D)\\,P(\\bar D)}\\), and in odds form \\(\\text{posterior odds}=\\text{prior odds}\\times\\dfrac{P(+\\mid D)}{P(+\\mid\\bar D)}\\)."
   ]
  },
  {
@@ -326,6 +431,11 @@
    "s_bayes",
    "base_rate",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Has the test changed, or has the group of people being tested changed? Which number from the earlier calculation should be replaced?",
+   "Keep the same likelihoods and substitute the prior of the group actually tested. Then apply Bayes' rule again.",
+   "\\(P(D\\mid +)=\\dfrac{0.99\\,p}{0.99\\,p+0.05\\,(1-p)}\\), where \\(p\\) is the prevalence among symptomatic people."
   ]
  },
  {
@@ -337,6 +447,11 @@
    "base_rate",
    "conditional_independence",
    "fmt_perturb"
+  ],
+  "hints": [
+   "When two tests are independent given disease status, how does the evidence from both combine compared with one test alone?",
+   "Use the odds form. Likelihood ratios of independent pieces of evidence multiply, so start from the single-test likelihood ratio and combine it with itself.",
+   "\\(\\dfrac{P(D\\mid{++})}{P(\\bar D\\mid{++})}=\\dfrac{P(D)}{P(\\bar D)}\\cdot\\left(\\dfrac{P(+\\mid D)}{P(+\\mid\\bar D)}\\right)^{2}\\)."
   ]
  },
  {
@@ -357,6 +472,11 @@
    "s_bayes",
    "base_rate",
    "fmt_twin"
+  ],
+  "hints": [
+   "Is the dog's alert a fact about the parcel alone, or does the base rate of contraband among all parcels matter too?",
+   "Apply Bayes' rule with contraband as the hypothesis and an alert as the evidence. The prior is the share of contraband among all parcels.",
+   "\\(P(C\\mid\\text{alert})=\\dfrac{P(\\text{alert}\\mid C)\\,P(C)}{P(\\text{alert}\\mid C)\\,P(C)+P(\\text{alert}\\mid\\bar C)\\,P(\\bar C)}\\)."
   ]
  },
  {
@@ -379,6 +499,11 @@
    "bayesian_updating",
    "beta_binomial",
    "fmt_solve"
+  ],
+  "hints": [
+   "Are you asked about the bias itself or about the next flip? What is the posterior on \\(p\\) after the data, and what does the prediction average over?",
+   "Use the Beta-Binomial update. The posterior is proportional to likelihood times prior, and the predictive for the next flip is the posterior mean of \\(p\\). The tail probability is a ratio of Beta integrals.",
+   "(a) \\(P(\\text{heads})=\\int_0^1 p\\,\\pi(p\\mid\\text{data})\\,dp\\). (b) \\(P(p>\\tfrac12\\mid\\text{data})=\\int_{1/2}^1\\pi(p\\mid\\text{data})\\,dp\\), with \\(\\pi(p\\mid\\text{data})\\propto p^{7}(1-p)^{3}\\)."
   ]
  },
  {
@@ -390,6 +515,11 @@
    "bayesian_updating",
    "jeffreys_prior",
    "fmt_perturb"
+  ],
+  "hints": [
+   "What changes in the prior, and how does that change the pseudo-counts that get added to the observed data?",
+   "Use the same Beta-Binomial update with the new prior parameters. Add them to the observed counts before forming the predictive mean.",
+   "\\(P(\\text{heads}\\mid\\text{data})=\\dfrac{7+\\alpha}{10+\\alpha+\\beta}\\), with \\((\\alpha,\\beta)\\) the parameters of the Jeffreys prior."
   ]
  },
  {
@@ -401,6 +531,11 @@
    "bayesian_updating",
    "mixture_prior",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Is the prior a continuum, or only two possible values? After one head, how does the plausibility of each coin change?",
+   "Update the mixture weights by Bayes' rule, using the likelihood of one head under each coin. Then average the next-flip probability over the posterior weights.",
+   "\\(P(\\text{biased}\\mid H)\\propto P(H\\mid\\text{biased})\\cdot\\tfrac12\\), and \\(P(H_2\\mid H)=\\sum_c P(c\\mid H)\\,P(H\\mid c)\\) over the two coins."
   ]
  },
  {
@@ -412,6 +547,11 @@
    "bayesian_updating",
    "polya_urn",
    "fmt_twin"
+  ],
+  "hints": [
+   "Is this sequence exchangeable? Which familiar model of an unknown bias does this red-share urn resemble?",
+   "Name the mapping. Each red draw reinforces the red share in the same way as a uniform prior on a coin's bias, so use the sequential predictive from that model.",
+   "\\(P(\\text{2nd red}\\mid\\text{1st red})=\\dfrac{r_1}{r_1+b_1}\\), where \\(r_1\\) and \\(b_1\\) are the red and black counts after the first draw is returned with its extra ball."
   ]
  },
  {
@@ -434,6 +574,11 @@
    "bayesian_updating",
    "beta_binomial",
    "fmt_solve"
+  ],
+  "hints": [
+   "Is the probability of a particular count of heads a fixed number, or does it average over the unknown bias? What integral does that average produce?",
+   "Average the binomial probability over the uniform prior. This marginal likelihood is a Beta integral, which collapses to a constant.",
+   "\\(P(k)=\\displaystyle\\int_0^1\\binom{3}{k}\\,p^{k}(1-p)^{3-k}\\,dp\\) for \\(k=0,1,2,3\\)."
   ]
  },
  {
@@ -445,6 +590,11 @@
    "bayesian_updating",
    "laplace_rule",
    "fmt_solve"
+  ],
+  "hints": [
+   "For part (a), is this a probability under the prior or under a known bias? For part (b), which prior-weighted integrals form the conditional?",
+   "Part (a) is a marginal likelihood: integrate the prior against the likelihood of the streak. Part (b) is a ratio of two such integrals, which gives the posterior predictive.",
+   "(a) \\(P(HHH)=\\displaystyle\\int_0^1 p^{3}\\,dp\\). (b) \\(P(H_4\\mid HHH)=\\dfrac{\\int_0^1 p^{4}\\,dp}{\\int_0^1 p^{3}\\,dp}\\)."
   ]
  },
  {
@@ -456,6 +606,11 @@
    "bayesian_updating",
    "laplace_rule",
    "fmt_solve"
+  ],
+  "hints": [
+   "Does the predictive depend on the sample frequency alone, or on the counts together with the prior's pseudo-counts? What is the posterior on \\(p\\) after \\(k\\) heads?",
+   "Identify the posterior from conjugacy, since a uniform prior times a binomial likelihood gives a Beta distribution. Then take its mean as the predictive probability.",
+   "\\(\\pi(p\\mid\\text{data})\\propto p^{k}(1-p)^{n-k}\\cdot\\pi_0(p)\\) with \\(\\pi_0\\) uniform; read off the Beta parameters, then the mean."
   ]
  },
  {
@@ -468,6 +623,11 @@
    "beta_binomial",
    "jeffreys_prior",
    "fmt_solve"
+  ],
+  "hints": [
+   "Which Beta parameters does the prior contribute, and how does the posterior mean balance the data against the prior?",
+   "Use conjugacy: add observed successes to the first parameter and observed failures to the second, then take the posterior mean as the predictive.",
+   "\\(\\pi(p\\mid\\text{data})\\propto p^{\\alpha-1}(1-p)^{\\beta-1}\\cdot p^{k}(1-p)^{n-k}\\). Read off the updated parameters, then their mean."
   ]
  },
  {
@@ -489,6 +649,11 @@
    "continuous_prior",
    "bayesian_updating",
    "fmt_solve"
+  ],
+  "hints": [
+   "What does the likelihood of three heads look like as a function of \\(p\\), and what does the uniform prior do to it?",
+   "With a uniform prior the posterior is the normalised likelihood. Find the normalising constant, then integrate the density over the region \\(p>\\tfrac12\\).",
+   "\\(\\pi(p\\mid HHH)=\\dfrac{p^{3}}{\\int_0^1 q^{3}\\,dq}\\) on \\([0,1]\\), and \\(P(p>\\tfrac12\\mid HHH)=\\displaystyle\\int_{1/2}^1\\pi(p\\mid HHH)\\,dp\\)."
   ]
  },
  {
@@ -500,6 +665,11 @@
    "continuous_prior",
    "s_conditional_expectation_tower",
    "fmt_solve"
+  ],
+  "hints": [
+   "Given \\(\\theta\\), which values of \\(\\theta\\) are compatible with observing \\(x\\)? Is the likelihood flat in \\(\\theta\\) over that set?",
+   "The likelihood of \\(x\\) given \\(\\theta\\) is \\(1/\\theta\\) on the set where \\(\\theta>x\\). The posterior is therefore not uniform there, so the mean needs that \\(1/\\theta\\) weight.",
+   "\\(E[\\theta\\mid X=x]=\\dfrac{\\int_x^1\\theta\\cdot\\frac1\\theta\\,d\\theta}{\\int_x^1\\frac1\\theta\\,d\\theta}\\)."
   ]
  },
  {
@@ -541,6 +711,11 @@
    "s_bayes",
    "likelihood_ratio",
    "fmt_solve"
+  ],
+  "hints": [
+   "Which quantity does each signal multiply? Is it easier to track odds or probabilities across two signals?",
+   "Use the odds form of Bayes' rule. Start from the prior odds, multiply by each likelihood ratio in turn, and convert to a probability only at the end.",
+   "\\(\\dfrac{P(A\\mid\\text{signals})}{P(B\\mid\\text{signals})}=\\dfrac{P(A)}{P(B)}\\cdot\\text{LR}_1\\cdot\\text{LR}_2\\), with the first signal's likelihood ratio applied first."
   ]
  },
  {
@@ -563,6 +738,11 @@
    "base_rate",
    "conditional_independence",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Are the two positive results independent pieces of evidence here? What does a shared error source do to the likelihood ratio of the pair?",
+   "Compute the likelihood ratio of the combined outcome directly, from the joint probability of 'both positive' under each disease status, not by multiplying single-test ratios.",
+   "Compare \\(\\dfrac{P({++}\\mid D)}{P({++}\\mid\\bar D)}\\) with \\(\\left(\\dfrac{P(+\\mid D)}{P(+\\mid\\bar D)}\\right)^{2}\\), and decide which one enters the posterior odds."
   ]
  },
  {
@@ -585,6 +765,11 @@
    "selection_bias",
    "inspection_paradox",
    "fmt_solve"
+  ],
+  "hints": [
+   "When you arrive at a random time, is every gap equally likely to be the one you land in? What makes some gaps more likely to be caught?",
+   "Size-bias. Weight each gap by its length when choosing the gap you land in, then compute your wait as a uniform fraction of that gap.",
+   "\\(P(\\text{land in gap }g)\\propto g\\,P(G=g)\\), and \\(E[W]=\\sum_g P(\\text{land in }g)\\cdot\\dfrac{g}{2}\\)."
   ]
  },
  {
@@ -596,6 +781,11 @@
    "selection_bias",
    "inspection_paradox",
    "fmt_twin"
+  ],
+  "hints": [
+   "Is the sample a class or a pupil? Which kind of sampling favours larger classes?",
+   "Weight each class by its number of pupils. Choosing a pupil selects classes in proportion to their size, so take the expected class size under that weighting.",
+   "\\(E[\\text{class size}]=\\sum_c \\dfrac{n_c}{N}\\cdot n_c\\), with \\(N=\\sum_c n_c\\) the total number of pupils."
   ]
  },
  {
@@ -607,6 +797,11 @@
    "selection_bias",
    "survivorship",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Is the skill known or unknown? If unknown, what does a run of ten wins tell you about the parameter before you predict year 11?",
+   "Put a Beta prior on the yearly win probability and update it with the wins. The predictive for the next year is the posterior mean.",
+   "\\(P(\\text{win}_{11}\\mid 10\\text{ wins})=\\displaystyle\\int_0^1 p\\,\\pi(p\\mid\\text{10 wins})\\,dp\\), with \\(\\pi(p\\mid\\text{10 wins})\\propto p^{10}\\) under the uniform prior."
   ]
  },
  {
@@ -637,6 +832,11 @@
    "s_conditional_expectation_tower",
    "simpsons_paradox",
    "fmt_solve"
+  ],
+  "hints": [
+   "Each treatment's overall rate is an average of subgroup rates. What are the weights, and are they the same for both treatments?",
+   "Write each overall cure rate as a weighted sum of its subgroup rates. The weights are the share of each stone size within that treatment.",
+   "\\(\\text{rate}_A=\\dfrac{n_{A,\\text{small}}}{n_A}\\,r_{A,\\text{small}}+\\dfrac{n_{A,\\text{large}}}{n_A}\\,r_{A,\\text{large}}\\), and the same form for B."
   ]
  },
  {
@@ -647,6 +847,11 @@
    "s_conditional_expectation_tower",
    "simpsons_paradox",
    "fmt_twin"
+  ],
+  "hints": [
+   "Compare the two players on each shot type separately. Then ask how the mix of shot types differs between them.",
+   "Compute each player's percentage within each shot type. The overall percentage is a weighted average, using that player's own attempt mix as weights.",
+   "\\(\\text{overall}_X=\\dfrac{m_{X,2}+m_{X,3}}{a_{X,2}+a_{X,3}}\\), where \\(m\\) counts makes and \\(a\\) counts attempts by shot type; likewise for \\(Y\\)."
   ]
  },
  {
@@ -657,6 +862,11 @@
    "s_conditional_expectation_tower",
    "simpsons_paradox",
    "fmt_perturb"
+  ],
+  "hints": [
+   "If both treatments had the same weight on each stone size, what would the overall rate become? Does the ordering of the subgroup rates still matter?",
+   "With equal weights the overall rate is the simple average of the two subgroup rates for each treatment. Compare those two averages.",
+   "\\(\\bar r_A=\\tfrac12\\,(r_{A,\\text{small}}+r_{A,\\text{large}})\\), \\(\\bar r_B=\\tfrac12\\,(r_{B,\\text{small}}+r_{B,\\text{large}})\\)."
   ]
  },
  {
@@ -689,6 +899,11 @@
    "s_variance_decomposition",
    "conditional_independence",
    "fmt_solve"
+  ],
+  "hints": [
+   "Flips are independent given the bias, but are they independent when the bias is unknown? What is the joint probability of two heads given a fixed bias?",
+   "Average the conditional joint probability over the bias. For independent flips given \\(p\\), \\(P(H_1H_2\\mid p)=p^{2}\\), so the joint probability is an expectation of \\(p^{2}\\).",
+   "\\(P(H_1H_2)=\\sum_b P(\\text{bias}=b)\\,b^{2}\\), and \\(\\operatorname{Cov}(H_1,H_2)=\\sum_b P(b)\\,b^{2}-\\big(\\sum_b P(b)\\,b\\big)^{2}\\)."
   ]
  },
  {
@@ -700,6 +915,11 @@
    "conditional_independence",
    "s_complement",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Are the three indicators pairwise independent? Does knowing two of them determine the third?",
+   "Check each pair first, then test the triple against the product of the marginals. A function of two independent variables is not automatically independent of them jointly.",
+   "Compare \\(P(X=1,Y=1,Z=1)\\) with \\(P(X=1)\\,P(Y=1)\\,P(Z=1)\\), where \\(Z=X\\oplus Y\\) is evaluated on the four \\((x,y)\\) cells."
   ]
  },
  {
@@ -732,6 +952,11 @@
    "s_bayes",
    "borel_kolmogorov",
    "fmt_solve"
+  ],
+  "hints": [
+   "The conditioning event is a single meridian, a zero-probability set. Which family of neighbourhoods defines the conditional distribution, and does the choice matter?",
+   "Use the area element on the sphere. Its latitude density is proportional to \\(\\cos\\theta\\), and conditioning on a narrow longitude band keeps that weight.",
+   "\\(P(\\theta>\\tfrac\\pi4\\mid\\phi\\approx0)=\\dfrac{\\int_{\\pi/4}^{\\pi/2}w(\\theta)\\,d\\theta}{\\int_{-\\pi/2}^{\\pi/2}w(\\theta)\\,d\\theta}\\), where \\(w\\) is the weight from the area element."
   ]
  },
  {
@@ -753,6 +978,11 @@
    "s_variance_decomposition",
    "correlation",
    "fmt_solve"
+  ],
+  "hints": [
+   "Which quantity measures how much two events move together, and how is it rescaled for indicators?",
+   "Use the covariance of the indicators, \\(P(A\\cap B)-P(A)P(B)\\), divided by the product of their standard deviations. For an indicator the variance is \\(p(1-p)\\).",
+   "\\(\\rho(A,B)=\\dfrac{P(A\\cap B)-P(A)P(B)}{\\sqrt{P(A)(1-P(A))\\,P(B)(1-P(B))}}\\), then substitute the three given values."
   ]
  },
  {
@@ -775,6 +1005,11 @@
    "s_variance_decomposition",
    "correlation",
    "fmt_perturb"
+  ],
+  "hints": [
+   "What is missing from the independent-case formula for the variance of a sum once the indicators are correlated?",
+   "Expand the variance into individual variances and pairwise covariances. With exchangeable indicators every pair has the same covariance, which follows from the given correlation.",
+   "\\(\\operatorname{Var}(S)=\\sum_i\\operatorname{Var}(I_i)+\\sum_{i\\neq j}\\operatorname{Cov}(I_i,I_j)\\), with \\(\\operatorname{Cov}(I_i,I_j)=\\rho\\sqrt{\\operatorname{Var}(I_i)\\operatorname{Var}(I_j)}\\)."
   ]
  },
  {
@@ -795,6 +1030,11 @@
    "s_bayes",
    "sequential_updating",
    "fmt_solve"
+  ],
+  "hints": [
+   "Which coin does the data favour? Does the second head change the posterior that the first head set up?",
+   "Use Bayes' rule with the coin as the hypothesis. Flips are independent given the coin, so the posterior after one flip can serve as the prior for the next.",
+   "\\(P(B\\mid HH)=\\dfrac{P(B)\\,P(HH\\mid B)}{P(B)\\,P(HH\\mid B)+P(A)\\,P(HH\\mid A)}\\), where \\(P(HH\\mid c)\\) is the product of the per-flip probabilities."
   ]
  },
  {
@@ -805,6 +1045,11 @@
    "s_bayes",
    "sequential_updating",
    "fmt_perturb"
+  ],
+  "hints": [
+   "The likelihoods are the same as before. Which number has changed, and how does it weight the two coins?",
+   "Keep the likelihood of HH under each coin and reweight by the new prior. Work in odds, so the prior odds and the likelihood ratio multiply.",
+   "\\(\\dfrac{P(B\\mid HH)}{P(A\\mid HH)}=\\dfrac{P(B)}{P(A)}\\cdot\\dfrac{P(HH\\mid B)}{P(HH\\mid A)}\\), where the first factor on the right uses the new prior."
   ]
  },
  {
@@ -816,6 +1061,11 @@
    "sequential_updating",
    "stopping_rule",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Does the probability of seeing this specific sequence depend on the stopping plan, or only on the flips themselves?",
+   "Compare the likelihoods of the observed sequence under each experiment. If the stopping rule depends only on the data, it drops out of the posterior.",
+   "\\(\\pi(p\\mid\\text{data})\\propto p^{\\#H}(1-p)^{\\#T}\\cdot\\pi_0(p)\\) for both experiments; compare the exponents."
   ]
  },
  {
@@ -826,6 +1076,11 @@
    "s_bayes",
    "dice",
    "fmt_twin"
+  ],
+  "hints": [
+   "How is this sample space different from rolling two dice? Is 'at least one 6' a fact about the first ball or about the pair?",
+   "Restrict to the outcome pairs in which at least one ball shows a 6, then count how many of them have a 6 on both draws. With replacement, each draw has the same six values.",
+   "\\(P(\\text{both }6\\mid\\geq1\\text{ six})=\\dfrac{P(\\text{both }6)}{P(\\geq1\\text{ six})}\\), with each ball uniform on \\(\\{1,\\dots,6\\}\\)."
   ]
  },
  {
