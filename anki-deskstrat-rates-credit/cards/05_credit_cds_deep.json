@@ -307,7 +307,7 @@
  },
  {
   "type": "cloze",
-  "front": "For a flat hazard \\(\\lambda\\) and continuous premium accrual, the par CDS spread is exactly \\(\\{{c1::\\lambda(1-R)\\}}\\), and the risk-free rate {{c2::cancels}} out of the ratio.",
+  "front": "For a flat hazard \\(\\lambda\\) and continuous premium accrual, the par CDS spread is exactly {{c1::\\(\\lambda(1-R)\\)}}, and the risk-free rate {{c2::cancels}} out of the ratio.",
   "back": "Derived in the flat-hazard par derivation card. Discrete quarterly premiums with accrued-on-default move the 5y par by about 1bp at \\(\\lambda=5\\%\\) (301.1bp vs 300.0bp).",
   "tags": [
    "cds",
