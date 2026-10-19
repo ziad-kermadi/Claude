@@ -78,7 +78,7 @@
   ],
   "hints": [
    "Is the pharmacist's discard a random event that could happen whatever the cure's location, or is it constrained by where the cure is?",
-   "This is the same structure as a host who must avoid the prize. Condition on which bottle was discarded, not on the two remaining bottles being symmetric.",
+   "Structural feature: the discard is made by someone who knows where the cure is, so the discard can carry information about it. Condition on which bottle was discarded, not on the two remaining bottles being symmetric.",
    "Let \\(d\\) be the discarded bottle and \\(c\\in\\{2,3\\}\\) the cure's bottle. Write \\(P(c\\mid d)\\propto P(d\\mid c)\\,P(c)\\) and compare the two values of \\(c\\)."
   ]
  },
@@ -135,7 +135,7 @@
   ],
   "hints": [
    "Does the information say 'the family has a boy', or 'the child you sampled is a boy'? Does the sampling procedure treat all families equally?",
-   "Enumerate (family, sampled child) pairs rather than families. A family with two boys can produce the observed event in two different ways.",
+   "Names the move: the sampling step belongs to the sample space. Count (family, sampled child) pairs, each equally likely, and restrict to the pairs where the sampled child is a boy.",
    "Let the sample space be pairs \\((f,c)\\), with \\(f\\) a family and \\(c\\in\\{1,2\\}\\) the sampled child, each pair equally likely. Let \\(E\\) be the event that the sampled child is a boy; then \\(P(\\text{other is a boy}\\mid E)=\\dfrac{\\#\\{(f,c)\\in E:\\ \\text{other child is a boy}\\}}{\\#E}\\)."
   ]
  },
@@ -150,7 +150,7 @@
   ],
   "hints": [
    "Which outcomes does the conditioning remove, and what does that do to the denominator?",
-   "Condition on 'at least one boy' by removing only the single all-girls outcome from the sample space. The event of interest is then the single all-boys outcome.",
+   "Names the move: conditioning restricts the sample space to the event. Count the outcomes that remain, and how many of them are all boys.",
    "\\(P(\\text{all boys}\\mid\\geq1\\text{ boy})=\\dfrac{P(\\text{all boys})}{P(\\geq1\\text{ boy})}\\). Express \\(P(\\geq1\\text{ boy})\\) through its complement, then evaluate for \\(n\\) fair children."
   ]
  },
@@ -367,8 +367,8 @@
   ],
   "hints": [
    "Is the marble you drew chosen uniformly from the jars or from the marbles? Which unit does the 'red' evidence count?",
-   "Condition on the marble drawn, not the jar. List the equally likely marbles, find the red ones, and see which jar each red marble belongs to.",
-   "\\(P(\\text{other red}\\mid\\text{red drawn})=\\dfrac{\\#\\{\\text{red marbles in an all-red jar}\\}}{\\#\\{\\text{red marbles}\\}}\\), counted over all six marbles."
+   "Structural feature: the jar is chosen first, but the evidence is a single item drawn from it. Compare how many red items each jar contributes to the total number of red items.",
+   "Setup: list the six equally likely marbles and write the probability as a ratio of counts of red marbles, split by the jar each one belongs to."
   ]
  },
  {
@@ -549,9 +549,9 @@
    "fmt_twin"
   ],
   "hints": [
-   "Is this sequence exchangeable? Which familiar model of an unknown bias does this red-share urn resemble?",
-   "Name the mapping. Each red draw reinforces the red share in the same way as a uniform prior on a coin's bias, so use the sequential predictive from that model.",
-   "\\(P(\\text{2nd red}\\mid\\text{1st red})=\\dfrac{r_1}{r_1+b_1}\\), where \\(r_1\\) and \\(b_1\\) are the red and black counts after the first draw is returned with its extra ball."
+   "Does the order of draws matter for the probability of a given sequence? Track how the composition of the urn changes after each red draw.",
+   "Structural feature: each draw adds one ball of the colour drawn, so the composition shifts after every draw. Track the red and black counts after each step, and use the current counts as the chance of red on the next draw.",
+   "Setup: after the first draw is returned with its extra ball, write the red and black counts, and express the probability of red on the second draw as a ratio of them."
   ]
  },
  {
@@ -955,7 +955,7 @@
   ],
   "hints": [
    "The conditioning event is a single meridian, a zero-probability set. Which family of neighbourhoods defines the conditional distribution, and does the choice matter?",
-   "Use the area element on the sphere. Its latitude density is proportional to \\(\\cos\\theta\\), and conditioning on a narrow longitude band keeps that weight.",
+   "Use the area element on the sphere. Ask how the area of a thin band of latitudes depends on its latitude, and compare bands of equal height.",
    "\\(P(\\theta>\\tfrac\\pi4\\mid\\phi\\approx0)=\\dfrac{\\int_{\\pi/4}^{\\pi/2}w(\\theta)\\,d\\theta}{\\int_{-\\pi/2}^{\\pi/2}w(\\theta)\\,d\\theta}\\), where \\(w\\) is the weight from the area element."
   ]
  },
@@ -1078,7 +1078,7 @@
    "fmt_twin"
   ],
   "hints": [
-   "How is this sample space different from rolling two dice? Is 'at least one 6' a fact about the first ball or about the pair?",
+   "Each draw has six equally likely values, and the announcement is about the pair. Which pairs of draws are still possible after the announcement?",
    "Restrict to the outcome pairs in which at least one ball shows a 6, then count how many of them have a 6 on both draws. With replacement, each draw has the same six values.",
    "\\(P(\\text{both }6\\mid\\geq1\\text{ six})=\\dfrac{P(\\text{both }6)}{P(\\geq1\\text{ six})}\\), with each ball uniform on \\(\\{1,\\dots,6\\}\\)."
   ]

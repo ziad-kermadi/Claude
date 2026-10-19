@@ -519,7 +519,7 @@
   "hints": [
    "Given the first four steps, which part of \\(S_{20}\\) is still random? What is the best prediction of a future value of a process with no drift?",
    "Tower property: the conditional expectation of a future value of a martingale equals its current value, and \\(S_n\\) is a martingale.",
-   "\\(E[S_{20}\\mid\\mathcal F_4]=S_4\\). Write \\(S_4\\) as the sum of the four given steps."
+   "Setup: split \\(S_{20}\\) into the known sum of the first four steps and the sum of the sixteen future steps, then take the conditional expectation of each part given the first four."
   ]
  },
  {
@@ -548,8 +548,8 @@
   ],
   "hints": [
    "Is there a quantity built from the red count and the total count whose expected value does not change from draw to draw?",
-   "The red fraction, scaled by the total number of balls, is a martingale, so its expectation stays at its starting value.",
-   "\\(E\\!\\left[\\frac{R_n}{n+2}\\right]=\\frac{R_0}{R_0+B_0}\\) for every \\(n\\). Write \\(R_0\\) and \\(B_0\\) from the statement and solve for \\(E[R_{10}]\\)."
+   "Look for a function of the red count and the total count whose expected value is unchanged by each draw, and see what that implies at draw 10.",
+   "Setup: let \\(X_n=R_n/(n+2)\\). Show that the expected change of \\(X_n\\) in one draw is zero given the current composition, and conclude what \\(E[X_{10}]\\) equals."
   ]
  },
  {
@@ -816,7 +816,7 @@
   ],
   "hints": [
    "Track only one player's holdings from round to round. Is the change each round symmetric, and what must be true when the game ends?",
-   "Her holdings form a martingale, so optional stopping between the two extremes applies.",
+   "Structural feature: each round moves exactly one coin, so the change in Ann's holdings has zero average every round. Think about what that average must equal when the game ends at 0 or at the total.",
    "\\(E[X_T]=X_0\\) with \\(X_T\\in\\{0,\\text{total}\\}\\) and \\(P=P(X_T=\\text{total})\\). Write this as one equation in \\(P\\)."
   ]
  },
@@ -864,8 +864,8 @@
   ],
   "hints": [
    "Given the final tally, every ordering of the votes is equally likely. How many orderings are there in total, and which of them keep A in front throughout?",
-   "Ballot-type counting: count the orderings in which A is strictly ahead at every step, and divide by the total number of orderings.",
-   "Total orderings: \\(\\binom{a+b}{a}\\). Write the favourable count as a ballot count for \\(a\\) and \\(b\\), then divide by the total."
+   "Structural feature: a count where one candidate stays strictly ahead is a walk that never returns to the axis. Count the orderings that avoid a return to the axis, and divide by the total number of orderings.",
+   "Setup: the total is \\(\\binom{a+b}{a}\\). Write the favourable count as a difference of two binomials, one for all orderings and one for orderings that touch the tie, and evaluate for \\(a=7\\), \\(b=3\\)."
   ]
  },
  {
@@ -924,8 +924,8 @@
   ],
   "hints": [
    "Split the event by where the balance ends after the 10 bets. Which endings are easy to compute directly?",
-   "Reflection-type argument: reflect the path after its first hit of level \\(a\\), and express the answer through probabilities of endpoints.",
-   "\\(P(M_{10}\\ge4)=P(S_{10}\\ge4)+P(\\text{reflected endpoint})\\). Fill in where the reflected paths end."
+   "Structural feature: paths that reach level 4 and then finish lower can be paired with other paths by flipping their remainder after the first arrival. Count the endpoints of the paired paths.",
+   "Setup: write \\(P(M_{10}\\ge 4)\\) as \\(P(S_{10}\\ge 4)\\) plus the probability of paths that touched 4 and end below it, and count those endpoints after the flip."
   ]
  },
  {

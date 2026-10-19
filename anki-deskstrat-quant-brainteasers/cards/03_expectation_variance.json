@@ -797,7 +797,7 @@
   ],
   "hints": [
    "Compare how the draws depend on each other under the two schemes. What factor in the variance formula comes from draws not repeating?",
-   "With replacement the draws are i.i.d., so the variance of the sample mean is the population variance divided by \\(n\\). The finite-population factor disappears.",
+   "Names the move: remove the dependence between draws and recompute the variance of the sum of the three draws.",
    "Write \\(\\mathrm{Var}(\\bar X)=\\frac1n\\mathrm{Var}(X_1)\\) for i.i.d. draws, and identify the population variance \\(\\sigma^2\\) that plays the role of \\(\\mathrm{Var}(X_1)\\)."
   ]
  },
@@ -915,7 +915,7 @@
   ],
   "hints": [
    "Relabel the line by height. What does a person being visible mean in terms of the running maximum of the people in front of them?",
-   "Records of a random permutation: count positions that are running maxima, using indicators. Each position's probability depends only on the relative rank among the people in front.",
+   "Structural feature: a person is visible exactly when they beat everyone in front of them, so each person's event depends only on how they rank among the people up to their position. Use one indicator per person and find each probability from that rank.",
    "Let \\(V_i=\\mathbf 1[\\text{person } i\\text{ is taller than everyone before}]\\), so the count is \\(\\sum_{i=1}^5V_i\\). Write \\(P(V_i=1)\\) in terms of the rank of person \\(i\\) among the first \\(i\\)."
   ]
  },
@@ -932,7 +932,7 @@
   ],
   "hints": [
    "Each guest matches only their own coat. Which pairs of guests can influence each other's chance of a match?",
-   "Indicators for fixed points: linearity for the mean, and the variance expansion with pairwise covariances, which are all equal by symmetry.",
+   "Structural feature: each guest's success is one event, and the events interact only through the fact that each coat goes to exactly one guest. Use one indicator per guest, and compute the marginal and pairwise joint probabilities.",
    "Let \\(I_g=\\mathbf 1[\\text{guest } g\\text{ gets their own coat}]\\) and \\(F=\\sum_gI_g\\). Write \\(\\mathrm{Var}(F)=\\sum_g\\mathrm{Var}(I_g)+\\sum_{g\\ne h}\\mathrm{Cov}(I_g,I_h)\\), and compute the marginal and the pairwise joint probabilities."
   ]
  },
@@ -948,7 +948,7 @@
   ],
   "hints": [
    "While you hold \\(j\\) distinct monsters, what fraction of boxes gives you a new one? Do the waits for successive new monsters depend on each other?",
-   "Coupon-collector phases: each new monster is a geometric wait, and by memorylessness the phases are independent. Means and variances add.",
+   "Structural feature: a wait for a new item restarts with a fixed chance of success, so the total wait splits into stages whose lengths do not depend on earlier stages. Means and variances add across stages.",
    "Let \\(G_j\\) be the boxes needed to get from \\(j-1\\) to \\(j\\) distinct monsters, with success probability \\(\\frac{7-j}{6}\\). Write \\(E[T]=\\sum_{j=1}^6E[G_j]\\) and \\(\\mathrm{Var}(T)=\\sum_{j=1}^6\\mathrm{Var}(G_j)\\)."
   ]
  },
@@ -983,8 +983,8 @@
   ],
   "hints": [
    "Can a partial match of this pattern overlap with itself when it fails? Could the last symbol of a failed attempt start the next one?",
-   "Pattern waiting time with no self-overlap: the expected wait is the reciprocal of the probability that the pattern completes at a given position.",
-   "Let \\(p\\) be the chance that two consecutive rolls equal \\((6,1)\\). With no self-overlap, the expected wait is \\(1/p\\), so compute \\(p\\) from the number of outcomes per roll."
+   "Structural feature: a failed attempt never leaves a partial match behind, because the first symbol of the pattern cannot also be its second. Use first-step analysis with a state for 'no progress' and a state for 'just rolled a 6'.",
+   "Setup: let \\(a\\) be the expected remaining rolls from 'no progress' and \\(b\\) from 'just rolled a 6'. Write both equations in terms of \\(a\\), \\(b\\) and the roll probabilities."
   ]
  },
  {
@@ -998,7 +998,7 @@
    "fmt_twin"
   ],
   "hints": [
-   "This is the same structure as the three-roll dice game. What is the best threshold at the last offer, and how does that change the choice at the previous one?",
+   "Each offer is a fresh uniform value and you may stop early, except the last offer is forced. What is the best rule at the last offer, and what threshold does that set for the offer before it?",
    "Backward induction over the offers remaining, with a threshold rule at each stage.",
    "Let \\(W_r\\) be the best value with \\(r\\) offers left, so \\(W_1=E[X]\\) for one uniform offer and \\(W_r=E[\\max(X,W_{r-1})]\\). Compute \\(W_2\\) by comparing each offer with \\(W_1\\)."
   ]
@@ -1016,7 +1016,7 @@
   ],
   "hints": [
    "Does the actual distribution matter here, or only some symmetry between the services?",
-   "Exchangeability: the services are i.i.d., so each service's share of the total has the same expectation.",
+   "Structural feature: the five service times play identical roles, and the shares must add up to the whole. Ask what the five expected shares sum to.",
    "Write \\(\\sum_{i=1}^5E\\!\\left[\\frac{X_i}{S_5}\\right]=E\\!\\left[\\frac{S_5}{S_5}\\right]\\), then use that the five terms are equal."
   ]
  },
@@ -1032,8 +1032,8 @@
    "fmt_twin"
   ],
   "hints": [
-   "This is a coupon-collector problem that stops after a fixed number of distinct kinds. How many phases are there, and what is the success probability of each?",
-   "Geometric phases for new kinds, added by linearity, stopping after the third distinct kind.",
+   "The collector stops after a fixed number of distinct kinds. How many distinct kinds must be found, and how many of the ten kinds are still unseen at each stage?",
+   "Structural feature: each new kind arrives after a waiting time whose success chance depends only on how many kinds are already held. The total is a sum of such waits.",
    "Let \\(G_j\\) be the packs needed to get the \\(j\\)th new kind, with success probability \\(\\frac{10-(j-1)}{10}\\) for \\(j=1,2,3\\). Write \\(E[\\text{packs}]=\\sum_{j=1}^{3}E[G_j]\\)."
   ]
  },

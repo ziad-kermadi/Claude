@@ -50,9 +50,9 @@
    "combinatorics"
   ],
   "hints": [
-   "Consider the gaps between the chosen seats. If each chosen seat is shifted left by its rank among the chosen seats, which constraint disappears?",
-   "Names the move: a shifting bijection that turns a no-two-adjacent selection into an ordinary subset of a shorter row, then a binomial count.",
-   "Setup: let the new positions be \\(q_i=p_i-(i-1)\\) and find the new upper limit \\(m\\) in terms of the 20 seats and the 4 people, giving \\(\\binom{m}{4}\\)."
+   "Each chosen seat must have an empty seat between it and the next chosen seat. How many seats are forced to stay empty once the four people are placed, and which seats are still free to choose?",
+   "Structural feature: the forbidden event is about adjacent positions. Treat the people and the empty seats as one row of symbols, so the constraint becomes a condition on how the empty seats are split into gaps.",
+   "Setup: let \\(g_0,\\dots,g_4\\) be the numbers of empty seats before, between and after the people, with \\(g_1,g_2,g_3\\ge 1\\). Write \\(\\sum g_i\\) in terms of the 20 seats and count the solutions."
   ]
  },
  {
@@ -171,8 +171,8 @@
   ],
   "hints": [
    "Each prize chooses one child. What must be true of the children's lists for every child to be covered, and how would you count the assignments that miss some children?",
-   "Names the move: inclusion-exclusion over the set of children who receive nothing, applied to maps from prizes to children.",
-   "Setup: \\( \\#=\\sum_{j=0}^{4}(-1)^j\\binom{4}{j}(4-j)^{6}\\)."
+   "Structural feature: every child needs at least one prize, so the failures are 'child j gets nothing'. Count the assignments in which a chosen set of children gets nothing.",
+   "Setup: with a fixed set of \\(m\\) children left empty, each prize chooses among the remaining children. Write that count as a power, then combine the sets of empty children with alternating signs."
   ]
  },
  {
@@ -198,7 +198,7 @@
    "partitions"
   ],
   "hints": [
-   "The boxes are identical, so swapping boxes does not create a new split. How would you build a partition by looking at where the last ball goes?",
+   "The boxes are identical, so only the partition into blocks matters. If you know the count for five balls, how could the sixth ball change it?",
    "Names the move: a recursion on set partitions into k blocks: the new element joins an existing block or starts a new one.",
    "Setup: \\( S(6,3)=3\\,S(5,3)+S(5,2)\\). Find \\(S(5,3)\\) and \\(S(5,2)\\) by the same recursion."
   ]
@@ -265,7 +265,7 @@
    "counting"
   ],
   "hints": [
-   "Which letters are free to go anywhere, and which constraint needs a different approach? Try arranging the non-S letters first and seeing where the S's can go.",
+   "Which constraint cannot be enforced by the multinomial alone, and what would the four S's need around the other letters?",
    "Names the move: arrange the other seven letters, then place the four S's into distinct gaps so that no two share a gap.",
    "Setup: \\( N=(\\text{arrangements of the 7 non-S letters})\\times\\binom{g}{4}\\), where \\(g\\) is the number of gaps including both ends."
   ]
@@ -281,9 +281,9 @@
    "counting"
   ],
   "hints": [
-   "Each person picks exactly one room, and the room sizes are fixed. Can you read the assignment as a word over three letters, with one letter per room?",
-   "Names the move: a multinomial, counting sequences with a fixed number of each category.",
-   "Setup: \\( \\dfrac{10!}{n_A!\\,n_B!\\,n_C!}\\), with the room sizes as the multiplicities."
+   "The room sizes are fixed, so each room's head-count is known in advance. What distinguishes two assignments, and does the order in which people are listed matter?",
+   "Structural feature: the people are distinct, each room has a fixed head-count, and the rooms are labelled. Count by choosing which people go to the first room, then which go to the next from those left.",
+   "Setup: the number of ways is a product of three choose-counts, one per room, taken from the people still unplaced. Fill in the three binomials."
   ]
  },
  {
@@ -325,7 +325,7 @@
    "dyck_paths"
   ],
   "hints": [
-   "Consider the first moment the path returns to the starting level. How does the path split into two smaller paths of the same kind?",
+   "Is there a point on the path where it could be cut into two shorter paths of the same kind? Which points qualify?",
    "Names the move: first-return decomposition, which gives a Catalan recursion \\(C_n=\\sum_k C_kC_{n-1-k}\\).",
    "Setup: \\( C_5=\\sum_{k=0}^{4} C_k\\,C_{4-k}\\), with \\(C_0=1\\). Fill in \\(C_0,\\dots,C_4\\) first."
   ]
@@ -341,7 +341,7 @@
    "random_walk"
   ],
   "hints": [
-   "Map the count to a walk: each vote for A is a step up and each vote for B a step down. What does 'strictly ahead after every vote' say about the walk, and which bad paths must you remove?",
+   "Map each vote to a step of a walk. What must the walk avoid for A to stay strictly ahead after every vote?",
    "Names the move: reflection, with the bad paths (those that touch the barrier) mapped to paths with a reflected endpoint.",
    "Setup: the first vote must be A, leaving 5 A's and 4 B's. Write \\(\\#\\text{good}=\\binom{9}{4}-\\#\\text{bad}\\), and find \\(\\#\\text{bad}\\) by reflecting after the first touch."
   ]
@@ -373,9 +373,9 @@
    "bracketing"
   ],
   "hints": [
-   "Each full parenthesisation is a binary tree whose leaves are the factors. How many internal nodes does such a tree have?",
-   "Names the move: a bijection with binary trees, or equivalently Dyck paths, which are counted by Catalan numbers.",
-   "Setup: with \\(n\\) factors the count is \\(C_{n-1}\\), where \\(C_m=\\dfrac{1}{m+1}\\dbinom{2m}{m}\\). Identify \\(m\\) for five factors."
+   "Each full parenthesisation fixes which product is performed last. How many choices of that last split are there, and what does each side look like?",
+   "Structural feature: a full parenthesisation is built by repeatedly splitting a product of adjacent factors into two non-empty blocks. Write the count for n factors as a sum over the size of the left block.",
+   "Setup: let \\(T_n\\) count the parenthesisations of n factors, with \\(T_1=1\\). Write \\(T_n=\\sum_{k=1}^{n-1}T_kT_{n-k}\\) and evaluate \\(T_5\\)."
   ]
  },
  {
@@ -560,7 +560,7 @@
   "hints": [
    "With replacement, do the five draws still depend on each other? What is the chance that each new draw has a rank different from all the earlier ones?",
    "Names the move: draws are independent and uniform over the 13 ranks, so count the ordered rank sequences with no repeats.",
-   "Setup: \\( \\Pr = \\dfrac{(13)_5}{13^{5}}\\), where \\((13)_5\\) is the falling factorial with five terms."
+   "Setup: \\( \\Pr=\\prod_{j=0}^{4}\\Pr(\\text{draw } j+1 \\text{ avoids the } j \\text{ earlier ranks})\\). Evaluate each factor."
   ]
  },
  {
@@ -617,7 +617,7 @@
    "cards"
   ],
   "hints": [
-   "Describe the complement in terms of ranks. In how many ways can five cards have five different ranks?",
+   "What does a hand with no pair look like in terms of its five ranks?",
    "Names the move: complement. Count hands with five distinct ranks by choosing the ranks and then a suit for each card.",
    "Setup: \\( \\Pr = 1-\\dfrac{(\\text{rank sets of size }5)\\cdot(\\text{suit choices per card})^{5}}{\\binom{52}{5}}\\)."
   ]
@@ -635,7 +635,7 @@
    "generalisation"
   ],
   "hints": [
-   "With seven cards and only thirteen ranks, what has to happen for all seven ranks to be different? Count the sets of ranks first.",
+   "With seven cards and thirteen ranks, what does a hand with all seven ranks different require, and how many ranks does such a hand use?",
    "Names the move: choose the set of seven distinct ranks, then assign a suit to each card.",
    "Setup: \\( \\Pr = \\dfrac{\\binom{13}{7}\\cdot(\\text{suit choices per card})^{7}}{\\binom{52}{7}}\\)."
   ]
@@ -694,7 +694,7 @@
    "cards"
   ],
   "hints": [
-   "Condition on the hand holding all four aces. How many cards remain to fill the hand, and from which pool are they drawn?",
+   "Once the four aces are in the hand, how many cards remain to fill it, and from which pool are they drawn?",
    "Names the move: fix the required cards, choose the rest from the others, then divide by all possible hands.",
    "Setup: \\( \\Pr=\\dfrac{\\binom{a}{b}}{\\binom{52}{13}}\\), with \\(a\\) the size of the remaining pool and \\(b\\) the number of cards still to draw."
   ]
@@ -721,7 +721,7 @@
    "collisions"
   ],
   "hints": [
-   "Consider the complement: when is every birthday different? Order the people and think about the options open to each newcomer.",
+   "When would every birthday be different? Think about what the newest person has to avoid.",
    "Names the move: complement, using a sequential product of the probabilities that each person avoids all earlier birthdays.",
    "Setup: \\( \\Pr(\\text{all distinct}) = \\prod_{i=0}^{n-1}\\dfrac{365-i}{365}\\), with \\(n\\) the number of people."
   ]
@@ -871,8 +871,8 @@
    "parties"
   ],
   "hints": [
-   "Each person's count lies in a fixed range. Can the range contain both of its extremes at once, and what does that do to the number of possible values?",
-   "Names the move: pigeonhole on the handshake counts, after showing that the two extreme values cannot both occur.",
+   "Each person's count lies in a fixed range of integers. How many distinct values can the counts take, and how does that compare with the number of people?",
+   "Names the move: pigeonhole on the handshake counts, after checking which values can occur together.",
    "Setup: let \\(d_i\\) be the number of handshakes of person \\(i\\). Show that the values \\(d_i\\) lie in a set with one fewer value than there are people."
   ]
  },
@@ -942,8 +942,8 @@
   ],
   "hints": [
    "Which sets of three roads on four cities connect everything with no loop? What shape must such a set have?",
-   "Names the move: count the spanning trees of the complete graph on four labelled vertices, using a counting formula for labelled trees.",
-   "Setup: a spanning tree on \\(n\\) labelled vertices has \\(n-1\\) edges and is counted by \\(n^{\\,n-2}\\). Substitute \\(n=4\\)."
+   "Structural feature: three edges on four vertices connect everything exactly when they form no cycle. Sort the valid sets by their shape, and count each shape separately.",
+   "Setup: write the count as a sum over the possible shapes of the number of ways to label each shape on the four cities. List the shapes first."
   ]
  },
  {
@@ -960,7 +960,7 @@
   "hints": [
    "Follow the cycle through your own box. When does every prisoner succeed? Think about the cycle lengths of the permutation.",
    "Names the move: success means every cycle has length at most the open limit. Count the complement, the permutations with a long cycle.",
-   "Setup: \\( \\Pr(\\text{success}) = 1-\\sum_{k=51}^{100}\\Pr(\\text{a cycle of length }k\\text{ exists})\\), and for \\(k>n/2\\) that probability is \\(1/k\\)."
+   "Setup: the failure events are indexed by \\(k=51,\\dots,100\\). Argue that at most one cycle can exceed 50, then count permutations with a fixed \\(k\\)-cycle: choose the \\(k\\) elements, arrange them in a cycle, and divide by the total."
   ]
  },
  {
@@ -1003,9 +1003,9 @@
    "cycles"
   ],
   "hints": [
-   "Following the chain from person 1 traces out one cycle. Does every length have the same chance, or do longer cycles become less likely?",
-   "Names the move: symmetry. Count permutations in which the cycle of person 1 has exactly the required length, and compare the counts across lengths.",
-   "Setup: \\( \\Pr(\\text{cycle of }1\\text{ has length }k)=\\dfrac{N_k}{10!}\\), where \\(N_k\\) counts permutations in which that cycle has exactly \\(k\\) elements."
+   "Following the chain from person 1 visits a new person at each step until it returns. At each step, how many people are still unvisited, and what must the chain do next?",
+   "Structural feature: the 'whose hat is this' map is a bijection, so the chain either returns to person 1 or runs through new people. Count the sequences of new people that end back at person 1 after four steps.",
+   "Setup: \\( \\Pr=\\Pr(\\text{first three steps visit three new people})\\times\\Pr(\\text{fourth step returns to person 1}\\mid\\text{that})\\). Write each factor as a conditional probability."
   ]
  },
  {
@@ -1082,8 +1082,8 @@
   ],
   "hints": [
    "The table can turn, so two seatings that are rotations of each other are the same. How many seatings are there in total, and how many of them does each class contain?",
-   "Names the move: Burnside's lemma on the rotation group of the eight seats, counting colourings fixed by each rotation.",
-   "Setup: \\( N=\\dfrac{1}{8}\\sum_{k=0}^{7}\\#\\{\\text{seatings fixed by rotation }k\\}\\)."
+   "Structural feature: a seating that looks the same after a partial turn has a repeating pattern around the table. Ask which turns can leave a seating unchanged, and how many seatings are left by each.",
+   "Setup: let \\(f_k\\) be the number of seatings unchanged by a turn of \\(k\\) seats. Find \\(f_k\\) in terms of the number of red chips in each cycle of that turn."
   ]
  },
  {
