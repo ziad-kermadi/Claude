@@ -359,7 +359,7 @@
  },
  {
   "type": "cloze",
-  "front": "In the normal model with zero drift, vega equals \\(\\{{c1::\\sigma_N T\\,\\Gamma}\\}\\) at every strike, so theta equals \\(\\{{c2::-\\sigma_N\\,\\mathcal V/(2T)}\\}\\).",
+  "front": "In the normal model with zero drift, vega equals \\({{c1::\\sigma_N T\\,\\Gamma}}\\) at every strike, so theta equals \\({{c2::-\\sigma_N\\,\\mathcal V/(2T)}}\\).",
   "back": "Derivation: \\(\\Theta=-\\tfrac12\\sigma_N^2\\Gamma\\), and \\(\\Gamma=\\mathcal V/(\\sigma_NT)\\). See the derivation card on the vega and theta relations.",
   "tags": [
    "greeks",

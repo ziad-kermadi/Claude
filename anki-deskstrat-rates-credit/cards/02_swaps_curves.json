@@ -23,8 +23,8 @@
  },
  {
   "type": "basic",
-  "front": "Compare lookback and observation-shift conventions for compounded RFR coupons. What does each fix, and what trade-off does each create for payment timing and hedging?",
-  "back": "<b>Answer:</b>\n<ul>\n<li><b>Lookback</b> of \\(d\\) business days: the rate applied to accrual day \\(i\\) is the overnight rate observed \\(d\\) days earlier, while the accrual weight \\(d_i\\) stays with day \\(i\\).</li>\n<li><b>Observation shift</b>: the rate-observation window is moved back by \\(d\\) days, so the weights are the day counts of the shifted window.</li>\n</ul>\nBoth make the final coupon knowable roughly \\(d\\) days before the payment date, so the cashflow can be settled on time without waiting for the last fixing. They differ in which weights attach to which rates. The value effect is small (forward change over the shifted days times a day-count mismatch), but the choice matters for exact cash reconciliation and for matching a hedge to the fixing schedule. The exact convention is set in the confirmation and ISDA definitions, so check it rather than assume it.<br>\n<b>Interviewer follow-up:</b> Why is the value difference tiny even though the conventions look different? Because the mismatch only touches the last few days of the period, and the forward rate barely moves over those days on a normal curve.",
+  "front": "Write the compounded RFR coupon under (a) a lookback of \\(d\\) business days and (b) an observation shift of \\(d\\) days. Which weight attaches to which rate in each? Why do the two coincide on a day-count basis, and where do they actually differ?",
+  "back": "<b>Answer:</b><br>\n(a) Lookback: \\(R_{lb}=\\frac{360}{D}\\big(\\prod_i(1+r_{i-d}\\,d_i/360)-1\\big)\\). The rate used on accrual day \\(i\\) is observed \\(d\\) days earlier, but the weight \\(d_i\\) stays with day \\(i\\).<br>\n(b) Observation shift: \\(R_{os}=\\frac{360}{D}\\big(\\prod_i(1+r_{i-d}\\,d_{i-d}/360)-1\\big)\\). The rate and its weight both come from the shifted day.<br>\nBoth fix the coupon \\(d\\) days before the period end, so both allow timely settlement. The difference is only the pairing of weights with rates. When every day has a one-day weight, the two formulas are identical. They differ only around holidays, where \\(d_i\\neq d_{i-d}\\), so the PV gap is \\(\\approx N\\sum_i (d_i-d_{i-d})\\,f_{i-d}\\,DF_i/360\\), which is small and confined to window edges.<br>\n<b>Interviewer follow-up:</b> Which convention should a hedge match? The one in the confirmation. A swap hedge built on the wrong pairing carries a small day-count residual at each holiday, which must be checked against the actual fixing schedule rather than assumed.",
   "tags": [
    "swaps",
    "rfr",
@@ -165,8 +165,8 @@
  },
  {
   "type": "basic",
-  "front": "What is the turn-of-year effect in the short end, and how should a curve builder handle a deposit or future that spans 31 December?",
-  "back": "<b>Answer:</b> Funding rates for periods spanning year-end typically spike because of balance-sheet and reporting effects. The forward over the turn is elevated relative to its neighbours.\nA piecewise-constant or smooth interpolation spreads this spike into adjacent nodes and mis-prices neighbouring instruments.\n<b>Handling:</b> (i) add an explicit turn-of-year jump in the forward, either as a separate node or as a discontinuity at the year-end date, solved from the instrument that straddles the turn; (ii) keep the spike out of the smooth segment; (iii) report the turn premium as its own bucket so it is hedged with the straddling instrument.<br>\n<b>Interviewer follow-up:</b> What is the trade-off? An explicit jump reprices the straddling instrument correctly, but its size is estimated from one or two instruments and can be unstable from day to day.",
+  "front": "A 1-month deposit spans 31 December, and its 7 straddling days carry a 10bp year-end funding premium. By how much does the deposit's rate rise, and how should a curve builder place the premium on the curve?",
+  "back": "<b>Answer:</b> Premium applied only on straddling days raises the period rate by about \\(10\\text{bp}\\times7/30\\approx2.3\\)bp.<br>\nCurve placement: a separate turn node or a jump in the forward at 31 December. Its size comes from the straddling instrument. Smooth interpolation spreads the jump into the neighbouring pillars and misprices them.<br>\nIdentification: one straddling quote fixes the sum of the forward level and the jump, not both. Without a second straddling instrument or a prior on the jump, the premium is not identified, and the curve builder should report it as a separate, low-confidence bucket.<br>\n<b>Interviewer follow-up:</b> Why not solve the premium from the 1m deposit alone? Because the deposit fixes one combination of two unknowns. Setting the jump to zero would absorb the premium into the forward level and misstate the next quarter's rate.",
   "tags": [
    "bootstrapping",
    "turn_of_year",
@@ -473,8 +473,8 @@
  },
  {
   "type": "basic",
-  "front": "A cleared swap's MTM rises by a hypothetical 1.0m when a CCP switches its discounting curve. What cash flows arise, and how does the trader's net economics change?",
-  "back": "<b>Answer:</b> The MTM change is a valuation effect, not an economic gain. The CCP settles it in cash through a price alignment amount, so the member's net position, after PAI, is largely unchanged. The trader's future variation margin and PAI now run at the new collateral rate, so the carry changes.\nCheck the bucketed DV01 before and after the switch: the sensitivity profile can move even if the MTM is compensated.<br>\n<b>Interviewer follow-up:</b> Why does the desk still see a P&L effect? If the PAI and the MTM change do not match exactly, for example on a curve or timing mismatch, the residual shows up as P&L. This is why the switch is run through the risk system explicitly.",
+  "front": "A cleared 5y receiver's MTM rises by 1.0m when the CCP changes its USD discounting curve. Explain the cash flow that offsets the valuation change, and why the trade's carry still changes. If the collateral rate on the 1.0m balance falls by 5bp, what is the daily carry change on Act/360?",
+  "back": "<b>Answer:</b> The MTM change is a valuation effect. Price alignment interest (PAI) settles it in cash, so the member's economic position is largely unchanged on the switch date.<br>\nCarry: variation margin and PAI are remunerated at the new collateral rate. Carry change \\(=1{,}000{,}000\\times0.0005/360\\approx1.39\\) per day on Act/360, about 1.4 per day.<br>\n<b>Where it breaks:</b> PAI is value-neutral only if it equals the MTM change on the switch date. Timing mismatches or a curve mismatch between the MTM and the PAI leave a residual P&amp;L. The DV01 profile also moves, so hedges sized on the old curve need re-mapping.<br>\n<b>Interviewer follow-up:</b> Why is a 1.4 per day carry change worth tracking? It is small on one trade, but a book with large cleared MTM runs the same daily effect across every trade, so the change must be modelled rather than assumed away.",
   "tags": [
    "clearing",
    "pai",
@@ -495,8 +495,8 @@
  },
  {
   "type": "basic",
-  "front": "Conceptually, what does FVA measure, and why is an uncollateralised derivative discounted off a funding curve?",
-  "back": "<b>Answer:</b> FVA is the present value of the expected funding cost (or benefit) on uncollateralised exposure. If the trade is an asset, the dealer must fund a hedge at its own funding rate; if it is a liability, the dealer earns a funding benefit on cash it can use.\nThe replicating hedge is financed at the funding rate, so the trade is discounted off a funding curve rather than the collateral curve. FVA is therefore the difference between the funding-curve and collateral-curve values.\nCaution: FVA can overlap with DVA or own-default effects. Frameworks differ on how to avoid double counting.<br>\n<b>Interviewer follow-up:</b> Why is FVA sometimes argued to be double counting? Because the funding benefit from own default and the own-credit benefit in DVA can offset each other; the accounting and pricing frameworks disagree on how to split them.",
+  "front": "Give a first-order formula for FVA on an uncollateralised derivative with expected exposure \\(EE(t)\\), funding spread \\(s_F\\) and discount factor \\(DF(t)\\). Evaluate it for EE = 1.0m flat over 5y, \\(s_F=100\\)bp and an average DF of 0.85.",
+  "back": "<b>Answer:</b> For an asset exposure the dealer must fund the hedge at its funding spread, so \\[\\mathrm{FVA}\\approx-s_F\\int_0^T EE(t)\\,DF(t)\\,dt.\\]<br>\nEvaluate: \\(-0.01\\times1.0\\text{m}\\times5\\times0.85\\approx-42{,}500\\). The cost is negative for an asset and reverses sign for a liability (a funding benefit).<br>\nCaveats: this ignores netting, collateral thresholds and the own-default term. The funding benefit on a liability overlaps with DVA, and frameworks differ on how to split the two.<br>\n<b>Interviewer follow-up:</b> Why does FVA use expected exposure and not current MTM? Funding is needed over the life of the trade wherever the expected future exposure is positive, so the profile matters more than today's value.",
   "tags": [
    "xva",
    "fva",
@@ -506,8 +506,8 @@
  },
  {
   "type": "basic",
-  "front": "Briefly, what are MVA and KVA, and what does each capture that FVA does not?",
-  "back": "<b>Answer:</b>\n<ul>\n<li><b>MVA</b> (margin valuation adjustment): the lifetime cost of funding initial margin posted on an uncleared trade.</li>\n<li><b>KVA</b> (capital valuation adjustment): the lifetime cost of regulatory capital held against the trade, charged at a hurdle rate.</li>\n</ul>\nFVA captures the funding of the MTM exposure, not the funding of IM or the cost of capital. MVA and KVA are additional adjustments that matter most for long-dated, uncleared, and capital-intensive trades.<br>\n<b>Interviewer follow-up:</b> Why do clearing and SIMM change these numbers? Clearing removes most bilateral capital and changes the IM funding profile, while SIMM changes the IM amount itself, so both alter MVA and KVA.",
+  "front": "An uncleared bilateral trade requires 10m of initial margin (IM) held flat for 5y, funded at 80bp over the collateral rate, with average DF 0.85. Estimate the margin valuation adjustment (MVA). What does KVA add, and how is it sized?",
+  "back": "<b>Answer:</b> MVA is the lifetime cost of funding IM above the collateral rate: \\[\\mathrm{MVA}\\approx s_{\\text{IM}}\\int_0^T IM(t)\\,DF(t)\\,dt=0.008\\times10\\text{m}\\times5\\times0.85\\approx340{,}000.\\]<br>\nKVA is the lifetime cost of regulatory capital at a hurdle rate \\(h\\): \\(\\mathrm{KVA}\\approx h\\int_0^T K(t)\\,DF(t)\\,dt\\). Illustrative only: 2m of capital at a 10% hurdle over 5y with DF 0.85 gives about 850,000.<br>\nMVA depends on IM and its funding spread; KVA depends on capital and the hurdle. FVA covers funding of MTM exposure, which neither term captures.<br>\n<b>Where it breaks:</b> the spread and capital inputs are contract- and regulation-specific, and both change with the margin model (for example, a SIMM-type IM calculation).<br>\n<b>Interviewer follow-up:</b> Why does clearing change MVA and KVA differently? Clearing removes most bilateral capital and changes the IM funding profile, so KVA falls sharply while MVA moves with the CCP's margin model.",
   "tags": [
    "xva",
    "mva",
@@ -517,8 +517,8 @@
  },
  {
   "type": "basic",
-  "front": "A dealer compares quoting a 10y USD swap cleared through a CCP with a bilateral trade under a CSA. Which curves and cost terms differ between the two?",
-  "back": "<b>Answer:</b> Cleared: discounting on the CCP's curve, VM in cash at the collateral rate, PAI on any switch, and IM set by the CCP's margin model. Bilateral under a CSA: discounting on the CSA's collateral curve, with collateral that may be non-cash and eligible-currency options, plus MVA and KVA for uncleared IM and capital.\nTrade-off: clearing lowers counterparty capital and CVA, but it makes IM funding and procyclicality more visible. A bilateral CSA gives flexibility over collateral and terms, but it carries more capital and more adjustments.<br>\n<b>Interviewer follow-up:</b> Which is cheaper? Depends on the capital, funding and margin profile of the book, so the comparison should be run as a full XVA calculation, not by one curve.",
+  "front": "A dealer must decide whether to quote a 10y USD swap cleared through a CCP or bilateral under a CSA. Name the valuation inputs that differ between the two, and the cost terms that move the price. Which costs does clearing reduce, and which does it concentrate?",
+  "back": "<b>Answer:</b><br>\nInputs that differ: discount curve (CCP's collateral curve versus the bilateral CSA's eligible-collateral curve), PAI on any switch, and the IM model (CCP's model versus bilateral SIMM-type).<br>\nCost terms: cleared trades carry CCP fees and IM funding; bilateral trades carry CVA, MVA, KVA, and the cost of any non-cash collateral.<br>\nClearing reduces counterparty credit exposure, CVA and most KVA. It concentrates IM funding, procyclicality and liquidity needs in stress, and it adds CCP-specific fees.<br>\n<b>Interviewer follow-up:</b> So which is cheaper? That depends on the book's capital, funding and margin profile, and should be settled by a full XVA comparison rather than by one curve.",
   "tags": [
    "clearing",
    "csa",
@@ -539,8 +539,8 @@
  },
  {
   "type": "basic",
-  "front": "What is the difference between term SOFR and compounded-in-arrears SOFR? Why does the difference need to be modelled, and where does it matter for swap valuation?",
-  "back": "<b>Answer:</b> Compounded SOFR is backward-looking: it accumulates realised overnight rates over the period. Term SOFR is forward-looking: it is a published rate for a future period, derived from market instruments such as SOFR futures and options. It embeds expectations and a term premium.\nThe term-compounded basis is nonzero and must be modelled. It matters when a trade references one and is hedged with the other, or when a curve is built from term instruments but projected on compounded SOFR.<br>\n<b>Interviewer follow-up:</b> Why does the basis matter for a swap that is priced off a compounded OIS curve? A term-referenced leg needs its own projection curve, and the basis between the two has to be consistent with the basis swap quotes in the curve.",
+  "front": "A swap references Term SOFR, but the curve is built from compounded-in-arrears SOFR OIS. If the term-compounded basis is \\(b\\), what is the valuation error per unit notional for a swap with annuity \\(A\\)? Give the error per 1bp of basis for 100m notional and \\(A=4.6\\), and say which curve should carry the adjustment.",
+  "back": "<b>Answer:</b> Missing spread on the term-referenced leg: error \\(\\approx N\\,b\\,A\\). Per 1bp on 100m with \\(A=4.6\\): \\(100\\text{m}\\times10^{-4}\\times4.6=46{,}000\\).<br>\nThe adjustment belongs on the projection curve for the term-referenced leg, as a basis node bootstrapped against the term-to-compounded basis quotes. The discount curve stays compounded OIS, so no DF changes.<br>\n<b>Where it breaks:</b> the basis is not constant. It moves with rate expectations and term-rate liquidity, so a static adjustment leaves a residual that needs its own hedge.<br>\n<b>Interviewer follow-up:</b> Why not simply shift the discount curve by the basis? That changes every PV, including trades that do not reference term SOFR, so it misstates the risk.",
   "tags": [
    "sofr",
    "term_sofr",
@@ -594,8 +594,8 @@
  },
  {
   "type": "basic",
-  "front": "Why does the cross-currency basis widen in funding stress, and why is it hard to arbitrage away?",
-  "back": "<b>Answer:</b> In stress, demand for USD funding through FX swaps rises sharply, and the banks that intermediate these trades face capital and balance-sheet constraints. The arbitrage that would close the gap (borrowing in the cheaper market and swapping) needs capital, counterparty room and collateral that are scarce exactly then.\nThe result is persistent covered-parity deviation: the basis stays wide until the constraints ease.<br>\n<b>Interviewer follow-up:</b> Which episodes show this? Episodes of market stress, such as 2008 and March 2020, saw the USD basis widen sharply, which is what made the basis an input to curve construction rather than a small correction.",
+  "front": "Why does the USD cross-currency basis widen in funding stress, and why is the arbitrage hard to take? For a 25bp FX-implied deviation on 100m USD for 3m, what is the funding cost per quarter?",
+  "back": "<b>Answer:</b> In stress, demand for USD funding through FX swaps rises. The banks that would arbitrage the gap need balance-sheet capacity, counterparty room and collateral, and these are scarcest exactly then.<br>\nCost: \\(25\\text{bp}\\times100\\text{m}\\times0.25=62{,}500\\) USD per quarter on the funding leg.<br>\nThe gap persists until those constraints ease. Episodes such as 2008 and March 2020 saw the USD basis widen sharply, which is why it is an input to curve construction rather than a small correction.<br>\n<b>Interviewer follow-up:</b> Why does a 25bp basis not get arbitraged away by one bank? The arbitrage costs balance-sheet capacity at the reporting dates, so the marginal provider's cost sets the basis rather than the average.",
   "tags": [
    "xccy",
    "basis",
