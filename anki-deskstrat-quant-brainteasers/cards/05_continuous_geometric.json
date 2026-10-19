@@ -8,6 +8,9 @@
    "uniform",
    "order_statistics",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f05_uniform_ladder"
   ]
  },
  {
@@ -30,6 +33,9 @@
    "bertrand",
    "circle",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f05_bertrand_readings"
   ]
  },
  {
@@ -52,6 +58,9 @@
    "s_geometric_probability",
    "buffon",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f05_buffon_long"
   ]
  },
  {
@@ -74,6 +83,9 @@
    "uniform",
    "irwin_hall",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f05_tail_sum_bars"
   ]
  },
  {
@@ -95,6 +107,9 @@
    "normal",
    "correlation",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f05_normal_orthant"
   ]
  },
  {
@@ -128,6 +143,9 @@
    "cauchy",
    "normal",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f05_ratio_wedges"
   ]
  },
  {
@@ -170,6 +188,9 @@
    "poisson",
    "inspection_paradox",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f05_inspection_density"
   ]
  },
  {
@@ -181,6 +202,9 @@
    "poisson",
    "superposition",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f05_race_chain"
   ]
  },
  {
@@ -192,6 +216,9 @@
    "uniform",
    "transformation",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f05_density_2x"
   ]
  },
  {
@@ -247,6 +274,9 @@
    "Three pieces form a triangle only under a constraint on each piece. Can two pieces violate that constraint at the same time?",
    "Use the complement: find the chance that some piece is at least half the stick, and check whether those bad events can overlap.",
    "Order the cuts as \\(U_{(1)}<U_{(2)}\\); the pieces are \\(U_{(1)}\\), \\(U_{(2)}-U_{(1)}\\) and \\(1-U_{(2)}\\), and the triangle event is that each piece is less than \\(\\tfrac12\\)."
+  ],
+  "figs_back": [
+   "f05_stick_triangle"
   ]
  },
  {
@@ -263,6 +293,9 @@
    "Is there a natural reference point among the five, so that 'all in one half' can be decided from it?",
    "Choose the point that is first clockwise of the others. The rest must all fall in the half-circle that starts there, and these reference events are disjoint, so you can add them.",
    "\\(P=n\\,q^{\\,n-1}\\), where \\(n\\) is the number of points and \\(q\\) is the chance that one other point lands in the half-circle starting at the reference; identify \\(q\\)."
+  ],
+  "figs_back": [
+   "f05_semicircle_ref"
   ]
  },
  {
@@ -279,6 +312,9 @@
    "Draw the two arrival times as a point in the unit square. Which region of the square corresponds to a meeting?",
    "A meeting is a diagonal band around \\(X=Y\\). Find its area by subtracting the corner regions outside it.",
    "Meeting means \\(|X-Y|\\le w\\) with \\(w\\) the wait in hours; write \\(P=1-(\\text{area of the two corner triangles})\\), and give each triangle legs \\(1-w\\)."
+  ],
+  "figs_back": [
+   "f05_meeting_band"
   ]
  },
  {
@@ -295,6 +331,9 @@
    "Chord length depends on how far its midpoint is from the centre. For which midpoints is the chord longer than \\(\\sqrt3\\)?",
    "Express chord length through the midpoint's distance \\(d\\) from the centre. The long-chord event becomes 'the midpoint lies in a smaller concentric disk', so compare areas.",
    "A chord whose midpoint is at distance \\(d\\) has length \\(2\\sqrt{1-d^2}\\); set \\(2\\sqrt{1-d^2}>\\sqrt3\\), solve for the critical radius \\(r\\), and write \\(P=r^2\\)."
+  ],
+  "figs_back": [
+   "f05_bertrand_readings"
   ]
  },
  {
@@ -311,6 +350,9 @@
    "Consider the needle's centre and the nearest line. What tilt of the needle is needed to reach that line, and how does the tilt affect the crossing?",
    "A crossing happens iff the centre's distance to the nearest line is at most half the needle's vertical extent. Average over the uniform distance and the uniform angle.",
    "Let \\(h\\) be the centre's distance to the nearest line and \\(\\theta\\) the angle; crossing iff \\(h\\le \\tfrac{\\ell}{2}|\\sin\\theta|\\), so \\(P=\\mathbb E\\!\\left[\\tfrac{2}{d}\\cdot\\tfrac{\\ell}{2}|\\sin\\theta|\\right]\\) with \\(\\ell=d/2\\)."
+  ],
+  "figs_back": [
+   "f05_buffon_geometry"
   ]
  },
  {
@@ -327,6 +369,9 @@
    "Several independent clocks start together. What determines which one rings first, and how long the first ring takes?",
    "Use the race fact: the first ring is exponential with rate equal to the sum of all the rates, and each clock wins with probability proportional to its own rate.",
    "Let \\(\\Lambda\\) be the sum of the three rates; then \\(P(\\text{clock }i\\text{ first})=\\lambda_i/\\Lambda\\) and \\(E[\\text{first ring}]=1/\\Lambda\\). Compute \\(\\Lambda\\) from the statement."
+  ],
+  "figs_back": [
+   "f05_race_rates"
   ]
  },
  {
@@ -343,6 +388,9 @@
    "The failures happen one after another. After the first failure, do the surviving machines still have the same remaining-life distribution?",
    "Use the spacings view: the gaps between successive failures are independent exponentials, and each gap's rate is set by how many machines are still working.",
    "\\(E[X_{(2)}]=E[G_1]+E[G_2]\\), where \\(G_j\\) is exponential with rate equal to (number still working)\\(\\times\\lambda\\); write the rate for \\(G_1\\) and for \\(G_2\\)."
+  ],
+  "figs_back": [
+   "f05_failure_timeline"
   ]
  },
  {
@@ -359,6 +407,9 @@
    "Merge the two streams and look only at the labels of the events. What is the chance that a given merged event is type A?",
    "Each merged event is independently type A with a fixed probability, so the number of A's before the first B is geometric. Combine that with the chance that the B comes next.",
    "\\(P=p_A^{\\,2}\\,p_B\\) with \\(p_A=\\lambda_A/(\\lambda_A+\\lambda_B)\\) and \\(p_B=1-p_A\\); evaluate \\(p_A\\) from the two rates."
+  ],
+  "figs_back": [
+   "f05_race_chain"
   ]
  },
  {
@@ -375,6 +426,9 @@
    "A random arrival is more likely to land in a long gap. Are all headways equally likely to contain your arrival?",
    "Use the inspection formula: the expected wait is \\(E[X^2]/(2E[X])\\), where \\(X\\) is the headway distribution seen by the arrival.",
    "With the two headway values \\(a\\) and \\(b\\) equally likely, write \\(E[X]=\\tfrac{a+b}{2}\\) and \\(E[X^2]=\\tfrac{a^2+b^2}{2}\\), then substitute into the inspection formula."
+  ],
+  "figs_back": [
+   "f05_bus_alternating"
   ]
  },
  {
@@ -391,6 +445,9 @@
    "\\(N=3\\) means the first two draws stay within a level and the third pushes past it. Which cumulative events are easiest to compute?",
    "Use the tail trick \\(P(N=n)=P(N>n-1)-P(N>n)\\). The event \\(N>n\\) is that the first \\(n\\) draws sum to at most the level.",
    "\\(P(N>n)=P(U_1+\\cdots+U_n\\le 1)\\), the volume of a corner region of the unit cube; write \\(P(N=3)=P(N>2)-P(N>3)\\)."
+  ],
+  "figs_back": [
+   "f05_tail_sum_bars"
   ]
  },
  {
@@ -438,6 +495,9 @@
    "Split the plane into four quadrants by the signs of \\(X\\) and \\(Y\\). How does a correlation of \\(\\tfrac12\\) redistribute mass among the quadrants compared with independence?",
    "Use the orthant formula for a standard bivariate normal: the positive-positive probability is a constant plus an arcsine term in \\(\\rho\\), divided by \\(\\pi\\).",
    "\\(P(X>0,Y>0)=\\tfrac14+\\dfrac{\\arcsin\\rho}{2\\pi}\\); substitute \\(\\rho=\\tfrac12\\) and simplify."
+  ],
+  "figs_back": [
+   "f05_normal_orthant"
   ]
  },
  {
@@ -470,6 +530,9 @@
    "Once the sum is fixed at a value, what is the distribution of \\(X\\)? Is it still normal, and what are its mean and variance?",
    "Conditioning a bivariate normal on a linear combination gives a normal conditional law. Use the regression formulas for its mean and variance, then standardise.",
    "\\(X\\mid X+Y=s\\sim N(\\mu,\\sigma^2)\\) with \\(\\mu=\\dfrac{\\text{Cov}(X,S)}{\\text{Var}(S)}\\,s\\) and \\(\\sigma^2=\\text{Var}(X)-\\dfrac{\\text{Cov}(X,S)^2}{\\text{Var}(S)}\\); then \\(P(X>1)=1-\\Phi\\!\\left(\\tfrac{1-\\mu}{\\sigma}\\right)\\)."
+  ],
+  "figs_back": [
+   "f05_cond_normal_tail"
   ]
  },
  {
@@ -486,6 +549,9 @@
    "Think of \\((X,Y)\\) as a point in the plane. What does the ratio \\(X/Y\\) measure about that point, and what symmetry does the joint law have?",
    "The pair is rotationally symmetric, so its angle is uniform. The ratio is the tangent of that angle, so the event is a union of arcs.",
    "Write \\(X/Y=\\tan\\theta\\) with \\(\\theta\\) uniform on \\([0,2\\pi)\\); the event is \\(|\\tan\\theta|>\\sqrt3\\), and its probability is the total arc length of that set divided by \\(2\\pi\\)."
+  ],
+  "figs_back": [
+   "f05_ratio_wedges"
   ]
  },
  {
@@ -502,6 +568,9 @@
    "Introduce the sum \\(S=X+Y\\) and the share \\(R=X/S\\). Does the joint density of \\((S,R)\\) factorise, and what law does \\(R\\) follow?",
    "Change variables to \\((S,R)\\) with the Jacobian. If the joint density factorises, the share has a simple marginal law that you can integrate.",
    "With \\(x=sr\\) and \\(y=s(1-r)\\), the Jacobian is \\(|J|=s\\), so \\(f_{S,R}(s,r)=|J|\\,f_X(sr)\\,f_Y(s(1-r))\\); simplify this and read off the marginal of \\(R\\)."
+  ],
+  "figs_back": [
+   "f05_exp_share_wedge"
   ]
  },
  {
@@ -518,6 +587,9 @@
    "Condition on the first uniform. For a fixed value of it, what range of the second makes the product at most the threshold?",
    "Integrate over the first variable. For each \\(u\\), the condition is \\(V\\le t/u\\), capped at 1. Split the integral at the point where \\(t/u\\) reaches 1.",
    "\\(P(UV\\le t)=\\displaystyle\\int_0^1\\min\\!\\left(1,\\tfrac{t}{u}\\right)du\\); split at \\(u=t\\) and evaluate the two pieces with \\(t\\) kept symbolic first."
+  ],
+  "figs_back": [
+   "f05_product_hyperbola"
   ]
  },
  {
@@ -582,6 +654,9 @@
    "Find the expected maximum through its tail: what is the chance that the longest piece exceeds a threshold \\(t\\)?",
    "Use \\(E[M]=\\int_0^1 P(M>t)\\,dt\\). Get \\(P(M>t)\\) by inclusion-exclusion over the three pieces, since the events that two pieces both exceed \\(t\\) have a simple form.",
    "\\(P(M>t)=\\sum_i P(S_i>t)-\\sum_{i<j}P(S_i>t,S_j>t)+P(S_1>t,S_2>t,S_3>t)\\), where each \\(S_i\\) is a piece; write each term as a power of a length in \\(t\\)."
+  ],
+  "figs_back": [
+   "f05_stick_max_tail"
   ]
  },
  {
@@ -598,6 +673,9 @@
    "The chord's length depends only on the angle between its two endpoints. Which angles produce a chord longer than the triangle's side?",
    "A chord subtending angle \\(\\varphi\\) has length \\(2\\sin(\\varphi/2)\\). Find the set of separations that satisfy the threshold, and compare its size to the full circle.",
    "Solve \\(2\\sin(\\varphi/2)>\\sqrt3\\) for \\(\\varphi\\in[0,2\\pi]\\), then \\(P=\\dfrac{\\text{length of that set}}{2\\pi}\\), since the separation of two uniform endpoints is uniform."
+  ],
+  "figs_back": [
+   "f05_bertrand_readings"
   ]
  },
  {
@@ -660,6 +738,9 @@
    "The uniform formula for a minimum assumes a particular distribution function. What changes when the density is not flat?",
    "Use the survival function of the minimum: \\(P(\\min>t)\\) is the square of \\(P(X_1>t)\\), then integrate over \\([0,1]\\).",
    "\\(E[\\min]=\\displaystyle\\int_0^1\\big(1-F(t)\\big)^2\\,dt\\), where \\(F\\) is the CDF of one draw; find \\(F\\) from the density \\(2x\\)."
+  ],
+  "figs_back": [
+   "f05_density_2x"
   ]
  },
  {
@@ -676,6 +757,9 @@
    "The meeting band is no longer centred on the diagonal of the square. Which corners fall outside the meeting region, and how big are they?",
    "The meeting event is a shifted band between two diagonals. Subtract the corner triangles outside it, and let each have its own leg length set by the waits.",
    "Meeting iff \\(Y-X\\in[-a,\\,b]\\) for constants \\(a,b\\) fixed by the two waits; write \\(P=1-(\\text{area of the two corner triangles})\\), each triangle having legs \\(1\\) minus the relevant bound."
+  ],
+  "figs_back": [
+   "f05_meeting_shifted"
   ]
  },
  {
@@ -692,6 +776,9 @@
    "In the semicircle argument, what does the value one half do? If the arc is smaller than half the circle, does the same reference argument still work?",
    "Use the reference-point argument with arc fraction \\(f\\): choose a reference point, and require every other point to lie within the arc of length \\(f\\) starting there.",
    "\\(P=n\\,f^{\\,n-1}\\) for \\(f\\le\\tfrac12\\), where \\(n\\) is the number of points and \\(f\\) the arc fraction given in the statement; substitute these values."
+  ],
+  "figs_back": [
+   "f05_arc_fraction"
   ]
  },
  {
@@ -725,6 +812,9 @@
    "Does having already waited change the remaining time when the arrival is bounded? Think about what the distribution looks like after you have survived past 4 minutes.",
    "Condition on the elapsed wait: given the bus has not come yet, its arrival is uniform on the rest of the interval, so the remaining wait is the mean of that shorter interval.",
    "Given \\(T>4\\), \\(T\\sim U(4,b)\\) with \\(b\\) the upper end of the window; write the expected remaining wait as the midpoint of \\([4,b]\\) minus 4."
+  ],
+  "figs_back": [
+   "f05_memoryless_contrast"
   ]
  },
  {
@@ -841,6 +931,9 @@
    "Where does the centre sit relative to the three vertices? When does the triangle fail to contain it?",
    "Structural feature: which side of the centre each point falls on decides whether the centre is inside. Count the configurations where all points fall on one side, using a reference point among them.",
    "Setup: write \\(P(\\text{hub inside})=1-P(\\text{all on one side})\\), and express \\(P(\\text{all on one side})\\) as a sum over which point serves as the reference, using the chance that each other point falls on its side."
+  ],
+  "figs_back": [
+   "f05_hub_triangle"
   ]
  },
  {
@@ -857,6 +950,9 @@
    "Two firing times are uniform on an interval. Draw them as a point in a square; which points count as a trip?",
    "Structural feature: the trip condition constrains only the difference of the two times. Ask which parts of the square have a difference larger than the window, and how their total area compares with the square.",
    "Setup: write \\(P=1-\\) (area of the region where the difference exceeds \\(w\\)), and compute that area as a double integral over \\(x\\) of the admissible \\(y\\)."
+  ],
+  "figs_back": [
+   "f05_meeting_band"
   ]
  },
  {
@@ -890,6 +986,9 @@
    "Split the time until the last bulb burns out into stages, one per burnout. How long is each stage, given how many bulbs are still burning?",
    "Structural feature: the bulbs are independent and memoryless, so after each burnout the survivors look like fresh bulbs. Find the rate of each stage from the number of survivors.",
    "Setup: the wait for the last burnout is a sum of stage waits. Write the expected total as a sum over the number of bulbs still burning at each stage, and evaluate the rates for three bulbs."
+  ],
+  "figs_back": [
+   "f05_failure_timeline"
   ]
  },
  {
@@ -907,6 +1006,9 @@
    "Split the path at time 1. Given the value at time 2, what is the value at time 1, and how is the increment from 1 to 2 related to it?",
    "Structural feature: the value at time 2 is a sum of two independent pieces. Ask how a fixed total is divided between the two pieces when each piece has the same variance.",
    "Setup: let \\(X\\) be the value at time 1 and \\(S\\) the value at time 2. Write \\(E[X\\mid S=1]\\) as \\(\\tfrac{\\text{Cov}(X,S)}{\\text{Var}(S)}\\cdot 1\\), and evaluate \\(\\text{Cov}(X,S)\\) and \\(\\text{Var}(S)\\) from the increments."
+  ],
+  "figs_back": [
+   "f05_cond_normal_tail"
   ]
  },
  {
@@ -924,6 +1026,9 @@
    "Two independent service times add to a total. Does the share held by customer A depend on the exact distribution of the service times, or only on the symmetry between the two customers?",
    "Structural feature: the two times have the same law, so the share has the same law seen from either customer, and the two shares add to one. Find the law of the share from that symmetry together with the memoryless property.",
    "\\(P\\!\\left(\\tfrac{A}{A+B}\\le t\\right)=P\\!\\left(A\\le \\tfrac{t}{1-t}B\\right)\\); condition on \\(B\\) and integrate the exponential tail of \\(A\\) against the density of \\(B\\)."
+  ],
+  "figs_back": [
+   "f05_exp_share_wedge"
   ]
  },
  {
@@ -978,6 +1083,9 @@
    "exponential",
    "toolkit",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f05_memoryless_contrast"
   ]
  },
  {
@@ -1062,6 +1170,9 @@
    "The nine points cut the interval into ten pieces that are exchangeable. What is known about the expected maximum of a set of exchangeable spacings?",
    "Use the known formula for the expected largest spacing from iid uniform cuts: it is a normalised sum of reciprocals, which you can read off from the number of cuts.",
    "With \\(m\\) uniform points, \\(E[\\text{max gap}]=\\dfrac{1}{m+1}\\sum_{k=1}^{m+1}\\dfrac{1}{k}\\); identify \\(m\\) from the statement and write out the sum."
+  ],
+  "figs_back": [
+   "f05_spacings_nine"
   ]
  },
  {
@@ -1078,6 +1189,9 @@
    "Can two of the ten gaps both exceed one half at once? What does that say about how the events for different gaps overlap?",
    "Gaps longer than the level are disjoint events, so the probability is a sum over the gaps. For each gap, the chance it exceeds the level is a power of the complement.",
    "\\(P(\\text{some gap}>t)=\\sum_{i=1}^{10}P(\\text{gap}_i>t)\\), with \\(P(\\text{gap}_i>t)=(1-t)^{9}\\) for each \\(i\\) and \\(t=\\tfrac12\\); write the sum."
+  ],
+  "figs_back": [
+   "f05_spacings_nine"
   ]
  },
  {
@@ -1094,6 +1208,9 @@
    "For the first gap to exceed a level, where must every one of the nine points lie?",
    "Use the survival of the leftmost gap: it exceeds \\(t\\) exactly when all points lie beyond \\(t\\), and the points are independent.",
    "\\(P(\\text{first gap}>t)=P(U_i>t\\ \\text{for all }i)=(1-t)^{9}\\); substitute \\(t=0.3\\)."
+  ],
+  "figs_back": [
+   "f05_spacings_nine"
   ]
  },
  {
@@ -1110,6 +1227,9 @@
    "With three points on a circle, is there one point you can single out as a reference, so that the other two must fall in a half-circle from it?",
    "Pick the first clockwise point as reference. The other two must lie in the half-circle that starts there, and the choices of reference point are disjoint events.",
    "\\(P=n\\,q^{\\,n-1}\\) with \\(n=3\\), where \\(q\\) is the chance a single other point lies in the half-circle starting at the reference; identify \\(q\\) and evaluate."
+  ],
+  "figs_back": [
+   "f05_semicircle_three"
   ]
  },
  {

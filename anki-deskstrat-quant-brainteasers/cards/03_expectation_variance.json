@@ -21,6 +21,9 @@
    "records",
    "order_statistics",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f03_records"
   ]
  },
  {
@@ -33,6 +36,9 @@
    "coupon_collector",
    "dice",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f03_coupon_stages"
   ]
  },
  {
@@ -81,6 +87,9 @@
    "distinct_values",
    "dice",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f03_distinct_pmf"
   ]
  },
  {
@@ -92,6 +101,9 @@
    "s_geometric_probability",
    "broken_stick",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f03_tail_stick_min"
   ]
  },
  {
@@ -104,6 +116,9 @@
    "dice",
    "expected_max",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f03_tail_max_dice"
   ]
  },
  {
@@ -148,6 +163,9 @@
    "s_conditional_expectation_tower",
    "mixtures",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f03_var_mixture"
   ]
  },
  {
@@ -160,6 +178,9 @@
    "random_walk",
    "dice",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f03_wald_path"
   ]
  },
  {
@@ -206,6 +227,9 @@
    "permutations",
    "ascents",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f03_ascent_chain"
   ]
  },
  {
@@ -217,12 +241,15 @@
    "expected_max",
    "variance",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f03_max_density"
   ]
  },
  {
   "type": "basic",
   "front": "A uniform random permutation of 6 items. Find the expected number of 3-cycles.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
-  "back": "<b>Structure:</b> bijection and counting (expected cycles of each length).<br><b>Trigger:</b> Cycle counts of a fixed length are sums over sets of items, and each set has a fixed chance of forming one cycle.<br><b>Key move:</b> Number of 3-cycles in \\(S_6\\): \\(\\binom63\\cdot 2\\cdot 3!=240\\). Divide by \\(6!=720\\).<br><b>Answer:</b> \\(\\frac13\\). In general the expected number of \\(k\\)-cycles is \\(\\frac1k\\).",
+  "back": "<b>Structure:</b> bijection and counting (expected cycles of each length).<br><b>Trigger:</b> Cycle counts of a fixed length are sums over sets of items, and each set has a fixed chance of forming one cycle.<br><b>Key move:</b> Indicator per 3-set: there are \\(\\binom63\\cdot 2=40\\) possible 3-cycles, each present with probability \\(\\frac{3!}{6!}=\\frac1{120}\\), so \\(E=40/120\\). (Equivalently, 3-cycles summed over all permutations: \\(40\\cdot 3!=240\\), divided by \\(6!=720\\).)<br><b>Answer:</b> \\(\\frac13\\). In general the expected number of \\(k\\)-cycles is \\(\\frac1k\\).",
   "tags": [
    "s_bijection",
    "s_indicators",
@@ -246,6 +273,9 @@
    "Each person either gets their own hat or not. Can \"nobody gets their own hat\" be written as an alternating sum over which people do get theirs?",
    "Inclusion-exclusion over the set of people who get their own hat. For the moments, the number of matches is a sum of indicators.",
    "Let \\(I_i=\\mathbf 1[\\text{person } i \\text{ gets own hat}]\\) and \\(M=\\sum_i I_i\\). Write \\(P(\\text{no match})=\\sum_{j=0}^{4}(-1)^j\\,\\frac{N_j}{4!}\\), where \\(N_j\\) counts permutations fixing a given set of \\(j\\) people."
+  ],
+  "figs_back": [
+   "f03_hat_matching"
   ]
  },
  {
@@ -297,6 +327,9 @@
    "Split the wait into stages. After \\(j\\) distinct faces have appeared, how long until the next new face, and do the stages depend on each other?",
    "Coupon-collector stages: each phase is geometric, and by memorylessness the phases are independent. Means and variances add.",
    "Let \\(G_j\\) be the rolls spent going from \\(j-1\\) to \\(j\\) distinct faces, so \\(G_j\\sim\\mathrm{Geom}(p_j)\\) where \\(p_j\\) is the chance a roll shows one of the \\(7-j\\) unseen faces. Write \\(E[T]=\\sum_{j=1}^6E[G_j]\\) and \\(\\mathrm{Var}(T)=\\sum_{j=1}^6\\mathrm{Var}(G_j)\\)."
+  ],
+  "figs_back": [
+   "f03_coupon_stages"
   ]
  },
  {
@@ -330,6 +363,9 @@
    "When you already hold \\(j\\) distinct types, what fraction of draws give a new type? Does the wait for the next new type depend on the history?",
    "Geometric phases with memorylessness. The expected total is a sum of phase means, one phase per new type.",
    "Let \\(W_j\\) be the wait after \\(j\\) distinct types, with success probability \\(q_j=\\frac{10-j}{10}\\). Write \\(E[T]=\\sum_{j=0}^{3}E[W_j]\\) and identify \\(E[W_j]\\) from \\(q_j\\)."
+  ],
+  "figs_back": [
+   "f03_coupon_10_k4"
   ]
  },
  {
@@ -347,6 +383,9 @@
    "Count the values that never appear rather than the values that do. For one specific value, what is the chance that all five draws avoid it?",
    "Indicators for absence: let \\(A_v\\) mark that value \\(v\\) never appears. The distinct count is 6 minus a sum of these, and the pairwise terms come from avoiding two values at once.",
    "Let \\(A_v=\\mathbf 1[v\\text{ absent}]\\), so \\(D=6-\\sum_{v=1}^6A_v\\). Write \\(P(A_v=1)\\) and \\(P(A_uA_v=1)\\) for \\(u\\ne v\\) using the number of allowed values on each draw, then expand \\(\\mathrm{Var}(D)\\) into variances and covariances."
+  ],
+  "figs_back": [
+   "f03_distinct_pmf"
   ]
  },
  {
@@ -364,6 +403,9 @@
    "Three pieces from two cuts are exchangeable spacings. For the shortest piece, what does the event \"every piece is longer than \\(t\\)\" look like in the square of cut positions?",
    "Spacings of uniform cuts are symmetric. Use the survival function of the shortest piece, \\(P(L_1>t)\\), and integrate it over \\(t\\). For the longest piece, use the order-statistic structure of the spacings.",
    "Let \\(L_1\\le L_2\\le L_3\\) be the sorted pieces. Write \\(E[L_1]=\\int_0^1P(L_1>t)\\,dt\\), and write \\(P(L_1>t)\\) as the area of the region of cut pairs in the unit square where all three pieces exceed \\(t\\)."
+  ],
+  "figs_back": [
+   "f03_tail_stick_min"
   ]
  },
  {
@@ -381,6 +423,9 @@
    "A triangle needs every piece below half the stick. How many pieces can be longer than half at the same time?",
    "Complement with disjoint events: the bad events \"piece \\(i\\) exceeds one half\" cannot overlap, so the probability of their union is a plain sum.",
    "Let \\(E_i=\\{\\text{piece } i\\ge\\tfrac12\\}\\). Since the \\(E_i\\) are disjoint, \\(P(\\text{triangle})=1-\\sum_i P(E_i)\\). Identify the region of the two cut points in the unit square where \\(E_1\\) holds."
+  ],
+  "figs_back": [
+   "f03_triangle_square"
   ]
  },
  {
@@ -432,6 +477,9 @@
    "Work backwards from the last roll. With one roll left, what is the best you can do, and what threshold does that create for the roll before it?",
    "Backward induction (dynamic programming) on the number of rolls remaining. At each stage compare keeping the value with the expected value of rolling again.",
    "Let \\(V_r\\) be the best expected payoff with \\(r\\) rolls left, so \\(V_1=E[X]\\) for one fair die and \\(V_r=E[\\max(X,V_{r-1})]\\). Compute \\(V_2\\) by checking which faces beat \\(V_1\\)."
+  ],
+  "figs_back": [
+   "f03_dice_policy"
   ]
  },
  {
@@ -449,6 +497,9 @@
    "Wald's identity relates the expected stopped sum to the expected number of steps. Does the stopping rule depend only on the past, and what would that let you compute?",
    "Optional stopping (Wald): \\(E[S_N]=E[X]\\,E[N]\\). So the work reduces to finding \\(E[N]\\), by a first-step recursion on the running total.",
    "Let \\(m(s)\\) be the expected number of further rolls from running total \\(s<10\\). Then \\(m(s)=1+\\frac16\\sum_{k=1}^6m(s+k)\\) with \\(m(s)=0\\) for \\(s\\ge10\\). The answer is \\(E[X]\\cdot m(0)\\)."
+  ],
+  "figs_back": [
+   "f03_wald_path"
   ]
  },
  {
@@ -465,6 +516,9 @@
    "Group the outcomes by the value of \\(K\\). Does each level \\(k\\le 20\\) contribute the same amount to the expectation, and what happens to the outcomes beyond the cap?",
    "Linearity over levels: each uncapped level contributes \\(P(K=k)\\times\\)payoff, and the capped tail adds one lump term.",
    "Write \\(E[\\text{payoff}]=\\sum_{k=1}^{20}2^{k}P(K=k)+2^{20}P(K>20)\\), and simplify each term using \\(P(K=k)=2^{-k}\\)."
+  ],
+  "figs_back": [
+   "f03_stpete_levels"
   ]
  },
  {
@@ -482,6 +536,9 @@
    "The expected payoff is infinite, so the usual expectation-maximising rule cannot set the price. What objective replaces it, and what must the fee leave unchanged?",
    "Log-utility indifference: the fee \\(c\\) is defined by equating expected log wealth after paying it with the current log wealth. There is no closed form, so solve numerically.",
    "Define \\(g(c)=\\sum_{k\\ge1}2^{-k}\\log(1000-c+2^k)-\\log 1000\\), and find the root \\(g(c)=0\\) by bisection on \\(c\\) in the interval \\((0,1000)\\)."
+  ],
+  "figs_back": [
+   "f03_log_fee"
   ]
  },
  {
@@ -498,6 +555,9 @@
    "Can the variance be split into a part from flipping a coin with known \\(p\\) and a part from \\(p\\) itself being random?",
    "Law of total variance: \\(\\mathrm{Var}(X)=E[\\mathrm{Var}(X\\mid p)]+\\mathrm{Var}(E[X\\mid p])\\), with \\(X\\mid p\\) binomial.",
    "Given \\(p\\), \\(X\\sim\\mathrm{Bin}(5,p)\\), so \\(\\mathrm{Var}(X\\mid p)=5p(1-p)\\) and \\(E[X\\mid p]=5p\\). Write \\(\\mathrm{Var}(X)=5\\,E[p(1-p)]+25\\,\\mathrm{Var}(p)\\) and compute the two terms for \\(p\\) uniform on \\(\\{0.1,0.9\\}\\)."
+  ],
+  "figs_back": [
+   "f03_var_mixture_5"
   ]
  },
  {
@@ -582,6 +642,9 @@
    "Compare the average of \\(1/X\\) with \\(1/E[X]\\). Which way does a convex function push an average, and what does a direct computation require here?",
    "Jensen's inequality for the convex function \\(f(x)=1/x\\). Direct computation is easy because \\(X\\) is uniform on six values.",
    "Write \\(E[1/X]=\\frac16\\sum_{x=1}^{6}\\frac1x\\), and compare it with \\(\\frac{1}{E[X]}\\) where \\(E[X]\\) is the mean of the fair die."
+  ],
+  "figs_back": [
+   "f03_jensen_chord"
   ]
  },
  {
@@ -598,6 +661,9 @@
    "After a head, what matters for the next flip? Is there a state that remembers \"I just saw a head\", and one that does not?",
    "First-step analysis with two states: start, and \"last flip was H\". Solve the two linear equations for the expected remaining flips.",
    "Let \\(a\\) be the expected remaining flips from start and \\(b\\) from \"just saw H\". The first equation is \\(a=1+\\tfrac12a+\\tfrac12b\\)."
+  ],
+  "figs_back": [
+   "f03_hh_chain"
   ]
  },
  {
@@ -614,6 +680,9 @@
    "Which two-flip patterns can overlap with themselves? After a head, does a tail finish the pattern while a head leaves you in the same state?",
    "First-step analysis with states start and \"after H\". From \"after H\", a tail completes the pattern and a head keeps you there.",
    "Let \\(b\\) be the expected remaining flips from \"after H\". The first equation is \\(b=1+\\tfrac12 b\\), and then write the start-state equation \\(a=1+\\tfrac12a+\\tfrac12b\\)."
+  ],
+  "figs_back": [
+   "f03_ht_chain"
   ]
  },
  {
@@ -630,6 +699,9 @@
    "The maximum is below \\(x\\) exactly when which event holds for every draw? Write the distribution function of the maximum first.",
    "Order statistics: the CDF of the maximum of \\(n\\) i.i.d. uniforms is the \\(n\\)th power of the single-draw CDF. Use the tail integral for the expectation.",
    "Write \\(P(M\\le x)=x^9\\) for \\(0\\le x\\le1\\), and \\(E[M]=\\int_0^1P(M>x)\\,dx=\\int_0^1\\bigl(1-x^9\\bigr)\\,dx\\)."
+  ],
+  "figs_back": [
+   "f03_tail_max9"
   ]
  },
  {
@@ -832,6 +904,9 @@
    "Which states need to remember the last flip? With a biased coin, how do the transition probabilities change between the two states?",
    "First-step analysis with states \"start\" and \"after H\". The transition probabilities depend on \\(p=P(H)\\).",
    "Let \\(a\\) be the expected remaining flips from start and \\(b\\) from \"after H\". Write \\(a=1+p\\,b+(1-p)\\,a\\) and \\(b=1+(1-p)\\,a\\), then solve for \\(a\\)."
+  ],
+  "figs_back": [
+   "f03_hh_chain_biased"
   ]
  },
  {
@@ -917,6 +992,9 @@
    "Relabel the line by height. What does a person being visible mean in terms of the running maximum of the people in front of them?",
    "Structural feature: a person is visible exactly when they beat everyone in front of them, so each person's event depends only on how they rank among the people up to their position. Use one indicator per person and find each probability from that rank.",
    "Let \\(V_i=\\mathbf 1[\\text{person } i\\text{ is taller than everyone before}]\\), so the count is \\(\\sum_{i=1}^5V_i\\). Write \\(P(V_i=1)\\) in terms of the rank of person \\(i\\) among the first \\(i\\)."
+  ],
+  "figs_back": [
+   "f03_records"
   ]
  },
  {
@@ -934,6 +1012,9 @@
    "Each guest matches only their own coat. Which pairs of guests can influence each other's chance of a match?",
    "Structural feature: each guest's success is one event, and the events interact only through the fact that each coat goes to exactly one guest. Use one indicator per guest, and compute the marginal and pairwise joint probabilities.",
    "Let \\(I_g=\\mathbf 1[\\text{guest } g\\text{ gets their own coat}]\\) and \\(F=\\sum_gI_g\\). Write \\(\\mathrm{Var}(F)=\\sum_g\\mathrm{Var}(I_g)+\\sum_{g\\ne h}\\mathrm{Cov}(I_g,I_h)\\), and compute the marginal and the pairwise joint probabilities."
+  ],
+  "figs_back": [
+   "f03_hat_matching"
   ]
  },
  {
@@ -950,6 +1031,9 @@
    "While you hold \\(j\\) distinct monsters, what fraction of boxes gives you a new one? Do the waits for successive new monsters depend on each other?",
    "Structural feature: a wait for a new item restarts with a fixed chance of success, so the total wait splits into stages whose lengths do not depend on earlier stages. Means and variances add across stages.",
    "Let \\(G_j\\) be the boxes needed to get from \\(j-1\\) to \\(j\\) distinct monsters, with success probability \\(\\frac{7-j}{6}\\). Write \\(E[T]=\\sum_{j=1}^6E[G_j]\\) and \\(\\mathrm{Var}(T)=\\sum_{j=1}^6\\mathrm{Var}(G_j)\\)."
+  ],
+  "figs_back": [
+   "f03_coupon_stages"
   ]
  },
  {
@@ -967,6 +1051,9 @@
    "What must be true of the largest piece for all three to be at most one half? Could two different pieces both exceed one half?",
    "Disjoint complements: the bad events \"piece \\(i\\) exceeds one half\" cannot overlap, so the probability of their union is a plain sum.",
    "Let \\(E_i=\\{\\text{piece } i>\\tfrac12\\}\\). Since the \\(E_i\\) are disjoint, \\(P(\\text{all}\\le\\tfrac12)=1-\\sum_iP(E_i)\\). Compute \\(P(E_1)\\) from the two cut points."
+  ],
+  "figs_back": [
+   "f03_triangle_square"
   ]
  },
  {
@@ -985,6 +1072,9 @@
    "Can a partial match of this pattern overlap with itself when it fails? Could the last symbol of a failed attempt start the next one?",
    "Structural feature: a failed attempt never leaves a partial match behind, because the first symbol of the pattern cannot also be its second. Use first-step analysis with a state for 'no progress' and a state for 'just rolled a 6'.",
    "Setup: let \\(a\\) be the expected remaining rolls from 'no progress' and \\(b\\) from 'just rolled a 6'. Write both equations in terms of \\(a\\), \\(b\\) and the roll probabilities."
+  ],
+  "figs_back": [
+   "f03_61_chain"
   ]
  },
  {
@@ -1001,6 +1091,9 @@
    "Each offer is a fresh uniform value and you may stop early, except the last offer is forced. What is the best rule at the last offer, and what threshold does that set for the offer before it?",
    "Backward induction over the offers remaining, with a threshold rule at each stage.",
    "Let \\(W_r\\) be the best value with \\(r\\) offers left, so \\(W_1=E[X]\\) for one uniform offer and \\(W_r=E[\\max(X,W_{r-1})]\\). Compute \\(W_2\\) by comparing each offer with \\(W_1\\)."
+  ],
+  "figs_back": [
+   "f03_dice_policy"
   ]
  },
  {
@@ -1092,6 +1185,9 @@
    "s_conditional_expectation_tower",
    "toolkit",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f03_var_mixture"
   ]
  },
  {
@@ -1103,6 +1199,9 @@
    "inequalities",
    "toolkit",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f03_jensen_chord"
   ]
  },
  {
@@ -1178,6 +1277,9 @@
    "The previous card used a finite alternating sum. What happens to that sum as the number of people grows?",
    "Inclusion-exclusion over \\(n\\) people. For \\(n=10\\) truncate at \\(j=10\\); the limit is an alternating exponential series.",
    "Write \\(P_n=\\sum_{j=0}^{n}\\frac{(-1)^j}{j!}\\) as the probability of no fixed point. Evaluate \\(P_{10}\\) term by term, then take \\(n\\to\\infty\\) in the same series."
+  ],
+  "figs_back": [
+   "f03_derangement_series"
   ]
  },
  {
