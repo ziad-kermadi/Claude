@@ -6,7 +6,8 @@
   "tags": [
    "structural",
    "merton",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -17,7 +18,8 @@
    "structural",
    "merton",
    "derivation",
-   "equity_credit"
+   "equity_credit",
+   "lvl_vp_core"
   ]
  },
  {
@@ -28,7 +30,8 @@
    "structural",
    "merton",
    "derivation",
-   "equity_credit"
+   "equity_credit",
+   "lvl_vp_core"
   ]
  },
  {
@@ -38,7 +41,8 @@
   "tags": [
    "structural",
    "merton",
-   "term_structure"
+   "term_structure",
+   "lvl_vp_core"
   ]
  },
  {
@@ -48,7 +52,8 @@
   "tags": [
    "structural",
    "kmv",
-   "convention"
+   "convention",
+   "lvl_foundation"
   ]
  },
  {
@@ -58,7 +63,8 @@
   "tags": [
    "reduced_form",
    "intensity",
-   "derivation"
+   "derivation",
+   "lvl_foundation"
   ]
  },
  {
@@ -68,7 +74,8 @@
   "tags": [
    "reduced_form",
    "recovery",
-   "convention"
+   "convention",
+   "lvl_stretch"
   ]
  },
  {
@@ -78,7 +85,8 @@
   "tags": [
    "reduced_form",
    "recovery",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -88,7 +96,8 @@
   "tags": [
    "reduced_form",
    "correlation",
-   "intensity"
+   "intensity",
+   "lvl_vp_core"
   ]
  },
  {
@@ -98,7 +107,8 @@
   "tags": [
    "reduced_form",
    "cir_plus_plus",
-   "calibration"
+   "calibration",
+   "lvl_vp_core"
   ]
  },
  {
@@ -108,7 +118,8 @@
   "tags": [
    "reduced_form",
    "affine",
-   "fourier"
+   "fourier",
+   "lvl_stretch"
   ]
  },
  {
@@ -118,7 +129,8 @@
   "tags": [
    "hazard",
    "risk_premia",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -128,7 +140,8 @@
   "tags": [
    "hazard",
    "mental_math",
-   "credit_triangle"
+   "credit_triangle",
+   "lvl_foundation"
   ]
  },
  {
@@ -138,7 +151,8 @@
   "tags": [
    "bootstrap",
    "credit_triangle",
-   "term_structure"
+   "term_structure",
+   "lvl_vp_core"
   ]
  },
  {
@@ -148,7 +162,8 @@
   "tags": [
    "bootstrap",
    "cds",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -158,7 +173,8 @@
   "tags": [
    "bootstrap",
    "interpolation",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -168,7 +184,8 @@
   "tags": [
    "bootstrap",
    "interpolation",
-   "convention"
+   "convention",
+   "lvl_foundation"
   ]
  },
  {
@@ -178,7 +195,8 @@
   "tags": [
    "bootstrap",
    "arbitrage",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -188,7 +206,8 @@
   "tags": [
    "bootstrap",
    "mental_math",
-   "arbitrage"
+   "arbitrage",
+   "lvl_vp_core"
   ]
  },
  {
@@ -198,7 +217,8 @@
   "tags": [
    "curve_construction",
    "illiquid",
-   "proxy"
+   "proxy",
+   "lvl_vp_core"
   ]
  },
  {
@@ -208,7 +228,8 @@
   "tags": [
    "basis",
    "cds",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -217,7 +238,8 @@
   "back": "Negative basis is driven largely by bond funding costs and the protection buyer's cheapest-to-deliver option.",
   "tags": [
    "basis",
-   "convention"
+   "convention",
+   "lvl_foundation"
   ]
  },
  {
@@ -227,7 +249,8 @@
   "tags": [
    "curve_construction",
    "cross_currency",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -237,7 +260,8 @@
   "tags": [
    "recovery",
    "convention",
-   "rmv"
+   "rmv",
+   "lvl_vp_core"
   ]
  },
  {
@@ -247,7 +271,8 @@
   "tags": [
    "recovery",
    "rt",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -257,7 +282,8 @@
   "tags": [
    "recovery",
    "data",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -267,7 +293,8 @@
   "tags": [
    "recovery",
    "correlation",
-   "tranches"
+   "tranches",
+   "lvl_stretch"
   ]
  },
  {
@@ -277,7 +304,8 @@
   "tags": [
    "copula",
    "vasicek",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -287,7 +315,8 @@
   "tags": [
    "copula",
    "vasicek",
-   "portfolio_credit"
+   "portfolio_credit",
+   "lvl_vp_core"
   ]
  },
  {
@@ -297,7 +326,8 @@
   "tags": [
    "portfolio_credit",
    "irb",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -307,7 +337,8 @@
   "tags": [
    "portfolio_credit",
    "irb",
-   "convention"
+   "convention",
+   "lvl_foundation"
   ]
  },
  {
@@ -317,7 +348,8 @@
   "tags": [
    "copula",
    "tail_dependence",
-   "trade_off"
+   "trade_off",
+   "lvl_vp_core"
   ]
  },
  {
@@ -327,7 +359,8 @@
   "tags": [
    "copula",
    "tail_dependence",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -337,7 +370,8 @@
   "tags": [
    "copula",
    "random_factor_loading",
-   "skew"
+   "skew",
+   "lvl_stretch"
   ]
  },
  {
@@ -347,7 +381,8 @@
   "tags": [
    "copula",
    "base_correlation",
-   "tranches"
+   "tranches",
+   "lvl_vp_core"
   ]
  },
  {
@@ -357,7 +392,8 @@
   "tags": [
    "tranches",
    "correlation",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -367,7 +403,8 @@
   "tags": [
    "nth_to_default",
    "correlation",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -377,7 +414,8 @@
   "tags": [
    "nth_to_default",
    "independence",
-   "convention"
+   "convention",
+   "lvl_foundation"
   ]
  },
  {
@@ -387,7 +425,8 @@
   "tags": [
    "wrong_way_risk",
    "cva",
-   "definition"
+   "definition",
+   "lvl_vp_core"
   ]
  },
  {
@@ -397,7 +436,8 @@
   "tags": [
    "wrong_way_risk",
    "modelling",
-   "cva"
+   "cva",
+   "lvl_vp_core"
   ]
  },
  {
@@ -407,7 +447,8 @@
   "tags": [
    "cva",
    "derivation",
-   "exposure"
+   "exposure",
+   "lvl_vp_core"
   ]
  },
  {
@@ -417,7 +458,8 @@
   "tags": [
    "cva",
    "dva",
-   "trade_off"
+   "trade_off",
+   "lvl_vp_core"
   ]
  },
  {
@@ -427,7 +469,8 @@
   "tags": [
    "cva",
    "mental_math",
-   "exposure"
+   "exposure",
+   "lvl_vp_core"
   ]
  },
  {
@@ -437,7 +480,8 @@
   "tags": [
    "cva",
    "hedging",
-   "cds"
+   "cds",
+   "lvl_vp_core"
   ]
  },
  {
@@ -447,7 +491,8 @@
   "tags": [
    "exposure",
    "derivation",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -458,7 +503,8 @@
    "exposure",
    "swaps",
    "derivation",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -469,7 +515,8 @@
    "cva",
    "regulatory",
    "convention",
-   "trade_off"
+   "trade_off",
+   "lvl_vp_core"
   ]
  },
  {
@@ -479,7 +526,8 @@
   "tags": [
    "cln",
    "structure",
-   "cds"
+   "cds",
+   "lvl_foundation"
   ]
  },
  {
@@ -490,7 +538,8 @@
    "cln",
    "funded",
    "counterparty_risk",
-   "wrong_way_risk"
+   "wrong_way_risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -500,7 +549,8 @@
   "tags": [
    "cln",
    "dual_name",
-   "pricing"
+   "pricing",
+   "lvl_vp_core"
   ]
  },
  {
@@ -511,7 +561,8 @@
    "cln",
    "pricing",
    "derivation",
-   "accrual_on_default"
+   "accrual_on_default",
+   "lvl_vp_core"
   ]
  },
  {
@@ -522,7 +573,8 @@
    "cln",
    "principal_protection",
    "structure",
-   "pricing"
+   "pricing",
+   "lvl_vp_core"
   ]
  },
  {
@@ -532,7 +584,8 @@
   "tags": [
    "lcds",
    "convention",
-   "basis"
+   "basis",
+   "lvl_vp_core"
   ]
  },
  {
@@ -542,7 +595,8 @@
   "tags": [
    "trs",
    "funding",
-   "pricing"
+   "pricing",
+   "lvl_vp_core"
   ]
  },
  {
@@ -552,7 +606,8 @@
   "tags": [
    "cds",
    "convention",
-   "upfront"
+   "upfront",
+   "lvl_foundation"
   ]
  },
  {
@@ -562,7 +617,8 @@
   "tags": [
    "cds",
    "rpv01",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -572,7 +628,8 @@
   "tags": [
    "recovery",
    "scenario",
-   "hazard"
+   "hazard",
+   "lvl_vp_core"
   ]
  },
  {
@@ -582,7 +639,8 @@
   "tags": [
    "trade_off",
    "calibration",
-   "bootstrap"
+   "bootstrap",
+   "lvl_vp_core"
   ]
  },
  {
@@ -593,7 +651,8 @@
    "trade_off",
    "basis",
    "hedging",
-   "cds"
+   "cds",
+   "lvl_vp_core"
   ]
  }
 ]

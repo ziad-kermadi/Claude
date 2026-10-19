@@ -7,7 +7,8 @@
    "bootstrap",
    "chain_bootstrap",
    "negative_hazard",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -18,7 +19,8 @@
    "bootstrap",
    "chain_bootstrap",
    "negative_hazard",
-   "data_quality"
+   "data_quality",
+   "lvl_stretch"
   ]
  },
  {
@@ -29,7 +31,8 @@
    "bootstrap",
    "chain_bootstrap",
    "curve_construction",
-   "trade_off"
+   "trade_off",
+   "lvl_vp_core"
   ]
  },
  {
@@ -40,7 +43,8 @@
    "bootstrap",
    "chain_bootstrap",
    "cva",
-   "risk_effects"
+   "risk_effects",
+   "lvl_stretch"
   ]
  },
  {
@@ -51,7 +55,8 @@
    "cln",
    "chain_cln_dual_default",
    "dual_default",
-   "pricing"
+   "pricing",
+   "lvl_vp_core"
   ]
  },
  {
@@ -62,7 +67,8 @@
    "cln",
    "chain_cln_dual_default",
    "correlation",
-   "joint_law"
+   "joint_law",
+   "lvl_stretch"
   ]
  },
  {
@@ -73,7 +79,8 @@
    "cln",
    "chain_cln_dual_default",
    "wrong_way_risk",
-   "collateral"
+   "collateral",
+   "lvl_stretch"
   ]
  },
  {
@@ -84,7 +91,8 @@
    "cln",
    "chain_cln_dual_default",
    "funding",
-   "pricing"
+   "pricing",
+   "lvl_vp_core"
   ]
  },
  {
@@ -95,7 +103,8 @@
    "nth_to_default",
    "chain_ftd_basket",
    "bounds",
-   "correlation"
+   "correlation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -106,7 +115,8 @@
    "nth_to_default",
    "chain_ftd_basket",
    "correlation",
-   "copula"
+   "copula",
+   "lvl_stretch"
   ]
  },
  {
@@ -117,7 +127,8 @@
    "nth_to_default",
    "chain_ftd_basket",
    "hedging",
-   "correlation"
+   "correlation",
+   "lvl_stretch"
   ]
  },
  {
@@ -128,7 +139,8 @@
    "nth_to_default",
    "chain_ftd_basket",
    "correlation_hedging",
-   "tranches"
+   "tranches",
+   "lvl_vp_core"
   ]
  },
  {
@@ -139,7 +151,8 @@
    "structural",
    "merton",
    "derivation",
-   "credit_spread"
+   "credit_spread",
+   "lvl_vp_core"
   ]
  },
  {
@@ -150,7 +163,8 @@
    "reduced_form",
    "cir",
    "derivation",
-   "affine"
+   "affine",
+   "lvl_stretch"
   ]
  },
  {
@@ -161,7 +175,8 @@
    "cds",
    "credit_triangle",
    "derivation",
-   "discrete_premium"
+   "discrete_premium",
+   "lvl_vp_core"
   ]
  },
  {
@@ -172,7 +187,8 @@
    "bootstrap",
    "cds",
    "derivation",
-   "discount_independence"
+   "discount_independence",
+   "lvl_stretch"
   ]
  },
  {
@@ -183,7 +199,8 @@
    "copula",
    "vasicek",
    "derivation",
-   "portfolio_credit"
+   "portfolio_credit",
+   "lvl_stretch"
   ]
  },
  {
@@ -194,7 +211,8 @@
    "copula",
    "simulation",
    "derivation",
-   "wrong_way_risk"
+   "wrong_way_risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -205,7 +223,8 @@
    "cln",
    "collateral_basis",
    "derivation",
-   "pricing"
+   "pricing",
+   "lvl_vp_core"
   ]
  },
  {
@@ -216,7 +235,8 @@
    "copula",
    "derivation",
    "nth_to_default",
-   "correlation"
+   "correlation",
+   "lvl_stretch"
   ]
  },
  {
@@ -227,7 +247,8 @@
    "bootstrap",
    "case_study",
    "hazard",
-   "cds"
+   "cds",
+   "lvl_vp_core"
   ]
  },
  {
@@ -238,7 +259,8 @@
    "cln",
    "case_study",
    "dual_default",
-   "pricing"
+   "pricing",
+   "lvl_stretch"
   ]
  },
  {
@@ -249,7 +271,8 @@
    "nth_to_default",
    "case_study",
    "correlation",
-   "copula"
+   "copula",
+   "lvl_vp_core"
   ]
  },
  {
@@ -260,7 +283,8 @@
    "vasicek",
    "case_study",
    "irb",
-   "portfolio_credit"
+   "portfolio_credit",
+   "lvl_vp_core"
   ]
  },
  {
@@ -271,7 +295,8 @@
    "structural",
    "case_study",
    "merton",
-   "recovery"
+   "recovery",
+   "lvl_vp_core"
   ]
  },
  {
@@ -282,7 +307,8 @@
    "cva",
    "case_study",
    "exposure",
-   "discounting"
+   "discounting",
+   "lvl_vp_core"
   ]
  },
  {
@@ -292,7 +318,8 @@
   "tags": [
    "copula",
    "joint_survival",
-   "formula"
+   "formula",
+   "lvl_foundation"
   ]
  },
  {
@@ -302,7 +329,8 @@
   "tags": [
    "reduced_form",
    "cir",
-   "formula"
+   "formula",
+   "lvl_stretch"
   ]
  },
  {
@@ -312,7 +340,8 @@
   "tags": [
    "cds",
    "upfront",
-   "formula"
+   "formula",
+   "lvl_foundation"
   ]
  },
  {
@@ -323,7 +352,8 @@
    "irb",
    "portfolio_credit",
    "convention",
-   "formula"
+   "formula",
+   "lvl_foundation"
   ]
  }
 ]
