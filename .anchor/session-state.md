@@ -1,6 +1,6 @@
 # Session state (auto-saved — last known reality)
 
-_Updated: 2026-10-19 20:14:25_  ·  branch: `claude/youthful-wright-kt2gjp`
+_Updated: 2026-10-19 20:27:39_  ·  branch: `claude/youthful-wright-kt2gjp`
 
 ## Uncommitted changes
 ```
@@ -15,14 +15,14 @@ Diff stat:
 
 ## Recent commits
 ```
+3159a65 Merge 91 verified gap cards into subdecks; normalise tags; add s_optimal_stopping
+aefe2a1 Merge pull request #4 from ziad-kermadi/claude/youthful-wright-kt2gjp
 fa16478 Rebuild .apkg with all diagrams
 1bb8959 Merge main into branch (resolve .anchor/session-state.md)
 5436b93 Progress: gap batch B staging
 fda133b Stage gap batch D (17 cards)
 5498610 Stage gap batch E (14 cards)
 c4c107c Stage gap batch F (14 cards)
-4c3c808 Stage gap batch C (16 cards)
-6670778 Diagrams complete for all 15 subdecks; gap staging progress
 ```
 
 ## Resume
