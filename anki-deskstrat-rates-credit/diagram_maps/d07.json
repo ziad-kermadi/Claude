@@ -1,0 +1,114 @@
+[
+ {
+  "file": "07_converts_loans.json",
+  "index": 0,
+  "front_start": "A convertible has face 1,000 and a conversion ratio of 12.5 ",
+  "image": "07_converts_loans_0_parity_premium.png",
+  "caption": "Parity line 12.5 x S with the 1,020 bond price; premium 82.5 at S = 75."
+ },
+ {
+  "file": "07_converts_loans.json",
+  "index": 11,
+  "front_start": "A long convertible is delta-hedged with short stock. Show th",
+  "image": "07_converts_loans_11_gamma_pnl_vs_realised_vol.png",
+  "caption": "Expected hedged gamma P&L per bond per year against realised vol; zero at the 30% implied vol."
+ },
+ {
+  "file": "07_converts_loans.json",
+  "index": 19,
+  "front_start": "A CLO holds loans with a 0.50% SOFR floor, and its liabiliti",
+  "image": "07_converts_loans_19_floor_coupon_vs_sofr.png",
+  "caption": "CLO loan coupon with the 0.50% floor vs unfloored and debt cost; the floor adds income when SOFR is low."
+ },
+ {
+  "file": "07_converts_loans.json",
+  "index": 20,
+  "front_start": "A 3-year loan is priced at 99 with a 350bp margin on quarter",
+  "image": "07_converts_loans_20_floater_price_vs_dm.png",
+  "caption": "Floater price vs discount margin; price 99 solves to a DM of about 388bp."
+ },
+ {
+  "file": "07_converts_loans.json",
+  "index": 26,
+  "front_start": "A CLO holds 100 of par loans at SOFR + 350bp. It funds 90 of",
+  "image": "07_converts_loans_26_clo_equity_income_waterfall.png",
+  "caption": "Income waterfall from assets to the 1.66 residual on 10 of equity."
+ },
+ {
+  "file": "07_converts_loans.json",
+  "index": 27,
+  "front_start": "A CLO has performing collateral par of 400 and senior notes ",
+  "image": "07_converts_loans_27_oc_test_defaults.png",
+  "caption": "Senior OC ratio before and after 20 of defaults against the 120% trigger."
+ },
+ {
+  "file": "07_converts_loans.json",
+  "index": 30,
+  "front_start": "A CLO has a 500 pool, senior fees of 0.15% of the pool per y",
+  "image": "07_converts_loans_30_sub_fee_hurdle.png",
+  "caption": "Subordinated fee is zero below the 5.00 hurdle and 20% of the excess above it."
+ },
+ {
+  "file": "07_converts_loans.json",
+  "index": 31,
+  "front_start": "A bank pays the total return on a TLB (price change plus cou",
+  "image": "07_converts_loans_31_trs_pnl_bridge.png",
+  "caption": "TRS P&L per quarter: price return, loan coupon and funding leg, net 1.00."
+ },
+ {
+  "file": "07_converts_loans_deep.json",
+  "index": 18,
+  "front_start": "<b>Case study:</b> A convertible desk is long 100 bonds (fac",
+  "image": "07_converts_loans_deep_18_hedge_pnl_bridge.png",
+  "caption": "Bond gain from delta and gamma, short-stock loss and the net gamma P&L of 200 as stock moves 80 to 84."
+ },
+ {
+  "file": "07_converts_loans_deep.json",
+  "index": 22,
+  "front_start": "<b>Case study:</b> A mandatory convertible with par 100, a s",
+  "image": "07_converts_loans_deep_22_mandatory_payoff.png",
+  "caption": "Mandatory convertible payoff: flat between 60 and 75, slope 1.67 below and 1.33 above."
+ },
+ {
+  "file": "07_converts_loans_deep.json",
+  "index": 7,
+  "front_start": "<b>[Chain: CLO equity 4/4]</b> Equity invests 50 at par, and",
+  "image": "07_converts_loans_deep_7_equity_cashflows.png",
+  "caption": "CLO equity cash flows in the base case and the stress case, with IRR 13.0% vs about 3.9%."
+ },
+ {
+  "file": "07_converts_loans_deep.json",
+  "index": 21,
+  "front_start": "<b>Case study:</b> Enterprise value at emergence is 620. Cla",
+  "image": "07_converts_loans_deep_21_recovery_ev.png",
+  "caption": "Recovery by class at EV 620 and EV 800; the fulcrum moves from the second lien to senior unsecured."
+ },
+ {
+  "file": "07_converts_loans_deep.json",
+  "index": 13,
+  "front_start": "<b>Derivation:</b> Derive the first-order sensitivity of a b",
+  "image": "07_converts_loans_deep_13_floor_price_vs_spread.png",
+  "caption": "Bond floor price vs credit spread with the tangent at 200bp, about -0.44 per bp."
+ },
+ {
+  "file": "07_converts_loans__v3.json",
+  "index": 1,
+  "front_start": "<b>[Chain: CLO IC 2/4]</b> Same CLO as the previous card, bu",
+  "image": "07_converts_loans__v3_1_ic_vs_sofr.png",
+  "caption": "Senior IC ratio falls with SOFR toward the 125% A/L limit; 167% at 4% and 150% at 8%."
+ },
+ {
+  "file": "07_converts_loans__v3.json",
+  "index": 4,
+  "front_start": "<b>[Chain: CLO BDR 1/3]</b> A CLO has 500 of collateral at p",
+  "image": "07_converts_loans__v3_4_bdr_tranche_loss.png",
+  "caption": "Principal loss by tranche vs cumulative default rate: equity wiped at 16.7%, mezzanine at 33.3%."
+ },
+ {
+  "file": "07_converts_loans__v3.json",
+  "index": 13,
+  "front_start": "A CLO pool is 400, with 40 of CCC-rated loans. Assume the in",
+  "image": "07_converts_loans__v3_13_oc_numerator_ccc.png",
+  "caption": "OC numerator with the excess CCC haircut: 397 against 400 required, a 124.1% ratio against 125%."
+ }
+]
