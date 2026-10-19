@@ -1,0 +1,992 @@
+[
+ {
+  "type": "basic",
+  "front": "A driftless Brownian motion \\(W\\) starts at 0. What is the probability it hits \\(+1\\) before \\(-2\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Optional stopping on a martingale with two absorbing levels.<br><b>Trigger:</b> Zero drift means \\(W\\) is a martingale; the stopped value is bounded by the two levels.<br><b>Key move:</b> Apply \\(E[W_\\tau]=0\\) with \\(W_\\tau\\in\\{1,-2\\}\\).<br><b>Answer:</b> \\(p\\cdot 1+(1-p)(-2)=0 \\Rightarrow p=2/3\\approx 0.667\\).",
+  "tags": [
+   "s_martingale",
+   "s_optional_stopping",
+   "brownian_motion",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Driftless Brownian motion starts at 0. What is the expected time until it first leaves the interval \\((-2,1)\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Optional stopping applied to \\(W_t^2-t\\).<br><b>Trigger:</b> Exit from a bounded interval by a zero-drift Brownian motion; \\(W_t^2-t\\) is a martingale.<br><b>Key move:</b> \\(E[\\tau]=E[W_\\tau^2]\\), then use the exit probabilities.<br><b>Answer:</b> \\(E[\\tau]=2\\). In general exit from \\((-a,b)\\) takes expected time \\(ab\\).",
+  "tags": [
+   "s_optional_stopping",
+   "s_martingale",
+   "brownian_motion",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Driftless Brownian motion starts at 0. What is \\(P\\big(\\max_{0\\le s\\le 4} W_s\\ge 2\\big)\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Reflection principle.<br><b>Trigger:</b> Question is about the running maximum of a zero-drift Brownian path.<br><b>Key move:</b> Reflect the path after its first hit of level \\(a\\): \\(P(M_t\\ge a)=2P(W_t\\ge a)\\).<br><b>Answer:</b> \\(2\\,P(Z\\ge 1)=2(1-\\Phi(1))\\approx 0.3173\\).",
+  "tags": [
+   "s_reflection",
+   "brownian_motion",
+   "random_walk",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "For a driftless Brownian motion, what is \\(E[W_t^4]\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Gaussian moments; Hermite martingale \\(W^4-6tW^2+3t^2\\).<br><b>Trigger:</b> Fourth moment of a centred Gaussian with variance \\(t\\).<br><b>Key move:</b> For \\(X\\sim N(0,v)\\), \\(E[X^4]=3v^2\\).<br><b>Answer:</b> \\(E[W_t^4]=3t^2\\) (so \\(12\\) at \\(t=2\\)).",
+  "tags": [
+   "s_martingale",
+   "brownian_motion",
+   "ito_calculus",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Driftless Brownian motion. What is \\(\\mathrm{Var}\\!\\left(\\int_0^1 W_s\\,ds\\right)\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Linearity of expectation with Fubini on the covariance.<br><b>Trigger:</b> A linear functional of a Gaussian path is Gaussian; its variance is a double integral of the covariance.<br><b>Key move:</b> \\(\\mathrm{Var}=\\iint \\min(s,t)\\,ds\\,dt\\).<br><b>Answer:</b> \\(1/3\\).",
+  "tags": [
+   "s_linearity_expectation",
+   "brownian_motion",
+   "mental_math",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Driftless Brownian motion. What is \\(E[W_1\\mid W_2=2]\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Gaussian conditioning (conditional expectation tower on the endpoint).<br><b>Trigger:</b> A conditional expectation given a future value of a Gaussian path.<br><b>Key move:</b> \\(E[W_s\\mid W_t=x]=\\frac{s}{t}x\\) because \\(\\mathrm{Cov}(W_s,W_t)=s\\).<br><b>Answer:</b> \\(E[W_1\\mid W_2=2]=\\frac12\\cdot 2=1\\).",
+  "tags": [
+   "s_conditional_expectation_tower",
+   "brownian_motion",
+   "brownian_bridge",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A Brownian bridge from \\(0\\) to \\(0\\) on \\([0,1]\\). What is \\(P(\\max_{0\\le t\\le 1} B_t\\ge 1)\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Reflection principle, applied to a path pinned at both ends.<br><b>Trigger:</b> Bridge pinned at both endpoints; the maximum tail has a closed form.<br><b>Key move:</b> \\(P(\\max B\\ge a)=e^{-2a^2}\\) for a unit-variance bridge.<br><b>Answer:</b> \\(e^{-2}\\approx 0.1353\\).",
+  "tags": [
+   "s_reflection",
+   "brownian_bridge",
+   "brownian_motion",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Is \\(e^{W_t-t/2}\\) a martingale? Is \\(e^{W_t}\\) a martingale? Driftless Brownian motion.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Martingale check via Ito's lemma on an exponential.<br><b>Trigger:</b> A function of \\(W\\) is a martingale only if its \\(dt\\) term vanishes.<br><b>Key move:</b> \\(d(e^{W})=e^{W}dW+\\tfrac12 e^{W}dt\\); the drift is \\(\\tfrac12 e^W\\neq 0\\).<br><b>Answer:</b> \\(e^{W_t-t/2}\\): yes. \\(e^{W_t}\\): no, since \\(E[e^{W_t}]=e^{t/2}\\neq 1\\).",
+  "tags": [
+   "s_martingale",
+   "ito_calculus",
+   "brownian_motion",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is \\(E\\!\\left[\\left(\\int_0^1 t\\,dW_t\\right)^2\\right]\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Ito isometry.<br><b>Trigger:</b> Second moment of a stochastic integral of a deterministic integrand.<br><b>Key move:</b> \\(E[(\\int H\\,dW)^2]=E\\int H^2\\,dt\\).<br><b>Answer:</b> \\(\\int_0^1 t^2\\,dt=1/3\\).",
+  "tags": [
+   "s_martingale",
+   "ito_calculus",
+   "brownian_motion",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A call price \\(C(K)\\) for a stock with a risk-neutral density. What is \\(-\\partial C/\\partial K\\), and why?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Replication via differentiation of the payoff \\((S-K)^+\\) in the strike.<br><b>Trigger:</b> Payoff derivative in \\(K\\) is \\(-\\mathbf 1\\{S_T>K\\}\\).<br><b>Key move:</b> Differentiate under the expectation: \\(-\\partial_K (S-K)^+=-\\mathbf 1\\{S>K\\}\\).<br><b>Answer:</b> \\(-\\partial C/\\partial K=e^{-rT}N(d_2)\\), the price of a cash-or-nothing digital paying 1 if \\(S_T>K\\).",
+  "tags": [
+   "s_replication",
+   "digital",
+   "options",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Three calls on one stock, same expiry, strikes \\(90\\), \\(100\\), \\(110\\). Which inequality holds, and what is its name?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Convexity of the call price in strike (Jensen on the payoff).<br><b>Trigger:</b> The payoff \\((S-K)^+\\) is convex in \\(K\\).<br><b>Key move:</b> \\(C(90)-2C(100)+C(110)\\ge 0\\) (no-arbitrage butterfly).<br><b>Answer:</b> Butterfly value is non-negative; it is the price of a payoff that is never negative.",
+  "tags": [
+   "s_convexity_jensen",
+   "options",
+   "arbitrage",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "GBM with \\(S_0=100\\), \\(\\mu=10\\%\\), \\(\\sigma=30\\%\\), \\(T=2\\). Is \\(P(S_T>100)\\) larger or smaller than \\(1/2\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Median versus mean of a lognormal variable.<br><b>Trigger:</b> The log of \\(S_T\\) is Gaussian with mean \\(\\ln S_0+(\\mu-\\sigma^2/2)T\\); the median is not the mean.<br><b>Key move:</b> Compare the median \\(S_0e^{(\\mu-\\sigma^2/2)T}\\) with 100.<br><b>Answer:</b> Larger: \\(P(S_T>100)\\approx 0.602\\), because the median is \\(111.63\\).",
+  "tags": [
+   "s_convexity_jensen",
+   "gbm",
+   "ito_calculus",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "GBM with drift \\(r=5\\%\\), \\(\\sigma=20\\%\\), \\(S_0=100\\), \\(T=1\\). Compare \\(E[1/S_T]\\) with \\(1/E[S_T]\\).<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Change of numeraire, and Jensen's inequality for the convex map \\(x\\mapsto 1/x\\).<br><b>Trigger:</b> The reciprocal of a lognormal variable has a different drift, and \\(1/x\\) is convex.<br><b>Key move:</b> Compute \\(E[1/S_T]\\) under the risk-neutral measure; \\(e^{rT}E[1/S_T]=e^{\\sigma^2T}/S_0\\).<br><b>Answer:</b> \\(E[1/S_T]=e^{\\sigma^2T-rT}/S_0\\approx 0.009900\\) versus \\(1/E[S_T]=0.009512\\). The first is larger.",
+  "tags": [
+   "s_change_of_measure",
+   "s_convexity_jensen",
+   "gbm",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "An American call on a non-dividend-paying stock. Can early exercise ever be optimal?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Optional stopping: the discounted payoff is dominated by a martingale-based lower bound.<br><b>Trigger:</b> No dividends means the call's time value is never negative.<br><b>Key move:</b> \\(C\\ge S-Ke^{-r\\tau}\\ge S-K\\), so exercising early never beats selling the option.<br><b>Answer:</b> No. Early exercise is never optimal, so the American call equals the European call.",
+  "tags": [
+   "s_optional_stopping",
+   "american_options",
+   "arbitrage",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A variance swap on a stock whose implied vol is a flat 20% across all strikes. What is the fair variance strike?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Static replication of realised variance by a \\(1/K^2\\) strip of options.<br><b>Trigger:</b> Variance swap payoff is a moment of realised variance; the strip replicates it.<br><b>Key move:</b> Use \\(K_{var}=\\frac{2e^{rT}}{T}\\Big[\\int_0^F \\frac{P(K)}{K^2}dK+\\int_F^\\infty \\frac{C(K)}{K^2}dK\\Big]\\) with flat vol.<br><b>Answer:</b> \\(K_{var}=0.20^2=0.04\\) (fair volatility 20%).",
+  "tags": [
+   "s_replication",
+   "variance_swap",
+   "volatility",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A stock pays a continuous dividend yield \\(q\\). Put and call have the same strike and expiry. What is \\(C-P\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Put-call parity with a dividend yield.<br><b>Trigger:</b> A long call and short put is a synthetic forward on the stock.<br><b>Key move:</b> The forward is \\(Se^{-qT}\\) in present value, not \\(S\\).<br><b>Answer:</b> \\(C-P=Se^{-qT}-Ke^{-rT}\\).",
+  "tags": [
+   "s_replication",
+   "options",
+   "dividends",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Under the risk-neutral measure, \\(u(t,x)=E[W_T^2\\mid W_t=x]\\) for \\(t<T\\). Which PDE does \\(u\\) solve?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Feynman-Kac: a conditional expectation of a function of a diffusion solves a backward PDE.<br><b>Trigger:</b> Function of a diffusion at a future time, viewed as a function of the current state.<br><b>Key move:</b> Write \\(u=x^2+(T-t)\\) and check \\(u_t+\\tfrac12 u_{xx}=0\\).<br><b>Answer:</b> \\(u_t+\\tfrac12 u_{xx}=0\\) with \\(u(T,x)=x^2\\).",
+  "tags": [
+   "s_martingale",
+   "pde",
+   "brownian_motion",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Estimate the price of an at-the-money straddle on a stock at \\(100\\), vol \\(20\\%\\), \\(1\\) year, zero rates.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Fermi estimate; square-root-of-time scaling of ATM option value.<br><b>Trigger:</b> ATM option value is linear in \\(\\sigma\\sqrt{T}\\) and in \\(S\\).<br><b>Key move:</b> Each ATM call is about \\(0.4\\,S\\sigma\\sqrt T\\); a straddle is twice that.<br><b>Answer:</b> About \\(0.8\\cdot S\\sigma\\sqrt T=16\\) (exact \\(15.93\\)).",
+  "tags": [
+   "s_fermi",
+   "s_sqrt_time_scaling",
+   "options",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A one-year zero-coupon bond has \\(P(0,1)=E[e^{-\\bar R}]\\), where the average short rate \\(\\bar R\\) is 3% or 7% with equal probability. A non-dividend stock is at 100. What is its one-year forward price?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Change of numeraire: the forward is \\(S_0/P(0,T)\\) under the forward measure.<br><b>Trigger:</b> Rates are random, so the forward is not \\(S_0e^{\\mathbb E[\\bar R]}\\).<br><b>Key move:</b> Forward \\(F=S_0/P(0,T)\\) by no-arbitrage (stock is a traded asset).<br><b>Answer:</b> \\(P(0,1)=0.95142\\), \\(F=105.106\\) (versus \\(100e^{0.05}=105.127\\)).",
+  "tags": [
+   "s_change_of_measure",
+   "stochastic_rates",
+   "forward_measure",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Driftless Brownian motion \\(W\\). What is \\(P(W_4>1)\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Brownian scaling.<br><b>Trigger:</b> \\(W_4\\overset{d}{=}2W_1\\), so the time horizon rescales the standard deviation.<br><b>Key move:</b> Standardise: \\(P(W_4>1)=P(Z>1/2)\\).<br><b>Answer:</b> \\(1-\\Phi(0.5)\\approx 0.3085\\).",
+  "tags": [
+   "s_sqrt_time_scaling",
+   "brownian_motion",
+   "mental_math",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "GBM with \\(S_0=100\\), \\(\\mu=10\\%\\), \\(\\sigma=30\\%\\), \\(T=2\\). What is \\(E[S_T^2]\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Lognormal moment generating function.<br><b>Trigger:</b> \\(\\ln S_T\\) is Gaussian, so \\(E[e^{k\\ln S_T}]\\) is its MGF at \\(k\\).<br><b>Key move:</b> \\(E[e^{kX}]=e^{k m+k^2 v/2}\\) with \\(X=\\ln S_T\\).<br><b>Answer:</b> \\(S_0^2e^{(2\\mu+\\sigma^2)T}=10000\\,e^{0.58}\\approx 17860\\).",
+  "tags": [
+   "s_generating_function",
+   "gbm",
+   "ito_calculus",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You are long an at-the-money call, delta-hedged daily. Realised vol is 25% and the option was bought at 20% implied vol. What is the sign of the expected P&L, and roughly how big is it per unit time at inception?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Second-order Taylor expansion of the option value (gamma P&L).<br><b>Trigger:</b> Delta-hedged option P&L is a gamma term times the difference of realised and implied variance.<br><b>Key move:</b> P&L per unit time \\(\\approx \\tfrac12\\Gamma S^2(\\sigma_r^2-\\sigma_i^2)\\).<br><b>Answer:</b> Positive. At \\(r=0\\), \\(\\Gamma\\approx 0.01985\\), so about \\(0.5\\cdot 0.01985\\cdot 10^4\\cdot 0.0225\\approx 2.2\\) per year.",
+  "tags": [
+   "s_taylor",
+   "greeks",
+   "volatility",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Driftless Brownian motion. Compute \\(E[W_2^4]\\).",
+  "back": "<b>Answer:</b> \\(E[W_2^4]=12\\)<br><b>Structure:</b> Gaussian fourth moment (Hermite martingale \\(W^4-6tW^2+3t^2\\) gives the same).<br><b>Key move:</b> \\(W_2\\sim N(0,2)\\), so \\(E[X^4]=3\\cdot 2^2\\).<br><b>Working:</b> \\(E[W_t^4]=3(\\mathrm{Var}\\,W_t)^2=3t^2\\); at \\(t=2\\): \\(3\\cdot 4=12\\).<br><b>Sanity check:</b> MC with \\(4\\times10^5\\) paths gives 11.97.<br><b>Transfer:</b> \\(E[(W_t-W_s)^4]=3(t-s)^2\\); the kurtosis of Brownian increments is 3.",
+  "tags": [
+   "s_martingale",
+   "brownian_motion",
+   "ito_calculus",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Driftless Brownian motion. Compute \\(\\mathrm{Var}\\!\\left(\\int_0^1 W_s\\,ds\\right)\\).",
+  "back": "<b>Answer:</b> \\(1/3\\)<br><b>Structure:</b> Fubini on the covariance (linearity of expectation under the integral sign).<br><b>Key move:</b> \\(\\mathrm{Cov}(W_s,W_t)=\\min(s,t)\\), so integrate \\(\\min(s,t)\\) over the unit square.<br><b>Working:</b> \\(\\iint_{[0,1]^2}\\min(s,t)\\,ds\\,dt=2\\int_0^1\\!\\!\\int_0^t s\\,ds\\,dt=\\int_0^1 t^2\\,dt=\\tfrac13\\).<br><b>Sanity check:</b> MC with \\(2\\times10^4\\) paths and 1000 steps gives 0.3336.<br><b>Transfer:</b> Variance of the time-average of Brownian motion is the same as the variance of a continuous Asian-style average.",
+  "tags": [
+   "s_linearity_expectation",
+   "brownian_motion",
+   "mental_math",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Driftless Brownian motion from 0. Compute \\(P(\\max_{0\\le s\\le 1}W_s\\ge 2)\\).",
+  "back": "<b>Answer:</b> \\(2(1-\\Phi(2))\\approx 0.0455\\)<br><b>Structure:</b> Reflection principle at the first passage time of level \\(2\\).<br><b>Key move:</b> Reflect the post-passage path: \\(P(M_1\\ge a,\\,W_1<a)=P(W_1>a)\\), so \\(P(M_1\\ge a)=2P(W_1\\ge a)\\).<br><b>Working:</b> \\(P(W_1\\ge 2)=1-\\Phi(2)=0.02275\\); double it to \\(0.0455\\).<br><b>Sanity check:</b> Probability is about twice the terminal tail, as the reflection principle requires.<br><b>Transfer:</b> Barrier options: knock-out prices are built from terminal Gaussian tails by reflection.",
+  "tags": [
+   "s_reflection",
+   "brownian_motion",
+   "random_walk",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Brownian bridge from \\(0\\) to \\(0\\) on \\([0,1]\\) (unit variance). Compute \\(E[\\max_{0\\le t\\le 1}B_t]\\).",
+  "back": "<b>Answer:</b> \\(\\sqrt{\\pi/8}\\approx 0.6267\\)<br><b>Structure:</b> Tail of the bridge maximum, then integrate the tail (layer-cake).<br><b>Key move:</b> \\(P(\\max B\\ge a)=e^{-2a^2}\\), so \\(E[M]=\\int_0^\\infty P(M\\ge a)\\,da\\).<br><b>Working:</b> \\(\\int_0^\\infty e^{-2a^2}da=\\tfrac12\\sqrt{\\pi/2}=\\sqrt{\\pi/8}\\).<br><b>Sanity check:</b> Discrete 1000-step MC gives 0.607; the gap of about 0.02 is the expected discrete-monitoring bias \\(\\approx 0.58\\sqrt{dt}\\).<br><b>Transfer:</b> Expected range or maximum of pinned Gaussian noise (Kolmogorov-type statistics).",
+  "tags": [
+   "s_reflection",
+   "brownian_bridge",
+   "brownian_motion",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Driftless Brownian motion. Compute \\(E\\!\\left[\\left(\\int_0^1 W_t\\,dW_t\\right)^2\\right]\\).",
+  "back": "<b>Answer:</b> \\(1/2\\)<br><b>Structure:</b> Ito's lemma to express the integral in closed form, then the variance of a squared Gaussian.<br><b>Key move:</b> \\(d(W^2)=dt+2W\\,dW\\Rightarrow\\int_0^1 W\\,dW=\\tfrac12(W_1^2-1)\\).<br><b>Working:</b> Mean is 0; \\(\\mathrm{Var}(W_1^2)=2\\), so \\(\\mathrm{Var}=\\tfrac14\\cdot 2=\\tfrac12\\). Isometry agrees: \\(\\int_0^1 E[W_t^2]dt=\\int_0^1 t\\,dt=\\tfrac12\\).<br><b>Sanity check:</b> MC variance of \\(\\int W\\,dW\\) gives 0.494 (discretised).<br><b>Transfer:</b> \\(\\int_0^T W\\,dW\\) has variance \\(T^2/2\\); the same closed form works for any horizon.",
+  "tags": [
+   "s_martingale",
+   "ito_calculus",
+   "brownian_motion",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Driftless Brownian motion. Compute \\(E[e^{W_1}]\\), and say why \\(E[e^{W_t-t/2}]=1\\).",
+  "back": "<b>Answer:</b> \\(E[e^{W_1}]=e^{1/2}\\approx 1.6487\\)<br><b>Structure:</b> Ito's lemma on the exponential, then the martingale property kills the drift.<br><b>Key move:</b> \\(d(e^{W_t})=e^{W_t}dW_t+\\tfrac12 e^{W_t}dt\\); so \\(e^{W_t-t/2}\\) is a martingale with \\(E=1\\).<br><b>Working:</b> \\(E[e^{W_t}]=e^{t/2}\\), giving \\(e^{1/2}\\) at \\(t=1\\).<br><b>Sanity check:</b> MC with \\(4\\times10^5\\) normals gives 1.6485.<br><b>Transfer:</b> The same identity \\(E[e^{\\sigma W_t-\\sigma^2t/2}]=1\\) is the density of the Girsanov change of measure.",
+  "tags": [
+   "s_martingale",
+   "ito_calculus",
+   "brownian_motion",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "GBM with \\(S_0=100\\), \\(\\mu=10\\%\\), \\(\\sigma=30\\%\\), \\(T=2\\). Compute the mean and the median of \\(S_T\\).",
+  "back": "<b>Answer:</b> Mean \\(=100e^{0.2}\\approx 122.14\\); median \\(=100e^{0.11}\\approx 111.63\\).<br><b>Structure:</b> Ito on \\(\\ln S\\): the median and mean of a lognormal differ by the volatility drag \\(\\sigma^2/2\\).<br><b>Key move:</b> \\(d\\ln S=(\\mu-\\tfrac12\\sigma^2)dt+\\sigma\\,dW\\), so \\(\\ln S_T\\) is Gaussian with mean \\((\\mu-\\tfrac12\\sigma^2)T\\).<br><b>Working:</b> Median \\(=S_0e^{(\\mu-\\sigma^2/2)T}=100e^{0.11}\\). Mean \\(=S_0e^{\\mu T}=100e^{0.2}\\).<br><b>Sanity check:</b> MC with \\(4\\times10^5\\) paths gives mean 122.16 and median 111.66.<br><b>Transfer:</b> Geometric return is arithmetic return minus \\(\\sigma^2/2\\); the same drag appears in \\(\\ln\\) compounding.",
+  "tags": [
+   "s_convexity_jensen",
+   "gbm",
+   "ito_calculus",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Driftless Brownian motion, \\(T>0\\). Compute \\(\\mathrm{Var}(W_T^2)\\) using Ito's lemma.",
+  "back": "<b>Answer:</b> \\(2T^2\\)<br><b>Structure:</b> Ito's lemma writes \\(W_T^2\\) as a constant plus a stochastic integral, so isometry gives the variance.<br><b>Key move:</b> \\(W_T^2=T+2\\int_0^T W\\,dW\\); then \\(\\mathrm{Var}=4\\int_0^T E[W_t^2]dt=4\\int_0^T t\\,dt\\).<br><b>Working:</b> \\(4\\cdot T^2/2=2T^2\\).<br><b>Sanity check:</b> At \\(T=1\\), \\(W_1^2\\sim\\chi^2_1\\) whose variance is 2.<br><b>Transfer:</b> Variance of realised variance over a window of length \\(T\\) for a Gaussian return scales like \\(T^2\\).",
+  "tags": [
+   "s_martingale",
+   "ito_calculus",
+   "volatility",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compare \\(\\int_0^1 W\\,dW\\) (Ito) with \\(\\int_0^1 W\\circ dW\\) (Stratonovich, midpoint rule). What are their expectations?",
+  "back": "<b>Answer:</b> Ito: \\(0\\). Stratonovich: \\(\\tfrac12\\).<br><b>Structure:</b> The Stratonovich integral obeys the ordinary chain rule, so it picks up the quadratic-variation correction.<br><b>Key move:</b> \\(\\int W\\circ dW=\\int W\\,dW+\\tfrac12\\langle W\\rangle_1=\\int W\\,dW+\\tfrac12\\).<br><b>Working:</b> Ito gives \\(\\tfrac12(W_1^2-1)\\) with mean 0. Stratonovich gives \\(\\tfrac12W_1^2\\) with mean \\(\\tfrac12\\).<br><b>Sanity check:</b> Ito integral is a martingale with mean 0, so the Stratonovich one must be the one with the extra \\(\\tfrac12\\).<br><b>Transfer:</b> In hedging, Ito is needed because the hedge error has zero mean; Stratonovich is the right choice only for the ordinary chain rule.",
+  "tags": [
+   "s_martingale",
+   "ito_calculus",
+   "brownian_motion",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Driftless Brownian motion \\(W\\). Which are martingales: (a) \\(W^3-3tW\\), (b) \\(W^3\\), (c) \\(e^{\\sigma W_t-\\sigma^2t/2}\\), (d) \\(S_t=S_0\\exp(\\sigma W_t+\\mu t-\\sigma^2t/2)\\) with \\(\\mu\\neq0\\)?",
+  "back": "<b>Answer:</b> (a) yes, (b) no, (c) yes, (d) no (only if \\(\\mu=0\\)).<br><b>Structure:</b> Martingale test by Ito: the \\(dt\\) term must vanish.<br><b>Key move:</b> Read off the \\(dt\\) coefficient of each process.<br><b>Working:</b> (a) \\(d(W^3-3tW)=3(W^2-t)\\,dW\\), no drift. (b) \\(d(W^3)=3W^2dW+3W\\,dt\\), drift \\(3W\\). (c) Standard exponential martingale. (d) Drift is \\(\\mu S\\,dt\\).<br><b>Sanity check:</b> Each martingale has \\(E=0\\) or \\(E=1\\) at all times, but a mean test alone fails: \\(E[W^3]=0\\) for (b) too.<br><b>Transfer:</b> Discounted asset prices under the risk-neutral measure: \\(S e^{-rt}\\) is a martingale only when the drift is \\(r\\).",
+  "tags": [
+   "s_martingale",
+   "ito_calculus",
+   "gbm",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Driftless Brownian motion from 0 leaves the interval \\((-3,2)\\) at time \\(\\tau\\). Compute \\(E[\\tau]\\).",
+  "back": "<b>Answer:</b> \\(E[\\tau]=6\\)<br><b>Structure:</b> Optional stopping applied to \\(W_t^2-t\\), which is a martingale.<br><b>Key move:</b> \\(E[\\tau]=E[W_\\tau^2]\\); first find \\(P(\\text{hit }2\\text{ first})=3/5\\).<br><b>Working:</b> \\(E[W_\\tau^2]=\\tfrac35\\cdot4+\\tfrac25\\cdot9=\\tfrac{12+18}{5}=6\\).<br><b>Sanity check:</b> Matches the general formula \\(ab\\) for exit from \\((-a,b)\\) with \\(a=3,b=2\\).<br><b>Transfer:</b> Expected duration of a fair gambler's ruin game with targets \\(a,b\\) is \\(ab\\), in continuous or discrete time with step variance 1.",
+  "tags": [
+   "s_optional_stopping",
+   "s_martingale",
+   "brownian_motion",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Under the risk-neutral measure, \\(u(t,x)=E[W_T^2\\mid W_t=x]\\) for \\(t<T\\). Show it solves a PDE, and find \\(u(0,0)\\) when \\(T=2\\).",
+  "back": "<b>Answer:</b> \\(u_t+\\tfrac12u_{xx}=0\\) with \\(u=x^2+(T-t)\\); \\(u(0,0)=2\\).<br><b>Structure:</b> Feynman-Kac: a conditional expectation of a payoff of a diffusion is a backward PDE solution.<br><b>Key move:</b> Ito on \\(u(t,W_t)\\): the \\(dt\\) coefficient must vanish, giving the PDE.<br><b>Working:</b> \\(E[W_T^2\\mid W_t=x]=x^2+(T-t)\\). Then \\(u_t=-1\\), \\(\\tfrac12u_{xx}=1\\), sum \\(0\\).<br><b>Sanity check:</b> \\(u(0,0)=E[W_2^2]=2\\), matching \\(T=2\\).<br><b>Transfer:</b> Add discounting at rate \\(r\\) and the PDE gains a \\(-ru\\) term (see the perturbation card).",
+  "tags": [
+   "s_martingale",
+   "pde",
+   "brownian_motion",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Black-Scholes by risk-neutral expectation. \\(S_0=K=100\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\), \\(T=1\\). Compute the European call price \\(e^{-rT}E^Q[(S_T-K)^+]\\).",
+  "back": "<b>Answer:</b> \\(C\\approx 10.4506\\)<br><b>Structure:</b> Change of measure: under \\(Q\\), the drift of \\(\\ln S\\) is \\(r\\); split the payoff by the indicator \\(\\{S_T>K\\}\\).<br><b>Key move:</b> \\(E[S_T\\mathbf 1_{S_T>K}]=S_0e^{rT}N(d_1)\\), so \\(C=S_0N(d_1)-Ke^{-rT}N(d_2)\\).<br><b>Working:</b> \\(d_1=0.35\\), \\(d_2=0.15\\), \\(N(d_1)=0.6368\\), \\(N(d_2)=0.5596\\). \\(C=63.683-95.123\\cdot0.5596=10.4506\\).<br><b>Sanity check:</b> ATM call is close to \\(0.4S\\sigma\\sqrt T\\approx 8\\) plus the rate term; MC with \\(4\\times10^5\\) normals agrees within 0.02.<br><b>Transfer:</b> Put by parity: \\(P=C-S_0+Ke^{-rT}=5.5735\\).",
+  "tags": [
+   "s_change_of_measure",
+   "black_scholes",
+   "risk_neutral",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the Black-Scholes PDE by replication for a European option \\(V(t,S)\\) on a stock with no dividends. Write the PDE, and give \\(\\Delta\\) for the ATM call with the parameters of the previous card.",
+  "back": "<b>Answer:</b> \\(\\partial_tV+\\tfrac12\\sigma^2S^2V_{SS}+rSV_S-rV=0\\); \\(\\Delta=N(d_1)\\approx 0.6368\\).<br><b>Structure:</b> Delta hedging: a self-financing portfolio that is risk-free must earn \\(r\\).<br><b>Key move:</b> Hold \\(\\Pi=V-V_S S\\). Ito gives \\(d\\Pi=(V_t+\\tfrac12\\sigma^2S^2V_{SS})dt\\) because the \\(dW\\) and \\(\\mu\\) terms cancel. Set \\(d\\Pi=r\\Pi\\,dt\\).<br><b>Working:</b> \\(dV=(V_t+\\mu SV_S+\\tfrac12\\sigma^2S^2V_{SS})dt+\\sigma SV_S\\,dW\\). Subtracting \\(V_S\\,dS\\) removes both \\(dW\\) and \\(\\mu\\). Then \\(d\\Pi=r\\Pi\\,dt\\) gives the PDE.<br><b>Sanity check:</b> \\(\\Delta\\in[0,1]\\) for a call, and the PDE is linear in \\(V\\) with no \\(\\mu\\) (price is independent of the stock's drift).<br><b>Transfer:</b> Same derivation with a dividend yield \\(q\\) replaces \\(rSV_S\\) by \\((r-q)SV_S\\).",
+  "tags": [
+   "s_replication",
+   "black_scholes",
+   "pde",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(S=K=100\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\), \\(T=1\\). Give the call and put delta, the gamma, and the vega per 1 vol point.",
+  "back": "<b>Answer:</b> \\(\\Delta_C=0.6368\\), \\(\\Delta_P=-0.3632\\), \\(\\Gamma=0.01876\\), vega \\(=0.3752\\) per vol point.<br><b>Structure:</b> Greeks are derivatives of the Black-Scholes formula; \\(\\Gamma\\) and vega share the density \\(\\varphi(d_1)\\).<br><b>Key move:</b> \\(\\Delta_C=N(d_1)\\), \\(\\Delta_P=N(d_1)-1\\), \\(\\Gamma=\\varphi(d_1)/(S\\sigma\\sqrt T)\\), vega \\(=S\\varphi(d_1)\\sqrt T\\).<br><b>Working:</b> \\(\\varphi(0.35)=0.37524\\). \\(\\Gamma=0.37524/20=0.01876\\). Vega \\(=100\\cdot0.37524=37.52\\) per unit \\(\\sigma\\), so \\(0.3752\\) per vol point.<br><b>Sanity check:</b> \\(\\Delta_C-\\Delta_P=1\\) (put-call parity in delta); \\(\\Gamma\\) is the same for call and put.<br><b>Transfer:</b> Vega per vol point is the usual desk unit; vega is largest near the money and at long maturity.",
+  "tags": [
+   "s_taylor",
+   "greeks",
+   "black_scholes",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Cash-or-nothing digital pays 1 if \\(S_T>K\\). With \\(S=K=100\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\), \\(T=1\\), what is its delta, and how does it compare with the call gamma?",
+  "back": "<b>Answer:</b> Digital delta \\(=0.01876\\), equal to the call gamma at \\(S=K\\).<br><b>Structure:</b> The digital is \\(-\\partial_KC\\), so its delta is \\(-\\partial_K\\) of the call's delta-derivative: a third-derivative identity.<br><b>Key move:</b> Digital \\(=e^{-rT}N(d_2)\\). \\(\\partial_S[e^{-rT}N(d_2)]=e^{-rT}\\varphi(d_2)/(S\\sigma\\sqrt T)\\). Use \\(S\\varphi(d_1)=Ke^{-rT}\\varphi(d_2)\\) to get \\(\\varphi(d_1)/(K\\sigma\\sqrt T)\\).<br><b>Working:</b> At \\(S=K\\) the expression equals \\(\\varphi(d_1)/(S\\sigma\\sqrt T)=\\Gamma_{call}\\).<br><b>Sanity check:</b> Numerically \\(0.018762\\) on both sides.<br><b>Transfer:</b> Digital delta peaks at the strike and grows as \\(T\\to 0\\); its gamma changes sign around the strike.",
+  "tags": [
+   "s_replication",
+   "digital",
+   "greeks",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You are long an ATM call (\\(S=K=100\\), \\(r=0\\)) bought at 20% implied vol, delta-hedged daily, and realised vol is 25% over 3 months. What is the expected P&L, approximately?",
+  "back": "<b>Answer:</b> About \\(+1.00\\) (MC \\(0.996\\pm0.002\\)).<br><b>Structure:</b> Gamma P&L: delta-hedged option P&L equals the integral of \\(\\tfrac12\\Gamma S^2(\\sigma_r^2-\\sigma_i^2)\\,dt\\).<br><b>Key move:</b> Ito on the option value with delta hedge removes the first-order terms. Left with \\(\\tfrac12\\Gamma S^2(\\sigma_r^2-\\sigma_i^2)dt\\) per unit time, then integrate over the path.<br><b>Working:</b> At inception \\(\\Gamma=\\varphi(0.1)/20=0.01985\\), so \\(\\tfrac12\\Gamma S^2(0.0225)\\approx 2.2\\) per year. Gamma rises as expiry approaches, and the 3-month integral is about \\(1.0\\).<br><b>Sanity check:</b> Sign is positive because realised exceeds implied; the expected P&L is zero when the two vols are equal.<br><b>Transfer:</b> Short the same option at 25% implied and realised 20%: the P&L flips sign and is roughly \\(-1.0\\).",
+  "tags": [
+   "s_taylor",
+   "greeks",
+   "volatility",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Market quotes at \\(K=100\\), same expiry: call \\(10.4506\\), put \\(5.5735\\). \\(S=100\\), \\(r=5\\%\\), \\(T=1\\). What dividend yield \\(q\\) is implied by put-call parity?",
+  "back": "<b>Answer:</b> \\(q=0\\).<br><b>Structure:</b> Put-call parity pins down the forward, so the quotes imply the forward directly.<br><b>Key move:</b> \\(C-P=Se^{-qT}-Ke^{-rT}\\), so \\(e^{-qT}=(C-P+Ke^{-rT})/S\\).<br><b>Working:</b> \\(C-P=4.8771\\); \\(Ke^{-rT}=95.1229\\); sum \\(=100.0000\\), so \\(q=0\\). Forward is \\(100e^{0.05}=105.13\\).<br><b>Sanity check:</b> A dividend yield of 3% would move the forward to \\(100e^{0.02}=102.02\\); the quotes do not show it.<br><b>Transfer:</b> Implied borrow or dividend from a conversion or reversal price is read the same way.",
+  "tags": [
+   "s_replication",
+   "options",
+   "dividends",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Butterfly on one stock, flat 20% vol, \\(r=5\\%\\), \\(T=1\\), \\(S=100\\): strikes 90, 100, 110. Compute \\(C(90)-2C(100)+C(110)\\).",
+  "back": "<b>Answer:</b> \\(\\approx 1.8384\\) (positive).<br><b>Structure:</b> Convexity of the call in strike; the butterfly payoff is a non-negative tent function.<br><b>Key move:</b> Payoff \\((S-90)^+-2(S-100)^++(S-110)^+\\) is a tent, so its value is \\(\\ge 0\\).<br><b>Working:</b> \\(C(90)=16.6994\\), \\(C(100)=10.4506\\), \\(C(110)=6.0401\\); \\(16.6994-20.9012+6.0401=1.8383\\).<br><b>Sanity check:</b> Tent area is \\(h^2=100\\) times density \\(0.0197\\) times \\(e^{-rT}\\approx 0.95\\): about \\(1.88\\), consistent.<br><b>Transfer:</b> Scaling the spacing \\(h\\) by 2 multiplies the butterfly by about 4 (proportional to \\(h^2\\)).",
+  "tags": [
+   "s_convexity_jensen",
+   "options",
+   "arbitrage",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Breeden-Litzenberger. With \\(S=100\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\), \\(T=1\\), what is the risk-neutral density of \\(S_T\\) at \\(K=100\\), from call prices?",
+  "back": "<b>Answer:</b> \\(f_T(100)=e^{rT}\\,\\partial_K^2C\\approx 0.01972\\).<br><b>Structure:</b> Second derivative of the call price in strike gives the state-price density.<br><b>Key move:</b> \\(C(K)=e^{-rT}\\int(s-K)^+f(s)\\,ds\\Rightarrow\\partial_K^2C=e^{-rT}f(K)\\).<br><b>Working:</b> Central second difference with \\(h=0.5\\): \\(f_T(100)\\approx 0.019723\\); the exact lognormal density at 100 is \\(0.019724\\).<br><b>Sanity check:</b> Density integrates to 1 and is unimodal near \\(S_0e^{rT}\\); \\(0.0197\\) is plausible at this spacing.<br><b>Transfer:</b> Recovers a smile-consistent density; the same identity gives the digital price as \\(-\\partial_KC\\).",
+  "tags": [
+   "s_replication",
+   "options",
+   "digital",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Price a contract paying \\(S_T^2\\) at \\(T=1\\), with \\(S_0=100\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\), using a static strip of calls and puts.",
+  "back": "<b>Answer:</b> \\(\\approx 10941.74\\) (\\(=S_0^2e^{(r+\\sigma^2)T}\\)).<br><b>Structure:</b> Static replication of a convex payoff: \\(f''(K)=2\\) gives a strip; the forward \\(F\\) pins the linear part.<br><b>Key move:</b> \\(S^2=F^2+2F(S-F)+2(S-F)^2\\); with \\(f''=2\\), \\(f(S)=f(F)+f'(F)(S-F)+\\int_0^F 2(K-S)^+dK+\\int_F^\\infty 2(S-K)^+dK\\).<br><b>Working:</b> Using \\(F=S_0e^{rT}=105.127\\): \\(e^{-rT}F^2=10512.71\\); the strip adds \\(2\\int_0^F P\\,dK+2\\int_F^\\infty C\\,dK=429.03\\). Total \\(10941.74\\).<br><b>Sanity check:</b> \\(e^{-rT}E^Q[S_T^2]=S_0^2e^{(r+\\sigma^2)T}=10000e^{0.09}\\), matching; MC agrees.<br><b>Transfer:</b> Variance swap is the same idea with \\(f(S)=-2\\ln(S/F)\\).",
+  "tags": [
+   "s_replication",
+   "s_generating_function",
+   "gbm",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Price a contract paying \\(\\max(S_T,K)\\) at \\(T=1\\), with \\(S_0=K=100\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\).",
+  "back": "<b>Answer:</b> \\(105.5735\\) (\\(=S_0+P\\)).<br><b>Structure:</b> Write the payoff as a stock plus a put: \\(\\max(S,K)=S+(K-S)^+\\).<br><b>Key move:</b> \\(\\max(S,K)=S+(K-S)^+\\), so the price is \\(S_0\\) plus the put price (no expectation needed).<br><b>Working:</b> Put \\(P=5.5735\\) from parity with \\(C=10.4506\\); \\(S_0+P=105.5735\\).<br><b>Sanity check:</b> Price \\(\\ge S_0\\) because the payoff is never below the stock; the premium over \\(S_0\\) is exactly the put.<br><b>Transfer:</b> Any payoff \\(g(S_T)\\) with \\(g\\) convex in the sense of \\(g''\\ge0\\) decomposes the same way (stock plus strip of puts and calls).",
+  "tags": [
+   "s_replication",
+   "options",
+   "digital",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Price a log contract paying \\(\\ln S_T\\) at \\(T=1\\), with \\(S_0=100\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\).",
+  "back": "<b>Answer:</b> \\(\\approx 4.4091\\) (\\(=e^{-rT}(\\ln S_0+(r-\\sigma^2/2)T)\\)).<br><b>Structure:</b> Expectation under \\(Q\\) of a log: Jensen gives \\(E[\\ln S]<\\ln E[S]\\), and the Gaussian mean is explicit.<br><b>Key move:</b> Under \\(Q\\), \\(\\ln S_T\\sim N(\\ln S_0+(r-\\sigma^2/2)T,\\sigma^2T)\\). Discount: \\(e^{-rT}E[\\ln S_T]\\).<br><b>Working:</b> \\(E[\\ln S_T]=\\ln100+(0.05-0.02)=4.63517\\); times \\(e^{-0.05}\\) gives \\(4.4091\\).<br><b>Sanity check:</b> Above \\(e^{-rT}\\ln S_0=4.3807\\) because the drift \\(r-\\sigma^2/2=0.03\\) is positive. The Jensen gap \\(\\ln E[S_T]-E[\\ln S_T]=\\sigma^2T/2=0.02\\) is the volatility drag.<br><b>Transfer:</b> Static strip for \\(\\ln S\\) has weight \\(-1/K^2\\); it is the variance swap's building block.",
+  "tags": [
+   "s_convexity_jensen",
+   "s_replication",
+   "gbm",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A chooser: at \\(t=0.5\\) the holder picks either a call or a put, both with strike \\(K=100\\) and expiry \\(T=1\\). \\(S_0=100\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\). What is the value at time 0?",
+  "back": "<b>Answer:</b> \\(\\approx 13.851\\).<br><b>Structure:</b> Put-call parity at time \\(t\\) turns the max of a call and a put into a call plus a put with a discounted strike.<br><b>Key move:</b> \\(\\max(C_t,P_t)=C_t+(Ke^{-r(T-t)}-S_t)^+\\) because \\(C_t-P_t=S_t-Ke^{-r(T-t)}\\). Price \\(=C_0(K,T)+P_0(Ke^{-r(T-t)},t)\\).<br><b>Working:</b> \\(C_0=10.4506\\); the put with strike \\(97.531\\), expiry \\(0.5\\), has value \\(3.4007\\). Sum \\(13.8513\\).<br><b>Sanity check:</b> Monte Carlo with \\(4\\times10^5\\) paths gives 13.858 (within one standard error of 0.01).<br><b>Transfer:</b> With different call and put strikes the parity step fails, and you must price the max directly.",
+  "tags": [
+   "s_replication",
+   "options",
+   "volatility",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "ATM call on a stock at 100, vol 20%, \\(T=1\\), zero rates. Compute the exact Black-Scholes value and compare it with the rule \\(0.4\\,S\\sigma\\sqrt T\\).",
+  "back": "<b>Answer:</b> \\(C=7.9656\\) versus \\(0.4\\cdot 100\\cdot 0.2=8.0\\).<br><b>Structure:</b> At-the-money symmetry: with \\(K=S\\) and \\(r=0\\), \\(d_1=\\sigma\\sqrt T/2\\) and \\(d_2=-d_1\\).<br><b>Key move:</b> \\(C=S(N(d_1)-N(-d_1))=S(2N(d_1)-1)\\approx 2S\\varphi(0)d_1=0.399\\,S\\sigma\\sqrt T\\).<br><b>Working:</b> \\(d_1=0.1\\), \\(2N(0.1)-1=0.07966\\), so \\(C=7.9656\\).<br><b>Sanity check:</b> Relative error 0.4%; the approximation is best at the money and gets worse away from it.<br><b>Transfer:</b> Straddle \\(\\approx 0.8\\,S\\sigma\\sqrt T\\); useful for quick breakeven moves.",
+  "tags": [
+   "s_fermi",
+   "s_sqrt_time_scaling",
+   "options",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Dimensional check: what is \\(E|W_1|\\) for driftless Brownian motion, and how does \\(E|W_t|\\) scale with \\(t\\)?",
+  "back": "<b>Answer:</b> \\(E|W_1|=\\sqrt{2/\\pi}\\approx 0.7979\\); \\(E|W_t|=\\sqrt{2t/\\pi}\\).<br><b>Structure:</b> Brownian motion has units of \\(\\sqrt{\\text{time}}\\), so any expected absolute value scales as \\(\\sqrt t\\).<br><b>Key move:</b> \\(W_1\\sim N(0,1)\\), so \\(E|Z|=\\sqrt{2/\\pi}\\). Scaling gives \\(E|W_t|=\\sqrt t\\,E|Z|\\).<br><b>Working:</b> \\(\\sqrt{2/\\pi}=0.79788\\).<br><b>Sanity check:</b> Less than \\(\\sqrt{E[W_1^2]}=1\\), as Jensen requires.<br><b>Transfer:</b> A one-day expected move of \\(\\sigma_d\\) gives an expected \\(n\\)-day move of \\(\\sigma_d\\sqrt n\\sqrt{2/\\pi}\\).",
+  "tags": [
+   "s_dimensional_analysis",
+   "s_sqrt_time_scaling",
+   "brownian_motion",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(S=K=100\\), \\(r=5\\%\\), continuous dividend yield \\(q=3\\%\\), \\(\\sigma=20\\%\\), \\(T=1\\). Compute the European call price.",
+  "back": "<b>Answer:</b> \\(C\\approx 8.6525\\) (was 10.4506 with no dividend).<br><b>Structure:</b> Under \\(Q\\) the stock drifts at \\(r-q\\), so the forward is \\(Se^{(r-q)T}\\); replace \\(S\\) by \\(Se^{-qT}\\) in the BS formula.<br><b>Key move:</b> \\(C=Se^{-qT}N(d_1)-Ke^{-rT}N(d_2)\\), \\(d_{1,2}=\\frac{\\ln(S/K)+(r-q\\pm\\sigma^2/2)T}{\\sigma\\sqrt T}\\).<br><b>Working:</b> \\(d_1=0.20\\), \\(d_2=0.00\\); \\(C=97.045\\cdot0.5793-95.123\\cdot0.5=56.21-47.56=8.65\\).<br><b>Sanity check:</b> Lower than the no-dividend call, as expected: dividends lower the forward.<br><b>Transfer:</b> Put-call parity becomes \\(C-P=Se^{-qT}-Ke^{-rT}\\) (card on parity).",
+  "tags": [
+   "s_replication",
+   "black_scholes",
+   "dividends",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Gamma-theta trade-off. ATM call, \\(S=100\\), \\(\\sigma=20\\%\\), \\(r=0\\), \\(T=1\\). Give the theta per year and check \\(\\Theta+\\tfrac12\\sigma^2S^2\\Gamma=0\\).",
+  "back": "<b>Answer:</b> \\(\\Theta=-3.9695\\) per year; \\(\\tfrac12\\sigma^2S^2\\Gamma=+3.9695\\); the sum is 0.<br><b>Structure:</b> Black-Scholes PDE at \\(r=0\\): theta and gamma offset exactly.<br><b>Key move:</b> \\(\\Theta=-S\\varphi(d_1)\\sigma/(2\\sqrt T)\\), \\(\\Gamma=\\varphi(d_1)/(S\\sigma\\sqrt T)\\), \\(d_1=\\sigma\\sqrt T/2=0.1\\).<br><b>Working:</b> \\(\\varphi(0.1)=0.39695\\). \\(\\Theta=-100\\cdot0.39695\\cdot0.2/2=-3.9695\\). \\(\\Gamma=0.01985\\); \\(\\tfrac12\\cdot0.04\\cdot10^4\\cdot0.01985=3.9695\\).<br><b>Sanity check:</b> Long gamma pays theta exactly; the carry is zero in expectation when realised equals implied.<br><b>Transfer:</b> With \\(r>0\\) the identity picks up a \\(rV-rS\\Delta\\) term.",
+  "tags": [
+   "s_taylor",
+   "greeks",
+   "black_scholes",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Driftless Brownian motion. Given \\(W_1=0\\), what is \\(\\mathrm{Var}(W_{1/2}\\mid W_1=0)\\)?",
+  "back": "<b>Answer:</b> \\(1/4\\)<br><b>Structure:</b> Gaussian conditioning on the endpoint gives a bridge with variance \\(s(t-s)/t\\).<br><b>Key move:</b> \\(\\mathrm{Var}(W_s\\mid W_t=x)=s-\\frac{s^2}{t}\\) because \\(\\mathrm{Cov}(W_s,W_t)=s\\).<br><b>Working:</b> \\(s=\\tfrac12\\), \\(t=1\\): \\(\\tfrac12-\\tfrac14=\\tfrac14\\).<br><b>Sanity check:</b> Maximal variance of a bridge is at the midpoint, \\(1/4\\) for \\(t=1\\); zero at the ends.<br><b>Transfer:</b> A bridge of length \\(T\\) has variance \\(s(T-s)/T\\) at time \\(s\\).",
+  "tags": [
+   "s_conditional_expectation_tower",
+   "brownian_bridge",
+   "brownian_motion",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Biased-drift version of a barrier race: \\(X_t=W_t+0.5\\,t\\) (drift \\(\\mu=0.5\\)) starts at 0. What is \\(P(X\\text{ hits }+1\\text{ before }-2)\\)?",
+  "back": "<b>What breaks:</b> Optional stopping on \\(X\\) fails, because \\(X\\) is not a martingale: \\(E[X_\\tau]\\neq 0\\). The argument that gave \\(2/3\\) assumed zero drift.<br><b>Fix:</b> Use the scale function \\(s(x)=e^{-2\\mu x}\\), which makes \\(s(X_t)\\) a martingale.<br><b>New answer:</b> \\(P=\\dfrac{e^{2\\mu b}-1}{e^{2\\mu b}-e^{-2\\mu a}}\\) with \\(a=1,b=2,\\mu=0.5\\): \\(\\approx 0.9100\\) (up from \\(0.6667\\)).",
+  "tags": [
+   "s_martingale",
+   "s_change_of_measure",
+   "brownian_motion",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Same drifted path \\(X_t=W_t+0.5\\,t\\) from 0. What is \\(P(\\max_{0\\le t\\le 1}X_t\\ge 1)\\)?",
+  "back": "<b>What breaks:</b> The reflection principle \\(P(M\\ge a)=2P(X_1\\ge a)\\) needs zero drift. With drift the reflected endpoint is weighted differently.<br><b>Fix:</b> Girsanov or the Doob-type formula for the drifted maximum.<br><b>New answer:</b> \\(P(M_1\\ge a)=\\Phi\\!\\big(\\tfrac{\\mu-a}{1}\\big)+e^{2\\mu a}\\Phi\\!\\big(\\tfrac{-a-\\mu}{1}\\big)\\) gives \\(\\approx 0.4901\\) (zero-drift value was \\(0.3173\\)).",
+  "tags": [
+   "s_reflection",
+   "s_change_of_measure",
+   "brownian_motion",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X_t=W_t+0.5\\,t\\) with \\(W\\) driftless BM from 0. Compute \\(E[X_1^2]\\).",
+  "back": "<b>What breaks:</b> Ito gives \\(d(X^2)=2X\\,dX+dt\\), and \\(dX\\) now has drift \\(\\mu\\,dt\\). The term \\(2\\mu X\\,dt\\) has non-zero mean, so \\(E[X_t^2]\\neq t\\).<br><b>Fix:</b> Track \\(m(t)=E[X_t^2]\\) with \\(m'(t)=2\\mu E[X_t]+1\\) and \\(E[X_t]=\\mu t\\).<br><b>New answer:</b> \\(m'(t)=2\\mu^2t+1\\), so \\(E[X_1^2]=1+\\mu^2=1.25\\) (zero-drift value was \\(1\\)).",
+  "tags": [
+   "s_martingale",
+   "ito_calculus",
+   "brownian_motion",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Biased coin walk: steps \\(+1\\) with probability \\(0.6\\), \\(-1\\) with \\(0.4\\), start at 0. What is the probability it hits \\(+1\\) before \\(-2\\)?",
+  "back": "<b>What breaks:</b> The fair-game martingale \\(S_n\\) is no longer a martingale; the gambler's-ruin answer \\(b/(a+b)\\) requires \\(p=1/2\\).<br><b>Fix:</b> Use the martingale \\((q/p)^{S_n}\\), with \\(q/p=2/3\\).<br><b>New answer:</b> \\(P=\\dfrac{1-(q/p)^2}{1-(q/p)^3}=\\dfrac{15}{19}\\approx 0.7895\\) (fair value was \\(0.6667\\)).",
+  "tags": [
+   "s_martingale",
+   "s_optional_stopping",
+   "random_walk",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A noise path from \\(0\\) at \\(t=0\\) is pinned to end at \\(c=1\\) at \\(t=1\\) (unit variance). What is \\(P(\\max_{0\\le t\\le 1}\\text{path}\\ge 2)\\)?",
+  "back": "<b>What breaks:</b> Pinning at \\(0\\) is gone: the endpoint is \\(c\\neq 0\\), so the zero-endpoint reflection formula \\(e^{-2a^2}\\) no longer applies.<br><b>Fix:</b> Reflect about the level \\(a\\) with the endpoint shifted: for \\(a\\ge\\max(0,c)\\), \\(P(\\max\\ge a)=e^{-2a(a-c)}\\).<br><b>New answer:</b> \\(P=e^{-2\\cdot 2\\cdot(2-1)}=e^{-4}\\approx 0.0183\\) (for \\(c=0\\) the same formula gives \\(e^{-8}\\), the usual zero-endpoint bridge value).",
+  "tags": [
+   "s_reflection",
+   "brownian_bridge",
+   "brownian_motion",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Same ATM call (\\(S=K=100\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\), \\(T=1\\)), but the stock pays a continuous dividend yield \\(q=3\\%\\). What is the delta \\(\\partial C/\\partial S\\)?",
+  "back": "<b>What breaks:</b> Hedging drift and forward change: the stock now earns \\(q\\) so the replicating portfolio carries \\(-qS\\,V_S\\) in the PDE; delta picks up \\(e^{-qT}\\).<br><b>Fix:</b> Replace \\(S\\) by \\(Se^{-qT}\\) in the price; the delta is \\(e^{-qT}N(d_1)\\) with \\(d_1\\) using \\(r-q\\).<br><b>New answer:</b> \\(\\Delta=e^{-0.03}\\cdot N(0.2)=0.9704\\cdot0.5793\\approx 0.5621\\) (no dividend: \\(0.6368\\)).",
+  "tags": [
+   "s_replication",
+   "black_scholes",
+   "dividends",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Stock at 100 with a random short rate: \\(P(0,1)=E[e^{-\\bar R}]\\), with \\(\\bar R\\) equal to 3% or 7% with probability \\(1/2\\). Vol 20%, ATM call, one year. Price the call.",
+  "back": "<b>What breaks:</b> The naive price uses one rate \\(r=E[\\bar R]=5\\%\\) and forward \\(S_0e^{rT}\\). The true forward is \\(S_0/P(0,1)\\), and the discount is \\(P(0,1)\\), not \\(e^{-rT}\\).<br><b>Fix:</b> Black-76 with \\(F=S_0/P(0,1)\\) and discount \\(P(0,1)\\); assumes the forward is lognormal with vol 20% under the forward measure.<br><b>New answer:</b> \\(P=0.95142\\), \\(F=105.106\\), \\(d_1=0.349\\), \\(d_2=0.149\\): \\(C=0.95142(105.106\\cdot0.6365-100\\cdot0.5592)\\approx 10.4399\\) (naive \\(10.4506\\)).",
+  "tags": [
+   "s_change_of_measure",
+   "stochastic_rates",
+   "forward_measure",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Long an ATM call (\\(S=K=100\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\), \\(T=1\\)) delta-hedged at the close, then the stock gaps down \\(10\\%\\) overnight with no rebalancing. Estimate the hedged P&L using the second-order gamma term.",
+  "back": "<b>What breaks:</b> A gap is a jump, so the continuous-path Taylor argument is only an approximation. The quadratic term \\(\\tfrac12\\Gamma\\Delta S^2\\) misses the third-order terms.<br><b>Fix:</b> Reprice exactly: P&L \\(=C(90)-C(100)-\\Delta\\cdot(-10)\\), with the hedge held at the pre-gap delta.<br><b>New answer:</b> Quadratic estimate: \\(\\tfrac12\\cdot0.018762\\cdot100=0.938\\). Exact: \\(C(90)-C(100)+6.368=1.009\\). The long option gains about \\(1.01\\).",
+  "tags": [
+   "s_taylor",
+   "greeks",
+   "volatility",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "An American call on a stock that pays a continuous dividend yield \\(q=8\\%\\), with \\(r=5\\%\\). Is early exercise ever optimal?",
+  "back": "<b>What breaks:</b> The no-early-exercise argument used \\(C\\ge S-Ke^{-r\\tau}\\ge S-K\\), which relied on zero dividends. With \\(q>r\\), holding the stock earns more than cash, so waiting has a cost.<br><b>Fix:</b> Compare the carry: exercise early when the dividend yield times \\(S\\) exceeds the interest on \\(K\\), roughly \\(qS>rK\\) for deep in-the-money calls.<br><b>New answer:</b> Yes. For deep in-the-money calls \\(qS>rK\\), so early exercise can be optimal and \\(C_{Am}>C_{Eu}\\).",
+  "tags": [
+   "s_optional_stopping",
+   "american_options",
+   "dividends",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A chooser: at \\(t=0.5\\) you pick a call with strike \\(110\\) or a put with strike \\(90\\), both expiring at \\(T=1\\). Stock 100, \\(r=5\\%\\), \\(\\sigma=20\\%\\). Price it.",
+  "back": "<b>What breaks:</b> Put-call parity needs a common strike. With different strikes, \\(\\max(C_t(110),P_t(90))\\) cannot be turned into a single put plus call.<br><b>Fix:</b> Price directly as an expectation of a max; the payoff depends on the joint law of the two option values at \\(t\\), which is a bivariate normal problem.<br><b>New answer:</b> No closed form from parity. Numerically: \\(\\mathbb E\\big[e^{-rt}\\max(C_t(110),P_t(90))\\big]\\), evaluated with a bivariate normal integral or Monte Carlo.",
+  "tags": [
+   "s_replication",
+   "options",
+   "volatility",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Variance swap on a stock with an unknown crash: at some time the stock drops \\(20\\%\\) in one jump. Does the static strip still give the fair variance strike, and what does the hedge lose?",
+  "back": "<b>What breaks:</b> The strip replication uses a dynamic hedge with a \\(\\int dS/S\\) leg, which assumes continuous paths. A jump breaks the self-financing hedge.<br><b>Fix:</b> Keep the price: the strip identity is model-free and still prices the expectation under \\(Q\\). Price the hedge risk separately as gap exposure.<br><b>New answer:</b> Fair strike is still the strip value (price unchanged in form). The hedge error from a 20% gap is of order \\(\\tfrac12\\Gamma S^2\\cdot(0.2)^2\\), not zero.",
+  "tags": [
+   "s_replication",
+   "variance_swap",
+   "volatility",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Gamma P&L argument, but the option is a cash-or-nothing digital paying 1 if \\(S_T>100\\). With \\(r=0\\), \\(\\sigma=20\\%\\), \\(T=1\\), \\(S=100\\), what is its gamma?",
+  "back": "<b>What breaks:</b> Digital gamma is not positive: it changes sign around \\(d_1=0\\), so the 'long gamma wins on realised vol' statement is wrong for a digital.<br><b>Fix:</b> Differentiate \\(e^{-rT}N(d_2)\\) twice: \\(\\Gamma_D=-e^{-rT}\\varphi(d_2)\\,d_1/(S^2\\sigma^2T)\\), so the sign follows \\(-d_1\\).<br><b>New answer:</b> At \\(S=K=100\\), \\(d_1=0.1>0\\), so \\(\\Gamma_D\\approx-0.0000992\\): negative, and a long digital loses when realised vol is high.",
+  "tags": [
+   "s_replication",
+   "digital",
+   "greeks",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Feynman-Kac with discounting: \\(u(t,x)=E[e^{-r(T-t)}W_T^2\\mid W_t=x]\\) for \\(t<T\\). Which PDE does \\(u\\) solve, and what is \\(u(0,0)\\) at \\(r=5\\%\\), \\(T=2\\)?",
+  "back": "<b>What breaks:</b> The undiscounted PDE \\(u_t+\\tfrac12u_{xx}=0\\) misses the killing term: discounting adds \\(-ru\\).<br><b>Fix:</b> Ito on \\(e^{-rt}u(t,W_t)\\): the \\(dt\\) coefficient must vanish, so \\(u_t+\\tfrac12u_{xx}-ru=0\\).<br><b>New answer:</b> \\(u=e^{-r(T-t)}(x^2+T-t)\\) solves \\(u_t+\\tfrac12u_{xx}-ru=0\\). \\(u(0,0)=e^{-0.1}\\cdot2\\approx1.8097\\) (undiscounted value was \\(2\\)).",
+  "tags": [
+   "s_martingale",
+   "pde",
+   "brownian_motion",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Driftless \\(W\\) was used for \\(E[W_2^4]=12\\). Now \\(X_t=W_t+0.5\\,t\\), so \\(X_2=W_2+1\\). What is \\(E[X_2^4]\\)?",
+  "back": "<b>What breaks:</b> The formula \\(E[W^4]=3t^2\\) assumes zero mean. A non-zero mean adds terms in \\(\\mu\\).<br><b>Fix:</b> Expand the binomial around the Gaussian centre: \\(E[(m+Z)^4]=m^4+6m^2v+3v^2\\) with \\(m=1,v=2\\).<br><b>New answer:</b> \\(1+6\\cdot1\\cdot2+3\\cdot4=25\\) (zero-drift value was \\(12\\)).",
+  "tags": [
+   "s_martingale",
+   "brownian_motion",
+   "mental_math",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Your bankroll, in thousands, follows a continuous zero-drift random path starting at 0. You stop when it reaches \\(+1\\) or \\(-2\\). What is the chance you stop at \\(+1\\)?",
+  "back": "<b>Classic:</b> Gambler's ruin for a fair game (continuous-time version).<br><b>Mapping:</b> Bankroll is \\(W_t\\); the win target \\(a=1\\) and ruin level \\(b=2\\). Fair means \\(W\\) is a martingale, so \\(E[W_\\tau]=0\\).<br><b>Answer:</b> \\(P=b/(a+b)=2/3\\).",
+  "tags": [
+   "s_martingale",
+   "s_optional_stopping",
+   "random_walk",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A driftless continuous random path starts at 0 and stops when it first reaches \\(3\\) or \\(-1\\). What is its expected stopping time?",
+  "back": "<b>Classic:</b> Expected duration of a fair gambler's ruin with targets \\(a\\) and \\(b\\).<br><b>Mapping:</b> Level \\(3\\) is one target and \\(-1\\) the other, so \\(E[\\tau]=3\\cdot1\\).<br><b>Answer:</b> \\(E[\\tau]=ab=3\\).",
+  "tags": [
+   "s_optional_stopping",
+   "s_martingale",
+   "brownian_motion",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A thermostat's error from setpoint is a driftless continuous random walk with variance 1 per hour, starting at 0. What is the probability it ever reaches \\(+2\\) within 4 hours?",
+  "back": "<b>Classic:</b> Reflection principle for the running maximum of Brownian motion.<br><b>Mapping:</b> Error is \\(W_t\\); \\(\\text{Var}(W_4)=4\\). Reach \\(+2\\) by time 4 means \\(M_4\\ge 2\\).<br><b>Answer:</b> \\(2P(W_4\\ge2)=2(1-\\Phi(1))\\approx 0.3173\\).",
+  "tags": [
+   "s_reflection",
+   "brownian_motion",
+   "random_walk",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Noise is pinned: a continuous path starts at 0 and must return to 0 at time 1 (unit-variance noise before pinning). What is the probability its maximum on \\([0,1]\\) exceeds 1?",
+  "back": "<b>Classic:</b> Brownian bridge maximum tail (the one-sided Kolmogorov-Smirnov law).<br><b>Mapping:</b> Path with both endpoints fixed is a bridge; the threshold \\(a=1\\) gives the tail \\(e^{-2a^2}\\).<br><b>Answer:</b> \\(e^{-2}\\approx 0.1353\\).",
+  "tags": [
+   "s_reflection",
+   "brownian_bridge",
+   "brownian_motion",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You are long one call and short one put, both with strike 105 and expiry in 6 months. Stock 100, rate 3% (continuous), dividend yield 1% (continuous). What is the value of the combination?",
+  "back": "<b>Classic:</b> Put-call parity: long call and short put is a synthetic forward.<br><b>Mapping:</b> Payoff \\(S_T-105\\) at expiry; present value is the forward \\(Se^{-qT}\\) minus the discounted strike \\(Ke^{-rT}\\).<br><b>Answer:</b> \\(100e^{-0.005}-105e^{-0.015}=-3.9355\\).",
+  "tags": [
+   "s_replication",
+   "options",
+   "dividends",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Your daily position in a fund has weight \\(i\\) on day \\(i\\) for \\(i=1,\\dots,10\\). Each day's return noise has variance \\(0.01\\) and is independent across days. What is the variance of the total weighted noise?",
+  "back": "<b>Classic:</b> Ito isometry for a deterministic integrand: \\(E[(\\int f\\,dW)^2]=\\int f^2\\,dt\\).<br><b>Mapping:</b> Weights are \\(f_i\\), increments are \\(\\Delta W_i\\) with variance \\(0.01\\). \\(\\mathrm{Var}=\\sum f_i^2\\cdot 0.01\\).<br><b>Answer:</b> \\(0.01\\sum_{i=1}^{10}i^2=0.01\\cdot385=3.85\\).",
+  "tags": [
+   "s_martingale",
+   "ito_calculus",
+   "brownian_motion",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Half a year before a 1-year claim expires, you may, at no cost, choose whether it becomes a call or a put, both struck at 100. Stock 100, rate 5%, vol 20%. What is its fair value today?",
+  "back": "<b>Classic:</b> Chooser option (choose at an intermediate date between a call and a put of the same strike and expiry).<br><b>Mapping:</b> At \\(t\\), \\(\\max(C_t,P_t)=C_t+(Ke^{-r(T-t)}-S_t)^+\\) by parity. Value is a call plus a put at strike \\(Ke^{-r(T-t)}\\) expiring at \\(t\\).<br><b>Answer:</b> \\(10.4506+3.4007=13.8513\\).",
+  "tags": [
+   "s_replication",
+   "options",
+   "volatility",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A market quotes the price of \\(\\mathbb E[(S_T-K)^+]\\) (discounted) for every strike \\(K\\). How do you get the probability density of \\(S_T\\) from these prices?",
+  "back": "<b>Classic:</b> Breeden-Litzenberger: density from the second strike derivative of call prices.<br><b>Mapping:</b> Call price is \\(e^{-rT}\\mathbb E[(S_T-K)^+]\\); the second derivative in \\(K\\) picks out the density at \\(K\\).<br><b>Answer:</b> \\(f_{S_T}(K)=e^{rT}\\,\\partial_K^2 C(K)\\).",
+  "tags": [
+   "s_replication",
+   "options",
+   "digital",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A claim pays \\(1/S_T\\) in cash at \\(T=1\\). Stock \\(S_0=100\\), rate 5%, lognormal vol 20% under the risk-neutral measure. What is its fair value today?",
+  "back": "<b>Classic:</b> Siegel's paradox: change of numeraire for an inverse price; the naive forward argument is wrong.<br><b>Mapping:</b> Under the stock numeraire, \\(1/S\\) is a martingale with a different drift; the cash price is \\(e^{-rT}\\mathbb E^Q[1/S_T]\\), not \\(1/S_0\\) with a forward discount.<br><b>Answer:</b> \\(e^{-rT}\\mathbb E^Q[1/S_T]=e^{(\\sigma^2-2r)T}/S_0=e^{-0.06}/100\\approx 0.009418\\) (naive \\(e^{-rT}/S_0=0.009512\\)).",
+  "tags": [
+   "s_change_of_measure",
+   "s_convexity_jensen",
+   "gbm",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for the reflection principle, and when does it fail?",
+  "back": "<b>Triggers:</b> Zero-drift Brownian motion (or any symmetric Gaussian increment), a single flat barrier, and a question about the running maximum or the hitting time.<br><b>Move:</b> Reflect the path after its first hit of the level: \\(P(M_T\\ge a)=2P(W_T\\ge a)\\). For a bridge use \\(P(\\max\\ge a)=e^{-2a^2}\\).<br><b>Example:</b> \\(P(\\max_{[0,4]}W\\ge 2)=2(1-\\Phi(1))\\approx 0.3173\\).<br><b>Failure mode:</b> Fails with drift (use a scale function or Girsanov), with discrete monitoring (bias \\(\\approx 0.58\\sigma\\sqrt{\\Delta t}\\)), with two barriers (needs an infinite image series), and with time-dependent barriers.",
+  "tags": [
+   "s_reflection",
+   "brownian_motion",
+   "barrier_options",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for a change of measure (Girsanov, forward measure, stock numeraire), and when does it fail?",
+  "back": "<b>Triggers:</b> A price is an expectation of a payoff times a ratio, or a drift needs to be removed, or a discount factor is random and correlated with the payoff.<br><b>Move:</b> Choose a numeraire \\(N\\); the price is \\(N_0\\,E^N[X_T/N_T]\\). Under \\(N\\), the tradable ratios are martingales, so the drift is the numeraire volatility.<br><b>Example:</b> Forward \\(F=S_0/P(0,T)\\) under the \\(T\\)-forward measure, even with random rates.<br><b>Failure mode:</b> Fails when the numeraire is not a traded, strictly positive asset, when the density is not equivalent to the original measure, or when the change of measure is correlated with the payoff in a way not captured by the chosen numeraire.",
+  "tags": [
+   "s_change_of_measure",
+   "forward_measure",
+   "risk_neutral",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For driftless \\(W\\), Ito's lemma gives \\(df(W_t)=f'(W_t)\\,dW_t\\) plus {{c1::\\(\\tfrac12 f''(W_t)\\,dt\\)}}.",
+  "back": "The \\(dt\\) term comes from \\(dW_t^2=dt\\), the quadratic variation of Brownian motion. Test with \\(f(x)=x^2\\): \\(d(W^2)=2W\\,dW+dt\\).",
+  "tags": [
+   "s_martingale",
+   "ito_calculus",
+   "brownian_motion",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Ito isometry for adapted \\(H\\): \\(E\\!\\left[\\left(\\int_0^T H_t\\,dW_t\\right)^2\\right]=\\) {{c1::\\(E\\!\\int_0^T H_t^2\\,dt\\)}}.",
+  "back": "Cross terms between different increments have zero expectation because increments are independent and mean zero. Use it for the variance of any stochastic integral of a deterministic or adapted integrand.",
+  "tags": [
+   "s_martingale",
+   "ito_calculus",
+   "brownian_motion",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When is a price a Feynman-Kac expectation solved by a PDE, and when do you need simulation instead?",
+  "back": "<b>Triggers:</b> Payoff is a function of the terminal state of a Markov diffusion, and you need the price at many \\((t,x)\\) points.<br><b>Move:</b> Solve the backward PDE \\(u_t+\\mu u_x+\\tfrac12\\sigma^2u_{xx}-ru=0\\) with terminal payoff; the expectation is \\(e^{-r(T-t)}E[g(X_T)\\mid X_t=x]\\).<br><b>Example:</b> \\(u(t,x)=E[W_T^2\\mid W_t=x]=x^2+(T-t)\\) solves \\(u_t+\\tfrac12u_{xx}=0\\).<br><b>Failure mode:</b> Fails for path-dependent payoffs (barrier, Asian, lookback) unless you add state variables; the PDE dimension grows with the number of state variables, and then Monte Carlo is usually better.",
+  "tags": [
+   "s_martingale",
+   "pde",
+   "brownian_motion",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When does replication (a hedge) determine a unique price, and when do you need a choice of risk-neutral measure?",
+  "back": "<b>Triggers:</b> Complete market: one Brownian driver and one traded asset, so every payoff can be hedged dynamically.<br><b>Move:</b> Build a self-financing hedge with \\(\\Delta=\\partial_S V\\); the initial cost of the hedge is the price, and no measure has to be chosen.<br><b>Example:</b> Black-Scholes: the call is replicated by \\(N(d_1)\\) shares and a bond; the price does not depend on \\(\\mu\\).<br><b>Failure mode:</b> Fails with stochastic volatility, jumps or incomplete markets: many measures are consistent with no-arbitrage and the price depends on the one chosen. Then use strips of option prices (model-free) or calibrate.",
+  "tags": [
+   "s_replication",
+   "black_scholes",
+   "risk_neutral",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When can you apply optional stopping to a Brownian motion, and when does it fail?",
+  "back": "<b>Triggers:</b> A stopping time \\(\\tau\\) with \\(E\\tau<\\infty\\) or a bounded stopped path, for example the first exit from a bounded interval.<br><b>Move:</b> \\(E[W_\\tau]=0\\) and \\(E[W_\\tau^2-\\tau]=0\\), giving exit probabilities and expected exit times.<br><b>Example:</b> Exit from \\((-3,2)\\): \\(E[\\tau]=E[W_\\tau^2]=6\\).<br><b>Failure mode:</b> Fails for \\(\\tau=\\)first hit of \\(+1\\) with no lower barrier: \\(W_\\tau=1\\), so \\(E[W_\\tau]=1\\neq 0\\). Unbounded stopping without integrability breaks the martingale identity.",
+  "tags": [
+   "s_optional_stopping",
+   "s_martingale",
+   "brownian_motion",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "With \\(x=\\ln S\\), \\(\\tau=T-t\\), the Black-Scholes PDE becomes \\(u_\\tau=\\tfrac12\\sigma^2u_{xx}+(r-\\tfrac12\\sigma^2)u_x-ru\\). It is the heat equation after {{c1::an exponential tilt \\(e^{\\alpha x+\\beta\\tau}\\) that removes the drift and the discount term}}.",
+  "back": "Choose \\(\\alpha=-\\tfrac{r-\\sigma^2/2}{\\sigma^2}\\) and \\(\\beta=-r-\\tfrac{(r-\\sigma^2/2)^2}{2\\sigma^2}\\) to remove the first-order and zero-order terms. Then \\(w_\\tau=\\tfrac12\\sigma^2w_{xx}\\), the heat equation.",
+  "tags": [
+   "s_change_of_measure",
+   "pde",
+   "black_scholes",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When is \\(C\\approx 0.4\\,S\\sigma\\sqrt T\\) a good rule, and when does it fail?",
+  "back": "<b>Triggers:</b> At the money (\\(K\\approx Se^{-rT}\\)), small \\(\\sigma\\sqrt T\\), small rates.<br><b>Move:</b> Use \\(C\\approx 0.4\\,S\\sigma\\sqrt T\\) and the straddle \\(\\approx 0.8\\,S\\sigma\\sqrt T\\) for quick breakevens.<br><b>Example:</b> \\(S=100\\), \\(\\sigma=20\\%\\), \\(T=1\\), \\(r=0\\): \\(C=7.97\\) versus \\(8\\).<br><b>Failure mode:</b> Fails away from the money (use \\(\\Phi\\)-based formula), for large \\(\\sigma\\sqrt T\\), and with dividends unless you use \\(Se^{-qT}\\) for \\(S\\).",
+  "tags": [
+   "s_fermi",
+   "s_sqrt_time_scaling",
+   "options",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When does Jensen's inequality settle the sign of a convexity effect, and when does it not?",
+  "back": "<b>Triggers:</b> You compare \\(E[g(X)]\\) with \\(g(E[X])\\) for a known convex or concave \\(g\\), with \\(X\\) random.<br><b>Move:</b> For convex \\(g\\), \\(E[g(X)]\\ge g(E X)\\); flip for concave. Use it to sign a price difference before computing it.<br><b>Example:</b> \\(e^{rT}E^Q[1/S_T]=e^{\\sigma^2T}/S_0>1/S_0\\): the reciprocal is convex.<br><b>Failure mode:</b> Gives only the sign, not the size; fails for functions that are neither convex nor concave (digital payoffs, a call near the strike), where the sign depends on the region. Size needs the variance term, for example via Taylor.",
+  "tags": [
+   "s_convexity_jensen",
+   "gbm",
+   "mental_math",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BS derivation 1/3]</b> Stock \\(S_0=100\\), strike \\(K=100\\), \\(r\\) and \\(\\sigma\\) constant, no dividends, \\(T=1\\). Under \\(Q\\), \\(\\ln S_T\\sim N(\\ln S_0+(r-\\sigma^2/2)T,\\sigma^2T)\\). Derive \\(C=e^{-rT}E^Q[(S_T-K)^+]\\) in closed form.",
+  "back": "<b>Answer:</b> \\(C=S_0N(d_1)-Ke^{-rT}N(d_2)\\), \\(d_{1,2}=\\dfrac{\\ln(S_0/K)+(r\\pm\\sigma^2/2)T}{\\sigma\\sqrt T}\\).<br><b>Structure:</b> Change of measure and lognormal truncated moments.<br><b>Key move:</b> Split the payoff at the indicator \\(\\{S_T>K\\}\\). Use \\(E^Q[S_T\\mathbf 1_{S_T>K}]=S_0e^{rT}N(d_1)\\), which is the tilted-measure version of the same integral.<br><b>Working:</b> Write \\(S_T=S_0e^{(r-\\sigma^2/2)T+\\sigma\\sqrt T Z}\\). The indicator is \\(Z>-d_2\\). Complete the square in the exponent to shift the mean by \\(\\sigma\\sqrt T\\), giving \\(N(d_1)\\).<br><b>Sanity check:</b> As \\(\\sigma\\to0\\) with \\(S_0>Ke^{-rT}\\), \\(C\\to S_0-Ke^{-rT}\\), the forward value. Numerically \\(C=10.4506\\) at \\(r=5\\%\\), \\(\\sigma=20\\%\\).<br><b>Transfer:</b> Any lognormal truncated mean, e.g. the cash-or-nothing digital \\(e^{-rT}N(d_2)\\).",
+  "tags": [
+   "s_change_of_measure",
+   "black_scholes",
+   "risk_neutral",
+   "fmt_chain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BS derivation 2/3]</b> Same call, \\(S_0=K=100\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\), \\(T=1\\), price \\(10.4506\\). Interviewer: 'The real-world drift is \\(\\mu=12\\%\\). Why does the price not change?'",
+  "back": "<b>Answer:</b> The price is the same for any \\(\\mu\\); the \\(\\mu\\) of the stock never enters \\(d_1,d_2\\).<br><b>Structure:</b> Girsanov: the real drift is removed by a change of measure to \\(Q\\), and replication does not need \\(\\mu\\).<br><b>Key move:</b> Market price of risk \\(\\theta=(\\mu-r)/\\sigma=0.35\\). Define \\(dQ/dP=\\exp(-\\theta W_T-\\tfrac12\\theta^2T)\\); under \\(Q\\), \\(\\tilde W_t=W_t+\\theta t\\) is Brownian, so the drift of \\(S\\) becomes \\(r\\).<br><b>Working:</b> Hedge the call with \\(\\Delta=N(d_1)\\) shares. The hedge portfolio's discounted value is a \\(Q\\)-martingale whatever \\(\\mu\\) is, so \\(\\mu\\) cancels in the replicating cost.<br><b>Sanity check:</b> Formula for \\(d_1,d_2\\) has no \\(\\mu\\); if \\(\\mu\\) changed the hedge ratio would not change either.<br><b>Transfer:</b> Forward price \\(Se^{rT}\\) is also independent of \\(\\mu\\); the expected payoff under \\(P\\) is not what you price.",
+  "tags": [
+   "s_change_of_measure",
+   "black_scholes",
+   "risk_neutral",
+   "fmt_chain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BS derivation 3/3]</b> Same derivation, \\(S_0=K=100\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\), \\(T=1\\), now with a continuous dividend yield \\(q=3\\%\\) paid out of the stock. What changes in the \\(Q\\)-drift, in \\(d_1,d_2\\), and in the price?",
+  "back": "<b>Answer:</b> Under \\(Q\\) the drift is \\(r-q\\). \\(d_1=0.20\\), \\(d_2=0.00\\), \\(C\\approx 8.6525\\) (from \\(10.4506\\)).<br><b>Structure:</b> Dividends lower the forward. Replace \\(S_0\\) by \\(S_0e^{-qT}\\) in the stock term and the drift by \\(r-q\\).<br><b>Key move:</b> \\(C=S_0e^{-qT}N(d_1)-Ke^{-rT}N(d_2)\\) with \\(d_{1,2}=\\frac{\\ln(S_0/K)+(r-q\\pm\\sigma^2/2)T}{\\sigma\\sqrt T}\\).<br><b>Working:</b> \\(97.0446\\cdot0.5793-95.1229\\cdot0.5=56.21-47.56=8.65\\).<br><b>Sanity check:</b> Call is lower than the no-dividend value, as expected. As \\(q\\to\\infty\\) the call goes to 0.<br><b>Transfer:</b> Put by parity: \\(P=C-Se^{-qT}+Ke^{-rT}=8.6525-97.0446+95.1229=6.7308\\).",
+  "tags": [
+   "s_replication",
+   "black_scholes",
+   "dividends",
+   "fmt_chain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: Variance swap 1/3]</b> Variance swap, notional 1, pays \\(\\frac1T\\int_0^T\\sigma_t^2\\,dt-K_{var}\\). Stock \\(S_0=100\\), \\(r=5\\%\\), volatility constant at 20%, \\(T=1\\). What is the fair \\(K_{var}\\)?",
+  "back": "<b>Answer:</b> \\(K_{var}=0.04\\) (fair volatility 20%).<br><b>Structure:</b> Realised variance is a moment of the path; with constant vol it is deterministic.<br><b>Key move:</b> Realised variance \\(=\\frac1T\\int_0^T\\sigma^2dt=\\sigma^2\\) pathwise, so the fair value of the swap is \\(\\sigma^2\\) minus \\(K_{var}\\) discounted.<br><b>Working:</b> \\(\\frac1T\\int_0^T 0.2^2\\,dt=0.04\\).<br><b>Sanity check:</b> With stochastic vol the fair strike is \\(E^Q[\\frac1T\\int\\sigma_t^2dt]\\), which is not the same as the ATM vol squared in general.<br><b>Transfer:</b> Fair strike is a risk-neutral expectation of realised variance, not a forecast under \\(P\\).",
+  "tags": [
+   "s_replication",
+   "variance_swap",
+   "volatility",
+   "fmt_chain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: Variance swap 2/3]</b> Same swap, but the smile is skewed: market OTM put vols are 25% and OTM call vols 18%. The strip \\(K_{var}=\\frac{2e^{rT}}{T}\\Big[\\int_0^F\\frac{P(K)}{K^2}dK+\\int_F^\\infty\\frac{C(K)}{K^2}dK\\Big]\\) is priced from these quotes. Which strikes dominate, and is the fair variance above or below \\(0.04\\)?",
+  "back": "<b>Answer:</b> Above \\(0.04\\). Low strikes dominate because their weight is \\(1/K^2\\) and they carry high put-wing variance.<br><b>Structure:</b> Fair variance is a weighted average of option prices with weights \\(\\propto 1/K^2\\), which reads as an average of the implied variances across strikes.<br><b>Key move:</b> Weights \\(2e^{rT}/(TK^2)\\) on OTM options. The weight per unit price is largest for low \\(K\\), so the 25% put wing pushes the strike above the ATM 20% level.<br><b>Working:</b> Flat smile at 20% gives exactly \\(0.04\\) by numerical integration (checked to \\(10^{-10}\\)). A linear wing interpolation to 25% (puts) and 18% (calls) gives \\(\\approx 0.0446\\), above \\(0.04\\).<br><b>Sanity check:</b> Model-free: the strip gives the expectation under \\(Q\\) for any smile, as long as quotes exist for all strikes.<br><b>Transfer:</b> Skew in the wings is priced by the strip; the ATM vol alone does not determine the fair variance.",
+  "tags": [
+   "s_replication",
+   "variance_swap",
+   "volatility",
+   "fmt_chain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: Variance swap 3/3]</b> Same swap, but the stock can drop 20% in one jump at an unknown time. Is the strip price still the fair strike, and what does a static strip not cover?",
+  "back": "<b>Answer:</b> Strip price is still the fair value under \\(Q\\). What is not covered is the dynamic hedge: the delta leg has gap risk.<br><b>Structure:</b> Static replication with a log contract is model-free for continuous paths; with jumps the realised variance includes the squared jump, which the strip still prices.<br><b>Key move:</b> Price: \\(e^{-rT}E^Q[\\text{realised variance}]\\) computed from the strip with jump-inclusive option prices. Hedge: the \\(\\int dS/S\\) leg is not self-financing across a gap.<br><b>Working:</b> A 20% drop is a log-return of \\(\\ln 0.8=-0.2231\\), squared \\(0.0498\\); this adds \\(0.0498/T\\) to realised variance over one year, which the strip prices in expectation.<br><b>Sanity check:</b> Gap risk is of order \\(\\tfrac12\\Gamma S^2(0.2)^2\\) per jump for the dynamic leg; the static strip price itself does not change form.<br><b>Transfer:</b> Crash-risk premium shows up as a steeper put wing in the strip, which raises the fair strike.",
+  "tags": [
+   "s_replication",
+   "variance_swap",
+   "volatility",
+   "fmt_chain"
+  ]
+ }
+]
