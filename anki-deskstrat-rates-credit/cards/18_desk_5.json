@@ -50,7 +50,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: DEFAULT_DAY 1/4]</b> Context: an IG-rated issuer with a 5y CDS and £500m of senior bonds files for bankruptcy at 06:30 London time. You are a credit strat on the desk. Walk through the first hours, step by step.",
-  "back": "<b>Headline:</b> stop quoting the defaulted bonds, establish the credit event status, pull the hedges and the position list, and set up the auction plan.<br>\n<b>Steps:</b><br>\n<ol>\n<li>Freeze quoting and mark the bonds to a recovery-based value. Confirm with compliance whether the name is on a restricted or watch list.</li>\n<li>Pull the CDS position report: notional, maturity, buy/sell, and which trades are 'physical' (against which obligations). Count the number of counterparties, since each one needs a credit event notice.</li>\n<li>Check whether the bankruptcy is a credit event under the ISDA Credit Derivatives Definitions. A bankruptcy filing is one of the listed events; the market decides via a Determinations Committee vote, so note the DC reference and timing.</li>\n<li>Set up the auction. Identify the Deliverable Obligations that will feed the auction and the open interest the desk expects to face.</li>\n</ol>\n<b>Trader angle:</b> the first 30 minutes are about not trading the wrong side of an event that is still being determined.<br>\n<b>Interviewer follow-up:</b> what if the DC has not ruled by the time you have to settle? Settlement is tied to the auction, so the timing is uncertain; the desk carries the risk of a delay and holds the position until the decision.",
+  "back": "<b>Headline:</b> stop quoting the defaulted bonds, establish the credit event status, pull the hedges and the position list, and set up the auction plan.<br>\n<b>Steps:</b><br>\n<ol>\n<li>Freeze quoting and mark the bonds to a recovery-based value. Confirm with compliance whether the name is on a restricted or watch list.</li>\n<li>Pull the CDS position report: notional, maturity, buy/sell, and which trades are 'physical' (against which obligations). Split the book by counterparty and by whether each trade settles in cash or physically.</li>\n<li>Check whether the bankruptcy is a credit event under the ISDA Credit Derivatives Definitions. A bankruptcy filing is one of the listed events; the market decides via a Determinations Committee vote, so note the DC reference and timing.</li>\n<li>Set up the auction. Identify the Deliverable Obligations that will feed the auction and the open interest the desk expects to face.</li>\n</ol>\n<b>Trader angle:</b> the first 30 minutes are about not trading the wrong side of an event that is still being determined.<br>\n<b>Interviewer follow-up:</b> what if the DC has not ruled by the time you have to settle? Settlement is tied to the auction, so the timing is uncertain; the desk carries the risk of a delay and holds the position until the decision.",
   "tags": [
    "default_day",
    "chain_default_day",
@@ -62,7 +62,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: DEFAULT_DAY 2/4]</b> Context: as before, the issuer is in default. You bought $20m notional of 5y CDS protection at 300bp. The CDS auction sets a final price of 28 (percent of par). Ignore accrued premium. What is the cash settlement, and who pays whom?",
-  "back": "<b>Headline:</b> the protection seller pays the protection buyer \\(\\$20\\text{m} \\times (1 - 0.28) = \\$14.4\\text{m}\\).<br>\n<b>Derivation:</b> cash settlement pays the loss below par on the notional, which is \\(N(1 - P_{\\text{final}}/100)\\). With final price 28 that is \\(20\\text{m} \\times 0.72 = \\$14.4\\text{m}\\).<br>\n<b>Desk angle:</b> the buyer receives the settlement amount; the seller receives the defaulted bonds (or the cash equivalent) at the auction price. Accrued premium is settled separately, which is why the desk checks the premium dates before quoting.<br>\n<b>Interviewer follow-up:</b> what if the auction final price is at 28 but your net short position is in a different maturity? Then you have a mismatch: your protection covers a different set of obligations and you carry basis risk on the auction result.",
+  "back": "<b>Headline:</b> the protection seller pays the protection buyer \\(\\$20\\text{m} \\times (1 - 0.28) = \\$14.4\\text{m}\\).<br>\n<b>Derivation:</b> cash settlement pays the loss below par on the notional, which is \\(N(1 - P_{\\text{final}}/100)\\). With final price 28 that is \\(20\\text{m} \\times 0.72 = \\$14.4\\text{m}\\).<br>\n<b>Desk angle:</b> under cash settlement the seller pays the buyer; under physical settlement the buyer delivers a deliverable obligation and receives par. Accrued premium is settled separately, which is why the desk checks the premium dates before quoting.<br>\n<b>Interviewer follow-up:</b> what if the auction final price is at 28 but your net short position is in a different maturity? Then you have a mismatch: your protection covers a different set of obligations and you carry basis risk on the auction result.",
   "tags": [
    "default_day",
    "chain_default_day",
@@ -86,7 +86,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: DEFAULT_DAY 4/4]</b> Context: a distressed bond in your book is bid 22 and offered 26 on default day. Your position is £10m nominal long, and the bid-offer is 4 points wide. Expected recovery is 35 in two years. Calculate the annualised return from buying at 28 to the expected recovery, and say what the bid-offer costs you on the way out.",
-  "back": "<b>Headline:</b> buying at 28 and receiving 35 in two years is about 11.8% a year before funding, and selling at the 22 bid costs £600k on £10m nominal.<br>\n<b>Calculation:</b> \\((35/28)^{1/2} - 1 = 11.8\\%\\) annualised. Exit cost: selling at 22 instead of the 24 mid costs \\(2 \\times 10\\text{m}/100 = £200\\text{k}\\) per side for the half-spread. Selling at the bid rather than mid is therefore \\(2\\) points, i.e. \\(£200\\text{k}\\) on £10m.<br>\n<b>Where it breaks:</b> the 35 recovery is an estimate with a wide distribution; the return is a recovery bet and the bid-offer dominates any expected accretion if you need to exit early.<br>\n<b>Interviewer follow-up:</b> when do you hold versus sell? Hold if the carry-to-recovery exceeds the cost of carrying the position and the bid-offer you would pay to exit, adjusted for the dispersion of recovery outcomes.",
+  "back": "<b>Headline:</b> buying at 28 and receiving 35 in two years is about 11.8% a year before funding; selling at the 22 bid instead of the 24 mid costs £200k on £10m nominal.<br>\n<b>Calculation:</b> \\((35/28)^{1/2} - 1 = 11.8\\%\\) annualised. Exit cost: the mid is 24, so selling at the 22 bid costs \\(2 \\times 10\\text{m}/100 = £200\\text{k}\\) against mid.<br>\n<b>Where it breaks:</b> the 35 recovery is an estimate with a wide distribution; the return is a recovery bet and the bid-offer dominates any expected accretion if you need to exit early.<br>\n<b>Interviewer follow-up:</b> when do you hold versus sell? Hold if the carry-to-recovery exceeds the cost of carrying the position and the bid-offer you would pay to exit, adjusted for the dispersion of recovery outcomes.",
   "tags": [
    "default_day",
    "chain_default_day",
@@ -154,7 +154,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: NIC 3/4]</b> Context: the desk holds the £50m allocation (DV01 £30k per bp) hedged with £49.2m of the benchmark. Two days after pricing, the new bond's secondary yield widens by 10bp to 5.25%, and the benchmark is unchanged. What is the P&amp;L on the unhedged spread, and how does the 15bp NIC relate to it?",
-  "back": "<b>Headline:</b> the unhedged spread loss is £300k, which is about two-thirds of the 15bp concession earned on the trade in value terms.<br>\n<b>Calculation:</b> the spread move is 10bp against a long position of £30k per bp, so the loss is \\(30{,}000 \\times 10 = £300{,}000\\). The benchmark hedge makes no money, since its yield is unchanged.<br>\n<b>Concession in value:</b> the 15bp NIC on the same £50m is worth about \\(50\\text{m} \\times 6.0 \\times 15 \\times 10^{-4} = £450\\text{k}\\) at the reoffer level. The desk's margin is therefore \\(450 - 300 = £150\\text{k}\\) if it sells the bonds at the 5.25% secondary, before fees and costs, but only if it can sell the position at that level.<br>\n<b>Interviewer follow-up:</b> what if you still hold after the widening? The concession is only realised if the position is sold near the reoffer, so the desk must decide whether to sell into weakness; holding is an outright credit view, not a hedge.",
+  "back": "<b>Headline:</b> the unhedged spread loss is £300k against the reoffer level. The 15bp NIC is the discount the investors received, not a desk gain, so it does not offset this loss.<br>\n<b>Calculation:</b> the spread move is 10bp against a long position of £30k per bp, so the loss is \\(30{,}000 \\times 10 = £300{,}000\\). The benchmark hedge makes no money, since its yield is unchanged.<br>\n<b>Concession in value:</b> the 15bp NIC on the same £50m is worth about \\(50\\text{m} \\times 6.0 \\times 15 \\times 10^{-4} = £450\\text{k}\\) on day one. That value sits with the investors who bought at 5.15 against a 5.00 fair level; the desk earns its fee and placement margin, not this amount.<br>\n<b>Interviewer follow-up:</b> what if you still hold after the widening? The concession is only realised if the position is sold near the reoffer, so the desk must decide whether to sell into weakness; holding is an outright credit view, not a hedge.",
   "tags": [
    "new_issue",
    "chain_new_issue",
@@ -177,7 +177,7 @@
  },
  {
   "type": "cloze",
-  "front": "In a syndicated new issue, the book is wall-crossed on the {{c1::syndicate desk}}, and the NIC is the gap between the {{c2::reoffer yield}} and the {{c3::secondary curve yield at the same maturity}}.",
+  "front": "In a syndicated new issue, syndicate staff are {{c1::wall-crossed}} before launch, and the NIC is the gap between the {{c2::reoffer yield}} and the {{c3::secondary curve yield at the same maturity}}.",
   "back": "Pre-hedging the deal itself before it is public is restricted; hedge the market exposure you already hold, and record why.",
   "tags": [
    "new_issue",
@@ -213,7 +213,7 @@
  {
   "type": "basic",
   "front": "Explain how a client RFQ on a corporate bond (sent through an electronic bond platform to several dealers) works from the dealer's side, and why the price you show depends on whether you are already long the bond.",
-  "back": "<b>Headline:</b> you see the size and the client, price the bond against your inventory and hedge, and reply with a level that wins only if it beats the other dealers.<br>\n<b>Steps:</b><br>\n<ol>\n<li>The RFQ arrives with the bond, side and size. You see the number of dealers and the time to respond.</li>\n<li>Price the bond off the screen mid, then adjust for the trade's cost to you: the hedge (index or government bond), the carry, and the inventory.</li>\n<li>If you are already long, a sell from the client is welcome; you can quote tighter on the sell side. If you are short, a buy is a benefit, and the reverse applies to the other side.</li>\n<li>If you win, the trade is booked and reported; the post-trade markout measures whether you won on a good number.</li>\n</ol>\n<b>Trade-off:</b> quoting tighter wins more often but lowers the margin. With n dealers all quoting at mid, the chance of winning is only about 1/n, so an RFQ with many dealers rewards the tightest quote and punishes slow pricing.<br>\n<b>Interviewer follow-up:</b> how do you decide whether to respond to an RFQ at all? Respond if the expected margin, net of hedge cost and the win probability, is positive; decline if the size is too large for the hedge.",
+  "back": "<b>Headline:</b> you see the size and the client, price the bond against your inventory and hedge, and reply with a level that wins only if it beats the other dealers.<br>\n<b>Steps:</b><br>\n<ol>\n<li>The RFQ arrives with the bond, side and size. You see the number of dealers and the time to respond.</li>\n<li>Price the bond off the screen mid, then adjust for the trade's cost to you: the hedge (index or government bond), the carry, and the inventory.</li>\n<li>If you are already long, a sell from the client is welcome; you can quote tighter on the sell side. If you are short, a buy is a benefit, and the reverse applies to the other side.</li>\n<li>If you win, the trade is booked and reported; the post-trade markout measures whether you won on a good number.</li>\n</ol>\n<b>Trade-off:</b> quoting tighter wins more often but lowers the margin. With n dealers all quoting at mid, the chance of winning is only about 1/n (ties broken at random), so an RFQ with many dealers rewards the tightest quote and punishes slow pricing.<br>\n<b>Interviewer follow-up:</b> how do you decide whether to respond to an RFQ at all? Respond if the expected margin, net of hedge cost and the win probability, is positive; decline if the size is too large for the hedge.",
   "tags": [
    "rfq",
    "bid_offer",
@@ -247,7 +247,7 @@
  },
  {
   "type": "basic",
-  "front": "<b>[Chain: FUNDING 1/2]</b> Context: the dealer holds £300m of corporate bonds with an average yield of 5.2%, financed in repo at 4.0% general collateral (GC). Calculate the annual carry and the daily carry on an ACT/360 basis. What is the desk's funding charge for the book?",
+  "front": "<b>[Chain: FUNDING 1/3]</b> Context: the dealer holds £300m of corporate bonds with an average yield of 5.2%, financed in repo at 4.0% general collateral (GC). Calculate the annual carry and the daily carry on an ACT/360 basis. What is the desk's funding charge for the book?",
   "back": "<b>Headline:</b> net carry is 1.2% a year, which is £3.6m a year, or about £10,000 a day on ACT/360.<br>\n<b>Calculation:</b> \\(\\text{carry}_{\\text{yr}} = 300\\text{m} \\times (5.2\\% - 4.0\\%) = £3.6\\text{m}\\). Daily on ACT/360: \\(3.6\\text{m}/360 = £10{,}000\\).<br>\n<b>Desk angle:</b> the funding desk charges the book at its marginal funding rate, not at GC, because the bank's own unsecured funding is more expensive than GC repo; a bond that is hard to finance is charged more.<br>\n<b>Interviewer follow-up:</b> what happens to the carry on a day the bond is special? The financing rate for that bond is lower than GC, so the holder is paid, but that is a rate the bond has to be specialled to earn; it is not a stable part of the carry.",
   "tags": [
    "funding",
@@ -259,8 +259,8 @@
  },
  {
   "type": "basic",
-  "front": "<b>[Chain: FUNDING 2/2]</b> Context: the desk is long £10m of a bond that is special in repo at 3.20%, against 4.00% GC. The desk lends the bond out and receives cash at 3.20%, or borrows cash at 4.00%? Explain the direction of the cash flows, and compute the 14-day saving on the £10m position.",
-  "back": "<b>Headline:</b> the desk is the cash lender in a special: it lends the bond and receives cash at the lower special rate. The saving against GC is \\(10\\text{m} \\times (4.00\\% - 3.20\\%) \\times 14/360 = £3{,}111\\).<br>\n<b>Direction:</b> in a reverse repo the desk receives the bond and pays cash; in the special, the desk gives the bond and receives cash at 3.20%. Relative to funding at 4.00%, the desk is paid a 0.80% rebate. The saving is the difference between the GC rate and the special rate applied to the cash amount.<br>\n<b>Where it breaks:</b> the desk must be sure the bond is available to borrow and that the special will persist; specials can end in one day when the bond is recalled or the market supply changes.<br>\n<b>Interviewer follow-up:</b> why does the funding desk care about specialness? It is an income source for holders of the bond, and it is why the bond's cash price can trade rich to its GC-implied level.",
+  "front": "<b>[Chain: FUNDING 2/3]</b> Context: the desk is long £10m of a bond that is special in repo at 3.20%, against 4.00% GC. Explain the direction of the cash and the bond in the repo, and compute the 14-day saving on the £10m position against funding at GC.",
+  "back": "<b>Headline:</b> the desk is the cash borrower: it repos out the bond it owns and receives cash at 3.20%, 80bp cheaper than GC funding. The saving is \\(10\\text{m} \\times (4.00\\% - 3.20\\%) \\times 14/360 = £3{,}111\\).<br>\n<b>Direction:</b> the desk gives the bond as collateral and receives cash. The cash lender on the other side receives the special bond and accepts the lower rate for it.<br>\n<b>Where it breaks:</b> the desk must be sure the bond is available to borrow and that the special will persist; specials can end in one day when the bond is recalled or supply changes.<br>\n<b>Interviewer follow-up:</b> why does the funding desk care about specialness? It is an income source for holders of the bond, and it is why the bond's cash price can trade rich to its GC-implied level.",
   "tags": [
    "funding",
    "chain_funding",
@@ -271,8 +271,20 @@
  },
  {
   "type": "basic",
-  "front": "It is 16:15 and your credit book's P&amp;L explain shows £180k unexplained for the day. The 5y index moved 3bp wider, the book's index CS01 is £90k per bp, and the desk's single-name bonds moved by a mix of spread and rates. Walk through the investigation.",
-  "back": "<b>Headline:</b> the spread move explains £270k of P&amp;L; you need to see whether the residual is a missing move, a mark error, or a trade that the explain did not capture.<br>\n<b>Calculation:</b> the spread P&amp;L explained by the index move is \\(90{,}000 \\times 3 = £270{,}000\\) loss for a long-protection book with the index sign assumed. The unexplained £180k is the residual the desk must split.<br>\n<b>Steps:</b><br>\n<ol>\n<li>Check the trade blotter for trades booked after the explain snapshot time, and check whether any were late-booked.</li>\n<li>Compare the marks used in the explain against the official end-of-day marks; a stale bond mark is the most common cause.</li>\n<li>Split the residual by book: index, single-names, bonds, and carry/roll. A residual that sits in one bond is a mark issue; a residual spread over the whole book is a missing risk factor.</li>\n<li>Check the rate and FX moves; a bond's spread P&amp;L is measured after removing its rates DV01 P&amp;L.</li>\n</ol>\n<b>Control angle:</b> the explain is only useful if the residual is below an agreed threshold; a residual above that goes to the product controller before the book is signed off.<br>\n<b>Interviewer follow-up:</b> what if the residual is the same sign every day? That points to carry or roll being left out of the explain, not to a random error.",
+  "front": "<b>[Chain: FUNDING 3/3]</b> Context: as before, a £10m long position is repoed at the 3.20% special rate against 4.00% GC for a planned 14 days. On day 5 the lender recalls the bond and the desk must refund at GC for the remaining 9 days. What is the total saving over the 14 days, and what would the desk pay to keep the special for the full period?",
+  "back": "<b>Headline:</b> the saving falls from £3,111 to about £1,111, because the special only lasts 5 days.<br>\n<b>Calculation:</b> saving over the special period \\(= 10\\text{m} \\times 0.80\\% \\times 5/360 = £1{,}111\\). The remaining 9 days are funded at GC, so there is no saving there. The planned £3,111 assumed 14 days of special.<br>\n<b>Desk angle:</b> the saving is only as good as the bond's availability. A recall is a loss of the special, and it can also force a buy-in of the position if the desk is short, so the funding desk prices specialness with a probability of recall.<br>\n<b>Interviewer follow-up:</b> how do you value an uncertain special? Take the expected duration of the special from the bond's history and recall frequency, then multiply the spread by that expected number of days; the spread is not a certain carry.",
+  "tags": [
+   "funding",
+   "chain_funding",
+   "case_study",
+   "lvl_vp_core",
+   "desk_practice"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "It is 16:15 and your credit book's P&amp;L explain shows £180k unexplained for the day. The book sells protection with index CS01 £90k per bp, the 5y index moved 3bp wider, and the book's actual day P&amp;L is -£450k. The single-name bonds moved by a mix of spread and rates. Walk through the investigation.",
+  "back": "<b>Headline:</b> the spread move explains -£270k of P&amp;L; you need to see whether the residual is a missing move, a mark error, or a trade that the explain did not capture.<br>\n<b>Calculation:</b> the book sells protection, so it is long spread risk. The explain attributes \\(-90{,}000 \\times 3 = -£270{,}000\\) to the index move. The actual day P&amp;L is -£450k, so the unexplained residual is \\(-£180\\text{k}\\), which the desk must split.<br>\n<b>Steps:</b><br>\n<ol>\n<li>Check the trade blotter for trades booked after the explain snapshot time, and check whether any were late-booked.</li>\n<li>Compare the marks used in the explain against the official end-of-day marks; a stale bond mark is the most common cause.</li>\n<li>Split the residual by book: index, single-names, bonds, and carry/roll. A residual that sits in one bond is a mark issue; a residual spread over the whole book is a missing risk factor.</li>\n<li>Check the rate and FX moves; a bond's spread P&amp;L is measured after removing its rates DV01 P&amp;L.</li>\n</ol>\n<b>Control angle:</b> the explain is only useful if the residual is below an agreed threshold; a residual above that goes to the product controller before the book is signed off.<br>\n<b>Interviewer follow-up:</b> what if the residual is the same sign every day? That points to carry or roll being left out of the explain, not to a random error.",
   "tags": [
    "pnl_explain",
    "lvl_vp_core",
@@ -288,30 +300,7 @@
    "scenario",
    "lvl_vp_core",
    "desk_practice",
-   "pre_open"
-  ]
- },
- {
-  "type": "basic",
-  "front": "A client asks a credit strat for a two-way price on £20m of a 5y single name, and tells you they are an active seller. The desk has no current position. How do you set the skew?",
-  "back": "<b>Headline:</b> quote the client side you want to trade and widen the side that would create risk you cannot hedge.<br>\n<b>Steps:</b><br>\n<ul>\n<li>With no position, you are indifferent to the direction for inventory but not for hedging. Compute the CS01 of the trade: \\(20\\text{m} \\times RPV01 \\times 10^{-4}\\).</li>\n<li>Check the hedge: can you buy or sell the index against it, and at what cost?</li>\n<li>Because the client is a seller of protection (sells risk), you buy protection from them on your offer side only if you can hedge; otherwise you widen that side.</li>\n</ul>\n<b>Trader angle:</b> a client who says it is active is signalling flow; the price you show is the price you accept to be the counterparty of that flow.<br>\n<b>Interviewer follow-up:</b> how does the skew differ when the desk is already long? The side that reduces the position is quoted tighter, the side that adds is quoted wider.",
-  "tags": [
-   "scenario",
-   "lvl_vp_core",
-   "desk_practice",
    "credit_sales"
-  ]
- },
- {
-  "type": "basic",
-  "front": "<b>Derivation: the beta-adjusted index hedge for a bond portfolio.</b> Derive the notional \\(N\\) of an index hedge that makes a bond portfolio flat to index spread moves, given portfolio CS01 \\(C\\), portfolio beta \\(\\beta\\) to the index, and index RPV01 \\(R\\). State where it breaks.",
-  "back": "<b>Derivation:</b> index move \\(\\Delta s\\). Portfolio spread move \\(\\beta\\,\\Delta s\\). Portfolio P&amp;L \\(= -C\\beta\\,\\Delta s\\) (in the portfolio's sign). Index protection of notional \\(N\\) gains \\(N R\\times 10^{-4}\\,\\Delta s\\). Setting the two equal:\n\\[ N = \\frac{\\beta\\,C}{R\\times 10^{-4}}. \\]\nWith \\(C = £36{,}000\\), \\(\\beta = 0.8\\), \\(R = 4.5\\): \\(N = 0.8 \\times 36{,}000 / (4.5\\times10^{-4}) = £64.0\\text{m}\\).<br>\n<b>Where it breaks:</b> the hedge is flat to the index move only. The residual is \\(C\\,(1-\\beta^2)\\)-type idiosyncratic risk in a regression sense, and it grows when the portfolio's names decouple from the index in stress. Beta estimated from a calm window understates the stress residual.<br>\n<b>Interviewer follow-up:</b> what does the hedge do to the basis? It introduces index-intrinsic basis risk; the index can trade wide or tight to its constituents.",
-  "tags": [
-   "index_hedge",
-   "derivation",
-   "chain_port_bid",
-   "lvl_stretch",
-   "desk_practice"
   ]
  },
  {
@@ -322,6 +311,41 @@
    "default_day",
    "convention",
    "lvl_vp_core",
+   "cloze",
+   "desk_practice"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A credit fund wants to exit £200m of IG bonds over one week. Compare executing as a single portfolio trade with working the list name by name over the week. What drives the choice, and what does each cost you?",
+  "back": "<b>Headline:</b> the portfolio trade gives certainty and a single price at a discount; working the list gives you a better average price but takes time and carries market risk.<br>\n<b>Trade-off:</b><br>\n<ul>\n<li><b>Portfolio:</b> one price, one discount to mid (the bid-side discount on the aggregate), one hedge to put on. Cost: the discount is wide because the dealer takes execution and hedge risk.</li>\n<li><b>Working the list:</b> narrower individual spreads, but each name carries its own risk over the week. The fund's average price depends on the market moving against it during the week.</li>\n</ul>\n<b>Decision rule:</b> the portfolio is preferred when the time value of the exit or the market risk over the week exceeds the discount. For £200m, a 0.8% discount is £1.6m; working the list only wins if the market moves less than that against the fund.<br>\n<b>Interviewer follow-up:</b> what does the dealer do with the list? It hedges the aggregate with the index and sells the bonds over time, so the discount is paid for that work.",
+  "tags": [
+   "portfolio_trade",
+   "lvl_vp_core",
+   "trade_off",
+   "desk_practice"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "An ETF authorised participant creates units by delivering a {{c1::basket of bonds}} and receives ETF shares, and the premium must exceed the {{c2::bond bid-offer, creation fee, financing and slippage}} for the creation to be profitable.",
+  "back": "In-kind creation is the standard mechanism for the bond ETFs discussed here; cash creation changes who bears the bid-offer.",
+  "tags": [
+   "etf_arb",
+   "convention",
+   "lvl_foundation",
+   "cloze",
+   "desk_practice"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A bond that is special in repo is cheap to {{c1::finance}}: the holder repos it out at a rate {{c2::below}} GC, and the {{c3::cash lender}} accepts that lower rate to obtain the bond.",
+  "back": "The saving on a position of N for t days is \\(N \\times (r_{GC} - r_{special}) \\times t/360\\).",
+  "tags": [
+   "funding",
+   "convention",
+   "lvl_foundation",
    "cloze",
    "desk_practice"
   ]

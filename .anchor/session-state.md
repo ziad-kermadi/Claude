@@ -1,6 +1,6 @@
 # Session state (auto-saved — last known reality)
 
-_Updated: 2026-10-19 19:15:50_  ·  branch: `claude/quant-deck-cpp-training-0rix4z`
+_Updated: 2026-10-19 19:15:58_  ·  branch: `claude/quant-deck-cpp-training-0rix4z`
 
 ## Uncommitted changes
 ```
@@ -15,6 +15,7 @@ Diff stat:
 
 ## Recent commits
 ```
+d23eed8 WIP: v3 card files in progress
 1b80999 Add desk practice 2: marking, IPV and model governance cards
 8a3417c Update anchor session state
 90fbfe8 Force-copy socratic config on session start; delete used handoff; record v3 scope
@@ -22,7 +23,6 @@ Diff stat:
 877a1cf Persist socratic config (all but Flow); v3 spec rules and subdeck map
 6abe47f Add anchor-memory session state snapshot
 5cfad96 Add handoff file for next session
-887cbd9 Deck v2: 856 notes, 12 subdecks, fact-checked; rebuild .apkg and add README
 ```
 
 ## Resume

@@ -1,0 +1,366 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PNL_BREAK 1/5]</b> Context: at 16:15 the rates desk's risk-based explain shows actual P&amp;L of +£1.25m, explained P&amp;L of +£1.65m and an unexplained residual of −£400k. The trader says nothing unusual happened. What are your first three checks, in order, and why in that order?",
+  "back": "<b>Answer:</b> Check the scope before the market data, and the market data before the residual.\n<ol>\n<li><b>Same population.</b> The positions behind the marks and the positions behind the sensitivities must be the same trades on the same date. Look for trades booked, amended, matured or cancelled since the last snapshot. A missing or duplicated trade is the commonest cause of a residual, and it moves many lines at once.</li>\n<li><b>Same market data.</b> The curves and vol surfaces used for the sensitivities must be the ones that produced today's marks, with matching timestamps and no stale pillars.</li>\n<li><b>Same day basis.</b> Yesterday's marks must be the signed official marks, not a flash estimate, and the carry and time decay must use the right day count and the right settlement date.</li>\n</ol>\nOnly then break the residual down by book, bucket and trade. Chasing the largest residual first is how a desk ends up explaining a symptom.<br>\n<b>Interviewer follow-up:</b> Why not start with the largest residual trade? A population or snapshot error moves many trades at once, so the largest single residual is often the visible part of a book-wide fault.",
+  "tags": [
+   "desk_practice",
+   "pnl_explain",
+   "workflow",
+   "chain_pnl_break",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PNL_BREAK 2/5]</b> Context: the −£400k residual from card 1/5 splits by trade into −£310k on trade A (a £150m 7y SONIA receiver), −£70k on trade B and −£20k across the rest of the book. Trade A passed the population check. Describe how you diagnose trade A, and what each outcome tells you.",
+  "back": "<b>Answer:</b> Rebuild trade A's explain on its own. Take its full revaluation at T−1 and at T and its risk-based explain from its own bucket sensitivities and bucket moves. Then compare three numbers: the book's mark P&amp;L on trade A, its full-reval P&amp;L, and its risk-based explained P&amp;L.\n<ul>\n<li><b>Mark P&amp;L differs from full-reval P&amp;L:</b> the trade is in a different state in the two systems (a booking or amendment mismatch) or is priced off a different curve.</li>\n<li><b>Mark and full-reval agree, but the explain does not:</b> the sensitivities are wrong or stale (a bucket that did not refresh, a pillar mapped to the wrong tenor, or a bump size that is too large for the trade's convexity).</li>\n<li><b>The residual is one bucket's DV01 times a move that the risk used as zero:</b> a bucket-move mismatch. This is the signature in card 3/5.</li>\n</ul>\nA large residual on one trade while the rest of the book explains cleanly points to that trade's market-data mapping, not to the book.<br>\n<b>Interviewer follow-up:</b> What single number tells you it is a mapping problem rather than a model problem? The residual is exactly one bucket's DV01 multiplied by the move that bucket should have recorded.",
+  "tags": [
+   "desk_practice",
+   "pnl_explain",
+   "workflow",
+   "chain_pnl_break",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PNL_BREAK 3/5]</b> Context: trade A is a £150m 7y SONIA receiver with signed DV01 of −£20k/bp in the 5y bucket, −£15k/bp in the 7y bucket and −£26k/bp in the 10y bucket. Over the day the 5y par rate moves −4bp and the 10y moves −6bp. The marks interpolate the 7y linearly between 5y and 10y, but the 7y pillar in the risk snapshot did not refresh and recorded a move of 0bp. Compute the explained P&amp;L, the actual P&amp;L and the residual, and state the residual as a formula.",
+  "back": "<b>Answer:</b> Interpolated 7y move: \\(-4+\\tfrac{2}{5}(-6+4)=-4.8\\)bp.\n<table>\n<tr><th>Line</th><th>Calculation</th><th>£</th></tr>\n<tr><td>Explained (risk snapshot)</td><td>\\((-20)(-4)+(-15)(0)+(-26)(-6)=80+0+156\\) (k)</td><td>+236,000</td></tr>\n<tr><td>Actual (marks)</td><td>\\((-20)(-4)+(-15)(-4.8)+(-26)(-6)=80+72+156\\) (k)</td><td>+308,000</td></tr>\n<tr><td><b>Residual</b></td><td>actual less explained</td><td><b>+72,000</b></td></tr>\n</table>\nThe residual equals \\(\\text{DV01}_{7y}\\times(\\Delta y^{\\text{mark}}_{7y}-\\Delta y^{\\text{risk}}_{7y})=(-15)(-4.8-0)\\)k. It is a clean function of one bucket, so the stale pillar is the cause. The fix is to refresh the pillar in the risk snapshot, never to plug the residual.<br>\n<b>Interviewer follow-up:</b> How would you catch this without a trade-level explain? Check that bucket moves are consistent with their neighbours: a zero move on a bucket that sits between two moving pillars is a red flag.",
+  "tags": [
+   "desk_practice",
+   "pnl_explain",
+   "workflow",
+   "chain_pnl_break",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PNL_BREAK 4/5]</b> Context: after the population and the curve checks, a residual of −£90k remains on the 1y×10y receiver straddles in the same book. Every curve point refreshed normally. The straddles have vega of £60k per bp of normal vol, and the 1y×10y vol point moved −1.5bp during the day. Where do you look next, and what result would show the vol explain is complete?",
+  "back": "<b>Answer:</b> The arithmetic gives \\(60\\text{k}\\times(-1.5)=-\\pounds 90\\text{k}\\), which is exactly the residual. A residual that equals vega times the move is almost always a missing vega line, so check that first.\n<ol>\n<li><b>Is there a vega line at all?</b> If the explain carries no vega for this book, add it.</li>\n<li><b>Does the vega ladder cover the moving point?</b> Vega is bucketed by expiry and tenor. If the vol move landed on a tenor that the ladder does not carry, the ladder sums to less than the parallel vega and the gap is the residual.</li>\n<li><b>Is the bump size right?</b> A ±5bp bump on a short-dated option misses vol-gamma. Compare with a full revaluation of the straddle on the surface with the vol point moved.</li>\n</ol>\nThe explain is complete when the bucketed vega times the bucket vol moves sums to the full-reval vol P&amp;L within the desk's tolerance, and each vol point's line is visible.<br>\n<b>Interviewer follow-up:</b> Why is a residual equal to exactly vega times the move the most useful clue? A match that tight points to a missing term, not to noise.",
+  "tags": [
+   "desk_practice",
+   "pnl_explain",
+   "vega",
+   "chain_pnl_break",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PNL_BREAK 5/5]</b> Context: the stale 7y pillar and the missing vega line are fixed. A residual of −£60k on the book has no identified cause. A trader asks you to net it against a +£60k residual on another book so the day signs off this evening. What do you do?",
+  "back": "<b>Answer:</b> Do not net. Report residuals gross by book, bucket and trade. The two residuals are different problems that happen to offset, and netting hides both. The −£60k stays open until it has a cause, or until it is accepted through the tolerance and escalation process owned by product control, not by the desk. Write up the checks already done, the figures and the open question, and escalate with them.\nA residual that persists across days is a model or data issue, and the trader should expect the question to be asked again tomorrow.<br>\n<b>Interviewer follow-up:</b> When is a residual acceptable? When it is within the agreed tolerance for that book, has a documented cause or a documented reason it is immaterial, and product control has seen it. Being small is not the test on its own.",
+  "tags": [
+   "desk_practice",
+   "pnl_explain",
+   "escalation",
+   "chain_pnl_break",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: REBUILD 1/3]</b> Context: at the end-of-day curve build, the 5y SONIA par input moves from 4.20% to 4.22% because the quote source for that instrument changed. The broker screen the desk watches for the 5y did not move. You hold £100m receive-fixed 5y with signed DV01 of −£42k/bp. The rebuild shows −£84k on the position. Is that market P&amp;L? How should it be classified, and what do you need before you accept it?",
+  "back": "<b>Answer:</b> \\(-42\\text{k}\\times 2=-\\pounds 84\\text{k}\\), but the number is not market P&amp;L. The market did not move. The input moved because its source changed, so the move is a data or rebuild item, not a trading result.\nBefore accepting it as anything:\n<ol>\n<li>The new source is an approved, documented input for that instrument.</li>\n<li>The change is a correction with a reason, not a preference for a more favourable quote.</li>\n<li>Prior-day marks are restated on both sources, so that the methodology or source effect is isolated from the market effect.</li>\n<li>Product control approves the classification.</li>\n</ol>\nWithout those steps the −£84k is unexplained P&amp;L presented as market P&amp;L.<br>\n<b>Interviewer follow-up:</b> Why not simply take the rebuilt mark as the new mark? Because the position's value would then change without a traded price or a market move, and any change in value from a rebuild needs an audit trail.",
+  "tags": [
+   "desk_practice",
+   "pnl_explain",
+   "curve_rebuild",
+   "chain_rebuild",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: REBUILD 2/3]</b> Context: the same £100m 5y receiver (signed DV01 by bucket: 4y −£8k/bp, 5y −£30k/bp, 6y −£4k/bp; parallel DV01 −£42k/bp). The bootstrap moves the zero rates by +0.9bp at 4y, +1.6bp at 5y and +2.1bp at 6y, because the rebuild changes the shape as well as the level. A risk manager computes the rebuild P&amp;L as the parallel DV01 times the 5y zero move. Compare that figure with a bucket-based calculation and say which is right and why.",
+  "back": "<b>Answer:</b>\nBucket-based: \\((-8)(0.9)+(-30)(1.6)+(-4)(2.1)=-7.2-48.0-8.4=-\\pounds 63.6\\text{k}\\).<br>\nParallel shortcut: \\((-42)(1.6)=-\\pounds 67.2\\text{k}\\).<br>\nThe shortcut overstates the loss by £3.6k because it applies the 5y move to every bucket. The bucket figure is right because each bucket's DV01 multiplies its own zero move. The shortcut is valid only when every bucket moves by the same amount, which a rebuild that changes shape does not do.<br>\n<b>Where it breaks:</b> this is a first-order calculation. For a larger rebuild add the convexity of each bucket.<br>\n<b>Interviewer follow-up:</b> Why do the zero moves differ from the par move at the same tenor? The bootstrap is recursive: a change in one par input moves the discount factors that the later instruments depend on, and the interpolation spreads the change across neighbouring tenors.",
+  "tags": [
+   "desk_practice",
+   "pnl_explain",
+   "curve_rebuild",
+   "bucket_dv01",
+   "chain_rebuild",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: REBUILD 3/3]</b> Context: the desk changes its bootstrap from linear interpolation of zero rates to log-linear interpolation of discount factors. On the prior day's market inputs, the PV of a 5y swap is £3.80m under the old method and £3.84m under the new method. At T, under the new method, the PV is £3.91m. The reported day P&amp;L is the change from the old method at T−1 to the new method at T. Split it into market and methodology parts, and say what the desk should report.",
+  "back": "<b>Answer:</b>\n<ul>\n<li>Total reported: \\(3.91-3.80=+\\pounds 110\\)k.</li>\n<li>Methodology, same inputs: \\(3.84-3.80=+\\pounds 40\\)k.</li>\n<li>Market, new method on both days: \\(3.91-3.84=+\\pounds 70\\)k.</li>\n</ul>\nCheck: \\(40+70=110\\). The £40k is a model change, not trading P&amp;L. The desk should restate prior-day marks under the new method so the history is consistent, and report the £40k as a separately approved methodology item to product control. A change of interpolation method is a model change, so it needs validation and approval before the new method is used for marks.<br>\n<b>Interviewer follow-up:</b> Which method should the desk pick? The one it can defend on the instruments it holds and validate with its model risk function. The P&amp;L effect is not the reason to choose it.",
+  "tags": [
+   "desk_practice",
+   "pnl_explain",
+   "curve_rebuild",
+   "methodology",
+   "chain_rebuild",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PREOPEN 1/3]</b> Context: it is 07:15. Overnight the 2y yield fell 3bp, the 5y fell 2bp and the 10y fell 1bp. The rates book has signed DV01 of −£18k/bp at 2y, +£32k/bp at 5y and −£55k/bp at 10y. Estimate the overnight P&amp;L on the book, say which items you have left out, and say what you tell the trader.",
+  "back": "<b>Answer:</b>\n<table>\n<tr><th>Bucket</th><th>DV01 (£k/bp)</th><th>Move (bp)</th><th>P&amp;L (£k)</th></tr>\n<tr><td>2y</td><td>−18</td><td>−3</td><td>+54</td></tr>\n<tr><td>5y</td><td>+32</td><td>−2</td><td>−64</td></tr>\n<tr><td>10y</td><td>−55</td><td>−1</td><td>+55</td></tr>\n<tr><td><b>Total</b></td><td></td><td></td><td><b>+45</b></td></tr>\n</table>\nThe flash estimate is about +£45k. The parallel DV01 is −£41k/bp, and a parallel −2bp move would give +£82k. The bucket view matters because the shape worked against the book in the 5y.<br>\nLeft out: vega from any overnight vol move, carry and roll, spread and basis moves, anything booked overnight, and any move in the next fixing. Tell the trader it is a flash estimate on the bucket moves, not the P&amp;L.<br>\n<b>Interviewer follow-up:</b> What could make this estimate wrong by more than the vega? A curve shape change inside a bucket, or quotes that were stale at 07:15.",
+  "tags": [
+   "desk_practice",
+   "overnight",
+   "dv01",
+   "workflow",
+   "chain_preopen",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PREOPEN 2/3]</b> Context: at 07:15 the 5y input on the curve has changed from an old benchmark swap quote to a new instrument, because the old one has rolled. The market did not move. The 5y zero moves +2bp because the new instrument prices differently on the same curve. Your £100m 5y receiver has signed DV01 of −£42k/bp, so the rebuild shows −£84k. Is that P&amp;L, and how do you split the day?",
+  "back": "<b>Answer:</b> The instrument changed, the market did not, so the −£84k is an instrument-roll or rebuild item, not market P&amp;L. Value the new instrument on both days, on the same curve. If the new instrument's own price moved by the same 2bp, the move is real and the classification changes. If its price did not move, the −£84k is the roll effect and it goes in the rebuild line.<br>\nThe test is always the same: price the instrument you now hold on T−1 and on T, and attribute only the change in its price on a common curve to market.<br>\n<b>Interviewer follow-up:</b> Why does a roll appear at all if both instruments reprice the curve? Because the curve's 5y node is pinned by whichever instrument the bootstrap uses. Changing the pinning instrument moves the node even when the market is flat.",
+  "tags": [
+   "desk_practice",
+   "overnight",
+   "curve_rebuild",
+   "chain_preopen",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PREOPEN 3/3]</b> Context: at 07:15 risk shows a £50m 5y payer that was booked at 16:40 yesterday with trade date yesterday. The P&amp;L system has it booked this morning, with trade date today. The day-one P&amp;L on the trade is +£38k. What do you do with it, and what does it do to the explain?",
+  "back": "<b>Answer:</b> The position and its P&amp;L belong to the trade date, so the trade must sit in yesterday's population. If the P&amp;L system books by booking date, yesterday's P&amp;L is understated by £38k and today's is overstated by the same amount. The explain then shows a residual on the new-trades line.\nFix the trade date in the P&amp;L system, rerun yesterday's explain on the corrected population, and document the correction. Do not backdate silently, and do not leave the risk and P&amp;L populations different. Today's explain then carries the trade only as a new-trade line, never as market P&amp;L.<br>\n<b>Interviewer follow-up:</b> Does a trade booked after the cut-off change yesterday's official P&amp;L? The record for that trade date is corrected and documented as a late booking. The bridge from flash to official shows it as a separate line, so the change is visible.",
+  "tags": [
+   "desk_practice",
+   "pnl_explain",
+   "new_trades",
+   "chain_preopen",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: FLASH 1/3]</b> Context: the desk reports a flash P&amp;L at 16:30, and the official P&amp;L is signed the next morning. Define each, and say what is allowed to change between them.",
+  "back": "<b>Answer:</b> <b>Flash:</b> the desk's estimate of today's P&amp;L from the marks available at the flash time. It has not been through the end-of-day curve and vol sign-off, or independent price verification. <b>Official:</b> the P&amp;L on the signed end-of-day marks, including late bookings, corrections, final fixings and any approved valuation adjustments.\nBetween them, the marks may change (closing curves, vol surfaces, closing levels), late trades may be added with trade date today, corrections may be booked and reserves may move. What must not change silently is the method and the population. Every change between flash and official must appear as a line in a bridge.<br>\n<b>Interviewer follow-up:</b> Why report a flash number at all? It gives the trader and risk a fast view, and it is a checkpoint: a large flash-to-official gap is itself a control signal.",
+  "tags": [
+   "desk_practice",
+   "flash_pnl",
+   "workflow",
+   "chain_flash",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: FLASH 2/3]</b> Context: flash P&amp;L is +£2.10m. Between flash and official, three things happen. A £45k late trade with trade date today is booked. After the flash, the end-of-day vol mark moves against the book by £130k. There are no other changes. Compute the official P&amp;L, lay out the bridge, and say how each line is classified.",
+  "back": "<b>Answer:</b> Official = \\(2.10+0.045-0.130=+\\pounds 2.015\\)m.\n<table>\n<tr><th>Bridge line</th><th>£</th><th>Classification</th></tr>\n<tr><td>Flash P&amp;L</td><td>+2,100,000</td><td>Starting point</td></tr>\n<tr><td>Late trade (trade date today)</td><td>+45,000</td><td>New trade, checked against its day-one P&amp;L</td></tr>\n<tr><td>EOD vol mark</td><td>−130,000</td><td>Market-data change at end of day, tied to the surface version and time</td></tr>\n<tr><td><b>Official</b></td><td><b>+2,015,000</b></td><td></td></tr>\n</table>\nThe bridge must sum exactly, with no plug. The gap of −£85k is about 4% of the flash. Such a gap is common; its composition is what gets reviewed.<br>\n<b>Interviewer follow-up:</b> Why is the late trade a bridge item rather than part of the flash? It was not in the population when the flash was taken. Its P&amp;L belongs to its trade date, so it is added on the official.",
+  "tags": [
+   "desk_practice",
+   "flash_pnl",
+   "bridge",
+   "chain_flash",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: FLASH 3/3]</b> Context: the official P&amp;L is +£2.015m against the flash of +£2.10m (card 2/3). The next morning the product controller asks why the bridge has a plug line of −£15k that nobody can explain. What is the wrong answer, and what is the process?",
+  "back": "<b>Answer:</b> The wrong answer is to leave a plug or a 'various' line. A plug means the bridge reconciles without a cause, and the amount is unsupervised.\nThe process: rerun the flash on the same inputs as the official, then compare trade by trade. The difference is one of three things: a population difference (a trade in one system and not the other), a mark that changed after the flash and was not written into the bridge, or a calculation or rounding difference between the two runs. Each cause must be tied to a number that moves the flash to the official. Anything that cannot be tied to a cause is escalated to product control with the trade-level comparison attached.<br>\n<b>Interviewer follow-up:</b> How do you test whether a difference is rounding? Rerun both at full precision and compare by trade. Rounding is a sum of small random trade-level differences, and the controller will want to see that it is.",
+  "tags": [
+   "desk_practice",
+   "flash_pnl",
+   "bridge",
+   "reconciliation",
+   "chain_flash",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: new-trade P&amp;L in the explain.</b> A receiver swap is executed on day \\(T\\) at fixed rate \\(K_{\\text{exec}}\\). The mid-market par rate at execution is \\(S_{\\text{mid}}\\). Let \\(A\\) be the annuity, so the PV of a unit change in the fixed rate is \\(NA\\). Write the new-trade P&amp;L as a pricing edge plus a fee, show which explain line each sits on, and compute both for \\(N=£100\\text{m}\\), \\(A=4.6\\), \\(K_{\\text{exec}}=4.005\\%\\), \\(S_{\\text{mid}}=4.000\\%\\) and a fee of £2,500.",
+  "back": "<b>Step 1.</b> The receiver's value at mid is \\(V=NA\\,(K-S_{\\text{mid}})\\). At execution \\(K=K_{\\text{exec}}\\), so the trade's value at mid is \\(NA\\,(K_{\\text{exec}}-S_{\\text{mid}})\\). That is the pricing edge, and it is the day-one P&amp;L at mid.<br>\n<b>Step 2.</b> The fee \\(F\\) is a cost of execution and is booked separately, so the day-one P&amp;L is \\(NA(K_{\\text{exec}}-S_{\\text{mid}})-F\\).<br>\n<b>Step 3 (numbers).</b> Edge \\(=100\\text{m}\\times4.6\\times0.00005=+\\pounds 23{,}000\\). Net day-one \\(=23{,}000-2{,}500=+\\pounds 20{,}500\\).<br>\n<b>Where it sits:</b> the edge goes on the new-trades line, the fee on the fees line. Neither is a market move. Only the next day's move in \\(S\\) is market P&amp;L.<br>\n<b>Where it breaks:</b> if the desk's mid is a model mid rather than a quote, part of the edge is model difference. That belongs in the valuation-control process, not in trading P&amp;L.",
+  "tags": [
+   "desk_practice",
+   "derivation",
+   "new_trades",
+   "pnl_explain",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: amendment P&amp;L.</b> On day \\(T\\) the fixed rate of a £100m receiver is amended from \\(K_0=4.000\\%\\) to \\(K_1=4.005\\%\\) to correct a booking error. The annuity is \\(A_T=4.6\\). Derive the P&amp;L the amendment produces on day \\(T\\), say how it should be classified, and then say what changes if the notional is amended instead of the rate.",
+  "back": "<b>Step 1.</b> For a receiver, \\(V(K)=N A_T(K-S_T)\\), so the value rises with the fixed rate. The amendment changes value by \\(V(K_1)-V(K_0)=NA_T(K_1-K_0)=100\\text{m}\\times4.6\\times0.00005=+\\pounds 23\\)k.<br>\n<b>Step 2 (classification).</b> The £23k is a correction to a record, not a market move on day \\(T\\). The economic loss happened at execution, so the right treatment is to restate the trade-date P&amp;L, or to report the amount on an amendments line with explicit approval. It must never appear as trading gain.<br>\n<b>Step 3 (notional amendment).</b> Value is linear in \\(N\\): \\(\\Delta V=(N_1-N_0)A_T(K-S_T)\\). An at-market trade (\\(K=S_T\\)) has zero value, so a notional amendment on it creates no P&amp;L at the mark. An off-market trade gives the price difference times the notional change.<br>\n<b>Interviewer follow-up:</b> Why does a notional change on an at-market swap create no P&amp;L? Its mid value is zero, and the value is linear in notional, so the change is zero times the notional change.",
+  "tags": [
+   "desk_practice",
+   "derivation",
+   "amendments",
+   "pnl_explain",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: bucketed versus parallel explain.</b> The rates P&amp;L is \\(\\sum_i D_i\\,\\Delta y_i\\), where \\(D_i\\) is the signed key-rate DV01 in bucket \\(i\\) and \\(\\Delta y_i\\) the bucket move. Show when this equals the parallel explain \\(D_\\parallel\\,\\Delta y_\\parallel\\). Then compute both for a 2y/5y/10y book with \\(D=(-18,+32,-55)\\)k/bp and moves \\((-3,-2,-1)\\)bp.",
+  "back": "<b>Step 1.</b> \\(\\Delta V\\approx\\sum_i\\partial V/\\partial y_i\\,\\Delta y_i=\\sum_i D_i\\Delta y_i\\), with each \\(D_i\\) found by bumping bucket \\(i\\) alone.<br>\n<b>Step 2.</b> Set \\(D_\\parallel=\\sum_i D_i\\) and let \\(\\Delta y_\\parallel\\) be the average bucket move. The parallel explain is \\(D_\\parallel\\Delta y_\\parallel\\). The difference from the bucketed explain is \\(\\sum_i D_i(\\Delta y_i-\\Delta y_\\parallel)\\), which is zero only when every bucket moves by the same amount.<br>\n<b>Step 3 (numbers).</b> \\(D_\\parallel=-18+32-55=-41\\)k/bp. Average move \\(=(-3-2-1)/3=-2\\)bp. Parallel explain \\(=(-41)(-2)=+82\\)k. Bucketed explain \\(=54-64+55=+45\\)k. The parallel shortcut is out by \\(45-82=-37\\)k, which is the shape move the single parallel DV01 cannot see.<br>\n<b>Where it breaks:</b> the bucketed explain is only as good as the \\(D_i\\). DV01s computed with different bump sizes or on a different curve do not add up to the parallel DV01 exactly.",
+  "tags": [
+   "desk_practice",
+   "derivation",
+   "dv01",
+   "bucket_dv01",
+   "pnl_explain",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: FX translation in a GBP-reporting desk.</b> A USD book has value \\(V_t\\) in USD. The spot is \\(S_t\\) (USD per GBP), so its GBP value is \\(V_t/S_t\\). Split the GBP P&amp;L into a local-currency part and a translation part. Compute both for \\(V_{T-1}=\\$10\\text{m}\\), local P&amp;L \\(+\\$1.2\\text{m}\\), \\(S_{T-1}=1.2500\\) and \\(S_T=1.2600\\).",
+  "back": "<b>Step 1.</b> Write \\(V_T=V_{T-1}+\\Delta V\\). Then\n\\[\\Delta\\!\\left(\\frac{V}{S}\\right)=\\frac{V_T}{S_T}-\\frac{V_{T-1}}{S_{T-1}}=\\underbrace{\\frac{\\Delta V}{S_T}}_{\\text{local P\\&L at closing}}+\\underbrace{V_{T-1}\\left(\\frac{1}{S_T}-\\frac{1}{S_{T-1}}\\right)}_{\\text{translation}}.\\]<br>\n<b>Step 2 (numbers).</b> Local: \\(1.2\\text{m}/1.26=\\pounds 952{,}381\\). Translation: \\(10\\text{m}\\times(1/1.26-1/1.25)=10\\text{m}\\times(-0.0063492)=-\\pounds 63{,}492\\). Total \\(=\\pounds 888{,}889\\). Check: \\(V_T/S_T=11.2/1.26=8.888889\\)m and \\(V_{T-1}/S_{T-1}=8.000\\)m, a difference of \\(0.888889\\)m.<br>\n<b>Where it breaks:</b> the split depends on convention. If local P&amp;L is converted at an average rate, the translation line absorbs the difference. Use the group's reporting convention, and use it every day.<br>\n<b>Interviewer follow-up:</b> Why does a long-USD book lose in GBP when the local P&amp;L is positive? \\(S\\) rose, so the dollar weakened, and each dollar of value buys fewer pounds. The translation term is negative.",
+  "tags": [
+   "desk_practice",
+   "derivation",
+   "fx_translation",
+   "pnl_explain",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: risk-based explain of an ATM payer swaption.</b> Long £100m 1y×5y payer, strike \\(K=4.00\\%\\), forward swap rate \\(F=4.00\\%\\), annuity \\(A=4.4\\), normal vol \\(\\sigma=85\\)bp. Normal model: \\(V=NA[(F-K)\\Phi(d)+\\sigma\\sqrt{T}\\,\\varphi(d)]\\), \\(d=(F-K)/(\\sigma\\sqrt T)\\). Overnight the forward moves to 4.06%, the vol falls to 80bp, and one business day passes (\\(1/252\\) year). Compute the full revaluation, the risk-based explain (delta, gamma, vega, theta), and the residual. Say what the residual is.",
+  "back": "<b>Numbers (computed in Python, normal model).</b> Price at T−1: \\(V_0=\\pounds 1{,}492{,}044\\). Price at T: \\(V_1=\\pounds 1{,}537{,}443\\). Full change: \\(+\\pounds 45{,}399\\).\n<table>\n<tr><th>Line</th><th>Greek at T−1</th><th>Move</th><th>P&amp;L (£)</th></tr>\n<tr><td>Delta</td><td>\\(NA\\,\\Phi(0)=220\\)m per unit, i.e. £22,000/bp</td><td>+6bp</td><td>+132,000</td></tr>\n<tr><td>Gamma</td><td>\\(NA\\,\\varphi(0)/(\\sigma\\sqrt T)=20.65\\)bn per unit²</td><td>\\(\\tfrac12\\Gamma(0.0006)^2\\)</td><td>+3,717</td></tr>\n<tr><td>Vega</td><td>\\(NA\\sqrt T\\,\\varphi(0)=\\pounds 17{,}553\\) per bp of normal vol</td><td>−5bp</td><td>−87,767</td></tr>\n<tr><td>Theta</td><td>one day, curve and vol fixed</td><td>1/252 yr</td><td>−2,963</td></tr>\n<tr><td><b>Explained</b></td><td></td><td></td><td><b>+44,987</b></td></tr>\n<tr><td><b>Residual</b></td><td>full reval less explained</td><td></td><td><b>+412</b></td></tr>\n</table>\nSanity check: vega dominates, which is the point of the trade. The residual is about 1% of the full move. It comes from the cross term (vanna) and third-order terms evaluated after the move: the forward moved 6bp, so \\(d\\) moved from 0 to about 0.075, off the money, where the cross term is non-zero.<br>\n<b>Interviewer follow-up:</b> When does this residual stop being small? For a 20bp move in the forward and a vol move of similar size, the cross and third-order terms grow faster than the first-order lines, and the explain needs a full-reval attribution step.",
+  "tags": [
+   "desk_practice",
+   "case_study",
+   "options",
+   "vega",
+   "pnl_explain",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: five-day explain and the gamma trap.</b> A receiver book has parallel signed DV01 of −£42k/bp. Each day it earns carry of +£2,400 and roll of +£600. Its gamma P&amp;L is \\(250\\,(\\Delta y/1\\text{bp})^2\\). Parallel moves over five days are +2, −3, +1, −2 and +4bp. The marks carry unmodelled P&amp;L of +£900 on day 3 and −£1,200 on day 5. Build the daily explain and the five-day totals. Then say what the gamma line becomes if you use the week's net move of +2bp, and why that is wrong.",
+  "back": "<b>Daily explain (£).</b>\n<table>\n<tr><th>Day</th><th>Move</th><th>Carry+roll</th><th>Delta</th><th>Gamma</th><th>Explained</th><th>Actual</th><th>Residual</th></tr>\n<tr><td>1</td><td>+2</td><td>3,000</td><td>−84,000</td><td>+1,000</td><td>−80,000</td><td>−80,000</td><td>0</td></tr>\n<tr><td>2</td><td>−3</td><td>3,000</td><td>+126,000</td><td>+2,250</td><td>+131,250</td><td>+131,250</td><td>0</td></tr>\n<tr><td>3</td><td>+1</td><td>3,000</td><td>−42,000</td><td>+250</td><td>−38,750</td><td>−37,850</td><td>+900</td></tr>\n<tr><td>4</td><td>−2</td><td>3,000</td><td>+84,000</td><td>+1,000</td><td>+88,000</td><td>+88,000</td><td>0</td></tr>\n<tr><td>5</td><td>+4</td><td>3,000</td><td>−168,000</td><td>+4,000</td><td>−161,000</td><td>−162,200</td><td>−1,200</td></tr>\n<tr><td><b>Total</b></td><td></td><td><b>15,000</b></td><td><b>−84,000</b></td><td><b>+8,500</b></td><td><b>−60,500</b></td><td><b>−60,800</b></td><td><b>−300</b></td></tr>\n</table>\n<b>The gamma trap.</b> The net move is +2bp, so \\(250\\times2^2=+\\pounds 1{,}000\\). Summing the daily gamma gives +£8,500. The difference is \\(7{,}500\\), and it is not noise: the convexity P&amp;L is a sum of squared daily moves, so it is path-dependent. Gamma must be computed on each day's move. Delta is linear, so the net move gives the right delta (\\(-42\\text{k}\\times2=-84\\text{k}\\)), but gamma does not.<br>\n<b>Interviewer follow-up:</b> Why should the weekly report keep the −£1,200 day-5 residual visible rather than netting it into the −£300 total? Because the offset on day 3 is a different problem from the one on day 5, and the day that breaks is the one a controller needs to find.",
+  "tags": [
+   "desk_practice",
+   "case_study",
+   "carry",
+   "gamma",
+   "pnl_explain",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: a day-count error in a compounded SONIA-style coupon.</b> A £200m receiver pays a 3-month coupon of 5.00% over 91 days. The coupon should accrue on ACT/365 Fixed, as SONIA does. The coupon was booked on ACT/360. Compute the overpayment in simple-interest terms. Say whether this is a market move, and where it sits in the explain and the flash-to-official bridge.",
+  "back": "<b>Numbers.</b> ACT/365: \\(200\\text{m}\\times0.05\\times91/365=\\pounds 2{,}493{,}151\\). ACT/360: \\(200\\text{m}\\times0.05\\times91/360=\\pounds 2{,}527{,}778\\). Error \\(=\\pounds 34{,}627\\), about 1.39% of the correct coupon.<br>\n<b>Classification.</b> Not a market move. Nothing in the market changed; the booking used the wrong convention. It is a booking or fixing item, and it appears on the explain as a residual until it is corrected, then as a correction line with the trade-date reference. It must not be netted against a market P&amp;L.<br>\n<b>Checks.</b> Recompute the coupon from the fixings on the official convention. Look for the same error on every period of the same trade and on other trades with the same convention. The error is systematic, so one trade with the wrong convention usually means others.<br>\n<b>Interviewer follow-up:</b> Why does a convention error look like a residual at first? The explain uses the correct convention in its sensitivities, while the P&amp;L system carries the booked coupon. The two disagree, and the difference lands in the unexplained line.",
+  "tags": [
+   "desk_practice",
+   "case_study",
+   "conventions",
+   "booking_error",
+   "pnl_explain",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Scenario: it is 17:30.</b> The rates book's explain residual is within the total tolerance, and the trader wants to sign the end-of-day P&amp;L now. List what you check before you sign, in order, and say which reasons you do not accept for signing.",
+  "back": "<b>Checks, in order.</b>\n<ol>\n<li>Positions used for sign-off equal the booked positions at the cut-off, with no tickets open or pending.</li>\n<li>The end-of-day curves and vol surfaces are the approved versions, with timestamps, and there are no stale pillars or unapproved overrides.</li>\n<li>Fixings are applied. Any missing fixing has a documented convention and an owner.</li>\n<li>Late trades are listed with trade dates, and each one appears in the bridge.</li>\n<li>The residual is within tolerance by book and by bucket, not only in total.</li>\n<li>Reserves and valuation adjustments are unchanged, or changed with approval.</li>\n<li>The flash-to-official bridge reconciles with no plug.</li>\n</ol>\n<b>Not accepted as reasons to sign:</b> the total being within tolerance when a book or bucket residual is large; the trader having checked it; the residual being small against the day's P&amp;L. Offsetting residuals across buckets can make a total look clean.<br>\n<b>Interviewer follow-up:</b> Why is a clean total not enough? Two large residuals in opposite directions net to a small total, and each one is still an error.",
+  "tags": [
+   "desk_practice",
+   "scenario",
+   "sign_off",
+   "workflow",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Scenario: it is 09:00.</b> The risk manager says the 10y DV01 on your book rose by £40k yesterday, and you say nothing traded in the 10y. How do you establish what happened, and what would prove that nothing traded?",
+  "back": "<b>Answer:</b> A DV01 moves when the position changes or when the curve changes. Check both.\n<ul>\n<li><b>Position:</b> compare the trade-level snapshots at T−1 and T. Look for new trades, amendments to notional or legs, matured or novated trades, and a spread or curve trade whose 2s10s leg moves the 10y bucket.</li>\n<li><b>Curve:</b> the same position has a different 10y DV01 if the curve's shape changed, because the bucket sensitivity is computed on the curve and the curve moved.</li>\n<li><b>Calculation:</b> a change in bump size or in the sensitivity engine moves the buckets without any change in the book.</li>\n</ul>\nNothing traded only if the trade-level snapshot shows no change in the position and the sensitivity engine returns the same bucket for the same curve and bump. Until both are shown, do not accept 'nothing traded'.<br>\n<b>Interviewer follow-up:</b> Which of the three is most often the cause on a day with no trades? The curve, because a rebuild that changes the shape moves the bucket DV01 of an untouched position.",
+  "tags": [
+   "desk_practice",
+   "scenario",
+   "dv01",
+   "risk_control",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Scenario: it is 16:15.</b> The trader says: \"theta is +£80k today, which is my money, and I am long gamma.\" What is wrong with that statement? List the possible explanations and how you check each.",
+  "back": "<b>Answer:</b> A long-gamma option position pays time decay. Its option theta is negative, so +£80k of theta on a long-gamma book does not come from option time decay. One of these explains it:\n<ul>\n<li><b>Carry in the theta line.</b> The accrual on bonds and swaps minus their funding is part of the day's theta, not option decay. Split carry, roll-down and option time decay on separate lines.</li>\n<li><b>Roll-down in the theta line.</b> On an upward-sloping curve the roll is positive for a long bond. It is a curve effect, not option decay.</li>\n<li><b>The book is short gamma.</b> The trader described it as long, or the sign of the gamma is wrong. Check the signed gamma by trade.</li>\n<li><b>A sign error in the theta line.</b> Recompute theta for one option by full revaluation a day apart, with the curve and vol held fixed.</li>\n</ul>\nCheck per trade, then per line, not on the total.<br>\n<b>Interviewer follow-up:</b> Could a long-gamma book have positive total theta at all? Yes, if the carry and roll from the non-option positions outweigh the option decay. That is why the split matters.",
+  "tags": [
+   "desk_practice",
+   "scenario",
+   "theta",
+   "gamma",
+   "carry",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Scenario: it is 07:15.</b> The risk report shows a DV01 of £0 on a new £55m 10y swap that the trader says is live. Nothing is in the residual yet. What is the most likely cause, and what do you check first?",
+  "back": "<b>Answer:</b> A zero line is a mapping failure, not a market or a residual problem. The trade has no sensitivity because its discount or projection curve is not in the risk configuration, or the trade's leg is mapped to a curve or currency that the sensitivity engine does not read. The P&amp;L may be right while the risk is blank, which is worse, because the limit check passes.\nCheck first: the trade's curve mapping and currency on each leg; whether the risk engine has the curve in its configuration; and whether the trade was loaded into the risk population at all. Then rerun the sensitivity and confirm the DV01 is about £55k/bp in the 10y bucket before anyone relies on it.<br>\n<b>Interviewer follow-up:</b> Why does a blank risk line matter more than a residual? A residual shows up in the explain. A blank line passes the limits and the explain silently, so the book runs without the risk it is supposed to carry.",
+  "tags": [
+   "desk_practice",
+   "scenario",
+   "risk_control",
+   "trade_mapping",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In a risk-based explain, the unexplained P&amp;L is {{c1::actual P&amp;L minus the sum of sensitivities times market moves}}, and carry and roll are kept as {{c2::separate lines}} so that time decay is not counted twice.",
+  "back": "Carry is the accrual less funding; roll-down is the change from rolling along a sloped curve. Both are time effects, so keeping them apart from the option or DV01 lines prevents double counting.",
+  "tags": [
+   "desk_practice",
+   "pnl_explain",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A flash P&amp;L is {{c1::an estimate on the marks available at the flash time}}, and the official P&amp;L is {{c2::signed on the end-of-day marks, including late trades and corrections}}.",
+  "back": "The two differ by a bridge. Every item in the bridge needs a cause; a plug is not an accepted item.",
+  "tags": [
+   "desk_practice",
+   "flash_pnl",
+   "cloze",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The bucketed residual against a parallel explain is \\(\\sum_i D_i(\\Delta y_i-\\Delta y_\\parallel)\\), so it is zero only if {{c1::every bucket moves by the same amount}}, that is, when the move is {{c2::parallel}}.",
+  "back": "Where the move is non-parallel, the parallel DV01 misses the shape term. With the 2y/5y/10y example in the derivation card, the shortcut is out by −£37k.",
+  "tags": [
+   "desk_practice",
+   "bucket_dv01",
+   "cloze",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A rebuild that changes a par input with no market move is classified as {{c1::rebuild or methodology}} P&amp;L, not {{c2::market}} P&amp;L, until {{c3::the input source and its change are approved}}.",
+  "back": "Market P&amp;L needs a market move on a common basis. A source change or a methodology change is a model or data item and needs its own approval and audit trail.",
+  "tags": [
+   "desk_practice",
+   "curve_rebuild",
+   "cloze",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a GBP-reporting desk with a USD book, translation P&amp;L on the opening value is \\(V_{T-1}\\left(1/S_T-1/S_{T-1}\\right)\\) with \\(S\\) quoted as USD per GBP, so a {{c1::rise}} in \\(S\\) gives a {{c2::loss}} on a long-USD book.",
+  "back": "A rise in USD per GBP means the dollar weakened, so each dollar of value buys fewer pounds. The sign follows from differentiating \\(1/S\\).",
+  "tags": [
+   "desk_practice",
+   "fx_translation",
+   "cloze",
+   "lvl_stretch"
+  ]
+ }
+]
