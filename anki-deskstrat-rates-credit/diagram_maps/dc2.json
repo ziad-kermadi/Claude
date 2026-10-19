@@ -1,0 +1,114 @@
+[
+ {
+  "file": "17_cpp_m5.json",
+  "index": 1,
+  "front_start": "When is <code>std::deque</code> the right choice over <code>",
+  "image": "17_cpp_m5_1_deque_chunks.png",
+  "caption": "deque<int> after push_front(1) and push_back(4): elements span two chunks behind a map."
+ },
+ {
+  "file": "17_cpp_m5.json",
+  "index": 2,
+  "front_start": "What does <code>std::list</code> give you that <code>std::ve",
+  "image": "17_cpp_m5_2_list_nodes.png",
+  "caption": "std::list after insert, push_front and erase: separate linked nodes, final order 99, 100, 100.5, 102."
+ },
+ {
+  "file": "17_cpp_m5.json",
+  "index": 3,
+  "front_start": "In C++, what does <code>dv01[\"10Y\"]</code> do on a <code>std",
+  "image": "17_cpp_m5_3_map_tree.png",
+  "caption": "std::map after dv01[\"10Y\"]: operator[] inserted a 0.0 node; find(\"30Y\") ends at nullptr without inserting."
+ },
+ {
+  "file": "17_cpp_m5.json",
+  "index": 6,
+  "front_start": "After <code>std::vector::push_back</code> reallocates, {{c1:",
+  "image": "17_cpp_m5_6_realloc_invalidation.png",
+  "caption": "push_back that reallocates: the old buffer is freed, so a saved pointer into it dangles."
+ },
+ {
+  "file": "17_cpp_m5.json",
+  "index": 17,
+  "front_start": "What do <code>by_value()</code> and <code>by_ref()</code> re",
+  "image": "17_cpp_m5_17_lambda_capture.png",
+  "caption": "By-value capture keeps the copy made at creation (100); by-reference capture sees the variable (250)."
+ },
+ {
+  "file": "17_cpp_m6.json",
+  "index": 2,
+  "front_start": "<b>Two threads each run 1,000,000 iterations of <code>++coun",
+  "image": "17_cpp_m6_2_data_race_timeline.png",
+  "caption": "One interleaving of two ++counter operations: a lost update leaves the counter at 1."
+ },
+ {
+  "file": "17_cpp_m6.json",
+  "index": 8,
+  "front_start": "<b>Thread 1 locks a then b, thread 2 locks b then a. Predict",
+  "image": "17_cpp_m6_8_deadlock_cycle.png",
+  "caption": "Lock-order deadlock: thread 1 holds a and waits for b; thread 2 holds b and waits for a."
+ },
+ {
+  "file": "17_cpp_m6.json",
+  "index": 15,
+  "front_start": "<b>Predict the output. What is the padding for, and what doe",
+  "image": "17_cpp_m6_15_false_sharing.png",
+  "caption": "Naive counters share one 64-byte line (16 bytes); padded counters take one line each (128 bytes)."
+ },
+ {
+  "file": "17_cpp_m6.json",
+  "index": 26,
+  "front_start": "<b>What is <code>sizeof(OptAoS)</code>, and what does the sp",
+  "image": "17_cpp_m6_26_aos_soa_layout.png",
+  "caption": "AoS spot loop uses 8 of every 32-byte record; SoA spot[] uses every byte of each cache line."
+ },
+ {
+  "file": "17_cpp_m6.json",
+  "index": 36,
+  "front_start": "<b>Derivation.</b> Derive Amdahl's law for a fixed-size prob",
+  "image": "17_cpp_m6_36_amdahl_speedup.png",
+  "caption": "Amdahl speedup at s = 0.05: 5.93 on 8 cores, 9.14 on 16, limit 20; Gustafson shown for comparison."
+ },
+ {
+  "file": "17_cpp_m6.json",
+  "index": 37,
+  "front_start": "<b>Derivation and case.</b> A Monte Carlo price is an averag",
+  "image": "17_cpp_m6_37_mc_error_paths.png",
+  "caption": "Standard error sigma/sqrt(N) against paths: eps = 0.01 needs N = 1,440,000 paths."
+ },
+ {
+  "file": "17_cpp_m7.json",
+  "index": 6,
+  "front_start": "<b>C++ course, Module 7.</b> Implement a CRR binomial tree i",
+  "image": "17_cpp_m7_6_binomial_tree.png",
+  "caption": "CRR tree with N = 3 steps: spot at node (i, j) is S u^j d^(i-j)."
+ },
+ {
+  "file": "17_cpp_m7.json",
+  "index": 20,
+  "front_start": "<b>What is wrong with this implementation?</b> The program c",
+  "image": "17_cpp_m7_20_dual_product.png",
+  "caption": "Buggy dual operator*: derivative printed as 1 where the product rule gives 6; the value 9 is correct."
+ },
+ {
+  "file": "17_cpp_m7.json",
+  "index": 22,
+  "front_start": "<b>C++ course, Module 7.</b> Separate payoff, model and engi",
+  "image": "17_cpp_m7_22_pricer_design.png",
+  "caption": "Payoff, model and engine: the engine holds references to a payoff and a model and runs the sampling loop."
+ },
+ {
+  "file": "17_cpp_m7.json",
+  "index": 30,
+  "front_start": "<b>C++ course, Module 7.</b> Implement an LRU cache in C++ w",
+  "image": "17_cpp_m7_30_lru_list_map.png",
+  "caption": "LRU state after the card's trace: list front is key 4, key 1 behind it; map entries point into the list."
+ },
+ {
+  "file": "17_cpp_m7.json",
+  "index": 32,
+  "front_start": "<b>C++ course, Module 7.</b> Implement a minimal price-time-",
+  "image": "17_cpp_m7_32_order_book.png",
+  "caption": "Order book after the four orders: trade 3 at 101.01, order 4 rests 3 on the 101.01 bid."
+ }
+]
