@@ -52,6 +52,7 @@ code,pre{font-family:Consolas,monospace;font-size:15px;background:rgba(128,128,1
 pre{padding:8px;overflow-x:auto}
 hr#answer{margin:12px 0}
 .src{font-size:12px;color:#888;margin-top:10px}
+.fig{margin:10px 0;text-align:center}.fig img{max-width:100%;height:auto;background:#fff;border-radius:4px}.fig .cap{font-size:13px;color:#777}
 """
 
 BASIC = genanki.Model(
@@ -72,7 +73,7 @@ CLOZE = genanki.Model(
 
 
 import re
-_TAG=re.compile(r'</?(b|i|br|ul|ol|li|code|pre|table|tr|td|th|thead|tbody|sup|sub|u|p|div|span|em|strong|hr)\b[^>]*>',re.I)
+_TAG=re.compile(r'</?(b|i|br|ul|ol|li|code|pre|table|tr|td|th|thead|tbody|sup|sub|u|p|div|span|em|strong|hr|img)\b[^>]*>',re.I)
 def _math(m):
     return m.group(0).replace('<',' \\lt ').replace('>',' \\gt ').replace('&','&amp;') if False else m.group(0).replace('<',' \\lt ').replace('>',' \\gt ')
 def clean(t):
@@ -111,5 +112,8 @@ for f in sorted(glob.glob(os.path.join(D, "cards", "*.json"))):
             note = genanki.Note(BASIC, fields=[clean(c["front"]), clean(c["back"]), topic], tags=tags, guid=guid)
         deck.add_note(note); n += 1
 
-genanki.Package(list(decks.values())).write_to_file(OUT)
+pkg = genanki.Package(list(decks.values()))
+pkg.media_files = sorted(glob.glob(os.path.join(D, "media", "*.png")))
+pkg.write_to_file(OUT)
+print("media:", len(pkg.media_files))
 print("notes:", n, "->", OUT)

@@ -1,0 +1,602 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PCP 1/4]</b> Context: European call and put, same strike \\(K\\) and expiry \\(T\\), on a non-dividend stock \\(S\\). State put-call parity and give the replication argument that proves it.",
+  "back": "<b>Answer:</b> \\(C - P = S - Ke^{-rT}\\), because a long call plus a short put pays like a long forward struck at \\(K\\), and that forward equals the stock minus a zero-coupon bond paying \\(K\\).<br>\n<b>Intuition:</b> two portfolios with identical payoffs in every state must have the same price today, or there is an arbitrage.<br>\n<b>Precise (replication):</b>\n<ol><li>At \\(T\\), long call and short put pay \\((S_T-K)^+-(K-S_T)^+=S_T-K\\) in every state.</li>\n<li>Long one share and short a bond paying \\(K\\) (borrow \\(Ke^{-rT}\\) today) also pays \\(S_T-K\\).</li></ol><br>\n<b>Worked example:</b> \\(S=100,\\ K=100,\\ r=5\\%\\) continuous, \\(T=1\\). Then \\(S-Ke^{-rT}=100-95.12=4.88\\). The Black-Scholes pair (call 10.45, put 5.57) has \\(C-P=4.88\\), as it must.<br>\n<b>Trap / Where it breaks:</b> European exercise only, no dividends, frictionless borrowing and lending at \\(r\\). No volatility model is needed.<br>\n<b>Interviewer follow-up:</b> \"Does parity need Black-Scholes?\" No. It needs no-arbitrage and European exercise, and holds for any dynamics.<div class=\"fig\"><img src=\"15_found_deriv_0_pcp_payoffs.png\"><div class=\"cap\">Long call plus short put has the same payoff as a long forward struck at K.</div></div>",
+  "tags": [
+   "derivatives",
+   "options",
+   "put_call_parity",
+   "chain_pcp",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PCP 2/4]</b> Context: \\(S=100,\\ K=100,\\ T=1\\), continuous \\(r=5\\%\\), no dividends. Quoted call 10.00, put 5.00. Is there an arbitrage? Give the trade, the cash flows at \\(T\\), and the riskless profit.",
+  "back": "<b>Answer:</b> yes. Parity requires \\(C-P=S-Ke^{-rT}=4.877\\), but the quote gives \\(C-P=5.00\\). Sell the synthetic stock and buy the real stock.<br>\n<b>Intuition:</b> the synthetic stock \\(C-P+Ke^{-rT}=100.12\\) is richer than the real stock at 100.00.<br>\n<b>Precise (trade):</b>\n<ol><li>Sell the call at 10.00 and buy the put at 5.00: receive 5.00.</li>\n<li>Buy one share at 100.00.</li>\n<li>Borrow \\(Ke^{-rT}=95.12\\) for one year, repaying 100.00 at \\(T\\).</li></ol><br>\n<b>Worked example:</b> net today \\(5.00-100.00+95.1229=0.1229\\), riskless.<br>\n<b>Check at \\(T\\):</b> \\(S_T=120\\): short call \\(-20\\), long put 0, stock \\(+120\\), repay \\(-100\\). Total 0. \\(S_T=80\\): short call 0, long put \\(+20\\), stock \\(+80\\), repay \\(-100\\). Total 0.<br>\n<b>Interviewer follow-up:</b> \"What stops this in practice?\" Share borrow cost and availability, bid-offer on both options, and the margin needed to hold a short call.",
+  "tags": [
+   "derivatives",
+   "options",
+   "put_call_parity",
+   "arbitrage",
+   "chain_pcp",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PCP 3/4]</b> Context: same parity, but the stock pays a continuous dividend yield \\(q\\). Write parity with \\(q\\), then in forward form. Price the forward for \\(S=100\\), \\(q=2\\%\\), \\(r=5\\%\\), \\(T=1\\), and say how \\(C-P\\) shifts relative to the no-dividend case.",
+  "back": "<b>Answer:</b> \\(C-P=Se^{-qT}-Ke^{-rT}\\). Forward form: \\(C-P=e^{-rT}(F-K)\\), with \\(F=Se^{(r-q)T}\\).<br>\n<b>Intuition:</b> higher \\(q\\) lowers the forward, so calls lose value and puts gain value, relative to the no-dividend case.<br>\n<b>Precise:</b> with reinvested dividends, a holding of \\(e^{-qT}\\) shares grows to one share at \\(T\\), so the stock leg of the replication costs \\(Se^{-qT}\\) today.<br>\n<b>Worked example:</b> \\(F=100e^{0.05-0.02}=103.05\\). Then \\(C-P=e^{-0.05}(103.05-100)=2.90\\). Without dividends the same strike gives 4.88. The dividend yield lowers \\(C-P\\) by \\(S(1-e^{-qT})=1.98\\), which is the value of the dividends that the call holder does not receive.<br>\n<b>Interviewer follow-up:</b> \"With a discrete dividend \\(D\\) paid at \\(t_1\\), what replaces \\(Se^{-qT}\\)?\" The present value of the dividend: \\(S-De^{-rt_1}\\).",
+  "tags": [
+   "derivatives",
+   "options",
+   "put_call_parity",
+   "dividends",
+   "forwards",
+   "chain_pcp",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PCP 4/4]</b> Context: a colleague says \"put-call parity holds for American options too, so \\(C_A-P_A=S-Ke^{-rT}\\).\" Where does this fail, and what replaces it on a non-dividend stock?",
+  "back": "<b>Answer:</b> only European options satisfy the equality. For American options on a non-dividend stock the bounds are \\(S-K\\le C_A-P_A\\le S-Ke^{-rT}\\).<br>\n<b>Intuition:</b> early exercise of the American put means the short leg is no longer fixed to expiry, so the replication breaks.<br>\n<b>Precise (why the upper bound holds):</b>\n<ol><li>An American call on a non-dividend stock is never exercised early, so \\(C_A=C\\).</li>\n<li>An American put is worth at least its European value, \\(P_A\\ge P\\).</li>\n<li>Hence \\(C_A-P_A\\le C-P=S-Ke^{-rT}\\).</li></ol><br>\n<b>Trap / Where it breaks:</b> with dividends, an American call can be exercised just before an ex-dividend date, so \\(C_A\\ne C\\) and the bounds move.<br>\n<b>Interviewer follow-up:</b> \"Why is the early-exercise premium on a put positive?\" Holding the put earns no interest on the strike, while exercising gives \\(K\\) now and the interest on \\(K\\) is a benefit that grows with \\(r\\) and with \\(K\\).",
+  "tags": [
+   "derivatives",
+   "options",
+   "put_call_parity",
+   "american_options",
+   "chain_pcp",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BIN 1/4]</b> Context: one step, \\(S_0=100\\), \\(u=1.10\\), \\(d=0.90\\), continuous \\(r=5\\%\\), \\(h=1\\)y. European call with \\(K=100\\). Build the replicating portfolio (shares plus bond) and price the call.",
+  "back": "<b>Answer:</b> 7.19. Buy \\(\\Delta=0.5\\) shares and borrow 42.81.<br>\n<b>Intuition:</b> \\(\\Delta\\) is the slope of the option payoff over the slope of the stock across the two states.<br>\n<b>Precise:</b>\n<ol><li>Up payoff \\(V_u=10\\), down payoff \\(V_d=0\\).</li>\n<li>Solve \\(110\\Delta+Be^{rh}=10\\) and \\(90\\Delta+Be^{rh}=0\\). So \\(\\Delta=\\frac{10-0}{110-90}=0.5\\), and \\(Be^{rh}=-45\\), giving \\(B=-42.81\\).</li></ol><br>\n<b>Worked example:</b> \\(V_0=0.5\\times100-42.81=7.19\\). The portfolio pays exactly the call in both states, so 7.19 is the no-arbitrage price.<br>\n<b>Interviewer follow-up:</b> \"If the real-world probability of the up move is 0.9, does the price change?\" No. The real-world probability only changes the option's expected return; the replicating portfolio fixes the price.<div class=\"fig\"><img src=\"15_found_deriv_4_binomial_one_step.png\"><div class=\"cap\">One-step tree: shares plus bond replicate the call, giving 7.19.</div></div>",
+  "tags": [
+   "derivatives",
+   "binomial",
+   "replication",
+   "chain_bin",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BIN 2/4]</b> Context: same one-step tree (\\(u=1.10,\\ d=0.90,\\ r=5\\%\\)). Convert the replication into risk-neutral probabilities. Show that the discounted stock is a martingale under them, and recompute the call.",
+  "back": "<b>Answer:</b> \\(p=\\dfrac{e^{rh}-d}{u-d}=\\dfrac{1.05127-0.90}{0.20}=0.7564\\), and discounting the \\(p\\)-weighted payoff gives \\(V_0=e^{-rh}[pV_u+(1-p)V_d]=0.95123\\times0.7564\\times10=7.19\\), the same as the hedge.<br>\n<b>Intuition:</b> the discounted stock has no drift under \\(Q\\).<br>\n<b>Precise (martingale):</b> by construction \\(pS_u+(1-p)S_d=100e^{rh}\\), so \\(e^{-rh}E^Q[S_1]=S_0\\).<br>\n<b>Trap / Where it breaks:</b> \\(p\\in(0,1)\\) requires \\(d&lt;e^{rh}&lt;u\\). If \\(u=1.02\\), then \\(e^{rh}>u\\) and \\(p>1\\). The stock then returns less than cash in every state, so the arbitrage is to sell the stock short and lend at \\(r\\).<br>\n<b>Interviewer follow-up:</b> \"What is \\(p\\) under the real-world measure, and does the price change?\" The price does not change. Real-world drift is replaced by \\(r\\) under \\(Q\\); the price is the same for any real-world \\(p\\) in \\((0,1)\\).",
+  "tags": [
+   "derivatives",
+   "binomial",
+   "risk_neutral",
+   "martingale",
+   "chain_bin",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BIN 3/4]</b> Context: extend to two steps, \\(h=1\\)y each, \\(u=1.10\\), \\(d=0.90\\), \\(r=5\\%\\), \\(S_0=100\\). European call \\(K=100\\). Give the terminal payoffs, the node values and the price, and say why backward induction is valid.",
+  "back": "<b>Answer:</b> the root value, the two-step call price, is 10.87.<br>\n<b>Intuition:</b> at each node the one-step replication is self-financing, so the node value is the cost of the hedge from that node. The root value is the cost of the hedge at \\(t=0\\), rebalanced at \\(t=1\\).<br>\n<b>Precise:</b> node delta at \\(u\\): \\((21-0)/(121-99)=0.955\\).<br>\n<b>Worked example:</b>\n<ol><li>Terminal: \\(S_{uu}=121\\), \\(S_{ud}=99\\), \\(S_{dd}=81\\), payoffs \\(21,\\ 0,\\ 0\\).</li>\n<li>Node \\(u\\): \\(V_u=e^{-r}[p\\cdot21+(1-p)\\cdot0]=0.95123\\times0.7564\\times21=15.11\\). \\(V_d=0\\) (both successors are out of the money). Root: \\(V_0=e^{-r}[p\\cdot15.11+(1-p)\\cdot0]=10.87\\).</li></ol><br>\n<b>Trap / Where it breaks:</b> the tree uses \\(u=1.10\\) and \\(d=0.90\\), not CRR parameters, so 10.87 is not an approximation to Black-Scholes (10.45).<br>\n<b>Interviewer follow-up:</b> \"What is the price with one step and \\(K=100\\), versus two steps?\" 7.19 versus 10.87. The second step adds optionality, and the path-dependent variance grows with the number of steps.<div class=\"fig\"><img src=\"15_found_deriv_6_binomial_two_step.png\"><div class=\"cap\">Two-step tree with terminal payoffs 21, 0, 0; backward induction gives 10.87.</div></div>",
+  "tags": [
+   "derivatives",
+   "binomial",
+   "backward_induction",
+   "chain_bin",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BIN 4/4]</b> Context: same two-step tree (\\(u=1.10,\\ d=0.90,\\ r=5\\%,\\ S_0=100\\)). Now price the American put with \\(K=100\\). Give the exercise decision at each node, the root value, and the European value for comparison.",
+  "back": "<b>Answer:</b> the American put is worth 2.48 and the European put 1.35, an early-exercise premium of 1.13.<br>\n<b>Intuition:</b> the put is deep in the money with little time value left, and the interest saved by receiving 100 now exceeds the option's remaining carry, so it is exercised at \\(S=90\\).<br>\n<b>Worked example:</b>\n<ol><li><b>Terminal:</b> payoffs \\((100-S)^+\\) are \\(0,\\ 1,\\ 19\\) at \\(S=121,\\ 99,\\ 81\\).</li>\n<li><b>Node \\(u\\) (\\(S=110\\)):</b> exercise value 0. Continuation \\(e^{-r}[p\\cdot0+(1-p)\\cdot1]=0.23\\). Hold; value 0.23.</li>\n<li><b>Node \\(d\\) (\\(S=90\\)):</b> exercise value 10. Continuation \\(e^{-r}[p\\cdot1+(1-p)\\cdot19]=5.12\\). Exercise; value 10.00.</li>\n<li><b>Root:</b> \\(e^{-r}[p\\cdot0.23+(1-p)\\cdot10]=2.48\\). European: \\(e^{-r}[p\\cdot0.23+(1-p)\\cdot5.12]=1.35\\).</li></ol><br>\n<b>Interviewer follow-up:</b> \"Why is the American put worth 2.48 at the root when exercise there pays zero?\" The root value comes from the \\(d\\) node: exercising there is worth 10 against a continuation of 5.12. That early-exercise advantage is discounted back and weighted by \\(1-p\\).<div class=\"fig\"><img src=\"15_found_deriv_7_american_put_tree.png\"><div class=\"cap\">American put tree: exercise at S=90 (value 10 vs 5.12 continuation), root 2.48.</div></div>",
+  "tags": [
+   "derivatives",
+   "binomial",
+   "american_options",
+   "early_exercise",
+   "chain_bin",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: GAM 1/4]</b> Context: \\(S=100\\), \\(K=100\\), \\(\\sigma=20\\%\\), \\(T=1\\), \\(r=5\\%\\). Give the ATM call gamma and vega, their signs for long calls and puts, and how gamma behaves as expiry shortens.",
+  "back": "<b>Answer:</b> \\(\\Gamma=\\dfrac{\\varphi(d_1)}{S\\sigma\\sqrt T}=\\dfrac{0.3752}{100\\times0.2\\times1}=0.0188\\) per unit of \\(S\\). Vega \\(=S\\varphi(d_1)\\sqrt T=37.5\\) per unit of vol, i.e. about 0.375 per vol point.<br>\n<b>Intuition:</b> gamma is positive for every long option, call or put, and is largest near the money. Short options are short gamma.<br>\n<b>Precise:</b> a call and a put with the same \\(S,K,T\\) have the same gamma, because \\(C-P\\) is linear in \\(S\\). As \\(T\\to0\\) the ATM gamma grows like \\(1/(S\\sigma\\sqrt T)\\), so short-dated ATM options carry the most gamma per unit notional.<br>\n<b>Interviewer follow-up:</b> \"Why does the put gamma equal the call gamma?\" Parity: \\(\\partial^2_S(C-P)=0\\), so \\(\\partial^2_SC=\\partial^2_SP\\).<div class=\"fig\"><img src=\"15_found_deriv_8_gamma_vega_vs_spot.png\"><div class=\"cap\">ATM gamma and vega peak near the money; the same for call and put.</div></div>",
+  "tags": [
+   "derivatives",
+   "greeks",
+   "gamma",
+   "chain_gamma",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: GAM 2/4]</b> Context: the same ATM call (\\(S=100,\\ K=100,\\ \\sigma=20\\%,\\ T=1,\\ r=5\\%\\)): price 10.45, delta 0.637, gamma 0.0188, theta \\(-6.41\\) per year. Check the Black-Scholes PDE in greek form and interpret each term.",
+  "back": "<b>Answer:</b> \\(\\theta+rS\\Delta+\\tfrac12\\sigma^2S^2\\Gamma=rV\\). The identity holds at the ATM point.<br>\n<b>Intuition:</b> the option's time decay (theta) and the financing term \\(rS\\Delta\\) are the cost of holding the position; the curvature term \\(\\tfrac12\\sigma^2S^2\\Gamma\\) is the gain from convexity. Delta-hedged, the position earns the risk-free rate on average, so in the BS world theta is the price of gamma.<br>\n<b>Precise:</b> with \\(r=0\\), \\(\\theta=-\\tfrac12\\sigma^2S^2\\Gamma\\). A per-day decay is \\(\\tfrac12\\sigma^2S^2\\Gamma/365\\).<br>\n<b>Worked example:</b> \\(-6.41+0.05\\times100\\times0.637+\\tfrac12\\times0.04\\times10^4\\times0.0188=-6.41+3.18+3.75=0.52\\), and \\(rV=0.05\\times10.45=0.52\\). The identity holds.<br>\n<b>Interviewer follow-up:</b> \"Why is theta largest at the money?\" Because gamma is largest there.<div class=\"fig\"><img src=\"15_found_deriv_9_pde_greek_bridge.png\"><div class=\"cap\">The PDE identity theta + rS Delta + 0.5 sig^2 S^2 Gamma = rV: -6.41 + 3.18 + 3.75 = 0.52.</div></div>",
+  "tags": [
+   "derivatives",
+   "greeks",
+   "theta",
+   "gamma",
+   "black_scholes",
+   "chain_gamma",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: GAM 3/4]</b> Context: a delta-hedged long ATM option with \\(S=100\\), \\(\\sigma=20\\%\\), \\(r=0\\) for simplicity. Gamma is 0.01985, and theta is about \\(-3.970\\) per year, or \\(-0.01088\\) per day. How far must the stock move in one day for gamma P&amp;L to cover one day of theta?",
+  "back": "<b>Answer:</b> about 1.05 points (1.05%): the one-day move at which gamma P&amp;L equals one day of theta.<br>\n<b>Intuition:</b> you win on the day if the realised one-day move exceeds the implied one-day move, and lose otherwise. The breakeven is exactly the one-day standard deviation implied by the option's vol.<br>\n<b>Precise:</b>\n<ol><li>Gamma P&amp;L over a move \\(\\Delta S\\) is \\(\\tfrac12\\Gamma(\\Delta S)^2\\).</li>\n<li>Set it equal to the daily theta \\(0.01088\\): \\(\\Delta S=\\sqrt{2\\times0.01088/0.01985}=1.047\\).</li></ol><br>\n<b>Worked example:</b> <b>Check:</b> \\(S\\sigma\\sqrt{1/365}=100\\times0.20\\times0.0523=1.047\\).<br>\n<b>Interviewer follow-up:</b> \"What is the one-day breakeven at \\(\\sigma=25\\%\\)?\" \\(100\\times0.25\\times0.0523=1.31\\) points.<div class=\"fig\"><img src=\"15_found_deriv_10_gamma_theta_breakeven.png\"><div class=\"cap\">Gamma P&amp;L against daily theta: the net is zero at a one-day move of about 1.05 points.</div></div>",
+  "tags": [
+   "derivatives",
+   "greeks",
+   "gamma",
+   "theta",
+   "breakeven",
+   "chain_gamma",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: GAM 4/4]</b> Context: you are long an ATM option bought at implied vol \\(\\sigma_I=20\\%\\) and delta-hedge it daily. Realised vol is \\(\\sigma_R\\). With \\(r=0\\) and no drift, what is the expected hedged P&amp;L per unit time, and does the market direction matter?",
+  "back": "<b>Answer:</b> \\(\\mathbb E[\\text{P&amp;L}]\\,dt\\approx\\tfrac12\\Gamma S^2(\\sigma_R^2-\\sigma_I^2)\\,dt\\). The sign depends only on realised versus implied variance.<br>\n<b>Intuition:</b> direction is irrelevant: the gamma P&amp;L is \\(\\tfrac12\\Gamma(\\Delta S)^2\\), which depends on the square of the move. The delta hedge removes the first-order exposure to \\(\\Delta S\\).<br>\n<b>Worked example:</b> \\(\\tfrac12\\Gamma S^2=\\tfrac12\\times0.01985\\times10^4=99.2\\). With \\(\\sigma_R=25\\%\\), \\(\\sigma_R^2-\\sigma_I^2=0.0625-0.04=0.0225\\). Expected P&amp;L \\(=99.2\\times0.0225\\approx2.23\\) per year for one option with \\(\\Gamma=0.01985\\) at \\(r=0\\).<br>\n<b>Trap / Where it breaks:</b> discrete rebalancing adds variance to the P&amp;L, jumps add gap risk, and a non-zero \\(r\\) or skew adds terms.<br>\n<b>Interviewer follow-up:</b> \"Is implied vol a forecast of realised vol?\" No. It is the price of variance paid on the trade date. Being long gamma means being long realised variance against implied.<div class=\"fig\"><img src=\"15_found_deriv_11_hedged_pnl_vs_realised_vol.png\"><div class=\"cap\">Expected delta-hedged P&amp;L per year is positive only when realised vol exceeds the 20% implied.</div></div>",
+  "tags": [
+   "derivatives",
+   "greeks",
+   "gamma",
+   "implied_vol",
+   "realised_vol",
+   "chain_gamma",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: Black-Scholes PDE from a delta-hedged portfolio.</b> Let \\(dS=\\mu S\\,dt+\\sigma S\\,dW\\) and \\(V(S,t)\\) be the price of a derivative. Derive the PDE by constructing a riskless hedge, and show which term forces the drift \\(\\mu\\) to disappear.",
+  "back": "<b>Answer:</b> a riskless delta hedge gives \\(V_t+\\tfrac12\\sigma^2S^2V_{SS}+rSV_S-rV=0\\), and the drift \\(\\mu\\) drops out.<br>\n<b>Intuition:</b> the hedge removes all exposure to \\(dW\\), so the drift \\(\\mu\\) cancels and only \\(r\\) appears.<br>\n<b>Precise:</b>\n<ol><li><b>Step 1 (Itô):</b> \\(dV=\\bigl(V_t+\\mu SV_S+\\tfrac12\\sigma^2S^2V_{SS}\\bigr)dt+\\sigma SV_S\\,dW\\).</li>\n<li><b>Step 2 (hedge):</b> hold \\(\\Pi=V-\\Delta S\\) with \\(\\Delta=V_S\\). Then \\(d\\Pi=dV-V_S\\,dS=\\bigl(V_t+\\tfrac12\\sigma^2S^2V_{SS}\\bigr)dt\\). The \\(dW\\) terms and the \\(\\mu\\) terms cancel.</li>\n<li><b>Step 3 (no-arbitrage):</b> \\(\\Pi\\) is riskless, so \\(d\\Pi=r\\Pi\\,dt=r(V-SV_S)\\,dt\\).</li>\n<li><b>Step 4:</b> \\(V_t+\\tfrac12\\sigma^2S^2V_{SS}+rSV_S-rV=0\\). The drift \\(\\mu\\) is absent. For a call, the terminal condition is \\(V(S,T)=(S-K)^+\\).</li></ol><br>\n<b>Trap / Where it breaks:</b> continuous rebalancing, no transaction costs, constant \\(\\sigma\\), no jumps, and a traded underlying that can be shorted. Any of these breaks the exact replication.<br>\n<b>Interviewer follow-up:</b> \"Why does the drift drop out?\" The hedge removes all exposure to \\(dW\\), so the risky drift no longer needs to be compensated; only \\(r\\) appears.",
+  "tags": [
+   "derivatives",
+   "black_scholes",
+   "pde",
+   "derivation",
+   "delta_hedging",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: Black-Scholes formula from the risk-neutral expectation.</b> Under \\(Q\\), \\(C=e^{-rT}E^Q[(S_T-K)^+]\\) with \\(\\ln S_T\\) normal. Show that this equals \\(C=SN(d_1)-Ke^{-rT}N(d_2)\\), by treating the two pieces separately.",
+  "back": "<b>Answer:</b> \\(C=SN(d_1)-Ke^{-rT}N(d_2)\\), obtained by treating the two pieces of \\(C=e^{-rT}\\bigl(E^Q[S_T\\mathbf 1_{S_T>K}]-K\\,Q(S_T>K)\\bigr)\\) separately.<br>\n<b>Precise:</b>\n<ol><li><b>Setup:</b> \\(\\ln S_T\\sim N\\bigl(\\ln S+(r-\\tfrac12\\sigma^2)T,\\ \\sigma^2T\\bigr)\\). Write \\(C=e^{-rT}\\bigl(E^Q[S_T\\mathbf 1_{S_T>K}]-K\\,Q(S_T>K)\\bigr)\\).</li>\n<li><b>Second piece:</b> \\(Q(S_T>K)=N(d_2)\\), where \\(d_2=\\dfrac{\\ln(S/K)+(r-\\tfrac12\\sigma^2)T}{\\sigma\\sqrt T}\\).</li>\n<li><b>First piece:</b> reweight by \\(S_T/(Se^{rT})\\), which has mean 1 under \\(Q\\). The reweighted law is lognormal with the drift shifted by \\(\\sigma^2T\\), so \\(Q^S(S_T>K)=N(d_1)\\), with \\(d_1=d_2+\\sigma\\sqrt T\\). Hence \\(E^Q[S_T\\mathbf 1_{S_T>K}]=Se^{rT}N(d_1)\\).</li>\n<li><b>Result:</b> \\(C=SN(d_1)-Ke^{-rT}N(d_2)\\). Check: as \\(\\sigma\\to0\\), \\(C\\to(S-Ke^{-rT})^+\\).</li></ol><br>\n<b>Worked example:</b> \\(S=K=100\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\), \\(T=1\\): \\(d_1=0.35\\), \\(d_2=0.15\\), \\(C=63.68-53.23=10.45\\).<br>\n<b>Trap / Where it breaks:</b> the derivation assumes lognormal \\(S_T\\) with constant \\(\\sigma\\). A smile violates it, so \\(N(d_2)\\) is not a market digital price.<br>\n<b>Interviewer follow-up:</b> \"What does \\(N(d_1)\\) represent?\" The probability that the call finishes in the money under the share measure, the measure with the stock as numeraire.",
+  "tags": [
+   "derivatives",
+   "black_scholes",
+   "risk_neutral",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: Black-76 from the forward measure.</b> Show that a call on a forward \\(F_T\\) with strike \\(K\\), priced under the \\(T\\)-forward measure, gives \\(C=P(0,T)\\bigl[FN(d_1)-KN(d_2)\\bigr]\\), with \\(d_{1,2}=\\dfrac{\\ln(F/K)\\pm\\frac12\\sigma_B^2T}{\\sigma_B\\sqrt T}\\). State the numeraire and why \\(F\\) is a martingale.",
+  "back": "<b>Answer:</b> the numeraire is the zero-coupon bond \\(P(t,T)\\), and \\(C=P(0,T)\\,E^T[(F_T-K)^+]=P(0,T)\\bigl[FN(d_1)-KN(d_2)\\bigr]\\).<br>\n<b>Intuition:</b> the bond discount comes out of the numeraire, so the expectation is taken under \\(Q^T\\).<br>\n<b>Precise:</b>\n<ol><li><b>Numeraire:</b> under \\(Q^T\\), any traded price divided by \\(P(t,T)\\) is a martingale. For a forward price \\(F_t\\), this means \\(F_t=E^T_t[F_T]\\): no drift.</li>\n<li><b>Dynamics:</b> under \\(Q^T\\), \\(dF=\\sigma_BF\\,dW^T\\), so \\(F_T=F\\exp\\bigl(\\sigma_B\\sqrt TZ-\\tfrac12\\sigma_B^2T\\bigr)\\).</li>\n<li><b>Price:</b> \\(C=P(0,T)\\,E^T[(F_T-K)^+]\\). The lognormal truncated expectation, as in the BS derivation with \\(r\\to0\\), gives \\(FN(d_1)-KN(d_2)\\).</li></ol><br>\n<b>Worked example:</b> consistency: with \\(F=Se^{rT}\\) and \\(P(0,T)=e^{-rT}\\), Black-76 gives the BS price. Numerically, \\(F=105.13\\), \\(K=100\\), \\(\\sigma_B=20\\%\\), \\(P(0,T)=0.9512\\) gives 10.45.<br>\n<b>Trap / Where it breaks:</b> \\(F\\le0\\) cannot be lognormal. Use Bachelier for a negative forward.<br>\n<b>Interviewer follow-up:</b> \"Why is discounting outside the expectation?\" The forward measure absorbs the stochastic discount factor into the numeraire. For swaptions the numeraire is the annuity.",
+  "tags": [
+   "derivatives",
+   "black76",
+   "forward_measure",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: why a digital equals minus the call's strike derivative.</b> In Black-Scholes, show that \\(\\partial C/\\partial K=-e^{-rT}N(d_2)\\). Explain why the \\(\\partial d_1/\\partial K\\) term drops out, and identify the price of the digital call it represents.",
+  "back": "<b>Answer:</b> \\(\\partial_KC=-e^{-rT}N(d_2)\\).<br>\n<b>Intuition:</b> \\(-\\partial_KC\\) is the price of a cash digital paying 1 if \\(S_T>K\\). It is also the limit of a call spread of width \\(\\varepsilon\\): \\((C(K)-C(K+\\varepsilon))/\\varepsilon\\).<br>\n<b>Precise:</b>\n<ol><li><b>Setup:</b> \\(C=SN(d_1)-Ke^{-rT}N(d_2)\\). Then \\(\\partial_KC=S\\varphi(d_1)\\partial_Kd_1-e^{-rT}N(d_2)-Ke^{-rT}\\varphi(d_2)\\partial_Kd_2\\). Both \\(d_1\\) and \\(d_2\\) have \\(\\partial_K=-1/(K\\sigma\\sqrt T)\\).</li>\n<li><b>Cancellation:</b> \\(d_1^2-d_2^2=2\\ln(S/K)+2rT\\), so \\(\\varphi(d_1)/\\varphi(d_2)=(K/S)e^{-rT}\\), i.e. \\(S\\varphi(d_1)=Ke^{-rT}\\varphi(d_2)\\). The first and third terms cancel exactly, leaving \\(\\partial_KC=-e^{-rT}N(d_2)\\).</li></ol><br>\n<b>Trap / Where it breaks:</b> with a smile, \\(\\sigma=\\sigma(K)\\), so the total derivative is \\(dC/dK=\\partial_KC+\\text{vega}\\cdot\\partial_K\\sigma\\). The smile-consistent digital is \\(e^{-rT}N(d_2)-\\text{vega}\\cdot\\partial_K\\sigma\\). With negative skew (\\(\\partial_K\\sigma&lt;0\\)) it is above the BS digital.<br>\n<b>Interviewer follow-up:</b> \"Which way does the skew move the digital?\" Up, by about \\(37.5\\times0.0005=0.019\\) per unit notional on the numbers in the case study.",
+  "tags": [
+   "derivatives",
+   "digital",
+   "breeden_litzenberger",
+   "smile",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: lognormal price dynamics from Itô.</b> From \\(dS/S=\\mu\\,dt+\\sigma\\,dW\\), derive the law of \\(S_T\\) by applying Itô's lemma to \\(f=\\ln S\\). Give the mean and the median of \\(S_T\\).",
+  "back": "<b>Answer:</b> the mean is \\(E[S_T]=S_0e^{\\mu T}\\), and the median is \\(S_0e^{(\\mu-\\frac12\\sigma^2)T}\\), below the mean.<br>\n<b>Intuition:</b> the exponent's \\(-\\tfrac12\\sigma^2T\\) is cancelled by the lognormal mean correction \\(+\\tfrac12\\sigma^2T\\).<br>\n<b>Precise:</b>\n<ol><li><b>Itô:</b> with \\(f=\\ln S\\), \\(f_S=1/S\\) and \\(f_{SS}=-1/S^2\\). So \\(d\\ln S=\\frac{dS}{S}-\\tfrac12\\sigma^2dt=(\\mu-\\tfrac12\\sigma^2)dt+\\sigma\\,dW\\).</li>\n<li><b>Solution:</b> \\(S_T=S_0\\exp\\bigl((\\mu-\\tfrac12\\sigma^2)T+\\sigma\\sqrt TZ\\bigr)\\), \\(Z\\sim N(0,1)\\).</li></ol><br>\n<b>Worked example:</b> \\(S_0=100\\), \\(\\mu=r=5\\%\\), \\(\\sigma=20\\%\\), \\(T=1\\): mean 105.13, median 103.05. The 5% and 95% quantiles are 74.16 and 143.19.<br>\n<b>Trap / Where it breaks:</b> GBM has no jumps and constant vol. Implied skew is the market's correction for both.<br>\n<b>Interviewer follow-up:</b> \"Why is the median below the mean even with \\(\\mu=0\\)?\" Jensen: \\(\\exp\\) is convex, so \\(E[e^X]>e^{E[X]}\\).<div class=\"fig\"><img src=\"15_found_deriv_16_lognormal_quantiles.png\"><div class=\"cap\">Lognormal S_T: mean 105.13, median 103.05, 5% and 95% quantiles at 74.16 and 143.19.</div></div>",
+  "tags": [
+   "derivatives",
+   "lognormal",
+   "ito",
+   "derivation",
+   "gbm",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: Hull-White \\(\\theta(t)\\) fits the initial curve.</b> In Hull-White 1F, \\(dr=(\\theta(t)-ar)\\,dt+\\sigma\\,dW\\) under \\(Q\\). Show that \\(\\theta(t)=\\partial_tf(0,t)+af(0,t)+\\dfrac{\\sigma^2}{2a}(1-e^{-2at})\\) reproduces the market forward curve \\(f(0,T)\\).",
+  "back": "<b>Answer:</b> \\(\\theta(t)=\\partial_tf(0,t)+af(0,t)+\\dfrac{\\sigma^2}{2a}(1-e^{-2at})\\) reproduces the market forward curve \\(f(0,T)\\).<br>\n<b>Precise:</b>\n<ol><li><b>Mean ODE:</b> \\(\\frac{d}{dt}E[r_t]=\\theta(t)-aE[r_t]\\), so \\(\\theta(t)=\\partial_tE[r_t]+aE[r_t]\\).</li>\n<li><b>Gaussian bond:</b> \\(\\ln P(0,T)=-\\int_0^TE[r_u]\\,du+\\tfrac12\\mathrm{Var}\\!\\left(\\int_0^Tr_u\\,du\\right)\\). Then \\(f(0,T)=-\\partial_T\\ln P(0,T)=E[r_T]-\\tfrac12\\partial_T\\mathrm{Var}\\bigl(\\int_0^Tr\\bigr)\\). With \\(\\partial_T\\mathrm{Var}=\\tfrac{\\sigma^2}{a^2}(1-e^{-aT})^2\\), this gives \\(E[r_T]=f(0,T)+\\tfrac{\\sigma^2}{2a^2}(1-e^{-aT})^2\\).</li>\n<li><b>Substitute:</b> \\(\\partial_tE[r_t]=\\partial_tf(0,t)+\\tfrac{\\sigma^2}{a}x(1-x)\\) with \\(x=e^{-at}\\). Adding \\(aE[r_t]\\) and collecting the \\(\\sigma^2\\) terms gives \\(\\tfrac{\\sigma^2}{2a}(1-x^2)\\), so \\(\\theta(t)\\) is as stated.</li></ol><br>\n<b>Worked example:</b> \\(a=0.1\\), \\(\\sigma=1\\%\\), \\(f(0,t)=3\\%+0.5\\%\\,t\\): \\(\\theta(1)=0.50\\%+0.35\\%+0.009\\%=0.86\\%\\).<br>\n<b>Trap / Where it breaks:</b> \\(\\theta\\) fits the curve but not the vol surface; one \\(\\sigma\\) and \\(a\\) must also fit caps and swaptions, which is the calibration limitation.<br>\n<b>Interviewer follow-up:</b> \"Why does the convexity term carry a positive sign?\" It is the Gaussian rate's convexity: the forward is the expected rate minus half the variance effect.",
+  "tags": [
+   "derivatives",
+   "hull_white",
+   "theta",
+   "calibration",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: Vasicek bond price from the PDE.</b> Under \\(Q\\), \\(dr=a(b-r)\\,dt+\\sigma\\,dW\\). Substitute \\(P(t,T)=\\exp(-A(\\tau)-B(\\tau)r)\\) with \\(\\tau=T-t\\) into the bond PDE, and derive the ODEs for \\(B\\) and \\(A\\).",
+  "back": "<b>Answer:</b> \\(P=A\\,e^{-Br}\\) with \\(B(\\tau)=\\dfrac{1-e^{-a\\tau}}{a}\\), and \\(A\\) follows from its own ODE.<br>\n<b>Precise:</b>\n<ol><li><b>PDE:</b> \\(P_t+a(b-r)P_r+\\tfrac12\\sigma^2P_{rr}-rP=0\\). Use \\(\\partial_t=-\\partial_\\tau\\) and divide by \\(P\\).</li>\n<li>The \\(r\\)-coefficient gives \\(B'(\\tau)=1-aB(\\tau)\\), with \\(B(0)=0\\). So \\(B(\\tau)=\\dfrac{1-e^{-a\\tau}}{a}\\).</li>\n<li><b>Constant term:</b> \\(A'(\\tau)=abB-\\tfrac12\\sigma^2B^2\\), \\(A(0)=0\\). Integrating gives \\(\\ln A\\) in closed form; the price is \\(P=A\\,e^{-Br}\\).</li></ol><br>\n<b>Worked example:</b> <b>Yield asymptote:</b> as \\(\\tau\\to\\infty\\), \\(B\\to1/a\\), and the long yield tends to \\(b-\\tfrac{\\sigma^2}{2a^2}\\), below \\(b\\).<br>\n<b>Trap / Where it breaks:</b> \\(r\\) is Gaussian, so it can be negative, and the model cannot match a lognormal cap smile. The same \\(B\\) appears in Hull-White, where \\(\\theta(t)\\) makes the drift time-dependent.<br>\n<b>Interviewer follow-up:</b> \"Why is the long yield below the long-run mean \\(b\\)?\" The convexity term \\(-\\sigma^2/(2a^2)\\) is the Jensen effect of the Gaussian rate on the yield, \\(y=-\\ln P/\\tau\\).",
+  "tags": [
+   "derivatives",
+   "vasicek",
+   "short_rate",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: 1y ATM European call and put.</b> \\(S=100\\), \\(K=100\\), continuous \\(r=5\\%\\), \\(\\sigma=20\\%\\), no dividends. Give \\(d_1,d_2\\), both prices, the call and put delta, gamma, vega and theta, and check parity.",
+  "back": "<b>Answer:</b> call 10.45 and put 5.57; parity holds, as the worked example shows.<br>\n<b>Precise:</b> <b>Parameters:</b> \\(d_1=\\dfrac{0+(0.05+0.02)}{0.2}=0.35\\), \\(d_2=0.15\\). \\(N(d_1)=0.6368\\), \\(N(d_2)=0.5596\\). <b>Greeks:</b> call delta 0.637, put delta \\(-0.363\\); gamma 0.0188 (both); vega 37.5 per unit of vol (0.375 per vol point); call theta \\(-6.41\\) per year, put theta \\(-1.66\\) per year.<br>\n<b>Worked example:</b> <b>Call:</b> \\(100\\times0.6368-95.12\\times0.5596=63.68-53.23=10.45\\). <b>Put:</b> \\(95.12\\times0.4404-100\\times0.3632=41.89-36.32=5.57\\). <b>Parity:</b> \\(10.45-5.57=4.88=100-95.12\\).<br>\n<b>Interviewer follow-up:</b> \"Which of call or put has a bigger theta in absolute terms, and why?\" The call, here. Both carry the \\(\\tfrac12\\sigma^2S^2\\Gamma\\) decay term. The call also pays the financing cost of the strike, \\(-rKe^{-rT}N(d_2)\\), while the put receives the offsetting benefit \\(+rKe^{-rT}N(-d_2)\\), so the put's theta is much smaller in size.",
+  "tags": [
+   "derivatives",
+   "black_scholes",
+   "greeks",
+   "case_study",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: 3m caplet on a forward rate, Black vol.</b> Forward \\(F=3.00\\%\\), strike \\(K=3.25\\%\\), Black vol \\(\\sigma_B=20\\%\\), fixing and expiry \\(T=1\\)y, accrual \\(\\tau=0.25\\), notional £100m, \\(P(0,T+\\tau)=0.9700\\). Price the caplet, and give its approximate normal-vol equivalent.",
+  "back": "<b>Answer:</b> the caplet is worth about £34,803, with a normal-vol equivalent of about 62.5bp per year.<br>\n<b>Precise:</b> <b>Parameters:</b> \\(d_1=\\dfrac{\\ln(3/3.25)+0.5\\times0.04}{0.2}=-0.300\\), \\(d_2=-0.500\\). \\(N(d_1)=0.3821\\), \\(N(d_2)=0.3085\\). <b>Normal equivalent:</b> \\(\\sigma_N\\approx\\sigma_B\\times\\tfrac12(F+K)=20\\%\\times3.125\\%=62.5\\)bp per year, to a first approximation.<br>\n<b>Worked example:</b> <b>Bracket:</b> \\(FN(d_1)-KN(d_2)=0.03\\times0.3821-0.0325\\times0.3085=0.011460-0.010025=0.001435\\). <b>Value:</b> \\(\\text{Notional}\\times\\tau\\times P(0,T+\\tau)\\times0.001435=100{,}000{,}000\\times0.25\\times0.97\\times0.001435=£34{,}803\\).<br>\n<b>Interviewer follow-up:</b> \"Why discount with \\(P(0,T+\\tau)\\) and not \\(P(0,T)\\)?\" The payment is at \\(T+\\tau\\). The forward is for the accrual period, and the Black formula is taken under the payment-date forward measure.",
+  "tags": [
+   "derivatives",
+   "black76",
+   "caplet",
+   "case_study",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: forward volatility and a forward-start ATM option.</b> Flat ATM lognormal vols: 1y 20%, 2y 22%. Compute the forward 1y-into-1y vol, then the value of a 1y-forward-start ATM call on \\(S=100\\), with \\(r=0\\), that starts in one year and runs one year.",
+  "back": "<b>Answer:</b> the forward 1y-into-1y vol is \\(\\sigma_f=\\sqrt{0.0568}=23.8\\%\\), and the forward-start ATM call is worth about 9.49.<br>\n<b>Intuition:</b> the strike is set at spot in one year, so the option is an ATM call on the forward spot with vol \\(\\sigma_f\\) over one year.<br>\n<b>Precise:</b>\n<ol><li>Total variance to 2y is \\(0.22^2\\times2=0.0968\\); to 1y is \\(0.20^2\\times1=0.04\\).</li>\n<li>Forward variance over \\([1,2]\\) is \\(0.0968-0.04=0.0568\\) per year. So \\(\\sigma_f=\\sqrt{0.0568}=23.8\\%\\).</li></ol><br>\n<b>Worked example:</b> price \\(=S(2N(\\sigma_f/2)-1)=100\\times(2\\times0.54742-1)=9.49\\). The \\(\\tfrac{1}{\\sqrt{2\\pi}}S\\sigma_f\\sqrt{\\tau}\\) rule gives 9.51.<br>\n<b>Interviewer follow-up:</b> \"What happens to \\(\\sigma_f\\) if the 2y vol is 20% flat?\" It is 20%, because the variance has no kink. A kink in the term structure is exactly what the forward variance measures.",
+  "tags": [
+   "derivatives",
+   "forward_vol",
+   "term_structure",
+   "case_study",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: Vasicek curve from parameters.</b> \\(dr=a(b-r)dt+\\sigma dW\\), \\(a=0.5\\), \\(b=4\\%\\), \\(\\sigma=2\\%\\), \\(r_0=3\\%\\), all under \\(Q\\). Give the 1y, 5y and 30y zero yields and the 30y-plus asymptote. Explain why the curve slopes up.",
+  "back": "<b>Answer:</b> zero yields are 3.21% at 1y, 3.60% at 5y and 3.86% at 30y, rising toward a 3.92% asymptote.<br>\n<b>Intuition:</b> \\(r_0=3\\%\\) is below the mean \\(b=4\\%\\), so the expected short rate rises toward \\(b\\) at speed \\(a\\). The convexity term makes the long yield slightly below \\(b\\).<br>\n<b>Precise:</b> <b>Asymptote:</b> \\(b-\\sigma^2/(2a^2)=4.00\\%-0.08\\%=3.92\\%\\).<br>\n<b>Worked example:</b> <b>Prices:</b> \\(B(\\tau)=(1-e^{-a\\tau})/a\\). For \\(\\tau=1\\): \\(B=0.787\\), \\(P=0.9684\\), yield \\(3.21\\%\\). For \\(\\tau=5\\): \\(B=1.836\\), yield \\(3.60\\%\\). For \\(\\tau=30\\): \\(B=2.000\\), yield \\(3.86\\%\\).<br>\n<b>Interviewer follow-up:</b> \"What happens to the 30y yield if \\(a\\) doubles?\" \\(B\\) saturates faster and the asymptote's convexity penalty \\(\\sigma^2/(2a^2)\\) falls by a factor 4, so the long end moves toward \\(b\\).<div class=\"fig\"><img src=\"15_found_deriv_22_vasicek_zero_curve.png\"><div class=\"cap\">Vasicek zero yields from the parameters: 3.21%, 3.60%, 3.86%, rising to the 3.92% asymptote.</div></div>",
+  "tags": [
+   "derivatives",
+   "vasicek",
+   "yield_curve",
+   "case_study",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: digital option and its call-spread hedge with smile.</b> A 1y digital pays £1m if \\(S_T>100\\). \\(S=100\\), \\(\\sigma=20\\%\\), \\(r=5\\%\\). (a) Give the flat-vol digital. (b) Check it with a call spread at flat vol. (c) Add a skew \\(\\partial_K\\sigma=-0.0005\\) per unit of strike and recompute.",
+  "back": "<b>Answer:</b> the flat-vol digital is £532,325, and with the skew it is £551,075.<br>\n<b>Precise:</b>\n<ol><li><b>(a)</b> \\(e^{-rT}N(d_2)=0.9512\\times0.5596=0.5323\\), so £532,325.</li>\n<li><b>(c)</b> With the skew, the digital is \\(0.5323-\\text{vega}\\times\\partial_K\\sigma=0.5323+37.5\\times0.0005=0.5511\\), so £551,075. Vega is 37.5 per unit of vol, so the correction is about £18,750.</li></ol><br>\n<b>Worked example:</b> <b>(b)</b> A 0.01-wide spread (100/100.01) at flat vol gives 0.5322, within 0.0001 of the exact value. A 1-point spread (100/101) gives 0.5230.<br>\n<b>Trap / Where it breaks:</b> the 1-point spread is biased by about 0.009 at width 1, so the spread must be narrow.<br>\n<b>Interviewer follow-up:</b> \"Which way does a dealer hedge the difference?\" The skew cost is hedged by the strike-ladder of vanilla options, not by the digital delta alone, since the correction is vega times skew.",
+  "tags": [
+   "derivatives",
+   "digital",
+   "smile",
+   "call_spread",
+   "case_study",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: discrete dividend and the forward.</b> \\(S=100\\), a dividend of £3 paid in 3 months, \\(r=5\\%\\) continuous, 1y forward. Give the forward, and the forward put-call parity for \\(K=100\\), with the 1y call at 10.50.",
+  "back": "<b>Answer:</b> the forward is \\(F=102.01\\), and the 1y put is 8.59 by parity.<br>\n<b>Precise:</b> <b>PV of dividend:</b> \\(3e^{-0.05\\times0.25}=2.963\\). <b>Forward:</b> \\(F=(S-PV(D))e^{rT}=(100-2.963)\\times1.05127=102.01\\).<br>\n<b>Worked example:</b> <b>Parity:</b> \\(P=C-e^{-rT}(F-K)=10.50-0.95123\\times2.01=10.50-1.91=8.59\\).<br>\n<b>Interviewer follow-up:</b> \"What if the dividend were paid at 6 months?\" Its PV is \\(3e^{-0.05\\times0.5}=2.927\\), so \\(F=(100-2.927)\\times1.05127=102.05\\). The forward rises by about 0.04 for each 3 months of delay, because the PV of the dividend shrinks as it is paid later.",
+  "tags": [
+   "derivatives",
+   "forwards",
+   "dividends",
+   "put_call_parity",
+   "case_study",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: the same option under the real-world and risk-neutral measures.</b> \\(S=100\\), \\(\\sigma=20\\%\\), \\(T=1\\). The risk-neutral drift is \\(r=5\\%\\), the real-world drift is \\(\\mu=10\\%\\). Compute \\(P(S_T>100)\\) under each, and the ATM call price under each.",
+  "back": "<b>Answer:</b> \\(P(S_T>100)\\) is 0.560 under \\(Q\\) and 0.655 under \\(P\\), but the ATM call is 10.45 under either measure.<br>\n<b>Intuition:</b> the price is a discounted \\(Q\\)-expectation, so \\(\\mu\\) changes the probability of finishing in the money, not the price.<br>\n<b>Precise:</b> <b>Risk-neutral:</b> \\(d_2=(0+(0.05-0.02))/0.2=0.15\\), \\(Q(S_T>100)=N(0.15)=0.560\\). <b>Real-world:</b> \\(d_2=(0+(0.10-0.02))/0.2=0.40\\), \\(P(S_T>100)=N(0.40)=0.655\\).<br>\n<b>Worked example:</b> the call price is the same, 10.45, under either measure.<br>\n<b>Interviewer follow-up:</b> \"So why does an option desk care about \\(\\mu\\)?\" It does not affect the price. It affects the expected P&amp;L of an unhedged position and the probability-based views of a trader, not the mark.",
+  "tags": [
+   "derivatives",
+   "risk_neutral",
+   "real_world",
+   "case_study",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Put-call parity for European options on a non-dividend stock: \\(C-P=\\){{c1::\\(S-Ke^{-rT}\\)}}. In forward form the same identity reads \\(C-P=\\){{c2::\\(e^{-rT}(F-K)\\)}}, with \\(F\\) the forward on the stock.",
+  "back": "Both forms need only no-arbitrage and European exercise. The forward form extends to a dividend yield through \\(F=Se^{(r-q)T}\\).",
+  "tags": [
+   "derivatives",
+   "put_call_parity",
+   "forwards",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In a one-step binomial tree with continuous \\(r\\), the risk-neutral up probability is \\(p=\\){{c1::\\(\\dfrac{e^{rh}-d}{u-d}\\)}}. No-arbitrage requires \\(d&lt;e^{rh}&lt;u\\).",
+  "back": "If \\(e^{rh}\\ge u\\), the stock never returns more than cash, so sell the stock short and lend at \\(r\\) for a riskless profit. The check is the first thing to do with any tree.",
+  "tags": [
+   "derivatives",
+   "binomial",
+   "risk_neutral",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In Black-Scholes, a cash digital call paying 1 if \\(S_T>K\\) has price \\(-\\partial C/\\partial K=\\){{c1::\\(e^{-rT}N(d_2)\\)}}, and it is the limit of a call spread struck at {{c2::\\(K\\) and \\(K+\\varepsilon\\)}} divided by \\(\\varepsilon\\).",
+  "back": "This identity holds in the flat-vol model. With a smile the vega term \\(-\\text{vega}\\cdot\\partial_K\\sigma\\) must be added.",
+  "tags": [
+   "derivatives",
+   "digital",
+   "call_spread",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The Black-Scholes put delta with dividend yield \\(q\\) is \\(\\Delta_P=\\){{c1::\\(e^{-qT}(N(d_1)-1)\\)}}. The call delta minus the put delta, for the same strike, is always {{c2::\\(e^{-qT}\\)}}.",
+  "back": "Parity explains the second result. The delta of the stock leg in \\(C-P=Se^{-qT}-Ke^{-rT}\\) is \\(e^{-qT}\\).",
+  "tags": [
+   "derivatives",
+   "greeks",
+   "delta",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "With \\(r=0\\), the Black-Scholes theta satisfies \\(\\theta=\\){{c1::\\(-\\tfrac12\\sigma^2S^2\\Gamma\\)}}, so the daily time decay of a long option is the price the holder pays for {{c2::gamma}}.",
+  "back": "With \\(r\\ne0\\) the PDE adds \\(rS\\Delta-rV\\) to the identity. The gamma-theta trade-off is the same.",
+  "tags": [
+   "derivatives",
+   "greeks",
+   "theta",
+   "gamma",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "With a continuous dividend yield \\(q\\), the forward on a stock is \\(F=\\){{c1::\\(Se^{(r-q)T}\\)}}. Under the \\(T\\)-forward measure the forward is a {{c2::martingale}} with no drift.",
+  "back": "The forward is the expected value of \\(S_T\\) under the \\(T\\)-forward measure, discounted with the bond as numeraire, so no extra discounting is applied.",
+  "tags": [
+   "derivatives",
+   "forwards",
+   "forward_measure",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A caplet on a rate \\(L\\) with strike \\(K\\), accrual \\(\\tau\\), fixing at \\(T\\), equals \\((1+\\tau K)\\) times a put on a zero-coupon bond expiring at \\(T\\), with strike {{c1::\\(1/(1+\\tau K)\\)}}.",
+  "back": "Derivation: \\(P(T,T+\\tau)\\,\\tau(L_T-K)=1-(1+\\tau K)P(T,T+\\tau)\\), since \\(1+\\tau L_T=1/P(T,T+\\tau)\\). Discounting the positive part from \\(T+\\tau\\) to \\(T\\) gives \\((1+\\tau K)\\,E_T[(1/(1+\\tau K)-P(T,T+\\tau))^+]\\).",
+  "tags": [
+   "derivatives",
+   "caplet",
+   "put_call_parity",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A payer swaption, the right to pay fixed \\(K\\), is equivalent to a {{c1::put}} on a fixed-coupon bond with coupon \\(K\\) and strike {{c2::at par}}.",
+  "back": "When rates rise the bond falls, so the put pays off, matching the payer swaption's payoff when rates rise.",
+  "tags": [
+   "derivatives",
+   "swaptions",
+   "put_call_parity",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In Vasicek, \\(dr=a(b-r)dt+\\sigma dW\\), the long-end yield tends to \\(\\){{c1::\\(b-\\sigma^2/(2a^2)\\)}}, which lies {{c2::below}} the long-run mean \\(b\\).",
+  "back": "The convexity term comes from Jensen's inequality applied to \\(E[e^{-\\int r}]\\): the bond price is the exponential of a Gaussian quantity, and \\(y=-\\ln P/\\tau\\).",
+  "tags": [
+   "derivatives",
+   "vasicek",
+   "short_rate",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "If rates and the underlying are positively correlated, the futures price is {{c1::above}} the forward price. With deterministic rates or zero correlation the two prices are {{c2::equal}}.",
+  "back": "Futures are marked to market daily, so their P&amp;L is reinvested at the short rate. Correlation makes the reinvestment rate random.",
+  "tags": [
+   "derivatives",
+   "futures",
+   "forwards",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the difference between a forward and a futures contract on the same underlying? When are their prices equal, and what sign does the difference take for positive correlation between rates and the underlying?",
+  "back": "<b>Answer:</b> a forward settles once at maturity, while a futures contract is marked to market daily, so its margin flows are reinvested or financed at the short rate.<br>\n<b>Intuition:</b> margin inflows arrive when the underlying is high and reinvestment rates are also high, so the long futures holder gains.<br>\n<b>Precise:</b> <b>Equal when:</b> rates are deterministic, or the underlying is uncorrelated with rates. Then the reinvestment rate is known and the futures price equals the forward. <b>Sign:</b> with positive correlation between rates and the underlying, the futures price is above the forward (Cox-Ingersoll-Ross).<br>\n<b>Worked example:</b> with \\(S=100\\), \\(r=5\\%\\), \\(T=1\\), no dividend, the forward is \\(100e^{0.05}=105.13\\).<br>\n<b>Interviewer follow-up:</b> \"Does this explain the rate-futures convexity adjustment?\" It is the same mechanism with rates as the underlying; the convexity term is the rate-specific case.",
+  "tags": [
+   "derivatives",
+   "forwards",
+   "futures",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "State the no-arbitrage bounds on a European call and put on a non-dividend stock. Show why the call cannot be worth less than \\(S-Ke^{-rT}\\), and give the numbers for \\(S=K=100\\), \\(r=5\\%\\), \\(T=1\\).",
+  "back": "<b>Answer:</b> the call satisfies \\(\\max(S-Ke^{-rT},0)\\le C\\le S\\), and the put satisfies \\(\\max(Ke^{-rT}-S,0)\\le P\\le Ke^{-rT}\\).<br>\n<b>Precise (lower bound on the call):</b>\n<ol><li>Compare portfolio A, a call plus cash \\(Ke^{-rT}\\), with portfolio B, one share.</li>\n<li>At \\(T\\), if \\(S_T>K\\) then A is worth \\((S_T-K)+K=S_T\\). If \\(S_T\\le K\\) then A is worth \\(K\\ge S_T\\).</li>\n<li>So A dominates B in every state, and \\(C+Ke^{-rT}\\ge S\\).</li></ol><br>\n<b>Worked example:</b> the lower bound is \\(100-95.12=4.88\\). The call at 10.45 sits above it.<br>\n<b>Interviewer follow-up:</b> \"What is the upper bound for a put, and why does it use \\(Ke^{-rT}\\) rather than \\(K\\)?\" The put's payoff is at most \\(K\\) at expiry, so its value today is at most \\(Ke^{-rT}\\).",
+  "tags": [
+   "derivatives",
+   "options",
+   "no_arbitrage",
+   "bounds",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why is an American call on a non-dividend stock never worth exercising early? Use \\(S=120\\), \\(K=100\\), \\(T=1\\), \\(r=5\\%\\), and compare the value of exercising now with the value of holding.",
+  "back": "<b>Answer:</b> exercising now gives \\(S-K=20\\), but holding is worth at least \\(S-Ke^{-r(T-t)}=120-95.12=24.88\\), so a call on a non-dividend stock is not exercised early.<br>\n<b>Intuition:</b> exercise throws away the option's remaining time value and pays \\(K\\) early, losing the interest on \\(K\\). The American call therefore equals the European call, \\(C_A=C\\).<br>\n<b>Trap / Where it breaks:</b> with a dividend, an ex-date can make early exercise optimal. See the dividend card.<br>\n<b>Interviewer follow-up:</b> \"Does the same argument work for a put?\" No. Early exercise of a put gives the holder interest on \\(K\\), so exercise can be optimal when the put is deep in the money.",
+  "tags": [
+   "derivatives",
+   "american_options",
+   "early_exercise",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When is it optimal to exercise an American put early? Describe the trade-off that sets the exercise boundary, and link it to the binomial tree.",
+  "back": "<b>Answer:</b> the put is exercised when \\(S\\) is below a critical level \\(S^*(t)\\), which rises toward \\(K\\) as expiry approaches.<br>\n<b>Intuition:</b> exercising now gives \\(K-S\\) immediately and earns interest on \\(K\\). Holding keeps the put's time value, which is small when the put is deep in the money, so the interest on the strike dominates.<br>\n<b>Worked example:</b> <b>Tree check:</b> in the two-step tree with \\(K=100\\), the node at \\(S=90\\) has exercise value 10 against a continuation value of 5.12, so the put is exercised there.<br>\n<b>Interviewer follow-up:</b> \"Does a higher rate make early exercise more or less likely?\" More likely: the interest saving on \\(K\\) rises with \\(r\\).",
+  "tags": [
+   "derivatives",
+   "american_options",
+   "early_exercise",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "a stock pays a known dividend \\(D\\) at \\(t_1\\) before the call's expiry. When is an American call exercised just before the ex-date? Give the rule of thumb and a numerical example.",
+  "back": "<b>Answer:</b> exercise just before the ex-date if the dividend exceeds the interest on the strike over the remaining life, \\(D>K(1-e^{-r(T-t_1)})\\).<br>\n<b>Intuition:</b> this compares the lost dividend with the saving on the strike, and ignores the remaining time value of the call.<br>\n<b>Worked example:</b> \\(K=100\\), \\(r=5\\%\\), \\(T-t_1=0.5\\)y. Threshold \\(=100(1-e^{-0.025})=2.47\\). A £3 dividend exceeds it, so exercise is considered at the ex-date.<br>\n<b>Trap / Where it breaks:</b> the threshold is only a first screen. The full test compares \\(D\\) with the call's time value at \\(t_1^-\\).<br>\n<b>Interviewer follow-up:</b> \"What does the holder gain by exercising just before ex?\" The shares carry the dividend \\(D\\). Exercising keeps \\(D\\) and gives up only the call's remaining time value, which is why the test compares those two.",
+  "tags": [
+   "derivatives",
+   "american_options",
+   "dividends",
+   "early_exercise",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Give the Black-Scholes delta of a European call and put on a stock with dividend yield \\(q\\). Give both deltas for \\(S=K=100\\), \\(\\sigma=20\\%\\), \\(r=5\\%\\), \\(T=1\\), and say how the delta moves when \\(S\\) rises to 110.",
+  "back": "<b>Answer:</b> at \\(S=K=100\\) the call delta is 0.637 and the put delta is \\(-0.363\\), and the call delta rises to 0.796 at \\(S=110\\).<br>\n<b>Intuition:</b> the call delta rises toward 1 as the call moves in the money.<br>\n<b>Precise:</b> <b>Formulas:</b> \\(\\Delta_C=e^{-qT}N(d_1)\\in(0,e^{-qT})\\). \\(\\Delta_P=e^{-qT}(N(d_1)-1)\\in(-e^{-qT},0)\\).<br>\n<b>Worked example:</b> \\(\\Delta_C=0.637\\), \\(\\Delta_P=-0.363\\). Their difference is 1, as parity requires with \\(q=0\\). At \\(S=110\\): \\(d_1=0.827\\) and \\(\\Delta_C=0.796\\).<br>\n<b>Interviewer follow-up:</b> \"What do you buy to hedge a long call?\" \\(\\Delta_C\\) shares per call, financed with borrowing, rebalanced as \\(S\\) moves.<div class=\"fig\"><img src=\"15_found_deriv_41_delta_vs_spot.png\"><div class=\"cap\">Call and put delta versus spot; the call delta rises toward 1 as the call moves in the money.</div></div>",
+  "tags": [
+   "derivatives",
+   "greeks",
+   "delta",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the ATM vega of a 1y call on \\(S=100\\) in units of \\(\\sigma\\), and what approximation gives it in terms of \\(S\\) and \\(\\sqrt T\\)? Give the ratio of 3-month to 1-year ATM vega.",
+  "back": "<b>Answer:</b> vega is \\(\\mathcal V=S\\varphi(d_1)\\sqrt T\\), and the exact 1y ATM vega is 37.5 per unit of vol.<br>\n<b>Intuition:</b> at the forward, vega scales with \\(\\sqrt T\\), so the 3-month vega is \\(0.5\\) of the 1-year vega.<br>\n<b>Precise:</b> at ATM-forward (\\(d_1\\approx0\\)), \\(\\varphi(0)=0.3989\\), so \\(\\mathcal V\\approx0.40\\,S\\sqrt T\\).<br>\n<b>Worked example:</b> with \\(S=K=100\\), \\(r=5\\%\\), \\(d_1=0.35\\), the exact vega is 37.5 per unit of vol, or 0.375 per vol point. At ATM-forward the approximation gives 39.9. The exact ratio is 0.52 (19.64 against 37.52).<br>\n<b>Trap / Where it breaks:</b> the 0.5 ratio is the forward approximation; the exact ratio for these numbers is 0.52.<br>\n<b>Interviewer follow-up:</b> \"Is vega the same for call and put?\" Yes, with the same strike and expiry; put-call parity makes \\(\\partial_\\sigma(C-P)=0\\).",
+  "tags": [
+   "derivatives",
+   "greeks",
+   "vega",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "give the Black-Scholes vanna of a European call, \\(\\partial\\Delta/\\partial\\sigma\\), with its formula and value for \\(S=K=100\\), \\(\\sigma=20\\%\\), \\(T=1\\), \\(r=5\\%\\). What does its sign mean for a desk delta-hedging through a vol move?",
+  "back": "<b>Answer:</b> vanna is \\(\\partial_\\sigma\\Delta_C=-\\dfrac{\\varphi(d_1)\\,d_2}{\\sigma}\\), about \\(-0.281\\) here, so a vol rise lowers the call delta.<br>\n<b>Intuition:</b> negative when \\(d_2>0\\), i.e. when the call is in the money on the forward. A rise in vol then lowers the call delta, so the desk must sell stock to stay hedged after a vol move.<br>\n<b>Precise:</b> <b>Formula:</b> \\(\\partial_\\sigma\\Delta_C=\\varphi(d_1)\\partial_\\sigma d_1=-\\dfrac{\\varphi(d_1)\\,d_2}{\\sigma}\\).<br>\n<b>Worked example:</b> \\(-0.3752\\times0.15/0.20=-0.281\\).<br>\n<b>Trap / Where it breaks:</b> vanna vanishes at \\(d_2=0\\), i.e. at strike \\(K=Fe^{-\\sigma^2T/2}\\), about 103.05 here: slightly below the forward, not at \\(K=F\\).<br>\n<b>Interviewer follow-up:</b> \"What does a vol rise do to a desk hedged in a sell-off?\" With negative vanna, a vol rise lowers the call delta. A desk short the call and long stock then has too much stock and sells; a desk long the call buys.",
+  "tags": [
+   "derivatives",
+   "greeks",
+   "vanna",
+   "smile",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Define implied volatility. Why does a call price give a unique implied vol, and what Newton step solves for it? Use a market price of 11.45 against the Black-Scholes price of 10.45 at 20% vol.",
+  "back": "<b>Answer:</b> implied vol is the \\(\\sigma\\) such that \\(BS(\\sigma)=P_{\\text{mkt}}\\). From 20% the first Newton step gives 22.7%, converging to 22.66%.<br>\n<b>Precise:</b>\n<ol><li><b>Uniqueness:</b> the call price is strictly increasing in \\(\\sigma\\), since vega is positive, and is bounded by \\((S-Ke^{-rT})^+\\) below and \\(S\\) above. Any price strictly between those bounds has exactly one implied vol.</li>\n<li><b>Newton:</b> \\(\\sigma_{n+1}=\\sigma_n-\\dfrac{BS(\\sigma_n)-P_{\\text{mkt}}}{\\mathcal V(\\sigma_n)}\\).</li></ol><br>\n<b>Worked example:</b> market price 11.45 against BS 10.45 at 20%. The first step from 20% gives \\(0.20+1/37.5=22.7\\%\\). Iterating converges to 22.66%.<br>\n<b>Interviewer follow-up:</b> \"Why not use the first-step vega formula for a deep out-of-the-money option?\" Vega is tiny there, so Newton is unstable; a bracketed method is safer.<div class=\"fig\"><img src=\"15_found_deriv_44_newton_implied_vol.png\"><div class=\"cap\">Newton on the call price from 20% vol: one step to 22.7%, converging to the 22.66% implied vol.</div></div>",
+  "tags": [
+   "derivatives",
+   "implied_vol",
+   "newton",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why is an equity index implied-vol skew typically negative, with low strikes priced at higher vol? Give at least three explanations a desk would use.",
+  "back": "<b>Answer:</b> implied vol falls as strike rises, so out-of-the-money puts are priced above the flat-vol BS level.<br>\n<b>Intuition:</b> <ul><li><b>Leverage:</b> a fall in the stock raises debt-to-equity, so equity volatility rises.</li>\n<li><b>Crash and jump risk:</b> investors pay for downside protection, so OTM put demand lifts their vol.</li>\n<li><b>Structural hedging:</b> pension funds and insurers buy puts persistently, a supply and demand effect.</li>\n<li><b>Risk premium:</b> the risk-neutral density is left-skewed, with a heavier lower tail than the real-world density.</li></ul><br>\n<b>Worked example:</b> <b>Illustration:</b> a 1y 90%-strike vol of 24% against 20% ATM is a 4-vol-point skew.<br>\n<b>Interviewer follow-up:</b> \"Does a steep skew mean the market expects a crash?\" Not necessarily. Under \\(Q\\) the lower tail carries more probability than under \\(P\\), because the premium is part of the price.",
+  "tags": [
+   "derivatives",
+   "smile",
+   "skew",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 10y bond has modified duration 8. Its yield vol is 1.00% a year in absolute (normal) terms. Estimate the price vol of the bond used in a lognormal option, and the Black vol of a 1y at-the-money option on the bond.",
+  "back": "<b>Answer:</b> \\(\\sigma_P\\approx D_{mod}\\times\\sigma_y=8\\times1.00\\%=8.0\\%\\) per year, and the Black vol of a 1y ATM option on the bond is about 8%.<br>\n<b>Precise:</b> <b>Option:</b> a 1y ATM option on the bond has Black vol of about 8%, since the forward is approximately the bond price for short expiries. <b>If yield vol is lognormal:</b> the price vol is \\(D_{mod}\\times y\\times\\sigma^{LN}_y\\).<br>\n<b>Worked example:</b> a 5% yield with 20% lognormal yield vol gives \\(8\\times0.05\\times0.20=8\\%\\), the same number.<br>\n<b>Interviewer follow-up:</b> \"Why does convexity not change the vol?\" It enters the price at second order, so it changes the option's gamma-like term but not the first-order vol conversion.",
+  "tags": [
+   "derivatives",
+   "bond_options",
+   "duration",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A dealer is short ATM gamma. Explain the direction of its delta-hedging trades as the underlying rises and falls, and why this matters for the market near expiry.",
+  "back": "<b>Answer:</b> a dealer short ATM gamma buys stock as the price rises and sells as it falls, so its hedging trades amplify moves.<br>\n<b>Intuition:</b> near expiry gamma concentrates at the strike, so these flows are strongest there: a short-gamma dealer accelerates moves through the strike, while a long-gamma dealer pins the price near it.<br>\n<b>Precise:</b> <b>Direction:</b> for a short call the dealer's delta is \\(-\\Delta_C\\). As the stock rises, \\(\\Delta_C\\) rises, so the short delta becomes more negative: the dealer buys stock as the price rises. As the stock falls it sells stock. <b>Scale:</b> 10,000 ATM options with gamma 0.0188 per share are short 188 shares of delta per £1 move.<br>\n<b>Interviewer follow-up:</b> \"What is the opposite position, and what flow does it create?\" A long-gamma dealer buys low and sells high, which dampens moves.",
+  "tags": [
+   "derivatives",
+   "greeks",
+   "gamma",
+   "hedging",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Define the 25-delta risk reversal and the butterfly quote. Give the sign of the risk reversal in a market with negative equity skew, and compute both for ATM 20%, 25-delta call 19%, 25-delta put 22%.",
+  "back": "<b>Answer:</b> the risk reversal is \\(-3\\) vol points and the butterfly is 0.5 vol points.<br>\n<b>Intuition:</b> negative skew makes puts richer, so \\(RR&lt;0\\).<br>\n<b>Precise:</b> <b>Risk reversal:</b> \\(RR=\\sigma_{25\\Delta C}-\\sigma_{25\\Delta P}\\). It measures skew, the tilt of the smile. <b>Butterfly:</b> \\(BF=\\tfrac12(\\sigma_{25\\Delta C}+\\sigma_{25\\Delta P})-\\sigma_{ATM}\\). It measures smile curvature, the excess kurtosis of the implied distribution.<br>\n<b>Worked example:</b> \\(RR=19-22=-3\\) vol points. \\(BF=\\tfrac12(19+22)-20=0.5\\) vol points.<br>\n<b>Interviewer follow-up:</b> \"Which quote drives the strike of a strangle?\" The 25-delta call and put strikes. The strangle's vol is \\(\\sigma_{ATM}+BF\\) when the RR is zero.<div class=\"fig\"><img src=\"15_found_deriv_48_vol_quotes_smile.png\"><div class=\"cap\">25-delta quotes: negative risk reversal (puts richer) and a small positive butterfly.</div></div>",
+  "tags": [
+   "derivatives",
+   "smile",
+   "risk_reversal",
+   "butterfly",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "For a 1y ATM straddle on \\(S=100\\) (\\(K=100\\), \\(\\sigma=20\\%\\), \\(r=5\\%\\)), give its delta, gamma, vega and theta. Explain why its delta is not zero even though it is struck at spot.",
+  "back": "<b>Answer:</b> delta 0.274, gamma 0.0375, vega 0.75 per vol point, and theta -8.07 per year.<br>\n<b>Intuition:</b> the forward is \\(100e^{0.05}=105.13\\), above the strike, so the straddle's delta is positive.<br>\n<b>Precise:</b> the straddle's delta is \\(2N(d_1)-1\\), which is zero only at \\(d_1=0\\), i.e. \\(K=Se^{(r+\\frac12\\sigma^2)T}=107.25\\), a strike above the forward.<br>\n<b>Worked example:</b> delta \\(=\\Delta_C+\\Delta_P=0.637-0.363=0.274\\). Gamma \\(=2\\times0.0188=0.0375\\). Vega \\(=2\\times37.5=75.0\\) per unit of vol, or 0.75 per vol point. Theta \\(=-6.41-1.66=-8.07\\) per year.<br>\n<b>Interviewer follow-up:</b> \"At what strike is the straddle delta-neutral?\" At \\(K=Se^{(r+\\frac12\\sigma^2)T}=107.25\\), where \\(d_1=0\\).",
+  "tags": [
+   "derivatives",
+   "greeks",
+   "straddle",
+   "lvl_foundation"
+  ]
+ }
+]

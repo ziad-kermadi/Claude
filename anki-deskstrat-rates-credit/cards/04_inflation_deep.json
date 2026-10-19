@@ -7,18 +7,20 @@
    "chain_rpi_reform",
    "rpi_reform",
    "rpi_cpi",
-   "inflation_swaps"
+   "inflation_swaps",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "<b>[Chain: RPI_REFORM 2/5]</b> Context: the instantaneous expected wedge falls from 1.0% to 0.4% pa at 2030 (hypothetical). Why does the par RPI-CPI curve show a kink at 2030 rather than a jump, and what are the slopes either side?",
-  "back": "Since \\(W_T=\\frac{1}{T}\\int_0^T w\\,dt\\), the par rate is continuous. Its slope is \\(\\frac{dW_T}{dT}=\\frac{w(T)-W_T}{T}\\), and \\(w(T)\\) jumps at \\(t_0\\), so the derivative of the par curve jumps.<br>\nBefore 2030 the par rises toward \\(w_0\\). After 2030 it flattens and falls toward \\(w_1\\), since the slope turns negative once \\(w(T)<W_T\\). Numerically the 10y par is 0.60% against 1.00% with no reform, a 40bp gap.<br>\nThe instantaneous (forward) wedge jumps by 60bp at \\(t_0\\). That discontinuity is the observable object, and the par curve only shows its footprint.<br>\n<b>Where it breaks:</b> the step is a deterministic model. Markets smooth the transition, so the observed kink is spread over the months around 2030, and the forward wedge is only observable through instruments whose fixings straddle the change.",
+  "back": "Since \\(W_T=\\frac{1}{T}\\int_0^T w\\,dt\\), the par rate is continuous. Its slope is \\(\\frac{dW_T}{dT}=\\frac{w(T)-W_T}{T}\\), and \\(w(T)\\) jumps at \\(t_0\\), so the derivative of the par curve jumps.<br>\nBefore 2030 the par rises toward \\(w_0\\). After 2030 it flattens and falls toward \\(w_1\\), since the slope turns negative once \\(w(T)<W_T\\). Numerically the 10y par is 0.60% against 1.00% with no reform, a 40bp gap.<br>\nThe instantaneous (forward) wedge jumps by 60bp at \\(t_0\\). That discontinuity is the observable object, and the par curve only shows its footprint.<br>\n<b>Where it breaks:</b> the step is a deterministic model. Markets smooth the transition, so the observed kink is spread over the months around 2030, and the forward wedge is only observable through instruments whose fixings straddle the change.<div class=\"fig\"><img src=\"04_inflation_deep_1_par_wedge_kink_2030.png\"><div class=\"cap\">Instantaneous wedge steps from 1.0% to 0.4% at 3.3y (hypothetical); par wedge is the running average, 0.60% at 10y.</div></div>",
   "tags": [
    "chain_rpi_reform",
    "rpi_reform",
    "inflation_swaps",
-   "scenario"
+   "scenario",
+   "lvl_stretch"
   ]
  },
  {
@@ -29,7 +31,8 @@
    "chain_rpi_reform",
    "rpi_reform",
    "trade_idea",
-   "rpi_cpi"
+   "rpi_cpi",
+   "lvl_stretch"
   ]
  },
  {
@@ -40,7 +43,8 @@
    "chain_rpi_reform",
    "basis",
    "rpi_reform",
-   "linkers"
+   "linkers",
+   "lvl_vp_core"
   ]
  },
  {
@@ -51,7 +55,8 @@
    "chain_rpi_reform",
    "rpi_reform",
    "linkers",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -62,7 +67,8 @@
    "chain_seasonality",
    "seasonality",
    "carry",
-   "linkers"
+   "linkers",
+   "lvl_vp_core"
   ]
  },
  {
@@ -73,7 +79,8 @@
    "chain_seasonality",
    "carry",
    "seasonality",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -84,7 +91,8 @@
    "chain_seasonality",
    "seasonality",
    "breakeven",
-   "trade_idea"
+   "trade_idea",
+   "lvl_vp_core"
   ]
  },
  {
@@ -95,7 +103,8 @@
    "chain_seasonality",
    "carry",
    "seasonality",
-   "case_study"
+   "case_study",
+   "lvl_vp_core"
   ]
  },
  {
@@ -106,7 +115,8 @@
    "derivation",
    "linkers",
    "indexation",
-   "jarrow_yildirim"
+   "jarrow_yildirim",
+   "lvl_stretch"
   ]
  },
  {
@@ -117,7 +127,8 @@
    "derivation",
    "real_rates",
    "breakeven",
-   "inflation_risk_premium"
+   "inflation_risk_premium",
+   "lvl_stretch"
   ]
  },
  {
@@ -128,18 +139,20 @@
    "derivation",
    "convexity",
    "yoy",
-   "jarrow_yildirim"
+   "jarrow_yildirim",
+   "lvl_stretch"
   ]
  },
  {
   "type": "basic",
   "front": "<b>Derivation: ZC inflation swap with a lag.</b> A 10y UK RPI ZCIIS fixes \\(I(T-L)\\) and pays at \\(T\\), with \\(L=2\\)m, the UK RPI swap lag. Starting from the index forward \\(F(0,T-L)\\), derive the par rate \\(K\\). Is a timing adjustment needed, and what is its sign?",
-  "back": "Par condition: \\((1+K)^T=E^T[I(T-L)]/I_0\\). The fixing is at \\(T-L\\) and the payment at \\(T\\), so the \\(T\\)-forward measure is not the fixing measure. Applying the YoY result with \\(T_1=T-L\\) and \\(\\tau=L/12\\):<br>\n\\[(1+K)^T=\\frac{F(0,T-L)}{I_0}\\exp\\!\\Bigl(-\\rho\\sigma_I\\sigma_r\\tfrac{L}{12}B(0,T-L)\\Bigr).\\]\nThe sign is negative for \\(\\rho>0\\), so the par is below the naive lagged forward. Size: with \\(\\rho=0.3\\), \\(\\sigma_I=1.2\\%\\) per root-year, \\(\\sigma_r=1\\%\\) normal, \\(a=0.03\\), \\(L=2\\)m, \\(B(0,9.83)\\approx8.52\\), the index correction is about \\(-0.51\\)bp, which is about \\(-0.05\\)bp on \\(K\\).<br>\n<b>Where it breaks:</b> the term is zero only at \\(L=0\\). So the lag, not the ZC structure, creates the adjustment. A claim that a ZC never needs a timing adjustment holds only without a lag.",
+  "back": "Par condition: \\((1+K)^T=E^T[I(T-L)]/I_0\\). The fixing is at \\(T-L\\) and the payment at \\(T\\), so the \\(T\\)-forward measure is not the fixing measure. Applying the YoY result with \\(T_1=T-L\\) and \\(\\tau=L/12\\):<br>\n\\[(1+K)^T=\\frac{F(0,T-L)}{I_0}\\exp\\!\\Bigl(-\\rho\\sigma_I\\sigma_r\\tfrac{L}{12}B(0,T-L)\\Bigr).\\]\nThe sign is negative for \\(\\rho>0\\), so the par is below the naive lagged forward. Size: with \\(\\rho=0.3\\), \\(\\sigma_I=1.2\\%\\) per root-year, \\(\\sigma_r=1\\%\\) normal, \\(a=0.03\\), \\(L=2\\)m, \\(B(0,9.83)\\approx8.52\\), the index correction is about \\(-0.51\\)bp, which is about \\(-0.05\\)bp on \\(K\\).<br>\n<b>Where it breaks:</b> the term is zero only at \\(L=0\\). So the lag, not the ZC structure, creates the adjustment. A claim that a ZC never needs a timing adjustment holds only without a lag.<div class=\"fig\"><img src=\"04_inflation_deep_12_zc_swap_fixing_lag.png\"><div class=\"cap\">10y RPI ZCIIS fixes I(T-2m) and pays at T; the lag is the source of the timing adjustment.</div></div>",
   "tags": [
    "derivation",
    "zc",
    "convexity",
-   "inflation_swaps"
+   "inflation_swaps",
+   "lvl_stretch"
   ]
  },
  {
@@ -150,7 +163,8 @@
    "derivation",
    "lpi",
    "caps_floors",
-   "put_call_parity"
+   "put_call_parity",
+   "lvl_vp_core"
   ]
  },
  {
@@ -161,7 +175,8 @@
    "derivation",
    "dv01",
    "breakeven",
-   "trade_idea"
+   "trade_idea",
+   "lvl_vp_core"
   ]
  },
  {
@@ -172,7 +187,8 @@
    "derivation",
    "caps_floors",
    "yoy",
-   "dv01"
+   "dv01",
+   "lvl_vp_core"
   ]
  },
  {
@@ -183,7 +199,8 @@
    "derivation",
    "dv01",
    "breakeven",
-   "linkers"
+   "linkers",
+   "lvl_vp_core"
   ]
  },
  {
@@ -194,7 +211,8 @@
    "derivation",
    "caps_floors",
    "convention",
-   "model_risk"
+   "model_risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -205,7 +223,8 @@
    "derivation",
    "breakeven",
    "convexity",
-   "inflation_swaps"
+   "inflation_swaps",
+   "lvl_vp_core"
   ]
  },
  {
@@ -216,7 +235,8 @@
    "put_call_parity",
    "lpi",
    "caps_floors",
-   "convention"
+   "convention",
+   "lvl_foundation"
   ]
  },
  {
@@ -227,7 +247,8 @@
    "derivation",
    "caps_floors",
    "convention",
-   "model_risk"
+   "model_risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -238,18 +259,20 @@
    "linkers",
    "indexation",
    "derivation",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "<b>Case study: settlement cash price of a post-2005 linker.</b> Real coupon 1.25% semi-annual. Settlement is 60 days into a 182-day coupon period. Base RPI at issue 290.0; RPI for the lag month (\\(m-3\\)) is 350.0. Quoted real clean price 98.20 per 100 real nominal. Compute the index ratio, the cash clean and dirty prices per 100 nominal, and a sanity check.",
-  "back": "<ol><li>Index ratio: \\(IR=350.0/290.0=1.20690\\). No interpolation, so the ratio is flat for the month.</li>\n<li>Real accrued: \\(0.625\\times60/182=0.20604\\).</li>\n<li>Real dirty: \\(98.20+0.20604=98.40604\\).</li>\n<li>Cash clean: \\(98.20\\times1.20690=118.517\\).</li>\n<li>Cash accrued: \\(0.20604\\times1.20690=0.2487\\).</li>\n<li>Cash dirty: \\(98.40604\\times1.20690=118.766\\).</li></ol>\n<b>Answer: cash dirty about 118.77 per 100 nominal, with a clean cash price of about 118.52.</b><br>\nSanity: \\(IR\\) multiplies the whole real price, and accrued is about 0.2% of dirty, so the cash dirty is \\(1.2069\\times98.41\\). Check that the desk's quote is real or nominal before comparing.",
+  "back": "<ol><li>Index ratio: \\(IR=350.0/290.0=1.20690\\). No interpolation, so the ratio is flat for the month.</li>\n<li>Real accrued: \\(0.625\\times60/182=0.20604\\).</li>\n<li>Real dirty: \\(98.20+0.20604=98.40604\\).</li>\n<li>Cash clean: \\(98.20\\times1.20690=118.517\\).</li>\n<li>Cash accrued: \\(0.20604\\times1.20690=0.2487\\).</li>\n<li>Cash dirty: \\(98.40604\\times1.20690=118.766\\).</li></ol>\n<b>Answer: cash dirty about 118.77 per 100 nominal, with a clean cash price of about 118.52.</b><br>\nSanity: \\(IR\\) multiplies the whole real price, and accrued is about 0.2% of dirty, so the cash dirty is \\(1.2069\\times98.41\\). Check that the desk's quote is real or nominal before comparing.<div class=\"fig\"><img src=\"04_inflation_deep_22_linker_cash_price_flow.png\"><div class=\"cap\">Real clean 98.20 to cash dirty 118.77 per 100 nominal, using IR 1.2069 and real accrued 0.2060.</div></div>",
   "tags": [
    "case_study",
    "linkers",
    "index_ratio",
-   "accrued"
+   "accrued",
+   "lvl_vp_core"
   ]
  },
  {
@@ -260,18 +283,20 @@
    "case_study",
    "inflation_swaps",
    "dv01",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "<b>Case study: real yield versus nominal, relative value.</b> 10y nominal yield 4.60%. 10y ZC swap breakeven 3.10%. The 10y linker's real yield is quoted at 1.75%. (a) What is the fair real yield from the swap? (b) What breakeven does the linker imply? (c) How much P&L does a DV01-matched breakeven trade make if the gap closes, given a linker real DV01 of £10,000 per bp?",
-  "back": "<ol><li>Fair real: \\((1.046/1.031)-1=1.455\\%\\). The additive shortcut gives \\(4.60-3.10=1.50\\%\\), about 4.5bp too high.</li>\n<li>Linker-implied breakeven: \\((1.046/1.0175)-1=2.801\\%\\). The linker's breakeven is 30bp below the swap's.</li>\n<li>If the gap closes by 30bp with nominal yields fixed, the real yield falls 30bp. The P&L is \\(30\\times\\text{£}10{,}000=\\text{£}300\\)k.</li></ol>\n<b>Answer: linker is cheap on breakeven by 30bp, worth about £300k if it converges.</b><br>\nSanity: with nominal fixed, a 30bp breakeven gap equals a 30bp real gap, so the P&L is DV01 times the gap. The additive shortcut is the wrong tool at 30bp, but the 5bp error is small against the trade.",
+  "back": "<ol><li>Fair real: \\((1.046/1.031)-1=1.455\\%\\). The additive shortcut gives \\(4.60-3.10=1.50\\%\\), about 4.5bp too high.</li>\n<li>Linker-implied breakeven: \\((1.046/1.0175)-1=2.801\\%\\). The linker's breakeven is 30bp below the swap's.</li>\n<li>If the gap closes by 30bp with nominal yields fixed, the real yield falls 30bp. The P&L is \\(30\\times\\text{£}10{,}000=\\text{£}300\\)k.</li></ol>\n<b>Answer: linker is cheap on breakeven by 30bp, worth about £300k if it converges.</b><br>\nSanity: with nominal fixed, a 30bp breakeven gap equals a 30bp real gap, so the P&L is DV01 times the gap. The additive shortcut is the wrong tool at 30bp, but the 5bp error is small against the trade.<div class=\"fig\"><img src=\"04_inflation_deep_24_real_yield_fisher_vs_shortcut.png\"><div class=\"cap\">Fair 10y real yield 1.455% (Fisher) against 1.50% (additive shortcut) and 1.75% quoted on the linker.</div></div>",
   "tags": [
    "case_study",
    "real_rates",
    "breakeven",
-   "relative_value"
+   "relative_value",
+   "lvl_vp_core"
   ]
  },
  {
@@ -282,29 +307,32 @@
    "case_study",
    "lpi",
    "caps_floors",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "<b>Case study: seasonal-adjusted carry over 3 months.</b> Long £10m nominal of a 3-month-lag linker. Real dirty price 105.00, index ratio \\(IR_0=1.25\\), so dirty nominal value £13.125m. Real coupon 1.25% pa (3-month accrual 0.3125%). Repo 4.00% pa. Trend breakeven 3.00% pa. Seasonal term over the window \\(s_m-s_{m-3}=-0.20\\%\\). Compute 3-month carry with and without the seasonal term, ignoring real price roll.",
-  "back": "<ol><li>Coupon accrual: \\(10\\text{m}\\times1.25\\times0.0125\\times0.25=\\text{£}39{,}063\\).</li>\n<li>Trend 3m accrual: \\((1.03)^{0.25}-1=0.7417\\%\\). Index accrual: \\(13.125\\text{m}\\times0.7417\\%=\\text{£}97{,}349\\).</li>\n<li>Seasonal-adjusted accrual: \\(0.7417\\%-0.20\\%=0.5417\\%\\). Index accrual: \\(13.125\\text{m}\\times0.5417\\%=\\text{£}71{,}099\\).</li>\n<li>Repo: \\(13.125\\text{m}\\times4.00\\%\\times0.25=\\text{£}131{,}250\\).</li>\n<li>Carry, trend only: \\(39{,}063+97{,}349-131{,}250=+\\text{£}5{,}162\\).</li>\n<li>Carry, seasonal-adjusted: \\(39{,}063+71{,}099-131{,}250=-\\text{£}21{,}088\\).</li></ol>\n<b>Answer: the seasonal term flips the 3-month carry from about +£5k to about -£21k.</b><br>\nSanity: the difference is \\(0.20\\%\\times13.125\\text{m}=\\text{£}26{,}250\\), exactly the gap between the two accruals.",
+  "back": "<ol><li>Coupon accrual: \\(10\\text{m}\\times1.25\\times0.0125\\times0.25=\\text{£}39{,}063\\).</li>\n<li>Trend 3m accrual: \\((1.03)^{0.25}-1=0.7417\\%\\). Index accrual: \\(13.125\\text{m}\\times0.7417\\%=\\text{£}97{,}349\\).</li>\n<li>Seasonal-adjusted accrual: \\(0.7417\\%-0.20\\%=0.5417\\%\\). Index accrual: \\(13.125\\text{m}\\times0.5417\\%=\\text{£}71{,}099\\).</li>\n<li>Repo: \\(13.125\\text{m}\\times4.00\\%\\times0.25=\\text{£}131{,}250\\).</li>\n<li>Carry, trend only: \\(39{,}063+97{,}349-131{,}250=+\\text{£}5{,}162\\).</li>\n<li>Carry, seasonal-adjusted: \\(39{,}063+71{,}099-131{,}250=-\\text{£}21{,}088\\).</li></ol>\n<b>Answer: the seasonal term flips the 3-month carry from about +£5k to about -£21k.</b><br>\nSanity: the difference is \\(0.20\\%\\times13.125\\text{m}=\\text{£}26{,}250\\), exactly the gap between the two accruals.<div class=\"fig\"><img src=\"04_inflation_deep_26_seasonal_carry_components.png\"><div class=\"cap\">3-month carry: the -0.20% seasonal term turns about +GBP 5.2k of trend carry into about -GBP 21.1k.</div></div>",
   "tags": [
    "case_study",
    "carry",
    "seasonality",
-   "linkers"
+   "linkers",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "<b>Case study: DV01-matched linker versus nominal.</b> Linker dirty value £13.125m, real modified duration 8.0 (hypothetical). Short a nominal gilt with the same DV01. Compute P&L for three scenarios: (A) BEI +5bp, nominal fixed; (B) nominal +10bp, BEI +5bp; (C) nominal +10bp, BEI unchanged.",
-  "back": "Real DV01 \\(=13.125\\text{m}\\times8.0\\times10^{-4}/10=\\text{£}10{,}500\\) per bp. Breakeven DV01 equal to it, by the derivation.<br>\n(A) Real falls 5bp. Linker \\(+52.5\\)k. Nominal \\(0\\). Net \\(+52.5\\)k.<br>\n(B) Real rises 5bp. Linker \\(-52.5\\)k. Short nominal \\(+105\\)k. Net \\(+52.5\\)k.<br>\n(C) Real rises 10bp. Linker \\(-105\\)k. Short nominal \\(+105\\)k. Net \\(0\\).<br>\n<b>Answer: net P&L equals £10,500 times the BEI change in every case, and is zero when BEI does not move.</b><br>\nSanity: scenario (C) shows the real-rate exposure is fully hedged. The residual is only the breakeven.",
+  "back": "Real DV01 \\(=13.125\\text{m}\\times8.0\\times10^{-4}/10=\\text{£}10{,}500\\) per bp. Breakeven DV01 equal to it, by the derivation.<br>\n(A) Real falls 5bp. Linker \\(+52.5\\)k. Nominal \\(0\\). Net \\(+52.5\\)k.<br>\n(B) Real rises 5bp. Linker \\(-52.5\\)k. Short nominal \\(+105\\)k. Net \\(+52.5\\)k.<br>\n(C) Real rises 10bp. Linker \\(-105\\)k. Short nominal \\(+105\\)k. Net \\(0\\).<br>\n<b>Answer: net P&L equals £10,500 times the BEI change in every case, and is zero when BEI does not move.</b><br>\nSanity: scenario (C) shows the real-rate exposure is fully hedged. The residual is only the breakeven.<div class=\"fig\"><img src=\"04_inflation_deep_27_dv01_matched_scenarios.png\"><div class=\"cap\">DV01-matched linker vs short nominal: net P&amp;L is GBP 10,500 per bp of breakeven move in each scenario.</div></div>",
   "tags": [
    "case_study",
    "dv01",
    "breakeven",
-   "trade_idea"
+   "trade_idea",
+   "lvl_vp_core"
   ]
  },
  {
@@ -315,18 +343,20 @@
    "case_study",
    "zc",
    "convexity",
-   "inflation_swaps"
+   "inflation_swaps",
+   "lvl_stretch"
   ]
  },
  {
   "type": "basic",
   "front": "<b>Case study: caplet delta hedge and gamma.</b> Notional £10m, YoY caplet on 1y, strike 3.50%. \\(F=3.00\\%\\), \\(\\sigma_N=1.00\\%\\), \\(P(0,1)=0.97\\), \\(\\tau=1\\). Compute the value, the forward delta and the ZCIIS hedge notional. Then check the P&L of a 5bp rise in \\(F\\) against the delta-only prediction.",
-  "back": "<ol><li>\\(d=(3.00-3.50)/1.00=-0.5\\). \\(\\Phi(-0.5)=0.30854\\), \\(\\phi(-0.5)=0.35207\\).</li>\n<li>Value: \\(0.97\\,[(-0.005)(0.30854)+0.01(0.35207)]=0.97\\times0.0019785=19.19\\)bp, so £19,186.</li>\n<li>Delta: \\(P\\tau\\Phi(d)=0.97\\times0.30854=0.2993\\). Hedge notional about \\(\\text{£}10\\text{m}\\times0.2993=\\text{£}2.99\\)m.</li>\n<li>\\(F\\to3.05\\%\\): exact value 20.73bp, so exact P&L \\(=\\text{£}1{,}539\\). Delta-only P&L \\(=\\text{£}1{,}496\\).</li></ol>\n<b>Answer: hedge about £2.99m of ZCIIS per £10m caplet; the 5bp move gives £1.54k exact against £1.50k from delta.</b><br>\nSanity: the £43 gap is gamma. It is positive for a long caplet, as expected for a long option.",
+  "back": "<ol><li>\\(d=(3.00-3.50)/1.00=-0.5\\). \\(\\Phi(-0.5)=0.30854\\), \\(\\phi(-0.5)=0.35207\\).</li>\n<li>Value: \\(0.97\\,[(-0.005)(0.30854)+0.01(0.35207)]=0.97\\times0.0019785=19.19\\)bp, so £19,186.</li>\n<li>Delta: \\(P\\tau\\Phi(d)=0.97\\times0.30854=0.2993\\). Hedge notional about \\(\\text{£}10\\text{m}\\times0.2993=\\text{£}2.99\\)m.</li>\n<li>\\(F\\to3.05\\%\\): exact value 20.73bp, so exact P&L \\(=\\text{£}1{,}539\\). Delta-only P&L \\(=\\text{£}1{,}496\\).</li></ol>\n<b>Answer: hedge about £2.99m of ZCIIS per £10m caplet; the 5bp move gives £1.54k exact against £1.50k from delta.</b><br>\nSanity: the £43 gap is gamma. It is positive for a long caplet, as expected for a long option.<div class=\"fig\"><img src=\"04_inflation_deep_29_caplet_value_vs_forward.png\"><div class=\"cap\">Caplet value against forward YoY with delta tangent at 3.00%: the 5bp move is 1.50bp by delta, 1.54bp exact.</div></div>",
   "tags": [
    "case_study",
    "caps_floors",
    "dv01",
-   "yoy"
+   "yoy",
+   "lvl_vp_core"
   ]
  }
 ]

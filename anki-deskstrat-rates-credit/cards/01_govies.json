@@ -6,17 +6,19 @@
   "tags": [
    "gilts",
    "conventions",
-   "day_count"
+   "day_count",
+   "lvl_foundation"
   ]
  },
  {
   "type": "basic",
   "front": "A 4% semi-annual gilt (face 100) has 61 days elapsed in a 182-day coupon period and a clean price of 98.50. What are accrued and dirty price?",
-  "back": "<b>Headline:</b> accrued \\(\\approx 0.67\\), dirty \\(\\approx 99.17\\).<br>\n\\[AI = \\frac{4}{2}\\times\\frac{61}{182} = 2\\times 0.3352 = 0.670\\]\n\\[P_{dirty} = 98.50 + 0.67 = 99.17\\]\n<b>Interviewer follow-up:</b> If settlement slips by one day, accrued rises by \\(2/182 \\approx 0.011\\) per day. This is why dirty drifts up between coupons while the clean quote is unchanged in the absence of market moves.",
+  "back": "<b>Headline:</b> accrued \\(\\approx 0.67\\), dirty \\(\\approx 99.17\\).<br>\n\\[AI = \\frac{4}{2}\\times\\frac{61}{182} = 2\\times 0.3352 = 0.670\\]\n\\[P_{dirty} = 98.50 + 0.67 = 99.17\\]\n<b>Interviewer follow-up:</b> If settlement slips by one day, accrued rises by \\(2/182 \\approx 0.011\\) per day. This is why dirty drifts up between coupons while the clean quote is unchanged in the absence of market moves.<div class=\"fig\"><img src=\"01_govies_1_accrued_interest_timeline.png\"><div class=\"cap\">Accrued interest within the 182-day coupon period: 0.67, dirty price 99.17</div></div>",
   "tags": [
    "gilts",
    "mental_math",
-   "conventions"
+   "conventions",
+   "lvl_vp_core"
   ]
  },
  {
@@ -26,7 +28,8 @@
   "tags": [
    "gilts",
    "conventions",
-   "ex_div"
+   "ex_div",
+   "lvl_vp_core"
   ]
  },
  {
@@ -36,7 +39,8 @@
   "tags": [
    "conventions",
    "day_count",
-   "repo"
+   "repo",
+   "lvl_foundation"
   ]
  },
  {
@@ -46,7 +50,8 @@
   "tags": [
    "gilts",
    "inflation",
-   "conventions"
+   "conventions",
+   "lvl_vp_core"
   ]
  },
  {
@@ -56,7 +61,8 @@
   "tags": [
    "gilts",
    "inflation",
-   "conventions"
+   "conventions",
+   "lvl_vp_core"
   ]
  },
  {
@@ -66,7 +72,8 @@
   "tags": [
    "gilts",
    "mental_math",
-   "conventions"
+   "conventions",
+   "lvl_foundation"
   ]
  },
  {
@@ -76,7 +83,8 @@
   "tags": [
    "duration",
    "derivation",
-   "rates"
+   "rates",
+   "lvl_vp_core"
   ]
  },
  {
@@ -86,7 +94,8 @@
   "tags": [
    "duration",
    "dv01",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -96,7 +105,8 @@
   "tags": [
    "convexity",
    "dv01",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -107,7 +117,8 @@
    "convexity",
    "callable",
    "hedging",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -117,7 +128,8 @@
   "tags": [
    "duration",
    "key_rate",
-   "hedging"
+   "hedging",
+   "lvl_vp_core"
   ]
  },
  {
@@ -128,7 +140,8 @@
    "duration",
    "zero_coupon",
    "convexity",
-   "conventions"
+   "conventions",
+   "lvl_foundation"
   ]
  },
  {
@@ -138,7 +151,8 @@
   "tags": [
    "carry",
    "repo",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -148,7 +162,8 @@
   "tags": [
    "roll_down",
    "carry",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -159,7 +174,8 @@
    "carry",
    "roll_down",
    "breakeven",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -170,7 +186,8 @@
    "carry",
    "roll_down",
    "tradeoff",
-   "curve_trades"
+   "curve_trades",
+   "lvl_vp_core"
   ]
  },
  {
@@ -181,7 +198,8 @@
    "asset_swap",
    "spreads",
    "derivation",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -191,7 +209,8 @@
   "tags": [
    "spreads",
    "conventions",
-   "trade_off"
+   "trade_off",
+   "lvl_vp_core"
   ]
  },
  {
@@ -201,7 +220,8 @@
   "tags": [
    "spreads",
    "options",
-   "convention"
+   "convention",
+   "lvl_foundation"
   ]
  },
  {
@@ -211,7 +231,8 @@
   "tags": [
    "futures",
    "invoice",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -221,7 +242,8 @@
   "tags": [
    "futures",
    "conversion_factor",
-   "conventions"
+   "conventions",
+   "lvl_foundation"
   ]
  },
  {
@@ -232,7 +254,8 @@
    "futures",
    "hedging",
    "dv01",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -242,7 +265,8 @@
   "tags": [
    "futures",
    "implied_repo",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -252,7 +276,8 @@
   "tags": [
    "futures",
    "basis",
-   "ctd"
+   "ctd",
+   "lvl_vp_core"
   ]
  },
  {
@@ -262,29 +287,32 @@
   "tags": [
    "futures",
    "delivery_options",
-   "options"
+   "options",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "Describe the cash-futures basis trade. What is the P&L and what risk would cause the position to unwind, using implied repo versus financing rate as the key variable?",
-  "back": "<b>Trade:</b> long the CTD cash bond, short the future with the CF-adjusted hedge, funded in repo.<br>\nP&L is approximately carry: \\((IRR - r_{repo})\\times\\) notional \\(\\times\\) time, plus any change in the net basis. If financing rises above the IRR, the trade loses carry.<br>\nUnwind risks: repo haircut or availability (funding squeeze), CTD switch, the futures contract converging to a different delivery basket, and mark-to-market on the basis when liquidity is thin.<br>\n<b>Interviewer follow-up:</b> Why was the UST cash-futures basis dislocated in March 2020? Hedge funds cut short futures (about $62bn, 3 to 17 March 2020) while repo-funded cash positions were unwound at the same time, and the cash-futures basis spiked above 70bp against a typical level near 5bp (Brookings-based summary; approx.; unverified against primary data). Dealer balance-sheet constraints contributed. The claim that leverage-ratio (SLR) constraints amplified the stress is an advocacy view and is not established here.",
+  "back": "<b>Trade:</b> long the CTD cash bond, short the future with the CF-adjusted hedge, funded in repo.<br>\nP&L is approximately carry: \\((IRR - r_{repo})\\times\\) notional \\(\\times\\) time, plus any change in the net basis. If financing rises above the IRR, the trade loses carry.<br>\nUnwind risks: repo haircut or availability (funding squeeze), CTD switch, the futures contract converging to a different delivery basket, and mark-to-market on the basis when liquidity is thin.<br>\n<b>Interviewer follow-up:</b> Why was the UST cash-futures basis dislocated in March 2020? Hedge funds cut short futures (about $62bn, 3 to 17 March 2020) while repo-funded cash positions were unwound at the same time, and the cash-futures basis spiked above 70bp against a typical level near 5bp (Kashyap, Stein, Wallen and Younger, Brookings Papers on Economic Activity; figures from secondary summaries). Dealer balance-sheet constraints contributed. The claim that leverage-ratio (SLR) constraints amplified the stress is an advocacy view and is not established here.",
   "tags": [
    "futures",
    "basis",
    "repo",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "Compare the UK Long Gilt, Euro-Bund and US 10-year futures in terms of notional, notional coupon and deliverable maturity range. How do the notional coupon and the range together determine the CTD set and the dispersion of conversion factors?",
-  "back": "<ul>\n<li><b>Long Gilt (LIF):</b> £100,000 notional, 4% notional coupon, deliverable gilts with 8 years 9 months to 13 years remaining (ICE contract spec).</li>\n<li><b>Bund (EUREX):</b> €100,000 notional, 6% notional coupon, deliverable about 8.5 to 10.5 years (approx.; unverified).</li>\n<li><b>US 10-year (TY):</b> $100,000 notional, 6% notional coupon, deliverable about 6.5 to 10 years (approx.; unverified).</li>\n</ul>\nThe conversion factor is the bond's clean price at the notional yield, so CF dispersion grows with the distance between a bond's coupon and the notional coupon and with its remaining maturity. A 4% notional coupon sits near the coupons of many long gilts, so CFs cluster closer to 1 for those bonds. The CF converts CTD DV01 into contract DV01 (\\(\\text{DV01}_{CTD}/CF\\)), so CF dispersion sets how much the hedge ratio jumps when the CTD switches.<br>\n<b>Interviewer follow-up:</b> Why does the 4% notional coupon not make the Long Gilt a better hedge for 30y exposure? The CTD is a 10-to-13 year bond, so the contract's DV01 tracks the CTD's curve point, not the 30y. A 30y hedge needs a beta adjustment on top of the CF-based ratio.",
+  "back": "<ul>\n<li><b>Long Gilt (LIF):</b> £100,000 notional, 4% notional coupon, deliverable gilts with 8 years 9 months to 13 years remaining (ICE contract spec).</li>\n<li><b>Bund (EUREX):</b> €100,000 notional, 6% notional coupon, deliverable 8.5 to 10.5 years remaining (Eurex contract spec).</li>\n<li><b>US 10-year (TY):</b> $100,000 face value. The deliverable range and notional coupon are set by the CME rulebook and were not confirmed here, so check the current spec before quoting them.</li>\n</ul>\nThe conversion factor is the bond's clean price at the notional yield, so CF dispersion grows with the distance between a bond's coupon and the notional coupon and with its remaining maturity. A 4% notional coupon sits near the coupons of many long gilts, so CFs cluster closer to 1 for those bonds. The CF converts CTD DV01 into contract DV01 (\\(\\text{DV01}_{CTD}/CF\\)), so CF dispersion sets how much the hedge ratio jumps when the CTD switches.<br>\n<b>Interviewer follow-up:</b> Why does the 4% notional coupon not make the Long Gilt a better hedge for 30y exposure? The CTD is a 10-to-13 year bond, so the contract's DV01 tracks the CTD's curve point, not the 30y. A 30y hedge needs a beta adjustment on top of the CF-based ratio.",
   "tags": [
    "futures",
    "conventions",
    "conversion_factor",
-   "ctd"
+   "ctd",
+   "lvl_vp_core"
   ]
  },
  {
@@ -295,28 +323,31 @@
    "futures",
    "conventions",
    "bund",
-   "ust"
+   "ust",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "A bond is trading special in repo, at 3.20% against 4.00% general collateral. Explain specialness, who pays it, and how much a short seller saves.",
-  "back": "<b>Specialness</b> is GC rate minus special repo rate: here \\(4.00\\%-3.20\\%=80\\)bp.<br>\nA short seller who needs the bond does a reverse repo: they lend cash and receive the bond as collateral, at the special rate, which is below GC. On that cash they forgo the 80bp difference against GC, and that foregone interest is the price of borrowing the bond. The spread reflects scarcity in the bond, not a credit view.<br>\n<b>Interviewer follow-up:</b> What causes specialness to spike? A short squeeze, a bond with low free float, or a bond that is the CTD of a future and is in high demand for delivery.",
+  "back": "<b>Specialness</b> is GC rate minus special repo rate: here \\(4.00\\%-3.20\\%=80\\)bp.<br>\nA short seller who needs the bond does a reverse repo: they lend cash and receive the bond as collateral, at the special rate, which is below GC. On that cash they forgo the 80bp difference against GC, and that foregone interest is the price of borrowing the bond. The spread reflects scarcity in the bond, not a credit view.<br>\n<b>Interviewer follow-up:</b> What causes specialness to spike? A short squeeze, a bond with low free float, or a bond that is the CTD of a future and is in high demand for delivery.<div class=\"fig\"><img src=\"01_govies_29_specialness_repo_flow.png\"><div class=\"cap\">Specialness: GC 4.00% vs special repo 3.20%, an 80 bp cost of borrowing the bond</div></div>",
   "tags": [
    "repo",
    "specials",
-   "mental_math"
+   "mental_math",
+   "lvl_foundation"
   ]
  },
  {
   "type": "basic",
   "front": "Explain how a repo transaction affects a dealer's leverage ratio and risk-weighted assets, and why a repo-heavy business may be constrained even with low RWA.",
-  "back": "<b>Headline:</b> the leverage ratio is non-risk-based: it measures Tier 1 capital against an exposure measure that includes repo assets on a gross basis unless netting or central clearing is available.<br>\nRepo with a high-quality counterparty can have low RWA, but the exposure measure still counts gross assets, so balance-sheet usage can dominate capital usage. The PRA leverage ratio minimum is 3.25% of the exposure measure for in-scope UK firms, plus buffers; Basel III's minimum is 3%.<br>\nNetting, central clearing and accounting netting reduce the exposure. Exposure measures for derivatives use SA-CCR (approx.; unverified).<br>\n<b>Interviewer follow-up:</b> Why do dealers hedge the leverage ratio at quarter-end? Some reporting dates set balance-sheet snapshots, so dealers reduce gross repo and reverse repo to meet the exposure target at quarter-end, which spikes repo rates.",
+  "back": "<b>Headline:</b> the leverage ratio is non-risk-based: it measures Tier 1 capital against an exposure measure that includes repo assets on a gross basis unless netting or central clearing is available.<br>\nRepo with a high-quality counterparty can have low RWA, but the exposure measure still counts gross assets, so balance-sheet usage can dominate capital usage. The PRA leverage ratio minimum is 3.25% of the exposure measure for in-scope UK firms, plus buffers; Basel III's minimum is 3%.<br>\nNetting, central clearing and accounting netting reduce the exposure where the framework permits. Derivative exposures follow the framework's own derivative rules rather than risk weights.<br>\n<b>Interviewer follow-up:</b> Why do dealers hedge the leverage ratio at quarter-end? Some reporting dates set balance-sheet snapshots, so dealers reduce gross repo and reverse repo to meet the exposure target at quarter-end, which spikes repo rates.",
   "tags": [
    "repo",
    "balance_sheet",
    "leverage_ratio",
-   "tradeoff"
+   "tradeoff",
+   "lvl_vp_core"
   ]
  },
  {
@@ -327,18 +358,20 @@
    "repo",
    "balance_sheet",
    "basis",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "Compare a DMO gilt auction with a syndication for issuing a new long gilt. What trade-offs drive the choice, and what is an auction tail?",
-  "back": "<b>Auction:</b> competitive sale with pricing set by bids; cheaper to run for benchmark-style issues and transparent. The auction clearing yield is compared with the pre-auction secondary level.<br>\n<b>Syndication:</b> bookbuilt sale to selected banks at a price agreed with the issuer; used for new long gilts where price discovery and distribution to real-money investors matter.<br>\n<b>Auction tail:</b> the difference between the auction clearing yield and the level of the bond in the secondary market just before the auction (approx.; unverified: the DMO tail definition and whether conventional auctions are uniform or multiple price could not be confirmed). A tail of a few bps signals weak demand and a high clearing cost.<br>\n<b>Interviewer follow-up:</b> What does bid-to-cover tell you? Higher bid-to-cover means more demand relative to supply; combined with tail, it informs future issuance timing and pricing.",
+  "back": "<b>Auction:</b> competitive sale with pricing set by bids; cheaper to run for benchmark-style issues and transparent. <br>\n<b>Syndication:</b> bookbuilt sale to selected banks at a price agreed with the issuer; used for new long gilts where price discovery and distribution to real-money investors matter.<br>\n<b>Auction tail:</b> the DMO definition is the yield at the lowest accepted price less the yield at the average accepted price, using unrounded yields, expressed in bp. A small tail means accepted bids clustered near the clearing price; a larger tail generally signals more dispersed bids and weaker demand.<br>\n<b>Interviewer follow-up:</b> What does bid-to-cover tell you? Higher bid-to-cover means more demand relative to supply; combined with tail, it informs future issuance timing and pricing.",
   "tags": [
    "dmo",
    "auctions",
    "syndication",
-   "tradeoff"
+   "tradeoff",
+   "lvl_vp_core"
   ]
  },
  {
@@ -348,7 +381,8 @@
   "tags": [
    "dmo",
    "gemms",
-   "conventions"
+   "conventions",
+   "lvl_foundation"
   ]
  },
  {
@@ -359,7 +393,8 @@
    "qe",
    "term_premium",
    "curve",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -371,7 +406,8 @@
    "curve",
    "term_premium",
    "scenario",
-   "tradeoff"
+   "tradeoff",
+   "lvl_vp_core"
   ]
  },
  {
@@ -382,7 +418,8 @@
    "curve_trades",
    "dv01",
    "mental_math",
-   "steepener"
+   "steepener",
+   "lvl_vp_core"
   ]
  },
  {
@@ -393,7 +430,8 @@
    "curve_trades",
    "dv01",
    "mental_math",
-   "weights"
+   "weights",
+   "lvl_vp_core"
   ]
  },
  {
@@ -404,7 +442,8 @@
    "curve_trades",
    "regression",
    "beta",
-   "tradeoff"
+   "tradeoff",
+   "lvl_stretch"
   ]
  },
  {
@@ -415,18 +454,20 @@
    "curve_trades",
    "butterfly",
    "dv01",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "cloze",
   "front": "A DV01-neutral 2s10s steepener, long £43m of 2y and short £10m of 10y (DV01s £8,170 and £8,180 per bp), earns about {{c1::£8,180}} for a 10y move of +1bp with the 2y unchanged, and about {{c2::£10}} for a parallel +1bp move.",
-  "back": "Steepening is long 2y and short 10y, so the short 10y gains when its yield rises. The DV01 match cancels the parallel move to within about £10 per bp, leaving the spread exposure. Weighting by DV01 rather than notional is what removes the hidden duration bet.",
+  "back": "Steepening is long 2y and short 10y, so the short 10y gains when its yield rises. The DV01 match cancels the parallel move to within about £10 per bp, leaving the spread exposure. Weighting by DV01 rather than notional is what removes the hidden duration bet.<div class=\"fig\"><img src=\"01_govies_40_steepener_pnl_bars.png\"><div class=\"cap\">Steepener P&amp;L per +1 bp: 10y-only move vs parallel move, net about GBP 10 for parallel</div></div>",
   "tags": [
    "curve_trades",
    "dv01",
    "steepener",
-   "conventions"
+   "conventions",
+   "lvl_vp_core"
   ]
  },
  {
@@ -437,7 +478,8 @@
    "ldi",
    "pensions",
    "repo",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -449,7 +491,8 @@
    "boe",
    "qe",
    "scenario",
-   "tradeoff"
+   "tradeoff",
+   "lvl_vp_core"
   ]
  },
  {
@@ -460,7 +503,8 @@
    "ldi",
    "pensions",
    "collateral",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -471,7 +515,8 @@
    "term_premium",
    "models",
    "qe",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -482,7 +527,8 @@
    "term_premium",
    "curve",
    "scenario",
-   "decomposition"
+   "decomposition",
+   "lvl_stretch"
   ]
  },
  {
@@ -493,7 +539,8 @@
    "term_premium",
    "qe",
    "models",
-   "conventions"
+   "conventions",
+   "lvl_vp_core"
   ]
  }
 ]

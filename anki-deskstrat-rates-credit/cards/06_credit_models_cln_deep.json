@@ -7,7 +7,8 @@
    "bootstrap",
    "chain_bootstrap",
    "negative_hazard",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -18,18 +19,20 @@
    "bootstrap",
    "chain_bootstrap",
    "negative_hazard",
-   "data_quality"
+   "data_quality",
+   "lvl_stretch"
   ]
  },
  {
   "type": "basic",
   "front": "<b>[Chain: BOOTSTRAP 3/4]</b> Context: 1y 300bp and 3y 90bp at \\(R=40\\%\\) give \\(\\lambda_{(1,3]}\\approx-0.29\\%\\). Name the fixes, and say which one a risk report and a trade should each use.",
-  "back": "<ul>\n<li><b>Fix the data first:</b> re-pull, align timestamps, align clause and recovery, and convert upfronts consistently.</li>\n<li><b>Constrained fit:</b> minimise weighted squared spread error subject to \\(\\lambda_k\\ge0\\). The 3y pillar is then fitted at about 102bp, where \\(\\lambda\\) on \\((1,3]\\) is zero, and the residual is shown.</li>\n<li><b>Drop or down-weight the offending pillar</b> and flag it.</li>\n<li><b>Monotone interpolation of \\(\\Lambda(t)\\):</b> a monotone spline keeps hazards non-negative and smooth, at the cost of non-local hedges.</li>\n</ul>\n<b>Use:</b> for the risk report, use the constrained fit so that PV and bucketed CS01s are monotone and hedges are stable. For a trade on the 3y pillar, reprice that instrument exactly to its own quote and hedge the 3y with the same CDS, so the trade is not driven by the curve inconsistency.<br>\n<b>Interviewer follow-up:</b> Why keep piecewise-constant hazards at all? Local support: one quote moves only its own interval, so bucket hedges are interpretable.",
+  "back": "<ul>\n<li><b>Fix the data first:</b> re-pull, align timestamps, align clause and recovery, and convert upfronts consistently.</li>\n<li><b>Constrained fit:</b> minimise weighted squared spread error subject to \\(\\lambda_k\\ge0\\). The 3y pillar is then fitted at about 102bp, where \\(\\lambda\\) on \\((1,3]\\) is zero, and the residual is shown.</li>\n<li><b>Drop or down-weight the offending pillar</b> and flag it.</li>\n<li><b>Monotone interpolation of \\(\\Lambda(t)\\):</b> a monotone spline keeps hazards non-negative and smooth, at the cost of non-local hedges.</li>\n</ul>\n<b>Use:</b> for the risk report, use the constrained fit so that PV and bucketed CS01s are monotone and hedges are stable. For a trade on the 3y pillar, reprice that instrument exactly to its own quote and hedge the 3y with the same CDS, so the trade is not driven by the curve inconsistency.<br>\n<b>Interviewer follow-up:</b> Why keep piecewise-constant hazards at all? Local support: one quote moves only its own interval, so bucket hedges are interpretable.<div class=\"fig\"><img src=\"06_credit_models_cln_deep_2_bootstrap_negative_forward.png\"><div class=\"cap\">Unconstrained bootstrap of 1y 300bp and 3y 90bp at R=40% gives a forward hazard of -0.29% on (1,3].</div></div>",
   "tags": [
    "bootstrap",
    "chain_bootstrap",
    "curve_construction",
-   "trade_off"
+   "trade_off",
+   "lvl_vp_core"
   ]
  },
  {
@@ -40,7 +43,8 @@
    "bootstrap",
    "chain_bootstrap",
    "cva",
-   "risk_effects"
+   "risk_effects",
+   "lvl_stretch"
   ]
  },
  {
@@ -51,7 +55,8 @@
    "cln",
    "chain_cln_dual_default",
    "dual_default",
-   "pricing"
+   "pricing",
+   "lvl_vp_core"
   ]
  },
  {
@@ -62,7 +67,8 @@
    "cln",
    "chain_cln_dual_default",
    "correlation",
-   "joint_law"
+   "joint_law",
+   "lvl_stretch"
   ]
  },
  {
@@ -73,7 +79,8 @@
    "cln",
    "chain_cln_dual_default",
    "wrong_way_risk",
-   "collateral"
+   "collateral",
+   "lvl_stretch"
   ]
  },
  {
@@ -84,7 +91,8 @@
    "cln",
    "chain_cln_dual_default",
    "funding",
-   "pricing"
+   "pricing",
+   "lvl_vp_core"
   ]
  },
  {
@@ -95,18 +103,20 @@
    "nth_to_default",
    "chain_ftd_basket",
    "bounds",
-   "correlation"
+   "correlation",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "<b>[Chain: FTD 2/4]</b> Context: same pair, \\(p=10\\%\\) each, Gaussian copula with correlation \\(\\rho\\). State \\(\\partial P(\\text{FTD})/\\partial\\rho\\) and say where in \\(\\rho\\) it is largest.",
-  "back": "With \\(a=\\Phi^{-1}(0.9)=1.2816\\), \\(P=1-\\Phi_2(a,a;\\rho)\\), so by the Plackett identity \\(\\partial P/\\partial\\rho=-\\varphi_2(a,a;\\rho)\\le0\\). Values: \\(-0.031\\) at \\(\\rho=0\\), \\(-0.061\\) at \\(\\rho=0.5\\), \\(-0.154\\) at \\(\\rho=0.9\\), \\(-0.494\\) at \\(\\rho=0.99\\).<br>\nSensitivity is largest near \\(\\rho=1\\): \\(\\varphi_2(a,a;\\rho)\\) diverges like \\((1-\\rho)^{-1/2}\\), so \\(P\\) approaches its comonotone value \\(0.10\\) with a square-root cusp. Numerically \\(P=0.1099\\) at \\(\\rho=0.99\\), \\(0.1031\\) at \\(\\rho=0.999\\) and \\(0.10\\) at \\(\\rho=1\\), which fits \\(P-0.10\\approx0.1\\sqrt{1-\\rho}\\).<br>\n<b>Interviewer follow-up:</b> What does the cusp imply? A correlation error near the top of the range moves the FTD value far more than the same error in the middle, so calibration error matters most when the market prices high correlation.",
+  "back": "With \\(a=\\Phi^{-1}(0.9)=1.2816\\), \\(P=1-\\Phi_2(a,a;\\rho)\\), so by the Plackett identity \\(\\partial P/\\partial\\rho=-\\varphi_2(a,a;\\rho)\\le0\\). Values: \\(-0.031\\) at \\(\\rho=0\\), \\(-0.061\\) at \\(\\rho=0.5\\), \\(-0.154\\) at \\(\\rho=0.9\\), \\(-0.494\\) at \\(\\rho=0.99\\).<br>\nSensitivity is largest near \\(\\rho=1\\): \\(\\varphi_2(a,a;\\rho)\\) diverges like \\((1-\\rho)^{-1/2}\\), so \\(P\\) approaches its comonotone value \\(0.10\\) with a square-root cusp. Numerically \\(P=0.1099\\) at \\(\\rho=0.99\\), \\(0.1031\\) at \\(\\rho=0.999\\) and \\(0.10\\) at \\(\\rho=1\\), which fits \\(P-0.10\\approx0.1\\sqrt{1-\\rho}\\).<br>\n<b>Interviewer follow-up:</b> What does the cusp imply? A correlation error near the top of the range moves the FTD value far more than the same error in the middle, so calibration error matters most when the market prices high correlation.<div class=\"fig\"><img src=\"06_credit_models_cln_deep_9_ftd_vs_correlation.png\"><div class=\"cap\">First-to-default probability for two 10% names falls from 19% (independent) to 10% (comonotone) as rho rises.</div></div>",
   "tags": [
    "nth_to_default",
    "chain_ftd_basket",
    "correlation",
-   "copula"
+   "copula",
+   "lvl_stretch"
   ]
  },
  {
@@ -117,7 +127,8 @@
    "nth_to_default",
    "chain_ftd_basket",
    "hedging",
-   "correlation"
+   "correlation",
+   "lvl_stretch"
   ]
  },
  {
@@ -128,7 +139,8 @@
    "nth_to_default",
    "chain_ftd_basket",
    "correlation_hedging",
-   "tranches"
+   "tranches",
+   "lvl_vp_core"
   ]
  },
  {
@@ -139,7 +151,8 @@
    "structural",
    "merton",
    "derivation",
-   "credit_spread"
+   "credit_spread",
+   "lvl_vp_core"
   ]
  },
  {
@@ -150,7 +163,8 @@
    "reduced_form",
    "cir",
    "derivation",
-   "affine"
+   "affine",
+   "lvl_stretch"
   ]
  },
  {
@@ -161,7 +175,8 @@
    "cds",
    "credit_triangle",
    "derivation",
-   "discrete_premium"
+   "discrete_premium",
+   "lvl_vp_core"
   ]
  },
  {
@@ -172,7 +187,8 @@
    "bootstrap",
    "cds",
    "derivation",
-   "discount_independence"
+   "discount_independence",
+   "lvl_stretch"
   ]
  },
  {
@@ -183,7 +199,8 @@
    "copula",
    "vasicek",
    "derivation",
-   "portfolio_credit"
+   "portfolio_credit",
+   "lvl_stretch"
   ]
  },
  {
@@ -194,7 +211,8 @@
    "copula",
    "simulation",
    "derivation",
-   "wrong_way_risk"
+   "wrong_way_risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -205,7 +223,8 @@
    "cln",
    "collateral_basis",
    "derivation",
-   "pricing"
+   "pricing",
+   "lvl_vp_core"
   ]
  },
  {
@@ -216,29 +235,32 @@
    "copula",
    "derivation",
    "nth_to_default",
-   "correlation"
+   "correlation",
+   "lvl_stretch"
   ]
  },
  {
   "type": "basic",
   "front": "Worked case: par CDS spreads 1y 80bp, 3y 110bp, 5y 135bp, \\(R=40\\%\\), quarterly premium with accrual on default, protection at quarter ends. Bootstrap piecewise-constant hazards on \\((0,1]\\), \\((1,3]\\), \\((3,5]\\) with discounting at 0%, then at a flat 3%. Are the forward hazards non-negative?",
-  "back": "<b>Step 1:</b> \\(a=S\\Delta/(2L)=0.08\\times0.25/1.2=0.001667\\), so \\(\\lambda_{(0,1]}=8\\,\\mathrm{artanh}(a)=1.333\\%\\). This does not depend on \\(r\\). \\(\\Lambda(1)=1.333\\%\\).<br>\n<b>Step 2:</b> solve the 3y par equation for \\(\\lambda_{(1,3]}\\): \\(2.09\\%\\) at 0% and \\(2.10\\%\\) at 3%.<br>\n<b>Step 3:</b> solve the 5y equation for \\(\\lambda_{(3,5]}\\): \\(2.91\\%\\) at 0% and \\(2.97\\%\\) at 3%.<br>\nAt 0%: \\(\\Lambda(3)=1.33+2\\times2.09=5.51\\%\\), \\(\\Lambda(5)=5.51+2\\times2.91=11.34\\%\\). Survival \\(Q(1)=0.9868\\), \\(Q(3)=0.9464\\), \\(Q(5)=0.8928\\), so the 5y cumulative PD is about 10.7%.<br>\n<b>Result:</b> all forward hazards are positive, so the curve is arbitrage-free in this sense. Discounting at 3% moves the 3y and 5y hazards by about 1bp and 5bp.<br>\n<b>Sanity check:</b> the flat-approximation increments \\((T_ks_k-T_{k-1}s_{k-1})/L\\) give \\((3\\times1.10\\%-0.80\\%)/0.6=4.17\\%\\) over 2 years, i.e. \\(2.08\\%\\) p.a., matching 2.09%. For 3y to 5y, \\((5\\times1.35\\%-3\\times1.10\\%)/0.6=5.75\\%\\) over 2 years, i.e. \\(2.88\\%\\) p.a., close to 2.91%.",
+  "back": "<b>Step 1:</b> \\(a=S\\Delta/(2L)=0.08\\times0.25/1.2=0.001667\\), so \\(\\lambda_{(0,1]}=8\\,\\mathrm{artanh}(a)=1.333\\%\\). This does not depend on \\(r\\). \\(\\Lambda(1)=1.333\\%\\).<br>\n<b>Step 2:</b> solve the 3y par equation for \\(\\lambda_{(1,3]}\\): \\(2.09\\%\\) at 0% and \\(2.10\\%\\) at 3%.<br>\n<b>Step 3:</b> solve the 5y equation for \\(\\lambda_{(3,5]}\\): \\(2.91\\%\\) at 0% and \\(2.97\\%\\) at 3%.<br>\nAt 0%: \\(\\Lambda(3)=1.33+2\\times2.09=5.51\\%\\), \\(\\Lambda(5)=5.51+2\\times2.91=11.34\\%\\). Survival \\(Q(1)=0.9868\\), \\(Q(3)=0.9464\\), \\(Q(5)=0.8928\\), so the 5y cumulative PD is about 10.7%.<br>\n<b>Result:</b> all forward hazards are positive, so the curve is arbitrage-free in this sense. Discounting at 3% moves the 3y and 5y hazards by about 1bp and 5bp.<br>\n<b>Sanity check:</b> the flat-approximation increments \\((T_ks_k-T_{k-1}s_{k-1})/L\\) give \\((3\\times1.10\\%-0.80\\%)/0.6=4.17\\%\\) over 2 years, i.e. \\(2.08\\%\\) p.a., matching 2.09%. For 3y to 5y, \\((5\\times1.35\\%-3\\times1.10\\%)/0.6=5.75\\%\\) over 2 years, i.e. \\(2.88\\%\\) p.a., close to 2.91%.<div class=\"fig\"><img src=\"06_credit_models_cln_deep_20_worked_bootstrap_hazards.png\"><div class=\"cap\">Worked bootstrap of 80/110/135bp: piecewise forward hazards and survival curve at r=0 and r=3%.</div></div>",
   "tags": [
    "bootstrap",
    "case_study",
    "hazard",
-   "cds"
+   "cds",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "Worked case: a 3y funded CLN with notional 100. The collateral is not bankruptcy-remote: if the SPV defaults, the collateral recovers 40%. It earns RFR flat at 3%. Reference 3y CDS is 200bp, SPV 3y spread 80bp, recovery 40% on both, flat hazards, independence, continuous discounting at 3%. Find the par spread over RFR and split its PV between the two default legs.",
-  "back": "Intensities from the triangle: \\(\\lambda_R=200/0.6=3.333\\%\\), \\(\\lambda_I=80/0.6=1.333\\%\\), joint hazard \\(\\mu=4.667\\%\\).<br>\nPar condition: \\(s=L_R\\lambda_R+L_I\\lambda_I=0.6\\times3.333\\%+0.6\\times1.333\\%=2.00\\%+0.80\\%=280\\)bp over RFR.<br>\nPV check: with \\(A=\\int_0^3e^{-(r+\\mu)t}dt=2.680\\), the spread leg is \\(sA=0.028\\times2.680=0.0750\\) per unit notional, i.e. 7.50 points. It splits into 5.36 from reference default and 2.14 from issuer default. A numerical integration of the full PV at 280bp returns par.<br>\n<b>Sanity check:</b> with bankruptcy-remote collateral (\\(L_I=0\\)) the same note is priced at 200bp, the CDS spread. The 80bp issuer term is the whole difference.<br>\n<b>Interviewer follow-up:</b> With funding at RFR plus 50bp, the break-even is approximately 330bp (\\(s^*\\approx s_{\\text{risk}}+F\\)).",
+  "back": "Intensities from the triangle: \\(\\lambda_R=200/0.6=3.333\\%\\), \\(\\lambda_I=80/0.6=1.333\\%\\), joint hazard \\(\\mu=4.667\\%\\).<br>\nPar condition: \\(s=L_R\\lambda_R+L_I\\lambda_I=0.6\\times3.333\\%+0.6\\times1.333\\%=2.00\\%+0.80\\%=280\\)bp over RFR.<br>\nPV check: with \\(A=\\int_0^3e^{-(r+\\mu)t}dt=2.680\\), the spread leg is \\(sA=0.028\\times2.680=0.0750\\) per unit notional, i.e. 7.50 points. It splits into 5.36 from reference default and 2.14 from issuer default. A numerical integration of the full PV at 280bp returns par.<br>\n<b>Sanity check:</b> with bankruptcy-remote collateral (\\(L_I=0\\)) the same note is priced at 200bp, the CDS spread. The 80bp issuer term is the whole difference.<br>\n<b>Interviewer follow-up:</b> With funding at RFR plus 50bp, the break-even is approximately 330bp (\\(s^*\\approx s_{\\text{risk}}+F\\)).<div class=\"fig\"><img src=\"06_credit_models_cln_deep_21_cln_leg_split.png\"><div class=\"cap\">Funded CLN spread leg of 280bp over RFR split into reference-default (5.36) and issuer-default (2.14) parts, total 7.50 points.</div></div>",
   "tags": [
    "cln",
    "case_study",
    "dual_default",
-   "pricing"
+   "pricing",
+   "lvl_stretch"
   ]
  },
  {
@@ -249,18 +271,20 @@
    "nth_to_default",
    "case_study",
    "correlation",
-   "copula"
+   "copula",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "Worked case: one-factor Vasicek with \\(p=1\\%\\) and \\(\\rho=12\\%\\). Find the 99.9% pool loss quantile, the Basel-style unexpected loss \\(K\\) with LGD 45% and \\(M=2.5\\), and the 99.9% quantile if the Basel supervisory correlation at this PD is used instead.",
-  "back": "<b>Quantile:</b> \\(q=\\Phi\\!\\Big(\\dfrac{\\Phi^{-1}(0.01)+\\sqrt{0.12}\\,\\Phi^{-1}(0.999)}{\\sqrt{0.88}}\\Big)=\\Phi\\Big(\\dfrac{-2.3263+0.3464\\times3.0902}{0.9381}\\Big)=\\Phi(-1.339)=9.03\\%\\).<br>\n<b>Unexpected loss:</b> \\(q-p=8.03\\%\\). Maturity adjustment at \\(M=2.5\\) with \\(b=(0.11852-0.05478\\ln0.01)^2=0.1375\\) gives \\(MA=\\dfrac{1}{1-1.5b}=1.260\\). Then \\(K=0.45\\times8.03\\%\\times1.260=4.55\\%\\) of exposure, before regulatory scalars.<br>\n<b>Basel correlation trap:</b> the corporate formula is \\(R(PD)=0.12\\,w+0.24(1-w)\\) with \\(w=\\frac{1-e^{-50PD}}{1-e^{-50}}\\). At PD 1%, \\(w=0.393\\) and \\(R=19.3\\%\\), not 12%. With 19.3%, \\(q=14.0\\%\\), five points higher.<br>\n<b>Sanity check:</b> \\(q\\) must lie between \\(p\\) and 1, and it equals \\(p\\) at \\(\\rho=0\\) and rises with \\(\\rho\\).<br>\n<b>Interviewer follow-up:</b> Why is 12% wrong here? It is the supervisory value at high PD, so it understates the tail at low PD.",
+  "back": "<b>Quantile:</b> \\(q=\\Phi\\!\\Big(\\dfrac{\\Phi^{-1}(0.01)+\\sqrt{0.12}\\,\\Phi^{-1}(0.999)}{\\sqrt{0.88}}\\Big)=\\Phi\\Big(\\dfrac{-2.3263+0.3464\\times3.0902}{0.9381}\\Big)=\\Phi(-1.339)=9.03\\%\\).<br>\n<b>Unexpected loss:</b> \\(q-p=8.03\\%\\). Maturity adjustment at \\(M=2.5\\) with \\(b=(0.11852-0.05478\\ln0.01)^2=0.1375\\) gives \\(MA=\\dfrac{1}{1-1.5b}=1.260\\). Then \\(K=0.45\\times8.03\\%\\times1.260=4.55\\%\\) of exposure, before regulatory scalars.<br>\n<b>Basel correlation trap:</b> the corporate formula is \\(R(PD)=0.12\\,w+0.24(1-w)\\) with \\(w=\\frac{1-e^{-50PD}}{1-e^{-50}}\\). At PD 1%, \\(w=0.393\\) and \\(R=19.3\\%\\), not 12%. With 19.3%, \\(q=14.0\\%\\), five points higher.<br>\n<b>Sanity check:</b> \\(q\\) must lie between \\(p\\) and 1, and it equals \\(p\\) at \\(\\rho=0\\) and rises with \\(\\rho\\).<br>\n<b>Interviewer follow-up:</b> Why is 12% wrong here? It is the supervisory value at high PD, so it understates the tail at low PD.<div class=\"fig\"><img src=\"06_credit_models_cln_deep_23_vasicek_loss_quantile.png\"><div class=\"cap\">Vasicek pool (p=1%, rho=12%) loss CDF with the 99.9% quantile at 9.03%.</div></div>",
   "tags": [
    "vasicek",
    "case_study",
    "irb",
-   "portfolio_credit"
+   "portfolio_credit",
+   "lvl_vp_core"
   ]
  },
  {
@@ -271,18 +295,20 @@
    "structural",
    "case_study",
    "merton",
-   "recovery"
+   "recovery",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "Worked case: unilateral CVA of a 5y interest-rate swap on an annual grid. Expected positive exposure at year-ends 1 to 5 (€m): 2.0, 3.5, 3.0, 1.8, 0.5. Counterparty flat hazard 2% (about 120bp at 40% recovery), discounting at 3%, exposure independent of default. Compute the CVA and reconcile with the flat approximation.",
-  "back": "CVA \\(=(1-R_C)\\sum_i DF(t_i)\\,EE(t_i)\\,[Q(t_{i-1})-Q(t_i)]\\), with \\(Q(t)=e^{-0.02t}\\).<br>\nSurvival increments for years 1 to 5: 0.01980, 0.01941, 0.01902, 0.01865, 0.01828. Discount factors: 0.9704, 0.9418, 0.9139, 0.8869, 0.8607.<br>\nSum of \\(DF\\times EE\\) terms: 0.6 times \\(\\sum_i DF_iEE_i\\,\\Delta Q_i\\) gives <b>CVA \\(\\approx\\) €0.115m</b>.<br>\n<b>Sanity check:</b> the flat approximation \\(L\\lambda\\sum_i DF_iEE_i=0.6\\times0.02\\times10.01=0.120\\)m is about 4% higher. The gap is survival weighting: the grid increments use \\(Q(t_{i-1})\\), which averages about 0.96 here, not 1.<br>\n<b>Interviewer follow-up:</b> If the hazard is linked to exposure, so \\(\\lambda\\) is higher in year 2 when EE peaks, how does CVA change? It rises, and the flat calibration hides that increase.",
+  "back": "CVA \\(=(1-R_C)\\sum_i DF(t_i)\\,EE(t_i)\\,[Q(t_{i-1})-Q(t_i)]\\), with \\(Q(t)=e^{-0.02t}\\).<br>\nSurvival increments for years 1 to 5: 0.01980, 0.01941, 0.01902, 0.01865, 0.01828. Discount factors: 0.9704, 0.9418, 0.9139, 0.8869, 0.8607.<br>\nSum of \\(DF\\times EE\\) terms: 0.6 times \\(\\sum_i DF_iEE_i\\,\\Delta Q_i\\) gives <b>CVA \\(\\approx\\) €0.115m</b>.<br>\n<b>Sanity check:</b> the flat approximation \\(L\\lambda\\sum_i DF_iEE_i=0.6\\times0.02\\times10.01=0.120\\)m is about 4% higher. The gap is survival weighting: the grid increments use \\(Q(t_{i-1})\\), which averages about 0.96 here, not 1.<br>\n<b>Interviewer follow-up:</b> If the hazard is linked to exposure, so \\(\\lambda\\) is higher in year 2 when EE peaks, how does CVA change? It rises, and the flat calibration hides that increase.<div class=\"fig\"><img src=\"06_credit_models_cln_deep_25_cva_worked_profile.png\"><div class=\"cap\">Five-year swap CVA: EE profile and per-year CVA contributions summing to about 0.115m EUR.</div></div>",
   "tags": [
    "cva",
    "case_study",
    "exposure",
-   "discounting"
+   "discounting",
+   "lvl_vp_core"
   ]
  },
  {
@@ -292,7 +318,8 @@
   "tags": [
    "copula",
    "joint_survival",
-   "formula"
+   "formula",
+   "lvl_foundation"
   ]
  },
  {
@@ -302,7 +329,8 @@
   "tags": [
    "reduced_form",
    "cir",
-   "formula"
+   "formula",
+   "lvl_stretch"
   ]
  },
  {
@@ -312,7 +340,8 @@
   "tags": [
    "cds",
    "upfront",
-   "formula"
+   "formula",
+   "lvl_foundation"
   ]
  },
  {
@@ -323,7 +352,8 @@
    "irb",
    "portfolio_credit",
    "convention",
-   "formula"
+   "formula",
+   "lvl_foundation"
   ]
  }
 ]

@@ -7,18 +7,20 @@
    "black76",
    "lognormal",
    "negative_rates",
-   "conventions"
+   "conventions",
+   "lvl_foundation"
   ]
  },
  {
   "type": "basic",
   "front": "Give the Bachelier call price for forward \\(F\\), strike \\(K\\), normal vol \\(\\sigma_N\\) and expiry \\(T\\) (undiscounted), and derive the ATM value.",
-  "back": "With \\(d=(F-K)/(\\sigma_N\\sqrt{T})\\):\n\\[C=(F-K)\\,N(d)+\\sigma_N\\sqrt{T}\\,\\varphi(d)\\]\nAt \\(F=K\\), \\(d=0\\), so \\(C=\\sigma_N\\sqrt{T}\\,\\varphi(0)=\\sigma_N\\sqrt{T}/\\sqrt{2\\pi}\\approx 0.4\\,\\sigma_N\\sqrt{T}\\). Only the density term survives at the money because the intrinsic term vanishes.<br>\n<b>Interviewer follow-up:</b> Why is the ATM straddle about \\(0.8\\,\\sigma_N\\sqrt{T}\\)? The straddle payoff is \\(|F_T-K|\\), and for a centred Gaussian \\(\\mathbb E|X|=\\sigma\\sqrt{T}\\sqrt{2/\\pi}\\approx 0.8\\,\\sigma\\sqrt{T}\\). Each leg is half that.",
+  "back": "With \\(d=(F-K)/(\\sigma_N\\sqrt{T})\\):\n\\[C=(F-K)\\,N(d)+\\sigma_N\\sqrt{T}\\,\\varphi(d)\\]\nAt \\(F=K\\), \\(d=0\\), so \\(C=\\sigma_N\\sqrt{T}\\,\\varphi(0)=\\sigma_N\\sqrt{T}/\\sqrt{2\\pi}\\approx 0.4\\,\\sigma_N\\sqrt{T}\\). Only the density term survives at the money because the intrinsic term vanishes.<br>\n<b>Interviewer follow-up:</b> Why is the ATM straddle about \\(0.8\\,\\sigma_N\\sqrt{T}\\)? The straddle payoff is \\(|F_T-K|\\), and for a centred Gaussian \\(\\mathbb E|X|=\\sigma\\sqrt{T}\\sqrt{2/\\pi}\\approx 0.8\\,\\sigma\\sqrt{T}\\). Each leg is half that.<div class=\"fig\"><img src=\"03_rates_options_1_bachelier_negative_forward.png\"><div class=\"cap\">Bachelier call stays defined for negative forwards, where Black-76 has no value.</div></div>",
   "tags": [
    "bachelier",
    "normal_model",
    "derivation",
-   "atm"
+   "atm",
+   "lvl_vp_core"
   ]
  },
  {
@@ -29,18 +31,20 @@
    "atm",
    "mental_math",
    "normal_model",
-   "bachelier"
+   "bachelier",
+   "lvl_foundation"
   ]
  },
  {
   "type": "basic",
   "front": "Convert a 20% lognormal ATM vol on a 2% forward into an approximate normal vol in bp per year.",
-  "back": "First-order ATM rule: \\(\\sigma_N\\approx\\sigma_B F\\). So \\(0.20\\times 0.02=0.004\\), about <b>40bp</b> per year normal.<br>\nRule of thumb: normal vol \\(\\approx\\) lognormal vol \\(\\times\\) forward. This matches ATM prices to first order only. Away from the money, and for long expiries, the mapping depends on strike and on the smile.<br>\n<b>Interviewer follow-up:</b> If the rate doubles to 4% at constant 20% lognormal vol, the normal vol doubles to about 80bp. A book quoted in lognormal vol therefore has bp-vega that scales with the level of rates.",
+  "back": "First-order ATM rule: \\(\\sigma_N\\approx\\sigma_B F\\). So \\(0.20\\times 0.02=0.004\\), about <b>40bp</b> per year normal.<br>\nRule of thumb: normal vol \\(\\approx\\) lognormal vol \\(\\times\\) forward. This matches ATM prices to first order only. Away from the money, and for long expiries, the mapping depends on strike and on the smile.<br>\n<b>Interviewer follow-up:</b> If the rate doubles to 4% at constant 20% lognormal vol, the normal vol doubles to about 80bp. A book quoted in lognormal vol therefore has bp-vega that scales with the level of rates.<div class=\"fig\"><img src=\"03_rates_options_3_atm_normal_vs_level.png\"><div class=\"cap\">A 20% lognormal ATM vol is 40bp normal at a 2% forward and 80bp at 4%.</div></div>",
   "tags": [
    "vol_conversion",
    "mental_math",
    "normal_model",
-   "lognormal"
+   "lognormal",
+   "lvl_vp_core"
   ]
  },
  {
@@ -51,18 +55,20 @@
    "vol_conversion",
    "atm",
    "lognormal",
-   "normal_model"
+   "normal_model",
+   "lvl_foundation"
   ]
  },
  {
   "type": "basic",
   "front": "A flat lognormal smile is quoted at a 2% forward. What does this imply for the normal smile, and why does it matter when comparing a Black quote with a normal quote?",
-  "back": "Using \\(\\sigma_N\\approx\\sigma_B\\,(F-K)/\\ln(F/K)\\), the factor is smaller at low strikes, so a flat lognormal smile implies a <b>normal smile that slopes upward in strike</b> (lower normal vol at low strikes).<br>\nA \"flat\" Black smile is not flat in bp. Surfaces must be converted strike by strike before a Black quote is compared with a normal quote, or a fake skew appears.",
+  "back": "Using \\(\\sigma_N\\approx\\sigma_B\\,(F-K)/\\ln(F/K)\\), the factor is smaller at low strikes, so a flat lognormal smile implies a <b>normal smile that slopes upward in strike</b> (lower normal vol at low strikes).<br>\nA \"flat\" Black smile is not flat in bp. Surfaces must be converted strike by strike before a Black quote is compared with a normal quote, or a fake skew appears.<div class=\"fig\"><img src=\"03_rates_options_5_lognormal_to_normal_smile.png\"><div class=\"cap\">A flat 20% lognormal smile maps to a normal smile that slopes up in strike (about 29bp at 1%, 40bp at 2%).</div></div>",
   "tags": [
    "vol_conversion",
    "smile",
    "normal_model",
-   "conventions"
+   "conventions",
+   "lvl_vp_core"
   ]
  },
  {
@@ -72,7 +78,8 @@
   "tags": [
    "shifted_lognormal",
    "negative_rates",
-   "models"
+   "models",
+   "lvl_vp_core"
   ]
  },
  {
@@ -83,17 +90,19 @@
    "normal_model",
    "negative_rates",
    "regime",
-   "conventions"
+   "conventions",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "Give delta, gamma and vega of a normal-model call in closed form, and their ATM values.",
-  "back": "With \\(d\\) as above:\n\\[\\Delta=N(d),\\qquad \\Gamma=\\frac{\\varphi(d)}{\\sigma_N\\sqrt{T}},\\qquad \\mathcal{V}=\\sqrt{T}\\,\\varphi(d)\\]\nAt the money: \\(\\Delta=0.5\\), \\(\\Gamma=\\varphi(0)/(\\sigma_N\\sqrt{T})\\approx 0.4/(\\sigma_N\\sqrt{T})\\), \\(\\mathcal{V}\\approx 0.4\\sqrt{T}\\).<br>\n<b>Interviewer follow-up:</b> Greeks depend on \\(F\\) and \\(K\\) only through \\(d\\), so for fixed \\(\\sigma_N\\) and \\(T\\) the ATM gamma is the same at every rate level. This is why normal greeks are stated in bp.",
+  "back": "With \\(d\\) as above:\n\\[\\Delta=N(d),\\qquad \\Gamma=\\frac{\\varphi(d)}{\\sigma_N\\sqrt{T}},\\qquad \\mathcal{V}=\\sqrt{T}\\,\\varphi(d)\\]\nAt the money: \\(\\Delta=0.5\\), \\(\\Gamma=\\varphi(0)/(\\sigma_N\\sqrt{T})\\approx 0.4/(\\sigma_N\\sqrt{T})\\), \\(\\mathcal{V}\\approx 0.4\\sqrt{T}\\).<br>\n<b>Interviewer follow-up:</b> Greeks depend on \\(F\\) and \\(K\\) only through \\(d\\), so for fixed \\(\\sigma_N\\) and \\(T\\) the ATM gamma is the same at every rate level. This is why normal greeks are stated in bp.<div class=\"fig\"><img src=\"03_rates_options_8_normal_greeks_profile.png\"><div class=\"cap\">Normal call delta, gamma and vega (K = 3%, 100bp, 1y) depend only on d.</div></div>",
   "tags": [
    "greeks",
    "normal_model",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -104,7 +113,8 @@
    "caps_floors",
    "caplets",
    "bootstrapping",
-   "vol_stripping"
+   "vol_stripping",
+   "lvl_vp_core"
   ]
  },
  {
@@ -115,7 +125,8 @@
    "caps_floors",
    "parity",
    "swaps",
-   "no_arbitrage"
+   "no_arbitrage",
+   "lvl_vp_core"
   ]
  },
  {
@@ -125,7 +136,8 @@
   "tags": [
    "caps_floors",
    "parity",
-   "swaps"
+   "swaps",
+   "lvl_foundation"
   ]
  },
  {
@@ -136,7 +148,8 @@
    "caps_floors",
    "rfr",
    "compounding",
-   "convexity"
+   "convexity",
+   "lvl_vp_core"
   ]
  },
  {
@@ -147,18 +160,20 @@
    "caps_floors",
    "vol_term_structure",
    "stripping",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "Write the payer swaption value using the annuity and a Black-type expression, and name the measure under which it is an expectation.",
-  "back": "With annuity \\(A=\\sum_i\\tau_i P(0,T_i)\\) and forward swap rate \\(S=(P(0,T_0)-P(0,T_n))/A\\):\n\\[V_{\\text{pay}}=A\\,\\mathbb{E}^{A}\\big[(S_{T_0}-K)^+\\big]=A\\,\\big[S\\,N(d_1)-K\\,N(d_2)\\big]\\]\nfor the Black case. The expectation is under the annuity measure, with numeraire \\(A(t)\\), under which \\(S\\) is a martingale. The normal analogue is \\(A\\,[(S-K)N(d)+\\sigma_N\\sqrt{T}\\varphi(d)]\\).<br>\n<b>Interviewer follow-up:</b> Why is \\(S\\) driftless under the annuity measure but not under the spot measure? \\(S\\) is a ratio of bond prices, and dividing by the annuity removes the drift.",
+  "back": "With annuity \\(A=\\sum_i\\tau_i P(0,T_i)\\) and forward swap rate \\(S=(P(0,T_0)-P(0,T_n))/A\\):\n\\[V_{\\text{pay}}=A\\,\\mathbb{E}^{A}\\big[(S_{T_0}-K)^+\\big]=A\\,\\big[S\\,N(d_1)-K\\,N(d_2)\\big]\\]\nfor the Black case. The expectation is under the annuity measure, with numeraire \\(A(t)\\), under which \\(S\\) is a martingale. The normal analogue is \\(A\\,[(S-K)N(d)+\\sigma_N\\sqrt{T}\\varphi(d)]\\).<br>\n<b>Interviewer follow-up:</b> Why is \\(S\\) driftless under the annuity measure but not under the spot measure? \\(S\\) is a ratio of bond prices, and dividing by the annuity removes the drift.<div class=\"fig\"><img src=\"03_rates_options_14_payer_swaption_payoff.png\"><div class=\"cap\">Payer swaption at expiry: intrinsic payoff vs full normal-model value, annuity 8.28, K = 3%.</div></div>",
   "tags": [
    "swaptions",
    "annuity_measure",
    "black",
-   "pricing"
+   "pricing",
+   "lvl_vp_core"
   ]
  },
  {
@@ -169,7 +184,8 @@
    "swaptions",
    "payer_receiver",
    "parity",
-   "conventions"
+   "conventions",
+   "lvl_vp_core"
   ]
  },
  {
@@ -180,18 +196,20 @@
    "swaptions",
    "atm",
    "mental_math",
-   "normal_model"
+   "normal_model",
+   "lvl_foundation"
   ]
  },
  {
   "type": "basic",
   "front": "You buy a 1y x 5y ATM straddle, payer plus receiver. Describe its delta, gamma and vega, and when it is a clean volatility trade.",
-  "back": "At inception the payer delta (about \\(+0.5A\\)) and receiver delta (about \\(-0.5A\\)) cancel, so the straddle is approximately delta-neutral. It is long gamma and long vega, with vega of about \\(0.8\\sqrt{T}\\,A\\) in normal units.<br>\nIts P&amp;L depends on realised rate moves against the implied normal vol, plus theta. It is a clean vol trade only while the forward stays near the strike. As the rate moves, delta builds up and must be hedged, and the wings remain exposed.",
+  "back": "At inception the payer delta (about \\(+0.5A\\)) and receiver delta (about \\(-0.5A\\)) cancel, so the straddle is approximately delta-neutral. It is long gamma and long vega, with vega of about \\(0.8\\sqrt{T}\\,A\\) in normal units.<br>\nIts P&amp;L depends on realised rate moves against the implied normal vol, plus theta. It is a clean vol trade only while the forward stays near the strike. As the rate moves, delta builds up and must be hedged, and the wings remain exposed.<div class=\"fig\"><img src=\"03_rates_options_17_straddle_payoff.png\"><div class=\"cap\">ATM straddle payoff at expiry per unit annuity: |S - K|, a V with a kink at the strike.</div></div>",
   "tags": [
    "swaptions",
    "straddle",
    "greeks",
-   "trade_off"
+   "trade_off",
+   "lvl_vp_core"
   ]
  },
  {
@@ -202,7 +220,8 @@
    "swaptions",
    "vol_cube",
    "interpolation",
-   "no_arbitrage"
+   "no_arbitrage",
+   "lvl_vp_core"
   ]
  },
  {
@@ -213,7 +232,8 @@
    "swaptions",
    "vega_bucketing",
    "hedging",
-   "risk"
+   "risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -224,7 +244,8 @@
    "swaptions",
    "implied_vol",
    "data_quality",
-   "conventions"
+   "conventions",
+   "lvl_vp_core"
   ]
  },
  {
@@ -234,17 +255,19 @@
   "tags": [
    "sabr",
    "parameters",
-   "smile"
+   "smile",
+   "lvl_foundation"
   ]
  },
  {
   "type": "basic",
   "front": "What is the SABR backbone, and how does \\(\\beta\\) control it?",
-  "back": "The backbone is how ATM vol moves as the forward moves. In lognormal terms \\(\\sigma_{\\text{ATM}}\\approx\\alpha F^{\\beta-1}\\). Equivalently, normal ATM vol is \\(\\approx\\alpha F^{\\beta}\\).<br>\n\\(\\beta=0\\): normal ATM vol is constant in \\(F\\), so ATM vol does not respond to the rate level. \\(\\beta=1\\): ATM lognormal vol is constant, so normal vol is proportional to \\(F\\).<br>\n<b>Interviewer follow-up:</b> Why do desks fix \\(\\beta\\) rather than fit it? A smile alone barely identifies \\(\\beta\\), so it is set by convention or by historical regression of ATM vol against the rate.",
+  "back": "The backbone is how ATM vol moves as the forward moves. In lognormal terms \\(\\sigma_{\\text{ATM}}\\approx\\alpha F^{\\beta-1}\\). Equivalently, normal ATM vol is \\(\\approx\\alpha F^{\\beta}\\).<br>\n\\(\\beta=0\\): normal ATM vol is constant in \\(F\\), so ATM vol does not respond to the rate level. \\(\\beta=1\\): ATM lognormal vol is constant, so normal vol is proportional to \\(F\\).<br>\n<b>Interviewer follow-up:</b> Why do desks fix \\(\\beta\\) rather than fit it? A smile alone barely identifies \\(\\beta\\), so it is set by convention or by historical regression of ATM vol against the rate.<div class=\"fig\"><img src=\"03_rates_options_22_sabr_backbone.png\"><div class=\"cap\">Backbone: ATM normal vol = alpha F^beta; beta sets how ATM vol moves with the rate.</div></div>",
   "tags": [
    "sabr",
    "backbone",
-   "beta"
+   "beta",
+   "lvl_vp_core"
   ]
  },
  {
@@ -255,7 +278,8 @@
    "sabr",
    "hagan",
    "approximation",
-   "arbitrage"
+   "arbitrage",
+   "lvl_vp_core"
   ]
  },
  {
@@ -266,7 +290,8 @@
    "sabr",
    "arbitrage",
    "density",
-   "breeden_litzenberger"
+   "breeden_litzenberger",
+   "lvl_stretch"
   ]
  },
  {
@@ -277,7 +302,8 @@
    "sabr",
    "arbitrage",
    "breeden_litzenberger",
-   "density"
+   "density",
+   "lvl_foundation"
   ]
  },
  {
@@ -288,18 +314,20 @@
    "sabr",
    "free_boundary",
    "zabr",
-   "models"
+   "models",
+   "lvl_stretch"
   ]
  },
  {
   "type": "basic",
   "front": "What do \\(\\rho\\) and \\(\\nu\\) control in the SABR smile, and why is this separation useful in calibration?",
-  "back": "\\(\\rho\\) controls skew: negative \\(\\rho\\) makes implied vol rise as strike falls. \\(\\nu\\) controls curvature and wing growth. To leading order skew scales with \\(\\rho\\) and curvature with \\(\\nu^2\\).<br>\nThe separation lets the risk reversal be matched by \\(\\rho\\) and the butterfly by \\(\\nu\\), so each expiry-tenor slice is close to a two-dimensional problem rather than a tangled one.<br>\n<b>Interviewer follow-up:</b> If \\(\\nu\\to 0\\), what remains? Only the CEV-induced skew, with no curvature from vol-of-vol.",
+  "back": "\\(\\rho\\) controls skew: negative \\(\\rho\\) makes implied vol rise as strike falls. \\(\\nu\\) controls curvature and wing growth. To leading order skew scales with \\(\\rho\\) and curvature with \\(\\nu^2\\).<br>\nThe separation lets the risk reversal be matched by \\(\\rho\\) and the butterfly by \\(\\nu\\), so each expiry-tenor slice is close to a two-dimensional problem rather than a tangled one.<br>\n<b>Interviewer follow-up:</b> If \\(\\nu\\to 0\\), what remains? Only the CEV-induced skew, with no curvature from vol-of-vol.<div class=\"fig\"><img src=\"03_rates_options_27_sabr_rho_nu_effects.png\"><div class=\"cap\">Leading-order beta=0 SABR: rho sets the skew, nu sets the curvature of the smile.</div></div>",
   "tags": [
    "sabr",
    "skew",
    "curvature",
-   "parameters"
+   "parameters",
+   "lvl_vp_core"
   ]
  },
  {
@@ -310,7 +338,8 @@
    "sabr",
    "beta",
    "normal_model",
-   "negative_rates"
+   "negative_rates",
+   "lvl_vp_core"
   ]
  },
  {
@@ -321,7 +350,8 @@
    "sabr",
    "negative_rates",
    "calibration",
-   "shifted"
+   "shifted",
+   "lvl_vp_core"
   ]
  },
  {
@@ -332,7 +362,8 @@
    "sabr",
    "hedging",
    "calibration",
-   "smile_dynamics"
+   "smile_dynamics",
+   "lvl_stretch"
   ]
  },
  {
@@ -343,7 +374,8 @@
    "smile_dynamics",
    "sticky_strike",
    "sticky_delta",
-   "delta"
+   "delta",
+   "lvl_vp_core"
   ]
  },
  {
@@ -354,7 +386,8 @@
    "vanna",
    "volga",
    "normal_model",
-   "greeks"
+   "greeks",
+   "lvl_vp_core"
   ]
  },
  {
@@ -365,7 +398,8 @@
    "greeks",
    "theta",
    "vega",
-   "normal_model"
+   "normal_model",
+   "lvl_vp_core"
   ]
  },
  {
@@ -376,7 +410,8 @@
    "gamma",
    "theta",
    "pde",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -387,7 +422,8 @@
    "delta_hedging",
    "pnl",
    "realised_implied",
-   "gamma_pnl"
+   "gamma_pnl",
+   "lvl_vp_core"
   ]
  },
  {
@@ -398,7 +434,8 @@
    "vol_of_vol",
    "correlation_risk",
    "spread_options",
-   "risk"
+   "risk",
+   "lvl_stretch"
   ]
  },
  {
@@ -409,7 +446,8 @@
    "hjm",
    "no_arbitrage",
    "drift",
-   "multifactor"
+   "multifactor",
+   "lvl_vp_core"
   ]
  },
  {
@@ -420,7 +458,8 @@
    "hjm",
    "markovian",
    "hull_white",
-   "models"
+   "models",
+   "lvl_vp_core"
   ]
  },
  {
@@ -430,7 +469,8 @@
   "tags": [
    "hull_white",
    "bond_price",
-   "mean_reversion"
+   "mean_reversion",
+   "lvl_vp_core"
   ]
  },
  {
@@ -441,7 +481,8 @@
    "hull_white",
    "mean_reversion",
    "vol_term_structure",
-   "correlation"
+   "correlation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -452,7 +493,8 @@
    "hull_white",
    "calibration",
    "swaptions",
-   "limitations"
+   "limitations",
+   "lvl_vp_core"
   ]
  },
  {
@@ -463,7 +505,8 @@
    "bermudan",
    "trees",
    "pde",
-   "backward_induction"
+   "backward_induction",
+   "lvl_vp_core"
   ]
  },
  {
@@ -474,7 +517,8 @@
    "bermudan",
    "exercise_boundary",
    "optionality",
-   "early_exercise"
+   "early_exercise",
+   "lvl_vp_core"
   ]
  },
  {
@@ -485,7 +529,8 @@
    "bermudan",
    "monte_carlo",
    "lsm",
-   "trade_off"
+   "trade_off",
+   "lvl_vp_core"
   ]
  },
  {
@@ -496,7 +541,8 @@
    "lmm",
    "bgm",
    "terminal_measure",
-   "drift"
+   "drift",
+   "lvl_stretch"
   ]
  },
  {
@@ -507,18 +553,20 @@
    "lmm",
    "calibration",
    "caplets",
-   "swaptions"
+   "swaptions",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "What is rank reduction in an LMM, and why does it matter for pricing?",
-  "back": "The correlation matrix is \\(N\\times N\\) and must be positive semi-definite. Rank reduction writes each correlation as an inner product of unit-norm vectors in \\(d\\) dimensions, for example Rebonato's parametrisation, or a PCA of the correlation.<br>\nA small number of factors, often 2 or 3, captures most of the variance of rate moves (approximately 90% or more; approx.; unverified). This speeds simulation at the cost of approximation error in the correlation, which can shift the swaption fit and Bermudan value.<br>\n<b>Interviewer follow-up:</b> What is the trade-off? Fewer factors lose correlation fidelity. More factors slow simulation and overfit.",
+  "back": "The correlation matrix is \\(N\\times N\\) and must be positive semi-definite. Rank reduction writes each correlation as an inner product of unit-norm vectors in \\(d\\) dimensions, for example Rebonato's parametrisation, or a PCA of the correlation.<br>\nA small number of factors, often 2 or 3, captures most of the variance of rate moves. This speeds simulation at the cost of approximation error in the correlation, which can shift the swaption fit and Bermudan value.<br>\n<b>Interviewer follow-up:</b> What is the trade-off? Fewer factors lose correlation fidelity. More factors slow simulation and overfit.",
   "tags": [
    "lmm",
    "rank_reduction",
    "pca",
-   "correlation"
+   "correlation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -529,7 +577,8 @@
    "lmm",
    "calibration",
    "correlation",
-   "bermudan"
+   "bermudan",
+   "lvl_stretch"
   ]
  },
  {
@@ -540,7 +589,8 @@
    "slv",
    "cheyette",
    "smile",
-   "models"
+   "models",
+   "lvl_stretch"
   ]
  },
  {
@@ -551,7 +601,8 @@
    "cms",
    "convexity",
    "forward_measure",
-   "convexity_adjustment"
+   "convexity_adjustment",
+   "lvl_vp_core"
   ]
  },
  {
@@ -562,7 +613,8 @@
    "cms",
    "static_replication",
    "smile",
-   "convexity"
+   "convexity",
+   "lvl_vp_core"
   ]
  },
  {
@@ -573,7 +625,8 @@
    "cms_spread",
    "correlation",
    "spread_options",
-   "risk"
+   "risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -584,7 +637,8 @@
    "cms_spread",
    "copula",
    "marginals",
-   "models"
+   "models",
+   "lvl_vp_core"
   ]
  },
  {
@@ -595,18 +649,20 @@
    "copula",
    "tail_dependence",
    "cms_spread",
-   "models"
+   "models",
+   "lvl_foundation"
   ]
  },
  {
   "type": "basic",
   "front": "A range accrual pays a daily coupon when the 10y swap rate lies between 2% and 4%. The forward is 3%. Describe the investor's exposure, and estimate how often the note accrues if the normal vol over the period is 80bp for a one-period view at expiry.",
-  "back": "The coupon is \\(\\sum_d c\\,\\tau_d\\,\\mathbf 1\\{L<S_d<U\\}\\). The investor holds a strip of digital options that pay when the rate is in range. Equivalently, the investor is long the bullet and short the two boundary digitals (below \\(L\\) and above \\(U\\)).<br>\n<b>Vega:</b> the in-range probability falls as vol rises, so the investor is short vol. <b>Delta:</b> near zero at the centre of the range by symmetry, and it grows as the rate approaches a boundary.<br>\n<b>Number:</b> with \\(\\sigma\\sqrt T=0.8\\%\\), the boundaries are \\(\\pm1\\%\\) from the forward, so \\(z=1.25\\). The Gaussian in-range probability is \\(1-2(1-N(1.25))=1-2(0.1056)\\approx 79\\%\\) at expiry. This is a single-date approximation: the daily accrual is the average over the path.<br>\n<b>Interviewer follow-up:</b> If the reference is a CMS rate, what else matters? Correlation and the smile, because the in-range probability depends on the tail shape of the swap rate.",
+  "back": "The coupon is \\(\\sum_d c\\,\\tau_d\\,\\mathbf 1\\{L<S_d<U\\}\\). The investor holds a strip of digital options that pay when the rate is in range. Equivalently, the investor is long the bullet and short the two boundary digitals (below \\(L\\) and above \\(U\\)).<br>\n<b>Vega:</b> the in-range probability falls as vol rises, so the investor is short vol. <b>Delta:</b> near zero at the centre of the range by symmetry, and it grows as the rate approaches a boundary.<br>\n<b>Number:</b> with \\(\\sigma\\sqrt T=0.8\\%\\), the boundaries are \\(\\pm1\\%\\) from the forward, so \\(z=1.25\\). The Gaussian in-range probability is \\(1-2(1-N(1.25))=1-2(0.1056)\\approx 79\\%\\) at expiry. This is a single-date approximation: the daily accrual is the average over the path.<br>\n<b>Interviewer follow-up:</b> If the reference is a CMS rate, what else matters? Correlation and the smile, because the in-range probability depends on the tail shape of the swap rate.<div class=\"fig\"><img src=\"03_rates_options_55_range_accrual_prob.png\"><div class=\"cap\">Range accrual 2% to 4% with forward 3% and sd 0.8%: about 79% in range at one date.</div></div>",
   "tags": [
    "range_accrual",
    "short_vol",
    "digitals",
-   "structured"
+   "structured",
+   "lvl_vp_core"
   ]
  },
  {
@@ -617,7 +673,8 @@
    "tarn",
    "path_dependence",
    "knockout",
-   "structured"
+   "structured",
+   "lvl_vp_core"
   ]
  },
  {
@@ -628,7 +685,8 @@
    "callable",
    "bermudan",
    "structured",
-   "vol"
+   "vol",
+   "lvl_vp_core"
   ]
  },
  {
@@ -639,7 +697,8 @@
    "sabr",
    "backbone",
    "hedging",
-   "negative_rates"
+   "negative_rates",
+   "lvl_stretch"
   ]
  }
 ]

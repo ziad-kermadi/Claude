@@ -2,12 +2,13 @@
  {
   "type": "basic",
   "front": "<b>[Chain: REPO 1/4]</b> A dealer funds a £50m gilt position through a classic repo at 4.00% for 14 days. Describe the cash flows of the repo and compute the interest.",
-  "back": "Headline: a repo is a sale of securities for cash with an agreed repurchase at a later date at a higher price. The cash borrower is the collateral seller; the cash lender is the collateral buyer (reverse-repo side).<br>\nRepurchase price: \\(P_{rep}=P_0\\left(1+r\\,\\dfrac{d}{B}\\right)\\), with \\(B=365\\) for GBP and \\(B=360\\) for USD and EUR.<br>\nInterest: \\(50{,}000{,}000\\times 0.04\\times \\dfrac{14}{365}=£76{,}712\\), so the repurchase price is £50,076,712.<br>\nCoupons on the collateral during the term flow to the economic owner (the cash borrower) under GMRA or GMSLA conventions, so the repo rate is purely a financing rate and is separate from the collateral's yield.<br>\n<i>Interviewer follow-up:</i> why does the lender not earn the bond coupon? Because the lender holds title only as security; coupons are passed back to the seller, so the lender's P&amp;L is the repo interest plus any haircut or margin.",
+  "back": "Headline: a repo is a sale of securities for cash with an agreed repurchase at a later date at a higher price. The cash borrower is the collateral seller; the cash lender is the collateral buyer (reverse-repo side).<br>\nRepurchase price: \\(P_{rep}=P_0\\left(1+r\\,\\dfrac{d}{B}\\right)\\), with \\(B=365\\) for GBP and \\(B=360\\) for USD and EUR.<br>\nInterest: \\(50{,}000{,}000\\times 0.04\\times \\dfrac{14}{365}=£76{,}712\\), so the repurchase price is £50,076,712.<br>\nCoupons on the collateral during the term flow to the economic owner (the cash borrower) under GMRA or GMSLA conventions, so the repo rate is purely a financing rate and is separate from the collateral's yield.<br>\n<i>Interviewer follow-up:</i> why does the lender not earn the bond coupon? Because the lender holds title only as security; coupons are passed back to the seller, so the lender's P&amp;L is the repo interest plus any haircut or margin.<div class=\"fig\"><img src=\"11_repo_financing_0_repo_cash_flows.png\"><div class=\"cap\">Classic repo over 14 days: cash and gilt legs, repurchase price GBP 50,076,712.</div></div>",
   "tags": [
    "repo",
    "financing",
    "chain_repo_mech",
-   "mechanics"
+   "mechanics",
+   "lvl_foundation"
   ]
  },
  {
@@ -18,7 +19,8 @@
    "repo",
    "haircut",
    "chain_repo_mech",
-   "risk"
+   "risk",
+   "lvl_foundation"
   ]
  },
  {
@@ -30,19 +32,21 @@
    "tri_party",
    "ccp",
    "chain_repo_mech",
-   "market_structure"
+   "market_structure",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "<b>[Chain: REPO 4/4]</b> A dealer funds £100m of gilts at a 2% haircut with £2m of equity. In a volatility spike the haircut is raised to 10% and equity is fixed at £2m. What is the funding consequence and why is it procyclical?",
-  "back": "Headline: at 10% the maximum position supportable by £2m of equity is \\(2/0.10=£20\\text{m}\\), so the desk must sell about £80m of gilts.<br>\nAt 2%: cash \\(=98\\), equity \\(=2\\), position \\(=100\\). At 10%: cash \\(=90\\), so to keep £100m of bonds the desk needs £10m of equity, an £8m shortfall.<br>\nProcyclicality: the haircut rises when volatility rises, forced sales push prices down and volatility up, and the loop repeats. This is the same mechanism that drove the 2022 UK LDI episode (spread pressure on leveraged funds with collateral calls).<br>\n<i>Interviewer follow-up:</i> what can a dealer do to limit the loop? Pre-fund margin, hold a liquidity buffer of unencumbered HQLA, term out funding and negotiate haircut floors.",
+  "back": "Headline: at 10% the maximum position supportable by £2m of equity is \\(2/0.10=£20\\text{m}\\), so the desk must sell about £80m of gilts.<br>\nAt 2%: cash \\(=98\\), equity \\(=2\\), position \\(=100\\). At 10%: cash \\(=90\\), so to keep £100m of bonds the desk needs £10m of equity, an £8m shortfall.<br>\nProcyclicality: the haircut rises when volatility rises, forced sales push prices down and volatility up, and the loop repeats. This is the same mechanism that drove the 2022 UK LDI episode (spread pressure on leveraged funds with collateral calls).<br>\n<i>Interviewer follow-up:</i> what can a dealer do to limit the loop? Pre-fund margin, hold a liquidity buffer of unencumbered HQLA, term out funding and negotiate haircut floors.<div class=\"fig\"><img src=\"11_repo_financing_3_haircut_funding_stack.png\"><div class=\"cap\">Haircut 2% to 10% on GBP 100m with GBP 2m equity: cash falls, GBP 8m equity shortfall.</div></div>",
   "tags": [
    "repo",
    "haircut",
    "procyclicality",
    "chain_repo_mech",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -53,7 +57,8 @@
    "specialness",
    "repo",
    "chain_specialness",
-   "mechanics"
+   "mechanics",
+   "lvl_vp_core"
   ]
  },
  {
@@ -65,7 +70,8 @@
    "specialness",
    "repo",
    "chain_specialness",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -77,7 +83,8 @@
    "specialness",
    "repo",
    "chain_specialness",
-   "mechanics"
+   "mechanics",
+   "lvl_vp_core"
   ]
  },
  {
@@ -89,7 +96,8 @@
    "specialness",
    "basis_trade",
    "chain_specialness",
-   "futures"
+   "futures",
+   "lvl_vp_core"
   ]
  },
  {
@@ -100,7 +108,8 @@
    "sonia",
    "risk_free_rates",
    "chain_boe_sonia",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -112,7 +121,8 @@
    "floor_system",
    "reserves",
    "chain_boe_sonia",
-   "central_bank"
+   "central_bank",
+   "lvl_vp_core"
   ]
  },
  {
@@ -124,7 +134,8 @@
    "qt",
    "reserve_demand",
    "chain_boe_sonia",
-   "central_bank"
+   "central_bank",
+   "lvl_vp_core"
   ]
  },
  {
@@ -137,7 +148,8 @@
    "iltr",
    "ctrf",
    "chain_boe_sonia",
-   "central_bank"
+   "central_bank",
+   "lvl_vp_core"
   ]
  },
  {
@@ -148,7 +160,8 @@
    "sofr",
    "risk_free_rates",
    "chain_us_repo",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -160,7 +173,8 @@
    "repo_spike",
    "reserves",
    "chain_us_repo",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -173,7 +187,8 @@
    "srf",
    "corridor",
    "chain_us_repo",
-   "central_bank"
+   "central_bank",
+   "lvl_vp_core"
   ]
  },
  {
@@ -185,7 +200,8 @@
    "sponsored_repo",
    "sec",
    "chain_us_repo",
-   "regulation"
+   "regulation",
+   "lvl_stretch"
   ]
  },
  {
@@ -196,18 +212,20 @@
    "derivation",
    "repo",
    "day_count",
-   "convention"
+   "convention",
+   "lvl_foundation"
   ]
  },
  {
   "type": "basic",
   "front": "<b>Derivation:</b> Two term repo rates are quoted: 4.00% for 30 days and 4.20% for 90 days, both on a simple basis. Derive the forward repo rate for days 30 to 90, and compute it.",
-  "back": "Step 1: no-arbitrage requires that lending for 90 days equals lending for 30 days then rolling at the forward rate \\(f\\) for 60 days.<br>\nStep 2: \\((1+r_2 t_2)=(1+r_1 t_1)\\,(1+f\\,(t_2-t_1))\\), with \\(t_1=30/365\\), \\(t_2=90/365\\).<br>\nStep 3: solve \\(f=\\dfrac{1}{t_2-t_1}\\left[\\dfrac{1+r_2t_2}{1+r_1t_1}-1\\right]\\).<br>\nStep 4: \\(r_1 t_1=0.3288\\%\\), \\(r_2 t_2=1.0356\\%\\). Ratio \\(=1.010356/1.003288=1.007046\\). Dividing \\(0.7046\\%\\) by \\(60/365=0.16438\\) gives \\(f\\approx 4.29\\%\\).<br>\nInterpretation: the forward sits above the 90-day rate because the upward slope of the term curve is embedded in the spot-to-forward roll.<br>\nWhere it breaks: this ignores the term premium and the bid-offer in term repo, and it assumes the same collateral basket is available in both legs.",
+  "back": "Step 1: no-arbitrage requires that lending for 90 days equals lending for 30 days then rolling at the forward rate \\(f\\) for 60 days.<br>\nStep 2: \\((1+r_2 t_2)=(1+r_1 t_1)\\,(1+f\\,(t_2-t_1))\\), with \\(t_1=30/365\\), \\(t_2=90/365\\).<br>\nStep 3: solve \\(f=\\dfrac{1}{t_2-t_1}\\left[\\dfrac{1+r_2t_2}{1+r_1t_1}-1\\right]\\).<br>\nStep 4: \\(r_1 t_1=0.3288\\%\\), \\(r_2 t_2=1.0356\\%\\). Ratio \\(=1.010356/1.003288=1.007046\\). Dividing \\(0.7046\\%\\) by \\(60/365=0.16438\\) gives \\(f\\approx 4.29\\%\\).<br>\nInterpretation: the forward sits above the 90-day rate because the upward slope of the term curve is embedded in the spot-to-forward roll.<br>\nWhere it breaks: this ignores the term premium and the bid-offer in term repo, and it assumes the same collateral basket is available in both legs.<div class=\"fig\"><img src=\"11_repo_financing_17_forward_repo_timeline.png\"><div class=\"cap\">Forward repo for days 30 to 90 implied by the 4.00% and 4.20% term rates: 4.29%.</div></div>",
   "tags": [
    "derivation",
    "term_repo",
    "forward_rate",
-   "repo_curve"
+   "repo_curve",
+   "lvl_foundation"
   ]
  },
  {
@@ -218,18 +236,20 @@
    "derivation",
    "forward_price",
    "repo",
-   "carry"
+   "carry",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "<b>Derivation:</b> Derive the carry of a long bond financed in repo over a period \\(\\tau\\), assuming the clean price is unchanged. Use position \\(N\\), coupon \\(c\\), dirty price \\(P_d\\) (per 100 face) and repo rate \\(r\\). Evaluate for \\(N=£100\\text{m}\\), \\(c=4.00\\%\\), \\(P_d=100\\), \\(r=3.50\\%\\), \\(\\tau=0.25\\).",
-  "back": "Step 1: coupon accrual over \\(\\tau\\) is \\(N\\,c\\,\\tau\\), since accrued interest rises linearly with time.<br>\nStep 2: with clean price constant, the dirty price rises only through accrued interest, so there is no capital gain other than accrual.<br>\nStep 3: repo cost is \\(r\\,\\tau\\) times the cash borrowed, which is \\(N\\,P_d/100\\).<br>\nStep 4: carry \\(=N\\,\\tau\\left(c-r\\,\\dfrac{P_d}{100}\\right)\\). For the numbers: \\(100\\text{m}\\times0.25\\times(0.04-0.035\\times1.00)=£125{,}000\\).<br>\nWhere it breaks: (a) a special bond's financing rate is below the GC rate, so the carry is larger than this formula gives; (b) day-count mismatch between semi-annual Act/Act coupons and Act/365 repo; (c) on the coupon date the clean price drops, so carry must be computed on dirty prices across the coupon.",
+  "back": "Step 1: coupon accrual over \\(\\tau\\) is \\(N\\,c\\,\\tau\\), since accrued interest rises linearly with time.<br>\nStep 2: with clean price constant, the dirty price rises only through accrued interest, so there is no capital gain other than accrual.<br>\nStep 3: repo cost is \\(r\\,\\tau\\) times the cash borrowed, which is \\(N\\,P_d/100\\).<br>\nStep 4: carry \\(=N\\,\\tau\\left(c-r\\,\\dfrac{P_d}{100}\\right)\\). For the numbers: \\(100\\text{m}\\times0.25\\times(0.04-0.035\\times1.00)=£125{,}000\\).<br>\nWhere it breaks: (a) a special bond's financing rate is below the GC rate, so the carry is larger than this formula gives; (b) day-count mismatch between semi-annual Act/Act coupons and Act/365 repo; (c) on the coupon date the clean price drops, so carry must be computed on dirty prices across the coupon.<div class=\"fig\"><img src=\"11_repo_financing_19_carry_waterfall.png\"><div class=\"cap\">Carry on GBP 100m: coupon accrual GBP 1.000m less repo cost GBP 0.875m = GBP 125,000.</div></div>",
   "tags": [
    "derivation",
    "carry",
    "repo",
-   "accrual"
+   "accrual",
+   "lvl_vp_core"
   ]
  },
  {
@@ -241,7 +261,8 @@
    "haircut",
    "roe",
    "leverage",
-   "financing"
+   "financing",
+   "lvl_vp_core"
   ]
  },
  {
@@ -252,7 +273,8 @@
    "derivation",
    "sonia",
    "compounding",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -264,7 +286,8 @@
    "trs",
    "repo",
    "financing",
-   "breakeven"
+   "breakeven",
+   "lvl_vp_core"
   ]
  },
  {
@@ -275,7 +298,8 @@
    "derivation",
    "repo",
    "dv01",
-   "funding_risk"
+   "funding_risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -286,7 +310,8 @@
    "derivation",
    "securities_lending",
    "rebate",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -297,7 +322,8 @@
    "case_study",
    "specialness",
    "repo",
-   "numbers"
+   "numbers",
+   "lvl_vp_core"
   ]
  },
  {
@@ -309,7 +335,8 @@
    "basis_trade",
    "repo",
    "haircut",
-   "numbers"
+   "numbers",
+   "lvl_vp_core"
   ]
  },
  {
@@ -321,31 +348,34 @@
    "year_end",
    "window_dressing",
    "repo",
-   "numbers"
+   "numbers",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "<b>Case study:</b> TRS vs repo cost comparison. Exposure of $100m of a bond for one year, SOFR at 4.00%. Repo is at SOFR + 15bp with a 2% haircut and equity costs 5.5%. The TRS is at SOFR + 75bp with no haircut. Compare all-in annual costs and find the breakeven TRS spread.",
-  "back": "Step 1: repo effective rate per unit exposure \\(=(1-h)(S+b)+h\\,r_e=0.98\\times4.15\\%+0.02\\times5.5\\%=4.177\\%\\).<br>\nStep 2: repo cost on $100m for one year \\(=\\$4.177\\text{m}\\).<br>\nStep 3: TRS cost \\(=100\\text{m}\\times(4.00\\%+0.75\\%)=\\$4.75\\text{m}\\).<br>\nStep 4: the TRS costs \\(\\$0.573\\)m more per year, i.e. about 57bp of exposure. Breakeven TRS spread is \\(17.7\\)bp over SOFR, from the derivation.<br>\nSanity check: the TRS spread exceeds the repo spread by 60bp (75 minus 15), but the repo effective spread is 17.7bp, not 15bp, because of the 3bp equity term. The net gap is 75 minus 17.7, about 57.3bp, which matches the $0.573m difference.<br>\nInterviewer follow-up: when would a rational desk still pay the TRS? When it saves balance-sheet or leverage charges, when the repo cannot be executed for the collateral, or when the TRS avoids the regulatory cost of gross repo exposure that the leverage ratio counts.",
+  "back": "Step 1: repo effective rate per unit exposure \\(=(1-h)(S+b)+h\\,r_e=0.98\\times4.15\\%+0.02\\times5.5\\%=4.177\\%\\).<br>\nStep 2: repo cost on $100m for one year \\(=\\$4.177\\text{m}\\).<br>\nStep 3: TRS cost \\(=100\\text{m}\\times(4.00\\%+0.75\\%)=\\$4.75\\text{m}\\).<br>\nStep 4: the TRS costs \\(\\$0.573\\)m more per year, i.e. about 57bp of exposure. Breakeven TRS spread is \\(17.7\\)bp over SOFR, from the derivation.<br>\nSanity check: the TRS spread exceeds the repo spread by 60bp (75 minus 15), but the repo effective spread is 17.7bp, not 15bp, because of the 3bp equity term. The net gap is 75 minus 17.7, about 57.3bp, which matches the $0.573m difference.<br>\nInterviewer follow-up: when would a rational desk still pay the TRS? When it saves balance-sheet or leverage charges, when the repo cannot be executed for the collateral, or when the TRS avoids the regulatory cost of gross repo exposure that the leverage ratio counts.<div class=\"fig\"><img src=\"11_repo_financing_28_trs_vs_repo_cost.png\"><div class=\"cap\">Annual cost on $100m: repo $4.177m vs TRS $4.75m, TRS dearer by $0.573m.</div></div>",
   "tags": [
    "case_study",
    "trs",
    "repo",
    "financing",
-   "numbers"
+   "numbers",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "<b>Case study:</b> Haircut stress on ROE. A dealer holds £100m of a bond yielding 5.00%, funded at 4.00% repo, with equity fixed at £2m and no outside capital. Haircut rises from 2% to 10%. Compute the position the desk can hold, the forced sale, and the ROE before and after.",
-  "back": "Step 1: at 2%, equity \\(=2\\) supports \\(2/0.02=£100\\text{m}\\). Carry \\(=100\\times(5.00\\%-0.98\\times4.00\\%)=£1.08\\)m per year, ROE \\(=54\\%\\) on £2m.<br>\nStep 2: at 10%, equity \\(=2\\) supports \\(2/0.10=£20\\text{m}\\). The desk must sell \\(£80\\text{m}\\) to meet the haircut.<br>\nStep 3: if the desk instead keeps £100m, it needs £10m equity, an £8m shortfall.<br>\nStep 4: ROE if it shrinks to £20m (same funding structure): carry \\(=20\\times(5.00\\%-0.90\\times4.00\\%)=£0.28\\)m on £2m, ROE \\(=14\\%\\). The ROE falls by 40 points, and the desk is also forced into a sale at the stressed price.<br>\nInterviewer follow-up: how would you pre-empt this? Hold an extra equity buffer proportional to the stressed haircut, and limit the position to what survives a 10% haircut shock.",
+  "back": "Step 1: at 2%, equity \\(=2\\) supports \\(2/0.02=£100\\text{m}\\). Carry \\(=100\\times(5.00\\%-0.98\\times4.00\\%)=£1.08\\)m per year, ROE \\(=54\\%\\) on £2m.<br>\nStep 2: at 10%, equity \\(=2\\) supports \\(2/0.10=£20\\text{m}\\). The desk must sell \\(£80\\text{m}\\) to meet the haircut.<br>\nStep 3: if the desk instead keeps £100m, it needs £10m equity, an £8m shortfall.<br>\nStep 4: ROE if it shrinks to £20m (same funding structure): carry \\(=20\\times(5.00\\%-0.90\\times4.00\\%)=£0.28\\)m on £2m, ROE \\(=14\\%\\). The ROE falls by 40 points, and the desk is also forced into a sale at the stressed price.<br>\nInterviewer follow-up: how would you pre-empt this? Hold an extra equity buffer proportional to the stressed haircut, and limit the position to what survives a 10% haircut shock.<div class=\"fig\"><img src=\"11_repo_financing_29_haircut_stress_roe.png\"><div class=\"cap\">Haircut stress: position GBP 100m to GBP 20m on GBP 2m equity; ROE 54% to 14%.</div></div>",
   "tags": [
    "case_study",
    "haircut",
    "procyclicality",
    "roe",
-   "numbers"
+   "numbers",
+   "lvl_stretch"
   ]
  },
  {
@@ -356,7 +386,8 @@
    "case_study",
    "repo_ois",
    "basis",
-   "numbers"
+   "numbers",
+   "lvl_vp_core"
   ]
  },
  {
@@ -367,7 +398,8 @@
    "case_study",
    "negative_rates",
    "specialness",
-   "numbers"
+   "numbers",
+   "lvl_stretch"
   ]
  },
  {
@@ -378,7 +410,8 @@
    "case_study",
    "fails",
    "convention",
-   "numbers"
+   "numbers",
+   "lvl_vp_core"
   ]
  },
  {
@@ -389,7 +422,8 @@
    "case_study",
    "securities_lending",
    "rebate",
-   "numbers"
+   "numbers",
+   "lvl_vp_core"
   ]
  },
  {
@@ -400,7 +434,8 @@
    "repo_ois",
    "balance_sheet",
    "scarcity",
-   "convention"
+   "convention",
+   "lvl_stretch"
   ]
  },
  {
@@ -411,18 +446,20 @@
    "basis_trade",
    "haircut",
    "risk",
-   "financing"
+   "financing",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "Under Basel's NSFR, how is a reverse repo of Level 1 collateral against a financial counterparty with under six months to maturity treated, and why does that matter for a dealer's funding plan?",
-  "back": "Headline: Basel's NSFR (standard para. 38) assigns a 10% required stable funding factor to a reverse repo with a financial counterparty, with residual maturity under six months, secured by Level 1 assets.<br>\nSome jurisdictions have applied 0% to this treatment, including the EU under a transitional rule. The position must be checked in the national text applicable to the desk (approx.; unverified for the current position).<br>\nWhy it matters: secured lending against Level 1 collateral needs less stable funding than unsecured lending, so it supports the NSFR relative to unsecured lending, but under the Basel factor it still requires some stable funding.<br>\n<i>Interviewer follow-up:</i> what is the trade-off? Short-maturity secured lending helps the ratio but increases roll-over and rate risk, which the NSFR does not fully capture.",
+  "back": "Headline: Basel's NSFR (standard para. 38) assigns a 10% required stable funding factor to a reverse repo with a financial counterparty, with residual maturity under six months, secured by Level 1 assets.<br>\nSome jurisdictions have applied a lower factor: the EU CRR has applied 0% to some Level 1 short-term reverse repos, and alignment with the Basel factor has been under discussion. Check the current text applicable to the desk.<br>\nWhy it matters: secured lending against Level 1 collateral needs less stable funding than unsecured lending, so it supports the NSFR relative to unsecured lending, but under the Basel factor it still requires some stable funding.<br>\n<i>Interviewer follow-up:</i> what is the trade-off? Short-maturity secured lending helps the ratio but increases roll-over and rate risk, which the NSFR does not fully capture.",
   "tags": [
    "nsfr",
    "reverse_repo",
    "basel",
-   "regulation"
+   "regulation",
+   "lvl_stretch"
   ]
  },
  {
@@ -433,7 +470,8 @@
    "secured_funding",
    "unsecured_funding",
    "ftp",
-   "funding_curve"
+   "funding_curve",
+   "lvl_vp_core"
   ]
  },
  {
@@ -445,7 +483,8 @@
    "srf",
    "corridor",
    "sofr",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -457,7 +496,8 @@
    "hqla",
    "haircut",
    "regulation",
-   "convention"
+   "convention",
+   "lvl_stretch"
   ]
  },
  {
@@ -468,7 +508,8 @@
    "rehypothecation",
    "prime_brokerage",
    "regulation",
-   "convention"
+   "convention",
+   "lvl_stretch"
   ]
  },
  {
@@ -479,7 +520,8 @@
    "leverage_ratio",
    "balance_sheet",
    "regulation",
-   "convention"
+   "convention",
+   "lvl_stretch"
   ]
  },
  {
@@ -489,7 +531,8 @@
   "tags": [
    "securities_lending",
    "collateral",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -500,7 +543,8 @@
    "day_count",
    "derivation",
    "convention",
-   "repo"
+   "repo",
+   "lvl_foundation"
   ]
  },
  {
@@ -510,7 +554,8 @@
   "tags": [
    "sonia",
    "risk_free_rates",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  }
 ]

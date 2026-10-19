@@ -8,7 +8,8 @@
    "chain",
    "convertibles",
    "hedging",
-   "greeks"
+   "greeks",
+   "lvl_vp_core"
   ]
  },
  {
@@ -19,7 +20,8 @@
    "cb_arb",
    "chain",
    "gamma",
-   "derivation"
+   "derivation",
+   "lvl_stretch"
   ]
  },
  {
@@ -30,7 +32,8 @@
    "cb_arb",
    "chain",
    "credit",
-   "hedging"
+   "hedging",
+   "lvl_vp_core"
   ]
  },
  {
@@ -42,7 +45,8 @@
    "chain",
    "borrow",
    "liquidity",
-   "history"
+   "history",
+   "lvl_vp_core"
   ]
  },
  {
@@ -54,7 +58,8 @@
    "chain",
    "clo",
    "structure",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -66,7 +71,8 @@
    "chain",
    "oc_test",
    "waterfall",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -78,19 +84,21 @@
    "chain",
    "oc_test",
    "equity",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "<b>[Chain: CLO equity 4/4]</b> Equity invests 50 at par, and the deal is bullet at year 4. Assume 40% recovery on the 25 par default (a principal loss of 15) and no further defaults. Compute the equity IRR without and with the event, and the terminal distribution.",
-  "back": "Base flows: −50, 6.50, 6.50, 6.50, 56.50 (50 back plus the last coupon), so IRR = 13.0%.<br>\nStress: at maturity the pool gives 475 performing plus 10 recovery = 485. Senior after the 4.17 paydown is 395.83, and mezzanine is 50. Terminal residual \\(= 485 - 395.83 - 50 = 39.17\\). Flows: −50, 1.46, 5.63, 5.63, 5.63 + 39.17 = 44.79. IRR ≈ 3.9%.<br>\nNet: one 5% default bucket at 60% loss cuts the IRR by about 9 points. The 15 principal loss is 30% of the 50 of equity.<br>\n<b>Interviewer follow-up:</b> Why is the IRR so sensitive? The pool is about 10 times the equity, so a principal loss hits a small capital base. The cash diversion adds to it through lost timing.",
+  "back": "Base flows: −50, 6.50, 6.50, 6.50, 56.50 (50 back plus the last coupon), so IRR = 13.0%.<br>\nStress: at maturity the pool gives 475 performing plus 10 recovery = 485. Senior after the 4.17 paydown is 395.83, and mezzanine is 50. Terminal residual \\(= 485 - 395.83 - 50 = 39.17\\). Flows: −50, 1.46, 5.63, 5.63, 5.63 + 39.17 = 44.79. IRR ≈ 3.9%.<br>\nNet: one 5% default bucket at 60% loss cuts the IRR by about 9 points. The 15 principal loss is 30% of the 50 of equity.<br>\n<b>Interviewer follow-up:</b> Why is the IRR so sensitive? The pool is about 10 times the equity, so a principal loss hits a small capital base. The cash diversion adds to it through lost timing.<div class=\"fig\"><img src=\"07_converts_loans_deep_7_equity_cashflows.png\"><div class=\"cap\">CLO equity cash flows in the base case and the stress case, with IRR 13.0% vs about 3.9%.</div></div>",
   "tags": [
    "clo_equity",
    "chain",
    "irr",
    "scenario",
-   "case_study"
+   "case_study",
+   "lvl_vp_core"
   ]
  },
  {
@@ -102,7 +110,8 @@
    "chain",
    "uptier",
    "distressed",
-   "covenants"
+   "covenants",
+   "lvl_vp_core"
   ]
  },
  {
@@ -114,7 +123,8 @@
    "chain",
    "recovery",
    "waterfall",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -126,7 +136,8 @@
    "chain",
    "loans",
    "pricing",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -138,7 +149,8 @@
    "chain",
    "loans",
    "pricing",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -150,19 +162,21 @@
    "derivation",
    "tsiveriotis_fernandes",
    "greeks",
-   "pricing"
+   "pricing",
+   "lvl_stretch"
   ]
  },
  {
   "type": "basic",
   "front": "<b>Derivation:</b> Derive the first-order sensitivity of a bond floor to its credit spread. Floor \\(P(s) = \\sum_t c_t e^{-(r+s)t}\\), 5-year, 4% annual coupon on 1,000 face, redeemed at 1,000, continuous compounding, \\(r = 3\\%\\), \\(s = 2\\%\\). Give the change per bp.",
-  "back": "Differentiate term by term, using \\(\\partial_s e^{-(r+s)t} = -t\\,e^{-(r+s)t}\\):\n\\[\\frac{\\partial P}{\\partial s} = -\\sum_t t\\,c_t e^{-yt} = -D_m P, \\qquad y = r+s = 5\\%.\\]\nHere \\(D_m\\) is the modified duration at \\(y\\). Numbers: \\(P = 951.37\\) and \\(D_m = 4.62\\). So \\(\\partial P/\\partial s = -4{,}395\\) per unit of \\(s\\), which is \\(-0.44\\) per bp.<br>\n<b>Where it breaks:</b> a constant \\(s\\) is wrong for a convertible if the hazard is stock-linked. Recovery of face versus par matters on default. The second-order error is about \\(\\tfrac12 P_{ss}(\\Delta s)^2\\), negligible for 1bp but not for 100bp.<br>\n<b>Interviewer follow-up:</b> Why does the floor's spread risk equal duration times price? The floor is a straight bond, so its spread risk is spread duration. The option part has its own credit sensitivity only through the stock-to-credit cross term.",
+  "back": "Differentiate term by term, using \\(\\partial_s e^{-(r+s)t} = -t\\,e^{-(r+s)t}\\):\n\\[\\frac{\\partial P}{\\partial s} = -\\sum_t t\\,c_t e^{-yt} = -D_m P, \\qquad y = r+s = 5\\%.\\]\nHere \\(D_m\\) is the modified duration at \\(y\\). Numbers: \\(P = 951.37\\) and \\(D_m = 4.62\\). So \\(\\partial P/\\partial s = -4{,}395\\) per unit of \\(s\\), which is \\(-0.44\\) per bp.<br>\n<b>Where it breaks:</b> a constant \\(s\\) is wrong for a convertible if the hazard is stock-linked. Recovery of face versus par matters on default. The second-order error is about \\(\\tfrac12 P_{ss}(\\Delta s)^2\\), negligible for 1bp but not for 100bp.<br>\n<b>Interviewer follow-up:</b> Why does the floor's spread risk equal duration times price? The floor is a straight bond, so its spread risk is spread duration. The option part has its own credit sensitivity only through the stock-to-credit cross term.<div class=\"fig\"><img src=\"07_converts_loans_deep_13_floor_price_vs_spread.png\"><div class=\"cap\">Bond floor price vs credit spread with the tangent at 200bp, about -0.44 per bp.</div></div>",
   "tags": [
    "convertibles",
    "credit",
    "derivation",
    "cds",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -174,7 +188,8 @@
    "derivation",
    "cds",
    "recovery",
-   "pricing"
+   "pricing",
+   "lvl_vp_core"
   ]
  },
  {
@@ -186,7 +201,8 @@
    "derivation",
    "discount_margin",
    "convention",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -198,7 +214,8 @@
    "derivation",
    "convertible_arb",
    "hedging",
-   "numerics"
+   "numerics",
+   "lvl_stretch"
   ]
  },
  {
@@ -210,19 +227,21 @@
    "derivation",
    "leverage",
    "equity",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "<b>Case study:</b> A convertible desk is long 100 bonds (face 1,000, ratio 12.5, bond at 1,050, stock at 80, so parity is 1,000 and the premium is 5%). The model delta is 7.75 shares per bond and gamma is 0.25 shares per bond per $1. The stock rises 5% to 84. The desk hedges at inception and then re-hedges. Compute the bond and hedge P&L and the rebalance trade.",
-  "back": "Inception: short \\(100 \\times 7.75 = 775\\) shares.<br>\nStep 1, bond: first order \\(100 \\times 7.75 \\times 4 = 3{,}100\\). Second order \\(\\tfrac12 \\times 100 \\times 0.25 \\times 4^2 = 200\\). Total bond gain 3,300, taking the bond from 1,050 to 1,083.<br>\nStep 2, hedge: the short 775 shares lose \\(775 \\times 4 = 3{,}100\\).<br>\nStep 3, net: +200 before costs and carry, equal to \\(\\tfrac12\\Gamma(\\Delta S)^2\\).<br>\nStep 4, rebalance: delta is now 8.75 per bond, so target short is 875. Sell 100 more shares at 84.<br>\nSanity: parity moved from 1,000 to 1,050 (+50 per bond). The bond moved +33, about 66% of the parity move. This matches the average delta of \\((7.75+8.75)/2 = 8.25\\) shares times 4 points, which is 33 per bond.<br>\n<b>Interviewer follow-up:</b> Why is the net gain positive if the book was delta-neutral? The book is long gamma. The bond's gain exceeds its first-order delta, and the linear short does not offset that convexity, so the 200 is kept.",
+  "back": "Inception: short \\(100 \\times 7.75 = 775\\) shares.<br>\nStep 1, bond: first order \\(100 \\times 7.75 \\times 4 = 3{,}100\\). Second order \\(\\tfrac12 \\times 100 \\times 0.25 \\times 4^2 = 200\\). Total bond gain 3,300, taking the bond from 1,050 to 1,083.<br>\nStep 2, hedge: the short 775 shares lose \\(775 \\times 4 = 3{,}100\\).<br>\nStep 3, net: +200 before costs and carry, equal to \\(\\tfrac12\\Gamma(\\Delta S)^2\\).<br>\nStep 4, rebalance: delta is now 8.75 per bond, so target short is 875. Sell 100 more shares at 84.<br>\nSanity: parity moved from 1,000 to 1,050 (+50 per bond). The bond moved +33, about 66% of the parity move. This matches the average delta of \\((7.75+8.75)/2 = 8.25\\) shares times 4 points, which is 33 per bond.<br>\n<b>Interviewer follow-up:</b> Why is the net gain positive if the book was delta-neutral? The book is long gamma. The bond's gain exceeds its first-order delta, and the linear short does not offset that convexity, so the 200 is kept.<div class=\"fig\"><img src=\"07_converts_loans_deep_18_hedge_pnl_bridge.png\"><div class=\"cap\">Bond gain from delta and gamma, short-stock loss and the net gamma P&amp;L of 200 as stock moves 80 to 84.</div></div>",
   "tags": [
    "convertibles",
    "case_study",
    "hedging",
    "gamma",
-   "mental_math"
+   "mental_math",
+   "lvl_stretch"
   ]
  },
  {
@@ -234,7 +253,8 @@
    "case_study",
    "discount_margin",
    "floors",
-   "oid"
+   "oid",
+   "lvl_vp_core"
   ]
  },
  {
@@ -246,31 +266,34 @@
    "case_study",
    "oc_test",
    "ccc",
-   "mental_math"
+   "mental_math",
+   "lvl_stretch"
   ]
  },
  {
   "type": "basic",
   "front": "<b>Case study:</b> Enterprise value at emergence is 620. Claims are: administrative and professional fees 30 (paid first), DIP 100 (super-priority), first-lien TLB 450 (secured), second-lien notes 200 (secured), senior unsecured notes 250, and general unsecured 50 (pari with senior unsecured). Compute each class's recovery and the fulcrum security. Then find the EV at which the fulcrum moves to the senior unsecured notes.",
-  "back": "Waterfall: admin 30 leaves 590. DIP 100 (100%) leaves 490. First lien 450 (100%) leaves 40. Second lien 200 gets \\(40/200 = 20\\%\\). Senior unsecured and general unsecured get 0%.<br>\nFulcrum: the second lien, the most senior class not paid in full, which would receive the reorganised equity under the plan.<br>\nThe fulcrum moves to senior unsecured once the second lien is paid in full: EV \\(\\ge 30 + 100 + 450 + 200 = 780\\). At EV 800, 20 is left for the 250 of senior unsecured and 50 of general unsecured, which rank pari passu, so recovery is 20/300 = 6.7% and they become the fulcrum.<br>\nSanity: \\(620 = 30 + 100 + 450 + 40\\), so the recoveries sum to EV.<br>\n<b>Interviewer follow-up:</b> Why does DIP size matter for the fulcrum? Each dollar of super-priority DIP sits ahead of every prepetition claim. A large DIP relative to collateral value moves the fulcrum up the capital structure.",
+  "back": "Waterfall: admin 30 leaves 590. DIP 100 (100%) leaves 490. First lien 450 (100%) leaves 40. Second lien 200 gets \\(40/200 = 20\\%\\). Senior unsecured and general unsecured get 0%.<br>\nFulcrum: the second lien, the most senior class not paid in full, which would receive the reorganised equity under the plan.<br>\nThe fulcrum moves to senior unsecured once the second lien is paid in full: EV \\(\\ge 30 + 100 + 450 + 200 = 780\\). At EV 800, 20 is left for the 250 of senior unsecured and 50 of general unsecured, which rank pari passu, so recovery is 20/300 = 6.7% and they become the fulcrum.<br>\nSanity: \\(620 = 30 + 100 + 450 + 40\\), so the recoveries sum to EV.<br>\n<b>Interviewer follow-up:</b> Why does DIP size matter for the fulcrum? Each dollar of super-priority DIP sits ahead of every prepetition claim. A large DIP relative to collateral value moves the fulcrum up the capital structure.<div class=\"fig\"><img src=\"07_converts_loans_deep_21_recovery_ev.png\"><div class=\"cap\">Recovery by class at EV 620 and EV 800; the fulcrum moves from the second lien to senior unsecured.</div></div>",
   "tags": [
    "distressed",
    "case_study",
    "recovery",
    "waterfall",
-   "fulcrum"
+   "fulcrum",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "<b>Case study:</b> A mandatory convertible with par 100, a stock floor \\(S_L = 60\\) and a cap \\(S_U = 75\\). Give the shares delivered and the payoff at \\(S = 50\\), 70 and 90, and express the payoff in calls and puts.",
-  "back": "Shares delivered: \\(100/60 = 1.667\\) for \\(S \\le 60\\), \\(100/S\\) for \\(60 < S < 75\\), and \\(100/75 = 1.333\\) for \\(S \\ge 75\\).<br>\n\\(S = 50\\): 1.667 shares, value 83.3. \\(S = 70\\): 1.429 shares, value 100.0. \\(S = 90\\): 1.333 shares, value 120.0.<br>\nDecomposition: \\(\\text{Payoff} = 100 + \\tfrac{100}{75}\\max(S-75, 0) - \\tfrac{100}{60}\\max(60-S, 0)\\). The holder is long calls struck at 75 and short puts struck at 60, per the par amount.<br>\nSanity: the payoff is continuous at both bounds, since \\(1.667 \\times 60 = 100\\) and \\(1.333 \\times 75 = 100\\).<br>\n<b>Interviewer follow-up:</b> What is the holder's payoff slope? It is 1.667 below 60, zero between 60 and 75, and 1.333 above 75. The holder is flat in the corridor and short the downside below 60.",
+  "back": "Shares delivered: \\(100/60 = 1.667\\) for \\(S \\le 60\\), \\(100/S\\) for \\(60 < S < 75\\), and \\(100/75 = 1.333\\) for \\(S \\ge 75\\).<br>\n\\(S = 50\\): 1.667 shares, value 83.3. \\(S = 70\\): 1.429 shares, value 100.0. \\(S = 90\\): 1.333 shares, value 120.0.<br>\nDecomposition: \\(\\text{Payoff} = 100 + \\tfrac{100}{75}\\max(S-75, 0) - \\tfrac{100}{60}\\max(60-S, 0)\\). The holder is long calls struck at 75 and short puts struck at 60, per the par amount.<br>\nSanity: the payoff is continuous at both bounds, since \\(1.667 \\times 60 = 100\\) and \\(1.333 \\times 75 = 100\\).<br>\n<b>Interviewer follow-up:</b> What is the holder's payoff slope? It is 1.667 below 60, zero between 60 and 75, and 1.333 above 75. The holder is flat in the corridor and short the downside below 60.<div class=\"fig\"><img src=\"07_converts_loans_deep_22_mandatory_payoff.png\"><div class=\"cap\">Mandatory convertible payoff: flat between 60 and 75, slope 1.67 below and 1.33 above.</div></div>",
   "tags": [
    "convertibles",
    "mandatory",
    "payoff",
    "case_study",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -282,7 +305,8 @@
    "case_study",
    "equity",
    "defaults",
-   "scenario"
+   "scenario",
+   "lvl_stretch"
   ]
  },
  {
@@ -294,7 +318,8 @@
    "case_study",
    "yield",
    "convention",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -305,7 +330,8 @@
    "credit",
    "convention",
    "cds",
-   "recovery"
+   "recovery",
+   "lvl_vp_core"
   ]
  },
  {
@@ -316,7 +342,8 @@
    "convertibles",
    "credit",
    "greeks",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -327,7 +354,8 @@
    "loans",
    "discount_margin",
    "convention",
-   "derivation"
+   "derivation",
+   "lvl_stretch"
   ]
  },
  {
@@ -338,7 +366,8 @@
    "gamma",
    "derivation",
    "convertible_arb",
-   "numerics"
+   "numerics",
+   "lvl_stretch"
   ]
  },
  {
@@ -349,7 +378,8 @@
    "lme",
    "recovery",
    "waterfall",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  }
 ]

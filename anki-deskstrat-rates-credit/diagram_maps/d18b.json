@@ -1,0 +1,128 @@
+[
+ {
+  "file": "18_desk_6.json",
+  "index": 0,
+  "front_start": "<b>[Chain: DMO_PREP 1/3]</b> Context: the DMO is auctioning ",
+  "image": "18_desk_6_0_dmo_auction_sequence.png",
+  "caption": "Pre-auction sequence and the cash DV01 (GBP 160,700 per bp) to hedge on the expected allocation."
+ },
+ {
+  "file": "18_desk_6.json",
+  "index": 11,
+  "front_start": "<b>Case study: corporate pre-lock, rate and spread decomposi",
+  "image": "18_desk_6_11_prelock_coupon_bridge.png",
+  "caption": "All-in coupon bridge from plan to locked level, with the GBP 10.25m rate payoff and 1.25m annual saving."
+ },
+ {
+  "file": "18_desk_6.json",
+  "index": 17,
+  "front_start": "<b>[Chain: CB_DAY 1/3]</b> Context: it is <b>11:30</b> on a ",
+  "image": "18_desk_6_17_mpc_day_steps.png",
+  "caption": "Priced path (60% chance of +25bp, 15bp expected move) and the four steps before the 12:00 decision."
+ },
+ {
+  "file": "18_desk_6.json",
+  "index": 20,
+  "front_start": "<b>[Chain: SSA_SWAP 1/3]</b> Context: a sovereign-supranatio",
+  "image": "18_desk_6_20_ssa_swap_flows.png",
+  "caption": "Cash and swap flows between SSA bond investors, the issuer and the dealer, which is short duration."
+ },
+ {
+  "file": "18_desk_7.json",
+  "index": 0,
+  "front_start": "<b>[Chain: LIMIT_BREACH 1/4]</b> Context: the desk's 5y key-",
+  "image": "18_desk_7_0_limit_breach_flow.png",
+  "caption": "Pre-trade breach check: 195 + 12 = GBP 207k/bp against the 200k/bp limit, then the escalation path."
+ },
+ {
+  "file": "18_desk_7.json",
+  "index": 6,
+  "front_start": "<b>[Case study]</b> The desk has bucket DV01 limits of 2y £1",
+  "image": "18_desk_7_6_bucket_limit_worst_case.png",
+  "caption": "Worst-case loss by bucket at the bucket limits: GBP 18.00m for the parallel move, GBP 7.25m for the steepener."
+ },
+ {
+  "file": "18_desk_7.json",
+  "index": 24,
+  "front_start": "<b>[Scenario]</b> It is 07:15. Overnight a central bank surp",
+  "image": "18_desk_7_24_overnight_hike_pnl.png",
+  "caption": "First-pass P&L of GBP -6.84m by bucket, against the GBP -5.0m daily loss limit."
+ },
+ {
+  "file": "18_desk_7.json",
+  "index": 26,
+  "front_start": "<b>[Scenario]</b> It is 16:15. The P&amp;L explain for the s",
+  "image": "18_desk_7_26_pnl_explain_residual_flow.png",
+  "caption": "Order of checks for the GBP -180k explain residual, with the 0.86bp 10y mark-error test."
+ },
+ {
+  "file": "18_desk_8.json",
+  "index": 1,
+  "front_start": "<b>[Chain: PRICE_TOOL 2/4]</b> Same 10y gilt (4.00% semi-ann",
+  "image": "18_desk_8_1_price_yield_convexity.png",
+  "caption": "Exact price-yield curve against the duration-only line for the 10y 4% gilt at +/-50bp: positive error both ways."
+ },
+ {
+  "file": "18_desk_8.json",
+  "index": 4,
+  "front_start": "<b>[Chain: CURVE_0700 1/4]</b> It is 06:40. The overnight ra",
+  "image": "18_desk_8_4_curve_fail_timeline.png",
+  "caption": "Timeline from the 06:40 build failure: fix window to 07:15, pricing at 07:30, trading at 08:00."
+ },
+ {
+  "file": "18_desk_8.json",
+  "index": 6,
+  "front_start": "<b>[Chain: CURVE_0700 3/4]</b> A bootstrapped curve reprices",
+  "image": "18_desk_8_6_curve_publish_gates.png",
+  "caption": "Gates that run before a curve is published; the repricing check alone passes a bad input."
+ },
+ {
+  "file": "18_desk_8.json",
+  "index": 18,
+  "front_start": "<b>Scenario:</b> it is 08:10. The overnight P&amp;L for a ra",
+  "image": "18_desk_8_18_pnl_check_triage.png",
+  "caption": "The five checks for the overnight P&L move, each with what it rules out."
+ },
+ {
+  "file": "18_desk_8.json",
+  "index": 26,
+  "front_start": "The pricing library needs a new version because the curve-bu",
+  "image": "18_desk_8_26_release_rollback.png",
+  "caption": "Release path for a breaking curve-builder API change: version, gate, sign-off, tag and deploy, with rollback."
+ },
+ {
+  "file": "18_desk_9.json",
+  "index": 3,
+  "front_start": "<b>[Chain: BASIS_UNWIND 1/3]</b> Context: in February 2020 l",
+  "image": "18_desk_9_3_basis_position.png",
+  "caption": "Basis-trade structure: long cash Treasuries financed in repo against short futures, earning the basis."
+ },
+ {
+  "file": "18_desk_9.json",
+  "index": 4,
+  "front_start": "<b>[Chain: BASIS_UNWIND 2/3]</b> Context: in March 2020 init",
+  "image": "18_desk_9_4_basis_unwind_loop.png",
+  "caption": "Forced-selling loop: margin call, cash sales, wider basis, larger margin call."
+ },
+ {
+  "file": "18_desk_9.json",
+  "index": 6,
+  "front_start": "<b>[Chain: ARCHEGOS 1/3]</b> Context: in March 2021 the fami",
+  "image": "18_desk_9_6_archegos_trs.png",
+  "caption": "Archegos TRS structure: exposure held through swaps without legal ownership, with 9.4% margin."
+ },
+ {
+  "file": "18_desk_9.json",
+  "index": 12,
+  "front_start": "Scenario: it is 07:15 on a Tuesday in late September 2022. O",
+  "image": "18_desk_9_12_ldi_collateral_loop.png",
+  "caption": "LDI collateral spiral: gilt sell-off, collateral call (GBP 150m, illustrative), forced sales, further falls."
+ },
+ {
+  "file": "18_desk_9.json",
+  "index": 14,
+  "front_start": "Scenario: it is 07:15 on Tuesday 17 September 2019. Overnigh",
+  "image": "18_desk_9_14_repo_spike_timeline.png",
+  "caption": "Overnight repo spike of about 3pp on 17 Sep 2019, with the first three actions and the one-day cost."
+ }
+]

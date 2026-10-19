@@ -1,6 +1,6 @@
 # Session state (auto-saved — last known reality)
 
-_Updated: 2026-10-19 20:12:09_  ·  branch: `claude/youthful-wright-kt2gjp`
+_Updated: 2026-10-19 19:55:51_  ·  branch: `claude/quant-deck-cpp-training-0rix4z`
 
 ## Uncommitted changes
 ```
@@ -9,20 +9,20 @@ _Updated: 2026-10-19 20:12:09_  ·  branch: `claude/youthful-wright-kt2gjp`
 
 Diff stat:
 ```
- .anchor/session-state.md | 42 +-----------------------------------------
- 1 file changed, 1 insertion(+), 41 deletions(-)
+ .anchor/session-state.md | 25 +------------------------
+ 1 file changed, 1 insertion(+), 24 deletions(-)
 ```
 
 ## Recent commits
 ```
-fda133b Stage gap batch D (17 cards)
-5498610 Stage gap batch E (14 cards)
-c4c107c Stage gap batch F (14 cards)
-4c3c808 Stage gap batch C (16 cards)
-6670778 Diagrams complete for all 15 subdecks; gap staging progress
-8f17a5f Progress: derivatives diagrams, gap staging
-6fe9be0 Progress: conditioning diagrams, gap staging
-fd123aa Add diagrams to rebuild, debug and stats subdecks (WIP for others)
+c51760a Final v3 build: layered explanations, 331 diagrams, README
+3af5240 WIP: layering pass
+4e8986b WIP: layering pass
+0c37cae WIP: layering pass
+0d80f48 WIP: layering pass
+e351bef Layering desk 7; record token-minimisation rule
+9a2455b WIP: layering pass in progress
+7edf87d Layered explanations: desk practice 1
 ```
 
 ## Resume

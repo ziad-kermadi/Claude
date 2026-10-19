@@ -2,12 +2,13 @@
  {
   "type": "basic",
   "front": "<b>[Chain: NEG_BASIS 1/5]</b> Context: 5y bond bought at an asset-swap spread of 150bp; 5y CDS protection bought at 120bp; basis = CDS minus bond = -30bp.<br>Set up the trade cash flows. What is the running carry before funding, which credit risks remain, and what is the sign of the basis?",
-  "back": "Long the bond via the asset swap receives the floating leg plus 150bp; long CDS protection pays 120bp. Net running carry is about +30bp per year on notional before funding, so the trade is long a positive carry against a negative basis.<br>\nCredit risk of the bond is largely offset by the protection, because both are exposed to the same issuer's default. What remains is (i) the basis itself (the CDS and asset swap can move apart), (ii) recovery mismatch at default (the CDS pays on the auction price, the bond pays its own realised price), (iii) counterparty risk on the protection seller, and (iv) funding.<br>\n<b>Interviewer follow-up:</b> Which of these risks is the trade actually paid for? The basis is the compensation; the others are costs the trader is carrying.",
+  "back": "Long the bond via the asset swap receives the floating leg plus 150bp; long CDS protection pays 120bp. Net running carry is about +30bp per year on notional before funding, so the trade is long a positive carry against a negative basis.<br>\nCredit risk of the bond is largely offset by the protection, because both are exposed to the same issuer's default. What remains is (i) the basis itself (the CDS and asset swap can move apart), (ii) recovery mismatch at default (the CDS pays on the auction price, the bond pays its own realised price), (iii) counterparty risk on the protection seller, and (iv) funding.<br>\n<b>Interviewer follow-up:</b> Which of these risks is the trade actually paid for? The basis is the compensation; the others are costs the trader is carrying.<div class=\"fig\"><img src=\"05_credit_cds_deep_0_negbasis_cashflows.png\"><div class=\"cap\">Negative basis trade: 150bp ASW long less 120bp CDS paid gives +30bp carry before funding.</div></div>",
   "tags": [
    "credit_basis",
    "neg_basis",
    "chain_neg_basis",
-   "trade"
+   "trade",
+   "lvl_vp_core"
   ]
  },
  {
@@ -19,7 +20,8 @@
    "neg_basis",
    "chain_neg_basis",
    "funding",
-   "repo"
+   "repo",
+   "lvl_vp_core"
   ]
  },
  {
@@ -31,19 +33,21 @@
    "neg_basis",
    "chain_neg_basis",
    "ctd",
-   "credit_events"
+   "credit_events",
+   "lvl_stretch"
   ]
  },
  {
   "type": "basic",
   "front": "<b>[Chain: NEG_BASIS 4/5]</b> Context: 5y bond bought at an asset-swap spread of 150bp; 5y CDS protection bought at 120bp; basis = CDS minus bond = -30bp.<br>Stress: the bond's asset-swap spread widens to 250bp and the CDS widens to 170bp (basis now -80bp). Bond spread duration about 4.5, CDS RPV01 about 4.4, notional 10m. What is the mark-to-market before any default, and what happens with margin?",
-  "back": "Bond MTM: \\(-100\\text{bp} \\times 4.5 \\times $10\\text{m} \\times 10^{-4} = -$450\\text{k}\\).<br>\nCDS protection bought, MTM: \\(+50\\text{bp} \\times 4.4 \\times $10\\text{m} \\times 10^{-4} = +$220\\text{k}\\).<br>\nNet mark: about -$230k with no default. Carry earned at 30bp is $30k per year, so the loss equals about 7.7 years of carry.<br>\nVariation margin on the CDS leg moves cash to the trader (they are the protection buyer and the spread rose) which helps funding, but the bond is funded in repo where haircuts and margin calls rise in stress. The forced-selling feedback is what turns a mark into a realised loss.<br>\n<b>Interviewer follow-up:</b> Why does the basis widen in stress? The bond is a funded, capital-intensive asset, so dealers and levered holders are forced to sell, while the index and CDS remain the hedging venue.",
+  "back": "Bond MTM: \\(-100\\text{bp} \\times 4.5 \\times $10\\text{m} \\times 10^{-4} = -$450\\text{k}\\).<br>\nCDS protection bought, MTM: \\(+50\\text{bp} \\times 4.4 \\times $10\\text{m} \\times 10^{-4} = +$220\\text{k}\\).<br>\nNet mark: about -$230k with no default. Carry earned at 30bp is $30k per year, so the loss equals about 7.7 years of carry.<br>\nVariation margin on the CDS leg moves cash to the trader (they are the protection buyer and the spread rose) which helps funding, but the bond is funded in repo where haircuts and margin calls rise in stress. The forced-selling feedback is what turns a mark into a realised loss.<br>\n<b>Interviewer follow-up:</b> Why does the basis widen in stress? The bond is a funded, capital-intensive asset, so dealers and levered holders are forced to sell, while the index and CDS remain the hedging venue.<div class=\"fig\"><img src=\"05_credit_cds_deep_3_negbasis_stress.png\"><div class=\"cap\">Stress: bond -450k and CDS +220k give a -230k mark, about 7.7 years of 30k carry.</div></div>",
   "tags": [
    "credit_basis",
    "neg_basis",
    "chain_neg_basis",
    "stress",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -55,7 +59,8 @@
    "neg_basis",
    "chain_neg_basis",
    "risk",
-   "stress"
+   "stress",
+   "lvl_vp_core"
   ]
  },
  {
@@ -67,7 +72,8 @@
    "idx_basis",
    "chain_idx_basis",
    "trade",
-   "indices"
+   "indices",
+   "lvl_vp_core"
   ]
  },
  {
@@ -79,7 +85,8 @@
    "idx_basis",
    "chain_idx_basis",
    "defaults",
-   "jtd"
+   "jtd",
+   "lvl_stretch"
   ]
  },
  {
@@ -91,7 +98,8 @@
    "idx_basis",
    "chain_idx_basis",
    "trade_costs",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -103,7 +111,8 @@
    "idx_basis",
    "chain_idx_basis",
    "stress",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -115,7 +124,8 @@
    "idx_basis",
    "chain_idx_basis",
    "roll",
-   "hedging"
+   "hedging",
+   "lvl_stretch"
   ]
  },
  {
@@ -127,7 +137,8 @@
    "base_corr",
    "chain_base_corr",
    "tranches",
-   "copula"
+   "copula",
+   "lvl_vp_core"
   ]
  },
  {
@@ -139,7 +150,8 @@
    "base_corr",
    "chain_base_corr",
    "skew",
-   "arbitrage"
+   "arbitrage",
+   "lvl_vp_core"
   ]
  },
  {
@@ -151,7 +163,8 @@
    "base_corr",
    "chain_base_corr",
    "delta",
-   "hedging"
+   "hedging",
+   "lvl_vp_core"
   ]
  },
  {
@@ -163,7 +176,8 @@
    "base_corr",
    "chain_base_corr",
    "correlation",
-   "hedging"
+   "hedging",
+   "lvl_vp_core"
   ]
  },
  {
@@ -175,7 +189,8 @@
    "base_corr",
    "chain_base_corr",
    "jtd",
-   "tranches"
+   "tranches",
+   "lvl_stretch"
   ]
  },
  {
@@ -186,19 +201,21 @@
    "cds",
    "derivation",
    "pricing",
-   "accrued_on_default"
+   "accrued_on_default",
+   "lvl_stretch"
   ]
  },
  {
   "type": "basic",
   "front": "<b>Derivation:</b> Under the ISDA standard CDS model, write the upfront of a single-name CDS with par spread \\(s\\) and standard coupon \\(c\\). Who pays the upfront when \\(s > c\\)? Check the sign at 500bp.",
-  "back": "<b>Step 1 (model).</b> The ISDA standard model bootstraps a piecewise-flat hazard curve from the par spreads of the standard tenors, using ACT/360 and the IMM schedule, with a common discount curve. The model is not a closed form: the risky annuity \\(RPV01\\) is computed on the bootstrapped curve.<br>\n<b>Step 2 (value to the protection buyer).</b> \\(V_{buyer} = PV_{prot} - PV_{prem}(c) = s\\cdot RPV01 - c\\cdot RPV01 = (s-c)\\,RPV01\\) per unit notional (using \\(PV_{prot}=s\\,RPV01\\) at fair spread).<br>\n<b>Step 3 (upfront).</b> The buyer pays \\(U = (s-c)\\,RPV01\\) for the contract to be fair at coupon \\(c\\), plus the accrued premium from the last coupon date (ACT/360), which is cash and not part of \\(U\\).<br>\n<b>Numbers.</b> \\(s=300\\)bp, \\(c=100\\)bp, \\(RPV01 \\approx 4.106\\) (flat \\(\\lambda=5\\%\\), \\(R=40\\%\\), 5y): \\(U = 0.02 \\times 4.106 = 8.21\\) points, or $821k on $10m. At \\(c=500\\)bp the sign flips: \\(U = -8.21\\) points, so the seller pays the buyer.<br>\n<b>Where it breaks:</b> \\(RPV01\\) depends on the bootstrapped curve, which is itself calibrated to the quoted spread, so a change in the quoted convention (for example moving from par to upfront quotes) changes the hazard as well as the value. The linear formula is exact given \\(RPV01\\); the approximation risk sits in the curve, not the formula.",
+  "back": "<b>Step 1 (model).</b> The ISDA standard model bootstraps a piecewise-flat hazard curve from the par spreads of the standard tenors, using ACT/360 and the IMM schedule, with a common discount curve. The model is not a closed form: the risky annuity \\(RPV01\\) is computed on the bootstrapped curve.<br>\n<b>Step 2 (value to the protection buyer).</b> \\(V_{buyer} = PV_{prot} - PV_{prem}(c) = s\\cdot RPV01 - c\\cdot RPV01 = (s-c)\\,RPV01\\) per unit notional (using \\(PV_{prot}=s\\,RPV01\\) at fair spread).<br>\n<b>Step 3 (upfront).</b> The buyer pays \\(U = (s-c)\\,RPV01\\) for the contract to be fair at coupon \\(c\\), plus the accrued premium from the last coupon date (ACT/360), which is cash and not part of \\(U\\).<br>\n<b>Numbers.</b> \\(s=300\\)bp, \\(c=100\\)bp, \\(RPV01 \\approx 4.106\\) (flat \\(\\lambda=5\\%\\), \\(R=40\\%\\), 5y): \\(U = 0.02 \\times 4.106 = 8.21\\) points, or $821k on $10m. At \\(c=500\\)bp the sign flips: \\(U = -8.21\\) points, so the seller pays the buyer.<br>\n<b>Where it breaks:</b> \\(RPV01\\) depends on the bootstrapped curve, which is itself calibrated to the quoted spread, so a change in the quoted convention (for example moving from par to upfront quotes) changes the hazard as well as the value. The linear formula is exact given \\(RPV01\\); the approximation risk sits in the curve, not the formula.<div class=\"fig\"><img src=\"05_credit_cds_deep_16_upfront_coupon.png\"><div class=\"cap\">Upfront = (s - c) x RPV01 changes sign at c = s; at c = 500bp the buyer receives 8.21 points.</div></div>",
   "tags": [
    "cds",
    "derivation",
    "pricing",
    "convention",
-   "isda"
+   "isda",
+   "lvl_vp_core"
   ]
  },
  {
@@ -209,18 +226,20 @@
    "cds",
    "derivation",
    "forward",
-   "term_structure"
+   "term_structure",
+   "lvl_stretch"
   ]
  },
  {
   "type": "basic",
   "front": "<b>Derivation:</b> A knockout payer option on a CDS index with \\(N\\) equal-weight names, common hazard \\(\\lambda\\), recovery \\(R\\), flat rate \\(r\\), expiry \\(T\\). Derive the front-end protection (FEP) value. Why must it be added to the Black value of the surviving index, and what does the decomposition look like for a one-month expiry?",
-  "back": "<b>Convention.</b> Under a knockout, the first default among the \\(N\\) names extinguishes the option and the holder receives the protection on the defaulted name, \\((1-R)/N\\) of index notional, paid at default. Otherwise the option pays its Black payoff at \\(T\\).<br>\n<b>Step 1 (first-default intensity).</b> With independent names of hazard \\(\\lambda\\), the first default has intensity \\(N\\lambda\\).<br>\n<b>Step 2 (FEP value).</b> \\(FEP = \\int_0^T \\frac{1-R}{N}\\,N\\lambda\\,e^{-N\\lambda t}\\,e^{-rt}\\,dt = \\frac{(1-R)\\lambda}{N\\lambda + r}\\left(1-e^{-(N\\lambda+r)T}\\right)\\).<br>\n<b>Step 3 (decomposition).</b> Value = FEP + \\(P(\\text{no default before }T)\\times\\) (Black value on the surviving index), with \\(P = e^{-N\\lambda T}\\).<br>\n<b>Numbers.</b> \\(N=125\\), \\(\\lambda=5\\%\\), \\(R=40\\%\\), \\(r=3\\%\\). For \\(T=1\\)m: FEP ≈ 0.195% of index notional and \\(P(\\text{no default}) \\approx 0.59\\). For \\(T=1\\)y: FEP ≈ 0.477% (≈ \\((1-R)/N = 0.48\\%\\)) and \\(P \\approx 0.002\\), so the option is almost entirely FEP.<br>\n<b>Where it breaks:</b> the Black term must use the forward spread of survivors, not the full index forward, otherwise the defaulted names are double counted. Heterogeneous hazards, default correlation and the exact knockout wording in a given contract change the convention; this derivation assumes independent homogeneous names. Pedersen (2003) makes the exercise decision depend on the accrued loss (loss-adjusted spread), so this closed form is a simplification of that approach.",
+  "back": "<b>Convention.</b> Under a knockout, the first default among the \\(N\\) names extinguishes the option and the holder receives the protection on the defaulted name, \\((1-R)/N\\) of index notional, paid at default. Otherwise the option pays its Black payoff at \\(T\\).<br>\n<b>Step 1 (first-default intensity).</b> With independent names of hazard \\(\\lambda\\), the first default has intensity \\(N\\lambda\\).<br>\n<b>Step 2 (FEP value).</b> \\(FEP = \\int_0^T \\frac{1-R}{N}\\,N\\lambda\\,e^{-N\\lambda t}\\,e^{-rt}\\,dt = \\frac{(1-R)\\lambda}{N\\lambda + r}\\left(1-e^{-(N\\lambda+r)T}\\right)\\).<br>\n<b>Step 3 (decomposition).</b> Value = FEP + \\(P(\\text{no default before }T)\\times\\) (Black value on the surviving index), with \\(P = e^{-N\\lambda T}\\).<br>\n<b>Numbers.</b> \\(N=125\\), \\(\\lambda=5\\%\\), \\(R=40\\%\\), \\(r=3\\%\\). For \\(T=1\\)m: FEP ≈ 0.195% of index notional and \\(P(\\text{no default}) \\approx 0.59\\). For \\(T=1\\)y: FEP ≈ 0.477% (≈ \\((1-R)/N = 0.48\\%\\)) and \\(P \\approx 0.002\\), so the option is almost entirely FEP.<br>\n<b>Where it breaks:</b> the Black term must use the forward spread of survivors, not the full index forward, otherwise the defaulted names are double counted. Heterogeneous hazards, default correlation and the exact knockout wording in a given contract change the convention; this derivation assumes independent homogeneous names. Pedersen (2003) makes the exercise decision depend on the accrued loss (loss-adjusted spread), so this closed form is a simplification of that approach.<div class=\"fig\"><img src=\"05_credit_cds_deep_18_fep_expiry.png\"><div class=\"cap\">FEP rises to 0.477% of notional by 1y while P(no default) falls to 0.2%.</div></div>",
   "tags": [
    "index_options",
    "fep",
    "derivation",
-   "knockout"
+   "knockout",
+   "lvl_stretch"
   ]
  },
  {
@@ -231,18 +250,20 @@
    "tranches",
    "derivation",
    "copula",
-   "lhp"
+   "lhp",
+   "lvl_stretch"
   ]
  },
  {
   "type": "basic",
   "front": "<b>Derivation:</b> Derive the jump-to-default P&L of a single-name CDS position with notional \\(N\\), recovery \\(R\\) and mark-to-market \\(V\\) to the holder. Apply it to a 5s10s steepener on one issuer where the 10y protection bought has moved from 150bp to 160bp.",
-  "back": "<b>Step 1.</b> At default, a protection buyer receives \\(N(1-R)\\) and the contract terminates. The mark \\(V\\) that existed just before default is lost.<br>\n<b>Step 2.</b> P&L at default \\(= N(1-R) - V\\). This is the JTD. For a fresh at-par trade \\(V = 0\\) and JTD \\(= N(1-R)\\). For a seller of protection the sign of both terms flips.<br>\n<b>Step 3 (MTM for a buyer).</b> \\(V = (s_{mkt} - c)\\,RPV01\\,N\\).<br>\n<b>Step 4 (numbers).</b> \\(RPV01_{10y} \\approx 7.69\\) at 150bp, \\(R=40\\%\\). Spread moves 150 to 160bp, so \\(V_{10} = (0.0160-0.0150)\\times 7.69 \\times 10\\text{m} = $76.9\\text{k}\\). JTD of the 10y bought leg = \\(6.00\\text{m} - 0.077\\text{m} = 5.92\\text{m}\\). If the 5y sold leg is at par (\\(V=0\\)) its JTD is \\(-6.00\\text{m}\\). Book JTD = \\(-$77\\text{k}\\), not zero.<br>\n<b>Where it breaks:</b> the equal-notional JTD neutrality holds only at inception. Any move in the legs makes \\(V\\neq 0\\) and shifts the book's JTD. Different recoveries on the legs (for example a sub-debt versus senior contract) break the equal-notional rule even at inception.",
+  "back": "<b>Step 1.</b> At default, a protection buyer receives \\(N(1-R)\\) and the contract terminates. The mark \\(V\\) that existed just before default is lost.<br>\n<b>Step 2.</b> P&L at default \\(= N(1-R) - V\\). This is the JTD. For a fresh at-par trade \\(V = 0\\) and JTD \\(= N(1-R)\\). For a seller of protection the sign of both terms flips.<br>\n<b>Step 3 (MTM for a buyer).</b> \\(V = (s_{mkt} - c)\\,RPV01\\,N\\).<br>\n<b>Step 4 (numbers).</b> \\(RPV01_{10y} \\approx 7.69\\) at 150bp, \\(R=40\\%\\). Spread moves 150 to 160bp, so \\(V_{10} = (0.0160-0.0150)\\times 7.69 \\times 10\\text{m} = $76.9\\text{k}\\). JTD of the 10y bought leg = \\(6.00\\text{m} - 0.077\\text{m} = 5.92\\text{m}\\). If the 5y sold leg is at par (\\(V=0\\)) its JTD is \\(-6.00\\text{m}\\). Book JTD = \\(-$77\\text{k}\\), not zero.<br>\n<b>Where it breaks:</b> the equal-notional JTD neutrality holds only at inception. Any move in the legs makes \\(V\\neq 0\\) and shifts the book's JTD. Different recoveries on the legs (for example a sub-debt versus senior contract) break the equal-notional rule even at inception.<div class=\"fig\"><img src=\"05_credit_cds_deep_20_jtd_steepener.png\"><div class=\"cap\">10y MTM gain of 77k lowers the 10y JTD to 5.92m; with the 5y sold, book JTD is -77k.</div></div>",
   "tags": [
    "cds",
    "derivation",
    "jtd",
-   "curve_trades"
+   "curve_trades",
+   "lvl_vp_core"
   ]
  },
  {
@@ -254,7 +275,8 @@
    "case_study",
    "upfront",
    "convention",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -266,7 +288,8 @@
    "case_study",
    "carry",
    "roll",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -278,19 +301,21 @@
    "case_study",
    "beta",
    "hedging",
-   "index"
+   "index",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "<b>Case study:</b> Negative basis trade on 10m: bond bought at par with ASW 150bp; 5y CDS protection bought at 120bp; carry 30bp. Default happens at year 2. Recovery on the bond is 35; the CDS auction settles at 40 (assume the bond is not a deliverable in the auction, so the auction price is not capped by it). Compute the P&L across default with and without the recovery mismatch.",
-  "back": "<b>Step 1 (carry to default).</b> \\(10\\text{m}\\times 0.30\\% \\times 2 = $60\\text{k}\\).<br>\n<b>Step 2 (case with matching recovery at 35).</b> Bond recovers \\(3.5\\text{m}\\). CDS pays \\((1-0.35)\\times 10\\text{m} = 6.5\\text{m}\\). Principal flow: \\(3.5 + 6.5 - 10 = 0\\). Total P&L = $60k carry.<br>\n<b>Step 3 (mismatch at auction 40).</b> CDS pays \\((1-0.40)\\times 10\\text{m} = 6.0\\text{m}\\). Principal flow: \\(3.5 + 6.0 - 10 = -0.5\\text{m}\\). Total P&L = \\(60\\text{k} - 500\\text{k} = -$440\\text{k}\\).<br>\n<b>Step 4 (sanity).</b> The mismatch equals the difference in recovery times notional: \\(0.05\\times 10\\text{m} = $500\\text{k}\\). Carry of $60k is about 1/8 of the loss; a 5-point auction-versus-bond difference wipes out about 17 years of carry at 30bp on 10m.<br>\n<b>Interviewer follow-up:</b> What is the asset-swap unwind at default? It is a separate cash flow and depends on the swap's terms; it is omitted here, so the result is the principal-plus-carry P&L only.",
+  "back": "<b>Step 1 (carry to default).</b> \\(10\\text{m}\\times 0.30\\% \\times 2 = $60\\text{k}\\).<br>\n<b>Step 2 (case with matching recovery at 35).</b> Bond recovers \\(3.5\\text{m}\\). CDS pays \\((1-0.35)\\times 10\\text{m} = 6.5\\text{m}\\). Principal flow: \\(3.5 + 6.5 - 10 = 0\\). Total P&L = $60k carry.<br>\n<b>Step 3 (mismatch at auction 40).</b> CDS pays \\((1-0.40)\\times 10\\text{m} = 6.0\\text{m}\\). Principal flow: \\(3.5 + 6.0 - 10 = -0.5\\text{m}\\). Total P&L = \\(60\\text{k} - 500\\text{k} = -$440\\text{k}\\).<br>\n<b>Step 4 (sanity).</b> The mismatch equals the difference in recovery times notional: \\(0.05\\times 10\\text{m} = $500\\text{k}\\). Carry of $60k is about 1/8 of the loss; a 5-point auction-versus-bond difference wipes out about 17 years of carry at 30bp on 10m.<br>\n<b>Interviewer follow-up:</b> What is the asset-swap unwind at default? It is a separate cash flow and depends on the swap's terms; it is omitted here, so the result is the principal-plus-carry P&L only.<div class=\"fig\"><img src=\"05_credit_cds_deep_24_recovery_mismatch.png\"><div class=\"cap\">Carry of 60k is swamped by the 500k auction-vs-bond recovery mismatch, total -440k.</div></div>",
   "tags": [
    "cds",
    "case_study",
    "basis",
    "recovery",
-   "default"
+   "default",
+   "lvl_vp_core"
   ]
  },
  {
@@ -302,7 +327,8 @@
    "case_study",
    "jtd",
    "carry",
-   "cs01"
+   "cs01",
+   "lvl_vp_core"
   ]
  },
  {
@@ -312,7 +338,8 @@
   "tags": [
    "cds",
    "derivation",
-   "credit_triangle"
+   "credit_triangle",
+   "lvl_foundation"
   ]
  },
  {
@@ -323,7 +350,8 @@
    "cds",
    "upfront",
    "convention",
-   "isda"
+   "isda",
+   "lvl_vp_core"
   ]
  },
  {
@@ -333,7 +361,8 @@
   "tags": [
    "index_options",
    "fep",
-   "knockout"
+   "knockout",
+   "lvl_stretch"
   ]
  },
  {
@@ -343,7 +372,8 @@
   "tags": [
    "cds",
    "jtd",
-   "risk"
+   "risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -353,7 +383,8 @@
   "tags": [
    "tranches",
    "copula",
-   "lhp"
+   "lhp",
+   "lvl_vp_core"
   ]
  }
 ]

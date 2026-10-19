@@ -7,19 +7,21 @@
    "callable",
    "structured",
    "chain_callable",
-   "funding"
+   "funding",
+   "lvl_foundation"
   ]
  },
  {
   "type": "basic",
   "front": "<b>[Chain: CALLABLE 2/4]</b> The 10NC2 pays coupon \\(c\\); the issuer can redeem at par on any coupon date from year 2.<br>Write the investor's position as a bullet minus one option, and say which swaption the issuer effectively holds.",
-  "back": "Bullet: \\(B=c\\sum_i \\tau_i D(T_i)+D(T_N)\\). The issuer's call on date \\(t_k\\) means pay par and stop the remaining coupons.<br>\nStopping a pay-fixed-\\(c\\) liability is the same as entering a <b>receive</b>-fixed-\\(c\\) position on the remaining schedule. So the issuer holds a Bermudan <b>receiver</b> swaption struck at \\(c\\), exercisable on the call dates, and the investor is short it:<br>\n\\[\\text{Callable}=B-V_{\\text{Berm-rec}}.\\]\nCommon trap: \"bullet minus Bermudan payer\" has the option direction wrong for this trade. The issuer gains when rates fall, which is a receiver payoff.<br>\n<b>Interviewer follow-up:</b> Why does the callable's price flatten near the call price as rates fall? The issuer's receiver is deep in the money in that region, and its value is subtracted from a bullet that keeps rising.",
+  "back": "Bullet: \\(B=c\\sum_i \\tau_i D(T_i)+D(T_N)\\). The issuer's call on date \\(t_k\\) means pay par and stop the remaining coupons.<br>\nStopping a pay-fixed-\\(c\\) liability is the same as entering a <b>receive</b>-fixed-\\(c\\) position on the remaining schedule. So the issuer holds a Bermudan <b>receiver</b> swaption struck at \\(c\\), exercisable on the call dates, and the investor is short it:<br>\n\\[\\text{Callable}=B-V_{\\text{Berm-rec}}.\\]\nCommon trap: \"bullet minus Bermudan payer\" has the option direction wrong for this trade. The issuer gains when rates fall, which is a receiver payoff.<br>\n<b>Interviewer follow-up:</b> Why does the callable's price flatten near the call price as rates fall? The issuer's receiver is deep in the money in that region, and its value is subtracted from a bullet that keeps rising.<div class=\"fig\"><img src=\"12_structured_exotics_1_callable_waterfall.png\"><div class=\"cap\">10NC2 at par: bullet at 4.47% less Bermudan receiver (k=1) gives callable at 100</div></div>",
   "tags": [
    "callable",
    "swaptions",
    "bermudan",
    "chain_callable",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -30,31 +32,34 @@
    "callable",
    "negative_convexity",
    "chain_callable",
-   "exercise"
+   "exercise",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "<b>[Chain: CALLABLE 4/4]</b> Long-dated callable issuance is large. The issuer's call is receiver-type vega, and the investor side is short it.<br>How does issuance feed into long-dated swaption vol, and which dealer hedge produces the flow?",
-  "back": "The call's value rises with receiver vol. The issuer holds the receiver. The dealer that intermediates the issuer's call takes the mirror position (short receiver vega) and hedges by buying receiver swaptions or receiver-tail vol in the street.<br>\nThat is a bid for long-dated receiver vol, which tends to richen receiver tails relative to payers, most visibly in the 10y tail of the cube (approx.; unverified market-practice claim). Size: vega per bp normal vol \\(\\approx N\\,A\\,\\sqrt{\\bar T}\\,\\varphi(0)\\,10^{-4}\\) (see the vega case card).<br>\nCaveats: (1) the sign depends on which dealer leg is hedged and how the swap is structured; state the assumption explicitly. (2) Flow is netted against payer-side demand from liability hedgers, so the effect is a skew and level shift in tails, not a fixed number.<br>\n<b>Interviewer follow-up:</b> Why does the long-dated vega not get arbitraged away? It is capital-intensive and long-dated; dealers warehouse it only within limits, and the hedge is imperfect (the curve, strike and expiry buckets do not match).",
+  "back": "The call's value rises with receiver vol. The issuer holds the receiver. The dealer that intermediates the issuer's call takes the mirror position (short receiver vega) and hedges by buying receiver swaptions or receiver-tail vol in the street.<br>\nThat is a bid for long-dated receiver vol. Its effect on receiver tails relative to payers depends on the flow and is not a fixed number. Size: vega per bp normal vol \\(\\approx N\\,A\\,\\sqrt{\\bar T}\\,\\varphi(0)\\,10^{-4}\\) (see the vega case card).<br>\nCaveats: (1) the sign depends on which dealer leg is hedged and how the swap is structured; state the assumption explicitly. (2) Flow is netted against payer-side demand from liability hedgers, so the effect is a skew and level shift in tails, not a fixed number.<br>\n<b>Interviewer follow-up:</b> Why does the long-dated vega not get arbitraged away? It is capital-intensive and long-dated; dealers warehouse it only within limits, and the hedge is imperfect (the curve, strike and expiry buckets do not match).",
   "tags": [
    "callable",
    "vega",
    "swaptions",
    "flows",
-   "chain_callable"
+   "chain_callable",
+   "lvl_stretch"
   ]
  },
  {
   "type": "basic",
   "front": "<b>[Chain: CMS SPREAD 1/3]</b> A 10s2s steepener pays on the difference of two CMS fixings, \\(\\max(S_{10}-S_2-K,0)\\), with \\(S_{10}\\) and \\(S_2\\) the 10y and 2y CMS rates.<br>Which way does the investor need the curve to move, and what does the position hold in vol and correlation?",
-  "back": "The long steepener is a long call on the spread \\(S_{10}-S_2\\). It gains when the spread widens above the strike.<br>\nIts vega is on the spread vol, \\(\\sigma_s\\), which depends on both leg vols and their correlation. A spread option has no exact static replication from swaptions, because the payoff depends on the joint distribution of two different-tenor rates.<br>\nSo the price needs three inputs: the two forwards with their own convexity (next card), the two leg vols with smiles, and the correlation between the legs. The third is the one with no liquid market quote.<br>\n<b>Interviewer follow-up:</b> What hedge reduces the spread vega? Leg vega can be approximated by a 10y and a 2y swaption in the right ratio; this leaves the correlation exposure and the spread's skew unhedged.",
+  "back": "The long steepener is a long call on the spread \\(S_{10}-S_2\\). It gains when the spread widens above the strike.<br>\nIts vega is on the spread vol, \\(\\sigma_s\\), which depends on both leg vols and their correlation. A spread option has no exact static replication from swaptions, because the payoff depends on the joint distribution of two different-tenor rates.<br>\nSo the price needs three inputs: the two forwards with their own convexity (next card), the two leg vols with smiles, and the correlation between the legs. The third is the one with no liquid market quote.<br>\n<b>Interviewer follow-up:</b> What hedge reduces the spread vega? Leg vega can be approximated by a 10y and a 2y swaption in the right ratio; this leaves the correlation exposure and the spread's skew unhedged.<div class=\"fig\"><img src=\"12_structured_exotics_4_cms_spread_payoff.png\"><div class=\"cap\">10s2s CMS spread call payoff with the ATM strike at 0.50%</div></div>",
   "tags": [
    "cms_spread",
    "steepener",
    "copula",
    "chain_cms_spread",
-   "vol"
+   "vol",
+   "lvl_vp_core"
   ]
  },
  {
@@ -65,7 +70,8 @@
    "cms_spread",
    "convexity",
    "chain_cms_spread",
-   "forward"
+   "forward",
+   "lvl_vp_core"
   ]
  },
  {
@@ -77,18 +83,20 @@
    "copula",
    "correlation",
    "model_risk",
-   "chain_cms_spread"
+   "chain_cms_spread",
+   "lvl_stretch"
   ]
  },
  {
   "type": "basic",
   "front": "<b>[Chain: RANGE ACCRUAL 1/3]</b> A 1y note accrues 5% per year on each period where the 3m reference rate fixes inside [2%, 4%], and nothing otherwise.<br>What is the investor long and short in option terms?",
-  "back": "The investor is long a strip of corridor binaries: each fixing contributes \\(\\mathbf 1\\{2\\%<S\\le 4\\%\\}\\) times the accrual. Equivalently, long a binary call struck at 2% and short a binary call struck at 4%, on each observation.<br>\nThe investor is therefore short the wings: the note loses accrual when rates move outside the corridor, and the loss is largest where the binaries are most sensitive to skew. Gap moves in either direction hurt. The note is a short-wing position that depends on the realised distribution inside the corridor.<br>\n<b>Interviewer follow-up:</b> Why does the fair accrual rate fall as the corridor narrows? The expected accrual is the coupon times the in-range probability, so fewer in-range fixings means a lower fair coupon at the same price.",
+  "back": "The investor is long a strip of corridor binaries: each fixing contributes \\(\\mathbf 1\\{2\\%<S\\le 4\\%\\}\\) times the accrual. Equivalently, long a binary call struck at 2% and short a binary call struck at 4%, on each observation.<br>\nThe investor is therefore short the wings: the note loses accrual when rates move outside the corridor, and the loss is largest where the binaries are most sensitive to skew. Gap moves in either direction hurt. The note is a short-wing position that depends on the realised distribution inside the corridor.<br>\n<b>Interviewer follow-up:</b> Why does the fair accrual rate fall as the corridor narrows? The expected accrual is the coupon times the in-range probability, so fewer in-range fixings means a lower fair coupon at the same price.<div class=\"fig\"><img src=\"12_structured_exotics_7_ra_payoff_binaries.png\"><div class=\"cap\">Range accrual payoff per quarter as long and short binaries</div></div>",
   "tags": [
    "range_accrual",
    "digital",
    "corridor",
-   "chain_range_accrual"
+   "chain_range_accrual",
+   "lvl_vp_core"
   ]
  },
  {
@@ -100,7 +108,8 @@
    "digital",
    "call_spread",
    "chain_range_accrual",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -112,18 +121,20 @@
    "smile",
    "skew",
    "digital",
-   "chain_range_accrual"
+   "chain_range_accrual",
+   "lvl_stretch"
   ]
  },
  {
   "type": "basic",
   "front": "<b>[Chain: TARN 1/3]</b> A 5y TARN pays a fixed 4% per year in a year when a condition holds; coupons accumulate and the note redeems at par once cumulative paid coupons reach a 12% target.<br>What is the investor short, and why is the knockout the key risk?",
-  "back": "The investor is short a path-dependent cap on total coupon: the note's total coupon is \\(\\min(\\text{cumulative coupon},\\,12\\%)\\), and the redemption at par is triggered by the cumulative path, not by a date.<br>\nThe knockout is the embedded risk: the investor gives up any coupon after the target is reached, in the states where the condition holds most often. That is short a strip of path-dependent digital events on the coupon condition.<br>\nPricing needs path state (cumulative coupon) in the simulation; the knockout is automatic, not optional, so no exercise decision is needed.<br>\n<b>Interviewer follow-up:</b> Why is the TARN not simply a bond with a capped coupon? The cap is path-dependent: the investor's total coupon depends on the order of paid years, so the term structure of the knockout depends on the joint law of the condition over time.",
+  "back": "The investor is short a path-dependent cap on total coupon: the note's total coupon is \\(\\min(\\text{cumulative coupon},\\,12\\%)\\), and the redemption at par is triggered by the cumulative path, not by a date.<br>\nThe knockout is the embedded risk: the investor gives up any coupon after the target is reached, in the states where the condition holds most often. That is short a strip of path-dependent digital events on the coupon condition.<br>\nPricing needs path state (cumulative coupon) in the simulation; the knockout is automatic, not optional, so no exercise decision is needed.<br>\n<b>Interviewer follow-up:</b> Why is the TARN not simply a bond with a capped coupon? The cap is path-dependent: the investor's total coupon depends on the order of paid years, so the term structure of the knockout depends on the joint law of the condition over time.<div class=\"fig\"><img src=\"12_structured_exotics_10_tarn_cumulative_ko.png\"><div class=\"cap\">TARN on one illustrative path: coupons accumulate to 12% cap, then knockout</div></div>",
   "tags": [
    "tarn",
    "path_dependence",
    "knockout",
-   "chain_tarn"
+   "chain_tarn",
+   "lvl_vp_core"
   ]
  },
  {
@@ -134,7 +145,8 @@
    "tarn",
    "path_dependence",
    "vega",
-   "chain_tarn"
+   "chain_tarn",
+   "lvl_vp_core"
   ]
  },
  {
@@ -146,7 +158,8 @@
    "monte_carlo",
    "lsm",
    "chain_tarn",
-   "numerics"
+   "numerics",
+   "lvl_vp_core"
   ]
  },
  {
@@ -157,7 +170,8 @@
    "autocall",
    "rates",
    "bermudan",
-   "chain_autocall"
+   "chain_autocall",
+   "lvl_vp_core"
   ]
  },
  {
@@ -168,18 +182,20 @@
    "autocall",
    "knock_in",
    "skew",
-   "chain_autocall"
+   "chain_autocall",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "<b>[Chain: AUTOCALL 3/3]</b> Case: 3 annual observations. Redemption at 106 in year 1, 112 in year 2, 118 at year 3 if not called before. Call probabilities: 0.30 at year 1, and 0.35 of the remaining at year 2. Coupon 6% per year paid in cash while the note is outstanding.<br>Compute the expected cash flows and expected life, price the note at a 4% flat discount rate, and compare with a 3y bullet at 6%. What does the yield to expected cash flows show?",
-  "back": "Probabilities: call at year 1 \\(=0.30\\); call at year 2 \\(=0.70\\times0.35=0.245\\); to maturity \\(=0.455\\).<br>\nExpected cash flows, reading the redemptions 106, 112 and 118 as total amounts for that date including the year's coupon: year 1 \\(=0.30\\times106+0.70\\times6=36.00\\); year 2 \\(=0.245\\times112+0.455\\times6=30.17\\); year 3 \\(=0.455\\times118=53.69\\). Expected life \\(=2.155\\) years.<br>\nAt 4% flat: autocall PV \\(=110.24\\); 3y bullet (par 100, 6% coupon) PV at 4% \\(=105.55\\). The step-up redemptions put the autocall above the bullet at this rate, so the two are not a like-for-like call cost. Compare prices on one curve.<br>\nYield to expected cash flows at a price of 100 is about 8.9%, not 6.00%: with redemptions above par the yield is not the coupon. (Redemption convention is ambiguous in the case; approx.; unverified.)<br>\n<b>Interviewer follow-up:</b> What would change the answer? A different call probability schedule changes the expected life and the premium, but the redemption levels set the cap on each date.",
+  "back": "Probabilities: call at year 1 \\(=0.30\\); call at year 2 \\(=0.70\\times0.35=0.245\\); to maturity \\(=0.455\\).<br>\nExpected cash flows, reading the redemptions 106, 112 and 118 as total amounts for that date including the year's coupon: year 1 \\(=0.30\\times106+0.70\\times6=36.00\\); year 2 \\(=0.245\\times112+0.455\\times6=30.17\\); year 3 \\(=0.455\\times118=53.69\\). Expected life \\(=2.155\\) years.<br>\nAt 4% flat: autocall PV \\(=110.24\\); 3y bullet (par 100, 6% coupon) PV at 4% \\(=105.55\\). The step-up redemptions put the autocall above the bullet at this rate, so the two are not a like-for-like call cost. Compare prices on one curve.<br>\nYield to expected cash flows at a price of 100 is about 8.9%, not 6.00%: with redemptions above par the yield is not the coupon. (This reads the redemptions as total amounts including that year's coupon, as in the expected cash flows above.)<br>\n<b>Interviewer follow-up:</b> What would change the answer? A different call probability schedule changes the expected life and the premium, but the redemption levels set the cap on each date.<div class=\"fig\"><img src=\"12_structured_exotics_15_autocall_timeline.png\"><div class=\"cap\">Autocall observation timeline with call and maturity branch probabilities</div></div><div class=\"fig\"><img src=\"12_structured_exotics_15_autocall_expected_cf.png\"><div class=\"cap\">Autocall expected cash flows by year, expected life 2.155y</div></div>",
   "tags": [
    "autocall",
    "case_study",
    "chain_autocall",
-   "expected_life"
+   "expected_life",
+   "lvl_vp_core"
   ]
  },
  {
@@ -190,7 +206,8 @@
    "callable",
    "derivation",
    "bermudan",
-   "funding"
+   "funding",
+   "lvl_stretch"
   ]
  },
  {
@@ -201,7 +218,8 @@
    "digital",
    "smile",
    "derivation",
-   "range_accrual"
+   "range_accrual",
+   "lvl_stretch"
   ]
  },
  {
@@ -212,7 +230,8 @@
    "cms_spread",
    "copula",
    "derivation",
-   "bachelier"
+   "bachelier",
+   "lvl_stretch"
   ]
  },
  {
@@ -224,7 +243,8 @@
    "monte_carlo",
    "derivation",
    "tarn",
-   "numerics"
+   "numerics",
+   "lvl_vp_core"
   ]
  },
  {
@@ -235,7 +255,8 @@
    "prdc",
    "quanto",
    "fx",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -246,7 +267,8 @@
    "cppi",
    "gap_risk",
    "derivation",
-   "dynamics"
+   "dynamics",
+   "lvl_vp_core"
   ]
  },
  {
@@ -257,7 +279,8 @@
    "callable",
    "case_study",
    "funding",
-   "bermudan"
+   "bermudan",
+   "lvl_vp_core"
   ]
  },
  {
@@ -268,40 +291,44 @@
    "callable",
    "vega",
    "case_study",
-   "flows"
+   "flows",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "<b>Case study:</b> ATM 10s2s CMS spread call, one-year expiry, strike 0.50%. Forwards: 10y CMS 3.50%, 2y CMS 3.00%. Normal vols: 90bp (10y), 110bp (2y). Price per unit annuity for \\(\\rho=0.3, 0.6, 0.7\\). Then size a model reserve for \\(\\rho\\in[0.3,0.7]\\) on \\$100m notional with annuity 8.0.",
-  "back": "Spread vol \\(\\sigma_s=\\sqrt{\\sigma_{10}^2+\\sigma_2^2-2\\rho\\sigma_{10}\\sigma_2}\\). The strike equals the forward spread (ATM), so the price per unit annuity is \\(\\sigma_s\\sqrt T\\varphi(0)\\).<br>\n<ul><li>\\(\\rho=0.3\\): \\(\\sigma_s=119.4\\)bp, price 47.6bp</li>\n<li>\\(\\rho=0.6\\): \\(\\sigma_s=91.2\\)bp, price 36.4bp</li>\n<li>\\(\\rho=0.7\\): \\(\\sigma_s=79.6\\)bp, price 31.8bp</li></ul>\nRange: 47.6 - 31.8 = 15.9bp per unit annuity. Reserve on \\$100m: \\(0.00159\\times8.0\\times\\$100\\text{m}\\approx\\$1.27\\text{m}\\).<br>\nSanity: ATM price is about 0.4 times the spread vol, so a 20% change in spread vol is a 20% change in price; the correlation range moves spread vol by about 40bp, so the reserve is a sizable fraction of the trade's value.<br>\n<b>Interviewer follow-up:</b> Would you reserve the full range? Not automatically: the reserve should reflect the range of exit prices a market participant would accept, which may be narrower than the parameter range.",
+  "back": "Spread vol \\(\\sigma_s=\\sqrt{\\sigma_{10}^2+\\sigma_2^2-2\\rho\\sigma_{10}\\sigma_2}\\). The strike equals the forward spread (ATM), so the price per unit annuity is \\(\\sigma_s\\sqrt T\\varphi(0)\\).<br>\n<ul><li>\\(\\rho=0.3\\): \\(\\sigma_s=119.4\\)bp, price 47.6bp</li>\n<li>\\(\\rho=0.6\\): \\(\\sigma_s=91.2\\)bp, price 36.4bp</li>\n<li>\\(\\rho=0.7\\): \\(\\sigma_s=79.6\\)bp, price 31.8bp</li></ul>\nRange: 47.6 - 31.8 = 15.9bp per unit annuity. Reserve on \\$100m: \\(0.00159\\times8.0\\times\\$100\\text{m}\\approx\\$1.27\\text{m}\\).<br>\nSanity: ATM price is about 0.4 times the spread vol, so a 20% change in spread vol is a 20% change in price; the correlation range moves spread vol by about 40bp, so the reserve is a sizable fraction of the trade's value.<br>\n<b>Interviewer follow-up:</b> Would you reserve the full range? Not automatically: the reserve should reflect the range of exit prices a market participant would accept, which may be narrower than the parameter range.<div class=\"fig\"><img src=\"12_structured_exotics_24_cms_spread_rho.png\"><div class=\"cap\">ATM CMS spread call price per unit annuity falls from 47.6bp to 31.8bp as rho goes 0.3 to 0.7</div></div>",
   "tags": [
    "cms_spread",
    "correlation",
    "case_study",
-   "reserve"
+   "reserve",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "<b>Case study:</b> A 1y range accrual, notional 10m, accrues 5% per year (quarterly, \\(\\tau=0.25\\)) when the 3m rate fixes in [2%, 4%]. Discount factors \\(D(t)=e^{-5\\%t}\\). Forward-measure probabilities at the four fixings: \\(P(S>2\\%)=0.97,0.95,0.93,0.91\\) and \\(P(S>4\\%)=0.25,0.20,0.17,0.15\\). Value the note and sanity-check it.",
-  "back": "Steps:\n<ol><li>In-range probabilities \\(p_i=P(S>2\\%)-P(S>4\\%)=0.72,\\,0.75,\\,0.76,\\,0.76\\).</li>\n<li>Discount factors: \\(D=0.9876,\\,0.9753,\\,0.9632,\\,0.9512\\).</li>\n<li>Period value \\(=10\\text{m}\\times0.05\\times0.25\\times D_i p_i\\): about 89, 91, 92 and 90bp of notional.</li>\n<li>Total \\(\\approx 362\\)bp, i.e. \\$362k.</li></ol>\nSanity: average in-range probability is 0.7475, and \\(5\\%\\times0.7475\\times0.97\\approx3.62\\%\\), which matches. The maximum possible is \\$500k, so the note is worth about 72% of its maximum.<br>\nSensitivity: +1 point on all four \\(P(S>4\\%)\\) lowers the value by about \\$4.8k.<br>\n<b>Interviewer follow-up:</b> Which binary needs the smile correction most? The lower wing (2% here), where the skew term is larger; the smile card gives the adjustment before quoting.",
+  "back": "Steps:\n<ol><li>In-range probabilities \\(p_i=P(S>2\\%)-P(S>4\\%)=0.72,\\,0.75,\\,0.76,\\,0.76\\).</li>\n<li>Discount factors: \\(D=0.9876,\\,0.9753,\\,0.9632,\\,0.9512\\).</li>\n<li>Period value \\(=10\\text{m}\\times0.05\\times0.25\\times D_i p_i\\): about 89, 91, 92 and 90bp of notional.</li>\n<li>Total \\(\\approx 362\\)bp, i.e. \\$362k.</li></ol>\nSanity: average in-range probability is 0.7475, and \\(5\\%\\times0.7475\\times0.97\\approx3.62\\%\\), which matches. The maximum possible is \\$500k, so the note is worth about 72% of its maximum.<br>\nSensitivity: +1 point on all four \\(P(S>4\\%)\\) lowers the value by about \\$4.8k.<br>\n<b>Interviewer follow-up:</b> Which binary needs the smile correction most? The lower wing (2% here), where the skew term is larger; the smile card gives the adjustment before quoting.<div class=\"fig\"><img src=\"12_structured_exotics_25_ra_case_period_values.png\"><div class=\"cap\">Range accrual case: value per quarterly fixing, total 362k</div></div>",
   "tags": [
    "range_accrual",
    "case_study",
    "digital",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "<b>Case study (toy model):</b> A 5y TARN pays 4% per year in each year the condition holds, redeems at par when cumulative paid coupons reach 12%. Each year's condition holds independently with probability \\(p\\). For \\(p=0.5,0.75,0.9\\), give expected total coupon (per 100 notional) and the probability of knockout within 5 years. Then give \\(P(\\text{KO in year 3})\\) at \\(p=0.75\\).",
-  "back": "Exact enumeration of the coupon recursion gives:\n<table><tr><th>p</th><th>E[total coupon]</th><th>P(KO by 5y)</th></tr>\n<tr><td>0.50</td><td>9.13</td><td>0.500</td></tr>\n<tr><td>0.75</td><td>11.52</td><td>0.897</td></tr>\n<tr><td>0.90</td><td>11.96</td><td>0.991</td></tr></table>\nCheck: at \\(p=0.5\\), \\(P(\\text{KO})=P(X\\ge3)=0.5\\) for \\(X\\sim\\text{Bin}(5,0.5)\\), and \\(E[\\text{coupon}]=4\\%\\cdot E[\\min(X,3)]=4\\%\\cdot 2.28\\). At \\(p=0.75\\), \\(P(\\text{KO in year 3})=0.75^3=0.422\\).<br>\nInterpretation: expected coupon approaches the 12 cap as \\(p\\) rises, so the marginal value of a higher \\(p\\) goes to zero while the knockout risk goes to one.<br>\n<b>Interviewer follow-up:</b> What is missing from the toy? A rate-path model with correlated conditions; the independence assumption removes the path dependence that drives real TARN risk.",
+  "back": "Exact enumeration of the coupon recursion gives:\n<table><tr><th>p</th><th>E[total coupon]</th><th>P(KO by 5y)</th></tr>\n<tr><td>0.50</td><td>9.13</td><td>0.500</td></tr>\n<tr><td>0.75</td><td>11.52</td><td>0.896</td></tr>\n<tr><td>0.90</td><td>11.96</td><td>0.991</td></tr></table>\nCheck: at \\(p=0.5\\), \\(P(\\text{KO})=P(X\\ge3)=0.5\\) for \\(X\\sim\\text{Bin}(5,0.5)\\), and \\(E[\\text{coupon}]=4\\%\\cdot E[\\min(X,3)]=4\\%\\cdot 2.28\\). At \\(p=0.75\\), \\(P(\\text{KO in year 3})=0.75^3=0.422\\).<br>\nInterpretation: expected coupon approaches the 12 cap as \\(p\\) rises, so the marginal value of a higher \\(p\\) goes to zero while the knockout risk goes to one.<br>\n<b>Interviewer follow-up:</b> What is missing from the toy? A rate-path model with correlated conditions; the independence assumption removes the path dependence that drives real TARN risk.<div class=\"fig\"><img src=\"12_structured_exotics_26_tarn_p_expected_ko.png\"><div class=\"cap\">TARN toy model: expected coupon and knockout probability for p = 0.5, 0.75, 0.9</div></div>",
   "tags": [
    "tarn",
    "case_study",
    "path_dependence",
-   "toy_model"
+   "toy_model",
+   "lvl_vp_core"
   ]
  },
  {
@@ -312,7 +339,8 @@
    "inflation",
    "yoy",
    "case_study",
-   "bachelier"
+   "bachelier",
+   "lvl_vp_core"
   ]
  },
  {
@@ -323,7 +351,8 @@
    "cppi",
    "gap_risk",
    "case_study",
-   "guarantee"
+   "guarantee",
+   "lvl_vp_core"
   ]
  },
  {
@@ -334,7 +363,8 @@
    "structured_notes",
    "case_study",
    "funding",
-   "economics"
+   "economics",
+   "lvl_vp_core"
   ]
  },
  {
@@ -345,7 +375,8 @@
    "prdc",
    "fx",
    "structured",
-   "exotics"
+   "exotics",
+   "lvl_stretch"
   ]
  },
  {
@@ -356,7 +387,8 @@
    "inflation",
    "yoy",
    "lag",
-   "convention"
+   "convention",
+   "lvl_stretch"
   ]
  },
  {
@@ -367,7 +399,8 @@
    "cpdo",
    "credit",
    "leverage",
-   "failure"
+   "failure",
+   "lvl_vp_core"
   ]
  },
  {
@@ -378,7 +411,8 @@
    "cso",
    "correlation",
    "tranches",
-   "credit"
+   "credit",
+   "lvl_stretch"
   ]
  },
  {
@@ -389,7 +423,8 @@
    "structured_notes",
    "fair_value",
    "day1_pnl",
-   "accounting"
+   "accounting",
+   "lvl_vp_core"
   ]
  },
  {
@@ -400,7 +435,8 @@
    "valuation",
    "level3",
    "ipv",
-   "model_risk"
+   "model_risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -411,7 +447,8 @@
    "reserve",
    "model_risk",
    "valuation",
-   "correlation"
+   "correlation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -422,7 +459,8 @@
    "risk_recycling",
    "hedging",
    "exotics",
-   "remarking"
+   "remarking",
+   "lvl_vp_core"
   ]
  },
  {
@@ -433,7 +471,8 @@
    "callable",
    "cloze",
    "bermudan",
-   "convention"
+   "convention",
+   "lvl_foundation"
   ]
  },
  {
@@ -443,7 +482,8 @@
   "tags": [
    "cppi",
    "cloze",
-   "gap_risk"
+   "gap_risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -454,7 +494,8 @@
    "inflation",
    "cloze",
    "yoy",
-   "lag"
+   "lag",
+   "lvl_vp_core"
   ]
  },
  {
@@ -464,7 +505,8 @@
   "tags": [
    "tarn",
    "cloze",
-   "knockout"
+   "knockout",
+   "lvl_vp_core"
   ]
  },
  {
@@ -475,7 +517,8 @@
    "lsm",
    "cloze",
    "monte_carlo",
-   "bounds"
+   "bounds",
+   "lvl_vp_core"
   ]
  },
  {
@@ -486,18 +529,20 @@
    "prdc",
    "quanto",
    "cloze",
-   "fx"
+   "fx",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "cloze",
   "front": "A zero-coupon callable (Formosa-style) has effective duration that {{c1::shortens}} as rates fall, because the issuer's {{c2::call}} is exercised when rates fall; this is {{c3::negative convexity}}.",
-  "back": "Formosa bonds are foreign-issuer bonds sold in Taiwan. Early deals were often 30-year zero-coupon notes with a short call period, bought mainly by life insurers; one source reports a later rule that embedded calls cannot be exercised for at least five years (approx.; unverified current rules). Retail access was opened in stages (unverified). When rates rise the note extends, so the investor's duration grows in the bad state.",
+  "back": "Formosa bonds are foreign-issuer bonds sold in Taiwan. The call terms and investor access rules for these bonds have to be checked against the current rules before quoting them. When rates rise the note extends, so the investor's duration grows in the bad state.",
   "tags": [
    "zero_coupon_callable",
    "cloze",
    "formosa",
-   "convexity"
+   "convexity",
+   "lvl_stretch"
   ]
  }
 ]

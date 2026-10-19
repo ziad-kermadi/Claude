@@ -1,0 +1,365 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: IPV 1/4]</b> Context: a desk runs a 10y swaption book whose marks come from the front office. What is Independent Price Verification (IPV), who runs it, and how often?",
+  "back": "<b>Answer:</b> IPV is the check that each front-office mark is supported by evidence the trader does not control.<br><b>Intuition:</b> the desk's price is not accepted on trust; an independent function tests it against outside evidence.<br><b>Precise:</b><ul><li><b>Owner:</b> Valuation Control (or Product Control) in a reporting line independent of the desk.</li><li><b>Evidence sources:</b> contributed consensus prices (Totem-type services), broker and dealer quotes, executed trades in the same or closest product, and internal model outputs for Level 3 inputs.</li><li><b>Frequency:</b> typically monthly for the whole book, more often (weekly or daily) for large-vega or Level 3 books.</li><li><b>Output:</b> a difference per position or risk point, compared with a tolerance; breaches are escalated and either resolved or reserved.</li></ul><br><b>Interviewer follow-up:</b> who decides when the trader and the evidence disagree? Valuation Control decides on the evidence hierarchy, not on seniority or P&amp;L impact.",
+  "tags": [
+   "ipv",
+   "valuation_control",
+   "marking",
+   "desk_practice",
+   "lvl_foundation",
+   "chain_ipv"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: IPV 2/4]</b> Context: the 10y swaption book's ATM vols are marked by the desk and checked monthly against consensus. What is an IPV tolerance band, how is it set, and what happens on a breach?",
+  "back": "<b>Answer:</b> a tolerance is the acceptable gap between the desk mark and the independent source, expressed in the unit the risk is marked in.<br><b>Intuition:</b> the band sets how far apart the two prices can be before someone has to act.<br><b>Precise:</b><ul><li><b>Units:</b> vol bp for options, price or yield bp for linear bonds and swaps, and a P&amp;L threshold for materiality.</li><li><b>Setting:</b> by the control function per product and risk family, approved under governance, not by the desk. Liquid, observable inputs get tighter bands; sparse inputs get wider bands, and some are excluded from IPV entirely.</li><li><b>Breach:</b> within tolerance, no action. Outside it, the difference is reserved or the mark adjusted, the item is escalated, and resolution has a deadline.</li></ul><br><b>Worked example:</b> a 0.4 vol bp difference on a book with vega of 250,000 per vol bp is 0.4 × 250,000 = <b>100,000</b> of P&amp;L.<br><b>Interviewer follow-up:</b> why express the band in vol bp and not P&amp;L? Vol bp is comparable across trades of different size; P&amp;L is the materiality test layered on top.",
+  "tags": [
+   "ipv",
+   "tolerance",
+   "vega",
+   "marking",
+   "lvl_vp_core",
+   "chain_ipv"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: IPV 3/4]</b> Context: on the 2y10y book the IPV difference is 0.4 vol bp, inside a 0.5 vol bp band. The 1y20y wing point is 0.9 vol bp off, and only one consensus contributor quotes that point. What do you do?",
+  "back": "<b>Answer:</b> one contributor is not enough evidence to call the trader wrong or right.<br><b>Precise:</b><ol><li>Check the number of contributors and their dispersion; a single-source point is not a consensus.</li><li>Check the nearest executed trades in time and tenor, adjusted for the strike and skew difference.</li><li>Recognise the influence: a wing point drives the interpolated surface between it and its neighbours, so its risk is spread over several cells.</li><li>If the evidence stays thin, treat the difference as unverified: reserve the P&amp;L on the unverified part and send it to the mark-dispute process.</li></ol><br><b>Interviewer follow-up:</b> can you use the 2y10y ATM vol as a proxy for the wing? No. ATM ignores skew and smile, so the proxy carries basis risk that must be stated, not hidden.<div class=\"fig\"><img src=\"18_desk_2_2_ipv_wing_evidence_flow.png\"><div class=\"cap\">Single-source wing point: evidence steps, and what to do if evidence stays thin.</div></div>",
+  "tags": [
+   "ipv",
+   "consensus",
+   "vol_surface",
+   "lvl_vp_core",
+   "chain_ipv"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: IPV 4/4]</b> Context: the 1y20y wing point is 0.9 vol bp above the independent source, and the wing vega is 60,000 per vol bp. The desk is long vega there. Quantify the unverified P&amp;L and state the sign.",
+  "back": "<b>Answer:</b> 0.9 × 60,000 = <b>54,000</b> of P&amp;L the independent evidence does not support.<br><b>Precise:</b><ul><li>Long vega and a desk vol above the source means the desk mark overstates the gain by 54,000.</li><li>Short vega flips the sign: the desk mark understates the loss by the same amount.</li><li>The reserve is booked against the desk P&amp;L until the dispute is resolved or the point is evidenced.</li></ul><br><b>Trap / Where it breaks:</b> a reserve sized as difference × vega assumes the vega is right and the difference is parallel across the wing. If the wing is driven by skew, the reserve must be sized off the sensitivity to the skew parameter instead.",
+  "tags": [
+   "ipv",
+   "reserve",
+   "vega",
+   "chain_ipv",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: L3 1/4]</b> Context: a CMS spread note's price depends on a 10y-2y correlation with no quoted market. The rates legs are observable. Define IFRS 13 fair value levels 1, 2 and 3 and classify the note.",
+  "back": "<b>Answer:</b> the note is Level 3, because the correlation input is significant to the whole fair value, even though the rates legs are Level 2.<br><b>Precise:</b><ul><li><b>Level 1:</b> quoted prices in active markets for identical instruments.</li><li><b>Level 2:</b> inputs other than Level 1 quotes that are observable, directly or indirectly (swap curves, ATM vols, observable spreads).</li><li><b>Level 3:</b> significant unobservable inputs.</li></ul>The level is set by the lowest-level input that is <i>significant to the whole measurement</i>.<br><b>Interviewer follow-up:</b> does a Level 2 product become Level 3 when one small input is unobservable? Only if that input is significant to the total fair value; a tiny unobservable input does not reclassify the instrument.",
+  "tags": [
+   "ifrs13",
+   "fair_value_hierarchy",
+   "level3",
+   "lvl_foundation",
+   "chain_level3"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: L3 2/4]</b> Context: the CMS spread note is Level 3. Name what the disclosures require for recurring Level 3 measurements and what this means for the desk's marking process.",
+  "back": "<b>Answer:</b> Level 3 is disclosed in detail because the number depends on judgement.<br><b>Precise:</b><ul><li><b>Roll-forward:</b> opening to closing balances, with gains and losses in P&amp;L and OCI, purchases, sales, settlements and transfers in and out of Level 3.</li><li><b>Techniques and inputs:</b> the valuation technique and the unobservable inputs, with ranges and weighted averages.</li><li><b>Sensitivity:</b> how fair value would move under reasonably possible alternative assumptions for the unobservable inputs.</li></ul><b>For the desk:</b> Level 3 positions get tighter IPV, a model-uncertainty reserve, and sign-off at a Level 3 committee. The desk must be able to produce the correlation sensitivity itself, not just the total.<br><b>Interviewer follow-up:</b> what is the sensitivity of the note to a 0.05 move in the 10y-2y correlation? Compute it by bumping the correlation and repricing, then report the reasonable range the desk can defend.",
+  "tags": [
+   "ifrs13",
+   "level3",
+   "disclosure",
+   "desk_practice",
+   "lvl_vp_core",
+   "chain_level3"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: L3 3/4]</b> Context: a 5y structured note is booked at 100. The model values it at 99.2 on day one because one input is Level 3. Explain how the day-one difference is treated and what that means for P&amp;L, using IFRS 9 rather than IFRS 13.",
+  "back": "<b>Answer:</b> the 0.8 difference between the transaction price (100) and the model value (99.2) is deferred at inception, so the trade date shows no day-one P&amp;L.<br><b>Intuition:</b> the desk cannot book a gain that rests on an input it cannot verify on day one.<br><b>Precise:</b><ul><li>IFRS 13 defines fair value; the day-one gain or loss is governed by IFRS 9 B5.1.2A.</li><li>Where fair value is not supported by a Level 1 input or by a technique using only observable market data, the difference between fair value and transaction price is <b>not</b> recognised at inception.</li><li>The deferred amount is recognised only to the extent it arises from a change in a factor, including time, that market participants would consider.</li></ul><br><b>Worked example:</b> a deferred gain of 1.0 on a 5y trade released straight-line gives 0.2 per year.<br><b>Trap / Where it breaks:</b> straight-line is a common policy but the standard does not prescribe it; release must track the factors that drive the difference.<br><b>Interviewer follow-up:</b> why does IFRS 9 not let the desk book the gain immediately? Because the difference reflects an unobservable input the entity cannot verify at inception.",
+  "tags": [
+   "ifrs9",
+   "day_one_pnl",
+   "deferral",
+   "level3",
+   "lvl_stretch",
+   "chain_level3"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: L3 4/4]</b> Context: a Level 2 bond moves to Level 3 when its broker quotes dry up. Product Control asks what changes in the mark, governance and reporting this quarter.",
+  "back": "<b>Answer:</b> the bond is disclosed as a transfer into Level 3; the transfer itself is not a P&amp;L event.<br><b>Precise:</b><ul><li><b>Transfer:</b> the bond is disclosed as transferred into Level 3, with the amount in the roll-forward.</li><li><b>Mark:</b> the valuation moves from quoted or observable inputs to a model with unobservable inputs; the first Level 3 mark is a model mark, so its difference to the prior mark is reviewed as a remark.</li><li><b>Governance:</b> IPV moves to model-based and consensus-based checks, with tighter escalation and a reserve for input uncertainty.</li><li><b>Reporting:</b> quarter-end Level 3 disclosure covers the transfer and its reasons.</li></ul><br><b>Interviewer trap:</b> is the transfer itself a P&amp;L event? Not by itself. P&amp;L arises from the change in fair value; the transfer is a classification and disclosure event. Check the entity's policy on the timing of transfers.",
+  "tags": [
+   "level3",
+   "transfers",
+   "ipv",
+   "reporting",
+   "lvl_stretch",
+   "chain_level3"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: Remark 1/3]</b> Context: a 1y5y swaption quote is missing from consensus and the vol surface must be remarked. List the steps and checks before the new surface goes into P&amp;L.",
+  "back": "<b>Answer:</b> refit only the affected expiry, check arbitrage, quantify the P&amp;L, and get Valuation Control sign-off before the new surface reaches P&amp;L.<br><b>Precise:</b><ol><li><b>Identify</b> the missing or stale quote and the basis of the old mark.</li><li><b>Refit</b> only the affected expiry slice (for example SABR per expiry with beta fixed), leaving other slices fixed where possible.</li><li><b>Check arbitrage:</b> butterfly (convexity across strikes) and calendar (total variance non-decreasing in expiry) on the refitted surface.</li><li><b>Quantify:</b> P&amp;L = vega × change in vol at each point, plus the effect on exotic Greeks and on any book that uses the point as a hedge.</li><li><b>Document and approve:</b> Valuation Control signs off; the new mark becomes the first IPV observation on the point.</li></ol><br><b>Trap / Where it breaks:</b> shared parameters mean a refit at one expiry moves neighbours. Reprice the full surface and compare, not just the affected slice.",
+  "tags": [
+   "vol_surface",
+   "remark",
+   "ipv",
+   "lvl_vp_core",
+   "chain_remark"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: Remark 2/3]</b> Context: the 1y5y ATM normal vol is remarked up by 2 bp. The book has vega of 180,000 per vol bp and the desk is short vega there. What is the P&amp;L and what does it do to the reserve?",
+  "back": "<b>Answer:</b> short vega × vol rise = −180,000 × 2 = <b>−360,000</b>.<br><b>Intuition:</b> the desk is short vega there, so a rise in vol is a loss.<br><b>Precise:</b><ul><li>The remark is a loss for the desk and reduces P&amp;L on the trade date.</li><li>The old mark's IPV difference on that point is realised by the remark, so any reserve held against it is released or re-sized.</li><li>Do not net the remark against unrelated positions; report it at the point.</li></ul><br><b>Interviewer follow-up:</b> is a first-order vega estimate enough for a 2 bp move on an option with convexity? For a small move, yes; for large moves add ½ × volga × (Δσ)² and state the approximation.",
+  "tags": [
+   "vol_surface",
+   "remark",
+   "vega",
+   "derivation",
+   "lvl_vp_core",
+   "chain_remark"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: Remark 3/3]</b> Context: it is 16:15 on month-end. You have remarked the 1y5y vol by 2 bp. The trader says the consensus at 1y5y is stale and wants the old mark back before the close. What do you do?",
+  "back": "<b>Answer:</b> keep the remark unless the trader produces evidence, and do not revert the mark to meet the close.<br><b>Precise:</b><ul><li>Ask for the evidence that makes the consensus stale: timestamp of the last contributor update, the executed trades since then, and the broker quotes.</li><li>If the evidence shows a newer trade or quote, adopt it; if not, keep the remark and log the trader's objection.</li><li>Do not revert a mark to meet a close deadline without evidence. A remark is changed only through the same evidence path that created it.</li><li>Escalate the disagreement under the mark-dispute policy, with the P&amp;L at stake (360,000 on the stated vega) recorded.</li></ul><br><b>Interviewer trap:</b> time pressure is the situation where bad marks get through. The answer is a documented, evidence-based decision, not a faster one.",
+  "tags": [
+   "vol_surface",
+   "remark",
+   "mark_dispute",
+   "scenario",
+   "lvl_stretch",
+   "chain_remark"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>It is 16:15 on the last business day of the month.</b> The trader marks a 10m nominal corporate bond at 62.4. Valuation Control's independent mark is 61.1. Walk through the resolution.",
+  "back": "<b>Answer:</b> if unresolved by the cut-off, the month-end mark is the independent mark (61.1), and the disputed P&amp;L is <b>130,000</b>; the desk does not move the mark to close the gap.<br><b>Precise:</b><ol><li><b>Confirm the basis:</b> clean or dirty price, settlement convention, and the timestamp of each source.</li><li><b>Check the last executed trade</b> in the bond and its age; a trade from last week is not the same as a trade today.</li><li><b>Check consensus and broker quotes</b> at the same timestamp, and test whether the gap is a spread or a yield convention issue.</li><li><b>Decide:</b> if unresolved by the cut-off, the month-end mark is the independent mark, the dispute is logged, and it goes to the escalation committee. The desk does not move the mark to close the gap.</li></ol><br><b>Worked example:</b> (62.4 − 61.1) / 100 × 10,000,000 = <b>130,000</b> of disputed P&amp;L.<br><b>Interviewer trap:</b> stale source timestamps. A consensus stamped at 10:00 compared with a 16:00 mark is a timing difference, not a valuation difference.",
+  "tags": [
+   "mark_dispute",
+   "ipv",
+   "month_end",
+   "scenario",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Stale mark:</b> a 10y corporate bond has not traded or been quoted for 5 business days. How do you detect it, what mark do you hold, and what reserve do you carry?",
+  "back": "<b>Answer:</b> flag the position as stale, move the mark with a proxy, and reserve the unexplained gap between proxy and bond basis.<br><b>Intuition:</b> a frozen price hides risk, so the desk moves the mark with a proxy and reserves the doubt.<br><b>Precise:</b><ul><li><b>Detect:</b> a stale-days counter per position; a threshold (set by policy) above which the mark is flagged.</li><li><b>Hold a mark, not a freeze:</b> move the mark with a proxy such as the issuer's CDS curve plus the last observed bond basis, and flag the position as stale.</li><li><b>Residual:</b> the gap between proxy and bond's own basis is unexplained risk, reserved explicitly.</li><li><b>Escalate:</b> the flagged position goes to the IPV exception list with an owner and a date to get a new quote or trade.</li></ul><br><b>Interviewer follow-up:</b> what if the proxy is wrong? That is basis risk. Size it from the historical dispersion of the bond basis versus the proxy and reserve it; a frozen mark hides the risk and is worse.",
+  "tags": [
+   "stale_marks",
+   "reserve",
+   "basis_risk",
+   "ipv",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "<b>SR 11-7</b> (US model risk guidance) has {{c1::three}} core elements: model development, implementation and use; {{c2::model validation}}; and governance, policies and controls. Model risk is the potential for adverse consequences from decisions based on {{c3::incorrect or misused model outputs and reports}}.",
+  "back": "Misuse is in scope: a valid model used outside its range is a model risk event. Validation is more than reproducing the desk's code; it tests conceptual soundness and outcomes.",
+  "tags": [
+   "model_risk",
+   "governance",
+   "sr_11_7",
+   "valuation_control",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "<b>PRA SS1/23</b> (model risk management principles for banks, effective {{c1::17 May 2024}}) sets {{c2::five}} principles: model identification and risk classification, governance, model development and implementation, {{c3::independent model validation}} and model risk mitigants.",
+  "back": "Mapping to desk practice: the IPV and model reserve processes sit under validation and mitigants. Check the current text before quoting the effective-date detail beyond the headline.",
+  "tags": [
+   "model_risk",
+   "pra_ss1_23",
+   "governance",
+   "convention",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Model reserve:</b> two calibrations of a structured note give 98.7 and 97.9. The desk marks at 98.7. What is the model reserve, and what should a validator ask before accepting the 98.7 mark?",
+  "back": "<b>Answer:</b> the reserve for model uncertainty is the gap to the alternative calibration, here 98.7 − 97.9 = <b>0.8</b> points, unless the chosen mark is already the prudent one.<br><b>Precise:</b><ul><li><b>Questions:</b> which calibration is the market-consistent one; does either calibration reprice the liquid hedges; what is the range across all reasonable model choices?</li><li><b>Mechanism:</b> the reserve sits against the desk's P&amp;L and unwinds as the model risk is resolved, for example as new prices arrive or the model is replaced.</li></ul><br><b>Trap / Where it breaks:</b> two calibrations that share the same wrong assumption are not two independent views. The range must span assumptions, not only parameters.",
+  "tags": [
+   "model_reserve",
+   "model_risk",
+   "valuation_control",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Prudent valuation (CRR Article 105):</b> what is an additional valuation adjustment (AVA), what is its capital effect, and what confidence level does the EBA prudent value use?",
+  "back": "<b>Answer:</b> an AVA is the adjustment that takes fair value to a prudent value, and the total AVA is deducted from CET1 under CRR Article 34.<br><b>Precise:</b><ul><li><b>AVA:</b> the adjustment that moves fair value to a prudent value, so that the carrying value is conservative for positions measured at fair value.</li><li><b>Capital:</b> the total AVA is deducted from Common Equity Tier 1 under CRR Article 34.</li><li><b>Confidence:</b> the prudent value is the level the institution can be 90% confident of exiting at under the market conditions at the time of the assessment (per the EBA RTS on prudent valuation, as amended).</li></ul><br><b>Worked example:</b> fair value 100.0m and prudent value 98.7m give an AVA of 1.3m, deducted from CET1.<br><b>Interviewer follow-up:</b> why does an AVA hit capital rather than P&amp;L directly? Because the capital regime treats prudent valuation as a regulatory deduction on top of accounting; the desk's P&amp;L is the accounting measure.",
+  "tags": [
+   "prudent_valuation",
+   "ava",
+   "capital",
+   "convention",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> an illustrative market-price-uncertainty AVA for a linear position assumes the exit rate is normal with standard deviation \\(\\sigma\\) (in bp of rate). The position has DV01 \\(E\\) (price change per bp). Derive the 90% prudent adjustment.",
+  "back": "<b>Answer:</b> the 90% adjustment is \\(z_{0.90}\\,\\sigma E\\), the normal 90% quantile times the rate volatility times DV01, in price units.<br><b>Precise:</b><br>1. The 90% one-sided quantile of a normal distribution is \\(z_{0.90}=1.2816\\).<br>2. The prudent exit value is \\(\\text{mid} - z_{0.90}\\,\\sigma E\\) for a long position, so the adjustment is \\(z_{0.90}\\,\\sigma E\\), with \\(\\sigma E\\) in price units.<br><b>Worked example</b> (step 3): for a 10y swap, \\(\\sigma=0.3\\) bp in rate and DV01 of 85,000 per bp, the adjustment is \\(1.2816 \\times 0.3 \\times 85{,}000 = 32{,}680\\) (about 32.7k).<br><b>Trap / Where it breaks:</b> a normal assumption on the mid is a simplification; for skewed or fat-tailed inputs (basis, options at extreme strikes) the quantile must come from the actual distribution or a stressed set of observations. The regulatory calibration itself is set by the RTS, not by this illustration.",
+  "tags": [
+   "prudent_valuation",
+   "derivation",
+   "ava",
+   "market_price_uncertainty",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Close-out cost AVA:</b> a 10y swap has DV01 of 85,000 per bp. Marks are at mid and the half bid-offer is 0.25 bp. Compute the close-out AVA and say why it is half, not full, spread.",
+  "back": "<b>Answer:</b> 85,000 × 0.25 = <b>21,250</b>.<br><b>Intuition:</b> the mark sits at mid, so the cost of closing is only the half spread to the far side.<br><b>Precise:</b><ul><li>The mark is at mid. Closing a position costs you the bid-offer to the far side, so half the spread is the adjustment relative to mid.</li><li>Full spread would double count the cost when the position is also reserved on the mid.</li></ul><br><b>Trap / Where it breaks:</b> concentrated or illiquid positions widen the adjustment beyond the quoted spread; state that as a separate test, not a default.<br><b>Interviewer follow-up:</b> what is the close-out AVA for a position of 4 times that size? Linear: 85,000 × 4 × 0.25 = 85,000, but the spread for a large position is usually wider, so the linear answer is a floor.",
+  "tags": [
+   "prudent_valuation",
+   "close_out",
+   "bid_offer",
+   "ava",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>It is 07:15.</b> The IPV dashboard shows the 5y5y payer vol point 0.7 vol bp above consensus. Desk vega at that point is 300,000 per vol bp, long. The desk opens at 08:00. What do you do before the open?",
+  "back": "<b>Answer:</b> the 0.7 vol bp gap on a long position of 300,000 per vol bp is 210,000 of P&amp;L the independent evidence does not support; check the source and brief the head of desk before the open, but do not change the mark until the evidence supports it.<br><b>Steps:</b><ol><li><b>Check the source:</b> consensus timestamp, number of contributors, whether the move overnight is in the consensus or in a stale contributor.</li><li><b>Compare with the tolerance</b> for that point; if breached, flag it and start the evidence search.</li><li><b>Brief the head of desk</b> so the trader can respond before the open, but do not change the mark until the evidence supports it.</li></ol><br><b>Numbers:</b> 0.7 × 300,000 = <b>210,000</b> of P&amp;L the independent evidence does not support.<br><b>Control angle:</b> <b>Interviewer trap:</b> the answer is the timeline, not the number. Show you know when IPV must be ready and who needs to know before the desk starts pricing.",
+  "tags": [
+   "ipv",
+   "scenario",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>It is 16:15.</b> The head of rates asks you to take the 2y10y consensus off the surface because it is wrong. The trader agrees. What do you say?",
+  "back": "<b>Answer:</b> no unilateral override; the consensus is removed only through the documented exclusion process, with evidence that the source is wrong.<br><b>Precise:</b><ul><li>No unilateral override. Remove a source only through the documented exclusion process, with evidence that the source is wrong.</li><li>Ask for the evidence: a trade, a broker quote, a timestamp showing the source is stale, or a contributor error.</li><li>If evidence is produced, the change is approved by Valuation Control and recorded with the reason, the old value and the P&amp;L impact.</li><li>If not, the consensus stays, the disagreement is logged, and the difference goes into the dispute process.</li></ul><br><b>Interviewer follow-up:</b> what does the record need to show an auditor? The source, the reason, the approver, the date, and the P&amp;L effect.",
+  "tags": [
+   "ipv",
+   "consensus",
+   "governance",
+   "scenario",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>It is 17:45 on month-end.</b> The consensus service has not published the closing curve and vols. What is the fallback order for the month-end mark?",
+  "back": "<b>Answer:</b> use the last published consensus (flagged stale) first, then executed trades, then broker or dealer quotes, then the internal model; the order is fixed in the valuation policy in advance.<br><b>Precise:</b><ol><li>The last published consensus, flagged as stale with its timestamp.</li><li>Executed trades in the period, adjusted to the mark's date and strike.</li><li>Broker or dealer quotes with their timestamps and the number of sources.</li><li>The internal model, using the best available market inputs, with its inputs and reserve documented.</li></ol><br><b>Trap / Interviewer trap:</b> the order is set in the valuation policy in advance. Choosing a source after seeing which gives the best P&amp;L is the failure mode the policy exists to stop.<div class=\"fig\"><img src=\"18_desk_2_21_month_end_fallback_order.png\"><div class=\"cap\">Month-end mark fallback order, fixed in the valuation policy in advance.</div></div>",
+  "tags": [
+   "ipv",
+   "month_end",
+   "scenario",
+   "valuation_policy",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: month-end IPV for a 10y receiver vol book.</b> Three points, each with the desk mark minus the independent mark and the vega. 1y5y: vega 120,000, difference +0.3 vol bp. 5y5y: vega 200,000, difference −0.4 vol bp. 10y10y: vega 90,000, difference +0.6 vol bp. Tolerance is 0.5 vol bp per point. Find the net and gross P&amp;L and the breaches.",
+  "back": "<b>Answer:</b> net 10,000 and gross 170,000. The one breach is 10y10y at 0.6 vol bp; 5y5y is the largest P&amp;L item at −80,000 although it is inside tolerance on the vol basis.<br><b>Worked example:</b><br><b>Step 1, P&amp;L per point (vega × difference, long vega):</b><br>1y5y: 120,000 × 0.3 = 36,000. 5y5y: 200,000 × (−0.4) = −80,000. 10y10y: 90,000 × 0.6 = 54,000.<br><b>Step 2, net:</b> 36,000 − 80,000 + 54,000 = <b>10,000</b>.<br><b>Step 3, gross:</b> |36,000| + |−80,000| + |54,000| = <b>170,000</b>.<br><b>Step 4, breaches:</b> 10y10y at 0.6 is outside the 0.5 band; 1y5y and 5y5y are inside. 5y5y is the largest P&amp;L item at −80,000 even though it is inside tolerance on the vol basis, so the P&amp;L view and the vol view disagree on what to escalate.<br><b>Interviewer trap:</b> do not report the net 10,000 as the mark quality. Offsetting differences hide two wrong marks. Report gross, and the per-point breaches, and explain the sign pattern.<div class=\"fig\"><img src=\"18_desk_2_22_ipv_three_point_bars.png\"><div class=\"cap\">Three IPV points against the 0.5 vol bp band, with vega-weighted P&amp;L.</div></div>",
+  "tags": [
+   "ipv",
+   "case_study",
+   "vega",
+   "tolerance",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: AVA aggregation on a rates options book.</b> Fair value of the book is 450.0m. Components: market price uncertainty 0.9m, close-out costs 0.35m, model risk 0.5m. Using a simple sum for illustration, compute the total AVA, the CET1 deduction and the percentage of fair value.",
+  "back": "<b>Answer:</b> the total AVA is 1.75m, the CET1 deduction is 1.75m, and that is 0.39% of fair value.<br><b>Worked example:</b><br><b>Step 1:</b> total = 0.9 + 0.35 + 0.5 = <b>1.75m</b>.<br><b>Step 2:</b> CET1 deduction equals the total AVA, 1.75m (before any regulatory netting rules that the RTS may allow).<br><b>Step 3:</b> 1.75 / 450.0 = 0.39% of fair value (1.75/450 ≈ 0.00389).<br><b>Trap / Where it breaks:</b> sanity check: a 0.39% adjustment on a book of options is plausible for illiquid tails; if the adjustment is large relative to fair value, check the components for double counting with the model reserve. The aggregation in the RTS is not a simple sum; the illustration shows the mechanics, and the regulatory aggregation rules must be checked before quoting numbers.<div class=\"fig\"><img src=\"18_desk_2_23_ava_build_waterfall.png\"><div class=\"cap\">AVA build-up of 1.75m (0.39% of fair value) from three components.</div></div>",
+  "tags": [
+   "prudent_valuation",
+   "case_study",
+   "ava",
+   "capital",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: stale corporate bond.</b> £10m nominal, last mark at 110 bp spread. The issuer's CDS-based proxy is at 118 bp. Spread DV01 is about £8,500 per bp per £10m. The desk is long. Compute the P&amp;L from moving to the proxy and the basis reserve if the bond-to-proxy basis has a ±3 bp dispersion.",
+  "back": "<b>Answer:</b> moving the mark to the proxy is a P&amp;L of −68,000 for the long, and the basis reserve around the proxy-based mark is 25,500.<br><b>Worked example:</b><br><b>Step 1, P&amp;L on moving the mark:</b> the spread widens by 8 bp, so the long loses 8 × 8,500 = <b>−68,000</b>.<br><b>Step 2, basis reserve:</b> ±3 bp × 8,500 = <b>25,500</b> of unexplained risk to reserve around the proxy-based mark.<br><b>Trap / Where it breaks:</b> sanity check: the proxy move is 8 bp on a 5-day-old mark, so check whether the market moved in the period from the CDS and index data before accepting it.<br><b>Interviewer follow-up:</b> why reserve the basis rather than the whole move? The move is observed through the proxy and is taken; only the uncertainty of the proxy's fit to the bond is reserved.",
+  "tags": [
+   "stale_marks",
+   "case_study",
+   "reserve",
+   "basis_risk",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Consensus pricing services (Totem-type):</b> what do they give the valuation team, and what must they not be treated as?",
+  "back": "<b>Answer:</b> consensus services give aggregated contributed prices, and they are not executed trades.<br><b>Precise:</b><ul><li><b>They give:</b> contributed prices or levels from a panel of market participants, aggregated, often with dispersion and contributor counts.</li><li><b>They are not:</b> executed trades. A consensus is an opinion of contributors, not a transaction, so its evidence weight is below a trade on the same instrument.</li><li><b>Use checks:</b> number of contributors, outlier rules, timestamp, and whether the point is on the product, tenor and strike you actually hold.</li></ul><br><b>Trap / Where it breaks:</b> if the desk is one of the contributors, the consensus is not independent of the mark. Check the panel before using it as evidence.<br><b>Interviewer follow-up:</b> what if consensus is wide? Report the dispersion, not only the median, and treat a wide range as an uncertainty to reserve.",
+  "tags": [
+   "consensus",
+   "ipv",
+   "marking",
+   "desk_practice",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Mark hierarchy:</b> rank the sources of evidence for a fair-value mark, strongest first, and say what happens when the top source is missing.",
+  "back": "<b>Answer:</b> rank the evidence from quoted Level 1 prices down to Level 3 models with a reserve; when the top source is missing, move down one level and record why.<br><b>Precise:</b><ol><li>Quoted prices in an active market for an identical instrument (Level 1).</li><li>Recent executed trades in the same or a closely matched instrument, adjusted for the differences.</li><li>Consensus or multiple broker quotes that are observable and dated.</li><li>Model prices using observable inputs (Level 2).</li><li>Model prices with unobservable inputs, with a reserve (Level 3).</li></ol><br><b>When the top source is missing:</b> move down one level and record why. A move down the hierarchy is a reclassification risk and must be disclosed if it changes the level. The trader's view is not a source in this hierarchy.",
+  "tags": [
+   "fair_value_hierarchy",
+   "marking",
+   "valuation_control",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Under IFRS 13 fair value hierarchy: Level 1 is {{c1::quoted prices in active markets for identical instruments}}; Level 2 is {{c2::observable inputs other than Level 1}}; Level 3 is {{c3::significant unobservable inputs}}. The level is set by the {{c4::lowest-level input significant to the whole measurement}}.",
+  "back": "Reclassifying an instrument because an input dried up is a disclosed transfer, not a P&amp;L event by itself.",
+  "tags": [
+   "ifrs13",
+   "fair_value_hierarchy",
+   "level3",
+   "convention",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Among the nine AVA categories under the EU prudent valuation RTS, the list includes {{c1::market price uncertainty}}, {{c2::close-out costs}}, {{c3::model risk}}, {{c4::unearned credit spreads}}, {{c5::investing and funding costs}}, {{c6::concentrated positions}}, {{c7::future administrative costs}}, {{c8::early termination}} and {{c9::operational risk}}.",
+  "back": "Each category has its own measurement method under the RTS; the desk's task is to map each position to its category before aggregation.",
+  "tags": [
+   "prudent_valuation",
+   "ava",
+   "convention",
+   "rts_2016_101",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A Level 3 note is booked at 100 and the model values it at 99.2. The 0.8 difference is governed by {{c1::IFRS 9 B5.1.2A}}, not IFRS 13 (which defines fair value). It reaches P&amp;L only to the extent it arises from a change in a factor, including {{c2::time}}, that {{c3::market participants}} would take into account.",
+  "back": "<b>Interviewer trap:</b> a change in the bank's own model is not a market-participant factor. The release test is about the market, not about a model update.",
+  "tags": [
+   "ifrs9",
+   "day_one_pnl",
+   "deferral",
+   "lvl_stretch"
+  ]
+ }
+]
