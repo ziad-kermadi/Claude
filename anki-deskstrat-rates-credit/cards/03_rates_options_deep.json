@@ -1,0 +1,333 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SABR_ARB 1/5]</b> Context: a normal SABR (\\(\\beta=0\\), \\(\\alpha=90\\)bp, \\(\\nu=0.8\\), \\(\\rho=-0.7\\), \\(F=3\\%\\)) is fitted to a 10y-expiry smile.<br>\n<b>Question:</b> What no-arbitrage test do you run on this implied smile before pricing wings with it, and how is it computed?",
+  "back": "Convert the implied normal vols to Bachelier call prices \\(C(K)\\) on a strike grid. Test the butterfly \\(C(K-h)-2C(K)+C(K+h)\\ge 0\\) at every strike, which is \\(\\partial_K^2C\\ge 0\\) and a non-negative risk-neutral density. Also test \\(\\partial_K C\\le 0\\). Run the test on prices, not vols: a vol curve can look smooth while the density is negative.<br>\nNumbers (first-order Hagan with the T correction, \\(h=25\\)bp, illustrative parameters, not calibrated): ATM vol is about 103bp at 3%, and about 219bp at \\(K=-0.75\\%\\). The butterfly at \\(K=-0.75\\%\\) is about \\(-3.2\\times10^{-7}\\) per unit notional, so the density there is about \\(-0.05\\) per unit rate. The ATM butterfly is positive.<br>\n<b>Interviewer follow-up:</b> Is the arbitrage visible in the vol quotes? Not necessarily. The failure appears only in the second difference of prices, which is why the check runs on the price grid.",
+  "tags": [
+   "chain_sabr_arb",
+   "sabr",
+   "arbitrage",
+   "density"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SABR_ARB 2/5]</b> Context: the same fit has a butterfly of about \\(-3.2\\times10^{-7}\\) per unit notional at \\(K=-0.75\\%\\), with 25bp strike spacing.<br>\n<b>Question:</b> Why does a negative butterfly imply static arbitrage, what trade would exploit it, and why can the desk not run that trade?",
+  "back": "The butterfly payoff \\((S-K_1)^+-2(S-K_2)^++(S-K_3)^+\\) is non-negative at expiry for equally spaced strikes. It is a tent with its peak at \\(K_2\\). A non-negative payoff with a negative price is a free lunch: buy the wings, sell the body, and receive cash today.<br>\nThe desk cannot run it because the arbitrage is in the model, not the market. No quote exists at \\(-0.75\\%\\), so the vol there is an extrapolation of the fitted smile. Any wing risk computed off this fit is wrong, even though no executable trade exists.<br>\n<b>Interviewer follow-up:</b> Why does the problem appear only in the wings? Hagan's formula is an asymptotic approximation that is accurate near the money. The density is a second strike derivative, which amplifies the approximation error, and the error grows with \\(\\nu\\), \\(T\\) and distance from the forward.",
+  "tags": [
+   "chain_sabr_arb",
+   "sabr",
+   "arbitrage",
+   "density"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SABR_ARB 3/5]</b> Context: the Hagan SABR fit gives a negative density in the low-strike wing of a 10y expiry, driven by large vol-of-vol.<br>\n<b>Question:</b> Name two ways to restore a non-negative density, and state what each costs.",
+  "back": "(1) <b>Free-boundary SABR</b> (Doust 2012). Alter the dynamics so the forward is defined above a free boundary \\(b\\) below the strikes of interest. The density is then well defined and non-negative on \\((b,\\infty)\\), and closed-form prices remain. Cost: an extra boundary parameter (fixed or fitted), and the smile dynamics change, so the delta and the wing vegas differ from the Hagan fit. Recalibrate and check the dynamics against history. Check the exact specification in Doust (2012) before use.<br>\n(2) <b>Constrained calibration of the Hagan formula.</b> Keep the formula and add the butterfly test as a constraint or a penalty, or cap \\(\\nu\\). Cost: the wing fit is worse, the constraint binds exactly where precision matters, and the density is guaranteed only at the tested strikes.<br>\n<b>Interviewer follow-up:</b> Which do you choose? If the wing is traded or hedged, prefer a model that is arbitrage-free by construction.",
+  "tags": [
+   "chain_sabr_arb",
+   "sabr",
+   "free_boundary",
+   "calibration"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SABR_ARB 4/5]</b> Context: a non-negative density is needed in the low-strike tail of a long-expiry SABR smile.<br>\n<b>Question:</b> What does the arbitrage-free SABR of Hagan, Kumar, Lesniewski and Woodward (2014) do differently from the 2002 expansion, and why is non-negativity guaranteed rather than tested?",
+  "back": "The 2002 formula is a closed-form asymptotic implied vol. The 2014 approach works with the density. The SABR forward dynamics give a forward Kolmogorov (Fokker-Planck) equation for \\(p(t,K)\\). That PDE is solved numerically with a martingale constraint in the boundary treatment, and call prices are obtained by integrating \\(p\\) against the payoff.<br>\nNon-negativity is then a property of the discretisation rather than a check applied to the output. Check the exact expansion and boundary conditions in the paper before quoting the scheme; the mechanism above is the design principle.<br>\n<b>Interviewer follow-up:</b> What is the cost? One numerical PDE per expiry and tenor, slower calibration, and Greeks by finite difference. In production, desks usually fit a fast approximation to the PDE surface.",
+  "tags": [
+   "chain_sabr_arb",
+   "sabr",
+   "arbitrage",
+   "pde"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SABR_ARB 5/5]</b> Context: the desk moves from Hagan SABR to an arbitrage-free SABR that matches the same ATM and 25-delta points of the smile.<br>\n<b>Question:</b> Which risk numbers should move, which should not, and why?",
+  "back": "<b>Should barely move:</b> ATM vol, the ATM-region vega and the ATM delta. The fit pins the ATM price and the first smile points.<br>\n<b>Should move:</b> the tail strike vegas and volga, because the wing density differs. The smile-adjusted delta under sticky-delta, \\(\\Delta_{\\text{smile}}=\\Delta_{BS}+\\mathcal V\\,\\partial\\sigma/\\partial F\\), because the backbone can change. And the value of products whose payoff sits in the low tail, such as floors, digitals, deep out-of-the-money swaptions and CMS spreads when rates are low.<br>\nTest: bucket vega by strike and compare the two models. A large gap in tail vega means the model choice is a hedging decision, not only a pricing one.<br>\n<b>Interviewer follow-up:</b> Why does the difference show up in the tail hedge and not the ATM hedge? The two models' densities differ in the wings, and the ATM region is pinned by the same market quotes.",
+  "tags": [
+   "chain_sabr_arb",
+   "sabr",
+   "risk",
+   "hedging"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BERM_SW 1/5]</b> Context: a 5y-tail payer Bermudan, exercisable annually at 1y, 2y, 3y and 4y, priced in one-factor Hull-White.<br>\n<b>Question:</b> Describe the exercise boundary, and explain why in one factor it is a single threshold on the short rate.",
+  "back": "At each exercise date \\(t_k\\) the holder exercises if the intrinsic value (the PV of the remaining swap at strike \\(K\\)) exceeds the continuation value. In a one-factor Markov model the swap value is a monotone function of the state \\(r\\), so for a payer the exercise region is \\(\\{r\\ge r^*(t_k)\\}\\). The threshold \\(r^*(t_k)\\) is found by backward induction on a tree.<br>\nThe boundary is therefore a time-indexed threshold on one state variable.<br>\n<b>Interviewer follow-up:</b> Why does this fail in two factors? The swap value depends on two states, so the boundary is a curve in the plane. The exercise region can then be non-convex, and single-threshold rules and simple regression bases become less reliable.",
+  "tags": [
+   "chain_berm_switch",
+   "bermudan",
+   "exercise_boundary",
+   "hull_white"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BERM_SW 2/5]</b> Context: the same Bermudan will be calibrated to the co-terminal swaptions 1y×4y, 2y×3y, 3y×2y and 4y×1y, all ending at the 5y tail's maturity.<br>\n<b>Question:</b> Why calibrate to co-terminals rather than co-initials, and which Hull-White parameter does the co-terminal set identify weakly?",
+  "back": "Each co-terminal swaption is one of the Bermudan's exercise-into alternatives, with the same end date and an earlier start. Calibrating to them prices the rights the Bermudan can actually monetise. Co-initials share the start date, which is not the structure the Bermudan uses.<br>\nThe mean reversion \\(a\\) is weakly identified. With piecewise \\(\\sigma(t)\\), the four co-terminal vols can be matched for a range of \\(a\\) values, because \\(\\sigma(t)\\) absorbs the change. So \\(a\\) is usually fixed from a benchmark, such as a historical regression or a long-tenor swaption fit, not fitted.<br>\n<b>Interviewer follow-up:</b> Is this a model problem or a data problem? It is an identification problem. The Bermudan's sensitivity to \\(a\\) is not hedged by the co-terminal calibration, so report it separately.",
+  "tags": [
+   "chain_berm_switch",
+   "bermudan",
+   "calibration",
+   "hull_white"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BERM_SW 3/5]</b> Context: the co-terminal fit is held. Mean reversion moves from \\(a=0.03\\) to \\(a=0.10\\). For a 1y×5y swap on a flat 3% curve, the factor \\(k(a)=|\\partial S/\\partial r|\\) is 0.930 at \\(a=0.03\\) and 0.738 at \\(a=0.10\\).<br>\n<b>Question:</b> What does this do to the Bermudan's value, and what risk must you report?",
+  "back": "In one-factor Hull-White, mean reversion does not decorrelate forward rates. All forward moves load on the same \\(dW\\). What \\(a\\) changes is the loading of each swap rate on the short rate. For the same 100bp 1y×5y swap vol, the short-rate vol must be about 1.07% at \\(a=0.03\\) and about 1.35% at \\(a=0.10\\), a ratio of about 1.26.<br>\nThe sign of the Bermudan's sensitivity to \\(a\\) is trade-specific, so compute it. Bump \\(a\\), re-fit \\(\\sigma(t)\\) to the same co-terminals, and reprice on the same tree. Report this as a separate mean-reversion sensitivity, distinct from the swaption vega.<br>\n<b>Interviewer follow-up:</b> Why not bump \\(a\\) without re-fitting? The vanilla fit then breaks, and the number measures a move in the vanilla surface, not a sensitivity to the model parameter.",
+  "tags": [
+   "chain_berm_switch",
+   "bermudan",
+   "mean_reversion",
+   "risk"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BERM_SW 4/5]</b> Context: a switch lets the holder, on each exercise date, enter either a payer 5y swap at \\(K_A\\) or a receiver 5y swap at \\(K_B\\), but only one. \\(V_A\\) and \\(V_B\\) are the Bermudan values for each alternative on its own.<br>\n<b>Question:</b> Give bounds on the switch value \\(V_{sw}\\) in terms of \\(V_A\\) and \\(V_B\\), and say what the gap between the bounds depends on.",
+  "back": "<b>Lower bound:</b> the holder can always choose the better alternative alone, so \\(V_{sw}\\ge\\max(V_A,V_B)\\).<br>\n<b>Upper bound:</b> owning both Bermudans gives the right to exercise into both, a superset of the switch's rights, so \\(V_{sw}\\le V_A+V_B\\).<br>\nThe gap is the value of the choice itself. It is small when the two alternatives are exercised in the same states, so the switch is close to the max. It moves toward the sum when they are exercised in disjoint states.<br>\n<b>Interviewer follow-up:</b> How do you quantify where in the gap the price sits? Price the switch on a tree or with Monte Carlo, and check the answer against both bounds.",
+  "tags": [
+   "chain_berm_switch",
+   "bermudan",
+   "switch_option",
+   "bounds"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BERM_SW 5/5]</b> Context: the desk values the switch as the maximum of the two alternatives' values at each date, with no early-exercise component.<br>\n<b>Question:</b> Is max-of-alternatives an upper or a lower estimate of the switch value, and how would you tighten it?",
+  "back": "It is a <b>lower</b> estimate. Max-of-alternatives ignores the option to wait, so it understates the value of exercising at the optimal date. This is the lower bound from the previous card. It is exact only if one alternative dominates in every state and at every date.<br>\nTo tighten it, price on a tree or PDE calibrated to the co-terminals. In Monte Carlo, Longstaff-Schwartz gives a sub-optimal policy and so a lower bound, while the Andersen-Broadie dual gives an upper bound. Report the gap between them as a model-sensitivity measure.<br>\n<b>Interviewer follow-up:</b> Why does the regression policy give a lower bound? Any exercise policy that is not optimal gives a value no higher than the optimal value, so the regression can only understate it.",
+  "tags": [
+   "chain_berm_switch",
+   "bermudan",
+   "monte_carlo",
+   "switch_option"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derive the Bachelier call price</b> from the normal SDE \\(dF=\\sigma_N\\,dW\\) under the forward measure, showing each step.",
+  "back": "1. Under the forward measure the forward is a martingale with no drift. With constant \\(\\sigma_N\\), \\(F_T=F+\\sigma_N W_T\\), so \\(F_T\\sim N(F,\\sigma_N^2T)\\).<br>\n2. The undiscounted call is \\(C=\\mathbb E[(F_T-K)^+]=\\int_K^\\infty (x-K)\\,p(x)\\,dx\\), with \\(p\\) the Gaussian density.<br>\n3. Substitute \\(x=F+\\sigma_N\\sqrt T\\,u\\) and \\(d=(F-K)/(\\sigma_N\\sqrt T)\\). The lower limit becomes \\(u=-d\\), and \\(C=\\int_{-d}^\\infty\\big[(F-K)+\\sigma_N\\sqrt T\\,u\\big]\\varphi(u)\\,du\\).<br>\n4. \\(\\int_{-d}^\\infty\\varphi(u)\\,du=N(d)\\), and \\(\\int_{-d}^\\infty u\\,\\varphi(u)\\,du=\\varphi(d)\\) because \\(u\\varphi(u)=-\\varphi'(u)\\).<br>\n5. Result: \\(C=(F-K)N(d)+\\sigma_N\\sqrt T\\,\\varphi(d)\\). Discounting multiplies by \\(P(0,T_p)\\), or by the annuity for a swaption.<br>\n<b>Where it breaks:</b> the formula needs constant \\(\\sigma_N\\) and a driftless forward under the chosen measure. A smile (stochastic vol) breaks it, and a measure with a drift adds a term. Using the spot measure for a payment at a later date adds a convexity correction.",
+  "tags": [
+   "derivation",
+   "bachelier",
+   "normal_model",
+   "measure_change"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derive the vega and theta relations</b> in the normal model from \\(V=(F-K)N(d)+\\sigma_N\\sqrt T\\varphi(d)\\): show \\(\\mathcal V=\\sigma_N T\\,\\Gamma\\), then \\(\\Theta=-\\sigma_N\\mathcal V/(2T)\\). State the Black analogue of the vega-gamma relation.",
+  "back": "1. Delta: \\(\\partial_F V=N(d)+(F-K)\\varphi(d)/(\\sigma_N\\sqrt T)-d\\,\\varphi(d)\\). Since \\(F-K=d\\sigma_N\\sqrt T\\), the last two terms cancel, so \\(\\Delta=N(d)\\).<br>\n2. Gamma: \\(\\Gamma=\\partial_F N(d)=\\varphi(d)/(\\sigma_N\\sqrt T)\\).<br>\n3. Vega: \\(\\partial_{\\sigma}V=(F-K)\\varphi(d)(-d/\\sigma_N)+\\sqrt T\\varphi(d)+\\sigma_N\\sqrt T\\varphi'(d)(-d/\\sigma_N)\\). With \\(\\varphi'(d)=-d\\varphi(d)\\) and \\(F-K=d\\sigma_N\\sqrt T\\), the two \\(d^2\\) terms cancel, leaving \\(\\mathcal V=\\sqrt T\\varphi(d)\\).<br>\n4. Vega-gamma: \\(\\sigma_NT\\Gamma=\\sigma_NT\\varphi(d)/(\\sigma_N\\sqrt T)=\\sqrt T\\varphi(d)=\\mathcal V\\).<br>\n5. Theta: with zero drift and constant \\(\\sigma_N\\), the pricing PDE gives \\(\\partial_tV=-\\tfrac12\\sigma_N^2\\Gamma\\). Substituting \\(\\Gamma=\\mathcal V/(\\sigma_NT)\\) gives \\(\\Theta=-\\sigma_N\\mathcal V/(2T)\\).<br>\nBlack analogue: \\(\\mathcal V=F\\sqrt T\\varphi(d_1)\\) and \\(\\Gamma=\\varphi(d_1)/(F\\sigma\\sqrt T)\\), so \\(\\mathcal V=F^2\\sigma T\\,\\Gamma\\).<br>\n<b>Where it breaks:</b> the identities use constant \\(\\sigma\\) and zero drift. With a smile, vega is strike-specific, and the vanna and volga terms enter the bucketed numbers.",
+  "tags": [
+   "derivation",
+   "greeks",
+   "vega",
+   "theta",
+   "normal_model"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derive payer-receiver parity for European swaptions</b> from the annuity measure, and show it needs no model and no volatility input.",
+  "back": "Let the swap run from expiry \\(T_0\\) to \\(T_n\\) at fixed rate \\(K\\). Annuity \\(A(t)=\\sum_i\\tau_iP(t,T_i)\\), forward swap rate \\(S(t)=(P(t,T_0)-P(t,T_n))/A(t)\\).<br>\n1. At expiry, payer minus receiver payoff is \\(A(T_0)\\big[(S-K)^+-(K-S)^+\\big]\\).<br>\n2. Since \\(x^+-(-x)^+=x\\), this equals \\(A(T_0)(S(T_0)-K)\\), which is linear.<br>\n3. Today's value: \\(V_{pay}-V_{rec}=A(0)\\,\\mathbb E^A[S(T_0)-K]\\), using the annuity numeraire.<br>\n4. \\(S\\) is a martingale under the annuity measure, so \\(\\mathbb E^A[S(T_0)]=S(0)\\), giving \\(V_{pay}-V_{rec}=A(0)(S(0)-K)\\).<br>\n5. No volatility appears, so the identity holds for every model.<br>\n<b>Where it breaks:</b> the identity needs one consistent \\(A\\) and \\(S\\). If the payer and receiver are projected or discounted on different curves (OIS versus IBOR, or with a basis), or the strike uses a different day count or compounding, the identity fails. Physical versus cash settlement changes the annuity.",
+  "tags": [
+   "derivation",
+   "swaptions",
+   "put_call_parity",
+   "annuity_measure"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derive the HJM drift condition</b> for \\(df(t,T)=\\alpha(t,T)\\,dt+\\sigma(t,T)\\,dW_t\\) under the risk-neutral measure, from the requirement that discounted bond prices are martingales.",
+  "back": "1. Let \\(Y_t=\\int_t^Tf(t,u)\\,du\\), so \\(P(t,T)=e^{-Y_t}\\) and \\(f(t,t)=r_t\\).<br>\n2. Leibniz rule: \\(dY_t=-r_t\\,dt+\\int_t^T df(t,u)\\,du=\\big(-r_t+\\int_t^T\\alpha\\,du\\big)dt+\\big(\\int_t^T\\sigma\\,du\\big)dW_t\\).<br>\n3. Itô on \\(e^{-Y}\\): \\(dP/P=\\big[r_t-\\int_t^T\\alpha\\,du+\\tfrac12(\\int_t^T\\sigma\\,du)^2\\big]dt-\\big(\\int_t^T\\sigma\\,du\\big)dW_t\\).<br>\n4. The discounted bond is a martingale, so the drift of \\(P/P\\) must equal \\(r_t\\). Hence \\(\\int_t^T\\alpha(t,u)\\,du=\\tfrac12\\big(\\int_t^T\\sigma(t,u)\\,du\\big)^2\\).<br>\n5. Differentiate in \\(T\\): \\(\\alpha(t,T)=\\sigma(t,T)\\int_t^T\\sigma(t,u)\\,du\\).<br>\n<b>Where it breaks:</b> the derivation assumes a frictionless market and no jumps. With several factors the product becomes a sum over factors of \\(\\sigma_k\\int\\sigma_k\\). Jump terms add compensators, and the step in 5 needs \\(\\sigma\\) differentiable in \\(T\\).",
+  "tags": [
+   "derivation",
+   "hjm",
+   "no_arbitrage",
+   "drift"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derive the Hull-White bond formula</b> \\(P(t,T)=A(t,T)e^{-B(t,T)r_t}\\) from \\(dr=(\\theta(t)-ar)\\,dt+\\sigma\\,dW\\), with \\(B(t,T)=(1-e^{-a(T-t)})/a\\). Show where \\(\\theta\\) enters \\(A\\).",
+  "back": "1. Ansatz \\(P=A(t,T)e^{-B(t,T)r}\\). The pricing PDE is \\(\\partial_tP+(\\theta-ar)\\partial_rP+\\tfrac12\\sigma^2\\partial_{rr}P-rP=0\\).<br>\n2. Use \\(\\partial_tP=P(\\partial_tA/A-\\partial_tB\\,r)\\), \\(\\partial_rP=-BP\\), \\(\\partial_{rr}P=B^2P\\). Dividing by \\(P\\) gives \\(\\big(\\partial_tA/A-\\theta B+\\tfrac12\\sigma^2B^2\\big)+r\\big(-\\partial_tB+aB-1\\big)=0\\).<br>\n3. The \\(r\\)-terms vanish if \\(\\partial_tB=aB-1\\) with \\(B(T,T)=0\\), so \\(B=(1-e^{-a(T-t)})/a\\).<br>\n4. The remaining terms give \\(\\partial_t\\ln A=\\theta(t)B-\\tfrac12\\sigma^2B^2\\), with \\(A(T,T)=1\\). \\(\\theta\\) is set so that the model matches today's curve, \\(\\theta(t)=\\partial_tf^M(0,t)+af^M(0,t)+\\frac{\\sigma^2}{2a}(1-e^{-2at})\\).<br>\n5. Integrating gives the closed form \\(\\ln A(t,T)=\\ln\\frac{P^M(0,T)}{P^M(0,t)}+B f^M(0,t)-\\frac{\\sigma^2}{4a}(1-e^{-2at})B^2\\).<br>\nNumbers: for 5y, \\(B(0,5)=4.643\\) at \\(a=0.03\\) and \\(3.935\\) at \\(a=0.10\\).<br>\n<b>Where it breaks:</b> constant \\(a\\) and \\(\\sigma\\) are assumed. Time-dependent \\(\\sigma(t)\\) changes \\(B\\) and the variance term. The Gaussian short rate can go negative, which suits normal quoting but not a lognormal convention.",
+  "tags": [
+   "derivation",
+   "hull_white",
+   "bond_price",
+   "affine"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derive the drift of the spot-LIBOR measure</b> in the lognormal forward model. Start from \\(dL_i=\\sigma_iL_i\\,dW_i^{i+1}\\) under the forward measure of \\(T_{i+1}\\), and move to the spot measure \\(\\mathbb Q^{\\eta(t)+1}\\). State the sign and explain why the sum runs over \\(k\\le i\\).",
+  "back": "1. The numeraire ratio between adjacent forward measures is \\(P(t,T_k)/P(t,T_{k+1})=1+\\tau_kL_k(t)\\). Its log-derivative under \\(\\mathbb Q^{k+1}\\) has a martingale part \\(\\tau_k\\sigma_kL_k/(1+\\tau_kL_k)\\,dW^{k+1}_k\\).<br>\n2. Girsanov with this density moves each Brownian motion by its correlation with \\(W_k\\): \\(dW^{k+1}_i=dW^{k}_i+\\rho_{ik}\\,\\sigma_k\\tau_kL_k/(1+\\tau_kL_k)\\,dt\\).<br>\n3. Substituting into \\(dL_i\\) adds the drift \\(\\sigma_iL_i\\,\\rho_{ik}\\sigma_k\\tau_kL_k/(1+\\tau_kL_k)\\) for each step \\(k\\) traversed.<br>\n4. Going from \\(\\mathbb Q^{i+1}\\) (where \\(L_i\\) has no drift) to the spot measure takes one step for each \\(k\\) with \\(\\eta(t)+1\\le k\\le i\\). The drift is therefore \\(\\sigma_iL_i\\sum_{k=\\eta(t)+1}^{i}\\rho_{ik}\\,\\frac{\\tau_k\\sigma_kL_k}{1+\\tau_kL_k}\\).<br>\n5. The sign is positive for \\(\\rho>0\\). The terminal-measure drift from the earlier card has the opposite sign and a sum over \\(k>i\\), which is a consistency check.<br>\n<b>Where it breaks:</b> the derivation assumes lognormal forwards with a fixed correlation matrix. The matrix must be positive semi-definite, and the rolling spot numeraire needs the discrete tenor structure. Simulating from the spot measure needs this drift at every step.",
+  "tags": [
+   "derivation",
+   "lmm",
+   "spot_measure",
+   "drift"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derive static replication</b> of \\(\\mathbb E^A[h(S)]\\) for a twice-differentiable \\(h\\), in terms of payer and receiver swaption prices per unit annuity (Carr-Madan). Then state the extra step a CMS needs.",
+  "back": "1. Taylor decomposition about the forward \\(F\\): \\(h(S)=h(F)+h'(F)(S-F)+\\int_F^\\infty h''(K)(S-K)^+dK+\\int_{-\\infty}^Fh''(K)(K-S)^+dK\\). The lower limit is \\(-\\infty\\) because rates can be negative. Check with \\(h=S^2\\), where \\(h''=2\\) and the decomposition returns \\(S^2\\).<br>\n2. Take \\(\\mathbb E^A\\). The linear term vanishes, since \\(S\\) is a martingale under the annuity measure, so \\(\\mathbb E^A[S-F]=0\\).<br>\n3. Let \\(\\mathrm{Pay}(K)=\\mathbb E^A[(S-K)^+]\\) and \\(\\mathrm{Rec}(K)=\\mathbb E^A[(K-S)^+]\\), read from the smile at each strike.<br>\n4. \\(\\mathbb E^A[h(S)]=h(F)+\\int_F^\\infty h''(K)\\,\\mathrm{Pay}(K)\\,dK+\\int_{-\\infty}^Fh''(K)\\,\\mathrm{Rec}(K)\\,dK\\).<br>\n5. For a CMS, the coupon fixes \\(S\\) at \\(T_f\\) and pays at \\(T_p\\). The expectation is under the \\(T_p\\) measure, which adds a density ratio that depends on \\(S\\). Write the expectation as \\(\\mathbb E^A[h(S)]\\), where \\(h\\) is \\(S\\) times that ratio, and apply the same formula with \\(h''\\) from the product.<br>\n<b>Where it breaks:</b> the formula needs prices at all strikes, so the extrapolation beyond quoted strikes controls the tail integrals. The smile must be arbitrage-free, meaning \\(\\mathrm{Pay}\\) and \\(\\mathrm{Rec}\\) come from one density. With zero payment lag the density ratio is one, and the adjustment vanishes.",
+  "tags": [
+   "derivation",
+   "cms",
+   "static_replication",
+   "carr_madan"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derive the leading-order Hagan normal vol</b> for \\(\\beta=0\\) SABR: show \\(\\sigma_N(K)=\\alpha\\,\\zeta/x(\\zeta)\\), with \\(\\zeta=(\\nu/\\alpha)(F-K)\\) and \\(x(\\zeta)=\\int_0^\\zeta dv/\\sqrt{1-2\\rho v+v^2}\\). Then give the local-vol reading of \\(x\\).",
+  "back": "1. Closed form of the integral: \\(x(\\zeta)=\\ln\\frac{\\sqrt{1-2\\rho\\zeta+\\zeta^2}+\\zeta-\\rho}{1-\\rho}\\). Check: the derivative of the log is \\(1/\\sqrt{1-2\\rho\\zeta+\\zeta^2}\\), and the expression is zero at \\(\\zeta=0\\).<br>\n2. Define an effective local normal vol on the segment \\(k\\in[K,F]\\): \\(\\sigma_{\\rm eff}(k)=\\alpha\\sqrt{1-2\\rho\\zeta(k)+\\zeta(k)^2}\\), with \\(\\zeta(k)=(\\nu/\\alpha)(F-k)\\).<br>\n3. Take the segment average \\(\\bar\\sigma=(F-K)\\big/\\int_K^F dk/\\sigma_{\\rm eff}(k)\\). Substituting \\(v=\\zeta(k)\\) gives \\(\\int_K^F dk/\\sigma_{\\rm eff}=x(\\zeta)/\\nu\\), so \\(\\bar\\sigma=(F-K)\\nu/x(\\zeta)=\\alpha\\,\\zeta/x(\\zeta)\\).<br>\n4. As \\(\\zeta\\to 0\\), \\(\\zeta/x(\\zeta)\\to 1\\), so the ATM normal vol is \\(\\alpha\\) at leading order.<br>\n5. First-order time correction, as in Hagan (2002): multiply by \\(\\big[1+\\tfrac{2-3\\rho^2}{24}\\nu^2T\\big]\\). Example: \\(\\nu=0.4\\), \\(\\rho=-0.3\\), \\(T=1\\) gives a factor of 1.0115.<br>\n<b>Where it breaks:</b> the local-vol reading in steps 2 and 3 is an interpretation of the leading-order result, not a derivation from the SDE. Verify it against Hagan (2002). The expansion is accurate only for small \\(\\zeta\\), small \\(T\\) and small \\(\\nu T\\). The correction term is first order in \\(T\\) and fails for long expiries.",
+  "tags": [
+   "derivation",
+   "sabr",
+   "hagan",
+   "normal_model"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derive the swap-rate vol in one-factor Hull-White</b>: show that the normal vol of a forward swap rate is \\(\\sigma|\\partial_rS|\\). Compute \\(|\\partial_rS|\\) for a 1y×5y swap on a flat 3% continuous curve, at \\(a=0.03\\) and \\(a=0.10\\).",
+  "back": "1. Forward swap \\(S=N/A\\), with \\(N=P(t,T_0)-P(t,T_n)\\) and \\(A=\\sum_i\\tau_iP(t,T_i)\\). Under HW, \\(\\partial_rP(t,T)=-B(t,T)P(t,T)\\).<br>\n2. Quotient rule: \\(\\partial_rS=(\\partial_rN\\cdot A-N\\,\\partial_rA)/A^2\\), with \\(\\partial_rN=-B_0P_0+B_nP_n\\) and \\(\\partial_rA=-\\sum_i\\tau_iB_iP_i\\).<br>\n3. S is a martingale under the annuity measure, so its diffusion is \\(\\partial_rS\\cdot\\sigma\\,dW\\), and the normal vol is \\(\\sigma|\\partial_rS|\\).<br>\n4. Numbers: flat 3% continuous curve, annual payments at 2 to 6 (\\(T_0=1\\), \\(T_n=6\\)), \\(S=3.045\\%\\), \\(A=4.439\\). \\(|\\partial_rS|=0.930\\) at \\(a=0.03\\) and \\(0.738\\) at \\(a=0.10\\).<br>\n5. For a 100bp swap vol, \\(\\sigma_r=1.075\\%\\) at \\(a=0.03\\) and \\(1.355\\%\\) at \\(a=0.10\\).<br>\n<b>Where it breaks:</b> the result assumes a constant \\(\\sigma\\) and a flat curve. The swap-rate diffusion has no drift only under the annuity measure. Under the spot measure, the drift from the bond ratio must be added.",
+  "tags": [
+   "derivation",
+   "hull_white",
+   "swap_rate_vol",
+   "mean_reversion"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case: ATM 1y×10y payer, 100bp normal vol.</b> Forward swap rate 3.00%. Annual fixed leg, 10 payments, flat 3% curve. Price per unit notional, the straddle, and the vega and delta per bp.",
+  "back": "1. Annuity: \\(A=\\sum_{i=1}^{10}1.03^{-i}=(1-1.03^{-10})/0.03=8.530\\). The swap rate is 3.00%, consistent with the flat curve.<br>\n2. ATM normal price per unit annuity: \\(\\sigma_N\\sqrt T\\varphi(0)=0.01\\times0.3989=0.003989\\).<br>\n3. Payer premium per unit notional: \\(A\\times0.003989=0.03403\\), that is 3.40% of notional.<br>\n4. Straddle: \\(2\\times3.40\\%=6.81\\%\\) of notional.<br>\n5. Vega: \\(A\\sqrt T\\varphi(0)\\times10^{-4}=0.00034\\) per unit notional, so 0.34bp of notional per 1bp of normal vol.<br>\n6. Delta: \\(A\\,N(0)=4.265\\) per unit rate, so a 1bp move in the swap rate changes the premium by about 4.27bp of notional.<br>\n<b>Sanity check:</b> the premium is roughly \\(0.4\\times(\\sigma_N\\sqrt T)\\times A=0.4\\times1\\%\\times8.5\\approx3.4\\%\\), consistent with the exact value.<br>\n<b>Where it breaks:</b> the premium is for a flat smile. If the payer is priced on OIS discounting and the strike is on a different convention, the annuity changes. The delta here is the annuity-scaled delta, not the smile-adjusted one.",
+  "tags": [
+   "case_study",
+   "swaptions",
+   "normal_model",
+   "greeks"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case: delta-hedged long 6m×5y ATM payer.</b> Notional 100mm, annuity 4.6 (approximately, for the 5y tail at 3%). Implied normal vol 70bp, realised 95bp over the life. You hedge continuously. Estimate the expected P&amp;L and check it against the vega identity.",
+  "back": "1. Gamma per unit rate per unit notional: \\(\\Gamma=A\\varphi(0)/(\\sigma_i\\sqrt T)=4.6\\times0.3989/(0.0070\\times0.7071)=370.8\\).<br>\n2. Expected P&amp;L per unit notional: \\(\\tfrac12\\Gamma T(\\sigma_r^2-\\sigma_i^2)\\), with \\(\\sigma_r^2-\\sigma_i^2=0.0095^2-0.0070^2=4.125\\times10^{-5}\\). That gives \\(\\tfrac12\\times370.8\\times0.5\\times4.125\\times10^{-5}=3.82\\times10^{-3}\\), which is 38bp of notional, or about $382k on 100mm.<br>\n3. Premium at implied vol: \\(A\\sigma_i\\sqrt T\\varphi(0)=9.08\\times10^{-3}\\) per unit notional, about $908k. The expected P&amp;L is about 42% of the premium.<br>\n4. Vega identity check: \\(\\sigma_iT\\Gamma=0.0070\\times0.5\\times370.8=1.30\\), and \\(A\\sqrt T\\varphi(0)=4.6\\times0.7071\\times0.3989=1.30\\). They agree.<br>\n<b>Sanity check:</b> the expected P&amp;L is gamma times the excess variance per year, which is the standard gamma-theta bound.<br>\n<b>Where it breaks:</b> the expectation uses the gamma at inception, which changes as rates move. Discrete hedging adds zero-mean noise whose variance grows with gamma squared and the rehedge interval, and it leaves the expectation roughly unchanged. The expectation ignores drift in the realised rate.",
+  "tags": [
+   "case_study",
+   "delta_hedging",
+   "pnl",
+   "realised_implied"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case: caplet stripping from two flat caps.</b> Annual-reset caps at strike 2.50%. The 2y cap is quoted at 60bp flat and the 3y cap at 58bp flat. The first caplet's fixing is set at 3.10% with \\(P(0,1)=0.9600\\). \\(P(0,2)=0.9230\\), \\(P(0,3)=0.8870\\). Forwards: 2.90% for the 1y fixing and 3.00% for the 2y fixing. Strip the caplet vols.",
+  "back": "1. The first caplet is deterministic: \\(0.9600\\times(3.10\\%-2.50\\%)=0.576\\%\\) of notional.<br>\n2. The 2y cap is the first caplet plus caplet 1 at 60bp. Caplet 1 is \\(0.9230\\times\\mathrm{Bach}(2.90\\%,2.50\\%,60\\text{bp},1y)=0.453\\%\\), so the cap is 1.029%. Stripping gives caplet 1 a vol of 60bp exactly.<br>\n3. The 3y cap at 58bp flat totals 1.587%. Caplet 1 at 58bp is worth less than at 60bp, so the 3y quote cannot be used directly for caplet 2 at 58bp.<br>\n4. Caplet 2 value = 3y cap minus first caplet minus caplet 1 at 60bp = \\(1.587\\%-0.576\\%-0.453\\%=0.558\\%\\).<br>\n5. Solve \\(0.9\\text{-}ish\\) discount-adjusted Bachelier for \\(\\sigma_2\\): \\(\\sigma_2=56.6\\)bp.<br>\n<b>Sanity check:</b> caplet 2 lies below the 58bp flat quote, because the 60bp caplet 1 absorbs more of the 2y premium. This is the bootstrap effect, not a market inconsistency.<br>\n<b>Where it breaks:</b> the flat quotes must share the same strike and conventions. A kink like this is a sign to smooth the caplet curve before using it for exotic pricing.",
+  "tags": [
+   "case_study",
+   "caps_floors",
+   "caplets",
+   "bootstrapping"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case: bounding a Bermudan payer.</b> Strike 3.00%, exercise at 1y, 2y, 3y, 4y into a 5y tail. Co-terminal European payers (forward swap rate, annuity, normal vol): 1y×4y (2.90%, 3.70, 95bp); 2y×3y (3.00%, 2.78, 100bp); 3y×2y (3.10%, 1.91, 100bp); 4y×1y (3.20%, 0.97, 105bp). Bound the Bermudan per unit notional.",
+  "back": "1. Value each European as \\(A\\cdot\\mathrm{Bach}(S,3.00\\%,\\sigma,T)\\):<br>\n1y×4y: 122.5bp. 2y×3y: 156.8bp. 3y×2y: 141.7bp. 4y×1y: 91.3bp.<br>\n2. Lower bound: the holder can exercise into any one European, so \\(V_B\\ge\\max_i E_i=156.8\\)bp.<br>\n3. Upper bound: holding all four Europeans gives at least the payoff of the Bermudan's single exercise, so \\(V_B\\le\\sum_iE_i=512.4\\)bp.<br>\n4. Bounds: \\(156.8\\text{bp}\\le V_B\\le 512.4\\text{bp}\\). The optionality premium over the best European is between 0 and 355.6bp.<br>\n<b>Sanity check:</b> the upper bound is far from tight, because exercising one European cancels the others. It is a consistency check, not a price. The true value needs a one-factor tree or a PDE calibrated to the four co-terminals, and it is expected to sit much nearer the lower bound. I do not quote a model price here.<br>\n<b>Where it breaks:</b> the European values use one vol per expiry and the annuities are given inputs. A smile would change each European's value.",
+  "tags": [
+   "case_study",
+   "bermudan",
+   "bounds",
+   "switch_option"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case: vega bucketing.</b> A long 100mm 1y×10y payer has 80% of its vega in the 1y expiry bucket and 20% in the 2y bucket (an assumed key-rate mapping). Hedge with 1y×5y and 2y×5y ATM payers, with annuity about 4.58 for the 5y tail. Size the two hedges so both buckets net to zero vega.",
+  "back": "1. Vega in $ per bp, per 1mm notional: \\(10^6\\,A\\sqrt T\\varphi(0)\\,10^{-4}\\). The 1y×10y gives 340.3 $/bp per mm, so 100mm is $34,031/bp, split as $27,224 in the 1y bucket and $6,806 in the 2y bucket.<br>\n2. Hedge vegas per 1mm: 1y×5y gives 182.7 $/bp, mapped 90% to the 1y bucket ($164.4) and 10% to 2y ($18.3). 2y×5y gives 258.4 $/bp, all in the 2y bucket.<br>\n3. Solve \\(n_1H_1+n_2H_2=-V\\): \\(n_1=-165.6\\)mm (sell 1y×5y), \\(n_2=-14.6\\)mm (sell 2y×5y). The gross hedge is 180mm.<br>\n4. Check: 1y bucket \\(164.4\\times(-165.6)=-27{,}224\\), offsetting the trade. 2y bucket \\(18.3\\times(-165.6)+258.4\\times(-14.6)=-6{,}806\\), also offsetting.<br>\n<b>Sanity check:</b> the hedge is larger than the trade because the 1y×5y has about half the vega per notional of the 1y×10y (annuity 4.58 against 8.53).<br>\n<b>Where it breaks:</b> the 90/10 and 80/20 mappings are assumptions. The hedge matches only linear ATM vega, so off-ATM vega, volga and bucket-correlation risk remain unmatched.",
+  "tags": [
+   "case_study",
+   "vega_bucketing",
+   "hedging",
+   "swaptions"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case: leading-order SABR normal vol.</b> \\(\\beta=0\\), \\(F=3.00\\%\\), \\(\\alpha=90\\)bp, \\(\\nu=0.40\\), \\(\\rho=-0.30\\), \\(T=1\\)y. Compute the leading-order normal vol at \\(K=2.00\\%\\), \\(K=2.50\\%\\) and ATM, then the first-order time correction at \\(K=2.00\\%\\).",
+  "back": "1. At \\(K=2.00\\%\\): \\(\\zeta=(0.40/0.009)\\times0.01=0.4444\\). \\(\\sqrt{1+0.2667+0.1975}=1.2100\\), so \\(x=\\ln\\frac{1.2100+0.4444+0.3}{1.3}=0.4078\\).<br>\n2. Leading order: \\(\\sigma_N=90\\times0.4444/0.4078=98.1\\)bp.<br>\n3. At \\(K=2.50\\%\\): \\(\\zeta=0.2222\\), \\(x=0.2137\\), so \\(\\sigma_N=93.6\\)bp.<br>\n4. ATM: \\(\\zeta\\to0\\) and \\(\\zeta/x\\to1\\), so \\(\\sigma_N=90\\)bp.<br>\n5. First-order correction \\(1+(2-3\\rho^2)\\nu^2T/24=1+1.73\\times0.16/24=1.0115\\). This gives 99.2bp at 2.00%, 94.7bp at 2.50%, and 91.0bp at ATM.<br>\n<b>Sanity check:</b> \\(\\rho<0\\) gives a normal skew, with higher vol at lower strikes (98 at 2.00% against 90 ATM). The ATM correction equals the first-order term, which is consistent with the ATM value.<br>\n<b>Where it breaks:</b> the leading order drops \\(O(T)\\) terms and is least accurate far from the money (large \\(\\zeta\\)). The correction shown is first order only. This is the \\(\\beta=0\\) case.",
+  "tags": [
+   "case_study",
+   "sabr",
+   "hagan",
+   "normal_model"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For the \\(\\beta=0\\) SABR at leading order, the normal vol is \\(\\sigma_N=\\alpha\\,\\{{c1::\\zeta/x(\\zeta)}\\}\\), with \\(x(\\zeta)=\\{{c2::\\int_0^\\zeta dv/\\sqrt{1-2\\rho v+v^2}}\\}\\). At the money the factor equals {{c3::1}}, so ATM normal vol is \\(\\alpha\\).",
+  "back": "Closed form: \\(x(\\zeta)=\\ln\\big[(\\sqrt{1-2\\rho\\zeta+\\zeta^2}+\\zeta-\\rho)/(1-\\rho)\\big]\\). The factor \\(\\zeta/x(\\zeta)\\) is the segment average of an effective local normal vol. See the derivation card.",
+  "tags": [
+   "sabr",
+   "hagan",
+   "derivation",
+   "normal_model"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Under the spot-LIBOR measure, the drift of \\(L_i\\) is {{c1::positive}} for \\(\\rho_{ik}>0\\), and the sum runs over \\(k\\) from {{c2::\\(\\eta(t)+1\\)}} to {{c3::\\(i\\)}}, with each term \\(\\rho_{ik}\\tau_k\\sigma_kL_k/(1+\\tau_kL_k)\\).",
+  "back": "The terminal measure has the opposite sign and sums over \\(k>i\\). Both signs follow from the numeraire change, and the spot-measure drift is the one used to simulate short-dated paths.",
+  "tags": [
+   "lmm",
+   "spot_measure",
+   "drift",
+   "derivation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a one-factor switch between alternatives with values \\(V_A\\) and \\(V_B\\), the switch value satisfies {{c1::\\(\\max(V_A,V_B)\\)}} \\(\\le V_{sw}\\le\\) {{c2::\\(V_A+V_B\\)}}.",
+  "back": "Lower bound: choose only the better alternative. Upper bound: hold both. The gap depends on how far the two alternatives' exercise regions coincide.",
+  "tags": [
+   "bermudan",
+   "switch_option",
+   "bounds",
+   "no_arbitrage"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In one-factor Hull-White with loading \\(\\sigma(t,T)=\\sigma e^{-a(T-t)}\\), the HJM drift is \\(\\alpha(t,T)=\\{{c1::\\sigma^2e^{-a(T-t)}(1-e^{-a(T-t)})/a}}\\).",
+  "back": "Obtained from \\(\\sigma(t,T)\\int_t^T\\sigma(t,u)\\,du\\). Compare the derivation card: the drift is fixed by the volatility loading, with no free parameter.",
+  "tags": [
+   "hjm",
+   "hull_white",
+   "drift",
+   "no_arbitrage"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In Hull-White with \\(a=0.03\\), the bond loading for a 5y bond is \\(B(0,5)=\\){{c1::4.64}}, from \\((1-e^{-0.15})/0.03\\).",
+  "back": "At \\(a=0.10\\) the same loading is 3.93. Higher mean reversion reduces the bond's sensitivity to the short rate.",
+  "tags": [
+   "hull_white",
+   "bond_price",
+   "mean_reversion",
+   "affine"
+  ]
+ }
+]

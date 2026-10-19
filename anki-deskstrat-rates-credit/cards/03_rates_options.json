@@ -196,35 +196,35 @@
  },
  {
   "type": "basic",
-  "front": "Describe the swaption volatility cube (expiry, tenor, strike): how is it quoted, and how is it interpolated?",
-  "back": "Each point is an option expiry, an underlying swap tenor and a strike. Market quotes are usually ATM vols on an expiry-by-tenor grid, plus strike spreads at standard offsets in normal bp. These are converted into full strike vols.<br>\nInterpolate in expiry on total variance \\(\\sigma^2 T\\), which keeps calendar no-arbitrage. Strike interpolation uses a parametric smile (typically SABR) fitted per expiry-by-tenor slice. The interpolated surface must stay arbitrage-free in strike.<br>\n<b>Interviewer follow-up:</b> Why quote strikes as spreads? The smile shape is more stable than its level, so quoting relative to ATM lets the ATM vol move while the shape stays put.",
+  "front": "How do you build a full swaption vol surface (expiry × tenor × strike) from market quotes, and which no-arbitrage conditions must the interpolation preserve?",
+  "back": "<b>Quotes:</b> ATM normal vols on an expiry × tenor grid, plus strike spreads at standard offsets, in normal bp. Each slice is converted to strike vols with a smile model (typically SABR fitted per expiry and tenor).<br>\n<b>Calendar (expiry) direction:</b> interpolate total variance \\(\\sigma^2T\\) rather than vol, at fixed strike. Total variance must not fall with expiry. Example: at a fixed strike, 1y normal vol 100bp and 2y normal vol 70bp give total variance \\(1.00\\times10^{-4}\\) at 1y and \\(0.98\\times10^{-4}\\) at 2y, which is calendar arbitrage.<br>\n<b>Strike direction:</b> each slice must give a non-negative density (butterfly \\(\\ge0\\)) and monotone call prices.<br>\n<b>Tenor direction:</b> there is no separate arbitrage condition, but the forward swap rate and annuity for each tenor must come from one consistent curve. A mismatch is a data error.<br>\n<b>Interviewer follow-up:</b> Why interpolate variance and not vol? Linear interpolation of total variance between monotone knots stays monotone. Linear interpolation of vol can create a dip in total variance.",
   "tags": [
    "swaptions",
    "vol_cube",
-   "quoting",
-   "interpolation"
+   "interpolation",
+   "no_arbitrage"
   ]
  },
  {
   "type": "basic",
-  "front": "How would you hedge the vega of a 1y x 10y swaption with liquid instruments, and what residual risk remains?",
-  "back": "Bucket vega by expiry and tenor, then hedge with the nearest liquid swaptions (for example 1y x 5y and 2y x 10y), sized to match the bucketed vegas. The model's correlation and mean reversion inform which hedge matches the forward-rate exposure.<br>\nResidual risk: different points on the cube decorrelate, so bucketed vega is not a complete hedge. Smile differences leave strike-specific vega unmatched, and calibration error adds model risk. The trade-off is hedge cost against exact bucket matching.<br>\n<b>Interviewer follow-up:</b> Can a 10y x 1y swaption hedge a 1y x 10y? No. They sit on different parts of the forward-rate surface, so their rate exposures differ.",
+  "front": "Why is bucketed-vega hedging with co-tenor swaptions only approximate, and what determines the residual? Use the 1y×10y payer versus 1y×5y ratio as the first number.",
+  "back": "Bucketed vega is matched to first order in the normal vol of each bucket at inception. The residual has four sources.<br>\n(1) <b>Mapping error.</b> The split of vega across buckets comes from the risk system's key-rate or PCA mapping. A different mapping gives a different hedge.<br>\n(2) <b>Strike mismatch.</b> Off-ATM vega is \\(\\sqrt T\\varphi(d)\\) with \\(d\\ne0\\), so a hedge at a different strike has different vega per unit notional.<br>\n(3) <b>Vol-surface shape.</b> Bucket vols do not move in parallel. Two hedges control two directions, not the full surface.<br>\n(4) <b>Second-order terms.</b> Volga and vanna are not matched by first-order vega.<br>\n<b>Number:</b> ATM vega per unit notional is proportional to \\(A\\sqrt T\\). A 1y×10y (annuity about 8.53) carries about 1.86 times the vega per notional of a 1y×5y (annuity about 4.58). Hedging 100mm of 1y×10y therefore needs about 186mm of 1y×5y, before any bucket mapping.<br>\n<b>Interviewer follow-up:</b> Why not hedge with the same instrument? The point is the desk does not carry the 1y×10y; the hedge is chosen for liquidity and bucket coverage.",
   "tags": [
    "swaptions",
-   "vol_cube",
+   "vega_bucketing",
    "hedging",
-   "vega_bucketing"
+   "risk"
   ]
  },
  {
   "type": "basic",
-  "front": "Why does a payer and a receiver with the same strike have the same implied vol under a consistent model, and what breaks this in practice?",
-  "back": "Payer minus receiver equals \\(A(S-K)\\), a model-free identity, so the two prices imply the same vol when both use the same forward, annuity and strike convention.<br>\nIn practice a mismatch arises from differing annuity or forward definitions, from quoting on different curves, or from stale quotes. A mismatch is a data or convention issue to resolve before calibrating.",
+  "front": "A payer and a receiver with the same expiry, tenor and strike show different implied normal vols in your system. Give the checks, in order, before you touch the smile model.",
+  "back": "1. <b>Forward and annuity.</b> Both legs must use one forward swap rate and one annuity: the same curve, the same discounting (OIS versus IBOR), the same day count and the same payment schedule.<br>\n2. <b>Strike definition.</b> The strike must be one number in both. Check the day count, compounding and any spread or shift.<br>\n3. <b>Settlement.</b> Cash versus physical settlement changes the annuity used for the premium.<br>\n4. <b>Quote timing.</b> A payer and receiver quoted at different times on a moving market are not comparable. Check that the quotes are simultaneous.<br>\nA consistent model gives identical implied vols for payer and receiver with the same strike, by payer-receiver parity. Only after these checks is a smile mismatch a model question.",
   "tags": [
    "swaptions",
    "implied_vol",
-   "put_call_parity",
-   "smile_consistency"
+   "data_quality",
+   "conventions"
   ]
  },
  {
@@ -359,13 +359,13 @@
  },
  {
   "type": "cloze",
-  "front": "In the normal model with no rate drift, theta equals {{c1::minus one half of sigma squared times gamma}}. At the money, gamma is about {{c2::0.4}} divided by \\(\\sigma_N\\sqrt{T}\\).",
-  "back": "Derivation in the next card.",
+  "front": "In the normal model with zero drift, vega equals \\(\\{{c1::\\sigma_N T\\,\\Gamma}\\}\\) at every strike, so theta equals \\(\\{{c2::-\\sigma_N\\,\\mathcal V/(2T)}\\}\\).",
+  "back": "Derivation: \\(\\Theta=-\\tfrac12\\sigma_N^2\\Gamma\\), and \\(\\Gamma=\\mathcal V/(\\sigma_NT)\\). See the derivation card on the vega and theta relations.",
   "tags": [
-   "gamma",
+   "greeks",
    "theta",
-   "normal_model",
-   "greeks"
+   "vega",
+   "normal_model"
   ]
  },
  {
@@ -435,13 +435,13 @@
  },
  {
   "type": "basic",
-  "front": "What does the mean-reversion parameter \\(a\\) do in Hull-White, and how is it calibrated?",
-  "back": "\\(a\\) damps shocks: a shock to the short rate has effect \\(e^{-a(T-t)}\\) on the T-forward. Forward rates at different tenors therefore decorrelate, and long-tenor forward vol is damped relative to short-tenor vol.<br>\nCalibration: \\(a\\) and \\(\\sigma\\) are fitted together. \\(a\\) is identified from the ratio of swaption vols across tenors at the same expiry (for example 1y x 1y versus 1y x 10y), not from one tenor alone.<br>\n<b>Interviewer follow-up:</b> Why does \\(a\\) matter for Bermudans? It controls the decorrelation of forward rates, which drives how the exercise value depends on the path.",
+  "front": "In one-factor Hull-White, what does the mean-reversion parameter \\(a\\) change in the swap-rate vol term structure, and why do forward-rate moves stay perfectly correlated?",
+  "back": "All instantaneous forward moves load on the same \\(dW\\) with \\(\\sigma e^{-a(T-t)}\\). Any two forward rates or swap rates are therefore perfectly correlated in a one-factor model. Mean reversion does not decorrelate them.<br>\nWhat \\(a\\) changes is the relative loading of each swap rate on the short rate. The swap-rate vol is \\(\\sigma|\\partial_rS|\\). For a 1y×5y swap on a flat 3% curve, \\(|\\partial_rS|\\) is 0.930 at \\(a=0.03\\) and 0.738 at \\(a=0.10\\). For the same 100bp swap vol, the short-rate vol must be about 1.07% at \\(a=0.03\\) and about 1.35% at \\(a=0.10\\).<br>\nDecorrelation needs a second factor, as in a two-factor Hull-White model with a correlation parameter.<br>\n<b>Interviewer follow-up:</b> So what does calibration identify? The co-terminal vols identify \\(\\sigma(t)\\) given \\(a\\), and the mix of short and long tenor vols constrains \\(a\\) only weakly.",
   "tags": [
    "hull_white",
    "mean_reversion",
    "vol_term_structure",
-   "calibration"
+   "correlation"
   ]
  },
  {
@@ -534,11 +534,11 @@
  },
  {
   "type": "basic",
-  "front": "Why do Cheyette and stochastic-local-vol models appear when a standard LMM or Hull-White model cannot fit the smile across strikes and expiries?",
-  "back": "Standard constant-parameter Gaussian and lognormal models produce a smile that is only partly controlled. Cheyette (quasi-Gaussian, with state-dependent vol) and SLV (stochastic vol with a local-vol leverage function) add state dependence, so the smile moves with the rate.<br>\nThe leverage function can match the calibrated vanilla surface exactly, and the stochastic component sets the forward smile dynamics that drive exotic values. Trade-off: more parameters and higher computational cost.",
+  "front": "Why does a one-factor Gaussian model with constant \\(\\sigma\\) miss the smile across strikes, and what does a local-vol leverage function fix that a stochastic-vol component does not?",
+  "back": "With constant \\(\\sigma\\), the normal model has no state dependence in its vol, so the smile has no dynamic skew. Cheyette and SLV add state dependence. In an SLV, the leverage function \\(L(t,S)\\) multiplies a stochastic-vol component, so \\(\\sigma_{\\rm loc}=L\\cdot\\sigma_{\\rm stoch}\\).<br>\nThe leverage function is calibrated so the model reproduces today's vanilla marginals exactly. The stochastic component controls how the smile moves through time, which is what exotic values depend on.<br>\n<b>Interviewer follow-up:</b> Why can a model with an exact vanilla fit still misprice a forward-starting option? Matching today's surface fixes only the marginals at today's date. A forward smile depends on the stochastic component, which is not pinned by the vanilla quotes.",
   "tags": [
-   "cheyette",
    "slv",
+   "cheyette",
    "smile",
    "models"
   ]
@@ -600,19 +600,19 @@
  },
  {
   "type": "basic",
-  "front": "What is the risk profile of a range accrual note from the investor's side?",
-  "back": "The coupon accrues only on days the reference rate lies inside a corridor. The investor is effectively long a strip of digital options on the reference being in range. That is equivalent to being short the range boundaries.<br>\nThe investor is usually short volatility: it earns when the rate stays in a band and loses on breakouts. The vega sign depends on the corridor relative to the forward. If the reference is CMS-based, correlation and smile matter as well.",
+  "front": "A range accrual pays a daily coupon when the 10y swap rate lies between 2% and 4%. The forward is 3%. Describe the investor's exposure, and estimate how often the note accrues if the normal vol over the period is 80bp for a one-period view at expiry.",
+  "back": "The coupon is \\(\\sum_d c\\,\\tau_d\\,\\mathbf 1\\{L<S_d<U\\}\\). The investor holds a strip of digital options that pay when the rate is in range. Equivalently, the investor is long the bullet and short the two boundary digitals (below \\(L\\) and above \\(U\\)).<br>\n<b>Vega:</b> the in-range probability falls as vol rises, so the investor is short vol. <b>Delta:</b> near zero at the centre of the range by symmetry, and it grows as the rate approaches a boundary.<br>\n<b>Number:</b> with \\(\\sigma\\sqrt T=0.8\\%\\), the boundaries are \\(\\pm1\\%\\) from the forward, so \\(z=1.25\\). The Gaussian in-range probability is \\(1-2(1-N(1.25))=1-2(0.1056)\\approx 79\\%\\) at expiry. This is a single-date approximation: the daily accrual is the average over the path.<br>\n<b>Interviewer follow-up:</b> If the reference is a CMS rate, what else matters? Correlation and the smile, because the in-range probability depends on the tail shape of the swap rate.",
   "tags": [
    "range_accrual",
-   "vol",
-   "structured",
-   "short_vol"
+   "short_vol",
+   "digitals",
+   "structured"
   ]
  },
  {
   "type": "basic",
-  "front": "Describe a TARN (target redemption note) and explain why its embedded knockout is the key risk.",
-  "back": "A TARN pays a coupon each period until cumulative coupons reach a target, then redeems. The coupons accumulate fastest in high-rate paths, so the target is hit early in exactly the scenarios where the coupons are highest.<br>\nThe investor is therefore short a path-dependent knockout on the coupon stream. Valuation depends on the whole path of rates, so vol dynamics, smile and correlation across the coupon schedule matter. A constant-vol Gaussian model misprices it.",
+  "front": "Describe the embedded option in a TARN (target redemption note), and say why the investor is short it without assuming which way the coupons move with rates.",
+  "back": "A TARN redeems when cumulative coupons reach a target. The redemption is a knockout on the coupon stream: once the target is hit, the investor gives up all future coupons.<br>\nThe investor holds the coupons and is therefore short this knockout. Whether a rate path hits the target fast or slow depends on the coupon's dependence on rates. Either way, a path that hits the target early removes the coupons the investor would have kept.<br>\n<b>Number:</b> with a 6% target, an average coupon of 2.5% knocks out after about 2.4 years, and an average of 1% after 6 years. The time to knockout is about target divided by average coupon.<br>\n<b>Interviewer follow-up:</b> Why does a single-vol model misprice it? The knockout depends on the whole coupon path, so the vol at each coupon date, the smile and the correlation between coupon dates all matter.",
   "tags": [
    "tarn",
    "path_dependence",

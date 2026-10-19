@@ -1,0 +1,332 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BOOT 1/4]</b> Context: single-curve SONIA OIS, annual fixed legs (day count ignored), par quotes 1y = 4.10% and 2y = 4.20%. Bootstrap \\(DF_1\\) and \\(DF_2\\), then give the annual-compounded 2y zero rate and the 1y1y forward.",
+  "back": "<b>Answer:</b> \\(DF_1=1/1.041=0.960615\\). Par condition for 2y: \\(S_2(DF_1+DF_2)=1-DF_2\\), so \\(DF_2=(1-S_2DF_1)/(1+S_2)=(1-0.042\\times0.960615)/1.042=0.920973\\).<br>\nCheck: \\(0.042\\times(0.960615+0.920973)=0.079027=1-DF_2\\).<br>\n2y zero (annual): \\(DF_2^{-1/2}-1=4.2021\\%\\), slightly above the 4.20% par rate. 1y1y forward: \\(DF_1/DF_2-1=4.3043\\%\\).<br>\n<b>Interviewer follow-up:</b> Why is the 2y zero above the 2y par rate? The par rate is an annuity-weighted average of the forwards (see the weighted-average derivation card), and the 1y1y forward (4.30%) sits below the 2y1y forward (4.36%), so the 2y par average sits below the 2y zero.",
+  "tags": [
+   "swaps",
+   "chain_boot_sonia",
+   "bootstrapping",
+   "ois"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BOOT 2/4]</b> Same curve (1y 4.10%, 2y 4.20% par, annual). Interpolate the discount factor at 1.5y two ways: (a) log-linear in DF, (b) linear in the annual-compounded zero rate. Which gives which DF, and how big is the gap?",
+  "back": "<b>Answer:</b><br>\n(a) Log-linear DF: \\(DF(1.5)=\\sqrt{DF_1 DF_2}=0.940585\\), implied 1.5y zero \\(4.1681\\%\\).<br>\n(b) Linear zero: \\(z(1.5)=(4.1000\\%+4.2021\\%)/2=4.1511\\%\\), so \\(DF(1.5)=(1.041511)^{-1.5}=0.940816\\).<br>\nGap in DF: \\(-0.000230\\), which is \\(-23{,}000\\) of PV on 100m notional. In rate terms the two 1.5y zeros differ by about 1.7bp.<br>\nBoth schemes reprice the 1y and 2y pillars exactly. The gap comes only from the choice of interpolation and so sits on off-pillar instruments.<br>\n<b>Interviewer follow-up:</b> Which is right? Neither is \"right\" from market data alone. The choice is a model assumption about the shape between pillars, and it changes the value of any 1.5y-type cashflow that the pillars do not price.",
+  "tags": [
+   "swaps",
+   "chain_boot_sonia",
+   "interpolation",
+   "curves"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BOOT 3/4]</b> Same 1y/2y curve. Under linear-in-continuous-zero interpolation between 1y and 2y, the instantaneous forward is linear in \\(t\\) on \\((1,2)\\). Suppose the 2y par quote moves up 1bp. How do forwards at \\(t=1.01\\), \\(1.5\\) and \\(1.99\\) move, and what does this shape imply for a curve trader?",
+  "back": "<b>Answer:</b> With \\(z(t)\\) linear on \\((1,2)\\), \\(f(t)=z(t)+t\\,z'(t)\\) is linear in \\(t\\), with slope \\(2\\,z'\\). A 1bp move in the 2y quote moves the 2y zero by about 0.98bp, so the forward changes by about <b>+1.0bp at 1.01y, +2.0bp at 1.5y and +2.9bp at 1.99y</b>.<br>\nUnder log-linear DF the forward on \\((1,2)\\) is constant, so the same bump shifts the whole segment by about +2.0bp, with a jump at the 1y pillar.<br>\nImplication: a 2y-only quote move produces a forward tilt inside the 1y-2y segment under linear zeros, and a flat step under log-linear. Hedging with the 2y par swap alone therefore leaves a residual in the forward shape that the desk must watch.<br>\n<b>Interviewer follow-up:</b> Why does the 1y forward move at all under linear zeros when the 1y quote is fixed? Because the 1y node is pinned in value, not in slope. The forward at \\(t=1^+\\) depends on the slope of \\(z\\) on the next segment, and that slope is set by the 2y quote.",
+  "tags": [
+   "swaps",
+   "chain_boot_sonia",
+   "forwards",
+   "risk"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BOOT 4/4]</b> Same 1y/2y curve, log-linear DF. Quotes \\(q=(S_1,S_2)\\) and nodes \\(z=(DF_1,DF_2)\\). Derive the 2x2 Jacobian \\(J=\\partial q/\\partial z\\), its inverse, and the per-bp PV sensitivity of a 1.5y zero-coupon DF (unit notional) to each par quote. Check that the bucket sum equals the parallel move.",
+  "back": "<b>Answer:</b> \\(S_1=1/DF_1-1\\), \\(S_2=(1-DF_2)/(DF_1+DF_2)\\). So<br>\n\\[J=\\begin{pmatrix}-1/DF_1^2 & 0\\\\ -\\dfrac{1-DF_2}{(DF_1+DF_2)^2} & -\\dfrac{1+DF_1}{(DF_1+DF_2)^2}\\end{pmatrix}\\]\nNumerically \\(J_{11}=-1.08368\\), \\(J_{21}=-0.02232\\), \\(J_{22}=-0.55379\\). Lower triangular, as expected for a sequential bootstrap.<br>\nInverse \\(\\partial z/\\partial q=J^{-1}\\): \\(\\partial DF_1/\\partial S_1=-0.92278\\) per unit, i.e. \\(-0.00009228\\) per bp; \\(\\partial DF_2/\\partial S_2=-0.00018057\\) per bp; \\(\\partial DF_2/\\partial S_1=+0.0000037\\) per bp.<br>\nMap the 1.5y DF: \\(\\partial DF(1.5)/\\partial z=(\\tfrac12 DF(1.5)/DF_1,\\ \\tfrac12 DF(1.5)/DF_2)\\). Then \\(\\partial V/\\partial q=(J^{-1})^{\\top}\\partial V/\\partial z\\) gives <b>\\(-0.0000433\\) per bp to \\(S_1\\)</b> and <b>\\(-0.0000922\\) per bp to \\(S_2\\)</b>, a total of \\(-0.0001355\\) per bp, or \\(-13{,}549\\) per bp on 100m. A direct parallel bump of both quotes confirms the total.<br>\n<b>Where it breaks:</b> the mapping assumes a non-singular \\(J\\). Redundant quotes or a node with no pinning instrument make \\(J\\) singular, and the par-to-node mapping then has no unique answer.<br>\n<b>Interviewer follow-up:</b> Why is the 2y quote's effect on the 1.5y DF larger than the 1y quote's? Because the 1.5y DF is built from both nodes, and the 2y quote moves \\(DF_2\\) directly while the 1y quote moves it only through the bootstrap.",
+  "tags": [
+   "jacobian",
+   "bootstrapping",
+   "risk",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CSA 1/3]</b> A 5y receiver swap, 100m notional, fixed 3.00% annual, float leg projected on a flat 3.20% curve, valued with discounting on a flat collateral curve. The collateral rate moves from flat 3.20% to flat 3.10%. Derive the swap value as a function of the discount curve and give the MTM change.",
+  "back": "<b>Answer:</b> With float forwards \\(F_i\\equiv S_p\\) and principal exchanged at both ends, the float leg is \\(N(S_p\\,A_d+DF_{d,n})\\) and the fixed leg is \\(N(K\\,A_d+DF_{d,n})\\), where \\(A_d=\\sum_i\\tau_i DF_{d,i}\\) on the discount curve. The receiver's value is<br>\n\\[V=N\\,(K-S_p)\\,A_d.\\]\nThe principal terms cancel, so the MTM depends on discounting only through the annuity.<br>\nNumbers (flat annual curves): \\(A_{\\text{old}}=4.55367\\) at 3.20%, \\(A_{\\text{new}}=4.56666\\) at 3.10%. Then \\(V_{\\text{old}}=-910{,}734\\) and \\(V_{\\text{new}}=-913{,}332\\). <b>MTM change \\(=-2{,}598\\)</b>: a lower collateral rate raises the annuity and makes the receiver's negative MTM larger.<br>\n<b>Interviewer follow-up:</b> Why does the receiver's MTM get worse when the collateral rate falls? Lower discounting raises every DF's weight in the annuity; the fixed-minus-float spread \\(K-S_p\\) is negative, so a larger annuity makes it more negative.",
+  "tags": [
+   "csa",
+   "discounting",
+   "swaps",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CSA 2/3]</b> Continuing the same 5y receiver after the switch to 3.10% collateral: the switch is compensated on the day with a cash amount equal to the MTM change. The receiver posts collateral equal to its negative MTM of about 0.91m and earns interest on it at the collateral rate. What compensation is due, and what is the residual daily carry effect?",
+  "back": "<b>Answer:</b> Compensation is the MTM change on the switch date: \\(\\Delta V=-2{,}598\\), paid by the receiver to the payer, or netted in the collateral account. This makes the trade's value continuous across the switch.<br>\nResidual carry: the collateral balance is about 910,734, and its rate falls by 10bp. Act/360 carry change \\(=910{,}734\\times 0.0010/360\\approx 2.53\\) per day, a loss to the receiver of about 2.5 per day.<br>\n<b>Where it breaks:</b> the compensation sets value at one date. Going forward, the value's sensitivity to the collateral curve changes (see the next card), and any mismatch between the compensation day and the valuation day shows up as P&amp;L.<br>\n<b>Interviewer follow-up:</b> Why is the carry effect small even though the MTM change is a stock effect? Because the carry is the collateral rate change times the posted balance, which is a daily flow on a balance of about 0.9m. The 2.6k MTM change is a one-off, but the carry runs every day until the trade matures or the collateral terms change again.",
+  "tags": [
+   "csa",
+   "pai",
+   "discounting",
+   "scenario"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CSA 3/3]</b> After the switch (receiver 5y, 100m, fixed 3.00%, projection 3.20% flat, discounting now 3.10% flat), a desk reports that the compensation was paid and the MTM is continuous, yet its DV01 to the discount curve has changed. Explain why compensation neutralises value but not sensitivity, and give the sign and approximate size of the discount-curve DV01.",
+  "back": "<b>Answer:</b> Compensation sets the value at one instant. Sensitivity is a derivative with respect to the discount curve: \\(\\partial V/\\partial y_d=N(K-S_p)\\,\\partial A_d/\\partial y_d\\).<br>\nSize: \\(\\partial A/\\partial y\\approx-13.1\\) per unit yield at 3.2% flat (5y annual), and \\(K-S_p=-0.20\\%\\). So \\(\\partial V/\\partial y_d\\approx 100\\text{m}\\times(-0.0020)\\times(-13.1)\\times10^{-4}\\approx+2{,}600\\) per bp. The receiver's DV01 to discounting is positive: a 1bp rise in discount rates shrinks the annuity and improves its negative MTM.<br>\n<b>Where it breaks:</b> a mismatch between the DV01 under the old and new discounting is a risk-management problem, not a valuation one. Hedges set on the old curve need re-mapping.<br>\n<b>Interviewer follow-up:</b> Why does the DV01 need recomputing even though MTM is compensated? Because hedges are sized on DV01 per curve. A value-neutral switch still moves which curve the risk sits on, so the hedge must move with it.",
+  "tags": [
+   "csa",
+   "discounting",
+   "risk",
+   "dv01"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: XCCY 1/3]</b> EURUSD spot 1.1000 (USD per EUR), 3m tenor \\(\\tau=0.25\\), USD 3m OIS 4.00%, EUR 3m OIS 2.00%. The market 3m forward is 1.10616. Covered-interest parity (CIP) gives 1.10547. Compute the USD rate implied by the market forward and the deviation from USD OIS.",
+  "back": "<b>Answer:</b> Covered parity: \\(F_{\\text{CIP}}=S(1+r_{\\text{USD}}\\tau)/(1+r_{\\text{EUR}}\\tau)=1.1\\times1.01/1.005=1.10547\\).<br>\nImplied USD rate from the market forward: \\(r_{\\text{impl}}=\\big[(F/S)(1+r_{\\text{EUR}}\\tau)-1\\big]/\\tau=\\big[(1.10616/1.1)(1.005)-1\\big]/0.25=4.2512\\%\\).<br>\nDeviation \\(=r_{\\text{impl}}-r_{\\text{USD OIS}}=+25\\)bp. Synthetic USD obtained through FX swaps costs 25bp more than direct USD OIS, which is the negative USD basis convention.<br>\n<b>Interviewer follow-up:</b> Which side pays the deviation? A party that needs USD and swaps EUR into USD pays it. A party that holds USD and lends it through FX swaps earns it.",
+  "tags": [
+   "xccy",
+   "cip",
+   "basis",
+   "fx"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: XCCY 2/3]</b> Same market (USD basis deviation +25bp, FX-implied USD 4.25% against USD OIS 4.00%). A bank could fund USD by an FX swap at that cost. Express the 25bp as a PV on 100m USD notional for a 3m tenor, and then as a PV01 on a 5y basis swap with a 1bp spread, to show how the basis enters a curve.",
+  "back": "<b>Answer:</b> 3m cost: \\(25\\text{bp}\\times100\\text{m}\\times0.25=62{,}500\\) USD per quarter, which is the funding excess.<br>\nBasis swap PV: a spread \\(b\\) on a leg of notional \\(N\\) has PV \\(N\\,b\\,A\\) with \\(A\\) the leg's annuity in its own currency. For a 5y EUR annuity at 2%, \\(A=4.71346\\), so the PV01 is \\(100\\text{m}\\times4.71346\\times10^{-4}=47{,}135\\) EUR per bp.<br>\nEach bp of basis is worth about 47k EUR of PV on 100m, so a 25bp move is about 1.18m EUR of MTM on a 5y basis swap.<br>\n<b>Interviewer follow-up:</b> Why is the basis entered into a curve as a spread and not as an FX quote? Because a basis swap pays a spread on one leg. Putting it on the projection curve keeps the discount curve collateral-consistent, and the spread then reprices the basis swap exactly.",
+  "tags": [
+   "xccy",
+   "basis",
+   "pv01",
+   "curves"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: XCCY 3/3]</b> The USD basis is wider at quarter-ends and year-ends than in the middle of a quarter. A curve builder wants a model for this. Give the balance-sheet mechanism, a rough cost sizing for an FX-swap arbitrage, and how the date effect should be treated in the curve.",
+  "back": "<b>Answer:</b> Bank leverage and regulatory balance-sheet snapshots are taken at reporting dates. Holding an FX swap adds gross exposure, and the cost of carrying that exposure over a reporting date is what widens the basis at quarter-ends.<br>\nIllustrative sizing (order of magnitude, not a calibrated figure): if an FX swap must carry leverage-type capital of about 3% of its gross notional, at a 10% cost of equity, the carry cost is about \\(0.03\\times0.10=0.3\\%\\) per year, or about 30bp on notional per year. A 3m trade bears about \\(0.25\\times30=7.5\\)bp of this on its notional over its life, which is the order of magnitude that an arbitrageur must earn to justify the trade.<br>\nCurve treatment: put the quarter-end effect on a separate short-end node or as a date-specific spread on the straddling instrument, and report it as a separate bucket. Do not smooth it into the surrounding basis nodes.<br>\n<b>Interviewer follow-up:</b> Why not simply accept a wider basis all the year? A flat spread misprices the instruments that straddle quarter-end, and it hides a risk that the desk can hedge with dated instruments.",
+  "tags": [
+   "xccy",
+   "balance_sheet",
+   "basis",
+   "trade_off"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CMS 1/3]</b> A 5y swap rate fixes at \\(T_f=5\\) and pays at \\(T_p=T_f+\\tau_p\\). Normal vol \\(\\sigma_N=1\\%\\) p.a. Curve flat at 3.00% annual. Using the linear swap-rate approximation, the CMS convexity adjustment (CA) is \\(E^{T_p}[S_{T_f}]-S_0\\). Give the leading-order formula in terms of the annuity slope and the payment lag, then compute it for \\(\\tau_p=0\\) and \\(\\tau_p=0.5\\).",
+  "back": "<b>Answer:</b> The density between the \\(T_p\\) and annuity measures is \\(G(S)\\propto P(\\cdot,T_p)/A\\) (see the annuity-measure derivation card). Under a normal model, \\(dS\\) acquires drift \\(\\sigma_N^2\\,\\partial_S\\ln G\\), so to leading order, with the ratio frozen at \\(S_0\\),<br>\n\\[\\mathrm{CA}\\approx\\sigma_N^2\\,T_f\\left[-\\frac{\\partial\\ln A}{\\partial y}-\\frac{\\tau_p}{1+y}\\right].\\]\nIn the flat-yield model \\(P(\\cdot,T)=(1+y)^{-(T-\\cdot)}\\), and \\(A(y)=\\sum_{i=1}^5(1+y)^{-i}\\).<br>\nNumbers: \\(-\\partial\\ln A/\\partial y=2.856\\). For \\(\\tau_p=0\\): \\(\\mathrm{CA}=10^{-4}\\times5\\times2.856=14.3\\)bp. For \\(\\tau_p=0.5\\): subtract \\(0.5/1.03=0.485\\), so \\(\\mathrm{CA}=10^{-4}\\times5\\times2.371=11.8\\)bp.<br>\n<b>Where it breaks:</b> the flat-yield curve and frozen ratio are approximations. The sign is robust (positive for a payment lag and a declining annuity), but the size depends on the true curve and on smile.<br>\n<b>Interviewer follow-up:</b> Why does a payment lag reduce the CA here? A later payment date puts the lag term \\(-\\tau_p/(1+y)\\) into the density, which pulls the drift down. The annuity term is the part that does not depend on the lag.",
+  "tags": [
+   "cms",
+   "convexity",
+   "annuity_measure",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CMS 2/3]</b> Same 5y fixing, normal vol 1%, flat 3% curve, \\(\\tau_p=0.5\\). The CA from the previous card is about 11.8bp. A trader wants to know whether using a lognormal Black formula for the adjustment would give a similar answer. Explain why the answer depends on the vol model and give the link between the two.",
+  "back": "<b>Answer:</b> The normal-model drift \\(\\sigma_N^2\\partial_S\\ln G\\) is linear in the vol-squared and independent of \\(S\\) in its variance term. Black's model with lognormal vol \\(\\sigma_B\\) has drift \\(\\sigma_B^2 S^2\\,\\partial_S\\ln G\\), so the same CA requires \\(\\sigma_B^2 S^2\\approx\\sigma_N^2\\), that is \\(\\sigma_B\\approx\\sigma_N/S\\).<br>\nAt \\(S=3\\%\\), a 1% normal vol corresponds to about 33% lognormal vol. So a Black vol quoted at a strike far from the forward maps to a different normal vol, and the two CAs differ unless the vols are reconciled through the surface.<br>\n<b>Where it breaks:</b> the link holds only for the frozen-ratio approximation. A genuine smile makes the CA depend on the whole vol curve at each strike.<br>\n<b>Interviewer follow-up:</b> Which vol should the desk quote? The normal vol at the swaption's strike, interpolated along the smile, is the consistent input. A single Black vol at the forward rate misstates the adjustment.",
+  "tags": [
+   "cms",
+   "convexity",
+   "volatility",
+   "smile"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CMS 3/3]</b> A 10y CMS paying at a 1y lag is priced with the flat-yield linear model at 3% and normal vol 1%. The desk's static-replication engine gives a different number once the swaption smile is included. Explain how static replication computes the CA and why the flat-yield answer can differ materially.",
+  "back": "<b>Answer:</b> Static replication writes the CMS payoff as a strip of swaptions: \\(E^{T_p}[S]\\) equals \\(S_0\\) plus an integral of payer and receiver swaption prices weighted by the second derivative of the payoff-to-density mapping \\(G(S)\\). Each strike is priced at the vol observed at that strike, so the smile enters through the strike-by-strike vol.<br>\nThe flat-yield CA sets a single normal vol and a flat curve, so it ignores the fact that the vol at 1y into 10y varies by strike. When the smile is steep, the replication answer differs in both size and sign of the adjustment at the tails.<br>\n<b>Where it breaks:</b> static replication needs a dense, arbitrage-free swaption surface and a stable extrapolation for high strikes. Errors in the tails feed directly into the CA.<br>\n<b>Interviewer follow-up:</b> Why does the desk use replication rather than an analytic CA? Because the analytic model fixes the vol and the curve. Replication uses the market's own strike-by-strike information, which is what a hedge of a CMS leg actually depends on.",
+  "tags": [
+   "cms",
+   "static_replication",
+   "smile",
+   "swaptions"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> the par swap rate as an annuity-weighted average of forwards. Single-curve, fixed annual schedule \\(T_0<\\dots<T_n\\), accrual \\(\\tau_i\\), forwards \\(F_i\\) for period \\(i\\), \\(A=\\sum_i\\tau_iDF_i\\).",
+  "back": "<b>Step 1.</b> Float leg, single curve, no spread: \\(\\sum_i \\tau_iF_iDF_i\\). Since \\(1+\\tau_iF_i=DF_{i-1}/DF_i\\), we have \\(\\tau_iF_iDF_i=DF_{i-1}-DF_i\\), which telescopes to \\(1-DF_n\\).<br>\n<b>Step 2.</b> Par condition \\(S\\,A=1-DF_n\\), so \\(S=\\dfrac{1-DF_n}{A}=\\dfrac{\\sum_i\\tau_iF_iDF_i}{\\sum_i\\tau_iDF_i}\\).<br>\n<b>Step 3.</b> Define weights \\(w_i=\\tau_iDF_i/A\\). These are positive and sum to one, so \\[S=\\sum_i w_iF_i.\\]<br>\n\n<b>Where it breaks:</b> the weighted-average identity requires the float leg to telescope. With a projection curve whose tenor differs from the discount curve, or a spread \\(b\\) on the float leg, the float leg is \\(\\sum\\tau_i(F_i+b)DF_i\\neq1-DF_n\\), and the par rate picks up an annuity-weighted basis term \\(b\\).<br>\n<b>Interviewer follow-up:</b> What does the weight \\(w_i\\) mean for a hedge? It says the par rate is most sensitive to the forwards whose discounted accrual carries the most weight, which is the later periods on a long swap.",
+  "tags": [
+   "swaps",
+   "derivation",
+   "par_rate",
+   "forwards"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> change of numeraire from the annuity measure \\(\\mathbb Q^A\\) to the forward measure \\(\\mathbb Q^{T_p}\\) for a payment at \\(T_p\\) after the swap's last fixing \\(T_f\\), and its effect on the swap rate.",
+  "back": "<b>Step 1.</b> Numeraires: \\(A(t)=\\sum_i\\tau_iP(t,T_i)\\) for \\(\\mathbb Q^A\\), and \\(P(t,T_p)\\) for \\(\\mathbb Q^{T_p}\\). The density is \\[\\frac{d\\mathbb Q^{T_p}}{d\\mathbb Q^A}\\Big|_{T_f}=\\frac{P(T_f,T_p)}{A(T_f)}\\cdot\\frac{A(0)}{P(0,T_p)}.\\]<br>\n<b>Step 2.</b> For any \\(X_{T_f}\\), \\(\\mathbb E^{T_p}[X]=\\mathbb E^{A}[X\\cdot Z]\\) with \\(Z\\) the density above. Since \\(S\\) is a martingale under \\(\\mathbb Q^A\\), \\(\\mathbb E^{T_p}[S_{T_f}]-S_0=\\mathrm{Cov}^{A}(S_{T_f},Z)\\).<br>\n<b>Step 3.</b> In the flat-yield model, \\(\\ln(P(T_f,T_p)/A(T_f))\\) has slope \\(-\\tau_p/(1+y)-\\partial_y\\ln A\\) in \\(y\\). Both terms are positive, so the drift is positive, and the net adjustment is \\(\\sigma_N^2T_f\\) times that slope.<br>\n<b>Where it breaks:</b> the derivation assumes the swap's own annuity is the numeraire and that \\(S\\) is a martingale under \\(\\mathbb Q^A\\). With a stochastic or correlated vol surface, the drift acquires an extra term from the vol-rate covariance.<br>\n<b>Interviewer follow-up:</b> Why does a zero payment lag give a non-zero adjustment? Because the density still contains \\(1/A(T_f)\\), whose slope with respect to \\(S\\) is not zero.",
+  "tags": [
+   "swaps",
+   "annuity_measure",
+   "cms",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> futures-forward convexity adjustment under the Hull–White one-factor model. Futures rate on \\([T_1,T_1+\\tau]\\) equals \\(\\mathbb E^{\\mathbb Q}[F(T_1,T_2)]\\), the forward rate equals \\(\\mathbb E^{T_2}[F(T_1,T_2)]\\). Derive the first-order adjustment and state the result.",
+  "back": "<b>Step 1.</b> Let \\(X=F(T_1,T_2)=\\tfrac1\\tau(1/P-1)\\) with \\(P=P(T_1,T_2)\\). Under HW, \\(\\ln P=\\text{const}-B\\,r(T_1)\\), where \\(B=(1-e^{-a\\tau})/a\\).<br>\n<b>Step 2.</b> Under \\(\\mathbb Q\\), \\(r(T_1)\\) is Gaussian with variance \\(v=\\sigma^2(1-e^{-2aT_1})/(2a)\\) and drift correction \\(\\sigma^2(1-e^{-aT_1})^2/(2a^2)\\) relative to the forward curve. The exponential moment gives \\(\\mathbb E[1/P]\\approx\\) (forward-consistent value)\\(\\times\\bigl(1+\\tfrac12B^2v+B\\,\\sigma^2(1-e^{-aT_1})^2/(2a^2)\\bigr)\\).<br>\n<b>Step 3.</b> Hence \\[\\mathrm{CA}\\approx\\frac1\\tau\\left[\\tfrac12B^2v+B\\frac{\\sigma^2(1-e^{-aT_1})^2}{2a^2}\\right].\\]<br>\nChecks: as \\(a\\to0\\), \\(B\\to\\tau\\) and the bracket gives \\(\\tfrac12\\sigma^2T_1T_2\\), the Ho–Lee result. Numbers: \\(T_1=3\\), \\(\\tau=0.25\\), \\(\\sigma=1\\%\\), \\(a=3\\%\\) give \\(\\mathrm{CA}\\approx4.44\\)bp against Ho–Lee \\(4.88\\)bp.<br>\n<b>Where it breaks:</b> this is a first-order (in \\(\\sigma^2\\)) approximation. Its closed form was checked only against the \\(a\\to0\\) limit and the Ho–Lee value, not against a full simulation. Use it as a sizing guide and confirm with an exact calculation before quoting.<br>\n<b>Interviewer follow-up:</b> Why does mean reversion reduce the adjustment? It caps the variance of \\(r(T_1)\\) at \\(\\sigma^2/(2a)\\), so the futures-forward gap grows more slowly than \\(T_1\\).",
+  "tags": [
+   "futures",
+   "convexity",
+   "hull_white",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> the Jacobian for a two-node bootstrap, written explicitly so that the par-to-node mapping can be checked by hand. Nodes \\(z=(DF_1,DF_2)\\), quotes \\(q=(S_1,S_2)\\), annual annuity, single curve.",
+  "back": "<b>Step 1.</b> Quotes as functions of nodes: \\(S_1=1/DF_1-1\\), \\(S_2=(1-DF_2)/(DF_1+DF_2)\\).<br>\n<b>Step 2.</b> \\(J=\\partial q/\\partial z\\) is lower triangular, since \\(S_1\\) does not depend on \\(DF_2\\) and \\(S_2\\) depends on both nodes. Numerically \\(J_{11}=-1.08368\\), \\(J_{21}=-0.02232\\), \\(J_{22}=-0.55379\\).<br>\n<b>Step 3.</b> Invert: \\(\\partial DF_1/\\partial S_1=1/J_{11}=-0.92278\\) per unit, so \\(-0.0000923\\) per bp. \\(\\partial DF_2/\\partial S_2=1/J_{22}=-1.80575\\) per unit, so \\(-0.0001806\\) per bp. Cross term \\(\\partial DF_2/\\partial S_1=-J_{21}/(J_{11}J_{22})=+0.0000037\\) per bp.<br>\n<b>Step 4.</b> Parallel check: moving both quotes by 1bp moves \\(DF_2\\) by \\(-0.0001769\\), which equals \\(-0.0001806+0.0000037\\). The direct full bump agrees.<br>\n<b>Where it breaks:</b> the cross term depends on the bootstrap order. If the 1y quote were not used as a node, the 2y DF would be the only unknown, and the 1y par sensitivity would vanish.<br>\n<b>Interviewer follow-up:</b> Why is the 1y quote's effect on \\(DF_2\\) positive? A higher 1y rate lowers \\(DF_1\\), which raises the 2y coupon's annuity value; holding \\(S_2\\) fixed, \\(DF_2\\) must rise to keep the 2y par identity.",
+  "tags": [
+   "jacobian",
+   "bootstrapping",
+   "derivation",
+   "risk"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> the covered-interest-parity forward with a cross-currency basis, written so the deviation is an explicit input. Spot \\(S\\) in USD per EUR, tenor \\(\\tau\\), USD and EUR simple rates \\(r_U\\), \\(r_E\\).",
+  "back": "<b>Step 1.</b> Without arbitrage frictions, borrowing USD at \\(r_U\\) and investing in EUR via FX swap gives \\(F\\cdot(1+r_E\\tau)=S\\cdot(1+r_U\\tau)\\), so \\(F_{\\text{CIP}}=S(1+r_U\\tau)/(1+r_E\\tau)\\).<br>\n<b>Step 2.</b> Define the USD-implied rate from a market forward \\(F\\): \\(r_{\\text{impl}}=\\big[(F/S)(1+r_E\\tau)-1\\big]/\\tau\\). The basis deviation is \\(d=r_{\\text{impl}}-r_U\\).<br>\n<b>Step 3.</b> Solving for \\(F\\): \\(F=S\\,\\dfrac{1+(r_U+d)\\tau}{1+r_E\\tau}\\).<br>\nNumbers: \\(S=1.10\\), \\(\\tau=0.25\\), \\(r_U=4.00\\%\\), \\(r_E=2.00\\%\\): \\(F_{\\text{CIP}}=1.10547\\). With \\(d=+25\\)bp, \\(F=1.10616\\).<br>\n<b>Where it breaks:</b> the formula treats the basis as a single rate and ignores the difference between the OIS and the basis-adjusted day-count, and ignores the bid-offer spread on the forward. A 25bp deviation is about 7 pips on a 3m EURUSD forward, so quote-level precision matters.<br>\n<b>Interviewer follow-up:</b> Why define the deviation via the USD-implied rate rather than the forward points? Because the implied rate is what a funding desk compares with USD OIS, so the basis reads directly in bp.",
+  "tags": [
+   "xccy",
+   "cip",
+   "fx",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: bootstrap three SONIA-style annual par OIS quotes by hand.</b> Par quotes 1y 4.10%, 2y 4.20%, 3y 4.25%. Single curve, annual fixed, day count ignored. Find \\(DF_1,DF_2,DF_3\\), the zero rates, and the 1y1y and 2y1y forwards.",
+  "back": "<b>Step 1.</b> \\(DF_1=1/1.0410=0.960615\\).<br>\n<b>Step 2.</b> \\(DF_2=(1-0.042\\times0.960615)/1.042=0.920973\\).<br>\n<b>Step 3.</b> \\(DF_3=(1-0.0425\\times(0.960615+0.920973))/1.0425=0.882525\\).<br>\n<b>Zeros (annual):</b> 4.1000%, 4.2021%, 4.2536%.<br>\n<b>Forwards:</b> 1y1y \\(=0.960615/0.920973-1=4.3043\\%\\); 2y1y \\(=0.920973/0.882525-1=4.3566\\%\\).<br>\n<b>Sanity check:</b> \\(0.0425\\times(DF_1+DF_2+DF_3)=0.117475=1-DF_3\\). Forwards are increasing, consistent with an upward-sloping curve and with the 3y par sitting between the 2y and 3y zeros.<br>\n<b>Answer:</b> \\(DF=(0.960615,\\ 0.920973,\\ 0.882525)\\), with zeros 4.100%, 4.202%, 4.254%.<br>\n<b>Interviewer follow-up:</b> If the 2y quote moves to 4.25% with the other two unchanged, which DFs change? Only \\(DF_2\\) and \\(DF_3\\); \\(DF_1\\) is pinned by the 1y quote.",
+  "tags": [
+   "bootstrapping",
+   "case_study",
+   "ois",
+   "curves"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: value an off-market 5y payer swap.</b> Notional 100m, fixed rate \\(K=2.50\\%\\) annual, 5y, single flat curve at 3.00% annual, so the par rate is 3.00%. Price the payer and the receiver, and show the PV01.",
+  "back": "<b>Step 1.</b> Annuity \\(A=\\sum_{i=1}^5 1.03^{-i}=4.57971\\).<br>\n<b>Step 2.</b> Par \\(S=3.00\\%\\). Payer PV \\(=N\\,A\\,(S-K)=100\\text{m}\\times4.57971\\times0.0050=+2{,}289{,}854\\).<br>\n<b>Step 3.</b> Cross-check through DFs with principal on both legs: payer PV \\(=N[(S\\,A+DF_5)-(K\\,A+DF_5)]=N(S-K)A\\), the same figure.<br>\n<b>Step 4.</b> Receiver PV \\(=-2{,}289{,}854\\). PV01 of the payer is \\(N\\,A\\times10^{-4}=45{,}797\\) per bp.<br>\n<b>Sanity check:</b> the payer gains when rates rise because the fixed rate is below market. A 100bp rise in the flat curve moves the payer by roughly 100 times 45.8k, but the convexity term reduces this at larger moves.<br>\n<b>Interviewer follow-up:</b> Why is the receiver's PV exactly the negative of the payer? Both legs share the same notional, schedule and curve, so the trade is a zero-sum swap.",
+  "tags": [
+   "swaps",
+   "valuation",
+   "case_study",
+   "pv01"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: bucketed DV01 and par hedge.</b> Portfolio: (a) receive 3% fixed 10y, notional 100m; (b) pay 3% fixed 5y, notional 50m. Flat 3% annual curve, par bucketing. Compute the bucket DV01s, the hedge notionals using par swaps at 5y and 10y, and the residual.",
+  "back": "<b>Step 1.</b> Annuities at 3%: \\(A_{5}=4.57971\\), \\(A_{10}=8.53020\\).<br>\n<b>Step 2.</b> Per-bp PV01: receiver 10y \\(=-100\\text{m}\\times8.5302\\times10^{-4}=-85{,}302\\). Payer 5y \\(=+50\\text{m}\\times4.57971\\times10^{-4}=+22{,}899\\).<br>\n<b>Step 3.</b> Bucket DV01: 5y bucket \\(+22{,}899\\), 10y bucket \\(-85{,}302\\). Total \\(-62{,}403\\) per bp (the portfolio loses if rates rise).<br>\n<b>Step 4.</b> Hedge: pay fixed 10y par swap on 100m (PV01 \\(+85{,}302\\)) and receive fixed 5y par swap on 50m (PV01 \\(-22{,}899\\)). Residual DV01 is zero in both buckets.<br>\n<b>Sanity check:</b> the hedge notionals equal the trade notionals because the par swaps are at the same tenor and the same flat curve; with curve-shape or forward-curve mismatch, the buckets would differ slightly.<br>\n<b>Interviewer follow-up:</b> Why is par bucketing the right basis for the hedge? A par swap at 10y has its PV01 concentrated in its own bucket, so the hedge maps one-to-one to the bucket it is meant to cover.",
+  "tags": [
+   "risk",
+   "dv01",
+   "hedging",
+   "case_study"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: XCCY basis swap valuation with a basis spread.</b> 5y EUR leg, notional 100m EUR, leg receives \\(\\text{€STR}+b\\) with \\(b=-20\\)bp, flat EUR discounting at 2.00% annual, MtM structure so principal resets to spot. Spot EURUSD 1.10. Value the spread leg and the basis PV01.",
+  "back": "<b>Step 1.</b> EUR annuity at 2%: \\(A=\\sum_{i=1}^5 1.02^{-i}=4.71346\\).<br>\n<b>Step 2.</b> Spread PV \\(=N\\,b\\,A=100\\text{m}\\times(-0.0020)\\times4.71346=-942{,}692\\) EUR. Convert at spot: \\(-1{,}036{,}961\\) USD.<br>\n<b>Step 3.</b> Basis PV01 \\(=N\\,A\\times10^{-4}=47{,}135\\) EUR per bp, or about 51.8k USD per bp.<br>\n<b>Step 4.</b> Under MtM the principal is reset at spot, so the principal legs are worth face value at each reset. The only MtM is the interest legs, which is why the spread is essentially the whole value.<br>\n<b>Sanity check:</b> \\(20\\times47{,}135=942{,}700\\), matching the PV to rounding.<br>\n<b>Interviewer follow-up:</b> Why does the basis not need an FX hedge for the principal? The MtM reset removes the FX exposure of the principal, so only the basis and the rate risk on the interest legs remain.",
+  "tags": [
+   "xccy",
+   "basis",
+   "mtm",
+   "case_study"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: MTM of a 5y payer after a 25bp parallel move.</b> 5y payer, fixed \\(K=3.00\\%\\) annual, notional 100m, at market on a flat 3.00% curve (value zero). The curve moves up 25bp to flat 3.25%. Compute the exact MTM, the first-order PV01 estimate, and the error.",
+  "back": "<b>Step 1.</b> Annuity at 3.25%: \\(A_{\\text{new}}=4.54720\\). The annuity at 3.00% is \\(A_{\\text{old}}=4.57971\\).<br>\n<b>Step 2.</b> Exact single-curve MTM: \\(N\\,A_{\\text{new}}(S_{\\text{new}}-K)=100\\text{m}\\times4.54720\\times0.0025=+1{,}136{,}800\\).<br>\n<b>Step 3.</b> First-order PV01 estimate using the old annuity: \\(N\\,A_{\\text{old}}\\times25\\text{bp}=+1{,}144{,}927\\).<br>\n<b>Step 4.</b> Error of the PV01 estimate: \\(+8{,}127\\), or 0.7%, from the annuity falling by 0.71% when rates rise. Using the new annuity (the exact result) removes the error.<br>\n<b>Sanity check:</b> the payer gains because the fixed rate is now below market. A second-order (convexity) term is already inside the exact result; the 0.7% gap is the annuity effect, not convexity.<br>\n<b>Interviewer follow-up:</b> Would a receiver's MTM change by the same amount? Its MTM is \\(-1{,}136{,}800\\), the exact negative, because the trade is zero-sum on a single curve.",
+  "tags": [
+   "swaps",
+   "pv01",
+   "scenario",
+   "case_study"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: futures strip convexity with Hull–White.</b> A 3y SOFR-style 3m future prices at an implied rate of 4.00%. \\(\\sigma=1\\%\\), \\(a=3\\%\\), \\(\\tau=0.25\\). Find the forward rate for fixing at 3y, and repeat for a 5y future. Compare with Ho–Lee.",
+  "back": "<b>Step 1.</b> 3y: HW CA \\(\\approx4.44\\)bp, so the forward is \\(4.00-0.0444=3.9556\\%\\). Ho–Lee would give \\(4.88\\)bp and a forward of 3.9513%.<br>\n<b>Step 2.</b> 5y: HW CA \\(\\approx11.27\\)bp, so the forward is \\(3.8873\\%\\). Ho–Lee gives \\(13.13\\)bp.<br>\n<b>Step 3.</b> The CA grows roughly with \\(T_1\\) (about \\(\\sigma^2T_1\\) times \\(\\tau\\)-factors), so the 5y adjustment is about 2.5 times the 3y one, not the 5/3 ratio of \\(T_1\\) alone.<br>\n<b>Sanity check:</b> the futures rate is above the forward, so subtracting the CA from the 4.00% futures rate gives the lower forward, consistent with the sign convention.<br>\n<b>Interviewer follow-up:</b> Why does the bootstrap use the forward and not the futures rate? Because the swap's fixed leg is priced off forwards, and the futures' daily margin introduces the convexity bias that the adjustment removes.",
+  "tags": [
+   "futures",
+   "convexity",
+   "hull_white",
+   "case_study"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The par swap rate is the annuity-weighted average of forwards, \\(S=\\sum_i w_iF_i\\), with weights \\(w_i=\\){{c1::\\(\\tau_iDF_i/A\\)}}, where \\(A=\\sum_i\\tau_iDF_i\\).",
+  "back": "Follows from the telescoping of the single-curve float leg. Breaks with a projection basis on the float leg.",
+  "tags": [
+   "swaps",
+   "derivation",
+   "par_rate",
+   "convention"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In Hull–White, the futures-forward convexity adjustment reduces to Ho–Lee's {{c1::\\(\\tfrac12\\sigma^2T_1T_2\\)}} as mean reversion \\(a\\to{{c2::0}}\\).",
+  "back": "Mean reversion caps the variance of \\(r(T_1)\\) and so slows the growth of the adjustment with maturity.",
+  "tags": [
+   "futures",
+   "convexity",
+   "hull_white",
+   "convention"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a flat annual-compounded curve with yield \\(y\\), the par swap rate equals {{c1::\\(y\\)}} and each discount factor is {{c2::\\((1+y)^{-i}\\)}}.",
+  "back": "Check: \\(S=(1-(1+y)^{-n})/A\\) with \\(A=\\sum_i(1+y)^{-i}\\) returns \\(y\\) exactly.",
+  "tags": [
+   "swaps",
+   "par_rate",
+   "mental_math",
+   "convention"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a swap with float forwards flat at \\(S_p\\), principal on both legs, fixed rate \\(K\\) and discounting curve \\(d\\): \\(V=N(K-S_p)\\,\\){{c1::\\(A_d\\)}}, where \\(A_d\\) is the {{c2::discount-curve annuity}}.",
+  "back": "Discounting enters only through the annuity. A collateral-rate switch therefore moves MTM proportionally to \\(N(K-S_p)\\,\\Delta A_d\\).",
+  "tags": [
+   "csa",
+   "discounting",
+   "derivation",
+   "convention"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The PV01 of a spread \\(b\\) on a leg of notional \\(N\\) is approximately \\(N\\times\\){{c1::annuity}}\\(\\times\\){{c2::1bp}}.",
+  "back": "Used to convert a basis quote into PV. A 5y EUR annuity of 4.71 gives about 47k per bp on 100m.",
+  "tags": [
+   "xccy",
+   "basis",
+   "pv01",
+   "convention"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The CMS convexity adjustment in the normal, flat-yield model is \\(\\sigma_N^2T_f\\,[\\,-\\partial_y\\ln A\\;\\){{c1::\\(-\\tau_p/(1+y)\\)}}\\(\\,]\\): a payment lag {{c2::reduces}} the adjustment through the term above.",
+  "back": "Leading order, frozen ratio. The annuity slope term is independent of the lag and is positive for a declining annuity.",
+  "tags": [
+   "cms",
+   "convexity",
+   "annuity_measure",
+   "convention"
+  ]
+ }
+]

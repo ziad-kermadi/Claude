@@ -1,0 +1,329 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: Bermudan 1/5]</b> A 10nc1 Bermudan payer swaption (annual exercise, 9-year underlying swap) is priced by Longstaff–Schwartz in a one-factor Hull–White model. Write the backward recursion for the option value and for the continuation value, and state exactly what is regressed at each exercise date.",
+  "back": "Let \\(h_k\\) be the exercise value at exercise date \\(t_k\\) and \\(D(t_k,t_{k+1})\\) the discount factor to the next date. The value satisfies\n\\[V_k(x)=\\max\\bigl(h_k(x),\\,C_k(x)\\bigr),\\qquad C_k(x)=\\mathbb E\\!\\left[D(t_k,t_{k+1})\\,V_{k+1}(X_{t_{k+1}})\\,\\middle|\\,X_{t_k}=x\\right].\\]\n\\(C_k\\) is a conditional expectation, so it is the regression function of the realised discounted cash flow \\(D\\,V_{k+1}\\) on the state \\(X_{t_k}\\). Simulate \\(M\\) paths, step backward from the last date, and at each date regress the realised discounted cash flows of paths that follow the current policy on basis functions of \\(X_{t_k}\\). The fitted \\(\\hat C_k\\) replaces \\(C_k\\) in the max.<br>\nRegressing the realised cash flow, rather than the fitted \\(\\hat V_{k+1}\\), keeps the target unbiased for \\(C_k\\) given \\(X_{t_k}\\). Feeding fitted values forward accumulates approximation error at every step.<br>\n<b>Interviewer follow-up:</b> why is the policy's value still a valid lower bound when \\(\\hat C_k\\) is wrong? Answer: any stopping rule gives a lower bound on the optimal value, so an approximate \\(\\hat C_k\\) makes the bound loose, never invalid.",
+  "tags": [
+   "bermudan_lsm",
+   "american_mc",
+   "longstaff_schwartz",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: Bermudan 2/5]</b> Same 10nc1 LSM: the continuation regression at each date uses the short rate (or the swap rate) \\(X_{t_k}\\) as its only regressor. Compare monomial, Laguerre and Chebyshev bases. Which do you use, how do you scale the state, and how many basis functions can \\(10^5\\) paths support?",
+  "back": "Monomials \\(1,x,x^2,\\dots\\) give a design matrix whose condition number grows roughly exponentially with the degree and with the range of \\(x\\), so normal equations lose digits quickly. Fixes:<br>\n<ul><li>Standardise \\(X\\) (zero mean, unit variance, or map the sample range to \\([-1,1]\\)) before building the basis.</li>\n<li>Use functions orthogonal on the sample: Laguerre functions \\(L_k(x)e^{-x/2}\\) for a positive state, or Chebyshev polynomials on the sample range.</li>\n<li>Solve the least-squares problem by QR or SVD, not by forming \\(X^\\top X\\).</li></ul>\nSample size: with \\(n\\) in-the-money paths and \\(p\\) basis functions, the variance of a fitted value is roughly \\(\\sigma^2 p/n\\) for well-spread regressors (approximate). With \\(10^5\\) paths and 40% in the money, \\(n\\approx4\\times10^4\\), and 6 to 10 functions are comfortable. Beyond that, the extra functions mostly fit noise in the tails.<br>\nWhere it breaks: a basis that fits the bulk of \\(X\\) well can extrapolate badly where few paths sit, and those tail regions are where the early-exercise decision is most sensitive.",
+  "tags": [
+   "bermudan_lsm",
+   "regression",
+   "numerics",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: Bermudan 3/5]</b> An LSM lower bound for the same 10nc1 uses a fixed 6-function basis on one path set. Give a practical test that separates Monte Carlo error from basis error, and name the in-sample effect that biases the lower bound if the policy is evaluated on the paths used to fit it.",
+  "back": "Monte Carlo error: for a fixed policy the standard error of the discounted payoff is \\(\\sigma_{CF}/\\sqrt N\\), falling as \\(N^{-1/2}\\). Basis error is deterministic and does not shrink with \\(N\\).<br>\nTest:<br>\n<ul><li>Keep the basis fixed and increase \\(N\\) on fresh paths. If the price moves within the \\(N^{-1/2}\\) standard error, the error is Monte Carlo limited.</li>\n<li>Keep \\(N\\) fixed and enrich the basis (more polynomials, or a second state variable such as a longer swap rate). A shift larger than the standard error that persists means the error is basis limited.</li></ul>\nIn-sample effect: the exercise boundary is fitted to the noise of the paths on which it is then evaluated, so the in-sample price is biased high. The lower bound must evaluate the policy on fresh, independent paths.<br>\nWhere it breaks: a consistently wrong basis can look stable under the first test, so run the second test as well.",
+  "tags": [
+   "bermudan_lsm",
+   "american_mc",
+   "bias",
+   "diagnostics"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: Bermudan 4/5]</b> The LSM regression gives an approximate continuation \\(\\hat C_k\\) for the same 10nc1. Build the Andersen–Broadie upper bound from it. What is the martingale penalty, and what does the bound equal when \\(\\hat C_k\\) is exact?",
+  "back": "Dual form: \\(V_0=\\inf_M\\mathbb E\\bigl[\\max_k(\\tilde h_k-M_k)\\bigr]\\), where \\(\\tilde h_k=D(0,t_k)h_k\\) is the discounted exercise value and the infimum runs over martingales \\(M\\) with \\(M_0=0\\). Take the Doob martingale of the approximate discounted value \\(\\tilde{\\hat V}\\) built from \\(\\hat C_k\\):\n\\[M_k=\\sum_{j<k}\\Bigl(\\tilde{\\hat V}_{j+1}-\\mathbb E\\bigl[\\tilde{\\hat V}_{j+1}\\mid\\mathcal F_{t_j}\\bigr]\\Bigr).\\]\nEach path gives \\(\\max_k(\\tilde h_k-M_k)\\), and the average over paths is an upper bound \\(U\\ge V_0\\).<br>\nIf \\(\\hat V=V\\) exactly, the penalised payoff equals \\(V_0\\) on the optimal exercise date and is at most \\(V_0\\) on every other date, so the path maximum is \\(V_0\\) and the gap \\(U-L\\) closes.<br>\nPractical point: the conditional expectations inside \\(M_k\\) need nested simulation from each exercise date. Replacing them by a small inner sample breaks the martingale property, so the bound is no longer rigorous, though it stays a useful diagnostic.<br>\nWhere it breaks: the bound is only as tight as \\(\\hat V\\) is accurate. A poor basis gives a loose, still valid, upper bound.",
+  "tags": [
+   "bermudan_lsm",
+   "andersen_broadie",
+   "bounds",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: Bermudan 5/5]</b> You want delta and vega of the LSM price of the same 10nc1 by adjoint differentiation rather than bump-and-revalue. What does the naive pathwise adjoint through the cash flows capture, what does it miss through the exercise decision and the regression, and how do you recover the missing term?",
+  "back": "On a path the discounted cash flow is \\(\\tilde h_\\tau(X_\\tau(\\theta))\\) at the chosen date \\(\\tau\\). Pathwise differentiation with decisions held fixed captures \\(\\partial\\tilde h_\\tau/\\partial\\theta\\) through the state path. The indicator \\(\\mathbf 1\\{h_k>\\hat C_k\\}\\) has zero derivative almost everywhere, so the decisions contribute nothing directly.<br>\nWhat is missed: when \\(\\theta\\) changes, the policy changes. The regression coefficients \\(\\hat\\beta_k(\\theta)\\) move, and so does the exercise boundary. A frozen-policy derivative is the exact derivative of the value of that fixed policy. It matches the derivative of the LSM price only when the policy change has no first-order effect. The envelope argument gives that for the optimal policy, but not in general for an approximate one.<br>\nFull fix: differentiate the regression too. \\(\\hat\\beta=(X^\\top X)^{-1}X^\\top y\\) is a linear solve, so its adjoint is one extra solve with the same factorisation per exercise date. The sensitivity then flows back through the basis evaluated at \\(X_{t_k}(\\theta)\\). Use common random numbers across scenarios so the policies are comparable.<br>\nWhere it breaks: the frozen-policy Greek is biased for an approximate policy. Including the regression adjoints adds implementation effort. Validate against bumps on the same random numbers.",
+  "tags": [
+   "bermudan_lsm",
+   "aad",
+   "greeks",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: Bootstrap 1/4]</b> Single-curve OIS, annual fixed leg and annual accrual \\(\\tau=1\\), par rates for years 1 to 5 of 4.00%, 4.10%, 4.20%, 4.25%, 4.35%. Write the sequential bootstrap for the discount factors \\(P_n\\) in Python and explain why it is exact for this quote set.",
+  "back": "For an annual swap of maturity \\(n\\), the par condition is \\(S_n\\sum_{i\\le n}P_i=1-P_n\\). Solving for the newest factor, with earlier factors already fitted:\n\\[P_n=\\frac{1-S_n\\sum_{i<n}P_i}{1+S_n}.\\]\nEach step is closed form, so the fit is exact and the cost is \\(O(n)\\) with a running annuity.<br>\n<pre><code>def bootstrap_annual_ois(par):\n    \"\"\"par: {n_years: par_rate}, annual fixed leg, annual accrual tau = 1.\n    Requires every year 1..N to be present (no gaps).\"\"\"\n    dfs, annuity = {}, 0.0\n    for n in sorted(par):\n        S = par[n]\n        P = (1.0 - S * annuity) / (1.0 + S)   # S*(annuity + P) = 1 - P  solved for P\n        dfs[n] = P\n        annuity += P\n    return dfs\n\npar = {1: 0.0400, 2: 0.0410, 3: 0.0420, 4: 0.0425, 5: 0.0435}\nfor n, P in bootstrap_annual_ois(par).items():\n    print(n, round(P, 6))</code></pre>\nOutput: \\(P_1=0.961538\\), \\(P_2=0.922744\\), \\(P_3=0.883743\\), \\(P_4=0.846387\\), \\(P_5=0.807641\\). Re-inserting these into the par formula reproduces the input rates to about \\(10^{-16}\\).<br>\nWhere it breaks: stub periods, non-annual fixed legs (day count and payment frequency), and gaps in the maturity grid. A gap makes the running annuity wrong, and the code does not check for one.",
+  "tags": [
+   "curve_bootstrap",
+   "ois",
+   "derivation",
+   "coding"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: Bootstrap 2/4]</b> The same curve is now solved globally. The unknowns are \\(x_j=\\ln P_j\\) at pillars 1, 2 and 3 years, and the residuals are the three par-swap quotes. Derive the analytic Jacobian \\(\\partial r_k/\\partial x_j\\), state the Newton iteration, and report the convergence you observe.",
+  "back": "Residual: \\(r_k=S_k(P)-S_k^{\\text{mkt}}\\), with \\(S_k=(1-P_k)/A_k\\) and \\(A_k=\\sum_{i\\le k}\\tau P_i\\). Then, for \\(j\\le k\\),\n\\[\\frac{\\partial S_k}{\\partial P_j}=-\\frac{\\delta_{jk}}{A_k}-\\frac{(1-P_k)\\,\\tau}{A_k^2},\\qquad \\frac{\\partial r_k}{\\partial x_j}=P_j\\,\\frac{\\partial S_k}{\\partial P_j},\\]\nusing \\(\\partial P_j/\\partial x_j=P_j\\). The Jacobian is lower triangular and exact, not a finite difference.<br>\nNewton: \\(x\\leftarrow x-J^{-1}r\\), solved as a linear system. Starting from \\(P_j=0.95\\) at every pillar, the residual norms are \\(3.1\\times10^{-2}\\), \\(2.0\\times10^{-4}\\), \\(9.4\\times10^{-9}\\), \\(1.1\\times10^{-16}\\), which is quadratic convergence. Comparing the analytic \\(J\\) with forward differences (step \\(10^{-7}\\)) gives a maximum entry difference of about \\(5\\times10^{-8}\\).<br>\nWhere it breaks: if a pillar is interpolated rather than a node, \\(J\\) stops being triangular and the interpolation weights enter the derivative. A wrong sign in one entry does not fail loudly: Newton stalls, so check \\(J\\) by finite differences.",
+  "tags": [
+   "curve_bootstrap",
+   "newton",
+   "jacobian",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: Bootstrap 3/4]</b> With two quotes per pillar (deposits, futures-implied forwards and swaps) plus a smoothness penalty on the forward curve, the system is overdetermined. Formulate the global solve as weighted least squares, write the Levenberg–Marquardt step, and explain why QR on the stacked system is preferred to forming \\(J^\\top J\\).",
+  "back": "Minimise \\(\\sum_k w_k r_k(x)^2+\\gamma\\|Dx\\|^2\\), with \\(w_k\\) set by quote precision and \\(D\\) a discrete second-difference operator on the forward curve. Penalising the forwards rather than zero rates avoids distorting the short end. Let \\(\\tilde J=W^{1/2}J\\) and \\(\\tilde r=W^{1/2}r\\). The Levenberg–Marquardt step solves\n\\[\\bigl(\\tilde J^\\top\\tilde J+\\gamma D^\\top D+\\mu I\\bigr)\\delta=-\\bigl(\\tilde J^\\top\\tilde r+\\gamma D^\\top Dx\\bigr),\\]\nwith \\(\\mu\\) increased when a step fails and decreased when it is accepted. Large \\(\\mu\\) gives a short scaled gradient step, and small \\(\\mu\\) gives Gauss–Newton.<br>\nForming \\(\\tilde J^\\top\\tilde J\\) squares the condition number. A QR factorisation of the stacked matrix \\([\\tilde J;\\sqrt\\gamma D]\\) keeps the conditioning of \\(\\tilde J\\).<br>\nWhere it breaks: a penalty \\(\\gamma\\) that is too large gives a smooth curve that ignores quotes. One that is too small lets oscillation back into the forwards. Choose \\(\\gamma\\) so the residuals sit inside bid–offer.",
+  "tags": [
+   "curve_bootstrap",
+   "least_squares",
+   "levenberg_marquardt",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: Bootstrap 4/4]</b> A PV \\(V\\) depends on the curve only through the pillar log-discount factors \\(x\\), and the curve solves \\(r(x,q)=0\\) for the market quotes \\(q\\). You need \\(\\partial V/\\partial q_k\\) for every quote (bucketed risk to quotes). Derive the reverse-mode formula with one transposed solve, and compare its cost with bumping each quote.",
+  "back": "Implicit function theorem: \\(\\partial x/\\partial q=-J^{-1}\\,\\partial r/\\partial q\\). Hence\n\\[\\frac{\\partial V}{\\partial q}=-\\frac{\\partial V}{\\partial x}\\,J^{-1}\\frac{\\partial r}{\\partial q}=-\\lambda^\\top\\frac{\\partial r}{\\partial q},\\qquad J^\\top\\lambda=\\Bigl(\\frac{\\partial V}{\\partial x}\\Bigr)^{\\!\\top}.\\]\nOne solve with \\(J^\\top\\) gives all the quote sensitivities. For par residuals \\(r_k=S_k-q_k\\) we have \\(\\partial r_k/\\partial q_j=-\\delta_{jk}\\), so \\(\\partial V/\\partial q_k=\\lambda_k\\).<br>\nCheck on a 3-pillar toy with \\(V=\\sum_j c_jP_j\\): the adjoint gives \\(\\partial V/\\partial q_2=-0.88680\\), and a full re-solve with a \\(10^{-7}\\) bump gives \\(-0.88680\\).<br>\nCost: bumping needs one full bootstrap per quote, so \\(m\\) re-solves. The adjoint needs one transposed solve plus one vector–Jacobian product, independent of \\(m\\). Bumps also carry truncation and rounding noise, while the adjoint is exact to rounding.<br>\nWhere it breaks: if \\(J\\) is nearly singular (duplicate instruments, or a pillar with no quote), the adjoint is as unstable as the solve, so check the condition number before trusting bucket risk.",
+  "tags": [
+   "curve_bootstrap",
+   "aad",
+   "implicit_function",
+   "risk"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: IV solver 1/3]</b> Implied normal (Bachelier) volatility from an undiscounted payer price per unit annuity, for forward \\(F\\), strike \\(K\\), expiry \\(T\\). Write a safeguarded Newton solver that uses vega \\(\\sqrt T\\,n(d)\\) and a bracket. Test: \\(F=3\\%\\), \\(K=3.5\\%\\), \\(T=5\\), \\(\\sigma_N=0.85\\%\\) gives price 0.0053434, and the solver should recover the vol.",
+  "back": "<pre><code>import math\ndef N(x): return 0.5*(1+math.erf(x/math.sqrt(2)))\ndef n(x): return math.exp(-0.5*x*x)/math.sqrt(2*math.pi)\n\ndef bach_undisc_call(F, K, sig, T):\n    \"\"\"Bachelier call per unit annuity: (F-K)N(d) + sig*sqrt(T)*n(d).\"\"\"\n    sd = sig*math.sqrt(T)\n    d = (F-K)/sd\n    return (F-K)*N(d) + sd*n(d)\n\ndef bach_vega(F, K, sig, T):\n    sd = sig*math.sqrt(T)\n    return math.sqrt(T)*n((F-K)/sd)\n\ndef implied_normal_vol(price, F, K, T, tol=1e-12, max_iter=100):\n    \"\"\"Safeguarded Newton: Newton step inside a shrinking bracket, bisection otherwise.\"\"\"\n    if price &lt;= max(F-K, 0.0):\n        raise ValueError(\"price at or below intrinsic\")\n    lo, hi = 1e-10, 0.01\n    while bach_undisc_call(F, K, hi, T) &lt; price:   # Bachelier price is unbounded in sigma\n        hi *= 2.0\n    sig = 0.5*(lo+hi)\n    for it in range(1, max_iter+1):\n        f = bach_undisc_call(F, K, sig, T) - price\n        if f &gt; 0: hi = sig\n        else:     lo = sig\n        if abs(f) &lt; tol: return sig, it\n        newton = sig - f/bach_vega(F, K, sig, T)\n        sig = newton if lo &lt; newton &lt; hi else 0.5*(lo+hi)\n    raise RuntimeError(\"no convergence\")\n\nif __name__ == \"__main__\":\n    F, K, T = 0.03, 0.035, 5.0\n    true = 0.0085\n    price = bach_undisc_call(F, K, true, T)\n    sig, its = implied_normal_vol(price, F, K, T)\n    print(\"price\", price, \"implied\", sig, \"iters\", its, \"err\", abs(sig-true))\n    # bisection-only iteration count for comparison\n    lo, hi = 1e-10, 0.01\n    while bach_undisc_call(F, K, hi, T) &lt; price: hi *= 2\n    c = 0\n    while hi-lo &gt; 1e-12:\n        m = 0.5*(lo+hi); c += 1\n        if bach_undisc_call(F, K, m, T) &gt; price: hi = m\n        else: lo = m\n    print(\"bisection iters\", c)\n    # deep OTM case\n    F2,K2,T2=0.03,0.06,1.0; p2=bach_undisc_call(F2,K2,0.0120,T2)\n    print(\"OTM price\",p2, implied_normal_vol(p2,F2,K2,T2))\n    try: implied_normal_vol(0.0, 0.03, 0.02, 1.0)\n    except ValueError as e: print(\"err\", e)</code></pre>\nResult: \\(\\sigma_N=0.0085\\) in 4 iterations, error \\(3\\times10^{-14}\\). Plain bisection to the same bracket width needs 34 iterations. An input at or below intrinsic \\(\\max(F-K,0)\\) has no real solution and must be rejected, not clipped.",
+  "tags": [
+   "iv_solver",
+   "newton",
+   "root_finding",
+   "coding"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: IV solver 2/3]</b> Why does the Bachelier implied-vol solver need a bracket-expansion step, while a Black (lognormal) solver can use a fixed upper bound? State the bounds on the price as a function of \\(\\sigma\\) for each model, and what they imply for uniqueness.",
+  "back": "Bachelier: \\(\\partial_\\sigma C=\\sqrt T\\,n(d)>0\\), so \\(C\\) is strictly increasing in \\(\\sigma\\). It also tends to infinity as \\(\\sigma\\to\\infty\\), because the \\(\\sigma\\sqrt T\\,n(d)\\) term grows without bound. Any price above intrinsic therefore has exactly one root, but there is no finite upper bound on \\(\\sigma\\). The bracket must be found by doubling \\(\\sigma_{hi}\\) until \\(C(\\sigma_{hi})\\ge\\) price, as in the C1 code.<br>\nBlack: a call per unit annuity satisfies \\(\\max(F-K,0)\\le C\\le F\\), and \\(C\\to F\\) as \\(\\sigma\\to\\infty\\). A price above \\(F\\) is an arbitrage and must be rejected. A price in \\((\\text{intrinsic},F)\\) has a unique \\(\\sigma\\) inside a finite bracket.<br>\nWhere it breaks: deep out-of-the-money, the Black vega is small, so Newton steps overshoot. That is where the bisection safeguard earns its place.",
+  "tags": [
+   "iv_solver",
+   "no_arbitrage",
+   "bounds",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: IV solver 3/3]</b> A vol surface needs about \\(10^5\\) implied vols per revaluation. Compare Brent's method (bracketing, derivative-free) with the safeguarded Newton from C1. Which do you deploy, what stopping criterion do you use, and which inputs still need guarding?",
+  "back": "Brent's method combines bisection, secant and inverse quadratic interpolation under a guaranteed bracket. It needs only the pricer, so it works for numerical or Monte Carlo pricers with no vega. For an analytic model it uses more evaluations than a Newton step, which here costs about the same as a price because vega shares the \\(\\exp\\) and \\(d\\) terms (approximate; I did not benchmark Brent in this environment).<br>\nFor analytic Bachelier or Black, deploy the safeguarded Newton: the same guarantee with fewer evaluations. For a numerical pricer without vega, use Brent.<br>\nStopping criterion: use the scaled price residual \\(|C(\\sigma)-P|/\\mathrm{vega}\\), not the raw price residual. A tiny price can have a tiny absolute error and still map to a large error in vol when vega is small.<br>\nGuards: prices at or below intrinsic (no solution), prices above the Black forward bound, and deep out-of-the-money quotes where vega is small. The Black case with \\(F=3\\%\\), \\(K=6\\%\\), \\(\\sigma_N=1.20\\%\\), \\(T=1\\) (price \\(2.4\\times10^{-5}\\)) recovers the normal vol in 7 Newton iterations from the bracket.",
+  "tags": [
+   "iv_solver",
+   "brent",
+   "numerics",
+   "trade_off"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the von Neumann amplification factor of the \\(\\theta\\)-scheme for \\(u_t=Du_{xx}\\) on a uniform grid, with \\(\\mu=D\\Delta t/\\Delta x^2\\). Show that \\(\\theta=\\tfrac12\\) (Crank–Nicolson) is stable for every \\(\\mu\\), and that its highest-frequency modes approach \\(-1\\) rather than zero.",
+  "back": "Insert \\(u_j^n=g^n e^{ikj\\Delta x}\\). With \\(q=4\\sin^2(k\\Delta x/2)\\in[0,4]\\), the discrete Laplacian satisfies \\(\\delta^2e^{ikj\\Delta x}=-q\\,e^{ikj\\Delta x}\\). The scheme\n\\[\\frac{u^{n+1}-u^n}{\\Delta t}=\\frac{D}{\\Delta x^2}\\Bigl[\\theta\\,\\delta^2u^{n+1}+(1-\\theta)\\,\\delta^2u^n\\Bigr]\\]\ngives\n\\[g=\\frac{1-(1-\\theta)\\,\\mu q}{1+\\theta\\,\\mu q}.\\]\nFor \\(\\theta=\\tfrac12\\), \\(g=(1-\\mu q/2)/(1+\\mu q/2)\\). Since \\(\\mu q\\ge0\\), \\(|g|\\le1\\) for every \\(\\mu\\), so the scheme is unconditionally stable. As \\(\\mu q\\to\\infty\\) (the highest modes, \\(q\\to4\\)), \\(g\\to-1\\): these modes flip sign each step and barely decay. That is why a digital payoff's kink gives persistent oscillations under pure Crank–Nicolson, and why a few fully implicit steps (\\(\\theta=1\\), \\(g=1/(1+\\mu q)\\to0\\)) are used first.<br>\nFor the explicit scheme (\\(\\theta=0\\)), \\(|g|\\le1\\) requires \\(\\mu q\\le2\\) for all \\(q\\le4\\), i.e. \\(\\mu\\le\\tfrac12\\).<br>\nWhere it breaks: von Neumann analysis assumes constant coefficients and periodic boundaries. With variable coefficients or Dirichlet boundaries it gives only local information, and the eigenvalues of the actual discrete operator decide stability.",
+  "tags": [
+   "pde",
+   "crank_nicolson",
+   "stability",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Define the efficiency of a Monte Carlo estimator as \\(1/(\\mathrm{Var}\\times\\text{cost per path})\\). Derive the total cost of reaching a standard error \\(\\varepsilon\\), then the efficiency gain of a control variate with correlation \\(\\rho\\) when the per-path cost rises by 30%. Use \\(\\sigma=12\\), \\(\\rho=0.9\\).",
+  "back": "The standard error is \\(\\sigma/\\sqrt N\\), so reaching \\(\\varepsilon\\) needs \\(N=\\sigma^2/\\varepsilon^2\\) paths (times \\(z^2\\) for a confidence level). The total cost is \\(Nc=\\sigma^2c/\\varepsilon^2\\), so cost to a fixed accuracy is proportional to \\(\\sigma^2c\\), the inverse of efficiency.<br>\nAn optimal control variate leaves variance \\(\\sigma^2(1-\\rho^2)\\). With \\(\\rho=0.9\\), \\(1-\\rho^2=0.19\\), and the per-path cost becomes \\(1.3c\\). The efficiency ratio is\n\\[\\frac{\\text{eff}_{cv}}{\\text{eff}_{\\text{plain}}}=\\frac{\\sigma^2c}{0.19\\,\\sigma^2\\cdot1.3c}=\\frac{1}{0.19\\times1.3}\\approx4.05.\\]\nSo the control variate reaches the same accuracy with about a quarter of the compute.<br>\nWhere it breaks: \\(\\rho\\) and the optimal coefficient are estimated from a pilot, so the realised gain is smaller than the population value and the pilot's cost counts. A control whose mean is itself estimated adds variance.",
+  "tags": [
+   "monte_carlo",
+   "variance_reduction",
+   "efficiency",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the likelihood-ratio (score) estimator of vega for a European call under GBM and the pathwise estimator, then test them on \\(S_0=100\\), \\(K=105\\), \\(r=3\\%\\), \\(\\sigma=20\\%\\), \\(T=1\\), where the exact vega is 39.8935. Which has the lower variance, and why?",
+  "back": "Pathwise: \\(\\partial S_T/\\partial\\sigma=S_T(\\sqrt T\\,Z-\\sigma T)\\), so vega \\(=e^{-rT}\\mathbb E[\\mathbf 1_{\\{S_T>K\\}}\\,\\partial_\\sigma S_T]\\).<br>\nLR: let \\(z=\\dfrac{\\ln(S_T/S_0)-(r-\\tfrac12\\sigma^2)T}{\\sigma\\sqrt T}\\). The log-density of \\(S_T\\) is \\(-\\tfrac12z^2-\\ln\\sigma+\\text{const}\\), since the remaining terms do not depend on \\(\\sigma\\). With \\(\\partial_\\sigma z=\\sqrt T-z/\\sigma\\), the score is\n\\[\\frac{\\partial}{\\partial\\sigma}\\ln p(S_T)=\\frac{z^2-1}{\\sigma}-z\\sqrt T,\\]\nand \\(\\text{vega}_{LR}=e^{-rT}\\mathbb E[f(S_T)\\cdot\\text{score}]\\) with \\(f\\) the payoff.<br>\nNumbers (2 million paths, same draws): exact 39.8935; pathwise \\(39.842\\pm0.052\\); LR \\(39.748\\pm0.174\\). Both are unbiased within error, and the LR variance is about 11 times the pathwise variance.<br>\nWhy: the pathwise estimator differentiates a smooth payoff, so randomness enters only through \\(S_T\\). The LR estimator moves the variance into the score, whose second moment grows with \\(\\sigma\\sqrt T\\) and with the payoff's sensitivity in the tails. For a digital, the pathwise derivative is zero almost everywhere, while LR differentiates the density and remains valid.<br>\nWhere it breaks: pathwise fails for discontinuous payoffs (its delta or vega is zero almost everywhere), and LR's variance grows quickly with maturity.",
+  "tags": [
+   "greeks",
+   "pathwise",
+   "likelihood_ratio",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Let \\(y=f(x_1,\\dots,x_n)\\) be computed by a straight-line program with \\(m\\) elementary operations. Show that reverse mode computes \\(\\nabla y\\) with work proportional to \\(m\\), independent of \\(n\\). Then explain why memory, not arithmetic, is the binding constraint for a 10-million-step Monte Carlo path.",
+  "back": "Example: \\(y=x_1x_2+\\sin x_1\\). Forward: \\(v_1=x_1x_2\\), \\(v_2=\\sin x_1\\), \\(y=v_1+v_2\\). Set \\(\\bar y=1\\). Each operation \\(v=\\varphi(u_1,u_2)\\) updates its parents by \\(\\bar u_i\\mathrel{+}=\\bar v\\,\\partial\\varphi/\\partial u_i\\). Here \\(\\bar v_1=\\bar v_2=1\\), so \\(\\bar x_1=x_2+\\cos x_1\\) and \\(\\bar x_2=x_1\\). Both are read off in one backward sweep.<br>\nEach operation adds a constant amount of work to the reverse sweep, one or two multiply-adds per parent, so the reverse pass is a bounded multiple of the forward pass whatever \\(n\\) is. Baur and Strassen give a bound of roughly five times the cost of the function for the gradient, in the standard operation-count model. The cost is therefore linear in \\(m\\) and independent of \\(n\\).<br>\nMemory: the reverse pass needs the forward intermediates (the tape). One path with \\(10^7\\) steps and about five recorded operations per step stores \\(5\\times10^7\\) doubles, about 400 MB, before batching any paths. That is why production AAD uses checkpointing or RNG replay.<br>\nWhere it breaks: non-smooth operations (max, indicators) have zero or undefined derivatives. Control flow must be recorded. For many outputs, reverse mode costs one sweep per output, so forward mode can win when inputs are few.",
+  "tags": [
+   "aad",
+   "adjoint",
+   "complexity",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "For the correlation matrix \\(\\Sigma=\\begin{pmatrix}1&\\rho\\\\\\rho&1\\end{pmatrix}\\), derive the Cholesky factor \\(L\\) with \\(LL^\\top=\\Sigma\\). For which \\(\\rho\\) is \\(L\\) real? Use it to write two correlated normals and check their covariance.",
+  "back": "Write \\(L=\\begin{pmatrix}a&0\\\\b&c\\end{pmatrix}\\) with \\(a,c>0\\). Then \\(LL^\\top=\\begin{pmatrix}a^2&ab\\\\ab&b^2+c^2\\end{pmatrix}\\). Matching entries gives \\(a=1\\), \\(b=\\rho\\), \\(c^2=1-\\rho^2\\), so\n\\[L=\\begin{pmatrix}1&0\\\\\\rho&\\sqrt{1-\\rho^2}\\end{pmatrix}.\\]\n\\(L\\) is real exactly when \\(1-\\rho^2>0\\), i.e. \\(|\\rho|<1\\). At \\(|\\rho|=1\\) the matrix is singular and \\(c=0\\), so the factor exists only in semidefinite form.<br>\nSimulation: \\(Z_1=G_1\\) and \\(Z_2=\\rho G_1+\\sqrt{1-\\rho^2}\\,G_2\\), with \\(G_1,G_2\\) i.i.d. standard normals. Then \\(\\mathrm{Cov}(Z)=\\Sigma\\) and \\(\\mathrm{Corr}(Z_1,Z_2)=\\rho\\).<br>\nWhere it breaks: for \\(n\\ge3\\) the same algebra needs the full Cholesky recursion, and for an indefinite estimated matrix a pivot \\(c^2\\) becomes negative at some step. That is the failure seen with pairwise-estimated correlation matrices.",
+  "tags": [
+   "cholesky",
+   "correlation",
+   "simulation",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write the exact transition density of \\(dX=\\kappa(\\theta-X)\\,dt+\\sigma\\,dW\\) over a step \\(\\Delta\\). Show that the conditional MLE of the AR(1) coefficient \\(\\varphi=e^{-\\kappa\\Delta}\\) is the OLS slope, and derive its leading small-sample bias with \\(n\\) observations. Quantify for \\(\\varphi=0.98\\), \\(n=250\\) (about one year of daily data), including the implied half-life.",
+  "back": "Exact transition: \\(X_{t+\\Delta}\\mid X_t\\sim N\\bigl(\\theta+(X_t-\\theta)\\varphi,\\ \\sigma^2(1-\\varphi^2)/(2\\kappa)\\bigr)\\). Maximising the conditional likelihood gives the regression of \\(X_{t+\\Delta}\\) on a constant and \\(X_t\\). So the MLE of \\(\\varphi\\) is the OLS slope, and \\(\\hat\\kappa=-\\ln\\hat\\varphi/\\Delta\\).<br>\nBias: Kendall's classical first-order approximation is \\(E[\\hat\\varphi]-\\varphi\\approx-(1+3\\varphi)/n\\). For \\(\\varphi=0.98\\), \\(n=250\\), this is about \\(-0.016\\). A simulation of 5,000 replications of this setup gives mean \\(\\hat\\varphi\\approx0.961\\), a bias of about \\(-0.019\\). The first-order formula understates the bias when \\(\\varphi\\) is close to one.<br>\nHalf-life: \\(t_{1/2}=-\\Delta\\ln2/\\ln\\varphi\\). The true value is \\(-\\ln2/\\ln0.98\\approx34.3\\) days. Because \\(\\hat\\varphi\\) is biased down, the estimate is biased short: the median over replications is about 19.5 days, and some replications give \\(\\hat\\varphi>1\\), which has no meaningful half-life.<br>\nWhere it breaks: the Gaussian conditional likelihood assumes a homoskedastic, stationary Markov process. The half-life is very sensitive near \\(\\varphi=1\\), so report a confidence interval rather than a point estimate.",
+  "tags": [
+   "time_series",
+   "ou_process",
+   "mean_reversion",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A pricer is written with templated arithmetic that also accepts complex numbers. Derive the complex-step derivative \\(f'(x)\\approx\\operatorname{Im}f(x+ih)/h\\) and its error order. Why does it avoid the subtractive cancellation of finite differences? Test with \\(f(x)=e^x\\sin x\\) at \\(x=1\\).",
+  "back": "For real analytic \\(f\\): \\(f(x+ih)=f(x)+ihf'(x)-\\tfrac{h^2}{2}f''(x)-\\tfrac{ih^3}{6}f'''(x)+\\dots\\). The imaginary part is \\(hf'(x)-\\tfrac{h^3}{6}f'''(x)+\\dots\\), so \\(\\operatorname{Im}f(x+ih)/h=f'(x)+O(h^2)\\). Nothing is subtracted from a nearly equal number, so \\(h\\) can be \\(10^{-20}\\) without losing digits.<br>\nTest: \\(f'(1)=e^{1}(\\sin1+\\cos1)=3.7560492\\ldots\\). The complex step with \\(h=10^{-20}\\) returns 3.7560492270947, which matches the exact value to every printed digit. A central difference with \\(h=10^{-6}\\) agrees only to about 9 to 10 digits.<br>\nWhere it breaks: \\(f\\) must be analytic near the real axis and built only from complex-capable operations. Real-only code (\\(\\max\\), \\(|\\cdot|\\), or a real-valued erf implementation) silently gives wrong results, and in C++ the Dual or complex type needs every function used.",
+  "tags": [
+   "greeks",
+   "numerics",
+   "automatic_differentiation",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "For an at-the-money swaption, derive the leading relation between the Black (lognormal) vol \\(\\sigma_B\\) and the Bachelier (normal) vol \\(\\sigma_N\\), including the first correction in \\(\\sigma_B^2T\\). Test with \\(F=3\\%\\), \\(\\sigma_B=25\\%\\), \\(T=5\\).",
+  "back": "Black ATM call per unit annuity: \\(F\\,(2N(x)-1)\\) with \\(x=\\sigma_B\\sqrt T/2\\). Expanding \\(N(x)=\\tfrac12+\\phi(0)(x-x^3/6+\\dots)\\) gives \\(F\\phi(0)\\sigma_B\\sqrt T\\,(1-\\sigma_B^2T/24+\\dots)\\). The Bachelier ATM price is \\(\\sigma_N\\sqrt T\\,\\phi(0)\\). Equating the two:\n\\[\\sigma_N\\approx F\\sigma_B\\Bigl(1-\\frac{\\sigma_B^2T}{24}\\Bigr).\\]\nTest: \\(F\\sigma_B=0.75\\%\\), and the corrected value is \\(0.74023\\%\\). The exact root of the Black-to-Bachelier price equation, found by bisection, is \\(0.74035\\%\\). The remaining difference is the next order.<br>\nWhere it breaks: away from the money, the relation picks up a \\(\\sqrt{FK}\\) factor and a \\(\\ln^2(F/K)\\) term (Hagan's expansion). The series also converges slowly for long expiries and high vols.",
+  "tags": [
+   "swaptions",
+   "normal_vol",
+   "black_scholes",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A payer swaption is priced as \\(A_0\\,\\mathbb E^{A}[(S_T-K)^+]\\) under the annuity measure. Show why the forward swap rate is a martingale under that measure, so that the Bachelier formula applies with a normal vol. What goes wrong if you use the spot-measure drift with the same Bachelier dynamics?",
+  "back": "Take the annuity \\(A_t=\\sum_i\\tau P(t,t_i)\\) as numeraire, with measure \\(\\mathbb Q^A\\). A payer swap has value \\(A_t(S_t-K)\\), a traded asset. Divided by \\(A_t\\), it is a \\(\\mathbb Q^A\\)-martingale, so \\((S_t-K)\\), and hence the forward swap rate \\(S_t\\), is a martingale. The swaption pays \\(A_T(S_T-K)^+\\) at expiry, so its value at 0 is \\(A_0\\,\\mathbb E^A[(S_T-K)^+]\\).<br>\nIf \\(dS=\\sigma_N\\,dW^A\\), then \\(\\mathbb E^A[(S_T-K)^+]\\) is exactly the Bachelier expression, so the price is \\(A_0\\bigl[(F-K)N(d)+\\sigma_N\\sqrt T\\,n(d)\\bigr]\\).<br>\nUnder the spot (risk-neutral) measure \\(S\\) is not a martingale. Its drift contains a covariance term between the swap rate and the annuity, the convexity adjustment. Using the Bachelier dynamics without that drift misprices the forward.<br>\nWhere it breaks: each swap rate has its own annuity numeraire, so a joint model needs a change of measure per term; with multiple curves, the annuity uses the discount curve, not the forward curve.",
+  "tags": [
+   "swaptions",
+   "change_of_numeraire",
+   "convexity",
+   "derivation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Kendall's first-order small-sample bias of the AR(1) coefficient is about {{c1::\\(-(1+3\\varphi)/n\\)}}, so a half-life estimated from a finite sample tends to be {{c2::too short}}. The bias is largest in magnitude when \\(\\varphi\\) is close to {{c3::one}}.",
+  "back": "At \\(\\varphi=0.98\\), \\(n=250\\) the simulated mean bias is about \\(-0.019\\), against about \\(-0.016\\) from the formula. Report a confidence interval for the half-life.",
+  "tags": [
+   "time_series",
+   "ou_process",
+   "bias",
+   "convention"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A Bachelier price is {{c1::unbounded above}} in \\(\\sigma\\), since vega \\(\\sqrt T\\,n(d)\\) is strictly positive. Any price above intrinsic therefore has {{c2::exactly one}} implied normal vol, and the solver must {{c3::expand the bracket}} rather than assume an upper bound.",
+  "back": "Black prices, by contrast, are bounded above by the forward \\(F\\) per unit annuity, so a price above \\(F\\) is an arbitrage and must be rejected.",
+  "tags": [
+   "iv_solver",
+   "no_arbitrage",
+   "convention"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Complex-step differentiation gives \\(f'(x)\\approx\\operatorname{Im}f(x+ih)/h\\) with error {{c1::\\(O(h^2)\\)}}. It has no {{c2::subtractive cancellation}}, so \\(h\\) can be as small as {{c3::\\(10^{-20}\\)}} without losing digits.",
+  "back": "Requires an analytic \\(f\\) computed with complex-capable operations throughout.",
+  "tags": [
+   "greeks",
+   "numerics",
+   "convention"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For reverse-mode AD, the gradient of a scalar function costs about {{c1::a small constant multiple}} of one forward evaluation regardless of {{c2::the number of inputs}}. Memory is set by the {{c3::number of recorded intermediate values (the tape)}}.",
+  "back": "Forward mode is the opposite trade-off: cheap for few inputs, with no tape.",
+  "tags": [
+   "aad",
+   "adjoint",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study.</b> A 1y-into-5y payer swaption with \\(F=3.00\\%\\), \\(K=3.20\\%\\), normal vol \\(\\sigma_N=90\\)bp, \\(T=1\\), annuity \\(A=4.5\\), notional 100mm. Give the closed form and a vectorised Monte Carlo with a control variate on the forward. Predict the standard error ratio before you run it.",
+  "back": "<pre><code>import math\nimport numpy as np\n\ndef norm_cdf(x):\n    return 0.5 * (1.0 + np.vectorize(math.erf)(x / math.sqrt(2.0)))\n\ndef norm_pdf(x):\n    return np.exp(-0.5 * x * x) / math.sqrt(2.0 * math.pi)\n\ndef bachelier_payer(F, K, sigma_n, T, annuity):\n    \"\"\"Closed form payer swaption, normal vol sigma_n (per unit notional).\"\"\"\n    sd = sigma_n * math.sqrt(T)\n    d = (F - K) / sd\n    return annuity * ((F - K) * float(norm_cdf(d)) + sd * float(norm_pdf(d)))\n\ndef mc_payer(F, K, sigma_n, T, annuity, n_paths, seed=42):\n    \"\"\"Plain MC, antithetic pairing, and a control variate on the forward.\"\"\"\n    rng = np.random.default_rng(seed)\n    z = rng.standard_normal(n_paths)\n    sd = sigma_n * math.sqrt(T)\n    FT = F + sd * z                            # forward swap rate at expiry\n    payoff = annuity * np.maximum(FT - K, 0.0)\n    cv_ctrl = annuity * (FT - K)              # linear payoff, known mean\n    b = np.cov(payoff, cv_ctrl, ddof=1)[0, 1] / np.var(cv_ctrl, ddof=1)\n    cv = payoff - b * (cv_ctrl - annuity * (F - K))\n    n = n_paths\n    return {\"plain\": (payoff.mean(), payoff.std(ddof=1) / math.sqrt(n)),\n            \"control_variate\": (cv.mean(), cv.std(ddof=1) / math.sqrt(n)),\n            \"analytic\": bachelier_payer(F, K, sigma_n, T, annuity)}\n\nif __name__ == \"__main__\":\n    res = mc_payer(F=0.03, K=0.032, sigma_n=0.0090, T=1.0, annuity=4.5, n_paths=10**6)\n    for k, v in res.items():\n        print(k, v)</code></pre>\nResults (\\(10^6\\) paths, seed 42):<br>\n<ul><li>Closed form: \\(0.0120545\\) per unit notional, i.e. about 1,205,447 on 100mm.</li>\n<li>Plain MC: \\(0.0120601\\pm0.0000206\\), about 1,206,014 \\(\\pm\\) 2,056.</li>\n<li>Control variate (the linear forward payoff \\(A(F_T-K)\\), whose mean \\(A(F-K)\\) is known): \\(0.0120585\\pm0.0000120\\), about 1,205,851 \\(\\pm\\) 1,199.</li></ul>\nPrediction: with sample correlation \\(\\rho\\approx0.81\\) between payoff and control, the variance ratio is \\(1-\\rho^2\\approx0.34\\), and the standard-error ratio is about \\(\\sqrt{0.34}\\approx0.58\\). The run gives \\(1199/2056\\approx0.58\\).<br>\nWhere it breaks: the Bachelier formula is only the model's price. The MC check verifies the sampler, not the vol or the annuity.",
+  "tags": [
+   "monte_carlo",
+   "control_variates",
+   "swaptions",
+   "case_study"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study.</b> ATM 5y payer swaption, annuity 4.5, normal vol 90bp, expiry 1y (forward at strike). For 1bn notional, how many plain MC paths give a standard error of 0.1bp of notional, roughly? Derive the answer in closed form first, then check numerically.",
+  "back": "For ATM, the payoff is \\(A\\sigma_N\\sqrt T\\max(Z,0)\\), with standard deviation \\(A\\sigma_N\\sqrt T\\sqrt{\\tfrac12-\\tfrac1{2\\pi}}\\). Per unit notional: \\(4.5\\times0.009\\times0.5833\\approx0.02362\\). Numerically (4 million paths): 0.02364. On 1bn, the per-path standard deviation is about \\(2.36\\times10^7\\). Target SE: 0.1bp of 1bn \\(=10^4\\). So \\(N=(2.36\\times10^7/10^4)^2\\approx5.6\\times10^6\\) paths.<br>\nInterpretation: plain MC is expensive for a one-basis-point-scale target, which is why control variates and the analytic model are used for the bulk of the book.<br>\nWhere it breaks: the arithmetic assumes the normal model, a fixed annuity, and no discounting path-dependence.",
+  "tags": [
+   "monte_carlo",
+   "standard_error",
+   "swaptions",
+   "case_study"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study.</b> A P&amp;L pipeline computes per-trade cash flows with a Python loop over 200,000 rows using <code>iterrows</code>. Profile it, rewrite it, and state the speed-up measured here and the correctness check you would keep in production.",
+  "back": "<pre><code>import numpy as np\nimport pandas as pd\n\ndef pv_loop(df):\n    out = np.empty(len(df))\n    for i, row in df.iterrows():                 # builds one Series per row\n        out[i] = row[\"side\"] * row[\"notional\"] * row[\"rate\"] * row[\"tenor\"]\n    return out\n\ndef pv_vec(df):\n    return (df[\"side\"] * df[\"notional\"] * df[\"rate\"] * df[\"tenor\"]).to_numpy()\n\nif __name__ == \"__main__\":\n    import time\n    rng = np.random.default_rng(0)\n    n = 200_000\n    df = pd.DataFrame({\"notional\": rng.uniform(1e5, 1e7, n), \"rate\": rng.normal(0.04, 0.01, n),\n                       \"tenor\": rng.uniform(0.5, 10, n), \"side\": rng.choice([1, -1], n)})\n    t0 = time.perf_counter(); a = pv_loop(df.head(20_000)); t1 = time.perf_counter() - t0\n    t0 = time.perf_counter(); b = pv_vec(df.head(20_000)); t2 = time.perf_counter() - t0\n    print(f\"loop 20k: {t1:.3f}s  vectorised 20k: {t2*1e3:.2f}ms  ratio ~{t1/t2:.0f}x  max|diff|={np.abs(a-b).max():.1e}\")</code></pre>\nMeasured here: the loop took 0.64 to 0.77 s for 20,000 rows, the vectorised version 1 to 5 ms, and the vectorised version handled 200,000 rows in about 5 ms. The ratio is two to three orders of magnitude (machine-dependent). Maximum absolute difference between the two results is 0.<br>\nWhy: <code>iterrows</code> builds a Series per row with dtype coercion, so each iteration does Python-level indexing and allocation. Profile with <code>cProfile</code> or a line profiler before changing anything, so the fix targets the actual hotspot.<br>\nProduction check: assert the vectorised output equals the loop on a random sample of rows, and assert no NaN in the inputs before the arithmetic.<br>\nWhere it breaks: vectorisation does not fix an incorrect join. Check the keys first, as in the pandas pitfalls card.",
+  "tags": [
+   "python",
+   "pandas",
+   "performance",
+   "case_study"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study.</b> A curve cache is read by 8 threads and rebuilt when market data updates. Implement it in C++17 with <code>std::shared_mutex</code>, a double-checked lookup, and <code>shared_ptr&lt;const Curve&gt;</code> return values. State what each lock protects and the remaining design risk.",
+  "back": "<pre><code>#include &lt;map&gt;\n#include &lt;memory&gt;\n#include &lt;shared_mutex&gt;\n#include &lt;mutex&gt;\n#include &lt;string&gt;\n#include &lt;thread&gt;\n#include &lt;vector&gt;\n#include &lt;functional&gt;\n#include &lt;cstdio&gt;\n#include &lt;atomic&gt;\n\nstruct Curve { std::vector&lt;double&gt; t, df; };\n\nclass CurveCache {\npublic:\n    using Builder = std::function&lt;std::shared_ptr&lt;const Curve&gt;(const std::string&amp;)&gt;;\n    explicit CurveCache(Builder b) : build_(std::move(b)) {}\n\n    std::shared_ptr&lt;const Curve&gt; get(const std::string&amp; key) {\n        {   // fast path: shared lock, many readers in parallel\n            std::shared_lock lk(mu_);\n            auto it = map_.find(key);\n            if (it != map_.end()) return it-&gt;second;\n        }\n        std::unique_lock lk(mu_);   // slow path: exclusive, re-check (another thread may have built it)\n        auto it = map_.find(key);\n        if (it != map_.end()) return it-&gt;second;\n        auto c = build_(key);       // built under the exclusive lock: builds are serialised\n        map_.emplace(key, c);\n        return c;\n    }\n\n    void invalidate(const std::string&amp; key) {\n        std::unique_lock lk(mu_);\n        map_.erase(key);            // readers holding the shared_ptr keep the old curve alive\n    }\n\nprivate:\n    Builder build_;\n    std::map&lt;std::string, std::shared_ptr&lt;const Curve&gt;&gt; map_;\n    std::shared_mutex mu_;\n};\n\nint main() {\n    std::atomic&lt;int&gt; builds{0};\n    CurveCache cache([&amp;](const std::string&amp;) {\n        ++builds;\n        auto c = std::make_shared&lt;Curve&gt;();\n        c-&gt;t = {1.0, 2.0}; c-&gt;df = {0.96, 0.92};\n        return std::shared_ptr&lt;const Curve&gt;(c);\n    });\n    std::vector&lt;std::thread&gt; th;\n    for (int i = 0; i &lt; 8; ++i)\n        th.emplace_back([&amp;] { for (int j = 0; j &lt; 1000; ++j) cache.get(\"USD-SOFR\"); });\n    for (auto&amp; t : th) t.join();\n    std::printf(\"builds=%d\\n\", builds.load());\n    cache.invalidate(\"USD-SOFR\");\n    cache.get(\"USD-SOFR\");\n    std::printf(\"builds after invalidate=%d\\n\", builds.load());\n}</code></pre>\nOutput: <code>builds=1</code> after 8,000 concurrent lookups, and <code>builds=2</code> after an invalidation, as expected.<br>\nDesign: readers take the shared lock; the exclusive lock covers the map and the build. The second lookup under the exclusive lock prevents two threads from building the same curve. Returning <code>shared_ptr&lt;const Curve&gt;</code> keeps an invalidated curve alive for readers still using it, so there is no dangling reference.<br>\nWhere it breaks: building under the exclusive lock blocks all readers during a slow build, and serialises builds of different keys. For slow builds, use one <code>std::shared_future</code> or <code>std::call_once</code> per key so the lock is held only for the map update. Heavy read traffic also contends on the shared_ptr reference count.",
+  "tags": [
+   "cpp",
+   "concurrency",
+   "caching",
+   "case_study"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study.</b> A templated Black–Scholes call with a minimal forward-mode dual number gives vega without a hand-coded derivative. Show the template and the output for \\(S=100\\), \\(K=105\\), \\(r=3\\%\\), \\(\\sigma=20\\%\\), \\(T=1\\).",
+  "back": "<pre><code>#include &lt;cmath&gt;\n#include &lt;cstdio&gt;\n\nusing std::exp; using std::log; using std::sqrt; using std::erfc;\n\nstruct Dual {                      // forward-mode AD: value v and tangent d\n    double v, d;\n    Dual(double x = 0.0) : v(x), d(0.0) {}\n    Dual(double x, double dx) : v(x), d(dx) {}\n};\ninline Dual operator+(Dual a, Dual b) { return {a.v + b.v, a.d + b.d}; }\ninline Dual operator-(Dual a) { return {-a.v, -a.d}; }\ninline Dual operator-(Dual a, Dual b) { return {a.v - b.v, a.d - b.d}; }\ninline Dual operator*(Dual a, Dual b) { return {a.v * b.v, a.d * b.v + a.v * b.d}; }\ninline Dual operator/(Dual a, Dual b) { return {a.v / b.v, (a.d * b.v - a.v * b.d) / (b.v * b.v)}; }\ninline Dual exp(Dual a) { double e = std::exp(a.v); return {e, e * a.d}; }\ninline Dual log(Dual a) { return {std::log(a.v), a.d / a.v}; }\ninline Dual sqrt(Dual a) { double s = std::sqrt(a.v); return {s, a.d / (2.0 * s)}; }\ninline Dual erfc(Dual a) {         // d/du erfc(u) = -2/sqrt(pi) * exp(-u^2)\n    return {erfc(a.v), -2.0 / std::sqrt(M_PI) * std::exp(-a.v * a.v) * a.d};\n}\n\n// Generic Black-Scholes call: works for double and for Dual.\ntemplate &lt;typename T&gt;\nT norm_cdf(T x) { return 0.5 * erfc(-x / sqrt(T(2.0))); }\n\ntemplate &lt;typename T&gt;\nT bs_call(T S, T K, T r, T sigma, T tau) {\n    T sd = sigma * sqrt(tau);\n    T d1 = (log(S / K) + (r + 0.5 * sigma * sigma) * tau) / sd;\n    T d2 = d1 - sd;\n    return S * norm_cdf(d1) - K * exp(-(r * tau)) * norm_cdf(d2);\n}\n\nint main() {\n    double S = 100, K = 105, r = 0.03, sig = 0.2, tau = 1.0;\n    double price = bs_call&lt;double&gt;(S, K, r, sig, tau);\n    // vega = d price / d sigma, seeded with tangent 1 on sigma\n    Dual p = bs_call&lt;Dual&gt;(Dual(S), Dual(K), Dual(r), Dual(sig, 1.0), Dual(tau));\n    double d1 = (std::log(S / K) + (r + 0.5 * sig * sig) * tau) / (sig * std::sqrt(tau));\n    double vega_exact = S * std::exp(-0.5 * d1 * d1) / std::sqrt(2 * M_PI) * std::sqrt(tau);\n    std::printf(\"price %.6f  AD-price %.6f\\n\", price, p.v);\n    std::printf(\"vega AD %.6f  analytic %.6f\\n\", p.d, vega_exact);\n    return 0;\n}</code></pre>\nOutput: <code>price 7.128065</code>, and the AD tangent on \\(\\sigma\\) is <code>39.893498</code>, matching the analytic vega <code>39.893498</code>.<br>\nPoints to check in an interview: each input direction costs one forward pass, so many-input Greeks need reverse mode (the tape-based AAD cards). Every function used in the template (<code>sqrt</code>, <code>log</code>, <code>exp</code>, <code>erfc</code>) needs a Dual overload, or the compiler fails. The <code>erfc</code> derivative is \\(-\\tfrac{2}{\\sqrt\\pi}e^{-u^2}\\).<br>\nWhere it breaks: a dual number carries one tangent. Second-order Greeks need nested duals or a second pass.",
+  "tags": [
+   "cpp",
+   "automatic_differentiation",
+   "templates",
+   "case_study"
+  ]
+ }
+]
