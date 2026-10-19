@@ -21,6 +21,9 @@
    "derangements",
    "permutations",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_derangement_limit"
   ]
  },
  {
@@ -45,6 +48,9 @@
    "catalan",
    "random_walk",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_dyck_reflect"
   ]
  },
  {
@@ -57,6 +63,9 @@
    "birthday",
    "approximation",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_birthday_bound"
   ]
  },
  {
@@ -80,6 +89,9 @@
    "monty_hall",
    "conditional",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_monty_cases"
   ]
  },
  {
@@ -237,6 +249,9 @@
    "gamblers_ruin",
    "duration",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_ruin_martingale"
   ]
  },
  {
@@ -261,6 +276,9 @@
    "pattern_waiting",
    "coin_patterns",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_htH_chain"
   ]
  },
  {
@@ -297,6 +315,9 @@
    "s_eigen",
    "stationary",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_two_state_flow"
   ]
  },
  {
@@ -321,6 +342,9 @@
    "random_walk_graph",
    "stationary",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_graph_walk_pi"
   ]
  },
  {
@@ -331,6 +355,9 @@
    "s_reflection",
    "brownian_motion",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_bm_reflection"
   ]
  },
  {
@@ -344,6 +371,9 @@
    "ballot",
    "random_walk",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_ballot_lattice"
   ]
  },
  {
@@ -368,6 +398,9 @@
    "s_conditional_expectation_tower",
    "polya_urn",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_urn_martingale"
   ]
  },
  {
@@ -392,6 +425,9 @@
    "s_extremal",
    "secretary",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_secretary_curve"
   ]
  },
  {
@@ -405,6 +441,9 @@
    "order_statistics",
    "spacings",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_order_spacings"
   ]
  },
  {
@@ -417,6 +456,9 @@
    "s_order_statistics",
    "broken_stick",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_stick_triangle"
   ]
  },
  {
@@ -442,6 +484,9 @@
    "s_order_statistics",
    "exponential_distribution",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_poisson_merge"
   ]
  },
  {
@@ -454,6 +499,9 @@
    "s_bayes",
    "poisson",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_poisson_thin"
   ]
  },
  {
@@ -465,6 +513,9 @@
    "inspection_paradox",
    "renewal",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_inspection"
   ]
  },
  {
@@ -502,6 +553,9 @@
    "normal",
    "correlation",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_bivariate_quadrants"
   ]
  },
  {
@@ -515,6 +569,9 @@
    "brownian_motion",
    "ito_calculus",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_qv_convergence"
   ]
  },
  {
@@ -627,6 +684,9 @@
    "put_call_parity",
    "options",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_put_call_parity"
   ]
  },
  {
@@ -691,6 +751,9 @@
    "options",
    "risk_neutral",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_bl_convex"
   ]
  },
  {
@@ -730,6 +793,9 @@
    "kelly",
    "betting",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_kelly_growth"
   ]
  },
  {
@@ -756,6 +822,9 @@
    "ols",
    "regression",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_ols_residuals"
   ]
  },
  {
@@ -781,6 +850,9 @@
    "mle",
    "uniform",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_uniform_mle"
   ]
  },
  {
@@ -869,6 +941,9 @@
    "heat_equation",
    "stability",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_ftcs_stability"
   ]
  },
  {
@@ -881,6 +956,9 @@
    "monte_carlo",
    "standard_error",
    "fmt_rebuild"
+  ],
+  "figs_back": [
+   "f11_mc_error_loglog"
   ]
  },
  {
@@ -1003,6 +1081,9 @@
    "gamblers_ruin",
    "duration",
    "fmt_connect"
+  ],
+  "figs_back": [
+   "f11_ruin_martingale"
   ]
  },
  {
@@ -1040,6 +1121,9 @@
    "options",
    "risk_neutral",
    "fmt_connect"
+  ],
+  "figs_back": [
+   "f11_butterfly_density"
   ]
  },
  {
@@ -1101,6 +1185,9 @@
    "brownian_motion",
    "random_walk",
    "fmt_connect"
+  ],
+  "figs_back": [
+   "f11_bm_reflection"
   ]
  },
  {
@@ -1114,6 +1201,9 @@
    "r_squared",
    "regression",
    "fmt_connect"
+  ],
+  "figs_back": [
+   "f11_ols_residuals"
   ]
  },
  {
@@ -1152,6 +1242,9 @@
    "catalan",
    "ballot",
    "fmt_connect"
+  ],
+  "figs_back": [
+   "f11_ballot_lattice"
   ]
  },
  {
@@ -1164,6 +1257,9 @@
    "random_walk_graph",
    "stationary",
    "fmt_connect"
+  ],
+  "figs_back": [
+   "f11_graph_walk_pi"
   ]
  },
  {
@@ -1203,6 +1299,9 @@
    "poisson",
    "superposition",
    "fmt_connect"
+  ],
+  "figs_back": [
+   "f11_poisson_merge"
   ]
  },
  {
@@ -1215,6 +1314,9 @@
    "inspection_paradox",
    "renewal",
    "fmt_connect"
+  ],
+  "figs_back": [
+   "f11_inspection"
   ]
  },
  {
@@ -1265,6 +1367,9 @@
    "black_scholes",
    "pde",
    "fmt_connect"
+  ],
+  "figs_back": [
+   "f11_dependency_map"
   ]
  },
  {
@@ -1278,6 +1383,9 @@
    "regression",
    "correlation",
    "fmt_connect"
+  ],
+  "figs_back": [
+   "f11_ols_residuals"
   ]
  },
  {
@@ -1329,6 +1437,9 @@
    "heat_equation",
    "stability",
    "fmt_connect"
+  ],
+  "figs_back": [
+   "f11_ftcs_stability"
   ]
  },
  {
@@ -1379,6 +1490,9 @@
    "order_statistics",
    "beta_distribution",
    "fmt_connect"
+  ],
+  "figs_back": [
+   "f11_order_spacings"
   ]
  },
  {
@@ -1404,6 +1518,9 @@
    "monty_hall",
    "conditional",
    "fmt_connect"
+  ],
+  "figs_back": [
+   "f11_monty_cases"
   ]
  },
  {
@@ -1466,6 +1583,9 @@
    "s_extremal",
    "secretary",
    "fmt_connect"
+  ],
+  "figs_back": [
+   "f11_secretary_curve"
   ]
  },
  {

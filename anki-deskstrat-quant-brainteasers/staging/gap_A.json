@@ -1,0 +1,266 @@
+[
+ {
+  "type": "basic",
+  "front": "How many permutations of \\(\\{1,2,\\dots,9\\}\\) contain no increasing subsequence of length 4 and no decreasing subsequence of length 4?",
+  "back": "<b>Answer:</b> \\(42^2=1764\\)<br><b>Structure:</b> s_extremal with s_bijection: the Robinson-Schensted correspondence turns the two chain conditions into one shape condition.<br><b>Key move:</b> RSK sends a permutation to a pair of standard Young tableaux of one shape \\(\\lambda\\). The first row length is the longest increasing subsequence and the number of rows is the longest decreasing one. Both at most 3 means \\(\\lambda\\) fits in a \\(3\\times3\\) box, and for \\(|\\lambda|=9\\) the only such shape is \\((3,3,3)\\).<br><b>Working:</b> The hook length formula gives \\(f^{(3,3,3)}=\\dfrac{9!}{\\prod\\text{hooks}}=\\dfrac{362880}{8640}=42\\). RSK then counts the permutations as \\(\\sum_\\lambda (f^\\lambda)^2=42^2=1764\\).<br><b>Sanity check:</b> This is a fraction \\(1764/9!\\approx0.005\\) of all permutations. The count is zero at \\(n=10\\), which is Erdős-Szekeres: \\(10=3\\cdot3+1\\).<br><b>Transfer:</b> Permutations avoiding only 123 number \\(C_9=4862\\) (Catalan), a different shape count. Longest monotone subsequences of a uniform random permutation are about \\(2\\sqrt n\\).",
+  "tags": [
+   "fmt_solve",
+   "s_extremal",
+   "s_bijection",
+   "erdos_szekeres",
+   "permutations",
+   "monotone_subsequences"
+  ],
+  "dest": "01_combinatorics",
+  "hints": [
+   "Think of a permutation as the point set \\((i,\\pi(i))\\). Which increasing and decreasing chains can every such point set be forced to contain, and what does avoiding both say about the shape of the set?",
+   "Names the move: Robinson-Schensted insertion, a bijection from permutations to pairs of standard Young tableaux of the same shape. The row and column lengths of that shape are the two longest chains.",
+   "Setup: the answer is \\(\\sum_\\lambda (f^\\lambda)^2\\) over shapes \\(\\lambda\\) of size 9 that fit in a \\(3\\times3\\) box. Compute \\(f^\\lambda\\) with the hook length formula."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> Five points are placed anywhere in the unit square \\([0,1]^2\\). What is the largest possible value of the smallest pairwise Euclidean distance between them?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_pigeonhole with s_extremal: cut the region into cells of small diameter, so a pigeon count forces two points close together.<br><b>Trigger:</b> a fixed number of points in a bounded region, with a max-min question about the closest pair.<br><b>Key move:</b> Cut the square into four closed sub-squares of side \\(\\tfrac12\\). Five points in four cells put two points in one cell, and two points in a closed \\(\\tfrac12\\times\\tfrac12\\) cell are at distance at most \\(\\tfrac{\\sqrt2}{2}\\), the cell diagonal.<br><b>Answer:</b> \\(\\dfrac{\\sqrt2}{2}\\approx0.7071\\). It is attained by the four corners plus the centre: centre-to-corner distance is \\(\\tfrac{\\sqrt2}{2}\\), and corner-to-corner distance is at least 1.",
+  "tags": [
+   "fmt_recognise",
+   "s_pigeonhole",
+   "s_extremal",
+   "unit_square",
+   "distance"
+  ],
+  "dest": "01_combinatorics",
+  "figs_back": [
+   "fgA_square_cells"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: any 7 integers contain a nonempty subset whose sum is divisible by 7. Change: you are given only 6 integers. Must a nonempty subset with sum divisible by 7 still exist?",
+  "back": "<b>What breaks:</b> the proof uses the prefix sums \\(S_0=0,S_1,\\dots,S_7\\) of the 7 integers: 8 values in 7 residues, so two agree mod 7, and the block between them has sum divisible by 7. With 6 integers you only get \\(S_0,\\dots,S_6\\): 7 values in 7 residues, and no collision is forced.<br><b>Fix:</b> look for a counterexample. Take \\(1,1,1,1,1,1\\). Its nonempty subset sums are \\(1,\\dots,6\\), none divisible by 7.<br><b>New answer:</b> No. Six integers do not guarantee such a subset, and the all-ones example is a counterexample.",
+  "tags": [
+   "fmt_perturb",
+   "s_pigeonhole",
+   "subset_sums",
+   "divisibility",
+   "prefix_sums"
+  ],
+  "dest": "01_combinatorics",
+  "hints": [
+   "Which argument proves the 7-integer case, and how many objects does it place into how many boxes? Recount for 6 integers.",
+   "Names the move: pigeonhole on the prefix sums \\(S_0,\\dots,S_n\\) modulo \\(n\\). A repeated residue \\(S_i\\equiv S_j\\) gives a block of consecutive integers whose sum is divisible by \\(n\\).",
+   "Setup: with six integers, list the residues of \\(S_0,\\dots,S_6\\) mod 7 and check whether a repeat is forced. Then test a constant sequence \\(k,k,\\dots,k\\)."
+  ],
+  "figs_back": [
+   "fgA_prefix_clock"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for pigeonhole on a chain cover, and when does it fail?",
+  "back": "<b>Triggers:</b> a forbidden relation between pairs of objects (for example \"differ by exactly 2\"), where the ground set can be covered by disjoint pairs that are themselves forbidden. Taking more objects than there are pairs then forces a forbidden pair.<br><b>Move:</b> partition the ground set into pairs \\(\\{x,x+2\\}\\) (or chains) and count them. Canonical example: \\(\\{1,\\dots,100\\}\\) splits into the 50 pairs \\(\\{1,3\\},\\{5,7\\},\\dots,\\{97,99\\}\\) and \\(\\{2,4\\},\\dots,\\{98,100\\}\\). Any 51 integers from 1 to 100 contain two that differ by exactly 2, and 50 need not: take \\(1,2,5,6,9,10,\\dots\\).<br><b>Failure mode:</b> the boxes must cover the conflict graph by edges and singletons. This is exact for disjoint paths, as here, but not in general. An odd cycle of conflicts needs one extra box, so the box count overstates the largest safe set; compute the independence number directly in that case.",
+  "tags": [
+   "fmt_toolkit",
+   "s_pigeonhole",
+   "s_extremal",
+   "pairing",
+   "forced_collision"
+  ],
+  "dest": "01_combinatorics",
+  "figs_back": [
+   "fgA_chain_pairs"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A bag holds one ticket for each number from 1 to 200. Without looking, you draw tickets one at a time. What is the smallest number you must draw to guarantee that four of the drawn tickets leave the same remainder on division by 9?",
+  "back": "<b>Classic:</b> generalised pigeonhole. With \\(n\\) boxes, forcing \\(r\\) objects into one box needs \\(n(r-1)+1\\) objects.<br><b>Mapping:</b> the remainder mod 9 is the box, a ticket is an object, and four tickets with one remainder are four in one box. Each remainder occurs at least 22 times in 1 to 200, so the bag can supply three tickets per remainder.<br><b>Answer:</b> \\(9\\cdot3+1=28\\).<br><b>Sanity check:</b> 27 tickets with three per remainder avoid the event, so 28 is the minimum.<br><b>Transfer:</b> birthday triples: with 365 birthdays, three people share one for sure once there are \\(2\\cdot365+1=731\\) people.",
+  "tags": [
+   "fmt_twin",
+   "s_pigeonhole",
+   "s_extremal",
+   "remainders",
+   "forced_collision"
+  ],
+  "dest": "01_combinatorics",
+  "hints": [
+   "Treat the remainder on division by 9 as a label with nine possible values. How many tickets can you hold while every label appears at most three times?",
+   "Names the move: pigeonhole with boxes equal to remainders. Find the largest draw that keeps every box at most three, then add one.",
+   "Setup: let \\(n_r\\) be the number of drawn tickets with remainder \\(r\\). Write the total as \\(\\sum_r n_r\\) and the constraint as \\(n_r\\le3\\)."
+  ],
+  "figs_back": [
+   "fgA_residue_boxes"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How many non-decreasing sequences of integers \\(1\\le a_1\\le a_2\\le a_3\\le a_4\\le a_5\\le 8\\) are there?",
+  "back": "<b>Answer:</b> \\(\\binom{12}{5}=792\\)<br><b>Structure:</b> s_stars_bars with s_bijection: a non-decreasing sequence is a multiset of size 5 from 8 values. Repeats are allowed, so choosing 5 distinct values does not count it.<br><b>Key move:</b> Set \\(b_i=a_i+i-1\\). Then \\(1\\le b_1<b_2<\\dots<b_5\\le 12\\), and this is a bijection onto the 5-element subsets of \\(\\{1,\\dots,12\\}\\). Equal neighbours \\(a_i=a_{i+1}\\) become consecutive \\(b\\)'s.<br><b>Working:</b> \\(\\binom{12}{5}=\\dfrac{12\\cdot11\\cdot10\\cdot9\\cdot8}{5!}=792\\). For example \\((1,1,3,6,6)\\mapsto(1,2,5,9,10)\\).<br><b>Sanity check:</b> Strictly increasing sequences alone number \\(\\binom85=56\\). Allowing repeats must add many more, and 792 is consistent with that.<br><b>Transfer:</b> monomials of degree 5 in 8 variables; sorted outcomes of 5 dice with 8 faces; multisets of 5 sweets from 8 flavours.",
+  "tags": [
+   "fmt_solve",
+   "s_stars_bars",
+   "s_bijection",
+   "counting",
+   "multisets"
+  ],
+  "dest": "01_combinatorics",
+  "hints": [
+   "Repeats are allowed, so a plain choice of values is not enough. Is there a shift that turns each non-decreasing sequence into one with distinct entries?",
+   "Names the move: add \\(i-1\\) to the \\(i\\)-th term. This turns the sequence into a strictly increasing one on a larger range.",
+   "Setup: with \\(b_i=a_i+i-1\\), find the range of the \\(b_i\\) and count the subsets of that range with 5 elements."
+  ],
+  "figs_back": [
+   "fgA_monotone_path"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How many integer solutions are there to \\(x_1+x_2+x_3+x_4=15\\) with \\(2\\le x_i\\le 7\\) for every \\(i\\)?",
+  "back": "<b>Answer:</b> 104<br><b>Structure:</b> s_stars_bars with s_inclusion_exclusion: the lower bounds are removed by a shift, and the upper bounds by inclusion-exclusion.<br><b>Key move:</b> Put \\(y_i=x_i-2\\), so \\(0\\le y_i\\le5\\) and \\(\\sum y_i=7\\). Count the non-negative solutions, then subtract those in which some \\(y_i\\ge6\\).<br><b>Working:</b> Without the cap, \\(\\binom{7+3}{3}=120\\). For a fixed \\(i\\), \\(y_i\\ge6\\) becomes \\(y_i'=y_i-6\\ge0\\) with sum 1, giving \\(\\binom{1+3}{3}=4\\) ways, so subtract \\(4\\cdot4=16\\). Two capped variables need a sum of at least 12 > 7, so no further term appears. Answer \\(120-16=104\\).<br><b>Sanity check:</b> The map \\(y\\mapsto5-y\\) sends sum 7 to sum 13, so 104 is also the count for sum 13. Enumeration of all \\(6^4\\) tuples gives 104.<br><b>Transfer:</b> sums of four dice with faces 2 to 7; a budget split among four capped items.",
+  "tags": [
+   "fmt_solve",
+   "s_stars_bars",
+   "s_inclusion_exclusion",
+   "bounded_compositions",
+   "counting"
+  ],
+  "dest": "01_combinatorics",
+  "hints": [
+   "Lower bounds are awkward for stars and bars. Is there a substitution that makes every variable start at zero?",
+   "Names the move: shift by the lower bound, then count the solutions that break an upper cap by inclusion-exclusion over the variables that break it.",
+   "Setup: with \\(y_i=x_i-2\\), write \\(\\sum y_i=7\\) with \\(0\\le y_i\\le5\\). Ask how many \\(y_i\\) can exceed 5 at the same time."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> How many non-negative integer solutions are there to \\(x_1+x_2+x_3+x_4=21\\) in which \\(x_1\\) is odd and \\(x_2,x_3,x_4\\) are all even?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_stars_bars with a parity constraint: substitute to remove the parity condition, then count with stars and bars.<br><b>Trigger:</b> an integer sum in which each variable must lie in a fixed residue class mod 2.<br><b>Key move:</b> Write \\(x_1=2a+1\\) and \\(x_j=2b_j\\) for \\(j=2,3,4\\), with \\(a,b_j\\ge0\\). Then \\(2(a+b_2+b_3+b_4)+1=21\\), so \\(a+b_2+b_3+b_4=10\\).<br><b>Answer:</b> \\(\\binom{13}{3}=286\\).",
+  "tags": [
+   "fmt_recognise",
+   "s_stars_bars",
+   "parity",
+   "integer_solutions",
+   "stars_bars"
+  ],
+  "dest": "01_combinatorics"
+ },
+ {
+  "type": "basic",
+  "front": "Count the ways four fair dice can total 14 (ordered outcomes, each die showing 1 to 6).<br><br><b>Proposed solution:</b><br><b>L1.</b> Put \\(y_i=x_i-1\\ge0\\), so \\(\\sum y_i=10\\).<br><b>L2.</b> Non-negative solutions of \\(\\sum_{i=1}^{4}y_i=10\\) number \\(\\binom{13}{3}=286\\).<br><b>L3.</b> Each \\(y_i\\) is at most 5 automatically once the total is 10, so the answer is 286.<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L3. The cap \\(y_i\\le5\\) is not implied by \\(\\sum y_i=10\\). The point \\((y_1,y_2,y_3,y_4)=(10,0,0,0)\\) satisfies the sum, but it gives \\(x_1=11\\), which a die cannot show.<br><b>Why it fails:</b> stars and bars counts every non-negative solution, so L2 is right only for the uncapped count. The cap must be removed by inclusion-exclusion.<br><b>Correct answer:</b> \\(\\binom{13}{3}-4\\binom{7}{3}=286-140=146\\). The violations \\(y_i\\ge6\\) leave a sum of 4 (35 ways each), and two violations are impossible.<br><b>Smell:</b> after the substitution, check whether a single variable can exceed its cap for the given total. If it can, the stars-and-bars count overcounts.",
+  "tags": [
+   "fmt_debug",
+   "s_stars_bars",
+   "s_inclusion_exclusion",
+   "dice",
+   "err_missing_cap"
+  ],
+  "dest": "01_combinatorics"
+ },
+ {
+  "type": "basic",
+  "front": "The numbers \\(1,2,3,4\\) are written on a board. A move erases two numbers \\(a\\) and \\(b\\) and writes \\(a+b+ab\\) in their place. After three moves one number remains. What is it?",
+  "back": "<b>Answer:</b> 119<br><b>Structure:</b> s_invariant: a multiplicative weight is conserved by the move.<br><b>Key move:</b> \\((1+a)(1+b)=1+a+b+ab\\). So the move replaces \\(a,b\\) by \\(a+b+ab\\), which leaves \\(P=\\prod(1+x)\\) over the board unchanged.<br><b>Working:</b> Initially \\(P=(2)(3)(4)(5)=120\\). The final single number \\(x\\) has \\(1+x=P=120\\), so \\(x=119\\), whatever the order of moves.<br><b>Sanity check:</b> Two numbers: \\(1,1\\mapsto3\\), and \\((1+1)(1+1)=4=1+3\\). Every merge order of \\(1,2,3,4\\) gives 119 (checked by enumeration).<br><b>Transfer:</b> failure probabilities multiply. With \\(q=1-x\\), the merge \\(x\\oplus y=x+y-xy\\) becomes \\(q_xq_y\\), so the same identity governs independent survival.",
+  "tags": [
+   "fmt_solve",
+   "s_invariant",
+   "board_game",
+   "multiplicative_invariant",
+   "merge"
+  ],
+  "dest": "06_brainteasers_games",
+  "hints": [
+   "Is there a function \\(f\\) of a single number such that the product of \\(f\\) over the board does not change when two numbers are merged?",
+   "Names the move: a multiplicative invariant under the merge. Look for \\(f\\) with \\(f(a+b+ab)=f(a)f(b)\\).",
+   "Setup: let \\(P\\) be the product of \\(1+x\\) over the board. Compute \\(P\\) at the start and relate it to the single final number."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "In the 15-puzzle, fifteen numbered tiles and one blank fill a \\(4\\times4\\) frame, and a tile slides into the blank. What fraction of the \\(16!\\) labelled arrangements of the tiles and blank can be reached from the solved position?",
+  "back": "<b>Answer:</b> \\(\\tfrac12\\), so \\(16!/2=10\\,461\\,394\\,944\\,000\\) arrangements are reachable.<br><b>Structure:</b> s_invariant with s_parity: a parity invariant combining the permutation sign with the blank's row.<br><b>Key move:</b> Read the tiles row by row, and let \\(\\operatorname{inv}\\) be the number of inversions of that sequence with the blank removed. Let \\(r\\) be the blank's row from the top. A horizontal slide keeps both quantities, and a vertical slide changes \\(\\operatorname{inv}\\) by an odd amount and \\(r\\) by 1. So \\(\\operatorname{inv}+r\\pmod2\\) never changes.<br><b>Working:</b> The invariant is a single bit, and the reachable states are exactly those with the solved state's parity (Johnson and Story 1879; Wilson 1974). Hence the reachable count is \\(16!/2\\). Swapping the tiles 14 and 15 flips the parity, so that configuration is unsolvable.<br><b>Sanity check:</b> The bit splits the states evenly, so the fraction is \\(1/2\\). Enumeration of the reachable states on \\(2\\times2\\), \\(2\\times3\\), \\(2\\times4\\) and \\(3\\times3\\) boards gives exactly \\(1/2\\) each time.<br><b>Transfer:</b> the same parity bit decides any sliding puzzle on an even-width board, and a single transposition of two tiles is never reachable.",
+  "tags": [
+   "fmt_solve",
+   "s_invariant",
+   "s_parity",
+   "sliding_puzzle",
+   "permutations"
+  ],
+  "dest": "06_brainteasers_games",
+  "hints": [
+   "Each slide swaps the blank with a neighbouring tile. What does a swap do to the sign of a permutation, and what does moving the blank one row do?",
+   "Names the move: a parity invariant that combines the sign of the tile permutation with the blank's row.",
+   "Setup: let \\(\\operatorname{inv}\\) count the inversions of the tile sequence read row by row, and let \\(r\\) be the blank's row. Show that \\(\\operatorname{inv}+r\\) mod 2 is preserved by a vertical slide, then count the states with the right parity."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: an \\(8\\times8\\) board with \\(a_1\\) and \\(h_8\\) removed cannot be covered by 31 dominoes, since the colour counts are 30 and 32. Change: the pieces are now L-shaped trominoes (three squares of a \\(2\\times2\\) block), and only \\(a_1\\) is removed. Can the remaining 63 squares be covered exactly by L-trominoes? If so, how many are used?",
+  "back": "<b>What breaks:</b> the colour count no longer obstructs. Every L-tromino lies in a \\(2\\times2\\) block and covers two squares of one colour and one of the other, so the colour counts need not balance. The only obstruction left is divisibility, \\(63=3\\cdot21\\).<br><b>Fix:</b> induction on \\(2^n\\times2^n\\) boards with one square removed. Split the board into four quadrants, and handle the quadrant holding the removed square by induction. Place one tromino at the centre covering the inner corner of each of the other three quadrants. Each of those quadrants then has one missing square, so induction applies again. The \\(4\\times4\\) case is in the figure, with five trominoes.<br><b>New answer:</b> Yes. \\(63/3=21\\) L-trominoes.",
+  "tags": [
+   "fmt_perturb",
+   "s_invariant",
+   "s_parity",
+   "tiling",
+   "trominoes",
+   "chessboard"
+  ],
+  "dest": "06_brainteasers_games",
+  "hints": [
+   "How many squares of each colour does an L-tromino cover? Can the colour count still produce a contradiction?",
+   "Names the move: a recursive construction on boards of side \\(2^n\\) with one square removed, using the four quadrants and one central tromino.",
+   "Setup: the area fixes the number of trominoes. Try a \\(4\\times4\\) board minus a corner first, and split it into four \\(2\\times2\\) quadrants."
+  ],
+  "figs_back": [
+   "fgA_tromino_4x4"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> Ten lamps stand in a row, all off. Button \\(i\\) (for \\(i=1,\\dots,8\\)) toggles lamps \\(i\\), \\(i+1\\) and \\(i+2\\). Can you reach the state in which only lamp 1 is on?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_invariant with s_parity: a linear (xor) invariant over the field of two elements.<br><b>Trigger:</b> each press adds a fixed 0/1 vector mod 2, so look for weights \\(c_j\\) whose weighted sum mod 2 is unchanged by every button.<br><b>Key move:</b> Take \\(c=(1,1,0,1,1,0,1,1,0,1)\\). Any three consecutive positions of this period-3 pattern contain exactly two 1s, so each press changes \\(\\sum_j c_jx_j\\) by 2, which is even.<br><b>Answer:</b> No. From all-off the weighted sum is 0, while lamp 1 alone has weighted sum \\(c_1=1\\).<br><b>Working:</b> The 8 button vectors are independent (each has a distinct leading lamp), so the reachable patterns form an 8-dimensional subspace: \\(256\\) of the \\(2^{10}\\) patterns, a quarter. The weight vector \\(c\\) is the single linear check that cuts out this subspace.",
+  "tags": [
+   "fmt_recognise",
+   "s_invariant",
+   "s_parity",
+   "lamps",
+   "xor"
+  ],
+  "dest": "06_brainteasers_games",
+  "figs_back": [
+   "fgA_lamp_weights"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Six cards are labelled \\(1\\) to \\(6\\). A machine takes any two cards, discards them, and returns one card whose label is the remainder, on division by 7, of the product of the two labels. The machine runs until one card is left. What is its label?",
+  "back": "<b>Answer:</b> 6.<br><b>Classic:</b> a conserved quantity under a binary operation. Replacing two numbers by their sum mod \\(k\\) keeps the total mod \\(k\\), so the last number is the total mod \\(k\\), whatever the order.<br><b>Mapping:</b> the labels \\(1,\\dots,6\\) are the non-zero residues mod 7, which form a group under multiplication. Addition becomes multiplication, so the conserved quantity is the product mod 7.<br><b>Working:</b> \\(1\\cdot2\\cdots6=720\\equiv6\\pmod7\\), in line with Wilson's theorem \\((p-1)!\\equiv-1\\pmod p\\). Each step keeps the product mod 7, and the last label lies in \\(\\{1,\\dots,6\\}\\), so it is 6.<br><b>Sanity check:</b> The sum version would give \\(21\\equiv0\\), so the group structure matters. Every merge order gives 6 (checked by enumeration).<br><b>Transfer:</b> any operation from a finite group gives an order-independent final value, for example the XOR of bits in lamp games.",
+  "tags": [
+   "fmt_twin",
+   "s_invariant",
+   "modular",
+   "group_invariant",
+   "board_game"
+  ],
+  "dest": "06_brainteasers_games",
+  "hints": [
+   "Does the final card depend on the order of operations? Look for a quantity that every operation keeps unchanged.",
+   "Names the move: a total conserved under a binary operation. The sum mod \\(k\\) is the familiar case. Ask whether a different operation on the labels is also conserved.",
+   "Setup: let \\(P\\) be the product of the labels modulo 7. Compute \\(P\\) at the start and check that one step leaves it unchanged."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for a monovariant, and when does it fail?",
+  "back": "<b>Triggers:</b> a process that must stop, or a question about how many steps it takes; a non-negative integer that strictly decreases at every legal move.<br><b>Move:</b> find \\(\\Phi\\ge0\\) that drops by a known amount at each step. Then \\(\\Phi\\) bounds the number of steps, and if the drop is always exactly 1, the number of steps is fixed.<br><b>Canonical example:</b> sorting by adjacent swaps. Let \\(\\Phi\\) be the number of inversions. Each adjacent swap of an out-of-order pair removes exactly one inversion, so reversing 10 distinct numbers takes exactly \\(\\binom{10}{2}=45\\) such swaps, whatever order of adjacent out-of-order swaps is used.<br><b>Failure mode:</b> the drop varies from move to move, so \\(\\Phi\\) bounds the steps but does not fix them; \\(\\Phi\\) can increase on some legal move; or \\(\\Phi\\) is not bounded below. A monovariant also says nothing about the final state.",
+  "tags": [
+   "fmt_toolkit",
+   "s_invariant",
+   "s_extremal",
+   "monovariant",
+   "sorting",
+   "termination"
+  ],
+  "dest": "06_brainteasers_games"
+ }
+]

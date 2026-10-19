@@ -84,6 +84,9 @@
    "Can a power be rewritten as an exponential, so that a logarithm does the work?",
    "Use \\((1+r)^n=\\exp\\bigl(n\\ln(1+r)\\bigr)\\), and series-expand \\(\\ln(1+r)\\) for the small rate \\(r\\).",
    "\\(\\ln(1.05)\\approx 0.05-\\dfrac{0.05^2}{2}+\\dfrac{0.05^3}{3}\\), then multiply by \\(n=10\\) and exponentiate."
+  ],
+  "figs_back": [
+   "f10_log_series_error"
   ]
  },
  {
@@ -100,6 +103,9 @@
    "Does \\(\\ln(1+r)\\) sit above or below \\(r\\), and by how much at \\(r=0.01\\)?",
    "Keep the second-order term of \\(\\ln(1+r)\\) and see how the exponent changes.",
    "Exponent \\(=100\\ln(1.01)\\approx 100\\,(r-\\tfrac{r^2}{2})\\) with \\(r=0.01\\)."
+  ],
+  "figs_back": [
+   "f10_log_series_error"
   ]
  },
  {
@@ -116,6 +122,9 @@
    "Is there a series in powers of \\(x\\) that gives \\(\\ln(1+x)\\) directly, with \\(x\\) small here?",
    "Use the alternating Taylor series of \\(\\ln(1+x)\\) about \\(x=0\\).",
    "\\(\\ln(1+x)=x-\\dfrac{x^2}{2}+\\dfrac{x^3}{3}-\\cdots\\), with \\(x=0.1\\)."
+  ],
+  "figs_back": [
+   "f10_log_series_error"
   ]
  },
  {
@@ -132,6 +141,9 @@
    "What does each step of long division by 7 depend on, and does the process ever repeat?",
    "Track the remainder after each step: the next digit and remainder depend only on the current remainder, so look for a cycle.",
    "Let \\(r_0=1\\). Then \\(r_{k+1}=10\\,r_k \\bmod 7\\). Compute \\(r_1,r_2,\\dots\\) until one repeats."
+  ],
+  "figs_back": [
+   "f10_rem_cycle_7"
   ]
  },
  {
@@ -201,6 +213,9 @@
    "After 252 independent steps of equal size, how does the spread of the total compare with the spread of one step?",
    "Independent unit-variance shocks add in variance, so the standard deviation of the total is the square root of the variance of the sum.",
    "\\(\\operatorname{Var}\\bigl(\\sum_{i=1}^{252}X_i\\bigr)=\\sum_{i=1}^{252}\\operatorname{Var}(X_i)\\), with \\(\\operatorname{Var}(X_i)=1\\)."
+  ],
+  "figs_back": [
+   "f10_walk_sqrt_t"
   ]
  },
  {
@@ -256,6 +271,9 @@
    "options",
    "normal",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f10_ncdf_tangent"
   ]
  },
  {
@@ -312,6 +330,9 @@
    "mental_math",
    "compounding",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f10_log_series_error"
   ]
  },
  {
@@ -328,6 +349,9 @@
    "Does the factor of 2 in the denominator change the repeating block, or only what comes before it?",
    "Write \\(1/14=\\tfrac12\\cdot\\tfrac17\\) and treat the two factors separately.",
    "Start from \\(\\tfrac17=0.\\overline{142857}\\) and halve it digit by digit, noting where the decimal point sits."
+  ],
+  "figs_back": [
+   "f10_rem_cycle_7"
   ]
  },
  {
@@ -344,6 +368,9 @@
    "For which starting values does this iteration settle down, and what does the error do at each step?",
    "Track the error \\(e_k=1-7x_k\\). Find how \\(e_{k+1}\\) depends on \\(e_k\\), then check whether \\(|e_k|\\) shrinks.",
    "Compute \\(e_0=1-7x_0\\) for \\(x_0=0.3\\), and write \\(e_{k+1}\\) in terms of \\(e_k\\)."
+  ],
+  "figs_back": [
+   "f10_newton_recip_error"
   ]
  },
  {
@@ -376,6 +403,9 @@
    "Which two quantities multiply to give a total weight, and roughly how many of each are there?",
    "Decompose the total as a count times a mass per item. Bound each factor with a low and high case, then multiply the bounds.",
    "Total \\(\\approx N\\times\\bar m\\), where \\(N\\) is the fleet size and \\(\\bar m\\) the average mass, each with a low and high estimate."
+  ],
+  "figs_back": [
+   "f10_fermi_bus_tree"
   ]
  },
  {
@@ -392,6 +422,9 @@
    "Can the same turnover be reached from two independent directions, one from the bottom up and one from a known global total?",
    "Triangulate: build one bottom-up estimate from desks and trades, one top-down from global turnover and London's share, then combine them.",
    "Bottom-up \\(=\\text{desks}\\times\\text{trades per desk}\\times\\text{average size}\\). Top-down \\(=\\text{global turnover}\\times\\text{London share}\\)."
+  ],
+  "figs_back": [
+   "f10_fermi_fx_routes"
   ]
  },
  {
@@ -421,6 +454,9 @@
    "fermi",
    "uncertainty",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f10_fermi_band"
   ]
  },
  {
@@ -437,6 +473,9 @@
    "Do the bus count and the bus mass really vary independently when both grow with city size?",
    "Combine the correlated pair into one factor first: its log-variance includes the cross term \\(2\\rho\\sigma_1\\sigma_2\\).",
    "\\(\\operatorname{Var}(\\ln N+\\ln m)=\\sigma_N^2+\\sigma_m^2+2\\rho\\,\\sigma_N\\sigma_m\\). Use this for the pair, then multiply in the other three factors."
+  ],
+  "figs_back": [
+   "f10_fermi_band"
   ]
  },
  {
@@ -453,6 +492,9 @@
    "A manager runs many funds with independent results, each with the same chance of beating any level. How does the chance that the best one beats a level compare with a single fund's chance?",
    "Structural feature: the best fund stays below a level only if every fund does, so the chance for the group is a power of one fund's chance. Use that to build the distribution of the best result.",
    "Setup: write the expected best alpha as an integral of the chance that it exceeds a level, then evaluate it numerically in standard-deviation units."
+  ],
+  "figs_back": [
+   "f10_extremal_max"
   ]
  },
  {
@@ -470,6 +512,9 @@
    "Which quantity is the product of traded volume, the share you capture, and the edge earned per unit?",
    "Use linearity: gross P&amp;L is volume captured times edge per share, then haircut the edge for adverse selection.",
    "Edge per share \\(=\\) half-spread \\(\\times\\) price. Daily P&amp;L \\(=\\) shares captured \\(\\times\\) edge, then multiply by 252 days."
+  ],
+  "figs_back": [
+   "f10_mm_pnl_chain"
   ]
  },
  {
@@ -481,6 +526,9 @@
    "fermi",
    "uncertainty",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f10_fermi_fx_routes"
   ]
  },
  {
@@ -498,6 +546,9 @@
    "How does the standard error of a sample standard deviation shrink as the sample grows?",
    "Use the normal approximation for the relative standard error of a sample sd, then invert it to solve for the sample size.",
    "Relative error \\(\\approx \\dfrac{1}{\\sqrt{2n}}\\). Set this equal to the target \\(\\epsilon\\) and solve for \\(n\\)."
+  ],
+  "figs_back": [
+   "f10_sd_error_loglog"
   ]
  },
  {
@@ -515,6 +566,9 @@
    "Can the sum of two independent dice be built from two single-die quantities?",
    "Use linearity for the mean and additivity of variance for independent summands. The width is the standard deviation.",
    "\\(E[S]=E[D_1]+E[D_2]\\) and \\(\\operatorname{Var}(S)=\\operatorname{Var}(D_1)+\\operatorname{Var}(D_2)\\), where \\(D\\) is one fair die."
+  ],
+  "figs_back": [
+   "f10_mm_dice_quote"
   ]
  },
  {
@@ -526,6 +580,9 @@
    "market_making",
    "cards",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f10_red_card_pmf"
   ]
  },
  {
@@ -542,6 +599,9 @@
    "What happens to the variance of a count of red cards when every draw is independent of the others?",
    "Replacement makes the draws independent, so the count is binomial. Drop the correction factor that only applies without replacement.",
    "Count \\(X\\sim\\text{Bin}(n,p)\\) with \\(n=10\\). Write \\(\\operatorname{Var}(X)\\) in terms of \\(n\\) and \\(p\\)."
+  ],
+  "figs_back": [
+   "f10_red_card_pmf"
   ]
  },
  {
@@ -553,6 +613,9 @@
    "market_making",
    "coins",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f10_coin_clt"
   ]
  },
  {
@@ -569,6 +632,9 @@
    "For two independent draws, what is the probability that both fall below a level \\(x\\)?",
    "Map the larger draw through its distribution: its cumulative probability is the square of the single-draw one. Integrate the survival function.",
    "\\(E[\\max]=\\int_0^1\\bigl(1-P(\\max\\le x)\\bigr)\\,dx\\), and \\(P(\\max\\le x)\\) is the square of the single-draw cumulative probability."
+  ],
+  "figs_back": [
+   "f10_max_tail_area"
   ]
  },
  {
@@ -585,6 +651,9 @@
    "Once you learn the sum is at least 8, which outcomes remain possible, and how likely is each relative to the rest?",
    "Condition the distribution on the surviving outcomes, renormalise by their total probability, then take the mean.",
    "\\(E[S\\mid S\\ge8]=\\dfrac{\\sum_{s\\ge8}s\\,P(S=s)}{P(S\\ge8)}\\)."
+  ],
+  "figs_back": [
+   "f10_dice_tail"
   ]
  },
  {
@@ -603,6 +672,9 @@
    "If a buyer lifts your ask only when the value is high, what does that tell you about the value conditional on being filled?",
    "Condition on the fill event \\(V>50\\). The expected value given a fill is the mean of the value over that restricted interval.",
    "\\(E[V\\mid V>50]=\\dfrac{\\int_{50}^{100}v\\,\\tfrac{1}{100}\\,dv}{P(V>50)}\\)."
+  ],
+  "figs_back": [
+   "f10_mm_winners_curse"
   ]
  },
  {
@@ -614,6 +686,9 @@
    "market_making",
    "winners_curse",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f10_mm_winners_curse"
   ]
  },
  {
@@ -631,6 +706,9 @@
    "Five noisy estimates are compared and you act on the highest. Given that you act on the highest, what can you say about how much of that estimate is noise?",
    "Structural feature: the five noise terms are independent and identically distributed, and the choice selects the largest estimate. Compare the average value of the selected estimate with the true value.",
    "Setup: write the chance that the largest estimate is below a level as a power of one estimate's chance, differentiate to get the density, then take the expectation of the error."
+  ],
+  "figs_back": [
+   "f10_extremal_max"
   ]
  },
  {
@@ -643,6 +721,9 @@
    "market_making",
    "adverse_selection",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f10_mm_dice_quote"
   ]
  },
  {
@@ -654,6 +735,9 @@
    "market_making",
    "winners_curse",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f10_mm_winners_curse"
   ]
  },
  {
@@ -670,6 +754,9 @@
    "How should your quote move when you already hold inventory, and in which direction does that position push the price you will trade at?",
    "Use the inventory skew from stochastic control: the reservation price moves against your position in proportion to inventory.",
    "Write \\(r=\\text{mid}-q\\,c\\), where \\(q\\) is the signed position and \\(c=\\gamma\\sigma^2(T-t)\\). Identify \\(q\\) and \\(c\\) from the statement, then quote both sides around \\(r\\)."
+  ],
+  "figs_back": [
+   "f10_inventory_skew"
   ]
  },
  {
@@ -682,6 +769,9 @@
    "bayes_update",
    "adverse_selection",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f10_bias_update"
   ]
  },
  {
@@ -699,6 +789,9 @@
    "Compare the price you sold at with fair value at that moment: what is the gap, and what position does the sale leave?",
    "An uninformed fill earns the gap between its price and fair value. The sign of the position follows from which side the buyer took.",
    "Edge \\(=\\text{ask}-\\text{fair value}\\). Track the quantity sold as a negative position."
+  ],
+  "figs_back": [
+   "f10_mm_dice_quote"
   ]
  },
  {
@@ -716,6 +809,9 @@
    "After a buy and a sell at different prices, what is your net position, and how much cash has changed hands?",
    "Track position and cash as two separate running totals. Two offsetting fills lock in the difference between their prices.",
    "Position: \\(-1+1\\). Cash: receipts minus payments, starting from the earlier fill."
+  ],
+  "figs_back": [
+   "f10_mm_dice_quote"
   ]
  },
  {
@@ -735,6 +831,9 @@
    "The buyer has seen information that you have not. How does that change the expected sum?",
    "Condition on the revealed first die: the second die is still uniform, so the conditional mean is the known face plus the mean of the other die.",
    "\\(E[S\\mid d_1]=d_1+E[d_2]\\), with \\(d_1\\) the revealed face. Then mark your short at this new fair value."
+  ],
+  "figs_back": [
+   "f10_mm_reveal_fair"
   ]
  },
  {
@@ -752,6 +851,9 @@
    "Which value should your quotes centre on now, and which side of it could an equally informed buyer profitably hit?",
    "Re-centre the quotes on the updated conditional mean, and keep each quote on the correct side of it so informed buyers cannot profit.",
    "New mid \\(=E[S\\mid\\text{all information so far}]\\). Quotes are mid \\(\\pm\\) the same half-width, then check each side against that mid."
+  ],
+  "figs_back": [
+   "f10_mm_reveal_fair"
   ]
  },
  {
@@ -769,6 +871,9 @@
    "Which bet size maximises the long-run growth of the bankroll rather than its expected value?",
    "Kelly criterion: maximise the expected log growth per bet over the fraction \\(f\\), and set the derivative to zero.",
    "\\(g(f)=p\\ln(1+f)+(1-p)\\ln(1-f)\\). Write \\(g'(f)=0\\)."
+  ],
+  "figs_back": [
+   "f10_kelly_growth"
   ]
  },
  {
@@ -786,6 +891,9 @@
    "At this bet size, what is the expected log change per flip, and does a positive expected value guarantee long-run growth?",
    "Use the same growth function \\(g(f)\\), now evaluated at the larger fraction. Growth is concave, so check whether this size lies past the zero-growth point.",
    "\\(g(0.4)=0.6\\ln(1+0.4)+0.4\\ln(1-0.4)\\)."
+  ],
+  "figs_back": [
+   "f10_kelly_growth"
   ]
  },
  {
@@ -803,6 +911,10 @@
    "What fraction of the best growth do you keep at a smaller bet size, and what does that buy in terms of risk?",
    "Evaluate the same growth function at the half-Kelly size and compare it with the maximum growth you found.",
    "Ratio \\(=g(f)/g(f^*)\\) with \\(f=f^*/2\\). Compute \\(g(f)\\) from the same formula as before."
+  ],
+  "figs_back": [
+   "f10_kelly_growth",
+   "f10_fractional_kelly"
   ]
  },
  {
@@ -849,6 +961,9 @@
    "For a small bet in a continuous model, what does expected log growth depend on besides the mean return?",
    "Use the continuous approximation: expected log growth is \\(f\\mu-\\tfrac12 f^2\\sigma^2\\). Maximise it over \\(f\\).",
    "\\(\\dfrac{d}{df}\\!\\left(f\\mu-\\tfrac12 f^2\\sigma^2\\right)=0\\), with \\(\\mu=0.08\\) and \\(\\sigma=0.20\\)."
+  ],
+  "figs_back": [
+   "f10_fractional_kelly"
   ]
  },
  {
@@ -860,6 +975,9 @@
    "market_making",
    "kelly",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f10_fractional_kelly"
   ]
  },
  {
@@ -878,6 +996,9 @@
    "Is there a function of wealth whose expected value stays fixed under this bet, so that a maximal inequality can bound the chance of a deep drawdown?",
    "Use \\(M_t=1/W_t\\). If its one-step expectation equals 1, it is a martingale. Then apply Doob's maximal inequality at the level you care about.",
    "One step: \\(E\\!\\left[\\dfrac{1}{1+fX}\\right]=\\dfrac{p}{1+f}+\\dfrac{1-p}{1-f}\\), with \\(f=0.2\\) and \\(p=0.6\\)."
+  ],
+  "figs_back": [
+   "f10_kelly_paths"
   ]
  },
  {
@@ -895,6 +1016,9 @@
    "Which edge is the bet sized for, and which edge does the coin actually have?",
    "Recompute the growth function \\(g(f)\\) using the true probability rather than the believed one, at the same bet size.",
    "\\(g(0.2)=p_{\\text{true}}\\ln(1.2)+(1-p_{\\text{true}})\\ln(0.8)\\). Substitute the true \\(p\\)."
+  ],
+  "figs_back": [
+   "f10_kelly_growth"
   ]
  },
  {
@@ -929,6 +1053,9 @@
    "What happens to the terms of the sum once the payoff stops doubling?",
    "Split the sum: the uncapped terms each contribute a fixed amount, and the capped tail is one probability times the cap.",
    "\\(E=\\sum_{k=1}^{19}2^k\\cdot2^{-k}+2^{20}\\cdot P(k\\ge20)\\). Write \\(P(k\\ge20)\\) as a geometric tail."
+  ],
+  "figs_back": [
+   "f10_stpete_cap"
   ]
  },
  {
@@ -997,6 +1124,9 @@
    "If the remaining deck is balanced, what does an immediate guess earn, and where does the rest of the value come from?",
    "Same recursion over \\((r,b)\\): the next draw splits the value into two possible remaining decks.",
    "\\(V(2,2)=\\tfrac12\\bigl(V(1,2)+V(2,1)\\bigr)\\). Write \\(V(1,2)\\) the same way from state \\((1,2)\\)."
+  ],
+  "figs_back": [
+   "f10_rb_lattice"
   ]
  },
  {
@@ -1086,6 +1216,9 @@
    "For a fair walk between two barriers, is the chance of hitting one barrier first a simple function of the starting point?",
    "Structural feature: a fair walk has no drift, so its position's average stays fixed. Use that fact at the moment the walk stops.",
    "Setup: let \\(h(x)\\) be the chance of hitting the upper barrier first from \\(x\\), and write its two boundary values at the barriers."
+  ],
+  "figs_back": [
+   "f10_ruin_barrier"
   ]
  },
  {
@@ -1097,6 +1230,9 @@
    "kelly",
    "betting",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f10_kelly_growth"
   ]
  },
  {
@@ -1126,6 +1262,9 @@
    "The buyer reveals part of the outcome. Does the expected value of the other die change?",
    "Condition on the revealed face: the other die is still uniform, so only the revealed face shifts the mean.",
    "\\(E[S\\mid d_1]=d_1+E[d_2]\\), with \\(d_1\\) the revealed face."
+  ],
+  "figs_back": [
+   "f10_mm_reveal_fair"
   ]
  },
  {
@@ -1138,6 +1277,9 @@
    "market_making",
    "adverse_selection",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f10_mm_winners_curse"
   ]
  },
  {
@@ -1162,6 +1304,9 @@
    "market_making",
    "dice",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f10_mm_dice_quote"
   ]
  },
  {

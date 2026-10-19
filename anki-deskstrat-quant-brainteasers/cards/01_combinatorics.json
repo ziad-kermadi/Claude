@@ -13,6 +13,9 @@
    "The units are identical and the five variables are labelled. How would you write one solution as a single row of symbols, and what do the symbols stand for?",
    "Names the move: stars and bars. Each solution is a row of 20 identical units and 4 separators, so count the ways to place the separators.",
    "Setup: \\( \\binom{20+5-1}{5-1} \\). Identify what the top and bottom entries count before evaluating."
+  ],
+  "figs_back": [
+   "f01_stars_bars_row"
   ]
  },
  {
@@ -25,6 +28,9 @@
    "s_inclusion_exclusion",
    "counting",
    "stars_bars"
+  ],
+  "figs_back": [
+   "f01_bounded_waterfall"
   ]
  },
  {
@@ -53,6 +59,9 @@
    "Each chosen seat must have an empty seat between it and the next chosen seat. How many seats are forced to stay empty once the four people are placed, and which seats are still free to choose?",
    "Structural feature: the forbidden event is about adjacent positions. Treat the people and the empty seats as one row of symbols, so the constraint becomes a condition on how the empty seats are split into gaps.",
    "Setup: let \\(g_0,\\dots,g_4\\) be the numbers of empty seats before, between and after the people, with \\(g_1,g_2,g_3\\ge 1\\). Write \\(\\sum g_i\\) in terms of the 20 seats and count the solutions."
+  ],
+  "figs_back": [
+   "f01_seats_gap"
   ]
  },
  {
@@ -70,6 +79,9 @@
    "Encode each subset as a string of ten bits. Which pairs of adjacent bits are forbidden, and how does the last bit restrict the bits before it?",
    "Names the move: a recursion on the length of the string, splitting on the last bit, which gives a linear recurrence.",
    "Setup: let \\(a_n\\) count valid strings of length \\(n\\). Write \\(a_n\\) in terms of \\(a_{n-1}\\) and \\(a_{n-2}\\), and state \\(a_0\\) and \\(a_1\\)."
+  ],
+  "figs_back": [
+   "f01_fib_tiling"
   ]
  },
  {
@@ -98,6 +110,9 @@
    "Pick any set S of people and ask for the event that exactly those people get their own hats. Does the count depend on which people are in S, or only on how many?",
    "Names the move: inclusion-exclusion over the events 'person i gets own hat', then the complement, since the intersections of these events are simple to count.",
    "Setup: \\( \\dfrac{D_{10}}{10!}=\\sum_{k=0}^{10}\\dfrac{(-1)^k\\binom{10}{k}(10-k)!}{10!}\\)."
+  ],
+  "figs_back": [
+   "f01_hat_fixed_points"
   ]
  },
  {
@@ -125,6 +140,9 @@
    "The original argument counted outcomes with zero matches. Which outcomes does the new event add, and how many matches do they have?",
    "Names the move: split by the number of matches. The exactly-one case is a choice of the matched person followed by a smaller derangement count.",
    "Setup: \\( P(\\text{at most one}) = \\dfrac{D_{10}}{10!} + \\dfrac{(\\text{choices of matched person})\\cdot D_{9}}{10!}\\)."
+  ],
+  "figs_back": [
+   "f01_hat_fixed_points"
   ]
  },
  {
@@ -157,6 +175,9 @@
    "Each outcome is a function from balls to boxes. Which functions are excluded, and can you describe the excluded set by which boxes they miss?",
    "Names the move: inclusion-exclusion over the set of empty boxes, since the number of functions avoiding any given set of boxes is easy to count.",
    "Setup: \\( \\#\\text{surjections} = \\sum_{j=0}^{3}(-1)^j\\binom{3}{j}(3-j)^{5}\\), and the probability divides by \\(3^5\\)."
+  ],
+  "figs_back": [
+   "f01_venn_surjection"
   ]
  },
  {
@@ -201,6 +222,9 @@
    "The boxes are identical, so only the partition into blocks matters. If you know the count for five balls, how could the sixth ball change it?",
    "Names the move: a recursion on set partitions into k blocks: the new element joins an existing block or starts a new one.",
    "Setup: \\( S(6,3)=3\\,S(5,3)+S(5,2)\\). Find \\(S(5,3)\\) and \\(S(5,2)\\) by the same recursion."
+  ],
+  "figs_back": [
+   "f01_stirling_recursion"
   ]
  },
  {
@@ -212,6 +236,9 @@
    "s_recursion",
    "bell_numbers",
    "partitions"
+  ],
+  "figs_back": [
+   "f01_bell_row"
   ]
  },
  {
@@ -223,6 +250,9 @@
    "s_recursion",
    "stirling",
    "partitions"
+  ],
+  "figs_back": [
+   "f01_stirling_recursion"
   ]
  },
  {
@@ -235,6 +265,9 @@
    "permutations",
    "cycles",
    "stirling"
+  ],
+  "figs_back": [
+   "f01_s4_cycles"
   ]
  },
  {
@@ -268,6 +301,9 @@
    "Which constraint cannot be enforced by the multinomial alone, and what would the four S's need around the other letters?",
    "Names the move: arrange the other seven letters, then place the four S's into distinct gaps so that no two share a gap.",
    "Setup: \\( N=(\\text{arrangements of the 7 non-S letters})\\times\\binom{g}{4}\\), where \\(g\\) is the number of gaps including both ends."
+  ],
+  "figs_back": [
+   "f01_gaps_s"
   ]
  },
  {
@@ -328,6 +364,9 @@
    "Is there a point on the path where it could be cut into two shorter paths of the same kind? Which points qualify?",
    "Names the move: first-return decomposition, which gives a Catalan recursion \\(C_n=\\sum_k C_kC_{n-1-k}\\).",
    "Setup: \\( C_5=\\sum_{k=0}^{4} C_k\\,C_{4-k}\\), with \\(C_0=1\\). Fill in \\(C_0,\\dots,C_4\\) first."
+  ],
+  "figs_back": [
+   "f01_dyck_path"
   ]
  },
  {
@@ -344,6 +383,9 @@
    "Map each vote to a step of a walk. What must the walk avoid for A to stay strictly ahead after every vote?",
    "Names the move: reflection, with the bad paths (those that touch the barrier) mapped to paths with a reflected endpoint.",
    "Setup: the first vote must be A, leaving 5 A's and 4 B's. Write \\(\\#\\text{good}=\\binom{9}{4}-\\#\\text{bad}\\), and find \\(\\#\\text{bad}\\) by reflecting after the first touch."
+  ],
+  "figs_back": [
+   "f01_ballot_walk"
   ]
  },
  {
@@ -360,6 +402,9 @@
    "Which event is now forbidden, and is the barrier in the same place as in the strict version?",
    "Names the move: reflection, with the barrier moved by one step compared with the strict version.",
    "Setup: count the bad paths as paths from the reflected starting point \\(-2\\) to the same endpoint, and subtract them from \\(\\binom{10}{4}\\)."
+  ],
+  "figs_back": [
+   "f01_ballot_walk"
   ]
  },
  {
@@ -376,6 +421,9 @@
    "Each full parenthesisation fixes which product is performed last. How many choices of that last split are there, and what does each side look like?",
    "Structural feature: a full parenthesisation is built by repeatedly splitting a product of adjacent factors into two non-empty blocks. Write the count for n factors as a sum over the size of the left block.",
    "Setup: let \\(T_n\\) count the parenthesisations of n factors, with \\(T_1=1\\). Write \\(T_n=\\sum_{k=1}^{n-1}T_kT_{n-k}\\) and evaluate \\(T_5\\)."
+  ],
+  "figs_back": [
+   "f01_last_split"
   ]
  },
  {
@@ -403,6 +451,9 @@
    "A path that never reaches height 3 is built from short pieces. What does an excursion look like if it returns to the axis and its height may be at most 2?",
    "Names the move: decompose the path into prime blocks that touch the axis only at their ends, then count sequences of blocks.",
    "Setup: a prime block of semilength \\(m\\) is \\(U(UD)^{m-1}D\\); a path of semilength \\(n\\) is a sequence of blocks whose semilengths sum to \\(n\\)."
+  ],
+  "figs_back": [
+   "f01_height2_blocks"
   ]
  },
  {
@@ -441,6 +492,9 @@
    "Which paths are the bad ones? What property of a path decides whether it is bad, and how many paths share that property?",
    "Names the move: complement. Count paths through the obstacle by splitting at it into two legs and multiplying.",
    "Setup: \\( \\#\\text{total}=\\binom{10}{5}\\), and \\(\\#\\text{through obstacle}=\\binom{a}{b}\\binom{c}{d}\\) with the step counts of the two legs filled in."
+  ],
+  "figs_front": [
+   "f01_grid_obstacle"
   ]
  },
  {
@@ -457,6 +511,9 @@
    "Can a single monotone path pass through both obstacle points? Compare their coordinates.",
    "Names the move: inclusion-exclusion over the two obstacles, with the intersection of the two bad events computed separately.",
    "Setup: \\( \\#\\text{good}=\\binom{10}{5}-\\#(\\text{through }A)-\\#(\\text{through }B)+\\#(\\text{through both})\\), where \\(A\\) and \\(B\\) are the two obstacle points."
+  ],
+  "figs_back": [
+   "f01_grid_two_obstacles"
   ]
  },
  {
@@ -469,6 +526,9 @@
    "s_reflection",
    "catalan",
    "lattice_paths"
+  ],
+  "figs_back": [
+   "f01_catalan_reflect"
   ]
  },
  {
@@ -485,6 +545,9 @@
    "For the walk to be at 0 at step 10, how many up-steps and down-steps must it take? Does each specific sequence of steps have the same probability?",
    "Names the move: every step sequence has probability \\(2^{-10}\\), so count the sequences with the right number of up-steps.",
    "Setup: \\( \\Pr = \\binom{10}{k}\\,2^{-10}\\), with \\(k\\) the number of up-steps needed to end at 0."
+  ],
+  "figs_back": [
+   "f01_walk_returns"
   ]
  },
  {
@@ -501,6 +564,9 @@
    "The binomial counted all paths at zero at step 10, including ones that had already returned. Which of those should you exclude, and how does the first visit split the path?",
    "Names the move: first-return decomposition. Before the first return the path is an excursion, which is counted by the Catalan numbers.",
    "Setup: \\( f_{2n} = 2\\cdot\\dfrac{(\\text{number of positive excursions of length }2n)}{2^{2n}}\\), with the excursion count matched to a Catalan number of index \\(n-1\\)."
+  ],
+  "figs_back": [
+   "f01_walk_returns"
   ]
  },
  {
@@ -513,6 +579,9 @@
    "s_bijection",
    "lattice_paths",
    "waypoints"
+  ],
+  "figs_back": [
+   "f01_waypoint"
   ]
  },
  {
@@ -572,6 +641,9 @@
    "s_bijection",
    "poker",
    "cards"
+  ],
+  "figs_back": [
+   "f01_poker_categories"
   ]
  },
  {
@@ -588,6 +660,9 @@
    "Two pair needs two ranks, each appearing twice, and then one more card. Which choices are free before any suits are picked, and what may the fifth card be?",
    "Names the move: choose the two pair ranks, then their suits, then the fifth card from the ranks that are not paired.",
    "Setup: \\( \\Pr = \\dfrac{\\binom{13}{2}\\binom{4}{2}^{2}\\cdot(\\text{cards of the other ranks})}{\\binom{52}{5}}\\)."
+  ],
+  "figs_back": [
+   "f01_poker_categories"
   ]
  },
  {
@@ -604,6 +679,9 @@
    "A full house uses two different ranks with different multiplicities. Does it matter which rank you pick first, or must the two roles be assigned?",
    "Names the move: assign a role to each of two distinct ranks (the triple and the pair), then choose the suits.",
    "Setup: \\( \\Pr=\\dfrac{(\\text{ordered choice of triple rank and pair rank})\\cdot\\binom{4}{3}\\binom{4}{2}}{\\binom{52}{5}}\\)."
+  ],
+  "figs_back": [
+   "f01_poker_categories"
   ]
  },
  {
@@ -620,6 +698,9 @@
    "What does a hand with no pair look like in terms of its five ranks?",
    "Names the move: complement. Count hands with five distinct ranks by choosing the ranks and then a suit for each card.",
    "Setup: \\( \\Pr = 1-\\dfrac{(\\text{rank sets of size }5)\\cdot(\\text{suit choices per card})^{5}}{\\binom{52}{5}}\\)."
+  ],
+  "figs_back": [
+   "f01_poker_categories"
   ]
  },
  {
@@ -724,6 +805,9 @@
    "When would every birthday be different? Think about what the newest person has to avoid.",
    "Names the move: complement, using a sequential product of the probabilities that each person avoids all earlier birthdays.",
    "Setup: \\( \\Pr(\\text{all distinct}) = \\prod_{i=0}^{n-1}\\dfrac{365-i}{365}\\), with \\(n\\) the number of people."
+  ],
+  "figs_back": [
+   "f01_birthday_curves"
   ]
  },
  {
@@ -758,6 +842,9 @@
    "Triples are rarer than pairs. What is the chance that every day holds at most two people, and how could you count arrangements under a per-day cap?",
    "Names the move: a generating function for occupancy with at most two people per day, then a search over \\(n\\) for the first value that crosses one half.",
    "Setup: \\( \\Pr(\\text{max}\\le 2)=\\dfrac{n!\\,[x^{n}]\\,(1+x+x^{2}/2)^{365}}{365^{n}}\\)."
+  ],
+  "figs_back": [
+   "f01_birthday_curves"
   ]
  },
  {
@@ -769,6 +856,9 @@
    "s_complement",
    "birthday",
    "approximation"
+  ],
+  "figs_back": [
+   "f01_birthday_curves"
   ]
  },
  {
@@ -796,6 +886,9 @@
    "s_complement",
    "birthday",
    "collisions"
+  ],
+  "figs_back": [
+   "f01_birthday_curves"
   ]
  },
  {
@@ -841,6 +934,9 @@
    "s_pigeonhole",
    "pigeonhole",
    "divisibility"
+  ],
+  "figs_back": [
+   "f01_odd_part_boxes"
   ]
  },
  {
@@ -858,6 +954,9 @@
    "Could five numbers avoid every divisibility relation? Try picking them from a range where no number divides another.",
    "Names the move: look for a counterexample from a construction that avoids divisibility, because the pigeonhole bound no longer applies at this size.",
    "Setup: a valid set has no pair \\(a\\neq b\\) with \\(a\\mid b\\). Test a candidate by checking every ratio \\(b/a\\)."
+  ],
+  "figs_back": [
+   "f01_odd_part_boxes"
   ]
  },
  {
@@ -944,6 +1043,9 @@
    "Which sets of three roads on four cities connect everything with no loop? What shape must such a set have?",
    "Structural feature: three edges on four vertices connect everything exactly when they form no cycle. Sort the valid sets by their shape, and count each shape separately.",
    "Setup: write the count as a sum over the possible shapes of the number of ways to label each shape on the four cities. List the shapes first."
+  ],
+  "figs_back": [
+   "f01_k4_trees"
   ]
  },
  {
@@ -961,6 +1063,10 @@
    "Follow the cycle through your own box. When does every prisoner succeed? Think about the cycle lengths of the permutation.",
    "Names the move: success means every cycle has length at most the open limit. Count the complement, the permutations with a long cycle.",
    "Setup: the failure events are indexed by \\(k=51,\\dots,100\\). Argue that at most one cycle can exceed 50, then count permutations with a fixed \\(k\\)-cycle: choose the \\(k\\) elements, arrange them in a cycle, and divide by the total."
+  ],
+  "figs_back": [
+   "f01_prisoner_threshold",
+   "f01_cycle_arrows"
   ]
  },
  {
@@ -973,6 +1079,9 @@
    "permutations",
    "cycles",
    "prisoners"
+  ],
+  "figs_back": [
+   "f01_cycle_arrows"
   ]
  },
  {
@@ -990,6 +1099,9 @@
    "With a limit of 40 boxes, can two cycles both exceed the limit? What does that do to the single-event sum?",
    "Names the move: count permutations whose cycles all have length at most the limit, using a recursion on the cycle containing one fixed element.",
    "Setup: \\( a_n=\\sum_{j=1}^{k}\\dfrac{(n-1)!}{(n-j)!}\\,a_{n-j}\\), with \\(a_0=1\\), and the probability is \\(a_n/n!\\)."
+  ],
+  "figs_back": [
+   "f01_prisoner_threshold"
   ]
  },
  {
@@ -1040,6 +1152,9 @@
    "Two colourings count as the same when one rotates into the other. Which colourings are fixed by a given rotation, and how does that depend on the cycle structure of the rotation on the beads?",
    "Names the move: Burnside's lemma. Average the number of fixed colourings over all rotations.",
    "Setup: \\( N=\\dfrac{1}{6}\\sum_{g}3^{c(g)}\\), where \\(c(g)\\) is the number of cycles of the rotation \\(g\\) acting on the 6 beads."
+  ],
+  "figs_back": [
+   "f01_burnside_necklace"
   ]
  },
  {
@@ -1056,6 +1171,9 @@
    "What changes when the necklace may also be flipped over? How many new symmetries does that add, and what do their cycles look like on the beads?",
    "Names the move: Burnside again, now averaged over the full group of rotations and reflections.",
    "Setup: \\( N=\\dfrac{1}{12}\\Bigl(\\sum_{\\text{rotations }g}3^{c(g)}+\\sum_{\\text{reflections }h}3^{c(h)}\\Bigr)\\)."
+  ],
+  "figs_back": [
+   "f01_burnside_necklace"
   ]
  },
  {
@@ -1122,6 +1240,9 @@
    "Picture two groups of six people. How can you choose a committee of six from the twelve, and how does splitting by the number of men from the first group reveal the sum?",
    "Names the move: double counting. Count the same selection of six people from twelve in two ways.",
    "Setup: \\( \\sum_{k}\\binom{6}{k}\\binom{6}{6-k}\\) equals the number of ways to choose 6 people from 12."
+  ],
+  "figs_back": [
+   "f01_vandermonde_bars"
   ]
  },
  {
@@ -1149,6 +1270,9 @@
    "Consider the largest element of a chosen 4-subset. What does that tell you about the other three elements?",
    "Names the move: the hockey-stick identity, counting 4-subsets of a larger set by their largest element.",
    "Setup: \\( \\sum_{k=3}^{10}\\binom{k}{3}=\\#\\{4\\text{-subsets of }\\{1,\\dots,m\\}\\}\\) for a suitable \\(m\\). Find \\(m\\)."
+  ],
+  "figs_back": [
+   "f01_hockey_stick"
   ]
  },
  {

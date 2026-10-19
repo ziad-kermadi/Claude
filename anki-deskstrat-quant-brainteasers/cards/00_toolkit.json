@@ -41,6 +41,9 @@
    "probability",
    "random_walk",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f00_first_step_walk"
   ]
  },
  {
@@ -62,6 +65,9 @@
    "markov",
    "random_walk",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f00_two_state_chain"
   ]
  },
  {
@@ -93,6 +99,9 @@
    "s_stars_bars",
    "combinatorics",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f00_stars_bars"
   ]
  },
  {
@@ -104,6 +113,9 @@
    "combinatorics",
    "probability",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f00_ie_venn"
   ]
  },
  {
@@ -115,6 +127,9 @@
    "probability",
    "stats",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f00_bayes_tree"
   ]
  },
  {
@@ -137,6 +152,9 @@
    "combinatorics",
    "dice",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f00_coloring_board"
   ]
  },
  {
@@ -158,6 +176,9 @@
    "s_pigeonhole",
    "combinatorics",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f00_pigeonhole_pairs"
   ]
  },
  {
@@ -169,6 +190,9 @@
    "games",
    "dynamic_programming",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f00_pile_game"
   ]
  },
  {
@@ -202,6 +226,9 @@
    "random_walk",
    "combinatorics",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f00_reflection"
   ]
  },
  {
@@ -213,6 +240,9 @@
    "geometry",
    "probability",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f00_square_gap"
   ]
  },
  {
@@ -246,6 +276,9 @@
    "dice",
    "combinatorics",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f00_three_dice_sum"
   ]
  },
  {
@@ -268,6 +301,9 @@
    "expectation",
    "dice",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f00_tail_sum_die"
   ]
  },
  {
@@ -279,6 +315,9 @@
    "probability",
    "stochastic_calculus",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f00_change_measure"
   ]
  },
  {
@@ -290,6 +329,9 @@
    "options",
    "stochastic_calculus",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f00_replication_tree"
   ]
  },
  {
@@ -322,6 +364,9 @@
    "expectation",
    "stats",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f00_jensen_points"
   ]
  },
  {
@@ -355,6 +400,9 @@
    "betting",
    "optimisation",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f00_kelly_growth"
   ]
  },
  {
@@ -387,6 +435,9 @@
    "probability",
    "expectation",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f00_mixture_decomp"
   ]
  },
  {
@@ -398,6 +449,9 @@
    "stats",
    "probability",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f00_clt_tail"
   ]
  },
  {
@@ -420,6 +474,9 @@
    "stats",
    "probability",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f00_mixture_decomp"
   ]
  },
  {
@@ -430,6 +487,9 @@
    "s_game_theory_equilibrium",
    "games",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f00_mp_indifference"
   ]
  },
  {
@@ -441,6 +501,9 @@
    "games",
    "stats",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f00_info_design"
   ]
  },
  {
@@ -452,6 +515,9 @@
    "dice",
    "optimisation",
    "fmt_toolkit"
+  ],
+  "figs_back": [
+   "f00_die_keep"
   ]
  },
  {
@@ -488,18 +554,24 @@
    "random_walk",
    "probability",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f00_walk_0_10"
   ]
  },
  {
   "type": "basic",
   "front": "Same walk: fair coin, start at 3, absorbing at 0 and 10. Expected number of flips until absorption?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
-  "back": "<b>Structure:</b> Martingale \\(S_n^2-n\\) with optional stopping<br><b>Trigger:</b> The question asks for a time. For a fair walk \\(S_n^2-n\\) is a martingale, so the expected time is read off from the endpoint.<br><b>Key move:</b> \\(E[\\tau]=E[S_\\tau^2]\\) gives \\(E[\\tau]=k(N-k)=3\\cdot7=21\\).<br><b>Answer:</b> \\(21\\)<br><b>Contrast:</b> Same walk as the hitting-probability drill; that one needs only S, not the martingale correction.",
+  "back": "<b>Structure:</b> Martingale \\(S_n^2-n\\) with optional stopping<br><b>Trigger:</b> The question asks for a time. For a fair walk \\(S_n^2-n\\) is a martingale, so the expected time is read off from the endpoint.<br><b>Key move:</b> \\(E[\\tau]=E[S_\\tau^2]-S_0^2=\\tfrac{3}{10}\\cdot100-9=21\\), i.e. \\(k(N-k)=3\\cdot7\\).<br><b>Answer:</b> \\(21\\)<br><b>Contrast:</b> Same walk as the hitting-probability drill; that one needs only S, not the martingale correction.",
   "tags": [
    "s_martingale",
    "s_optional_stopping",
    "random_walk",
    "expectation",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f00_walk_0_10"
   ]
  },
  {
@@ -533,6 +605,9 @@
    "s_stars_bars",
    "combinatorics",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f00_stars_bars"
   ]
  },
  {
@@ -555,6 +630,9 @@
    "random_walk",
    "combinatorics",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f00_reflection"
   ]
  },
  {
@@ -566,6 +644,9 @@
    "dice",
    "combinatorics",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f00_three_dice_sum"
   ]
  },
  {
@@ -577,6 +658,9 @@
    "geometry",
    "probability",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f00_chord_sqrt3"
   ]
  },
  {
@@ -588,6 +672,9 @@
    "probability",
    "stats",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f00_spacings"
   ]
  },
  {
@@ -622,6 +709,9 @@
    "probability",
    "distributions",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f00_race_rates"
   ]
  },
  {
@@ -654,6 +744,9 @@
    "s_pigeonhole",
    "combinatorics",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f00_pigeonhole_pairs"
   ]
  },
  {
@@ -678,6 +771,9 @@
    "dice",
    "optimisation",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f00_die_keep"
   ]
  },
  {
@@ -688,6 +784,9 @@
    "s_kelly_log_utility",
    "betting",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f00_kelly_growth"
   ]
  },
  {
@@ -710,6 +809,9 @@
    "options",
    "stochastic_calculus",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f00_replication_tree"
   ]
  },
  {
@@ -721,6 +823,9 @@
    "probability",
    "expectation",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f00_mixture_decomp"
   ]
  },
  {
@@ -732,6 +837,9 @@
    "probability",
    "stats",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f00_mixture_decomp"
   ]
  },
  {
@@ -743,6 +851,9 @@
    "stats",
    "probability",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f00_clt_tail"
   ]
  },
  {
@@ -765,6 +876,9 @@
    "probability",
    "stats",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f00_bayes_tree"
   ]
  },
  {
@@ -776,6 +890,9 @@
    "combinatorics",
    "fmt_toolkit",
    "process"
+  ],
+  "figs_back": [
+   "f00_no_adj_strings"
   ]
  },
  {
@@ -849,6 +966,9 @@
    "mental_math",
    "fmt_toolkit",
    "process"
+  ],
+  "figs_back": [
+   "f00_mc_error"
   ]
  },
  {
@@ -874,6 +994,9 @@
    "probability",
    "fmt_toolkit",
    "process"
+  ],
+  "figs_back": [
+   "f00_stick_triangle"
   ]
  },
  {

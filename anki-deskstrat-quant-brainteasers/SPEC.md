@@ -56,3 +56,14 @@ Goal: the learner must be able to *regenerate* any answer from a blank page, fro
 
 ### Hint ladders (for existing problem cards)
 Add an optional field `"hints": ["...", "...", "..."]` (2-3 strings, HTML) to fmt_solve / fmt_perturb / fmt_twin / fmt_chain cards. Hint 1 = a question that points at the structure without naming it. Hint 2 = names the move. Hint 3 = sets up the first equation. Hints never contain the answer. They render as click-to-open boxes on the front, so the learner attempts unaided first and takes the minimum help needed. Grading rule: no hint => Good; hint 1-2 => Hard; hint 3 or saw the back => Again.
+
+## v3: diagrams
+A figure goes on a card only when it shows the *mechanism*, not decoration: a state diagram you would otherwise draw on the whiteboard, a probability tree, sample paths with barriers or a reflection, a region in the unit square, a payoff decomposition, a lattice path, a game tree, a density with the relevant area shaded, the projection picture behind OLS. Skip figures for pure algebra, mental arithmetic and most code cards.
+
+Mechanics:
+- Figures are drawn by Python in `diagrams/d_NN_*.py` (one module per card file), registered with `@figure("fNN_name", w, h, axis)` from `diagrams/qcfig.py`. Use its palette (INK, BLUE, ORANGE, GREEN, RED, GREY + LIGHT_*) and helpers (`node`, `box`, `arrow`, `self_loop`, `frame`, `caption`). Compute plotted numbers in code, never hard-code a number the card derives.
+- `python3 diagrams/render_all.py [module]` writes `diagrams/svg/qc_<name>.svg` (shipped) and `diagrams/_preview/qc_<name>.png` (local QA, not committed).
+- A card references figures with `"figs_back": ["fNN_name"]` (solution figure, inserted before the Transfer line) or `"figs_front": [...]` (only when the figure is part of the problem statement and reveals nothing the learner should derive).
+- Figure notation must match the card text exactly (same symbols, same numbers).
+- Night mode inverts figures via CSS, so draw dark ink on a transparent background; keep colour semantic (blue = up/heads/success path, red = down/ruin/failure, green = target/absorbing, orange = the key move/highlight).
+- Matplotlib mathtext only: `\frac{a}{b}` with braces (no `\tfrac`, `\dfrac`, `\text`, `\varnothing`, environments).

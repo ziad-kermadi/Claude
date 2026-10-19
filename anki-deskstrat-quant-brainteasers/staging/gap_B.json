@@ -1,0 +1,253 @@
+[
+ {
+  "type": "basic",
+  "front": "Four fair six-sided dice are rolled and their face values are added. Using the generating function of one die, find the probability that the total is exactly \\(10\\).",
+  "back": "<b>Answer:</b> \\(P(S=10)=\\frac{80}{1296}=\\frac{5}{81}\\approx 0.0617\\).<br><b>Structure:</b> s_generating_function. Trigger: the total of independent dice is a sum of independent terms, so its PGF is the product of the single-die PGFs.<br><b>Key move:</b> Write \\(s+s^2+\\dots+s^6=s\\,\\frac{1-s^6}{1-s}\\). Then \\(P(S=10)\\) is a coefficient of a product of simple series.<br><b>Working:</b> \\([s^{10}]\\,(s+\\dots+s^6)^4=[s^6]\\,(1-s^6)^4(1-s)^{-4}\\). Since \\([s^k](1-s)^{-4}=\\binom{k+3}{3}\\), the constant term of \\((1-s^6)^4\\) gives \\(\\binom{9}{3}=84\\), and the \\(-4s^6\\) term gives \\(-4\\binom{3}{3}=-4\\). So \\(80\\) of the \\(6^4=1296\\) outcomes total 10.<br><b>Sanity check:</b> The mean total is \\(14\\) and the variance is \\(4\\cdot\\frac{35}{12}\\approx 11.67\\). A normal approximation gives a density of about \\(0.059\\) at 10, close to the exact \\(0.062\\).<br><b>Transfer:</b> The same coefficient extraction counts outcomes for any number of dice and any target total, without enumerating \\(6^n\\) outcomes.",
+  "tags": [
+   "s_generating_function",
+   "dice",
+   "sums_of_dice",
+   "fmt_solve"
+  ],
+  "dest": "01_combinatorics",
+  "hints": [
+   "Each die contributes one face value. Is there a polynomial whose exponents are the face values, so that the total of four dice is a power of it?",
+   "Name the move: write one die's generating function in closed form, using \\(s+\\dots+s^6=s\\frac{1-s^6}{1-s}\\), and extract one coefficient.",
+   "After removing the factor \\(s^4\\), only the constant and \\(s^6\\) terms of \\((1-s^6)^4\\) can contribute to \\(s^6\\). Use \\((1-s)^{-4}=\\sum_k\\binom{k+3}{3}s^k\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Each individual in a population has \\(0\\), \\(1\\) or \\(2\\) children, each with probability \\(\\tfrac13\\), independently of everyone else. Start from one ancestor. Find the probability that the line eventually dies out, and the probability that generation 2 is empty.",
+  "back": "<b>Answer:</b> The line dies out with probability \\(q=1\\). \\(P(Z_2=0)=\\frac{13}{27}\\approx 0.481\\).<br><b>Structure:</b> s_generating_function with s_recursion (a Galton-Watson process). Trigger: each individual's children start independent copies of the same process, so the generation PGFs are iterates of one offspring PGF.<br><b>Key move:</b> With offspring count \\(X\\), let \\(f(s)=E[s^X]=\\frac{1+s+s^2}{3}\\). The extinction probability \\(q\\) is the smallest root of \\(f(s)=s\\) in \\([0,1]\\).<br><b>Working:</b> \\(f(s)-s=\\frac{(s-1)^2}{3}\\), so \\(s=1\\) is the only root in \\([0,1]\\), and it is a double root. The mean is \\(f'(1)=1\\), the critical case. Also \\(P(Z_1=0)=f(0)=\\frac13\\) and \\(P(Z_2=0)=f(f(0))=f(\\tfrac13)=\\frac{13}{27}\\). The iterates \\(f_n(0)\\) increase to 1, slowly: \\(\\frac{1}{1-f(s)}\\approx\\frac{1}{1-s}+\\frac13\\), so \\(\\frac{1}{1-f_n(0)}\\) grows by about \\(\\frac13\\) per generation.<br><b>Sanity check:</b> \\(f_2(0)\\approx 0.481\\) and \\(f_{1000}(0)\\approx 0.997\\). The mean offspring count is exactly 1, so the population has no drift to grow.<br><b>Transfer:</b> Any offspring law gives \\(q\\) as the smallest fixed point of \\(f\\) in \\([0,1]\\). Raising the mean above 1 pushes the double root apart, and the smallest root then lies below 1.",
+  "tags": [
+   "s_generating_function",
+   "s_recursion",
+   "branching_process",
+   "extinction",
+   "fmt_solve"
+  ],
+  "dest": "04_markov_walks_martingales",
+  "hints": [
+   "Condition on how many children the ancestor has. What equation must the extinction probability \\(q\\) satisfy?",
+   "Name the move: a fixed point of the offspring generating function. Write \\(q=f(q)\\) and say why \\(q\\) is the smallest root in \\([0,1]\\).",
+   "Compute \\(f(s)-s\\) for \\(f(s)=\\frac{1+s+s^2}{3}\\) and factor it. How many roots lie in \\([0,1]\\)?"
+  ],
+  "figs_back": [
+   "fgB_branch_fixed"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A strip of 10 unit cells is tiled with two kinds of piece: a single cell, which comes in one colour, and a domino covering two adjacent cells, which comes in two colours. How many tilings of the strip are there?",
+  "back": "<b>Answer:</b> \\(a_{10}=683\\).<br><b>Structure:</b> s_generating_function with s_recursion. Trigger: a count of tilings of a strip, where the last piece is one of finitely many types of fixed length.<br><b>Key move:</b> Condition on the last piece: \\(a_n=a_{n-1}+2a_{n-2}\\), with \\(a_0=a_1=1\\). Then \\(A(x)=\\sum_n a_nx^n\\) satisfies \\(A(x)(1-x-2x^2)=1\\).<br><b>Working:</b> \\(A(x)=\\frac{1}{(1-2x)(1+x)}=\\frac{2/3}{1-2x}+\\frac{1/3}{1+x}\\), so \\(a_n=\\frac{2^{n+1}+(-1)^n}{3}\\). The first terms are \\(1,1,3,5,11,21,43,85,171,341,683\\).<br><b>Sanity check:</b> \\(a_{10}/a_9=683/341\\approx 2.003\\). Each step has one way to add a single cell and two ways to add a domino, so the growth rate is the root of \\(\\lambda^2=\\lambda+2\\) that is positive, namely 2.<br><b>Transfer:</b> With one domino colour the recurrence becomes \\(a_n=a_{n-1}+a_{n-2}\\) (Fibonacci), and the growth rate drops from 2 to the golden ratio.",
+  "tags": [
+   "s_generating_function",
+   "s_recursion",
+   "tilings",
+   "fmt_solve"
+  ],
+  "dest": "01_combinatorics",
+  "hints": [
+   "Look at the last cell. Which piece covers it, and how long is the rest of the strip?",
+   "Name the move: a linear recurrence. Multiply it by \\(x^n\\), sum over \\(n\\), and get an equation for \\(A(x)=\\sum_n a_nx^n\\).",
+   "Factor \\(1-x-2x^2\\), then split \\(\\frac{1}{1-x-2x^2}\\) into partial fractions."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A coin lands heads with probability \\(\\tfrac14\\). It is flipped \\(5\\) times. What is the probability that the number of heads is even?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_generating_function evaluated at \\(s=-1\\) (the parity sign trick).<br><b>Trigger:</b> 'even number of' asks for the sum of the even-index coefficients of a PGF, and the count is a sum of independent Bernoulli trials.<br><b>Key move:</b> \\(G(s)=E[s^N]=(q+ps)^5\\). Then \\(G(1)=1\\) and \\(G(-1)=(q-p)^5\\), and \\(P(N\\text{ even})=\\tfrac12\\bigl(G(1)+G(-1)\\bigr)\\).<br><b>Answer:</b> \\(\\frac{1+(q-p)^5}{2}=\\frac{1+(1/2)^5}{2}=\\frac{33}{64}\\approx 0.516\\).",
+  "tags": [
+   "s_generating_function",
+   "s_parity",
+   "coin_flips",
+   "fmt_recognise"
+  ],
+  "dest": "01_combinatorics"
+ },
+ {
+  "type": "basic",
+  "front": "A casino wants two custom dice. Each die has six faces, and each face shows a positive whole number (repeats allowed). Players roll one of each die and add the two face values. The casino wants the total to follow exactly the same distribution as the total of two ordinary dice labelled \\(1\\) to \\(6\\). Find labels for the two dice that do this, other than the ordinary labels. Are there any others, up to swapping the dice?",
+  "back": "<b>Answer:</b> \\(\\{1,2,2,3,3,4\\}\\) and \\(\\{1,3,4,5,6,8\\}\\). Up to swapping the two dice, these are the only labels besides the ordinary ones.<br><b>Structure:</b> s_generating_function. This is the Sicherman pair. Trigger: the total of two dice has a PGF equal to the product of the two single-die PGFs, so a relabelling is a factorisation problem.<br><b>Key move:</b> A die with faces \\(F\\) has PGF \\(G_F(s)=\\sum_{f\\in F}s^f\\). Two dice reproduce the standard total law iff \\(G_AG_B=(s+\\dots+s^6)^2\\). Factor \\(s+\\dots+s^6=s(1+s)(1+s+s^2)(1-s+s^2)\\), and use \\(1+s^3=(1+s)(1-s+s^2)\\) to regroup the factors.<br><b>Working:</b> \\(G_A=s(1+s)(1+s+s^2)=s+2s^2+2s^3+s^4\\), so \\(A=\\{1,2,2,3,3,4\\}\\). \\(G_B=s(1+s^3)(1+s+s^2)(1-s+s^2)=s+s^3+s^4+s^5+s^6+s^8\\), so \\(B=\\{1,3,4,5,6,8\\}\\). Their product is \\((s+\\dots+s^6)^2\\).<br><b>Sanity check:</b> The face sums are \\(15\\) and \\(27\\), so the mean total is \\(\\frac{15}{6}+\\frac{27}{6}=7\\), as for two ordinary dice. The largest label cannot exceed 11, because the largest total is 12 and the other die has a label at least 1. An exhaustive search over label sets from 1 to 11 finds no other pair.<br><b>Transfer:</b> The same test decides whether two dice with given face counts can be relabelled: factor the single-die PGF into cyclotomic pieces and look for a regrouping into two products with non-negative coefficients.",
+  "tags": [
+   "s_generating_function",
+   "dice",
+   "relabelling",
+   "fmt_twin"
+  ],
+  "dest": "01_combinatorics",
+  "hints": [
+   "A die is a random exponent: the total of two dice is a product of two polynomials in \\(s\\). What does a product of two face polynomials look like?",
+   "Name the move: factor the single-die polynomial into cyclotomic factors, then regroup those factors into two new polynomials with non-negative coefficients.",
+   "Use \\(1+s^3=(1+s)(1-s+s^2)\\) to see which factors can be moved between the two dice. Each new die polynomial must have total coefficient 6."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Let \\(X\\sim\\mathrm{Bin}(10,\\tfrac3{10})\\) and \\(Y\\sim\\mathrm{Bin}(12,\\tfrac3{10})\\). Build both from one sequence of twelve independent tosses of a coin with \\(P(H)=\\tfrac3{10}\\): \\(X\\) counts heads in the first ten tosses and \\(Y\\) counts heads in all twelve. Find \\(P(Y>X)\\), and state what this construction shows about the two laws.",
+  "back": "<b>Answer:</b> \\(P(Y>X)=1-\\left(\\tfrac7{10}\\right)^2=\\tfrac{51}{100}\\). The construction gives \\(Y\\ge X\\) on every outcome, so \\(X\\le_{st}Y\\): \\(P(Y>t)\\ge P(X>t)\\) for every \\(t\\).<br><b>Structure:</b> s_coupling (a monotone coupling) with s_linearity_expectation. Trigger: two laws in one family that differ in a size parameter, and a claim about their ordering.<br><b>Key move:</b> Drive both variables by the same tosses. Then \\(Y=X+Z\\), where \\(Z\\) counts heads in tosses 11 and 12, so \\(Y\\ge X\\) pointwise. A pointwise inequality in one probability space is a stochastic-dominance statement.<br><b>Working:</b> \\(Y>X\\) exactly when \\(Z\\ge1\\), so \\(P(Y>X)=1-P(Z=0)=1-(0.7)^2=0.51\\). Also \\(E[Y-X]=2\\cdot0.3=0.6\\). For each \\(t\\), \\(\\{X>t\\}\\subseteq\\{Y>t\\}\\) on this coupling, so \\(P(Y>t)\\ge P(X>t)\\).<br><b>Sanity check:</b> \\(P(Y>X)\\) belongs to this coupling, not to the marginals. With independent \\(X\\) and \\(Y\\) it would be about \\(0.517\\). A simulation of \\(10^5\\) pairs agrees with \\(0.51\\) within one standard error.<br><b>Transfer:</b> The same extra-tosses construction gives \\(\\mathrm{Bin}(n,p)\\le_{st}\\mathrm{Bin}(m,p)\\) for \\(n\\le m\\). Any monotone map of a common input gives a dominance coupling.",
+  "tags": [
+   "s_coupling",
+   "s_linearity_expectation",
+   "stochastic_dominance",
+   "binomial",
+   "fmt_solve"
+  ],
+  "dest": "03_expectation_variance",
+  "hints": [
+   "Here \\(X\\) and \\(Y\\) are not independent. How much of the randomness do they share, and what does that say about their order?",
+   "Name the move: a monotone coupling. Write \\(Y\\) as \\(X\\) plus extra tosses, and ask when \\(Y>X\\) can happen.",
+   "Let \\(Z\\) count heads in the last two tosses. Write \\(P(Z\\ge1)\\) as \\(1-P(Z=0)\\) and compute \\(P(Z=0)\\) from independence."
+  ],
+  "figs_back": [
+   "fgB_dominance_flips"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two walkers live on the cube \\(\\{0,1\\}^{10}\\). One starts at \\(0000000000\\) and the other at \\(1111111111\\). Each step, a coordinate \\(c\\) is chosen uniformly from the ten coordinates. Both walkers then have their bit \\(c\\) replaced by the same fresh fair bit. Each walker on its own moves as the lazy random walk on the cube. Find the expected number of steps until the two walkers occupy the same vertex.",
+  "back": "<b>Answer:</b> \\(E[T]=10H_{10}=\\frac{7381}{252}\\approx 29.29\\).<br><b>Structure:</b> s_coupling with s_linearity_expectation. Trigger: the two copies are driven by shared randomness, and once a coordinate matches it stays matched, so the meeting time is a coupon-collector time. This is the twin of the coupon collector.<br><b>Key move:</b> Under this coupling a coordinate, once chosen, agrees between the two walkers forever. The walkers meet exactly when all ten coordinates have been chosen at least once.<br><b>Working:</b> Let \\(\\tau_k\\) be the first time \\(k\\) distinct coordinates have been chosen. The wait \\(\\tau_k-\\tau_{k-1}\\) is geometric with success probability \\(\\frac{11-k}{10}\\), so its mean is \\(\\frac{10}{11-k}\\). Summing, \\(E[T]=\\sum_{k=1}^{10}\\frac{10}{11-k}=10H_{10}=\\frac{7381}{252}\\). A simulation of \\(10^5\\) runs agrees within one standard error.<br><b>Sanity check:</b> \\(10(\\ln 10+\\gamma)\\approx 28.8\\), close to \\(29.3\\), using \\(H_n\\approx\\ln n+\\gamma\\).<br><b>What breaks:</b> If the two walkers use independent fresh bits, a coordinate can disagree again after it has matched, so the meeting time is no longer a coupon-collector time. From antipodal starts the first meeting time is \\(\\frac{149504}{63}\\approx 2373\\), about 81 times larger. The coupling, not the walk, is what makes the answer small.<br><b>Transfer:</b> A coupling time \\(T\\) bounds total variation: \\(\\|P^t(x,\\cdot)-\\pi\\|_{TV}\\le P(T>t)\\). With the coupon-collector tail, this bounds how fast the lazy walk on the cube mixes.",
+  "tags": [
+   "s_coupling",
+   "s_linearity_expectation",
+   "hypercube",
+   "fmt_twin"
+  ],
+  "dest": "04_markov_walks_martingales",
+  "hints": [
+   "Look at one coordinate. After it has been chosen once, what is the relation between the two walkers' bits in that coordinate?",
+   "Name the move: a shared-randomness coupling. The question becomes when every coordinate has been touched at least once.",
+   "Let \\(\\tau_k\\) be the first time \\(k\\) distinct coordinates have been chosen. Find the success probability of the step from \\(k-1\\) to \\(k\\) distinct coordinates."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for coupling from the past (CFTP), and when does it fail? Test it on the walk on \\(\\{0,1,2,3\\}\\) that moves up with probability \\(\\tfrac12\\) and down with probability \\(\\tfrac12\\), and stays put at an end when it would leave the interval.",
+  "back": "<b>Triggers:</b> you need an exact draw from the stationary law of a finite Markov chain, and you can drive all start states with the same random inputs (a monotone update, or a coupling of all states).<br><b>Move:</b> Start every state at time \\(-T\\), drive them with the same uniforms \\(U_{-T},\\dots,U_{-1}\\), and check whether they have merged by time 0. If they have, the common value is an exact draw from the stationary law. If not, double \\(T\\) and reuse the old uniforms. Never redraw them.<br><b>Fails when:</b> the uniforms are redrawn at each restart, which biases the output toward the last restart; or the update is not monotone, so merging of the extreme states does not imply merging of all states. A non-monotone chain needs a different coupling or a sandwich argument.<br><b>Test case:</b> Here the update \\(x\\mapsto\\min(x+1,3)\\) or \\(x\\mapsto\\max(x-1,0)\\) is monotone, so the extreme states 0 and 3 merging implies that all states merge. The stationary law is uniform, so each state has probability \\(\\tfrac14\\). A simulation of \\(10^5\\) CFTP draws gives state frequencies within one standard error of \\(0.25\\).<br><b>Transfer:</b> Any monotone chain on a finite state space admits this exact sampler, for example the ferromagnetic Ising model with a monotone heat-bath update.",
+  "tags": [
+   "s_coupling",
+   "s_markov_chain",
+   "stationary_distribution",
+   "coupling_from_the_past",
+   "fmt_toolkit"
+  ],
+  "dest": "04_markov_walks_martingales",
+  "figs_back": [
+   "fgB_cftp_paths"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Coin A has \\(P(H)=0.3\\) and coin B has \\(P(H)=0.6\\). Drive both with one uniform \\(U\\): A is heads when \\(U<0.3\\), and B is heads when \\(U<0.6\\). Then \\(P(A\\neq B)=\\){{c1::\\(0.3\\)}}. No joint law of the two coins can make them differ less often than {{c2::\\(|0.6-0.3|=0.3\\)}}.",
+  "back": "The coins differ exactly when \\(U\\in[0.3,0.6)\\), an interval of length \\(0.3\\). For any coupling, \\(\\{B=H\\}\\subseteq\\{A=H\\}\\cup\\{A\\neq B\\}\\), so \\(0.6\\le 0.3+P(A\\neq B)\\).",
+  "tags": [
+   "s_coupling",
+   "common_uniform",
+   "bernoulli",
+   "fmt_toolkit"
+  ],
+  "dest": "03_expectation_variance"
+ },
+ {
+  "type": "basic",
+  "front": "Let \\(X\\sim\\mathrm{Bin}(4,\\tfrac12)\\) and \\(Y\\sim\\mathrm{Bin}(4,\\tfrac13)\\). Over all joint distributions of \\((X,Y)\\) with these two marginals, what is the smallest possible value of \\(P(X\\neq Y)\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_coupling: the coupling inequality, attained by the maximal coupling. Trigger: the two marginals are fixed and the joint law is free, so the question is about the best coupling.<br><b>Key move:</b> \\(P(X\\neq Y)\\ge d_{TV}=\\tfrac12\\sum_k|P(X=k)-P(Y=k)|\\), because \\(P(X=k)-P(Y=k)\\le P(X=k,\\,X\\neq Y)\\) for each \\(k\\). The bound is attained by the maximal coupling: put mass \\(\\min(p_k,q_k)\\) on the diagonal, and move the rest, which lives on disjoint sets, off it.<br><b>Answer:</b> \\(d_{TV}=\\frac{121}{432}\\approx 0.2801\\), so the smallest \\(P(X\\neq Y)\\) is \\(\\frac{121}{432}\\). The common mass is \\(\\frac{311}{432}\\).<br><b>Sanity check:</b> Identical marginals give 0 and disjoint supports give 1, so the answer sits between. The differences \\(P(X=k)-P(Y=k)\\) are \\(-\\frac{175}{1296},-\\frac{188}{1296},\\frac{102}{1296},\\frac{196}{1296},\\frac{65}{1296}\\). Their positive parts sum to \\(\\frac{363}{1296}=\\frac{121}{432}\\).<br><b>Transfer:</b> The same number bounds how often one draw can tell the two laws apart, for example in any test built on a single sample.",
+  "tags": [
+   "s_coupling",
+   "total_variation",
+   "coupling_inequality",
+   "binomial",
+   "fmt_recognise"
+  ],
+  "dest": "03_expectation_variance",
+  "figs_back": [
+   "fgB_tv_overlap"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ten candidates arrive in uniformly random order. You see each candidate's rank relative to those already seen, you must hire or reject at once, and you cannot recall anyone. You must hire exactly one candidate. The usual goal is to maximise \\(P(\\text{hire the best})\\), and for that goal the optimal rule rejects the first three and then hires the first relative best. Change the goal: minimise the expected rank of the hire, where rank 1 is best. Does the same rule remain optimal? Find the optimal expected rank.",
+  "back": "<b>Answer:</b> The same rule is not optimal for this goal. The optimal expected rank is \\(\\frac{3223}{1260}\\approx 2.558\\). The rule that rejects three and then takes the first relative best has expected rank \\(\\frac{569}{200}=2.845\\).<br><b>Structure:</b> s_optimal_stopping with s_dynamic_programming. Trigger: a no-recall hire decision that sees only relative ranks, with a reward that now depends on the rank rather than on a 0-1 event.<br><b>What breaks:</b> For \\(P(\\text{best})\\) the reward is an indicator, and the continuation value depends only on whether the current candidate is relatively best, which gives a single threshold. For expected rank, the candidate who is the \\(r\\)-th best of the first \\(k\\) has expected final rank \\(\\frac{r(n+1)}{k+1}\\), which grows with \\(r\\). A relative second-best can be worth hiring late, so the stopping set is no longer 'relative best only'.<br><b>Key move:</b> Backward induction on relative rank: \\(V_n(r)=r\\), and for \\(k<n\\), \\(V_k(r)=\\min\\bigl(\\frac{r(n+1)}{k+1},\\,C_k\\bigr)\\) with \\(C_k=\\frac{1}{k+1}\\sum_{s=1}^{k+1}V_{k+1}(s)\\).<br><b>Working:</b> The recursion gives \\(V_1(1)=\\frac{3223}{1260}\\). For the threshold-3 rule, \\(P(\\text{best})=\\frac{3}{10}\\sum_{j=4}^{10}\\frac{1}{j-1}=\\frac{3349}{8400}\\approx 0.3987\\), which is the maximum over thresholds, and its expected rank is \\(\\frac{569}{200}\\).<br><b>Sanity check:</b> A random hire has expected rank \\(5.5\\) and the best possible is 1, so 2.56 sits between them. A simulation of \\(10^6\\) random orders agrees with \\(2.558\\) within one standard error.<br><b>Transfer:</b> The same recursion handles any reward that depends on the relative rank at the time of hire, such as a payoff for hiring one of the best two.",
+  "tags": [
+   "s_optimal_stopping",
+   "s_dynamic_programming",
+   "secretary_problem",
+   "relative_rank",
+   "fmt_perturb"
+  ],
+  "dest": "06_brainteasers_games",
+  "hints": [
+   "Under the usual goal, what is the reward for hiring a candidate who is not the best? Does it matter how far from the best they are?",
+   "Name the move: backward induction on the relative rank. For the expected rank, what is the expected absolute rank of a candidate who is the \\(r\\)-th best of the first \\(k\\)?",
+   "Set \\(V_{10}(r)=r\\). Step back one time at a time, comparing \\(\\frac{r(n+1)}{k+1}\\) with the expected value of continuing, and read the answer at \\(k=1\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You are selling a house. Offers arrive one per day, independently, uniform on \\([0,1]\\) (in millions). You may accept the current offer or reject it, and a rejected offer cannot be recalled. Each extra day you keep looking costs \\(c=0.02\\), and the first offer is free. Find the reservation price and the expected net value of the optimal policy.",
+  "back": "<b>Answer:</b> Reservation price \\(w=1-\\sqrt{2c}=0.80\\). Expected net value \\(V=w+c=0.82\\).<br><b>Structure:</b> s_optimal_stopping with s_dynamic_programming. Trigger: i.i.d. offers, a cost per look, and no recall, so the only state that matters is the value of continuing.<br><b>Key move:</b> Let \\(V\\) be the value of a fresh offer whose first look is free. Rejecting costs \\(c\\) and leaves you with a fresh offer, so the value of continuing is \\(V-c\\). Then \\(V=E[\\max(X,V-c)]\\), and the reservation price is \\(w=V-c\\).<br><b>Working:</b> \\(E[\\max(X,w)]=w+E[(X-w)^+]=w+\\frac{(1-w)^2}{2}\\). Setting this equal to \\(V=w+c\\) gives \\((1-w)^2=2c\\), so \\(w=1-\\sqrt{2c}=0.8\\) and \\(V=0.82\\).<br><b>Sanity check:</b> Accepting an offer above \\(w\\) is worth it exactly when the gain \\(\\frac{(1-w)^2}{2}\\) from one more offer equals \\(c\\). At \\(c=0\\) the reservation price tends to 1, and as \\(c\\to\\frac12\\) it tends to 0. A simulation of \\(10^5\\) runs gives \\(0.82\\) within one standard error.<br><b>Transfer:</b> Any i.i.d. offer law gives the reservation price by the same fixed point, with \\(E[(X-w)^+]\\) in place of \\(\\frac{(1-w)^2}{2}\\).",
+  "tags": [
+   "s_optimal_stopping",
+   "s_dynamic_programming",
+   "house_selling",
+   "fmt_solve"
+  ],
+  "dest": "04_markov_walks_martingales",
+  "hints": [
+   "Once you have rejected an offer, what matters for the future? Is there anything to remember besides the value of continuing?",
+   "Name the move: a one-dimensional dynamic programme. Let \\(V\\) be the value of a fresh offer, and write the equation it satisfies.",
+   "Write \\(w=V-c\\), compute \\(E[(X-w)^+]\\) for \\(X\\sim U(0,1)\\), and set \\(w+E[(X-w)^+]=w+c\\)."
+  ],
+  "figs_back": [
+   "fgB_house_gain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair six-sided die can be rolled up to four times. After any roll you may stop and take that roll's face value as your payoff. If you have not stopped after the fourth roll, you take the fourth roll's face. Find the maximum expected payoff.",
+  "back": "<b>Answer:</b> \\(\\frac{89}{18}\\approx 4.944\\).<br><b>Structure:</b> s_optimal_stopping with s_dynamic_programming (backward induction on the rolls left). Trigger: i.i.d. draws, a stop-or-continue choice, and a fixed horizon.<br><b>Key move:</b> Let \\(W_m\\) be the value with \\(m\\) rolls to go. Then \\(W_1=\\frac72\\) and \\(W_m=E[\\max(X,W_{m-1})]\\). Accept a roll with face \\(x\\) when \\(x\\ge W_{m-1}\\).<br><b>Working:</b> \\(W_2=\\frac{3\\cdot\\frac72+4+5+6}{6}=\\frac{17}{4}\\). \\(W_3=\\frac{4\\cdot\\frac{17}{4}+5+6}{6}=\\frac{14}{3}\\). \\(W_4=\\frac{4\\cdot\\frac{14}{3}+5+6}{6}=\\frac{89}{18}\\). With four rolls to go, accept the first roll only on a 5 or 6.<br><b>Sanity check:</b> The single-roll mean is \\(3.5\\) and the best face is 6, and \\(4.94\\) lies between. A simulation of \\(2\\cdot10^5\\) games agrees within one standard error.<br><b>Transfer:</b> The two-roll version is the first step of the same recursion, with value \\(\\frac{17}{4}\\).",
+  "tags": [
+   "s_optimal_stopping",
+   "s_dynamic_programming",
+   "dice",
+   "fmt_solve"
+  ],
+  "dest": "06_brainteasers_games",
+  "hints": [
+   "With one roll left, what is your best payoff? Does that depend on earlier rolls?",
+   "Name the move: backward induction on the number of rolls left. For each count, compare the face with the value of having one fewer roll.",
+   "Start from \\(W_1=\\frac72\\). Compute \\(W_2=E[\\max(X,W_1)]\\), then \\(W_3\\) and \\(W_4\\) the same way, and read the first-roll threshold from \\(W_3\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Three decision times. At time 1 you may stop and receive \\(1\\), which is certain. If you continue, at time 2 you see \\(R_2\\): it is \\(0\\) with probability \\(0.7\\) and \\(3\\) with probability \\(0.3\\). You may then stop and receive \\(R_2\\), or continue to time 3 and receive \\(2\\) for certain.<br><br><b>Proposed solution:</b><br>L1. At time 1, compare the sure \\(1\\) with the expected next reward, \\(E[R_2]=0.9\\). Since \\(1>0.9\\), stop.<br>L2. The value is \\(1\\).<br><br>Find the flaw. What is the optimal value at time 1?",
+  "back": "<b>Flaw:</b> Line L1 compares stopping with the expected next reward alone. It ignores the option to keep going past time 2. The one-step rule treats the future as worth only one step, but at time 2 you can refuse a 0 and still collect 2 at time 3.<br><b>Correct answer:</b> \\(\\frac{23}{10}\\). At time 2 stop if \\(R_2\\ge2\\), which means stop when \\(R_2=3\\). So the value of continuing at time 1 is \\(0.3\\cdot3+0.7\\cdot2=2.3\\), which beats the sure 1.<br><b>Smell:</b> A rule that compares the sure payoff with only the next observation has dropped the option value beyond one step. Run backward induction to the horizon before trusting it.",
+  "tags": [
+   "s_optimal_stopping",
+   "s_dynamic_programming",
+   "one_step_lookahead",
+   "fmt_debug"
+  ],
+  "dest": "06_brainteasers_games",
+  "figs_back": [
+   "fgB_lookahead_tree"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ten independent events occur at times \\(1\\) to \\(10\\). Event \\(k\\) occurs with probability \\(\\frac{1}{k+1}\\), independently of the others. You observe the events in time order and may stop at any event. You win if the event you stop at is the last event that occurs over the ten times. Find the best achievable probability of winning.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_optimal_stopping with s_indicators: Bruss's odds theorem for the last success of independent events.<br><b>Trigger:</b> independent indicators, a win only on the last one that occurs, and a win probability that is a product over the later events.<br><b>Key move:</b> The odds are \\(r_k=\\frac{p_k}{1-p_k}=\\frac1k\\). Stop at the first event at or after index \\(s\\), where \\(s\\) is the largest index with \\(\\sum_{k\\ge s}r_k\\ge1\\).<br><b>Answer:</b> \\(s=4\\), since \\(\\frac14+\\dots+\\frac1{10}=\\frac{2761}{2520}\\ge1\\) but \\(\\frac15+\\dots+\\frac1{10}\\approx0.85<1\\). Then \\(P(\\text{win})=\\prod_{k\\ge4}(1-p_k)\\cdot\\sum_{k\\ge4}r_k=\\frac{4}{11}\\cdot\\frac{2761}{2520}=\\frac{251}{630}\\approx 0.398\\).<br><b>Sanity check:</b> Bruss's theorem guarantees at least \\(\\frac1e\\approx0.368\\), and 0.398 is above it. A simulation of \\(2\\cdot10^5\\) runs agrees within one standard error.<br><b>Transfer:</b> The same rule applies to any sequence of independent events, such as offers that arrive with known probabilities, and the stopping index is read off from the odds.",
+  "tags": [
+   "s_optimal_stopping",
+   "s_indicators",
+   "odds_algorithm",
+   "fmt_recognise"
+  ],
+  "dest": "06_brainteasers_games",
+  "figs_back": [
+   "fgB_odds_tail"
+  ]
+ }
+]

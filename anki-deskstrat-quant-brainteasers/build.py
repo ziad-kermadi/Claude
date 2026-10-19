@@ -4,6 +4,7 @@ import genanki
 D = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(D, "DeskStrat_Quant_Brainteasers_VP_London.apkg")
 ROOT = "DeskStrat VP London::Quant Interview Core"
+FIG_DIR = os.path.join(D, "diagrams", "svg")
 
 SUBDECKS = {
     "00_toolkit": "0 Structure Toolkit & Recognition",
@@ -38,6 +39,9 @@ hr#answer{margin:12px 0}
 details.hint{margin:6px 0;padding:4px 8px;border-left:3px solid #a05a00;background:rgba(160,90,0,.07)}
 summary{cursor:pointer;color:#a05a00;font-size:14px}
 .prompt{font-size:13px;color:#a05a00;margin-top:8px}
+.fig{text-align:center;margin:10px 0}
+.fig img{max-width:100%;height:auto}
+.nightMode img.dg,.night_mode img.dg{filter:invert(.92) hue-rotate(180deg)}
 """
 
 PROMPT = ("<div class='prompt'>Say it out loud first: structure, trigger, key move. "
@@ -59,7 +63,7 @@ CLOZE = genanki.Model(
                 "afmt": "{{cloze:Text}}<br><hr id=answer>{{Extra}}"}],
     css=CSS)
 
-_TAG = re.compile(r'</?(b|i|br|ul|ol|li|code|pre|table|tr|td|th|thead|tbody|sup|sub|u|p|div|span|em|strong|hr|details|summary)\b[^>]*>', re.I)
+_TAG = re.compile(r'</?(b|i|br|ul|ol|li|code|pre|table|tr|td|th|thead|tbody|sup|sub|u|p|div|span|em|strong|hr|details|summary|img)\b[^>]*>', re.I)
 
 def _math(m):
     return m.group(0).replace('<', ' \\lt ').replace('>', ' \\gt ')
@@ -86,7 +90,21 @@ def deck(name):
         decks.setdefault(nm, genanki.Deck(did(nm), nm))
     return decks[name]
 
-n, skipped, seen = 0, 0, set()
+def figs(names):
+    out = ""
+    for nm in names:
+        fn = f"qc_{nm}.svg"
+        assert os.path.exists(os.path.join(FIG_DIR, fn)), f"missing figure {fn} (run diagrams/render_all.py)"
+        media.add(fn)
+        out += f"<div class='fig'><img class='dg' src='{fn}'></div>"
+    return out
+
+def with_back_figs(back, html):
+    # Put solution figures just before the Transfer line when there is one, else at the end.
+    i = back.find("<b>Transfer:</b>")
+    return back[:i] + html + back[i:] if html and i >= 0 else back + html
+
+n, skipped, seen, media = 0, 0, set(), set()
 struct = collections.Counter()
 for f in sorted(glob.glob(os.path.join(D, "cards", "*.json"))):
     key = os.path.basename(f)[:-5]
@@ -102,6 +120,8 @@ for f in sorted(glob.glob(os.path.join(D, "cards", "*.json"))):
         struct.update(t for t in tags if t.startswith("s_"))
         topic = SUBDECKS[key]
         guid = genanki.guid_for("quantcore", c["front"])
+        front_figs, back_figs = figs(c.get("figs_front", [])), figs(c.get("figs_back", []))
+        c = dict(c, front=c["front"] + front_figs, back=with_back_figs(c.get("back", ""), back_figs))
         hints = c.get("hints") or []
         if hints and c["type"] == "basic":
             c = dict(c, front=c["front"] + "".join(
@@ -112,6 +132,8 @@ for f in sorted(glob.glob(os.path.join(D, "cards", "*.json"))):
             note = genanki.Note(BASIC, fields=[clean(c["front"]), clean(c.get("back", "")), topic], tags=tags, guid=guid)
         dk.add_note(note); n += 1
 
-genanki.Package(list(decks.values())).write_to_file(OUT)
-print("notes:", n, "skipped:", skipped, "->", OUT)
+pkg = genanki.Package(list(decks.values()))
+pkg.media_files = [os.path.join(FIG_DIR, fn) for fn in sorted(media)]
+pkg.write_to_file(OUT)
+print("notes:", n, "skipped:", skipped, "figures:", len(media), "->", OUT)
 print("structure coverage:", ", ".join(f"{k}={v}" for k, v in struct.most_common()))

@@ -8,6 +8,9 @@
    "urn",
    "fmt_debug",
    "err_ordered_unordered"
+  ],
+  "figs_back": [
+   "f12_urn_subsets"
   ]
  },
  {
@@ -19,6 +22,9 @@
    "dice",
    "fmt_debug",
    "err_distinguishable"
+  ],
+  "figs_back": [
+   "f12_dice_grid"
   ]
  },
  {
@@ -31,6 +37,9 @@
    "cards",
    "fmt_debug",
    "err_double_count"
+  ],
+  "figs_back": [
+   "f12_witness_overcount"
   ]
  },
  {
@@ -98,6 +107,9 @@
    "medical_testing",
    "fmt_debug",
    "err_base_rate"
+  ],
+  "figs_back": [
+   "f12_medical_counts"
   ]
  },
  {
@@ -110,6 +122,9 @@
    "monty_hall",
    "fmt_debug",
    "err_info_process"
+  ],
+  "figs_back": [
+   "f12_monty_tree"
   ]
  },
  {
@@ -144,6 +159,9 @@
    "families",
    "fmt_debug",
    "err_info_process"
+  ],
+  "figs_back": [
+   "f12_family_selection"
   ]
  },
  {
@@ -166,6 +184,9 @@
    "bias_prior",
    "fmt_debug",
    "err_likelihood"
+  ],
+  "figs_back": [
+   "f12_bias_posterior"
   ]
  },
  {
@@ -200,6 +221,9 @@
    "dice",
    "fmt_debug",
    "err_jensen"
+  ],
+  "figs_back": [
+   "f12_jensen_reciprocal"
   ]
  },
  {
@@ -281,6 +305,9 @@
    "random_walk",
    "fmt_debug",
    "err_optional_stopping"
+  ],
+  "figs_back": [
+   "f12_hitting_truncated"
   ]
  },
  {
@@ -305,6 +332,9 @@
    "gamblers_ruin",
    "fmt_debug",
    "err_boundary"
+  ],
+  "figs_back": [
+   "f12_ruin_ratio"
   ]
  },
  {
@@ -339,6 +369,9 @@
    "brownian_motion",
    "fmt_debug",
    "err_reflection"
+  ],
+  "figs_back": [
+   "f12_reflection"
   ]
  },
  {
@@ -407,6 +440,9 @@
    "broken_stick",
    "fmt_debug",
    "err_ordering_density"
+  ],
+  "figs_back": [
+   "f12_broken_stick"
   ]
  },
  {
@@ -440,6 +476,9 @@
    "uniform_disc",
    "fmt_debug",
    "err_jacobian"
+  ],
+  "figs_back": [
+   "f12_disc_radius"
   ]
  },
  {
@@ -451,6 +490,9 @@
    "nim",
    "fmt_debug",
    "err_backward_induction"
+  ],
+  "figs_back": [
+   "f12_nim_positions"
   ]
  },
  {
@@ -497,6 +539,9 @@
    "race_to_three",
    "fmt_debug",
    "err_backward_induction"
+  ],
+  "figs_back": [
+   "f12_race_to_three"
   ]
  },
  {
@@ -622,6 +667,9 @@
    "early_exercise",
    "fmt_debug",
    "err_early_exercise"
+  ],
+  "figs_back": [
+   "f12_american_bound"
   ]
  },
  {
@@ -633,6 +681,9 @@
    "jensen_option",
    "fmt_debug",
    "err_jensen"
+  ],
+  "figs_back": [
+   "f12_option_chord"
   ]
  },
  {
@@ -745,6 +796,9 @@
    "fpc",
    "fmt_debug",
    "err_fpc"
+  ],
+  "figs_back": [
+   "f12_fpc_variance"
   ]
  },
  {
@@ -756,6 +810,9 @@
    "regression_to_mean",
    "fmt_debug",
    "err_regression_to_mean"
+  ],
+  "figs_back": [
+   "f12_regression_mean"
   ]
  },
  {
@@ -778,6 +835,9 @@
    "explicit_scheme",
    "fmt_debug",
    "err_stability"
+  ],
+  "figs_back": [
+   "f12_heat_stability"
   ]
  },
  {
@@ -789,6 +849,9 @@
    "mc_error",
    "fmt_debug",
    "err_mc_scaling"
+  ],
+  "figs_back": [
+   "f12_mc_loglog"
   ]
  },
  {
@@ -800,6 +863,9 @@
    "cholesky",
    "fmt_debug",
    "err_cholesky"
+  ],
+  "figs_back": [
+   "f12_cholesky_vectors"
   ]
  },
  {
@@ -823,6 +889,9 @@
    "intercept",
    "fmt_debug",
    "err_intercept"
+  ],
+  "figs_back": [
+   "f12_ols_intercept"
   ]
  },
  {
@@ -845,6 +914,9 @@
    "kelly",
    "fmt_debug",
    "err_kelly_odds"
+  ],
+  "figs_back": [
+   "f12_kelly_growth"
   ]
  },
  {
