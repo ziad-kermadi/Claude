@@ -1,0 +1,508 @@
+[
+ {
+  "type": "basic",
+  "front": "What is the only semantic difference between a <code>class</code> and a <code>struct</code> in C++?",
+  "back": "<b>Answer:</b> The default access level. Members of a <code>struct</code> are public by default and members of a <code>class</code> are private by default. The same default applies to base classes: <code>struct D : B</code> inherits publicly, <code>class D : B</code> inherits privately. Otherwise both can have constructors, destructors, virtual functions, templates and member functions.<br><b>Code:</b><pre><code>#include &lt;iostream&gt;\n\nstruct Point {          // members default to public\n    double x, y;\n};\n\nclass Secret {          // members default to private\n    int v = 42;\npublic:\n    int reveal() const { return v; }\n};\n\nint main() {\n    Point p{1.0, 2.0};\n    Secret s;\n    std::cout &lt;&lt; p.x &lt;&lt; ' ' &lt;&lt; p.y &lt;&lt; ' ' &lt;&lt; s.reveal() &lt;&lt; '\\n';\n    // std::cout &lt;&lt; s.v;   // error: 'int Secret::v' is private within this context\n}</code></pre><b>Output:</b><pre><code>1 2 42</code></pre><b>Interview trap:</b> calling a struct 'just data' is a C habit and is wrong in C++. A struct with <code>virtual</code> functions is a polymorphic class. The choice between the two keywords is a convention: <code>struct</code> for passive data with no invariant, <code>class</code> when the type maintains an invariant.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "classes",
+   "access",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Member access defaults to {{c1::private}} in a <code>class</code> and to {{c2::public}} in a <code>struct</code>. Inheritance follows the same pattern: in <code>class D : B</code> the base <code>B</code> is inherited {{c3::privately}}.",
+  "back": "<b>Interview trap:</b> the default inheritance access is a common source of bugs. Write the access specifier on every base: <code>class D : public B</code>. A class that forgets <code>public</code> has its inherited public members made private, so callers can no longer convert <code>D*</code> to <code>B*</code> implicitly.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "classes",
+   "access",
+   "convention",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A <code>Money</code> class keeps its amount in a private member <code>cents_</code>. What invariant does the private access protect, and which member functions are responsible for keeping it true?",
+  "back": "<b>Answer:</b> The invariant is <code>cents_ &gt;= 0</code>: this type never represents a negative balance. Only member functions can change <code>cents_</code>, so every mutating member (here <code>deposit</code>) must check the invariant before it writes. If the member were public, any caller could write <code>m.cents_ = -5</code> and every other function would receive an invalid object with no signal. Encapsulation keeps the set of code that can break the invariant small enough to audit.<br><b>Code:</b><pre><code>#include &lt;cstdint&gt;\n#include &lt;iostream&gt;\n#include &lt;stdexcept&gt;\n\nclass Money {\npublic:\n    explicit Money(std::int64_t cents) : cents_(cents) {}\n    void deposit(std::int64_t c) {\n        if (c &lt; 0) throw std::invalid_argument(\"negative deposit\");\n        cents_ += c;                         // invariant: cents_ &gt;= 0 holds\n    }\n    std::int64_t cents() const { return cents_; }\nprivate:\n    std::int64_t cents_;\n};\n\nint main() {\n    Money m{100};\n    m.deposit(50);\n    std::cout &lt;&lt; m.cents() &lt;&lt; '\\n';\n    try { m.deposit(-5); }\n    catch (const std::invalid_argument&amp; e) { std::cout &lt;&lt; \"rejected: \" &lt;&lt; e.what() &lt;&lt; '\\n'; }\n    std::cout &lt;&lt; m.cents() &lt;&lt; '\\n';\n}</code></pre><b>Output:</b><pre><code>150\nrejected: negative deposit\n150</code></pre><b>Interview trap:</b> private is not a security boundary across a program. A getter that returns a non-const reference, or a pointer to the member, re-exposes the state. Keep the invariant in the mutators and return values by value or by const reference.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "encapsulation",
+   "classes",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does <code>Trade b();</code> declare inside a function body, and why does <code>Trade a{};</code> produce a different kind of thing?",
+  "back": "<b>Answer:</b> <code>Trade b();</code> declares a <i>function</i> <code>b</code> that takes no arguments and returns <code>Trade</code>. No object is created. This is the most vexing parse. <code>Trade a{};</code> defines an object and value-initialises it: for an aggregate with no default member initialiser, <code>id</code> becomes 0. A plain <code>Trade c;</code> default-initialises instead, which leaves <code>id</code> indeterminate, and reading it is undefined behaviour.<br><b>Code:</b><pre><code>#include &lt;iostream&gt;\n\nstruct Trade {\n    int id;\n};\n\nint main() {\n    Trade a{};          // object, value-initialised: id == 0\n    Trade b();          // NOT an object: function declaration taking no arguments\n    std::cout &lt;&lt; a.id &lt;&lt; '\\n';\n    // std::cout &lt;&lt; b.id &lt;&lt; '\\n';   // error: request for member 'id' in 'b', which is of non-class type\n}</code></pre><b>Output:</b><pre><code>0</code></pre>Uncommenting the last line gives GCC's error: request for member 'id' in 'b', which is of non-class type 'Trade()'. Compiling with -Wall also gives the -Wvexing-parse warning.<br><b>Interview trap:</b> use braces for default construction, <code>Trade b{};</code>. Braces also reject narrowing conversions, which parentheses accept silently.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "constructors",
+   "initialisation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why must <code>const</code> and reference members be set in the member initialiser list, and what does the list save for members of class type?",
+  "back": "<b>Answer:</b> A <code>const</code> or reference member has to be initialised when the object is born, and an assignment in the constructor body is not initialisation. Initialiser-list entries construct the member directly from the argument. A member of class type such as <code>std::string</code> that is assigned in the body is first default-constructed and then assigned, which is two steps.<br><b>Code:</b><pre><code>#include &lt;iostream&gt;\n#include &lt;string&gt;\n#include &lt;utility&gt;\n\nclass Bond {\npublic:\n    Bond(std::string id, double notional, double coupon)\n        : id_(std::move(id)), notional_(notional), coupon_(coupon) {}\n    void show() const { std::cout &lt;&lt; id_ &lt;&lt; ' ' &lt;&lt; notional_ &lt;&lt; ' ' &lt;&lt; coupon_ &lt;&lt; '\\n'; }\nprivate:\n    std::string id_;\n    const double notional_;      // const: must be set in the initialiser list\n    double coupon_;\n};\n\nint main() {\n    Bond b{\"UKT-2030\", 1e6, 0.04};\n    b.show();\n}</code></pre><b>Output:</b><pre><code>UKT-2030 1e+06 0.04</code></pre>A version that assigns the <code>const double notional_</code> in the body is rejected by GCC with 'uninitialized const member in const double' and 'assignment of read-only member Bond::notional_'.<br><b>Interview trap:</b> the list does not decide the order of initialisation. Members are initialised in declaration order however the list is written, which the next card tests.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "constructors",
+   "initialiser_list",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A class declares <code>double shift;</code> and then <code>double level;</code>. Its constructor is written <code>: level(l), shift(level * 0.01)</code>. What happens at runtime, and what rule decides the order?",
+  "back": "<b>Answer:</b> Members are initialised in the order they are declared in the class, not the order in the initialiser list. <code>shift</code> is initialised first and reads <code>level</code> before <code>level</code> has a value. That is undefined behaviour. GCC flags it with <code>-Wreorder</code> and <code>-Wuninitialized</code>.<br><b>Correct form:</b> <code>level</code> is declared first, so it is initialised first and the list then reads a valid value. The file also contains <code>BadCurve</code> to show the warning; it compiles, and <code>main</code> uses only <code>Curve</code>.<br><b>Code:</b><pre><code>#include &lt;iostream&gt;\n\nstruct BadCurve {                              // compiles, but reads level before it is set\n    double shift;                              // declared first, so initialised first\n    double level;                              // declared second\n    BadCurve(double l) : level(l), shift(level * 0.01) {}\n};\n\nstruct Curve {\n    double level;                              // declared first: initialised first\n    double shift;                              // declared second\n    Curve(double l) : level(l), shift(level * 0.01) {}\n};\n\nint main() {\n    Curve c{100.0};\n    std::cout &lt;&lt; c.level &lt;&lt; ' ' &lt;&lt; c.shift &lt;&lt; '\\n';\n}</code></pre><b>Output:</b><pre><code>100 1</code></pre><b>Interview trap:</b> the -Wreorder warning is the signal to look for. A candidate who says the list order decides initialisation has missed the rule. The usual fix is to declare members in dependency order.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "constructors",
+   "initialisation_order",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does the <code>explicit</code> keyword on a single-argument constructor prevent, and what happens to a call such as <code>f(5.0)</code> when the parameter's constructor is explicit?",
+  "back": "<b>Answer:</b> <code>explicit</code> forbids the compiler from using the constructor for an implicit conversion from its argument type to the class. Without it, <code>g(5.0)</code> compiles because the double is converted to <code>Implicit</code>. With it, <code>f(5.0)</code> is rejected: GCC reports that it could not convert 5.0 from double to Explicit.<br><b>Code:</b><pre><code>#include &lt;iostream&gt;\n\nstruct Explicit {\n    explicit Explicit(double v) : value(v) {}\n    double value;\n};\n\nstruct Implicit {\n    Implicit(double v) : value(v) {}\n    double value;\n};\n\nvoid f(Explicit e) { std::cout &lt;&lt; \"explicit \" &lt;&lt; e.value &lt;&lt; '\\n'; }\nvoid g(Implicit i) { std::cout &lt;&lt; \"implicit \" &lt;&lt; i.value &lt;&lt; '\\n'; }\n\nint main() {\n    g(5.0);               // OK: double converts to Implicit through its constructor\n    f(Explicit{5.0});     // OK: explicit construction\n    // f(5.0);            // error: no implicit conversion from double to Explicit\n}</code></pre><b>Output:</b><pre><code>implicit 5\nexplicit 5</code></pre><b>Interview trap:</b> a non-explicit constructor from <code>long</code> on <code>Money</code> lets <code>money + 5L</code> compile through an implicit conversion, and overload resolution picks up conversions you did not intend. Make single-argument constructors explicit unless the conversion is part of the type's meaning.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "constructors",
+   "explicit",
+   "conversions",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Automatic objects are destroyed in the {{c1::reverse}} order of construction. The data members of a class are destroyed in {{c2::reverse declaration}} order, after the class's own destructor body has run.",
+  "back": "<b>Code:</b><pre><code>#include &lt;iostream&gt;\n#include &lt;string&gt;\n#include &lt;utility&gt;\n\nstruct Noisy {\n    std::string name;\n    Noisy(std::string n) : name(std::move(n)) { std::cout &lt;&lt; \"ctor \" &lt;&lt; name &lt;&lt; '\\n'; }\n    ~Noisy() { std::cout &lt;&lt; \"dtor \" &lt;&lt; name &lt;&lt; '\\n'; }\n};\n\nstruct Desk {\n    Noisy first{\"first\"};\n    Noisy second{\"second\"};\n    ~Desk() { std::cout &lt;&lt; \"dtor Desk\\n\"; }\n};\n\nint main() {\n    Desk d;\n    std::cout &lt;&lt; \"in scope\\n\";\n}</code></pre><b>Output:</b><pre><code>ctor first\nctor second\nin scope\ndtor Desk\ndtor second\ndtor first</code></pre><b>Interview trap:</b> the destructor body runs before any member is destroyed, so it can still use the members. A member cannot be destroyed earlier, because the destructor body might still need it.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "destructors",
+   "lifetime",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Python's <code>with open(path) as f</code> closes the file when the block exits. What is the C++ equivalent for any resource, and how does a file-handle wrapper guarantee the close when an exception is thrown?",
+  "back": "<b>Answer:</b> RAII (resource acquisition is initialisation). The constructor acquires the resource and the destructor releases it. Stack unwinding calls the destructors of every fully constructed object as an exception leaves the scope, so the release runs on normal return, early return and throw. The example uses <code>std::tmpfile()</code>, which is standard C and removes its file when closed. Copy operations are deleted, so there is exactly one owner.<br><b>Code:</b><pre><code>#include &lt;cstdio&gt;\n#include &lt;iostream&gt;\n#include &lt;stdexcept&gt;\n\nclass FileHandle {\npublic:\n    FileHandle() : fp_(std::tmpfile()) {\n        if (!fp_) throw std::runtime_error(\"tmpfile failed\");\n        ++live_;\n    }\n    ~FileHandle() {\n        if (fp_) std::fclose(fp_);          // runs on normal exit AND during unwinding\n        --live_;\n    }\n    FileHandle(const FileHandle&amp;) = delete;  // exactly one owner\n    FileHandle&amp; operator=(const FileHandle&amp;) = delete;\n    std::FILE* get() const { return fp_; }\n    inline static int live_ = 0;             // open handles, for demonstration\nprivate:\n    std::FILE* fp_;\n};\n\nvoid write_report(bool fail) {\n    FileHandle h;\n    std::fputs(\"PV01 42\\n\", h.get());\n    if (fail) throw std::runtime_error(\"boom\");\n}\n\nint main() {\n    write_report(false);\n    std::cout &lt;&lt; \"live after normal return: \" &lt;&lt; FileHandle::live_ &lt;&lt; '\\n';\n    try {\n        write_report(true);\n    } catch (const std::exception&amp; e) {\n        std::cout &lt;&lt; \"caught: \" &lt;&lt; e.what() &lt;&lt; '\\n';\n    }\n    std::cout &lt;&lt; \"live after throw: \" &lt;&lt; FileHandle::live_ &lt;&lt; '\\n';\n}</code></pre><b>Output:</b><pre><code>live after normal return: 0\ncaught: boom\nlive after throw: 0</code></pre><b>Compared with Python:</b> <code>with</code> needs a context manager and a <code>with</code> statement at every use site, and it does not follow the object when it is stored in another object, returned, or put in a container. The C++ wrapper is written once, and every owner of it gets the release for free. A constructor that throws never runs its destructor, so the handle is counted only after <code>tmpfile</code> succeeds.<br><b>Interview trap:</b> a destructor must not throw. It is noexcept by default, and an exception escaping it during unwinding calls <code>std::terminate</code>.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "raii",
+   "resources",
+   "exceptions",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why is <code>std::lock_guard</code> safer than calling <code>mtx.lock()</code> and <code>mtx.unlock()</code> by hand in a function that can throw?",
+  "back": "<b>Answer:</b> With manual calls the unlock is reached only on the path that gets there. If an exception leaves the function between the two calls, the mutex stays locked and the next caller blocks forever. The <code>lock_guard</code> unlocks in its destructor, which runs on normal return and during unwinding. The program below throws inside the critical section, then probes the mutex with <code>try_lock</code>. The probe succeeds, so the mutex was released.<br><b>Code:</b><pre><code>#include &lt;iostream&gt;\n#include &lt;mutex&gt;\n#include &lt;stdexcept&gt;\n\nstd::mutex book_mtx;\nint position = 0;\n\nvoid add_fill(int qty, bool bad) {\n    std::lock_guard&lt;std::mutex&gt; lk(book_mtx);     // locks here\n    position += qty;\n    if (bad) throw std::runtime_error(\"bad fill\");  // lk unlocks during unwinding\n}                                                  // and on normal return\n\nint main() {\n    add_fill(10, false);\n    try { add_fill(5, true); }\n    catch (const std::exception&amp; e) { std::cout &lt;&lt; e.what() &lt;&lt; '\\n'; }\n    std::cout &lt;&lt; \"position \" &lt;&lt; position &lt;&lt; '\\n';\n    const bool free_now = book_mtx.try_lock();\n    std::cout &lt;&lt; \"mutex free: \" &lt;&lt; (free_now ? \"yes\" : \"no\") &lt;&lt; '\\n';\n    if (free_now) book_mtx.unlock();\n}</code></pre><b>Output:</b><pre><code>bad fill\nposition 15\nmutex free: yes</code></pre><b>Interview trap:</b> <code>lock_guard</code> cannot be unlocked early or moved. Use <code>std::unique_lock</code> when you need either, or to wait on a condition variable. Use <code>std::scoped_lock</code> for several mutexes at once, which avoids lock-order deadlock.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "raii",
+   "mutex",
+   "exceptions",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Classify each statement as copy construction or copy assignment: <code>Counter b = a;</code>, then <code>c = b;</code>, then <code>d = Counter{9};</code>. The class declares a copy constructor and a copy assignment operator.",
+  "back": "<b>Answer:</b> <code>Counter b = a;</code> is copy construction: <code>b</code> is being created, and the <code>=</code> spelling does not call assignment. <code>c = b;</code> is copy assignment: <code>c</code> already exists. <code>d = Counter{9};</code> is copy assignment from a temporary. A user-declared copy constructor and copy assignment suppress the implicit move operations, so the temporary is copied, not moved.<br><b>Code:</b><pre><code>#include &lt;iostream&gt;\n\nstruct Counter {\n    int v;\n    Counter(int x) : v(x) {}\n    Counter(const Counter&amp; o) : v(o.v) { std::cout &lt;&lt; \"copy ctor\\n\"; }\n    Counter&amp; operator=(const Counter&amp; o) { v = o.v; std::cout &lt;&lt; \"copy assign\\n\"; return *this; }\n};\n\nint main() {\n    Counter a{1};\n    Counter b = a;        // copy construction: b is being created\n    Counter c(a);         // copy construction\n    c = b;                // copy assignment: c already exists\n    Counter d{5};\n    d = Counter{9};       // copy assignment from a temporary (copy ctor declared, so no move)\n    std::cout &lt;&lt; b.v &lt;&lt; c.v &lt;&lt; d.v &lt;&lt; '\\n';\n}</code></pre><b>Output:</b><pre><code>copy ctor\ncopy ctor\ncopy assign\ncopy assign\n119</code></pre>The last line, 119, prints <code>b.v</code>, <code>c.v</code> and <code>d.v</code>.<br><b>Interview trap:</b> the object being assigned to may be the object being copied (self-assignment), and the operator has to handle that. The next cards build the deep-copy version.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "copy_semantics",
+   "constructors",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A class owns a raw <code>double*</code> allocated in its constructor and freed with <code>delete[]</code> in its destructor, and it declares no copy operations. What does <code>Buffer b = a;</code> do, and what goes wrong at the end of <code>main</code>?",
+  "back": "<b>Answer:</b> The implicit copy constructor copies members one by one, so the pointer value is copied and not the array. Both objects now own the same block. At scope exit both destructors call <code>delete[]</code> on the same address: a double free, which is undefined behaviour.<br><b>Code:</b><pre><code>#include &lt;cstddef&gt;\n#include &lt;iostream&gt;\n\nclass Buffer {\npublic:\n    explicit Buffer(std::size_t n) : data_(new double[n]()), n_(n) {}\n    ~Buffer() { delete[] data_; }\n    double* data() const { return data_; }\nprivate:\n    double* data_;\n    std::size_t n_;\n};\n\nint main() {\n    Buffer a{4};\n    Buffer b = a;                                       // implicit memberwise copy\n    std::cout &lt;&lt; std::boolalpha &lt;&lt; (a.data() == b.data()) &lt;&lt; '\\n';\n}                                                       // both dtors delete[] the same block</code></pre><b>Observed:</b> with GCC -O2 the process prints nothing to stdout when piped (the 'true' line sits in a buffer that is not flushed on abort), then stops with the following on stderr, exit code 134:<pre><code>free(): double free detected in tcache 2</code></pre><b>Interview trap:</b> the failure can show up far from the cause, or not at all on a test machine. The bug is the missing copy operations, which the rule of three (next card) addresses.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "shallow_copy",
+   "memory",
+   "undefined_behaviour",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write the copy constructor and copy assignment for a <code>Buffer</code> that owns <code>double* data_</code> and <code>std::size_t n_</code>, so that copies are deep and <code>a = a</code> is safe. Explain the order of operations in the assignment.",
+  "back": "<b>Answer:</b> The copy constructor allocates <code>o.n_</code> doubles and copies the values. The copy assignment (1) checks for self-assignment, (2) allocates the new block before touching the old one, so a failed allocation leaves the object unchanged, (3) copies the values in, (4) frees the old block, (5) takes the new pointer and size. The destructor frees the block.<br><b>Code:</b><pre><code>#include &lt;algorithm&gt;\n#include &lt;cstddef&gt;\n#include &lt;iostream&gt;\n\nclass Buffer {\npublic:\n    explicit Buffer(std::size_t n) : data_(new double[n]()), n_(n) {}\n    Buffer(const Buffer&amp; o) : data_(new double[o.n_]), n_(o.n_) {\n        std::copy(o.data_, o.data_ + n_, data_);\n    }\n    Buffer&amp; operator=(const Buffer&amp; o) {\n        if (this != &amp;o) {\n            double* fresh = new double[o.n_];          // allocate before releasing\n            std::copy(o.data_, o.data_ + o.n_, fresh);\n            delete[] data_;\n            data_ = fresh;\n            n_ = o.n_;\n        }\n        return *this;\n    }\n    ~Buffer() { delete[] data_; }\n    double&amp; operator[](std::size_t i) { return data_[i]; }\n    std::size_t size() const { return n_; }\nprivate:\n    double* data_;\n    std::size_t n_;\n};\n\nint main() {\n    Buffer a{3};\n    a[0] = 1.5; a[1] = 2.5; a[2] = 3.5;\n    Buffer b = a;             // deep copy\n    b[0] = 99.0;\n    a = a;                    // self-assignment is safe\n    std::cout &lt;&lt; a[0] &lt;&lt; ' ' &lt;&lt; b[0] &lt;&lt; ' ' &lt;&lt; b.size() &lt;&lt; '\\n';\n}</code></pre><b>Output:</b><pre><code>1.5 99 3</code></pre><b>Interview trap:</b> if you write one of destructor, copy constructor or copy assignment, you almost always need all three. Copy-and-swap is the shorter form of the same logic and is strongly exception safe.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "rule_of_three",
+   "deep_copy",
+   "memory",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A user-declared destructor suppresses the implicit {{c1::move constructor}} and the implicit {{c2::move assignment}} operator, so a move of such a class falls back to {{c3::copy}}.",
+  "back": "<b>Code:</b><pre><code>#include &lt;iostream&gt;\n#include &lt;utility&gt;\n\nstruct Probe {\n    Probe() = default;\n    Probe(const Probe&amp;) { std::cout &lt;&lt; \"copy\\n\"; }\n    Probe(Probe&amp;&amp;) noexcept { std::cout &lt;&lt; \"move\\n\"; }\n};\n\nstruct Rule0 {                  // no user-declared special members\n    Probe p;\n};\n\nstruct Rule5Dtor {              // user-declared destructor suppresses implicit move\n    Probe p;\n    ~Rule5Dtor() {}\n};\n\nint main() {\n    Rule0 a;\n    Rule0 a2 = std::move(a);          // prints \"move\"\n    Rule5Dtor b;\n    Rule5Dtor b2 = std::move(b);      // prints \"copy\"\n    (void)a2; (void)b2;\n}</code></pre><b>Output:</b><pre><code>move\ncopy</code></pre><code>Rule0</code> has no user-declared special members, so its implicit move constructor moves the <code>Probe</code> and prints 'move'. <code>Rule5Dtor</code> has a user-declared destructor, so its implicit move is suppressed and the implicit copy runs, printing 'copy'. The fix is to declare or default the five special members, for example <code>X(X&amp;&amp;) noexcept = default;</code>.<br><b>Interview trap:</b> a destructor that only logs or counts turns every move into a deep copy. Nothing fails, so only a profile shows it.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "rule_of_five",
+   "move_semantics",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the rule of zero, and why does a class whose members are a <code>std::string</code>, a <code>std::vector</code> and a <code>std::unique_ptr</code> need no copy, move or destructor code?",
+  "back": "<b>Answer:</b> If every member manages its own resource, the implicitly generated special members are already correct, so the class declares none of them. The string and the vector copy their contents. The <code>unique_ptr</code> is move-only, which makes the whole class move-only, and the implicit move constructor moves every member.<br><b>Code:</b><pre><code>#include &lt;iostream&gt;\n#include &lt;memory&gt;\n#include &lt;string&gt;\n#include &lt;utility&gt;\n#include &lt;vector&gt;\n\nstruct Trade { std::string id; double notional; };\n\nclass Portfolio {\npublic:\n    std::string name;\n    std::vector&lt;Trade&gt; trades;\n    std::unique_ptr&lt;int&gt; version = std::make_unique&lt;int&gt;(1);\n};\n\nint main() {\n    Portfolio p;\n    p.name = \"RatesDesk\";\n    p.trades.push_back({\"T1\", 5e6});\n    Portfolio q = std::move(p);                 // implicit move constructor\n    std::cout &lt;&lt; q.name &lt;&lt; ' ' &lt;&lt; q.trades.size() &lt;&lt; ' ' &lt;&lt; *q.version &lt;&lt; '\\n';\n    // Portfolio r = q;                         // error: use of deleted function (unique_ptr member)\n}</code></pre><b>Output:</b><pre><code>RatesDesk 1 1</code></pre>Uncommenting the copy line gives GCC's error: use of deleted function 'Portfolio::Portfolio(const Portfolio&amp;)'.<br><b>Interview trap:</b> move-only is a consequence, not an accident. If the class must be copyable, make the ownership explicit: a deep-copy member, or <code>shared_ptr</code> for shared ownership. Do not add the five special members to 'fix' it without knowing why it was deleted.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "rule_of_zero",
+   "special_members",
+   "raii",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does a <code>const</code> after a member function's parameter list promise, and what happens when a <code>const</code> object calls a non-const member function?",
+  "back": "<b>Answer:</b> Inside a <code>const</code> member function <code>this</code> is a pointer to const. The function cannot modify non-mutable data members or call non-const members, and it can be called on const objects and const references. A const and a non-const overload of the same name can coexist, and the non-const one is chosen for non-const objects. Calling a non-const member on a const object is a compile error: GCC says 'passing const Bond as this argument discards qualifiers'.<br><b>Code:</b><pre><code>#include &lt;iostream&gt;\n\nclass Bond {\npublic:\n    explicit Bond(double px) : px_(px) {}\n    double price() const { return px_; }     // read-only: callable on const objects\n    void bump(double d) { px_ += d; }        // non-const: mutates the object\nprivate:\n    double px_;\n};\n\nint main() {\n    const Bond b{100.5};\n    std::cout &lt;&lt; b.price() &lt;&lt; '\\n';\n    // b.bump(1.0);                          // error: passing 'const Bond' as 'this' discards qualifiers\n    Bond m{99.0};\n    m.bump(1.0);\n    std::cout &lt;&lt; m.price() &lt;&lt; '\\n';\n}</code></pre><b>Output:</b><pre><code>100.5\n100</code></pre><b>Interview trap:</b> const promises the logical state, and it is easy to break. A const member that returns a non-const pointer or reference to its own data lets callers change the object. Return const references for read-only members.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "const",
+   "member_functions",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A <code>const</code> member function of a discount-curve class needs to cache the last discount factor. Which keyword permits this, and what must the cache not do with multiple threads?",
+  "back": "<b>Answer:</b> <code>mutable</code> on a data member lets a const member function modify it. It is for state that does not change the observable value, such as memoisation, a lazy cache or a counter. The code caches the last time point and counts misses. The second call to <code>df(1.0)</code> is a hit, so only two misses are recorded.<br><b>Code:</b><pre><code>#include &lt;cmath&gt;\n#include &lt;iostream&gt;\n\nclass Discount {\npublic:\n    explicit Discount(double r) : rate_(r) {}\n    double df(double t) const {                // logically const: same t gives same answer\n        if (t != last_t_) {\n            last_t_ = t;\n            last_df_ = std::exp(-rate_ * t);\n            ++misses_;\n        }\n        return last_df_;\n    }\n    int misses() const { return misses_; }\nprivate:\n    double rate_;\n    mutable double last_t_ = -1.0;\n    mutable double last_df_ = 1.0;\n    mutable int misses_ = 0;\n};\n\nint main() {\n    const Discount d{0.05};\n    std::cout &lt;&lt; d.df(1.0) &lt;&lt; '\\n';\n    std::cout &lt;&lt; d.df(1.0) &lt;&lt; '\\n';\n    std::cout &lt;&lt; d.df(2.0) &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"misses \" &lt;&lt; d.misses() &lt;&lt; '\\n';\n}</code></pre><b>Output:</b><pre><code>0.951229\n0.951229\n0.904837\nmisses 2</code></pre><b>Interview trap:</b> two threads calling this const <code>df</code> at once both write <code>last_t_</code> and <code>last_df_</code>. That is a data race and undefined behaviour, even though the function is const. Guard the cache with a mutex or use atomics, and state that in the design.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "mutable",
+   "const",
+   "caching",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A <code>static</code> data member is one object shared by all instances. Since C++17 it can be defined in the class body with {{c1::inline static int count_ = 0;}}, so it needs no definition in a .cpp file.",
+  "back": "<b>Code:</b><pre><code>#include &lt;iostream&gt;\n\nclass Trade {\npublic:\n    Trade() { ++count_; }\n    ~Trade() { --count_; }\n    static int live() { return count_; }\nprivate:\n    inline static int count_ = 0;     // C++17: in-class definition of a static data member\n};\n\nint main() {\n    Trade a, b;\n    {\n        Trade c;\n        std::cout &lt;&lt; Trade::live() &lt;&lt; '\\n';\n    }\n    std::cout &lt;&lt; Trade::live() &lt;&lt; '\\n';\n    (void)a; (void)b;\n}</code></pre><b>Output:</b><pre><code>3\n2</code></pre><b>Interview trap:</b> a global or static object whose constructor reads another static object from a different translation unit depends on initialisation order, which the standard leaves unspecified. This is the static initialisation order fiasco.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "static",
+   "storage",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why is <code>operator&lt;&lt;</code> for a <code>Money</code> class written as a <code>friend</code> function rather than a member, and what does friendship not provide?",
+  "back": "<b>Answer:</b> A member operator takes the class object as its left operand. The left operand of <code>&lt;&lt;</code> is a <code>std::ostream</code>, so the function has to be a non-member. A friend is a non-member with access to <code>private</code> members. The code defines it inside the class, which makes it a hidden friend: it is found only through argument-dependent lookup on <code>Money</code>, so it does not clutter the namespace.<br><b>Code:</b><pre><code>#include &lt;iostream&gt;\n\nclass Money {\npublic:\n    explicit Money(long cents) : cents_(cents) {}\n    friend std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, const Money&amp; m) {\n        const long units = m.cents_ / 100;\n        const long rem = m.cents_ % 100;\n        return os &lt;&lt; '$' &lt;&lt; units &lt;&lt; '.' &lt;&lt; (rem &lt; 10 ? \"0\" : \"\") &lt;&lt; rem;\n    }\nprivate:\n    long cents_;\n};\n\nint main() {\n    Money m{123456};\n    std::cout &lt;&lt; m &lt;&lt; '\\n';\n    std::cout &lt;&lt; Money{5} &lt;&lt; '\\n';\n}</code></pre><b>Output:</b><pre><code>$1234.56\n$0.05</code></pre><b>Interview trap:</b> friendship is granted, not inherited, not transitive and not symmetric. A friend of <code>A</code> is not a friend of a class derived from <code>A</code>, and a friend of a friend has no access. Grant it only inside one design unit.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "friend",
+   "operator_overloading",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A <code>Money</code> class defines <code>operator+</code>. Why does it take the right operand as <code>const&amp;</code> and return a new value, and why does <code>2 * m</code> need a free function instead of a member?",
+  "back": "<b>Answer:</b> The right operand is passed by const reference: no copy, and the operator promises not to change it. The result is a new object, so it is returned by value, because returning a reference to a local would dangle. A member operator needs the class object on the left. In <code>2 * m</code> the left operand is a <code>long</code>, so <code>operator*</code> has to be a free function taking <code>long</code> first.<br><b>Code:</b><pre><code>#include &lt;iostream&gt;\n\nclass Money {\npublic:\n    explicit Money(long cents) : cents_(cents) {}\n    long cents() const { return cents_; }\n    Money operator+(const Money&amp; rhs) const { return Money{cents_ + rhs.cents_}; }   // member form\nprivate:\n    long cents_;\n};\n\nMoney operator*(long k, const Money&amp; m) { return Money{k * m.cents()}; }            // free: long on the left\n\nint main() {\n    Money a{250}, b{125};\n    Money c = a + b;\n    std::cout &lt;&lt; c.cents() &lt;&lt; '\\n';\n    std::cout &lt;&lt; (2 * c).cents() &lt;&lt; '\\n';\n}</code></pre><b>Output:</b><pre><code>375\n750</code></pre><b>Interview trap:</b> with a non-explicit constructor from <code>long</code>, a free <code>operator+(const Money&amp;, const Money&amp;)</code> would also accept <code>5L + m</code> through an implicit conversion. That is why the constructor is <code>explicit</code>.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "operator_overloading",
+   "money",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does <code>auto operator&lt;=&gt;(const Date&amp;) const = default;</code> generate for <code>struct Date { int y, m, d; }</code>, and does it also provide <code>==</code>?",
+  "back": "<b>Answer:</b> The defaulted three-way comparison compares members in declaration order: <code>y</code>, then <code>m</code>, then <code>d</code>. For <code>int</code> members the return type is <code>std::strong_ordering</code>. The compiler also implicitly declares a defaulted <code>==</code> that compares all members, so <code>a == b</code> and <code>a != b</code> work. The relational operators <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code> and <code>&gt;=</code> are rewritten from <code>&lt;=&gt;</code>.<br><b>Code:</b><pre><code>#include &lt;compare&gt;\n#include &lt;iostream&gt;\n\nstruct Date {\n    int y, m, d;\n    auto operator&lt;=&gt;(const Date&amp;) const = default;    // lexicographic: y, then m, then d\n};\n\nint main() {\n    Date a{2026, 3, 31}, b{2026, 4, 1};\n    std::cout &lt;&lt; (a &lt; b) &lt;&lt; ' ' &lt;&lt; (a == b) &lt;&lt; ' ' &lt;&lt; (a != b) &lt;&lt; '\\n';\n    std::cout &lt;&lt; (a &gt;= b) &lt;&lt; '\\n';\n}</code></pre><b>Output:</b><pre><code>1 0 1\n0</code></pre><b>Interview trap:</b> the field order is the sort order. Reordering the members of <code>Date</code> changes which dates sort first, and nothing flags it. Equality and ordering agree here because both use every member.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "spaceship",
+   "comparisons",
+   "operator_overloading",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A class with a <code>double</code> member gets a defaulted <code>&lt;=&gt;</code>. Which ordering category is its return type, and what do <code>nan &lt; one</code>, <code>nan &gt; one</code> and <code>nan == nan</code> evaluate to?",
+  "back": "<b>Answer:</b> <code>std::partial_ordering</code>. A NaN is unordered with every value, so the <code>double</code> comparison is partial. <code>nan &lt; one</code> and <code>nan &gt; one</code> are both false, <code>nan == nan</code> is false, and <code>nan &lt;=&gt; one</code> is <code>partial_ordering::unordered</code>. The output shows 1, then 0 0 0, then 1.<br><b>Code:</b><pre><code>#include &lt;compare&gt;\n#include &lt;iostream&gt;\n#include &lt;limits&gt;\n#include &lt;type_traits&gt;\n\nstruct Px {\n    double v;\n    auto operator&lt;=&gt;(const Px&amp;) const = default;\n};\n\nint main() {\n    using R = decltype(Px{1.0} &lt;=&gt; Px{2.0});\n    std::cout &lt;&lt; std::is_same_v&lt;R, std::partial_ordering&gt; &lt;&lt; '\\n';\n    Px nan{std::numeric_limits&lt;double&gt;::quiet_NaN()};\n    Px one{1.0};\n    std::cout &lt;&lt; (nan &lt; one) &lt;&lt; ' ' &lt;&lt; (nan &gt; one) &lt;&lt; ' ' &lt;&lt; (nan == nan) &lt;&lt; '\\n';\n    auto r = nan &lt;=&gt; one;\n    std::cout &lt;&lt; (r == std::partial_ordering::unordered) &lt;&lt; '\\n';\n}</code></pre><b>Output:</b><pre><code>1\n0 0 0\n1</code></pre><b>Interview trap:</b> <code>std::sort</code>, <code>std::set</code> and <code>std::map</code> need a strict weak ordering. With NaN among the keys, <code>operator&lt;</code> is not one, and the result is undefined. Filter NaN out first, or compare with <code>std::strong_order</code>, which is total and places NaN after every number.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "spaceship",
+   "partial_ordering",
+   "floating_point",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What may a derived class do with a <code>protected</code> member of its base that outside code may not, and how do public, protected and private inheritance change the access of the inherited members?",
+  "back": "<b>Answer:</b> A derived class can read and write the protected members of its own base subobject. Outside code cannot. Public inheritance keeps public members public and protected members protected, and models is-a. Protected inheritance makes the public members protected in the derived class. Private inheritance makes them private, so the base is used only for implementation.<br><b>Code:</b><pre><code>#include &lt;iostream&gt;\n#include &lt;string&gt;\n#include &lt;utility&gt;\n\nclass Instrument {\npublic:\n    explicit Instrument(std::string n) : name_(std::move(n)), ccy_(\"GBP\") {}\n    void describe() const { std::cout &lt;&lt; name_ &lt;&lt; ' ' &lt;&lt; ccy_ &lt;&lt; '\\n'; }\nprotected:\n    std::string name_;\n    std::string ccy_;\n};\n\nclass Gilt : public Instrument {\npublic:\n    using Instrument::Instrument;\n    void rename(std::string n) { name_ = std::move(n); }   // OK: protected access from derived\n};\n\nint main() {\n    Gilt g{\"UKT 4 2030\"};\n    g.rename(\"UKT 4.25 2030\");\n    g.describe();\n    // g.name_ = \"x\";    // error: 'name_' is protected within this context\n}</code></pre><b>Output:</b><pre><code>UKT 4.25 2030 GBP</code></pre>Uncommenting the assignment gives GCC's error: 'name_' is protected within this context.<br><b>Interview trap:</b> protected data couples every derived class to the base's representation. Prefer protected member functions as extension points and keep the data private.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "inheritance",
+   "protected",
+   "access",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A <code>Derived</code> class has a base class and a data member of class type. In what order are the constructors and destructors called for <code>Derived d;</code>?",
+  "back": "<b>Answer:</b> Construction runs the base subobjects first, then the members in declaration order, then the body of the derived constructor. Destruction is the exact reverse: body of the derived destructor, then members in reverse declaration order, then the base destructor.<br><b>Code:</b><pre><code>#include &lt;iostream&gt;\n\nstruct Base {\n    Base() { std::cout &lt;&lt; \"Base ctor\\n\"; }\n    ~Base() { std::cout &lt;&lt; \"Base dtor\\n\"; }\n};\n\nstruct Member {\n    Member() { std::cout &lt;&lt; \"Member ctor\\n\"; }\n    ~Member() { std::cout &lt;&lt; \"Member dtor\\n\"; }\n};\n\nstruct Derived : Base {\n    Member m;\n    Derived() { std::cout &lt;&lt; \"Derived ctor\\n\"; }\n    ~Derived() { std::cout &lt;&lt; \"Derived dtor\\n\"; }\n};\n\nint main() {\n    Derived d;\n}</code></pre><b>Output:</b><pre><code>Base ctor\nMember ctor\nDerived ctor\nDerived dtor\nMember dtor\nBase dtor</code></pre><b>Interview trap:</b> the base constructor cannot see the derived part of the object yet (see the card on virtual calls in constructors). The base destructor here is not virtual, which matters when deleting through a base pointer.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "inheritance",
+   "constructors",
+   "destructors",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A base class has <code>virtual double price() const</code>, and a derived class overrides it with <code>override</code>. What does <code>r.price()</code> call when <code>r</code> is an <code>Instrument&amp;</code> bound to a <code>Bond</code>, and what would it call if <code>virtual</code> were missing?",
+  "back": "<b>Answer:</b> Dynamic dispatch selects the function by the dynamic type of the object. Through a reference or pointer to <code>Instrument</code>, a <code>Bond</code> still runs <code>Bond::price</code>. Without <code>virtual</code> the call is resolved by the static type, so <code>Instrument::price</code> runs. <code>override</code> asks the compiler to check that a virtual function with the same signature exists in a base class. It has no runtime cost.<br><b>Code:</b><pre><code>#include &lt;iostream&gt;\n\nstruct Instrument {\n    virtual double price() const { return 0.0; }\n};\n\nstruct Bond : Instrument {\n    double price() const override { return 100.25; }\n};\n\nint main() {\n    Bond b;\n    Instrument* p = &amp;b;\n    Instrument&amp; r = b;\n    std::cout &lt;&lt; p-&gt;price() &lt;&lt; ' ' &lt;&lt; r.price() &lt;&lt; '\\n';\n}</code></pre><b>Output:</b><pre><code>100.25 100.25</code></pre><b>Interview trap:</b> a function that is virtual in a base stays virtual in every derived class, with or without the keyword. The keyword is a check for the compiler, not an instruction to the machine.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "virtual",
+   "override",
+   "dynamic_dispatch",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does this program print? Then explain what changes if <code>override</code> is added to <code>Bond::price</code>.<pre><code>#include &lt;iostream&gt;\n\nstruct Instrument {\n    virtual double price() const { return 0.0; }\n};\n\nstruct Bond : Instrument {\n    double price() { return 100.0; }     // const missing: a different function\n};\n\nint main() {\n    Bond b;\n    Instrument&amp; r = b;\n    std::cout &lt;&lt; r.price() &lt;&lt; '\\n';\n}</code></pre>",
+  "back": "<b>Answer:</b> It prints 0. <code>Bond::price()</code> lacks <code>const</code>, so it is a new function that does not override the base virtual. A call through <code>Instrument&amp;</code> still runs the base version, <code>Instrument::price() const</code>. GCC warns with -Woverloaded-virtual that the base function was hidden.<br><b>Observed:</b><pre><code>0</code></pre><b>With override:</b> the line becomes <code>double price() override</code>. GCC rejects it: 'Bond::price()' marked 'override', but does not override. The check costs nothing at runtime, and it turns a silent bug into a compile error.<br><b>Interview trap:</b> the usual mismatches are a missing <code>const</code>, a different parameter type such as <code>int</code> for <code>double</code>, and a missing reference qualifier. Make <code>override</code> mandatory in review.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "override",
+   "virtual",
+   "signature_mismatch",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A class marked {{c1::final}} cannot be used as a base class. A virtual function marked {{c2::final}} cannot be overridden in any derived class.",
+  "back": "<b>Code:</b><pre><code>#include &lt;iostream&gt;\n\nstruct Base {\n    virtual double f() const { return 1.0; }\n    virtual ~Base() = default;\n};\n\nstruct Mid final : Base {\n    double f() const override { return 2.0; }\n};\n// struct Bad : Mid {};    // error: cannot derive from 'final' base 'Mid'\n\nint main() {\n    Mid m;\n    const Base&amp; r = m;\n    std::cout &lt;&lt; r.f() &lt;&lt; '\\n';\n}</code></pre><b>Output:</b><pre><code>2</code></pre>Uncommenting the derived class gives GCC's error: cannot derive from 'final' base 'Mid'.<br><b>Interview trap:</b> <code>final</code> is also a hint to the optimiser: a call through an object whose dynamic type is known to be final can be devirtualised. Treat that as an optimisation the compiler may apply, not a guarantee the program relies on.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "final",
+   "virtual",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What makes <code>Instrument</code> an abstract class, and what does the compiler say if you declare a variable <code>Instrument i;</code>?",
+  "back": "<b>Answer:</b> A pure virtual function, declared <code>= 0</code>. Here <code>price()</code> is pure. The class can be a base and can be used through pointers and references, but it cannot be instantiated. A pure virtual function can still have a body, which derived classes can call with an explicit qualification.<br><b>Code:</b><pre><code>#include &lt;iostream&gt;\n#include &lt;memory&gt;\n#include &lt;vector&gt;\n\nclass Instrument {\npublic:\n    virtual ~Instrument() = default;\n    virtual double price() const = 0;      // pure virtual\n};\n\nclass Bond : public Instrument {\npublic:\n    Bond(double face, double px) : face_(face), px_(px) {}\n    double price() const override { return face_ * px_ / 100.0; }\nprivate:\n    double face_, px_;\n};\n\nint main() {\n    // Instrument i;                        // error: abstract type\n    std::vector&lt;std::unique_ptr&lt;Instrument&gt;&gt; book;\n    book.push_back(std::make_unique&lt;Bond&gt;(1e6, 99.5));\n    std::cout &lt;&lt; book[0]-&gt;price() &lt;&lt; '\\n';\n}</code></pre><b>Output:</b><pre><code>995000</code></pre>Declaring <code>Instrument i;</code> gives GCC's error: cannot declare variable 'i' to be of abstract type 'Instrument', with a note that 'price' is pure within 'Instrument'.<br><b>Interview trap:</b> an interface with virtual functions must also have a virtual destructor. Otherwise <code>std::unique_ptr&lt;Instrument&gt;</code> deletes a <code>Bond</code> through a base pointer with undefined behaviour (see the next card).",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "abstract_class",
+   "pure_virtual",
+   "interface",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A <code>Derived</code> object with its own destructor is deleted through a <code>Base*</code> whose destructor is not virtual. What happens, and what is the fix?",
+  "back": "<b>Answer:</b> Deleting through a base pointer whose destructor is not virtual has undefined behaviour. In practice only the base destructor runs. The derived destructor is never called, so the 1000-element array in <code>Derived</code> leaks, and so would any resource the derived part owns. The fix is <code>virtual ~Base() = default;</code>, so the delete dispatches to the most-derived destructor. GCC warns about this with -Wdelete-non-virtual-dtor when the base has a virtual function.<br><b>Code:</b><pre><code>#include &lt;iostream&gt;\n\nstruct Base {\n    virtual double price() const { return 0.0; }\n    ~Base() { std::cout &lt;&lt; \"~Base\\n\"; }       // non-virtual destructor\n};\n\nstruct Derived : Base {\n    double* hist = new double[1000];\n    double price() const override { return 1.0; }\n    ~Derived() { std::cout &lt;&lt; \"~Derived\\n\"; delete[] hist; }\n};\n\nint main() {\n    Base* p = new Derived;\n    delete p;                                  // undefined behaviour: ~Derived never runs\n}</code></pre><b>Output:</b><pre><code>~Base</code></pre><b>Interview trap:</b> the bug is silent in small tests. Any class with a virtual function needs a virtual destructor. The alternative for a base that must never be deleted through a pointer is a protected non-virtual destructor.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "virtual_destructor",
+   "polymorphism",
+   "undefined_behaviour",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does the compiler add to a class with virtual functions, what does a virtual call compile to, and what does it cost in size and time?",
+  "back": "<b>Answer:</b> One vtable per polymorphic class: an array of function pointers, one slot per virtual function. Each object of such a class carries a hidden vptr. On the Itanium C++ ABI, used by GCC and Clang on Linux and macOS, the vptr is the first member at offset 0. A virtual call loads the vptr from the object, loads the slot for the function from the vtable, and calls through that pointer. MSVC uses a different ABI. Size: the vptr adds 8 bytes on x86-64. Time: one extra dependent load, an indirect branch the CPU has to predict, and no inlining unless the compiler can devirtualise.<br><b>Code:</b><pre><code>#include &lt;cstring&gt;\n#include &lt;iostream&gt;\n\nstruct Plain { double x; };\n\nstruct Poly {\n    double x;\n    explicit Poly(double v) : x(v) {}\n    virtual double f() const { return x; }\n};\n\nstruct PolyD : Poly {\n    using Poly::Poly;\n    double f() const override { return 2 * x; }\n};\n\nconst void* vptr_of(const void* obj) {         // Itanium C++ ABI: vptr at offset 0\n    const void* vp;\n    std::memcpy(&amp;vp, obj, sizeof vp);\n    return vp;\n}\n\nint main() {\n    std::cout &lt;&lt; sizeof(Plain) &lt;&lt; ' ' &lt;&lt; sizeof(Poly) &lt;&lt; '\\n';\n    Poly a{1.0};\n    PolyD b{3.0};\n    std::cout &lt;&lt; (vptr_of(&amp;a) == vptr_of(&amp;b)) &lt;&lt; '\\n';\n    const Poly* p = &amp;b;\n    std::cout &lt;&lt; p-&gt;f() &lt;&lt; '\\n';\n}</code></pre><b>Output:</b><pre><code>8 16\n0\n6</code></pre>Read the output as: <code>Plain</code> is 8 bytes and <code>Poly</code> is 16 because of the vptr. The vptrs of <code>Poly</code> and <code>PolyD</code> differ. The call through a <code>Poly*</code> dispatches to <code>PolyD::f</code>, giving 2 * 3 = 6.<br><b>Interview trap:</b> the vptr location and layout are implementation details. The <code>memcpy</code> in the snippet reads it for illustration only. Do not rely on it in production code.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "vtable",
+   "vptr",
+   "virtual_call_cost",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is object slicing? For <code>Swap s; show_by_value(s); show_by_ref(s);</code>, where <code>show_by_value</code> takes an <code>Instrument</code> by value and <code>show_by_ref</code> takes a <code>const Instrument&amp;</code>, what does each call print?",
+  "back": "<b>Answer:</b> Slicing happens when an object of a derived class is copied into an object of the base type. Only the base subobject is copied, so the derived members are lost and the copy carries the base's vtable. Inside <code>show_by_value</code> the call resolves to <code>Instrument::name</code>. The reference keeps the whole object, so the call resolves to <code>Swap::name</code>.<br><b>Code:</b><pre><code>#include &lt;iostream&gt;\n\nstruct Instrument {\n    virtual ~Instrument() = default;\n    virtual const char* name() const { return \"Instrument\"; }\n    double notional = 1.0;\n};\n\nstruct Swap : Instrument {\n    const char* name() const override { return \"Swap\"; }\n    double fixed_rate = 0.03;\n};\n\nvoid show_by_value(Instrument i) { std::cout &lt;&lt; i.name() &lt;&lt; '\\n'; }\nvoid show_by_ref(const Instrument&amp; i) { std::cout &lt;&lt; i.name() &lt;&lt; '\\n'; }\n\nint main() {\n    Swap s;\n    show_by_value(s);     // sliced copy: Instrument part only, dynamic type lost\n    show_by_ref(s);       // no slicing\n}</code></pre><b>Output:</b><pre><code>Instrument\nSwap</code></pre><b>Interview trap:</b> a <code>std::vector&lt;Instrument&gt;</code> holding swaps slices every element on insertion. Store <code>std::unique_ptr&lt;Instrument&gt;</code>, or pass by const reference.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "slicing",
+   "inheritance",
+   "value_semantics",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does the program below print, and why does the call to <code>name()</code> inside the <code>Base</code> constructor not reach <code>Derived::name</code>?",
+  "back": "<b>Answer:</b> <code>Base::name</code>. During the base constructor the dynamic type of the object is <code>Base</code>. The vptr is set to <code>Base</code>'s vtable before the base constructor body runs, and it changes to <code>Derived</code>'s only when the <code>Derived</code> constructor starts. The same holds in destructors, where the dynamic type has already reverted to the base. If <code>name</code> were pure virtual in <code>Base</code>, the call would be undefined behaviour, and the program terminates.<br><b>Code:</b><pre><code>#include &lt;iostream&gt;\n\nstruct Base {\n    Base() { std::cout &lt;&lt; \"Base sees: \" &lt;&lt; name() &lt;&lt; '\\n'; }\n    virtual const char* name() const { return \"Base\"; }\n    virtual ~Base() = default;\n};\n\nstruct Derived : Base {\n    const char* name() const override { return \"Derived\"; }\n};\n\nint main() {\n    Derived d;\n    std::cout &lt;&lt; \"after: \" &lt;&lt; d.name() &lt;&lt; '\\n';\n}</code></pre><b>Output:</b><pre><code>Base sees: Base\nafter: Derived</code></pre><b>Interview trap:</b> a common design is a separate <code>init()</code> called after construction, or a CRTP base. A derived class that expects to customise the base during construction will silently not do it.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "virtual_call",
+   "constructors",
+   "vptr",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "In a diamond, <code>Bottom</code> inherits from <code>Left</code> and <code>Right</code>, which both inherit from <code>Base</code>. How many <code>Base</code> subobjects does a <code>Bottom</code> have with virtual inheritance, and how many without? Which constructor runs once?",
+  "back": "<b>Answer:</b> With <code>virtual</code> inheritance there is one shared <code>Base</code> subobject. It is constructed once, by the most-derived class, before <code>Left</code> and <code>Right</code>. Without it there are two copies, and <code>Base</code> is constructed twice. The output shows both sequences. Sizes are compiler-specific: GCC on x86-64 gives 24 and 8. The non-virtual diamond also makes <code>nb.id</code> ambiguous, which GCC reports as 'request for member id is ambiguous'.<br><b>Code:</b><pre><code>#include &lt;iostream&gt;\n\nstruct Base {\n    Base() { std::cout &lt;&lt; \"Base ctor\\n\"; }\n    int id = 0;\n};\nstruct Left : virtual Base { Left() { std::cout &lt;&lt; \"Left\\n\"; } };\nstruct Right : virtual Base { Right() { std::cout &lt;&lt; \"Right\\n\"; } };\nstruct Bottom : Left, Right { Bottom() { std::cout &lt;&lt; \"Bottom\\n\"; } };\n\nstruct NLeft : Base {};\nstruct NRight : Base {};\nstruct NBottom : NLeft, NRight {};\n\nint main() {\n    std::cout &lt;&lt; \"virtual diamond:\\n\";\n    Bottom b;\n    b.id = 5;                                  // unambiguous: one Base subobject\n    std::cout &lt;&lt; sizeof(Bottom) &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"non-virtual diamond:\\n\";\n    NBottom nb;\n    std::cout &lt;&lt; sizeof(NBottom) &lt;&lt; '\\n';\n    // nb.id = 1;                              // error: request for member 'id' is ambiguous\n}</code></pre><b>Output:</b><pre><code>virtual diamond:\nBase ctor\nLeft\nRight\nBottom\n24\nnon-virtual diamond:\nBase ctor\nBase ctor\n8</code></pre><b>Interview trap:</b> with a virtual base the most-derived class initialises it, so <code>Bottom</code>'s constructor list decides the arguments of <code>Base</code> and <code>Left</code> and <code>Right</code> lose their say. Virtual bases cost an extra pointer per object and a lookup on access. Prefer composition, or a single inheritance chain, unless the design needs the shared base.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "multiple_inheritance",
+   "diamond",
+   "virtual_inheritance",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "For a swap that needs a pricing engine, why compose the trade with a <code>PricingEngine</code> owned through <code>std::unique_ptr</code>, rather than deriving a swap class from the engine?",
+  "back": "<b>Answer:</b> A swap is not a pricing engine. The engine is an interchangeable behaviour, which is the strategy pattern. Composition lets one trade switch model at runtime with <code>set_engine</code>, lets many trades share an engine type, and avoids a combinatorial hierarchy such as LinearSwap and ScaledSwap. The code prices a 1m swap with 3% fixed, marked at 3.5%, so the excess rate is 0.5%. It prices once with a linear engine and then swaps the engine.<br><b>Code:</b><pre><code>#include &lt;iostream&gt;\n#include &lt;memory&gt;\n#include &lt;utility&gt;\n\nclass PricingEngine {\npublic:\n    virtual ~PricingEngine() = default;\n    virtual double npv(double notional, double excess_rate) const = 0;\n};\n\nclass LinearEngine : public PricingEngine {\npublic:\n    double npv(double n, double r) const override { return n * r; }\n};\n\nclass ScaledEngine : public PricingEngine {\npublic:\n    double npv(double n, double r) const override { return 2.0 * n * r; }\n};\n\nclass PaySwap {                                       // composition: owns a strategy\npublic:\n    PaySwap(double notional, double fixed, std::unique_ptr&lt;PricingEngine&gt; e)\n        : notional_(notional), fixed_(fixed), engine_(std::move(e)) {}\n    void set_engine(std::unique_ptr&lt;PricingEngine&gt; e) { engine_ = std::move(e); }\n    double value(double market) const { return engine_-&gt;npv(notional_, market - fixed_); }\nprivate:\n    double notional_;\n    double fixed_;\n    std::unique_ptr&lt;PricingEngine&gt; engine_;\n};\n\nint main() {\n    PaySwap s{1e6, 0.03, std::make_unique&lt;LinearEngine&gt;()};\n    std::cout &lt;&lt; s.value(0.035) &lt;&lt; '\\n';\n    s.set_engine(std::make_unique&lt;ScaledEngine&gt;());\n    std::cout &lt;&lt; s.value(0.035) &lt;&lt; '\\n';\n}</code></pre><b>Output:</b><pre><code>5000\n10000</code></pre><b>Interview trap:</b> <code>unique_ptr</code> makes the owner move-only and gives each trade its own engine. A calibrated model shared across a book should be a <code>shared_ptr</code>, or passed by reference into <code>value()</code>. The virtual call is a small cost next to the model's own work.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "composition",
+   "strategy",
+   "pricing_engine",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compare an abstract interface with pure virtual <code>price()</code> to a template that calls <code>x.price()</code> on each element. Which one can hold a <code>Bond</code> and a <code>Swap</code> in one container, and what does each cost at runtime?",
+  "back": "<b>Answer:</b> The virtual interface does runtime polymorphism. One container of <code>std::unique_ptr&lt;IPricer&gt;</code> holds mixed types. Each element costs a heap allocation and an indirect call per use, and the code is compiled once. The template does compile-time polymorphism. Each type gets its own instantiation with no vtable, and the calls can be inlined. A <code>std::vector&lt;T&gt;</code> holds one type only, and code size grows with the number of types.<br><b>Code:</b><pre><code>#include &lt;iostream&gt;\n#include &lt;memory&gt;\n#include &lt;vector&gt;\n\n// Runtime polymorphism: one interface, heterogeneous containers\nstruct IPricer { virtual ~IPricer() = default; virtual double price() const = 0; };\nstruct BondP : IPricer { double price() const override { return 99.0; } };\nstruct SwapP : IPricer { double price() const override { return 1.5; } };\n\ndouble sum_virtual(const std::vector&lt;std::unique_ptr&lt;IPricer&gt;&gt;&amp; xs) {\n    double s = 0;\n    for (const auto&amp; x : xs) s += x-&gt;price();\n    return s;\n}\n\n// Compile-time polymorphism: each T is a separate instantiation, no vtable\nstruct BondT { double price() const { return 99.0; } };\nstruct SwapT { double price() const { return 1.5; } };\n\ntemplate &lt;class T&gt;\ndouble sum_template(const std::vector&lt;T&gt;&amp; xs) {\n    double s = 0;\n    for (const auto&amp; x : xs) s += x.price();\n    return s;\n}\n\nint main() {\n    std::vector&lt;std::unique_ptr&lt;IPricer&gt;&gt; v;\n    v.push_back(std::make_unique&lt;BondP&gt;());\n    v.push_back(std::make_unique&lt;SwapP&gt;());\n    std::cout &lt;&lt; sum_virtual(v) &lt;&lt; '\\n';\n    std::cout &lt;&lt; sum_template(std::vector&lt;BondT&gt;{BondT{}, BondT{}}) &lt;&lt; '\\n';\n}</code></pre><b>Output:</b><pre><code>100.5\n198</code></pre><b>Interview trap:</b> the choice depends on whether the set of types is known at compile time. A hot loop over one type favours templates. A heterogeneous book favours virtual dispatch or <code>std::variant</code>. Concepts (C++20) constrain the template. Module 4 covers this in detail.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "interfaces",
+   "templates",
+   "polymorphism",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does this program print, and when is each <code>Guard</code> destroyed relative to the <code>catch</code> block?<pre><code>#include &lt;iostream&gt;\n#include &lt;stdexcept&gt;\n#include &lt;string&gt;\n#include &lt;utility&gt;\n\nstruct Guard {\n    std::string tag;\n    explicit Guard(std::string t) : tag(std::move(t)) {}\n    ~Guard() { std::cout &lt;&lt; \"release \" &lt;&lt; tag &lt;&lt; '\\n'; }\n};\n\nvoid price_leg(double rate) {\n    Guard g{\"leg\"};\n    if (rate &lt; 0) throw std::invalid_argument(\"negative rate\");\n    std::cout &lt;&lt; \"priced at \" &lt;&lt; rate &lt;&lt; '\\n';\n}\n\nint main() {\n    try {\n        price_leg(0.02);\n        price_leg(-0.01);\n    } catch (const std::invalid_argument&amp; e) {      // catch by const reference\n        std::cout &lt;&lt; \"caught: \" &lt;&lt; e.what() &lt;&lt; '\\n';\n    }\n}</code></pre>",
+  "back": "<b>Answer:</b> The first call completes normally, prints the priced line, and releases its guard at the end of the function. The second call throws before printing. Stack unwinding destroys its guard as the exception leaves <code>price_leg</code>, so the release message appears before control reaches the <code>catch</code> block. The handler takes the exception by const reference.<br><b>Output:</b><pre><code>priced at 0.02\nrelease leg\nrelease leg\ncaught: negative rate</code></pre><b>Interview trap:</b> catching by value slices a derived exception type and copies it. Throwing by value and catching by const reference is the default. A destructor that throws during unwinding calls <code>std::terminate</code>.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "exceptions",
+   "stack_unwinding",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A class has two data members of class type, <code>a_</code> and <code>b_</code>. Its constructor throws after both members are built. Which destructors run, in what order, and is the class's own destructor called?",
+  "back": "<b>Answer:</b> The class's own destructor does not run, because the object never finished construction. The fully constructed members are destroyed in reverse order of construction, so <code>b_</code> is released before <code>a_</code>. The catch clause runs after that cleanup.<br><b>Code:</b><pre><code>#include &lt;iostream&gt;\n#include &lt;stdexcept&gt;\n#include &lt;string&gt;\n#include &lt;utility&gt;\n\nstruct Resource {\n    std::string name;\n    explicit Resource(std::string n) : name(std::move(n)) { std::cout &lt;&lt; \"acquire \" &lt;&lt; name &lt;&lt; '\\n'; }\n    ~Resource() { std::cout &lt;&lt; \"release \" &lt;&lt; name &lt;&lt; '\\n'; }\n};\n\nclass Pricer {\npublic:\n    explicit Pricer(bool fail) : a_(\"a\"), b_(\"b\") {\n        if (fail) throw std::runtime_error(\"ctor failed\");\n    }\n    ~Pricer() { std::cout &lt;&lt; \"~Pricer\\n\"; }     // never runs if the constructor throws\nprivate:\n    Resource a_;\n    Resource b_;\n};\n\nint main() {\n    try {\n        Pricer p{true};\n    } catch (const std::runtime_error&amp; e) {\n        std::cout &lt;&lt; \"caught: \" &lt;&lt; e.what() &lt;&lt; '\\n';\n    }\n}</code></pre><b>Output:</b><pre><code>acquire a\nacquire b\nrelease b\nrelease a\ncaught: ctor failed</code></pre><b>Interview trap:</b> a raw owning pointer member leaks if the constructor throws after allocating it, because nothing destroys the half-built object. Members that own resources, such as <code>unique_ptr</code> or <code>vector</code>, make constructors exception safe without extra code.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "constructors",
+   "exceptions",
+   "raii",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why should a move constructor be marked <code>noexcept</code>? Use <code>std::vector</code> reallocation in your answer, and say what happens if a <code>noexcept</code> function throws.",
+  "back": "<b>Answer:</b> When a vector reallocates, it moves its elements into a new block. If an element's move constructor can throw, a failure halfway would leave the old vector partly moved and impossible to restore. So the vector moves only when the move constructor is <code>noexcept</code>, and otherwise copies, provided the element is copyable. This is <code>std::move_if_noexcept</code>. An exception leaving a <code>noexcept</code> function calls <code>std::terminate</code>.<br><b>Code:</b><pre><code>#include &lt;iostream&gt;\n#include &lt;vector&gt;\n\nstruct ThrowingMove {\n    ThrowingMove() = default;\n    ThrowingMove(const ThrowingMove&amp;) { std::cout &lt;&lt; \"copy\\n\"; }\n    ThrowingMove(ThrowingMove&amp;&amp;) { std::cout &lt;&lt; \"move (not noexcept)\\n\"; }\n};\n\nstruct SafeMove {\n    SafeMove() = default;\n    SafeMove(const SafeMove&amp;) { std::cout &lt;&lt; \"copy\\n\"; }\n    SafeMove(SafeMove&amp;&amp;) noexcept { std::cout &lt;&lt; \"move (noexcept)\\n\"; }\n};\n\nint main() {\n    std::vector&lt;ThrowingMove&gt; a;\n    a.emplace_back();\n    std::cout &lt;&lt; \"-- grow --\\n\";\n    a.emplace_back();\n    std::cout &lt;&lt; \"-- SafeMove --\\n\";\n    std::vector&lt;SafeMove&gt; b;\n    b.emplace_back();\n    std::cout &lt;&lt; \"-- grow --\\n\";\n    b.emplace_back();\n}</code></pre><b>Output:</b><pre><code>-- grow --\ncopy\n-- SafeMove --\n-- grow --\nmove (noexcept)</code></pre>The first <code>emplace_back</code> into an empty vector does not move anything. The second one reallocates: <code>ThrowingMove</code> is copied, and <code>SafeMove</code> is moved.<br><b>Interview trap:</b> <code>noexcept</code> is part of the function's contract, and the library relies on it. Marking a function <code>noexcept</code> only because it does not throw today is a promise that a later change can break, and then the program terminates. Check <code>std::is_nothrow_move_constructible</code> when a template depends on it.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "noexcept",
+   "move_semantics",
+   "vector",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Implement copy assignment for <code>Buffer</code> by copy-and-swap. Why does it give the strong guarantee, and why does self-assignment need no special check?",
+  "back": "<b>Answer:</b> The parameter is taken by value, so the copy is made at the call site by the copy constructor. If that copy throws, <code>*this</code> is untouched. The swap is <code>noexcept</code> and only exchanges the pointer and the size. The old block then belongs to the parameter and is freed when it goes out of scope. Self-assignment works because the parameter is already a copy of the right-hand side, so the swap exchanges with that copy, not with the object itself.<br><b>Code:</b><pre><code>#include &lt;cstddef&gt;\n#include &lt;iostream&gt;\n#include &lt;utility&gt;\n\nclass Buffer {\npublic:\n    explicit Buffer(std::size_t n) : data_(new double[n]()), n_(n) {}\n    Buffer(const Buffer&amp; o) : data_(new double[o.n_]), n_(o.n_) {\n        for (std::size_t i = 0; i &lt; n_; ++i) data_[i] = o.data_[i];\n    }\n    Buffer&amp; operator=(Buffer o) noexcept {     // copy already made by the caller's copy ctor\n        swap(o);\n        return *this;                           // o now owns the old block and frees it\n    }\n    ~Buffer() { delete[] data_; }\n    void swap(Buffer&amp; o) noexcept {\n        std::swap(data_, o.data_);\n        std::swap(n_, o.n_);\n    }\n    double&amp; operator[](std::size_t i) { return data_[i]; }\n    std::size_t size() const { return n_; }\nprivate:\n    double* data_;\n    std::size_t n_;\n};\n\nint main() {\n    Buffer a{2};\n    a[0] = 1.5;\n    Buffer b{1};\n    b = a;\n    b[0] = 9.0;\n    std::cout &lt;&lt; a[0] &lt;&lt; ' ' &lt;&lt; b[0] &lt;&lt; ' ' &lt;&lt; b.size() &lt;&lt; '\\n';\n    a = a;\n    std::cout &lt;&lt; a[0] &lt;&lt; '\\n';\n}</code></pre><b>Output:</b><pre><code>1.5 9 2\n1.5</code></pre><b>Interview trap:</b> copy-and-swap always allocates, even when the existing buffer could be reused. Reusing the buffer is faster, but it gives up the strong guarantee unless it is written with care. The pattern is RAII plus commit at the end: nothing is changed until the work that can throw is finished.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "copy_and_swap",
+   "exception_safety",
+   "strong_guarantee",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Under the basic guarantee, a failed operation leaves no leaks and a valid object. Under the {{c1::strong}} guarantee, a failed operation leaves the state unchanged. Under the {{c2::nothrow}} guarantee, the operation never throws.",
+  "back": "<b>Follow-up:</b> the other guarantees depend on <code>swap</code>, destructors and <code>delete</code> being nothrow, which is why copy-and-swap works. The strong guarantee covers the object itself, not effects on other objects. A function that updates a global registry before a step that can throw breaks the strong guarantee unless it commits the registry last.<br><b>Interview trap:</b> a function that changes shared state and then throws leaves that state changed. Commit external effects only after the last step that can throw.",
+  "tags": [
+   "cpp",
+   "cpp_m2",
+   "exception_safety",
+   "guarantees",
+   "noexcept",
+   "lvl_vp_core"
+  ]
+ }
+]

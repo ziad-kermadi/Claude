@@ -1,0 +1,504 @@
+[
+ {
+  "type": "basic",
+  "front": "You are a Python quant. In Python, <code>b = a</code> makes both names refer to one list, so <code>b.append(4)</code> also changes <code>a</code>. What does the C++ equivalent do with <code>std::vector&lt;int&gt; b = a; b.push_back(4);</code>, and what are the three default mental-model differences from Python you must internalise?",
+  "back": "<b>Headline:</b> in C++ <code>=</code> copies the whole object by default. Python binds a second name to the same object; C++ shares only through an explicit <code>&amp;</code> or pointer.<br><pre><code>#include &lt;iostream&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::vector&lt;int&gt; a{1, 2, 3};\n    std::vector&lt;int&gt; b = a;     // copies all elements\n    b.push_back(4);\n    std::cout &lt;&lt; a.size() &lt;&lt; ' ' &lt;&lt; b.size() &lt;&lt; '\\n';\n}</code></pre>Output: <code>3 4</code> (<code>a</code> is unchanged).<br><br><b>Three defaults to internalise:</b><ul><li><b>Static types:</b> every variable has a type fixed at compile time; the compiler rejects <code>int x = \"hi\";</code> before the program runs.</li><li><b>No garbage collector:</b> an automatic object is destroyed when execution leaves its scope. Heap memory is released by its owner, usually a <code>std::vector</code> or <code>std::unique_ptr</code>, not by a collector.</li><li><b>Value semantics:</b> assignment and by-value parameters copy the object. Sharing needs <code>&amp;</code> or a pointer.</li></ul><b>Interview trap:</b> the Python habit of passing containers around freely becomes a silent deep copy here. The compiler does not warn about it.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "mental_model",
+   "value_semantics",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In C++ every variable's type is fixed at {{c1::compile time}}, so <code>int x = \"hi\";</code> is rejected before the program runs. C++ has no {{c2::garbage collector}}: an object with automatic storage is destroyed when execution leaves its {{c3::scope}}.",
+  "back": "Python allows <code>x = 1; x = \"hi\"</code> because a name is a binding to a typed object, and the binding can change. In C++ the variable is the typed storage itself.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "mental_model",
+   "static_typing",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Walk through what happens between <code>main.cpp</code> and an executable for <code>g++ -std=c++20 main.cpp other.cpp -o app</code>. Name each stage, the artefact it produces, and which stage reports each kind of error.",
+  "back": "<ol><li><b>Preprocessor:</b> expands <code>#include</code> (a textual paste of the header), <code>#define</code>, and <code>#if</code>. Output: one translation unit (TU) per <code>.cpp</code>. Inspect with <code>g++ -E</code>.</li><li><b>Compiler:</b> parses and type-checks each TU, optimises it, and emits machine code. Syntax and type errors come from here. Each TU is compiled separately; <code>-c</code> stops here and writes <code>.o</code>.</li><li><b>Assembler:</b> turns assembly (<code>-S</code>) into an object file that contains defined symbols and a list of unresolved references.</li><li><b>Linker:</b> matches every reference to exactly one definition across all object files and libraries and writes the executable. <code>undefined reference</code> and <code>multiple definition</code> come from here.</li></ol>A header's text is compiled once in every <code>.cpp</code> that includes it. Changing a header recompiles all its includers; changing a <code>.cpp</code> recompiles only that file, then relinks.<br><br><b>Interview trap:</b> a missing semicolon is a compile error and stops at stage 2. A missing function body is a link error at stage 4, after every file compiled cleanly.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "toolchain",
+   "compilation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What goes in a header and what goes in a <code>.cpp</code> file? Why does a header hold declarations, and what does <code>#include \"x.hpp\"</code> actually do?",
+  "back": "<b>Headline:</b> <code>#include</code> is a textual paste done by the preprocessor. The header lets every TU see the same declarations.<br><br><ul><li><b>Declaration</b> says a name exists and gives its type: <code>double discount_factor(double r, double t);</code>. It can appear any number of times.</li><li><b>Definition</b> gives the body or storage. An ordinary function or non-inline variable must be defined in exactly one TU.</li><li><b>Headers hold:</b> declarations, class definitions (the compiler needs the layout for <code>sizeof</code> and members), <code>inline</code> and template functions (their bodies must be visible wherever they are used), and <code>constexpr</code> functions.</li><li><b>.cpp files hold:</b> ordinary function bodies and variable definitions.</li></ul><b>Interview trap:</b> putting a non-inline function body in a header breaks the one-definition rule the moment two .cpp files include it (card on ODR below).",
+  "tags": [
+   "cpp",
+   "language_core",
+   "toolchain",
+   "headers",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A header included twice in one translation unit is protected by an include guard: <code>#ifndef RATES_HPP</code>, <code>#define RATES_HPP</code>, body, <code>#endif</code>. <code>#pragma once</code> does the same job and is {{c1::supported by all major compilers but is not part of the ISO standard}}. Without a guard, a class defined twice in one TU gives a {{c2::redefinition}} error.",
+  "back": "Guards stop a second copy of the text within a single TU. They do nothing about the same function defined in two different .cpp files; that is a linker problem (ODR).",
+  "tags": [
+   "cpp",
+   "language_core",
+   "toolchain",
+   "headers",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the minimal C++ program that prints to stdout? Compile it with <code>g++ -std=c++20 -Wall -Wextra -O2</code> and state the output. Then explain what <code>int main()</code> must return and what happens if you write <code>void main()</code>.",
+  "back": "<pre><code>#include &lt;iostream&gt;\n\nint main() {\n    std::cout &lt;&lt; \"Hello, rates desk\\n\";\n    return 0;\n}</code></pre>Output: <code>Hello, rates desk</code><br><br><ul><li><code>&lt;iostream&gt;</code> provides <code>std::cout</code>. <code>&lt;&lt;</code> is the insertion operator.</li><li><code>main</code> must return <code>int</code>. The value is the process exit status. If you reach the closing brace of <code>main</code>, it returns 0 automatically; no other function gets that treatment.</li><li><code>void main()</code> is rejected by g++:<br><pre><code>main.cpp:3:1: error: ‘::main’ must return ‘int’\n    3 | void main() {\n      | ^~~~</code></pre></li></ul><b>Interview trap:</b> <code>std::endl</code> also flushes the stream, which is expensive inside a loop. Use <code>'\\n'</code> unless you need the flush.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "toolchain",
+   "syntax",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A translation unit calls <code>df(0.05, 1.0)</code>, and <code>df</code> is declared in a header but never defined. The compiler is happy and the linker fails with <code>undefined reference to 'df(double, double)'</code>. What causes this, and how do you fix it?",
+  "back": "<pre><code>double df(double r, double t);   // declared, never defined\n\nint main() {\n    return df(0.05, 1.0) &gt; 0 ? 0 : 1;\n}</code></pre>g++ output:<br><pre><code>/usr/bin/ld: &lt;obj&gt;: in function `main':\nmain.cpp:(.text.startup+0x19): undefined reference to `df(double, double)'\ncollect2: error: ld returned 1 exit status</code></pre><b>Cause:</b> the compiler checked the declaration; the linker found no object file or library that defines the symbol.<br><br><b>Fixes:</b><ul><li>Define <code>df</code> in a <code>.cpp</code> and add that file to the build command (or its <code>.o</code>).</li><li>Link the library that defines it, e.g. <code>-L/path -lpricing</code>.</li><li>Check the signature. C++ mangles the parameter types into the symbol name, so <code>df(double)</code> and <code>df(double,double)</code> are different symbols. Linking C code also needs <code>extern \"C\"</code> on the declaration.</li></ul><b>Interview trap:</b> a signature mismatch produces exactly this error even when the function exists. Compare the mangled names with <code>nm -C</code>.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "linking",
+   "compile_error",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "The header <code>dup.hpp</code> contains <code>double bump(double x) { return x + 1e-4; }</code> with no <code>inline</code>. Two .cpp files include it and the program is linked. What happens, and which rule does it break?",
+  "back": "<b>Rule:</b> the One Definition Rule (ODR). Each non-inline function or variable with external linkage must be defined exactly once in the whole program.<br><br><i>dup.hpp</i><pre><code>#pragma once\ndouble bump(double x) { return x + 1e-4; }   // non-inline definition in a header</code></pre><i>a.cpp</i><pre><code>#include \"dup.hpp\"\ndouble fa() { return bump(1.0); }</code></pre><i>main.cpp</i><pre><code>#include &lt;iostream&gt;\n#include \"dup.hpp\"\ndouble fa();\nint main() { std::cout &lt;&lt; fa() + bump(2.0) &lt;&lt; '\\n'; }</code></pre>Linker output:<br><pre><code>/usr/bin/ld: &lt;obj&gt;: in function `bump(double)':\na.cpp:(.text+0x0): multiple definition of `bump(double)'; &lt;obj&gt;:main.cpp:(.text+0x0): first defined here\ncollect2: error: ld returned 1 exit status</code></pre>Each TU receives its own copy of the header text, so each object file contains a definition of <code>bump</code>.<br><br><b>Fixes:</b> declare in the header and define in one .cpp; or mark the function <code>inline</code>, which permits identical definitions in every TU. Templates and <code>constexpr</code> functions are implicitly inline.<br><br><b>Interview trap:</b> the linker reports only duplicate external symbols. Many ODR violations, such as two different classes with the same name, link silently.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "linking",
+   "odr",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write the header/source split for a discount factor <code>discount_factor(r, t) = e^{-rt}</code> (continuous compounding). Give the header, the source, and a main that prints <code>discount_factor(0.05, 2.0)</code>. What does it print, and what build commands do you use?",
+  "back": "<i>discount.hpp</i><pre><code>#pragma once\n// Discount factor for a continuously compounded rate r over t years.\ndouble discount_factor(double r, double t);</code></pre><i>discount.cpp</i><pre><code>#include \"discount.hpp\"\n#include &lt;cmath&gt;\n\ndouble discount_factor(double r, double t) {\n    return std::exp(-r * t);\n}</code></pre><i>main.cpp</i><pre><code>#include &lt;iostream&gt;\n#include \"discount.hpp\"\n\nint main() {\n    std::cout &lt;&lt; discount_factor(0.05, 2.0) &lt;&lt; '\\n';\n}</code></pre>Build: <code>g++ -std=c++20 -Wall -Wextra -O2 -c discount.cpp</code>, then <code>g++ -std=c++20 -Wall -Wextra -O2 main.cpp discount.o -o split</code>.<br>Output: <code>0.904837</code> (that is \\(e^{-0.1}\\) to six significant digits).<br><br>The header carries only the declaration, so <code>&lt;cmath&gt;</code> stays in the .cpp and each include is cheap. A change to the .cpp rebuilds one object file.<br><br><b>Interview trap:</b> the call compiles with the arguments swapped. <code>discount_factor(2.0, 0.05)</code> returns the same value because the product \\(rt\\) is symmetric. The compiler checks types, not meaning; name parameters clearly and keep units in the name, e.g. <code>r_cont</code>, <code>t_years</code>.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "toolchain",
+   "headers",
+   "pricing_example",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "On this Linux x86-64 build, what are <code>sizeof(int)</code>, <code>sizeof(long)</code> and <code>sizeof(double)</code>? Which sizes does the standard guarantee and which are platform-specific? What does <code>--u</code> do to <code>unsigned int u = 0</code>?",
+  "back": "<pre><code>#include &lt;climits&gt;\n#include &lt;cstdint&gt;\n#include &lt;iostream&gt;\n\nint main() {\n    std::cout &lt;&lt; \"char      \" &lt;&lt; sizeof(char) &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"int       \" &lt;&lt; sizeof(int) &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"long      \" &lt;&lt; sizeof(long) &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"long long \" &lt;&lt; sizeof(long long) &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"double    \" &lt;&lt; sizeof(double) &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"INT_MAX   \" &lt;&lt; INT_MAX &lt;&lt; '\\n';\n    unsigned int u = 0;\n    --u;\n    std::cout &lt;&lt; \"0u - 1    \" &lt;&lt; u &lt;&lt; '\\n';\n    std::int64_t big = 3000000000LL;\n    std::cout &lt;&lt; \"int64 3e9 \" &lt;&lt; big &lt;&lt; '\\n';\n}</code></pre>Output:<br><code>char      1<br>int       4<br>long      8<br>long long 8<br>double    8<br>INT_MAX   2147483647<br>0u - 1    4294967295<br>int64 3e9 3000000000</code><br><br><ul><li>The standard fixes <code>sizeof(char) == 1</code> and sets minimum widths only (e.g. <code>int</code> at least 16 bits, <code>long</code> at least 32, <code>long long</code> at least 64).</li><li>Unsigned arithmetic is modular: <code>0u - 1</code> equals \\(2^{32}-1\\) = 4294967295 for a 32-bit unsigned int.</li><li>Use <code>std::int64_t</code> from <code>&lt;cstdint&gt;</code> when the width matters.</li></ul><b>Interview trap:</b> <code>long</code> is 8 bytes on Linux (LP64) and 4 bytes on 64-bit Windows (LLP64). A trade counter stored in <code>long</code> changes range across platforms. Signed overflow is a different matter: it is undefined behaviour (see the UB cards).",
+  "tags": [
+   "cpp",
+   "language_core",
+   "fundamental_types",
+   "unsigned",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What do these lines print: <code>7 / 2</code>, <code>7 / 2.0</code>, <code>-7 / 2</code>, <code>-7 % 3</code>? How do they differ from Python's <code>//</code> and <code>%</code>?",
+  "back": "<pre><code>#include &lt;iostream&gt;\n\nint main() {\n    int a = 7, b = 2;\n    std::cout &lt;&lt; a / b &lt;&lt; '\\n';                       // 3\n    std::cout &lt;&lt; 7 / 2.0 &lt;&lt; '\\n';                     // 3.5\n    std::cout &lt;&lt; static_cast&lt;double&gt;(a) / b &lt;&lt; '\\n';  // 3.5\n    std::cout &lt;&lt; -7 / 2 &lt;&lt; '\\n';                      // -3: truncates toward zero\n    std::cout &lt;&lt; -7 % 3 &lt;&lt; '\\n';                      // -1: sign follows dividend\n}</code></pre>Output (one per line): <code>3 , 3.5 , 3.5 , -3 , -1</code><br><br><b>Rules (C++11 and later):</b> integer division truncates toward zero, and the sign of <code>%</code> follows the dividend. <code>(a / b) * b + a % b == a</code> always holds.<br><b>Python:</b> <code>7 // 2 == 3</code> as in C++, but <code>-7 // 2 == -4</code> (floor) and <code>-7 % 3 == 2</code> (sign of the divisor).<br><br><b>Interview trap:</b> <code>double x = 7 / 2;</code> gives 3.0, because the division happens on ints before the conversion. Bucketing a negative quantity with integer division rounds toward zero, not down; use <code>std::floor</code> on a double when you need floor semantics.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "arithmetic",
+   "python_contrast",
+   "what_does_this_print",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with <code>int n{3.7};</code>, while <code>int m = 3.7;</code> compiles? Give the g++ error and the rule behind it. Then give the surprising behaviour of <code>std::vector&lt;int&gt; v{5}</code> versus <code>v(5)</code>.",
+  "back": "<pre><code>#include &lt;iostream&gt;\n\nint main() {\n    int n{3.7};          // narrowing double -&gt; int inside braces\n    std::cout &lt;&lt; n &lt;&lt; '\\n';\n}</code></pre>g++ error:<br><pre><code>main.cpp: In function ‘int main()’:\nmain.cpp:4:11: error: narrowing conversion of ‘3.7000000000000002e+0’ from ‘double’ to ‘int’ [-Wnarrowing]\n    4 |     int n{3.7};          // narrowing double -&gt; int inside braces\n      |           ^~~</code></pre><b>Rule:</b> list-initialisation (braces) rejects narrowing conversions that can lose value: floating to integer, and wider to narrower integer when the value may not fit. Copy-initialisation with <code>=</code> truncates silently: <code>int m = 3.7;</code> gives <code>3</code>.<br><br><b>Interview trap:</b> <code>std::vector&lt;int&gt; v1{5}</code> is one element holding 5; <code>std::vector&lt;int&gt; v2(5)</code> is five zeros. Braces prefer the initializer-list constructor. Output of the same comparison:<br><pre><code>#include &lt;iostream&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::vector&lt;int&gt; v1{5};     // list-initialisation: one element, value 5\n    std::vector&lt;int&gt; v2(5);     // parentheses: five elements, each 0\n    std::cout &lt;&lt; v1.size() &lt;&lt; ' ' &lt;&lt; v1[0] &lt;&lt; \" | \" &lt;&lt; v2.size() &lt;&lt; ' ' &lt;&lt; v2[0] &lt;&lt; '\\n';\n}</code></pre><code>1 5 | 5 0</code>",
+  "tags": [
+   "cpp",
+   "language_core",
+   "brace_init",
+   "conversions",
+   "trap",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What type does <code>auto</code> deduce in each case: <code>auto a = pillars;</code> with <code>const std::vector&lt;double&gt; pillars</code>; <code>const auto&amp; r = pillars;</code>; <code>auto x = 2.0f;</code>? How can you check the answer at compile time?",
+  "back": "<pre><code>#include &lt;type_traits&gt;\n#include &lt;vector&gt;\n\nint main() {\n    const std::vector&lt;double&gt; pillars{0.5, 1.0};\n    auto a = pillars;                       // top-level const dropped: std::vector&lt;double&gt;\n    static_assert(std::is_same_v&lt;decltype(a), std::vector&lt;double&gt;&gt;);\n    const auto&amp; r = pillars;                // const reference, no copy\n    static_assert(std::is_same_v&lt;decltype(r), const std::vector&lt;double&gt;&amp;&gt;);\n    auto x = 2.0f;                          // float\n    static_assert(std::is_same_v&lt;decltype(x), float&gt;);\n    return static_cast&lt;int&gt;(a.size()) - 2;  // 0\n}</code></pre>Compiles with no diagnostics. The <code>static_assert</code>s are checked by the compiler; the run gives <code>exit=0</code>.<br><br><ul><li><code>auto a = pillars;</code> is <code>std::vector&lt;double&gt;</code>: top-level <code>const</code> is dropped and the object is copied.</li><li><code>const auto&amp; r</code> is a <code>const std::vector&lt;double&gt;&amp;</code>: no copy.</li><li><code>auto x = 2.0f;</code> is <code>float</code>.</li></ul><b>Interview trap:</b> <code>auto x = 0;</code> is <code>int</code>, not <code>double</code>. Writing <code>auto a = container;</code> on a large object is a silent deep copy; write <code>const auto&amp;</code> when you only read.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "auto",
+   "type_deduction",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "<code>auto</code> deduces the type from the initialiser using template argument deduction. Top-level {{c1::const}} and {{c2::reference}} qualifiers are dropped, so <code>auto a = ref_to_const;</code> yields a {{c3::copy}}. Write {{c4::const auto&amp;}} to bind to the original without copying.",
+  "back": "The type is decided once, at the initialiser. <code>auto x = 1;</code> is <code>int</code>; <code>auto y = 1.0;</code> is <code>double</code>. Both are fixed for their lifetime.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "auto",
+   "type_deduction",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the difference between <code>const</code> and <code>constexpr</code>? Give an example where a <code>constexpr</code> function is checked at compile time, and state what the program prints.",
+  "back": "<pre><code>#include &lt;iostream&gt;\n\nconstexpr double bp = 1e-4;                                  // compile-time constant\nconstexpr double df_const(double r, double t) { return 1.0 / (1.0 + r * t); }\nstatic_assert(df_const(0.0, 5.0) == 1.0);                    // evaluated by the compiler\n\nint main() {\n    const double notional = 1e6;                             // read-only at run time\n    double dv01 = notional * bp;\n    std::cout &lt;&lt; bp &lt;&lt; ' ' &lt;&lt; dv01 &lt;&lt; '\\n';\n}</code></pre>Output: <code>0.0001 100</code><br><br><ul><li><code>const</code> means the object cannot be modified after initialisation. Its value may be known only at run time.</li><li><code>constexpr</code> requires the value to be a compile-time constant. A <code>constexpr</code> function can be evaluated at compile time when all its inputs are constant expressions. The same function still runs at run time with run-time arguments.</li><li><code>static_assert(df_const(0.0, 5.0) == 1.0)</code> is evaluated by the compiler; a false condition is a compile error.</li></ul><b>Interview trap:</b> <code>const double x = f(v);</code> compiles for any <code>v</code>. <code>constexpr double x = f(v);</code> fails unless <code>v</code> is a constant expression.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "const",
+   "constexpr",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compare references and pointers: declaration syntax, null, rebinding, and what <code>r = y;</code> does when <code>r</code> refers to <code>x</code>. Trace the code and give the printed output.",
+  "back": "<pre><code>#include &lt;iostream&gt;\n\nint main() {\n    int x = 1, y = 2;\n    int&amp; r = x;          // must be bound at declaration, cannot be null\n    r = 10;              // writes x\n    int* p = nullptr;    // pointers can be null\n    int* q = &amp;x;\n    q = &amp;y;              // pointer rebinding is allowed\n    *q = 20;             // writes y\n    r = y;               // NOT a rebind: copies y's value into x\n    std::cout &lt;&lt; x &lt;&lt; ' ' &lt;&lt; y &lt;&lt; ' ' &lt;&lt; (p == nullptr) &lt;&lt; '\\n';\n}</code></pre>Output: <code>20 20 1</code><br><br><b>Trace:</b> <code>x=1, y=2</code>. <code>r = 10</code> writes <code>x</code>. <code>q = &amp;y</code> rebinds the pointer. <code>*q = 20</code> writes <code>y</code>. <code>r = y</code> copies <code>y</code>'s value (20) into <code>x</code>.<br><br><ul><li>A reference must be bound when declared, is an alias for its target, and cannot be null.</li><li>A pointer can be null (<code>nullptr</code>) and can be reassigned to point elsewhere.</li></ul><b>Interview trap:</b> <code>r = y;</code> looks like rebinding if you think in Python. There is no rebinding of a reference: it assigns through the alias.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "references",
+   "pointers",
+   "trace",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "For a large object such as a <code>Curve</code> holding a vector of pillars, should the function take it by value, by non-const reference, or by <code>const&amp;</code>? Show the copy count for the first two calls in this program.",
+  "back": "<pre><code>#include &lt;iostream&gt;\n#include &lt;vector&gt;\n\nstruct Curve {\n    std::vector&lt;double&gt; pillars;\n    Curve() = default;\n    Curve(const Curve&amp; o) : pillars(o.pillars) { ++copies; }\n    static inline int copies = 0;\n};\n\ndouble by_value(Curve c)          { return static_cast&lt;double&gt;(c.pillars.size()); }\ndouble by_cref(const Curve&amp; c)    { return static_cast&lt;double&gt;(c.pillars.size()); }\n\nint main() {\n    Curve c;\n    c.pillars.assign(1000, 1.0);\n    by_value(c);\n    std::cout &lt;&lt; \"after by value: \" &lt;&lt; Curve::copies &lt;&lt; '\\n';\n    by_cref(c);\n    std::cout &lt;&lt; \"after const&amp;:   \" &lt;&lt; Curve::copies &lt;&lt; '\\n';\n}</code></pre>Output:<br><code>after by value: 1<br>after const&amp;:   1</code><br><br><b>Answer:</b> <code>const Curve&amp;</code>. It is read-only, copies nothing, and binds to both lvalues and temporaries. A non-const <code>Curve&amp;</code> rejects temporaries and invites mutation. By value copies the whole container (here a heap allocation of 1000 doubles) unless the function needs its own copy to store or modify.<br><br><b>Interview trap:</b> <code>const&amp;</code> is safe only while the referred object lives. Storing it in a member or a lambda that outlives the call creates a dangling reference.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "parameter_passing",
+   "const_ref",
+   "copies",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does this print and why: <code>set_by_value(int x) { x = 5; }</code>, <code>set_by_ref(int&amp; x) { x = 5; }</code>, <code>set_ptr(int* p) { *p = 5; }</code>, called on <code>a</code>, <code>b</code>, <code>c</code>, all initialised to 1?",
+  "back": "<pre><code>#include &lt;iostream&gt;\n\nvoid set_by_value(int x) { x = 5; }\nvoid set_by_ref(int&amp; x)  { x = 5; }\nvoid set_ptr(int* p)     { *p = 5; }\n\nint main() {\n    int a = 1, b = 1, c = 1;\n    set_by_value(a);\n    set_by_ref(b);\n    set_ptr(&amp;c);\n    std::cout &lt;&lt; a &lt;&lt; ' ' &lt;&lt; b &lt;&lt; ' ' &lt;&lt; c &lt;&lt; '\\n';\n}</code></pre>Output: <code>1 5 5</code><br><br>The by-value call changes only its local copy. The reference and pointer calls write to the caller's object. g++ also warns that the parameter <code>x</code> in <code>set_by_value</code> is set but never used, because the write has no visible effect.<br><br><b>Interview trap:</b> in C++ the caller cannot tell from the call site whether an argument may change. The signature (<code>int</code>, <code>int&amp;</code>, <code>int*</code>, <code>const int&amp;</code>) carries that contract; Python has no equivalent.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "parameter_passing",
+   "what_does_this_print",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What do these calls select and print: <code>show(2)</code>, <code>show(2.0)</code>, <code>show('A')</code> with overloads for <code>int</code> and <code>double</code>; and <code>df(0.05, 1.0)</code> versus <code>df(0.05, 1.0, 0.01)</code> where <code>df</code> has a default third argument?",
+  "back": "<pre><code>#include &lt;iostream&gt;\n\ndouble df(double r, double t, double spread = 0.0) {\n    return 1.0 / (1.0 + (r + spread) * t);\n}\nvoid show(int x)    { std::cout &lt;&lt; \"int \" &lt;&lt; x &lt;&lt; '\\n'; }\nvoid show(double x) { std::cout &lt;&lt; \"double \" &lt;&lt; x &lt;&lt; '\\n'; }\n\nint main() {\n    show(2);\n    show(2.0);\n    show('A');                 // char promotes to int: exact match after promotion\n    std::cout &lt;&lt; df(0.05, 1.0) &lt;&lt; ' ' &lt;&lt; df(0.05, 1.0, 0.01) &lt;&lt; '\\n';\n}</code></pre>Output:<br><code>int 2<br>double 2<br>int 65<br>0.952381 0.943396</code><br><br><b>Overload resolution:</b> an exact match beats a promotion (<code>char</code> to <code>int</code>, <code>float</code> to <code>double</code>), which beats a standard conversion (<code>int</code> to <code>double</code>). <code>'A'</code> is promoted to <code>int</code> and prints 65.<br><b>Default arguments</b> are part of the declaration and are substituted at the call site. Repeat them only in the header, never in the definition.<br><br><b>Interview trap:</b> unlike Python's default arguments, C++ defaults are not evaluated once and shared, so the mutable-default bug does not exist. Their resolution is static.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "overloading",
+   "default_arguments",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why does <code>price(100)</code> fail to compile when both <code>void price(int, double = 0.0)</code> and <code>void price(int)</code> are declared? Give the compiler message and two fixes.",
+  "back": "<pre><code>#include &lt;iostream&gt;\n\nvoid price(int notional, double spread = 0.0) {\n    std::cout &lt;&lt; notional &lt;&lt; ' ' &lt;&lt; spread &lt;&lt; '\\n';\n}\nvoid price(int notional) {\n    std::cout &lt;&lt; \"no spread \" &lt;&lt; notional &lt;&lt; '\\n';\n}\n\nint main() {\n    price(100);\n}</code></pre>g++ error:<br><pre><code>main.cpp: In function ‘int main()’:\nmain.cpp:11:10: error: call of overloaded ‘price(int)’ is ambiguous\n   11 |     price(100);\n      |     ~~~~~^~~~~\nmain.cpp:3:6: note: candidate: ‘void price(int, double)’\n    3 | void price(int notional, double spread = 0.0) {\n      |      ^~~~~\nmain.cpp:6:6: note: candidate: ‘void price(int)’\n    6 | void price(int notional) {\n      |      ^~~~~</code></pre>Both overloads are viable with identical conversions for <code>price(100)</code>. The default argument makes the first one viable with one argument, so neither is better: the call is ambiguous.<br><br><b>Fixes:</b> keep only one overload (the one with the default), or give the variant a distinct name such as <code>price_with_spread</code>.<br><br><b>Interview trap:</b> adding a defaulted parameter to an existing pricing function can make existing calls ambiguous once an overload of the same name exists. Overload sets are a common source of silent behaviour changes in shared libraries.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "overloading",
+   "default_arguments",
+   "compile_error",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "This compiles with a warning. What is wrong, what happens at run time, and how do you fix it? <code>const double&amp; discount(double r) { double df = 1.0 / (1.0 + r); return df; }</code>",
+  "back": "<pre><code>#include &lt;iostream&gt;\n\nconst double&amp; discount(double r) {\n    double df = 1.0 / (1.0 + r);   // local object\n    return df;                      // reference to an object that dies on return\n}\n\nint main() {\n    std::cout &lt;&lt; discount(0.05) &lt;&lt; '\\n';\n}</code></pre>g++ warning:<br><pre><code>main.cpp: In function ‘const double&amp; discount(double)’:\nmain.cpp:5:12: warning: reference to local variable ‘df’ returned [-Wreturn-local-addr]\n    5 |     return df;                      // reference to an object that dies on return\n      |            ^~\nmain.cpp:4:12: note: declared here\n    4 |     double df = 1.0 / (1.0 + r);   // local object\n      |            ^~</code></pre><b>What is wrong:</b> <code>df</code> has automatic storage and is destroyed when <code>discount</code> returns. The caller receives a reference to dead storage; using it is undefined behaviour. On this build the program segfaults (exit code 139) at both <code>-O0</code> and <code>-O2</code>; the failure is not guaranteed to look like that.<br><br><b>Fix:</b> return the <code>double</code> by value. For a scalar that costs nothing, and for an object a return by value is also fine (copy elision, see the return-by-value card).<br><br><b>Interview trap:</b> returning a reference to a member of a temporary is the same bug, and g++ warns only for direct locals such as this one.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "lifetime",
+   "dangling_reference",
+   "ub",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why can <code>const double kBp = 1e-4;</code> sit in a header included by many .cpp files, while <code>double kScale = 1.0;</code> in the same header causes a multiple-definition link error? What is the C++17 fix for <code>kScale</code>, and what does the fixed version print?",
+  "back": "<i>rates.hpp</i><pre><code>#pragma once\nconst double kBp = 1e-4;     // const at namespace scope: internal linkage, safe in a header\ndouble kScale = 1.0;         // external linkage: a definition in every TU that includes it</code></pre><i>a.cpp</i><pre><code>#include \"rates.hpp\"\ndouble fa() { return kBp * kScale; }</code></pre><i>main.cpp</i><pre><code>#include &lt;iostream&gt;\n#include \"rates.hpp\"\ndouble fa();\nint main() { std::cout &lt;&lt; fa() &lt;&lt; '\\n'; }</code></pre>Link error:<br><pre><code>/usr/bin/ld: &lt;obj&gt;:(.data+0x0): multiple definition of `kScale'; &lt;obj&gt;:(.data+0x0): first defined here\ncollect2: error: ld returned 1 exit status</code></pre><b>Why:</b> a namespace-scope <code>const</code> (or <code>constexpr</code>) object has internal linkage, so each TU gets a private copy and nothing clashes. A non-const variable has external linkage and must be defined once.<br><br><b>Fix (C++17):</b> <code>inline double kScale = 1.0;</code> in the header. One shared object is used by all TUs. Output of the fixed version:<br><i>rates.hpp</i><pre><code>#pragma once\nconst double kBp = 1e-4;\ninline double kScale = 1.0;  // inline variable (C++17): one shared object across TUs</code></pre><code>0.0001 1</code><br><br><b>Interview trap:</b> with internal linkage each TU has its own <code>kBp</code>, so taking its address in two TUs gives two different pointers. Harmless for a constant, but it is why <code>static</code> data does not behave like a singleton across files.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "linkage",
+   "odr",
+   "inline",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What do these print, and why does <code>sizeof(a)</code> inside <code>f</code> give 8 on this build?",
+  "back": "<pre><code>#include &lt;iostream&gt;\n\nvoid f(int a[]) {\n    std::cout &lt;&lt; \"in f: sizeof(a) = \" &lt;&lt; sizeof(a) &lt;&lt; '\\n';\n}\n\nint main() {\n    int a[5] = {1, 2, 3, 4, 5};\n    std::cout &lt;&lt; \"in main: sizeof(a) = \" &lt;&lt; sizeof(a) &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"elements = \" &lt;&lt; sizeof(a) / sizeof(a[0]) &lt;&lt; '\\n';\n    f(a);\n}</code></pre>Output:<br><code>in main: sizeof(a) = 20<br>elements = 5<br>in f: sizeof(a) = 8</code><br><br>A C array does not carry its size. Passing <code>int a[]</code> to a function passes an <code>int*</code>, and <code>sizeof</code> of a pointer is 8 on this 64-bit build. g++ warns with <code>-Wsizeof-array-argument</code>.<br><br><b>Fix:</b> pass <code>std::span&lt;int&gt;</code> (C++20), which carries the size, or pass the size explicitly. <code>sizeof(a) / sizeof(a[0])</code> works only where the array type is still visible.<br><br><b>Interview trap:</b> the same expression silently changes meaning when the array is a parameter. Python lists always know their length.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "arrays",
+   "decay",
+   "trap",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "<code>std::array&lt;double, 3&gt;</code> has its size as part of the {{c1::type}} and stores its elements inline, so <code>sizeof</code> is 3 × 8 = 24 bytes. <code>std::vector&lt;double&gt;</code> keeps its size at {{c2::run time}} and its elements in {{c3::heap}} memory. The vector object is a small handle, typically three pointers.",
+  "back": "<pre><code>#include &lt;array&gt;\n#include &lt;iostream&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::array&lt;double, 3&gt; a{1.0, 2.0, 3.0};   // N is part of the type\n    std::vector&lt;double&gt; v{1.0, 2.0, 3.0};     // size is a run-time value, heap storage\n    std::cout &lt;&lt; sizeof(a) &lt;&lt; ' ' &lt;&lt; a.size() &lt;&lt; ' ' &lt;&lt; v.size() &lt;&lt; '\\n';\n}</code></pre>Output (sizeof(a), a.size(), v.size()): <code>24 3 3</code>. Use <code>std::array</code> when the size is fixed and known at compile time; <code>std::vector</code> for anything sized at run time.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "containers",
+   "std_array",
+   "std_vector",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does <code>std::string copy = ccy; copy += \"USD\";</code> do to <code>ccy</code>? What do <code>ccy == \"EUR\"</code> and <code>copy == \"EURUSD\"</code> evaluate to, and what is the pitfall with comparing two <code>const char*</code>?",
+  "back": "<pre><code>#include &lt;iostream&gt;\n#include &lt;string&gt;\n\nint main() {\n    std::string ccy = \"EUR\";\n    std::string copy = ccy;          // deep copy: independent of ccy\n    copy += \"USD\";\n    std::cout &lt;&lt; ccy &lt;&lt; ' ' &lt;&lt; copy &lt;&lt; ' ' &lt;&lt; copy.size() &lt;&lt; '\\n';\n    std::cout &lt;&lt; (ccy == \"EUR\") &lt;&lt; ' ' &lt;&lt; (copy == \"EURUSD\") &lt;&lt; '\\n';\n}</code></pre>Output:<br><code>EUR EURUSD 6<br>1 1</code><br><br><ul><li><code>std::string</code> owns its characters. Assignment makes a deep copy, so <code>ccy</code> is unchanged.</li><li><code>==</code> compares contents, not addresses.</li><li><code>\"EUR\" + \"USD\"</code> does not compile: both operands are <code>const char*</code>. Write <code>std::string(\"EUR\") + \"USD\"</code>.</li></ul><b>Interview trap:</b> <code>const char* a</code> compared with <code>==</code> compares pointer values. Two equal literals may or may not share an address, so the result is not specified.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "strings",
+   "value_semantics",
+   "trap",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What do these three loops print, and which loop modifies <code>dv01</code>?",
+  "back": "<pre><code>#include &lt;iostream&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::vector&lt;double&gt; dv01{1.0, 2.0};\n    for (auto x : dv01) x *= 10;           // x is a copy: dv01 unchanged\n    std::cout &lt;&lt; dv01[0] &lt;&lt; ' ' &lt;&lt; dv01[1] &lt;&lt; '\\n';\n    for (auto&amp; x : dv01) x *= 10;          // x is a reference: elements change\n    std::cout &lt;&lt; dv01[0] &lt;&lt; ' ' &lt;&lt; dv01[1] &lt;&lt; '\\n';\n    for (const auto&amp; x : dv01) std::cout &lt;&lt; x &lt;&lt; ' ';\n    std::cout &lt;&lt; '\\n';\n}</code></pre>Output:<br><code>1 2<br>10 20<br>10 20</code><br><br><ul><li><code>for (auto x : v)</code> copies each element into <code>x</code>; changes to <code>x</code> are lost.</li><li><code>for (auto&amp; x : v)</code> binds <code>x</code> to each element; changes persist.</li><li><code>for (const auto&amp; x : v)</code> reads without copying; use it for class types.</li></ul><b>Interview trap:</b> <code>for (auto x : bigVector)</code> compiles, runs, and silently copies every element each time. The first loop's assignment has no effect on the vector, which is a common source of bugs when porting Python loops.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "control_flow",
+   "range_for",
+   "references",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compare <code>enum Side { Buy, Sell };</code> with <code>enum class Tenor { M3, Y1, Y10 };</code>. Show the valid code and the g++ error for <code>int bad = Tenor::Y10;</code>.",
+  "back": "<pre><code>#include &lt;iostream&gt;\n\nenum Side { Buy, Sell };              // unscoped: Buy and Sell leak into the enclosing scope\nenum class Tenor { M3, Y1, Y10 };     // scoped: must be qualified, no implicit int\n\nint main() {\n    int s = Buy;                      // implicit conversion to int: allowed\n    Tenor t = Tenor::Y10;\n    int ok = static_cast&lt;int&gt;(t);     // explicit conversion\n    std::cout &lt;&lt; s &lt;&lt; ' ' &lt;&lt; ok &lt;&lt; '\\n';\n}</code></pre>Output (s, ok): <code>0 2</code><br><br>g++ error for the scoped enum:<br><pre><code>main.cpp: In function ‘int main()’:\nmain.cpp:4:22: error: cannot convert ‘Tenor’ to ‘int’ in initialization\n    4 |     int bad = Tenor::Y10;   // no implicit conversion from scoped enum to int\n      |               ~~~~~~~^~~\n      |                      |\n      |                      Tenor</code></pre><b>Rule:</b> unscoped enumerators leak into the enclosing scope and convert to <code>int</code> implicitly. Scoped enumerators need qualification and convert only with <code>static_cast</code>.<br><br><b>Interview trap:</b> two unscoped enums in one scope that reuse an enumerator name, such as <code>Buy</code>, collide with a compile error. Use <code>enum class</code> for any enum that is part of an interface.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "enums",
+   "type_safety",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A namespace groups names: <code>namespace rates { double df(double r, double t); }</code> is called as {{c1::rates::df}}. Never write {{c2::using namespace std;}} in a header, because it injects every {{c3::std}} name into every file that includes the header.",
+  "back": "Qualify names in headers (<code>std::vector</code>). A <code>using</code> declaration for a single name, such as <code>using std::string;</code>, is acceptable inside a .cpp file.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "namespaces",
+   "headers",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How do you initialise a <code>struct Bond</code> that has a default notional and a <code>coupon</code> with no default? What does <code>Bond b{};</code> give for <code>coupon</code>, and why is <code>Bond b;</code> dangerous for scalar members?",
+  "back": "<code>struct Bond { double notional = 100.0; double coupon; int freq = 2; };</code> is an aggregate.<br><pre><code>#include &lt;iostream&gt;\n\nstruct Bond {\n    double notional = 100.0;   // default member initialiser\n    double coupon;             // no initialiser: indeterminate if left out\n    int    freq = 2;\n};\n\nint main() {\n    Bond a{1e6, 0.05};         // aggregate initialisation\n    Bond b{};                  // value-initialisation: coupon becomes 0.0\n    std::cout &lt;&lt; a.notional &lt;&lt; ' ' &lt;&lt; a.coupon &lt;&lt; ' ' &lt;&lt; a.freq &lt;&lt; '\\n';\n    std::cout &lt;&lt; b.notional &lt;&lt; ' ' &lt;&lt; b.coupon &lt;&lt; ' ' &lt;&lt; b.freq &lt;&lt; '\\n';\n}</code></pre>Output:<br><code>1e+06 0.05 2<br>100 0 2</code><br><br><ul><li><code>Bond a{1e6, 0.05};</code> sets the first two members; <code>freq</code> takes its default initialiser.</li><li><code>Bond b{};</code> value-initialises the scalars, so <code>coupon</code> is 0.0.</li><li><code>Bond c;</code> leaves <code>coupon</code> indeterminate. Reading it is undefined behaviour.</li></ul><b>Interview trap:</b> a scalar member without a default initialiser is zero only under braces or value-initialisation. Give every member a default in the struct definition.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "structs",
+   "initialisation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A function returns a <code>Curve</code> by value, and the object holds a <code>std::vector</code> of pillars. Is the vector deep-copied at each return? How many copies and moves does this program make in C++17 and later?",
+  "back": "<pre><code>#include &lt;iostream&gt;\n#include &lt;vector&gt;\n\nstruct Curve {\n    std::vector&lt;double&gt; pillars;\n    static inline int copies = 0, moves = 0;\n    Curve() = default;\n    explicit Curve(std::vector&lt;double&gt; p) : pillars(std::move(p)) {}\n    Curve(const Curve&amp; o) : pillars(o.pillars) { ++copies; }\n    Curve(Curve&amp;&amp; o) noexcept : pillars(std::move(o.pillars)) { ++moves; }\n};\n\nCurve bootstrap() {\n    return Curve{std::vector&lt;double&gt;{0.5, 1.0, 2.0}};   // prvalue: guaranteed elision in C++17\n}\n\nint main() {\n    Curve c = bootstrap();\n    std::cout &lt;&lt; \"copies=\" &lt;&lt; Curve::copies &lt;&lt; \" moves=\" &lt;&lt; Curve::moves\n              &lt;&lt; \" pillars=\" &lt;&lt; c.pillars.size() &lt;&lt; '\\n';\n}</code></pre>Output: <code>copies=0 moves=0 pillars=3</code><br><br><b>Answer:</b> no copies, no moves. <code>return Curve{...};</code> returns a prvalue, and since C++17 the object is constructed directly in the caller's storage (guaranteed copy elision). Returning a named local (<code>return c;</code>) is elided in practice (NRVO) and, when it is not, is treated as a move.<br><br><b>Interview trap:</b> <code>return std::move(c);</code> on a local prevents the elision and forces a move. Return the name plainly.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "copy_elision",
+   "move_semantics",
+   "return_by_value",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does <code>0.1 + 0.2 == 0.3</code> evaluate to in C++, and why? Print the sum with 17 significant digits and explain the output.",
+  "back": "<pre><code>#include &lt;iomanip&gt;\n#include &lt;iostream&gt;\n\nint main() {\n    double a = 0.1 + 0.2;\n    std::cout &lt;&lt; std::setprecision(17) &lt;&lt; a &lt;&lt; '\\n';\n    std::cout &lt;&lt; (a == 0.3) &lt;&lt; '\\n';\n    std::cout &lt;&lt; std::setprecision(6) &lt;&lt; a &lt;&lt; '\\n';\n}</code></pre>Output:<br><code>0.30000000000000004<br>0<br>0.3</code><br><br><b>Why:</b> <code>double</code> is IEEE 754 binary64: a 53-bit significand, so 0.1, 0.2 and 0.3 are not exact. The sum rounds to the neighbouring representable value, which is not the double nearest to 0.3. <code>digits10</code> is 15, which is the guaranteed decimal precision; 17 digits are needed to round-trip any double.<br><br><b>Interview trap:</b> never test doubles with <code>==</code> for a zero or reconciliation check. The same effect breaks P&amp;L tie-outs and \"equal\" strike checks when values come from different summation orders.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "floating_point",
+   "precision",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write a scale-aware comparison of doubles. What are <code>epsilon()</code>, <code>min()</code> (not <code>lowest()</code>), <code>max()</code> and <code>digits10</code> for <code>double</code>? Why does a NaN break a plain <code>if (px &lt; 0) reject</code> check?",
+  "back": "<pre><code>#include &lt;algorithm&gt;\n#include &lt;cmath&gt;\n#include &lt;iostream&gt;\n#include &lt;limits&gt;\n\nbool nearly_equal(double a, double b, double rel = 1e-12, double abs_tol = 1e-14) {\n    return std::abs(a - b) &lt;= std::max(abs_tol, rel * std::max(std::abs(a), std::abs(b)));\n}\n\nint main() {\n    using L = std::numeric_limits&lt;double&gt;;\n    std::cout &lt;&lt; \"epsilon  \" &lt;&lt; L::epsilon() &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"min      \" &lt;&lt; L::min() &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"max      \" &lt;&lt; L::max() &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"digits10 \" &lt;&lt; L::digits10 &lt;&lt; '\\n';\n    double nan = L::quiet_NaN();\n    std::cout &lt;&lt; \"nan==nan \" &lt;&lt; (nan == nan) &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"isnan    \" &lt;&lt; std::isnan(nan) &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"nearly_equal(0.1+0.2, 0.3) = \" &lt;&lt; nearly_equal(0.1 + 0.2, 0.3) &lt;&lt; '\\n';\n    std::cout &lt;&lt; \"nearly_equal(1.0, 1.1)     = \" &lt;&lt; nearly_equal(1.0, 1.1) &lt;&lt; '\\n';\n}</code></pre>Output:<br><code>epsilon  2.22045e-16<br>min      2.22507e-308<br>max      1.79769e+308<br>digits10 15<br>nan==nan 0<br>isnan    1<br>nearly_equal(0.1+0.2, 0.3) = 1<br>nearly_equal(1.0, 1.1)     = 0</code><br><br><ul><li><code>epsilon()</code> is the gap between 1.0 and the next representable double, about 2.2e-16.</li><li><code>min()</code> is the smallest positive normal value; <code>lowest()</code> is the most negative finite value.</li><li>The helper combines an absolute and a relative tolerance. Relative alone fails near zero, where the abs term takes over.</li><li>NaN fails every ordered comparison and is not equal to itself. <code>if (px &lt; 0)</code> lets NaN through. Write <code>if (!(px &gt;= 0))</code> or test with <code>std::isnan</code>.</li></ul><b>Interview trap:</b> a validation that uses <code>x &lt; 0</code> to reject bad inputs accepts NaN silently. Financial data pipelines produce NaN from 0/0 in a zero-volume bucket, so the check has to be written to catch it.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "floating_point",
+   "numeric_limits",
+   "nan",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Define undefined behaviour in C++. Why is \"it crashes\" the wrong mental model? Name the four classic examples this module covers.",
+  "back": "<b>Definition:</b> the standard places no requirement on what happens. The compiler may assume the event never occurs and optimise on that basis. The program can print the right answer, a wrong one, crash, or behave differently at another optimisation level or on another compiler.<br><br><b>Four classic examples:</b><ol><li>Reading an uninitialised automatic variable.</li><li>Accessing an element outside an array or vector.</li><li>Signed integer overflow.</li><li>Using memory after it has been freed (dangling pointer or reference).</li></ol>Other examples include data races and strict-aliasing violations.<br><br><b>Interview trap:</b> code that behaves differently at <code>-O0</code> and <code>-O2</code> usually contains UB; the optimiser is not the bug. Run it under sanitizers to find the cause.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "undefined_behaviour",
+   "ub",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "This program has a bug. What is it, what does <code>g++ -Wall -Wextra -O2</code> report, and what can you say about the number it prints? <code>int total; for (int i = 0; i &lt; 3; ++i) total += i; std::cout &lt;&lt; total;</code>",
+  "back": "<pre><code>#include &lt;iostream&gt;\n\nint main() {\n    int total;                                // indeterminate value\n    for (int i = 0; i &lt; 3; ++i) total += i;   // reads an uninitialised object: UB\n    std::cout &lt;&lt; total &lt;&lt; '\\n';\n}</code></pre>g++ warning:<br><pre><code>main.cpp: In function ‘int main()’:\nmain.cpp:5:39: warning: ‘total’ is used uninitialized [-Wuninitialized]\n    5 |     for (int i = 0; i &lt; 3; ++i) total += i;   // reads an uninitialised object: UB\n      |                                 ~~~~~~^~~~\nmain.cpp:4:9: note: ‘total’ was declared here\n    4 |     int total;                                // indeterminate value\n      |         ^~~~~</code></pre>Output on this run: <code>3</code>. Reading <code>total</code> before it is initialised is undefined behaviour, so this value is not guaranteed; it happened to be 0 before the loop on this build.<br><br><b>Fix:</b> <code>int total = 0;</code> or <code>int total{};</code>.<br><br><b>Interview trap:</b> local scalars are not zeroed in C++, unlike Python. UBSan does not catch this read; use Valgrind memcheck or Clang's MemorySanitizer.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "ub",
+   "uninitialised",
+   "sanitizers",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "This loop indexes past the end of a vector. Predict what it does, and what does AddressSanitizer report when you compile with <code>-fsanitize=address -g -O1</code>?",
+  "back": "<pre><code>#include &lt;iostream&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::vector&lt;double&gt; pillars{0.25, 0.5, 1.0};\n    double sum = 0.0;\n    for (int i = 0; i &lt;= 3; ++i)     // off by one: i == 3 is past the end\n        sum += pillars[i];\n    std::cout &lt;&lt; sum &lt;&lt; '\\n';\n}</code></pre>Without the sanitizer at <code>-O2</code> the program printed <code>1.75</code>: the out-of-bounds read returned a value that happened to be harmless, which is undefined behaviour.<br><br>AddressSanitizer report (first line, address elided):<br><pre><code>==8605==ERROR: AddressSanitizer: heap-buffer-overflow at pc 0x55aaf73d0621 bp 0x7ffee20b5430 sp 0x7ffee20b5420</code></pre>The report points at <code>main.cpp:8</code>, the line <code>sum += pillars[i];</code>.<br><br><b>Fix:</b> loop with <code>i &lt; pillars.size()</code>, use a range-for, or use <code>pillars.at(i)</code>, which throws <code>std::out_of_range</code>.<br><br><b>Interview trap:</b> <code>operator[]</code> never checks bounds. The compiler accepts <code>pillars[3]</code> without a diagnostic.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "ub",
+   "out_of_bounds",
+   "sanitizers",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why does <code>x + 1</code> with <code>x = INT_MAX</code> break a program, and what does UBSan report? The function is <code>int bump(int x) { return x + 1; }</code>; the value is held in a <code>volatile</code> so the compiler cannot fold it.",
+  "back": "<pre><code>#include &lt;climits&gt;\n#include &lt;iostream&gt;\n\nint bump(int x) { return x + 1; }       // signed overflow is undefined behaviour\n\nint main() {\n    volatile int v = INT_MAX;           // volatile: keep the value opaque to the compiler\n    std::cout &lt;&lt; bump(v) &lt;&lt; '\\n';\n}</code></pre>Output without UBSan (<code>-O2</code>): <code>-2147483648</code>. The result wrapped, but the standard does not promise that.<br><br>UBSan report (compiled with <code>-fsanitize=undefined</code>):<br><pre><code>main.cpp:4:30: runtime error: signed integer overflow: 2147483647 + 1 cannot be represented in type 'int'</code></pre><b>Rule:</b> signed overflow is undefined behaviour; unsigned overflow wraps by definition. The compiler may therefore reason as if <code>x + 1 &gt; x</code> is always true for an <code>int</code>.<br><br><b>Interview trap:</b> a risk model that accumulates a signed 32-bit counter of trades or basis points can overflow silently at -O2. Use <code>std::int64_t</code>, or check before adding.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "ub",
+   "signed_overflow",
+   "sanitizers",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "With the same kind of code as before, what does this program print at <code>-O2</code> and why? <code>bool always_bigger(int x) { return x + 1 &gt; x; }</code> is called with <code>INT_MAX</code> (through a <code>volatile</code>).",
+  "back": "<pre><code>#include &lt;iostream&gt;\n\nbool always_bigger(int x) { return x + 1 &gt; x; }   // compiler may assume no overflow\n\nint main() {\n    volatile int v = 2147483647;\n    std::cout &lt;&lt; always_bigger(v) &lt;&lt; '\\n';\n}</code></pre>Output: <code>1</code>. For <code>x = INT_MAX</code> the comparison is false under wrap-around, but g++ at <code>-O2</code> compiled the function to return <code>true</code>.<br><br><b>Why:</b> because signed overflow is undefined, the optimiser may assume <code>x + 1 &gt; x</code> holds for every <code>int</code>, and folds the test away. The code is correct only under a rule the standard does not give you.<br><br><b>Interview trap:</b> overflow guards written as <code>if (x + 1 &lt; x)</code> are removed by the optimiser. Test before the operation: <code>if (x &gt; INT_MAX - 1)</code>, or use <code>__builtin_add_overflow</code>.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "ub",
+   "signed_overflow",
+   "optimiser",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why does <code>view[1]</code> produce a garbage value here, even though <code>view</code> was assigned before <code>free_buf</code> ran? Show the AddressSanitizer report type and the fix.",
+  "back": "<i>buf.cpp</i><pre><code>#include &lt;cstdlib&gt;\ndouble* make_buf() { return new double[3]{0.5, 1.0, 2.0}; }   // separate TU: no elision\nvoid free_buf(double* p) { delete[] p; }</code></pre><i>main.cpp</i><pre><code>#include &lt;iostream&gt;\ndouble* make_buf();\nvoid free_buf(double* p);\nint main() {\n    double* p = make_buf();\n    double* view = p;               // non-owning alias\n    free_buf(p);                    // memory released here\n    std::cout &lt;&lt; view[1] &lt;&lt; '\\n';   // use after free\n}</code></pre>Without the sanitizer, <code>-O2</code> printed an arbitrary value (one run: <code>-3.61871e-152</code>; the value changes between runs). With <code>-fsanitize=address</code>:<br><pre><code>==8686==ERROR: AddressSanitizer: heap-use-after-free at pc 0x56464cfb932c bp 0x7ffd7e84a3a0 sp 0x7ffd7e84a390</code></pre><b>Cause:</b> <code>view</code> is a non-owning raw pointer. Freeing the memory invalidates every alias, and the allocator may reuse it.<br><br><b>Fix:</b> own the buffer with a <code>std::vector&lt;double&gt;</code> or <code>std::unique_ptr&lt;double[]&gt;</code>; for a non-owning view use <code>std::span</code>, which does not prevent the owner from being freed.<br><br><b>Interview trap:</b> a single-file version of this code was constant-folded at <code>-O2</code> and printed 1.0 with no sanitizer report. A dangling pointer can look correct until the optimiser or the allocator changes.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "ub",
+   "dangling_pointer",
+   "heap",
+   "sanitizers",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Compile with {{c1::-fsanitize=address,undefined}} to catch heap and stack buffer overflows, use-after-free and leaks with AddressSanitizer, and {{c2::signed overflow, null dereference and misaligned access}} with UBSan. An uninitialised read is {{c3::not}} caught by UBSan: use Valgrind memcheck or Clang's MemorySanitizer.",
+  "back": "Build with <code>-O1 -g</code> for readable stack traces. The combination compiles and runs in this environment (<code>g++ 13</code>). Sanitizers add overhead; use them in tests and debug builds, not for production timing. Note: leak detection is part of AddressSanitizer on Linux.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "sanitizers",
+   "debugging",
+   "tooling",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two .cpp files each define a different <code>struct Quote</code> with a <code>mid()</code> member. Both compile and link. What goes wrong, and what does this build print for <code>mid_a(1, 3)</code> and <code>mid_b(1, 3)</code> at <code>-O0</code>?",
+  "back": "<i>quote_a.cpp</i><pre><code>struct Quote {\n    double bid, ask;\n    [[gnu::noinline]] double mid() const { return 0.5 * (bid + ask); }\n};\ndouble mid_a(double b, double a) { Quote q{b, a}; return q.mid(); }</code></pre><i>quote_b.cpp</i><pre><code>struct Quote {                       // same class name, different definition\n    double bid, ask;\n    [[gnu::noinline]] double mid() const { return bid; }\n};\ndouble mid_b(double b, double a) { Quote q{b, a}; return q.mid(); }</code></pre><i>main.cpp</i><pre><code>#include &lt;iostream&gt;\ndouble mid_a(double, double);\ndouble mid_b(double, double);\nint main() {\n    std::cout &lt;&lt; mid_a(1.0, 3.0) &lt;&lt; ' ' &lt;&lt; mid_b(1.0, 3.0) &lt;&lt; '\\n';\n}</code></pre>Output at <code>-O0</code>: <code>2 2</code>. <code>mid_b</code> should give 1. Output at <code>-O2</code>: <code>2 1</code>, which is correct only because the optimiser inlined the calls.<br><br><b>Why:</b> the two <code>Quote::mid() const</code> functions have the same mangled name. The linker keeps one definition, so one function silently replaces the other. This is an ODR violation between class definitions; the linker has no way to see it.<br><br><b>Fix:</b> put each internal type in an unnamed namespace, or give it a unique name. Never define one class name two ways in one program.<br><br><b>Interview trap:</b> g++ reports ODR violations only with <code>-flto</code> (<code>-Wodr</code>). Without it the test suite can pass at one optimisation level and fail at another.",
+  "tags": [
+   "cpp",
+   "language_core",
+   "odr",
+   "linking",
+   "ub",
+   "lvl_stretch"
+  ]
+ }
+]

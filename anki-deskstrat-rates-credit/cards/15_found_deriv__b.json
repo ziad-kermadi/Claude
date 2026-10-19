@@ -1,0 +1,508 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CAP_BLACK 1/5]</b> Context: a 3-month caplet on a forward rate \\(F\\), fixing at \\(T_0=1\\)y and paying at \\(T_1=1.25\\)y, accrual \\(\\tau=0.25\\), notional 10m, strike 3.25%.<br><b>Question:</b> Write the caplet payoff and state what it is an option on. Why is it not an option on a bond price?",
+  "back": "<b>Answer:</b> The caplet pays \\(N\\tau\\,(L_{T_0}-K)^+\\) at \\(T_1\\), where \\(L_{T_0}\\) is the simple forward fixed at \\(T_0\\). It is a call on the simple forward rate, with payment deferred to \\(T_1\\).<br><b>Intuition:</b> The payoff is set by a rate, not a price. The forward is the market-implied average of expected short rates over \\([T_0,T_1]\\). A bond price is a discount factor, and an option on it is a different instrument (a bond option).<br><b>Formula:</b> \\[V_0=N\\,\\tau\\,P(0,T_1)\\,\\mathbb{E}^{T_1}\\big[(F(T_0)-K)^+\\big]\\]<br><b>Worked:</b> Each 1bp the forward finishes in the money is worth \\(10^7\\times0.25\\times0.0001=250\\) undiscounted. A caplet on a 2% forward strike is 100bp out of the money at fixing and pays nothing.<br><b>Used in the deck for:</b> caplet pricing and cap strips (03_rates_options); the payment-lag logic reappears for YoY inflation caplets (04_inflation).",
+  "tags": [
+   "chain_cap_black",
+   "caplet",
+   "option_basics",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CAP_BLACK 2/5]</b> Context: a 3-month caplet on a forward rate \\(F\\), fixing at \\(T_0=1\\)y and paying at \\(T_1=1.25\\)y, accrual \\(\\tau=0.25\\), notional 10m, strike 3.25%.<br><b>Question:</b> Why is the price \\(N\\tau P(0,T_1)[F\\Phi(d_1)-K\\Phi(d_2)]\\), and which measure makes the Black formula valid for a rate paid at \\(T_1\\)?",
+  "back": "<b>Answer:</b> Use the \\(T_1\\)-forward measure with numeraire \\(P(\\cdot,T_1)\\). Under it \\(F(t)\\) is a martingale, so Black applies with zero drift. The volatility is over the fixing time \\(T_0\\), not the payment time.<br><b>Intuition:</b> The payoff is paid at \\(T_1\\), so its discount factor is \\(P(0,T_1)\\). If you used the bank-account numeraire, the forward would not be a martingale and you would need a timing (convexity) adjustment. Choosing the \\(T_1\\) numeraire absorbs it.<br><b>Formula:</b> \\[\\mathrm{Cpl}=N\\tau P(0,T_1)\\big[F\\Phi(d_1)-K\\Phi(d_2)\\big],\\quad d_{1,2}=\\frac{\\ln(F/K)\\pm\\tfrac12\\sigma^2T_0}{\\sigma\\sqrt{T_0}}\\]<br><b>Worked:</b> With \\(F=3\\%\\), \\(K=3.25\\%\\), \\(\\sigma_B=20\\%\\), \\(T_0=1\\): \\(\\ln(F/K)=-0.0800\\), \\(d_1=-0.300\\), \\(d_2=-0.500\\).<br><b>Used in the deck for:</b> caplet pricing and the forward-measure logic in the rates options section (03_rates_options); inflation caplets (04_inflation).",
+  "tags": [
+   "chain_cap_black",
+   "black76",
+   "forward_measure",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CAP_BLACK 3/5]</b> Context: a 3-month caplet on a forward rate \\(F\\), fixing at \\(T_0=1\\)y and paying at \\(T_1=1.25\\)y, accrual \\(\\tau=0.25\\), notional 10m, strike 3.25%.<br><b>Question:</b> Compute the caplet premium for 10m with \\(F=3.00\\%\\), \\(\\sigma_B=20\\%\\), \\(P(0,T_1)=0.9632\\), and state the at-the-money normal-vol equivalent.",
+  "back": "<b>Answer:</b> About 3,456 per 10m, which is roughly 3.5bp of notional upfront. The ATM normal-vol equivalent is about 60bp p.a. (\\(\\sigma_N\\approx\\sigma_BF\\)).<br><b>Intuition:</b> The caplet is small because the strike is 25bp out of the money and the time value is one year. Per unit of forward, the Black price is \\(F\\Phi(d_1)-K\\Phi(d_2)=0.011460-0.010026=0.001435\\).<br><b>Formula:</b> \\[\\mathrm{Premium}=10^7\\times0.25\\times0.9632\\times0.001435\\approx3{,}456\\]<br><b>Worked:</b> \\(\\Phi(d_1)=0.3820\\), \\(\\Phi(d_2)=0.3085\\), per-unit price 0.001435, premium 3,456. The ATM equivalent is \\(0.20\\times3.00\\%=60\\)bp, exact value 59.9bp.<br><b>Used in the deck for:</b> caplet stripping case study and vega bucketing of caps (03_rates_options_deep).",
+  "tags": [
+   "chain_cap_black",
+   "black76",
+   "worked_example",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CAP_BLACK 4/5]</b> Context: a 3-month caplet on a forward rate \\(F\\), fixing at \\(T_0=1\\)y and paying at \\(T_1=1.25\\)y, accrual \\(\\tau=0.25\\), notional 10m, strike 3.25%.<br><b>Question:</b> A 2y quarterly cap has seven caplets (fixings at 0.25, 0.50, up to 1.75). Why is a cap a strip of caplets, and why is a single flat cap vol not equal to each caplet's own vol?",
+  "back": "<b>Answer:</b> A cap is the sum of its caplets, so the cap price is the sum of caplet prices. A flat vol is the single \\(\\sigma\\) that, used in every caplet's Black formula with its own forward, reprices the whole cap.<br><b>Intuition:</b> Each caplet has its own forward \\(F_i\\) and expiry \\(T_i\\). Market quotes give one number per cap maturity, so a flat vol is a summary of the strip, not an average of the caplet vols. Caplet vols must be bootstrapped from the flat vols, one expiry at a time.<br><b>Formula:</b> \\[\\mathrm{Cap}(K)=\\sum_{i=1}^{n}\\mathrm{Cpl}_i\\big(K;\\sigma_i\\big),\\qquad \\text{flat }\\sigma:\\ \\sum_i \\mathrm{Cpl}_i(K;\\sigma)=\\mathrm{Cap}^{\\text{mkt}}(K)\\]<br><b>Worked:</b> With caplet vols of 18% (expiry 0.5y) and 22% (expiry 1.0y) and equal forwards, the flat vol that reprices the two-caplet cap lies between 18% and 22% but is not their arithmetic mean in general. It depends on the caplets' relative prices.<br><b>Used in the deck for:</b> caplet stripping from flat cap vols (03_rates_options_deep); cap vega bucketing (03_rates_options).",
+  "tags": [
+   "chain_cap_black",
+   "caps",
+   "vol_stripping",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CAP_BLACK 5/5]</b> Context: a 5y annual swap with flat 3% curve, annuity \\(A=\\sum\\tau P(0,T_i)=4.58\\). Notional 1bn. Cap and floor both struck at \\(K=3.00\\%\\) on the same dates, forward swap rate \\(S=3.40\\%\\).<br><b>Question:</b> Using cap-floor parity, what is Cap(3.00%) minus Floor(3.00%)? Derive why the identity needs no volatility model.",
+  "back": "<b>Answer:</b> Cap(K) minus Floor(K) equals a payer swap at K. The value is about 18.3m, that is \\(N\\,A\\,(S-K)=10^9\\times4.58\\times0.004\\).<br><b>Intuition:</b> Each fixing satisfies \\((L-K)^+-(K-L)^+=L-K\\) pathwise, so the difference is a sum of forward-rate payoffs. Those sum to a swap (floating leg minus fixed leg), and the floating leg prices at par, which is why only the curve matters and not a volatility.<br><b>Formula:</b> \\[\\mathrm{Cap}(K)-\\mathrm{Floor}(K)=N\\sum_i\\tau_iP(0,T_{i+1})(F_i-K)=N\\,A\\,(S-K)\\]<br><b>Worked:</b> Telescoping: \\(\\sum_i\\tau_iP(0,T_{i+1})F_i=P(0,T_0)-P(0,T_n)\\), so the sum equals \\((P(0,T_0)-P(0,T_n))-KA = A(S-K)\\). With \\(A=4.58\\), \\(S-K=0.40\\%\\), \\(N=10^9\\): 18.3m.<br><b>Used in the deck for:</b> the cap/floor vol convention, since ATM cap and floor vols must agree (03_rates_options); the payer-swap leg used in the swaption cards.",
+  "tags": [
+   "chain_cap_black",
+   "cap_floor_parity",
+   "swap_identity",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SWPT_BLACK 1/4]</b> Context: a 1y×5y payer swaption, notional 100m, strike 3.00%, forward swap rate \\(S=3.00\\%\\), forward annuity \\(A(0)=4.446\\) (flat 3%, annual fixed leg paying at years 2 to 6).<br><b>Question:</b> Write the payer swaption payoff at expiry. Why is the underlying a swap rate and not a bond?",
+  "back": "<b>Answer:</b> At expiry \\(T_0\\) the holder receives \\(N\\,A(T_0)\\,(S(T_0)-K)^+\\), where \\(S\\) is the par swap rate. A payer swaption is a call on the fixed rate that makes the swap worth zero.<br><b>Intuition:</b> The option is the right to enter a payer swap at K. The swap's value is \\(A\\,(S-K)\\), so the payoff is positive exactly when the par rate is above the strike. The annuity converts the rate difference into currency.<br><b>Formula:</b> \\[V_{\\text{pay}}(T_0)=N\\,A(T_0)\\big(S(T_0)-K\\big)^+,\\qquad S(t)=\\frac{P(t,T_a)-P(t,T_b)}{A(t)},\\quad A(t)=\\sum_i\\tau_iP(t,T_i)\\]<br><b>Worked:</b> If \\(S(T_0)=3.40\\%\\) and \\(K=3.00\\%\\): payoff \\(=100\\text{m}\\times4.446\\times0.004=1.78\\text{m}\\).<br><b>Used in the deck for:</b> swaption Black pricing and the swap-rate definition (03_rates_options); CMS and Bermudan cards (03_rates_options_deep).",
+  "tags": [
+   "chain_swpt_black",
+   "swaption",
+   "swap_rate",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SWPT_BLACK 2/4]</b> Context: a 1y×5y payer swaption, notional 100m, strike 3.00%, forward swap rate \\(S=3.00\\%\\), forward annuity \\(A(0)=4.446\\) (flat 3%, annual fixed leg paying at years 2 to 6).<br><b>Question:</b> Why is the swaption priced under the annuity measure with numeraire \\(A(t)\\)? What does that make a martingale, and what goes wrong with the spot measure?",
+  "back": "<b>Answer:</b> Under the annuity measure \\(\\mathbb{Q}^A\\), the forward swap rate \\(S(t)\\) is a martingale. The price is \\(N\\,A(0)\\,\\mathbb{E}^A[(S(T_0)-K)^+]\\), which Black applies to with zero drift.<br><b>Intuition:</b> The payoff is \\(A\\cdot(S-K)^+\\), and \\(A\\cdot S=P(t,T_a)-P(t,T_b)\\) is a traded portfolio. Using the annuity as numeraire makes the ratio \\(S=(P_a-P_b)/A\\) a ratio of traded assets, which is a martingale. Under the spot measure, \\(S\\) and the discounting are correlated, so you would need a convexity term.<br><b>Formula:</b> \\[V_0=N\\,A(0)\\,\\mathbb{E}^{A}\\big[(S(T_0)-K)^+\\big]\\]<br><b>Worked:</b> Under \\(\\mathbb{Q}^A\\), \\(\\mathbb{E}^A[S(T_0)]=S(0)=3.00\\%\\). Under the spot measure, the omitted term is the covariance of \\(S\\) and the discount factor over \\([0,T_0]\\), which is not zero. That is a model error, not a rounding term.<br><b>Used in the deck for:</b> the annuity measure for swaptions (03_rates_options), CMS convexity (03_rates_options_deep), and the Bermudan numeraire (03_rates_options_deep).",
+  "tags": [
+   "chain_swpt_black",
+   "annuity_measure",
+   "martingale",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SWPT_BLACK 3/4]</b> Context: a 1y×5y payer swaption, notional 100m, strike 3.00%, forward swap rate \\(S=3.00\\%\\), forward annuity \\(A(0)=4.446\\) (flat 3%, annual fixed leg paying at years 2 to 6).<br><b>Question:</b> Write the Black swaption formula. Check the ATM case and give the premium for ATM and for a 3.25% strike, with \\(\\sigma_B=20\\%\\).",
+  "back": "<b>Answer:</b> \\(V_0=N\\,A(0)[S\\Phi(d_1)-K\\Phi(d_2)]\\). ATM the premium is about 1.06m, and at a 3.25% strike about 0.64m.<br><b>Intuition:</b> ATM the value per unit annuity is \\(S(2\\Phi(\\sigma\\sqrt T/2)-1)\\approx0.4\\,S\\,\\sigma\\sqrt T\\), so the premium is almost linear in vol and in the forward. Moving the strike 25bp out of the money cuts the premium by about 40%.<br><b>Formula:</b> \\[V_0=N\\,A(0)\\big[S\\,\\Phi(d_1)-K\\,\\Phi(d_2)\\big],\\quad d_{1,2}=\\frac{\\ln(S/K)\\pm\\tfrac12\\sigma^2T}{\\sigma\\sqrt T}\\]<br><b>Worked:</b> ATM: \\(0.03\\times0.07966=0.002390\\) per unit annuity; premium \\(=100\\text{m}\\times4.446\\times0.002390=1.06\\text{m}\\). At \\(K=3.25\\%\\): 0.64m.<br><b>Used in the deck for:</b> swaption straddle and vega cards (03_rates_options); swaption calibration in SABR and Hull–White (03_rates_options_deep).",
+  "tags": [
+   "chain_swpt_black",
+   "black_swaption",
+   "atm",
+   "worked_example",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SWPT_BLACK 4/4]</b> Context: a 1y×5y payer swaption, notional 100m, strike 3.00%, forward swap rate \\(S=3.00\\%\\), forward annuity \\(A(0)=4.446\\) (flat 3%, annual fixed leg paying at years 2 to 6).<br><b>Question:</b> Why can you not price this swaption by summing caplets on the underlying forwards? What does the sum-of-caplets approach get wrong?",
+  "back": "<b>Answer:</b> A swaption is an option on a weighted sum of forwards with curve-dependent weights, and the option on a sum is not the sum of options. Summing caplets at the same strike overprices the swaption whenever the forwards are not perfectly correlated.<br><b>Intuition:</b> Write \\(S=\\sum_i w_iF_i\\) with \\(w_i\\ge0\\), \\(\\sum_iw_i=1\\). Because \\(x\\mapsto x^+\\) is convex, \\((\\sum_iw_ix_i)^+\\le\\sum_iw_ix_i^+\\). The swaption payoff is bounded by the weighted caplet payoffs, and the gap is larger the less correlated the forwards are.<br><b>Formula:</b> \\[\\Big(\\sum_i w_i(F_i-K)\\Big)^+\\le\\sum_i w_i\\,(F_i-K)^+\\]<br><b>Worked:</b> Two forwards with \\(w=(0.5,0.5)\\), \\(F_1=3.5\\%\\), \\(F_2=2.5\\%\\), \\(K=3.0\\%\\). The swap rate is 3.0%, so the swaption pays 0. The caplet sum pays \\(0.5\\times0.5\\%=0.25\\%\\) of weight. That is a 0.25% gap in one state.<br><b>Used in the deck for:</b> why the swaption cube is not the same as a caplet cube (03_rates_options); basket and CMS spread pricing (03_rates_options_deep).",
+  "tags": [
+   "chain_swpt_black",
+   "swaption",
+   "basket",
+   "correlation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SHORT_RATE 1/4]</b> Context: Vasicek short rate \\(dr=a(b-r)\\,dt+\\sigma\\,dW\\) with \\(a=0.5\\), long-run mean \\(b=3\\%\\), \\(\\sigma=1\\%\\) per year (normal), \\(r_0=2.5\\%\\).<br><b>Question:</b> Interpret \\(a\\), \\(b\\), \\(\\sigma\\). What is the half-life and the long-run standard deviation of \\(r\\)? Give \\(\\mathbb E[r_1]\\) and the standard deviation of \\(r_1\\).",
+  "back": "<b>Answer:</b> \\(b\\) is the long-run mean, \\(a\\) the speed of mean reversion, \\(\\sigma\\) the absolute (normal) vol. The half-life is \\(\\ln2/a=1.39\\)y and the stationary sd is \\(\\sigma/\\sqrt{2a}=1.00\\%\\).<br><b>Intuition:</b> The drift pulls \\(r\\) back to \\(b\\) at rate \\(a\\), and the noise adds variance. Balancing the two gives a stationary variance \\(\\sigma^2/(2a)\\). Vasicek is Gaussian, so negative rates are allowed, as in Bachelier.<br><b>Formula:</b> \\[\\mathbb E[r_t]=b+(r_0-b)e^{-at},\\qquad \\mathrm{Var}[r_t]=\\frac{\\sigma^2}{2a}\\big(1-e^{-2at}\\big)\\]<br><b>Worked:</b> At \\(t=1\\): \\(\\mathbb E[r_1]=3\\%-0.5\\%\\times e^{-0.5}=2.697\\%\\); \\(\\mathrm{Var}[r_1]=10^{-4}\\times(1-e^{-1})=6.32\\times10^{-5}\\), sd 0.795%.<br><b>Used in the deck for:</b> the Gaussian short-rate and normal-vol link (03_rates_options); the Hull–White extension (03_rates_options_deep).",
+  "tags": [
+   "chain_short_rate",
+   "vasicek",
+   "mean_reversion",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SHORT_RATE 2/4]</b> Context: Vasicek short rate \\(dr=a(b-r)\\,dt+\\sigma\\,dW\\) with \\(a=0.5\\), long-run mean \\(b=3\\%\\), \\(\\sigma=1\\%\\) per year (normal), \\(r_0=2.5\\%\\).<br><b>Question:</b> Give the closed-form Vasicek zero-coupon bond price \\(P(0,\\tau)=A(\\tau)e^{-B(\\tau)r_0}\\) and evaluate it for \\(\\tau=5\\) with the parameters above.",
+  "back": "<b>Answer:</b> \\(B=(1-e^{-a\\tau})/a\\), \\(\\ln A=(B-\\tau)\\big(b-\\tfrac{\\sigma^2}{2a^2}\\big)-\\tfrac{\\sigma^2B^2}{4a}\\). For \\(\\tau=5\\): \\(B=1.8358\\), \\(\\ln A=-0.0945\\), \\(P=0.8690\\), a continuously compounded yield of 2.81%.<br><b>Intuition:</b> \\(B\\) is the duration-like sensitivity of the bond to \\(r\\), bounded as \\(\\tau\\) grows because mean reversion stops the sensitivity compounding. The yield sits above the 2.5% spot rate because the rate is pulled toward the 3% mean, and convexity adds a small term.<br><b>Formula:</b> \\[P(0,\\tau)=A(\\tau)\\,e^{-B(\\tau)r_0},\\qquad B(\\tau)=\\frac{1-e^{-a\\tau}}{a}\\]<br><b>Worked:</b> \\(B=(1-e^{-2.5})/0.5=1.83583\\); \\(\\ln A=(1.83583-5)(0.03-0.0002)-0.0001\\times3.3703/2=-0.0945\\); \\(P=0.9099\\,e^{-1.83583\\times0.025}=0.8690\\).<br><b>Used in the deck for:</b> the Hull–White bond formula, the B-function is the same with \\(\\theta(t)\\) (03_rates_options_deep); bond prices in the one-factor short-rate models (03_rates_options).",
+  "tags": [
+   "chain_short_rate",
+   "vasicek",
+   "zcb_formula",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SHORT_RATE 3/4]</b> Context: Vasicek short rate \\(dr=a(b-r)\\,dt+\\sigma\\,dW\\) with \\(a=0.5\\), long-run mean \\(b=3\\%\\), \\(\\sigma=1\\%\\) per year (normal), \\(r_0=2.5\\%\\).<br><b>Question:</b> Vasicek with a fixed \\(b\\) cannot match today's discount curve. What does Hull–White's \\(\\theta(t)\\) do, and what is the formula that makes the model reprice \\(P^M(0,T)\\)?",
+  "back": "<b>Answer:</b> \\(\\theta(t)\\) is a time-dependent drift chosen so that model zero-coupon prices match the market curve exactly. It replaces the constant mean \\(b\\) with a path that follows the curve's shape.<br><b>Intuition:</b> A constant \\(b\\) gives one long-run level and one set of bond prices. The market curve has a shape, so the drift must move with time. Mean reversion \\(a\\) still controls how fast shocks die, which sets the shape of the term structure of vol.<br><b>Formula:</b> \\[\\theta(t)=\\partial_t f^M(0,t)+a\\,f^M(0,t)+\\frac{\\sigma^2}{2a}\\big(1-e^{-2at}\\big)\\]<br><b>Worked:</b> Flat market forward \\(f^M=3\\%\\), \\(a=0.5\\), \\(\\sigma=1\\%\\): \\(\\theta(t)=1.5\\%+10^{-4}(1-e^{-t})\\). So \\(\\theta(0)=1.50\\%\\) and \\(\\theta(\\infty)\\approx1.51\\%\\), and the implied long-run level \\(\\theta/a\\) is about 3%.<br><b>Used in the deck for:</b> Hull–White calibration to the initial curve (03_rates_options); the HJM and Bermudan calibration (03_rates_options_deep).",
+  "tags": [
+   "chain_short_rate",
+   "hull_white",
+   "curve_fit",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SHORT_RATE 4/4]</b> Context: Ho–Lee, \\(dr=\\theta(t)\\,dt+\\sigma\\,dW\\), no mean reversion, \\(\\sigma=1\\%\\) per year, on a flat 3% curve.<br><b>Question:</b> What is the Ho–Lee bond formula, and what are its two structural weaknesses relative to Hull–White?",
+  "back": "<b>Answer:</b> Ho–Lee is the \\(a\\to0\\) limit of Hull–White. It fits the curve with \\(\\theta(t)=\\partial_t f^M(0,t)+\\sigma^2t\\). Its short-rate variance grows linearly, \\(\\mathrm{Var}(r_t)=\\sigma^2t\\), so the long end is unbounded.<br><b>Intuition:</b> Without mean reversion the model has no pull back to a level, so long-dated rates and bond vol keep growing. Hull–White's \\(a>0\\) damps the long-end vol and produces a more realistic swaption term structure. Ho–Lee is still useful as a simple, closed-form benchmark.<br><b>Formula:</b> \\[P(t,T)=\\frac{P^M(0,T)}{P^M(0,t)}\\exp\\!\\Big[(T-t)f^M(0,t)-\\tfrac12\\sigma^2t(T-t)^2-(T-t)\\,r_t\\Big]\\]<br><b>Worked:</b> With \\(\\sigma=1\\%\\): the sd of \\(r\\) at \\(t=5\\) is \\(\\sigma\\sqrt5=2.24\\%\\), versus the Vasicek stationary sd of 1.00% from the earlier card. The convexity factor for \\(t=1\\), \\(T=5\\) is \\(e^{-\\frac12\\sigma^2t(T-t)^2}=0.9992\\).<br><b>Used in the deck for:</b> Hull–White as the mean-reverting extension (03_rates_options_deep); model choice in Bermudan pricing (03_rates_options).",
+  "tags": [
+   "chain_short_rate",
+   "ho_lee",
+   "no_mean_reversion",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: STATIC_REPL 1/4]</b> Context: 1y European calls on a spot of 100 with \\(r=0\\) and lognormal vol 20%: \\(C(95)=10.52\\), \\(C(100)=7.97\\), \\(C(105)=5.91\\), strike spacing \\(h=5\\).<br><b>Question:</b> Show how the risk-neutral density at 100 follows from these call prices (Breeden–Litzenberger), and compare it with the exact value.",
+  "back": "<b>Answer:</b> The density is the second strike derivative of the call price, \\(q(K)=e^{rT}\\,\\partial_K^2C(K)\\). The finite difference gives 0.01976 against the exact lognormal value 0.01985.<br><b>Intuition:</b> A butterfly spread on the strike grid is a bet on the density at its centre. Taking the second difference of prices, divided by \\(h^2\\), recovers the density.<br><b>Formula:</b> \\[C(K)=e^{-rT}\\!\\int(s-K)^+q(s)\\,ds\\;\\Rightarrow\\;\\partial_K^2C(K)=e^{-rT}q(K)\\approx\\frac{C(K-h)-2C(K)+C(K+h)}{h^2}\\]<br><b>Worked:</b> \\(C(95)-2C(100)+C(105)=10.5195-15.9312+5.9056=0.4939\\); \\(0.4939/25=0.01976\\). Exact: \\(\\phi(d_2)/(K\\sigma\\sqrt T)=\\phi(-0.1)/20=0.01985\\).<br><b>Used in the deck for:</b> the smile no-arbitrage test on the price grid (03_rates_options_deep, SABR_ARB chain).",
+  "tags": [
+   "chain_static_repl",
+   "breeden_litzenberger",
+   "density",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: STATIC_REPL 2/4]</b> Context: 1y European calls on a spot of 100 with \\(r=0\\) and lognormal vol 20%: \\(C(95)=10.52\\), \\(C(100)=7.97\\), \\(C(105)=5.91\\), strike spacing \\(h=5\\).<br><b>Question:</b> State the Carr–Madan replication formula and verify it for \\(f(S)=S^2\\) with forward \\(F=100\\) at \\(S=110\\).",
+  "back": "<b>Answer:</b> Any twice-differentiable payoff is a bond, a forward and a strip of out-of-the-money options. Each strike \\(K\\) enters with weight \\(f''(K)\\): puts below \\(F\\), calls above.<br><b>Intuition:</b> Expand \\(f\\) about \\(F\\) and write the remainder as an integral of the second derivative. The Taylor remainder for \\(f(S)\\) is a superposition of hockey-stick payoffs \\((K-S)^+\\) and \\((S-K)^+\\).<br><b>Formula:</b> \\[f(S)=f(F)+f'(F)(S-F)+\\int_0^F f''(K)(K-S)^+dK+\\int_F^\\infty f''(K)(S-K)^+dK\\]<br><b>Worked:</b> \\(f(F)=10{,}000\\), \\(f'(F)(S-F)=200\\times10=2{,}000\\), puts contribute 0 because \\((K-110)^+=0\\) for every \\(K\\) below 100, calls contribute \\(\\int_{100}^{110}2(110-K)\\,dK=100\\). Total \\(12{,}100=110^2\\).<br><b>Used in the deck for:</b> the static hedge for path-independent payoffs and variance swaps (D3 in this chain); CMS and digital hedges (03_rates_options_deep).",
+  "tags": [
+   "chain_static_repl",
+   "carr_madan",
+   "static_hedge",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: STATIC_REPL 3/4]</b> Context: lognormal \\(S\\) with \\(\\sigma=20\\%\\), \\(r=0\\), \\(T=1\\), forward \\(F=S_0e^{rT}=100\\).<br><b>Question:</b> State the variance-swap identity in terms of \\(\\mathbb E^Q[\\ln(S_T/F)]\\). Show that this asset gives a variance strike of 0.04, that is a 20% vol strike.",
+  "back": "<b>Answer:</b> The expected integrated variance is \\(-2\\) times the expected log return from the forward.<br><b>Intuition:</b> Replicate \\(-2\\ln(S_T/F)\\) statically with \\(1/K^2\\)-weighted options and you have the fair variance.<br><b>Formula:</b> \\[\\mathbb E^Q\\Big[\\int_0^T\\sigma_t^2\\,dt\\Big]=-2\\,\\mathbb E^Q\\Big[\\ln\\frac{S_T}{F}\\Big],\\qquad K_{\\text{var}}=\\frac{2e^{rT}}{T}\\Big[\\int_0^F\\frac{P(K)}{K^2}dK+\\int_F^\\infty\\frac{C(K)}{K^2}dK\\Big]\\]<br><b>Worked:</b> Under lognormal dynamics \\(\\mathbb E[\\ln(S_T/F)]=-\\sigma^2T/2\\), so \\(-2\\mathbb E[\\ln(S_T/F)]=\\sigma^2T=0.04\\), giving a vol strike of \\(\\sqrt{0.04}=20\\%\\).<br><b>Used in the deck for:</b> the variance and vol-swap convexity (03_rates_options_deep); the dispersion trade on index correlation (05_credit_cds).",
+  "tags": [
+   "chain_static_repl",
+   "variance_swap",
+   "log_contract",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: STATIC_REPL 4/4]</b> Context: the replication in the previous card needs a continuum of strikes from 0 to infinity and assumes continuous monitoring. A variance swap is quoted with a vol strike, not a variance strike, on a 20% vol asset with variance sd 0.02.<br><b>Question:</b> Why is a vol swap worth less than the square root of the variance strike, and what breaks in practice when the replication is applied to a finite strike grid with jumps?",
+  "back": "<b>Answer:</b> The vol strike is \\(\\sqrt{K_{\\text{var}}}\\) minus a convexity term, because \\(\\mathbb E\\sqrt V\\le\\sqrt{\\mathbb EV}\\) (Jensen). In practice the variance estimate depends on the strike-grid tails and on the absence of jumps.<br><b>Intuition:</b> The static hedge needs the full wing of options, and the wings are the least-liquid quotes. A jump breaks the continuous-monitoring assumption behind the \\(-2\\ln\\) identity, so the replicated number no longer equals realised variance.<br><b>Formula:</b> \\[\\mathbb E\\sqrt V\\approx\\sqrt{m}-\\frac{\\mathrm{Var}(V)}{8\\,m^{3/2}},\\qquad m=\\mathbb E V\\]<br><b>Worked:</b> With \\(m=0.04\\) and \\(\\mathrm{sd}(V)=0.02\\): \\(\\mathrm{Var}/(8m^{3/2})=0.0004/(8\\times0.008)=0.00625\\), so the vol swap is about 19.4% against a 20% variance-root (approx.; the sd of realised variance is illustrative).<br><b>Used in the deck for:</b> vol-swap versus variance-swap convexity (03_rates_options_deep) and the tail-strike issue in SABR wings (03_rates_options).",
+  "tags": [
+   "chain_static_repl",
+   "vol_swap",
+   "convexity",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why does each rates product use a different pricing measure, and which numeraire does each choose?",
+  "back": "<b>Answer:</b> Each product uses the numeraire whose asset is the natural discounting for its payoff date. Under that measure the forward or swap rate is a martingale, so the expectation is a simple Black-type integral.<br><b>Intuition:</b> Changing measure absorbs the covariance between the payoff's underlying and the discount factor. The choice removes a convexity term from the price. Products: caplet (\\(T_{i+1}\\)-forward), swaption (annuity), CMS (payment-date forward, with a convexity correction), LMM drift (spot-LIBOR or terminal).<br><b>Formula:</b> \\[V_0=N\\,\\mathbb E^{\\mathbb Q}\\!\\Big[\\frac{X_T}{B_T}\\Big]=N\\,P(0,T_{\\text{pay}})\\,\\mathbb E^{T_{\\text{pay}}}[X_T]\\]<br><b>Worked:</b> On a 3% continuously compounded curve, a caplet paid at \\(T_1=1.25\\)y is discounted by \\(P(0,1.25)=0.9632\\), against \\(P(0,1)=0.9704\\) at 1y. That 0.75% gap is the timing value that the \\(T_1\\)-numeraire carries.<br><b>Used in the deck for:</b> caplets and swaptions (03_rates_options); CMS convexity and LMM drifts (03_rates_options_deep); YoY inflation caplets (04_inflation).",
+  "tags": [
+   "measures",
+   "numeraire",
+   "black76",
+   "conventions",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A cap is a strip of caplets and a floor a strip of floorlets. Which side does a floating-rate borrower buy, and what does a long cap hedge?",
+  "back": "<b>Answer:</b> A borrower with floating debt buys a cap to limit the rate paid above K, and a floating-rate investor buys a floor to protect the income. A long cap is long rates vol and short the rates upside for the holder's liabilities.<br><b>Intuition:</b> A caplet is a call on the forward and a floorlet is a put on it. The payoff per fixing is \\(N\\tau(L-K)^+\\) for a cap and \\(N\\tau(K-L)^+\\) for a floor, so the holder of a cap gains when rates rise.<br><b>Formula:</b> \\[\\mathrm{Cap}(K)=\\sum_i N\\tau_i(L_i-K)^+,\\qquad \\mathrm{Floor}(K)=\\sum_i N\\tau_i(K-L_i)^+\\]<br><b>Worked:</b> A 10m floating borrower with a 3.5% cap: each 10bp that the fixing exceeds 3.5% costs \\(10^7\\times0.25\\times0.0010=2{,}500\\) per quarter, undiscounted.<br><b>Used in the deck for:</b> cap and floor direction in the hedging discussion (03_rates_options); negative-rates floors (03_rates_options_deep).",
+  "tags": [
+   "caps",
+   "floors",
+   "hedging",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the swaption volatility cube, and what does it take to specify one?",
+  "back": "<b>Answer:</b> The cube is the implied vol as a function of three variables: option expiry, swap tenor and strike. The ATM surface uses expiry and tenor, and the smile adds the strike direction.<br><b>Intuition:</b> Vol is a surface over expiry and tenor because each swap maturity has its own rate dynamics. Strike adds the smile. The desk quotes an ATM grid and a few smile parameters (for example risk reversal and butterfly quotes, or SABR parameters) for each expiry-tenor pair.<br><b>Formula:</b> \\[\\sigma=\\sigma(T_e,\\,T_s,\\,K)\\]<br><b>Worked:</b> A 10×10 expiry-tenor grid with 5 strike offsets gives 500 vol numbers. Adjacent points move together, so the effective dimension is far smaller, and most of the risk sits in a few factors.<br><b>Used in the deck for:</b> swaption vol surface and bucketed vega (03_rates_options_deep); SABR calibration (03_rates_options); Bermudan calibration (03_rates_options_deep).",
+  "tags": [
+   "vol_cube",
+   "swaption_vol",
+   "surface",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "At the money, what is the normal-vol equivalent of a 20% lognormal vol on a 3% forward, and how accurate is the approximation?",
+  "back": "<b>Answer:</b> \\(\\sigma_N\\approx\\sigma_B\\,F\\). For \\(F=3\\%\\) and \\(\\sigma_B=20\\%\\) the normal vol is about 60bp p.a. The error is of relative order \\(\\sigma_B^2T/24\\).<br><b>Intuition:</b> Both models must give the same ATM price. The Black ATM price is \\(F(2\\Phi(\\sigma_B\\sqrt T/2)-1)\\approx F\\sigma_B\\sqrt T\\,\\phi(0)\\), and the Bachelier ATM price is \\(\\sigma_N\\sqrt T\\,\\phi(0)\\). Equating the two gives the result.<br><b>Formula:</b> \\[\\sigma_N\\approx\\sigma_B\\,F\\Big(1-\\frac{\\sigma_B^2T}{24}\\Big)\\]<br><b>Worked:</b> \\(F\\sigma_B=60\\)bp; with the correction, 59.9bp. Reverse: 60bp normal on 3% gives 20% lognormal. At \\(T=10\\) and 20% vol the correction is about 1.7%, which is material for long-dated swaptions.<br><b>Used in the deck for:</b> normal versus lognormal quoting (03_rates_options), inflation caplet conversion (04_inflation).",
+  "tags": [
+   "normal_vol",
+   "lognormal_vol",
+   "conversion",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is static replication, and why is it preferred to dynamic delta-hedging for pricing a payoff that depends on the vol surface?",
+  "back": "<b>Answer:</b> Static replication holds a fixed portfolio of vanilla options bought at inception and not rebalanced. The price then depends only on the observed option prices, not on a model for the vol.<br><b>Intuition:</b> A dynamic hedge needs a model for how vol evolves between rebalances, so the price inherits model risk. A static hedge only needs quotes. The options replicate the payoff's second derivative at each strike, and the payoff is the sum of its vanilla pieces.<br><b>Formula:</b> \\[V_0=\\sum_k w_k\\,C(K_k)+\\sum_j v_j\\,P(K_j)+\\text{(forward and bond)}\\]<br><b>Worked:</b> A digital paying 1 above 100 is the limit of \\((C(100)-C(100+\\varepsilon))/\\varepsilon\\) as the strike gap shrinks. A 1-wide call spread (long the 100 call, short the 101 call) pays a linear ramp between 100 and 101, and its price is model-free.<br><b>Used in the deck for:</b> CMS and digital replication (03_rates_options_deep); the variance-swap construction (static replication chain).",
+  "tags": [
+   "static_replication",
+   "vanilla_strip",
+   "model_risk",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the difference between the risk-neutral measure and the real-world measure, and which do you use for pricing versus scenario P&amp;L?",
+  "back": "<b>Answer:</b> The risk-neutral measure \\(\\mathbb Q\\) is the one under which discounted traded prices are martingales, and it is used for pricing and hedging. The real-world measure \\(\\mathbb P\\) has the empirical drift and is used for VaR, stress tests and expected exposure.<br><b>Intuition:</b> Under \\(\\mathbb Q\\) the drift of every traded asset is the risk-free rate, so risk premia are removed. Under \\(\\mathbb P\\) the drift includes the premium that investors demand for risk. Pricing needs \\(\\mathbb Q\\) because a hedge is priced by the cost of replicating it.<br><b>Formula:</b> \\[dS=\\mu S\\,dt+\\sigma S\\,dW^{\\mathbb P}\\quad\\longrightarrow\\quad dS=rS\\,dt+\\sigma S\\,dW^{\\mathbb Q}\\]<br><b>Worked:</b> Stock at 100, \\(\\mu=7\\%\\), \\(r=3\\%\\): \\(\\mathbb E^{\\mathbb P}[S_1]=107\\) but \\(\\mathbb E^{\\mathbb Q}[S_1]=103\\). A 1y call is priced under \\(\\mathbb Q\\), and a 1y 95th-percentile loss is measured under \\(\\mathbb P\\).<br><b>Used in the deck for:</b> CVA and exposure simulation (10_xva_funding); VaR and stress scenarios (09_scenarios_markets_reg); CDS-implied hazard calibration (05_credit_cds).",
+  "tags": [
+   "real_world",
+   "risk_neutral",
+   "measures",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A CVA desk prices under \\(\\mathbb Q\\) but reports PFE and EAD under \\(\\mathbb P\\). Why are these different, and what is the common mistake?",
+  "back": "<b>Answer:</b> CVA is a price, so it must reconcile to hedgeable instruments and uses \\(\\mathbb Q\\) with CDS-implied survival. PFE and capital measure what could happen to exposure, so they use \\(\\mathbb P\\) with historically calibrated drifts and volatilities.<br><b>Intuition:</b> The \\(\\mathbb Q\\) expected exposure carries a risk premium relative to the \\(\\mathbb P\\) one. Mixing them up (for example, using \\(\\mathbb Q\\) paths for a 99% PFE) misstates both the CVA charge and the capital.<br><b>Formula:</b> \\[\\mathrm{CVA}\\approx(1-R)\\sum_i \\mathbb E^{\\mathbb Q}[\\text{EE}(t_i)]\\,\\big(Q(t_{i-1})-Q(t_i)\\big)\\,P(0,t_i)\\]<br><b>Worked:</b> For the stock at 100 above, \\(\\mathbb E^{\\mathbb P}[S_1]=107\\) and \\(\\mathbb E^{\\mathbb Q}[S_1]=103\\). A PFE built on \\(\\mathbb Q\\) paths carries the risk-premium drift, so its distribution is shifted away from the physical one.<br><b>Used in the deck for:</b> XVA and exposure simulation (10_xva_funding); PFE and regulatory capital (09_scenarios_markets_reg).",
+  "tags": [
+   "xva",
+   "cva",
+   "pfe",
+   "measures",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How does a Monte Carlo price work, and what is its standard error?",
+  "back": "<b>Answer:</b> Simulate \\(N\\) paths under \\(\\mathbb Q\\), discount each payoff, and average. The standard error is \\(s/\\sqrt N\\), where \\(s\\) is the sample standard deviation of the discounted payoffs.<br><b>Intuition:</b> Each path is an independent draw of the payoff, so the average converges at rate \\(1/\\sqrt N\\) regardless of dimension. Halving the error needs four times the paths.<br><b>Formula:</b> \\[\\hat V=\\frac{e^{-rT}}{N}\\sum_{i=1}^N h\\big(S_T^{(i)}\\big),\\qquad \\mathrm{SE}=\\frac{s}{\\sqrt N}\\]<br><b>Worked:</b> If the payoff std is 12 and \\(N=10{,}000\\): \\(\\mathrm{SE}=0.12\\). Halving to 0.06 needs \\(N=40{,}000\\); a target of 0.012 needs \\(N=10^6\\).<br><b>Used in the deck for:</b> MC for path-dependent and multi-factor products (08_coding_numerics), CMS spread and Bermudan LSM (03_rates_options_deep), XVA simulation (10_xva_funding).",
+  "tags": [
+   "monte_carlo",
+   "standard_error",
+   "estimator",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Name two variance-reduction techniques for Monte Carlo and when each helps.",
+  "back": "<b>Answer:</b> Antithetic variates pair each shock \\(Z\\) with \\(-Z\\). Control variates subtract a correlated payoff with a known price. Antithetic helps when the payoff is monotone in the shock. A control helps when a close analogue has a known price.<br><b>Intuition:</b> Antithetic pairs remove the odd-moment part of the estimator. A control variate with optimal coefficient \\(c=\\mathrm{Cov}/\\mathrm{Var}\\) removes the part of the payoff's variance explained by the control, leaving \\((1-\\rho^2)\\) of the original variance.<br><b>Formula:</b> \\[\\hat V_{\\text{cv}}=\\hat X+c\\,(\\mu_Y-\\hat Y),\\qquad \\mathrm{Var}_{\\text{cv}}=(1-\\rho^2)\\,\\mathrm{Var}(X)\\]<br><b>Worked:</b> With correlation 0.95 to a control, the variance falls to \\(1-0.9025=9.75\\%\\) of the original, so the standard error falls to about 31%.<br><b>Used in the deck for:</b> efficiency of estimators (08_coding_numerics); XVA simulation cost (10_xva_funding).",
+  "tags": [
+   "variance_reduction",
+   "monte_carlo",
+   "control_variate",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When would you price with a tree, a PDE grid or Monte Carlo?",
+  "back": "<b>Answer:</b> Trees and PDE grids suit one or two state variables with early exercise or barriers. Monte Carlo suits path dependence and three or more factors, because its cost grows only linearly with dimension.<br><b>Intuition:</b> Grid methods suffer from the curse of dimension: each extra factor multiplies the nodes. Monte Carlo's convergence rate is \\(1/\\sqrt N\\) for any dimension. The trade-off is that Monte Carlo handles early exercise only with regression (LSM) or a second pass.<br><b>Formula:</b> \\[\\text{nodes per step}=N_S^{\\,d}\\quad(d=\\text{factors});\\qquad \\mathrm{SE}\\propto N^{-1/2}\\]<br><b>Worked:</b> A three-factor grid with 100 points per dimension has \\(100^3=10^6\\) nodes per time step. A Monte Carlo with \\(10^5\\) paths and 50 steps costs about \\(5\\times10^6\\) operations and is independent of \\(d\\) in its rate.<br><b>Used in the deck for:</b> pricing methods for Bermudans and LMMs (03_rates_options_deep); XVA and hybrid models (10_xva_funding); numerical methods (08_coding_numerics).",
+  "tags": [
+   "numerical_methods",
+   "trees",
+   "pde",
+   "monte_carlo",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How do you compute delta by bump-and-revalue, and what is its error?",
+  "back": "<b>Answer:</b> Central difference: \\(\\Delta\\approx[V(S+h)-V(S-h)]/(2h)\\). Its error is \\(O(h^2)\\), compared with \\(O(h)\\) for a one-sided bump.<br><b>Intuition:</b> Bumping up and down cancels the first-order error in the Taylor expansion of \\(V\\). Too large a bump biases the estimate through curvature; too small a bump amplifies rounding and, for Monte Carlo, the sampling noise.<br><b>Formula:</b> \\[\\Delta\\approx\\frac{V(S+h)-V(S-h)}{2h}\\]<br><b>Worked:</b> Black–Scholes 1y ATM call, \\(S=100\\), 20% vol, \\(r=0\\), \\(h=1\\): \\(V(101)=8.5153\\), \\(V(99)=7.4357\\), so \\(\\Delta=0.5398\\). The exact \\(N(d_1)=0.5398\\).<br><b>Used in the deck for:</b> bumped Greeks and CS01 bumps (05_credit_cds); numerical Greeks (08_coding_numerics).",
+  "tags": [
+   "greeks",
+   "bump_and_revalue",
+   "delta",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How do you compute gamma and vega by bumping, and what must you control for a Monte Carlo price?",
+  "back": "<b>Answer:</b> Gamma is the second central difference \\([V(S+h)-2V(S)+V(S-h)]/h^2\\). Vega is the central difference in \\(\\sigma\\). For Monte Carlo, use common random numbers so the bumped prices share the same paths.<br><b>Intuition:</b> The second difference cancels the first order and isolates curvature. Without common random numbers, the MC noise is larger than the bump effect and the Greek is dominated by sampling error.<br><b>Formula:</b> \\[\\Gamma\\approx\\frac{V(S+h)-2V(S)+V(S-h)}{h^2},\\qquad \\mathrm{Vega}\\approx\\frac{V(\\sigma+\\delta\\sigma)-V(\\sigma-\\delta\\sigma)}{2\\,\\delta\\sigma}\\]<br><b>Worked:</b> Same BS call with \\(h=1\\): \\(\\Gamma=(8.5153-15.9312+7.4357)=0.0198\\), exact \\(\\phi(d_1)/(S\\sigma\\sqrt T)=0.0198\\). Vega per 1 vol point: \\((V(21)-V(19))/2=0.397\\), exact 0.397.<br><b>Used in the deck for:</b> Greeks and CRN in MC (08_coding_numerics); CS01 bumps (05_credit_cds).",
+  "tags": [
+   "greeks",
+   "gamma",
+   "vega",
+   "common_random_numbers",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why does a one-factor model with \\(\\rho=1\\) fail to price a 2s10s spread option, and how large is the error?",
+  "back": "<b>Answer:</b> A one-factor model makes all forward rates perfectly correlated, so the vol of a spread between two tenors is \\(|\\sigma_a-\\sigma_b|\\). Observed correlation between 2y and 10y rates is well below 1, so the spread vol is much larger than the one-factor value.<br><b>Intuition:</b> With \\(\\rho=1\\) the curve only shifts or changes slope in one direction, so the spread never decorrelates. Real curves have a level factor, a slope factor and a curvature factor, with the slope factor creating most of the spread vol.<br><b>Formula:</b> \\[\\sigma_{\\text{spread}}^2=\\sigma_a^2+\\sigma_b^2-2\\rho\\,\\sigma_a\\sigma_b\\]<br><b>Worked:</b> 2y vol 90bp, 10y vol 70bp: at \\(\\rho=1\\) the spread vol is 20bp; at an illustrative \\(\\rho=0.6\\) it is \\(\\sqrt{8100+4900-7560}=73.8\\)bp, about 3.7 times larger (\\(\\rho=0.6\\) is illustrative, not a market quote).<br><b>Used in the deck for:</b> steepener option pricing and the HW one-factor limit (03_rates_options_deep); multi-factor LMM and rank reduction (03_rates_options).",
+  "tags": [
+   "one_factor",
+   "correlation",
+   "spread_option",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Price a zero-coupon bond that can default, using survival \\(S(T)\\) and recovery \\(R\\). Give the decomposition and the value versus a riskless bond.",
+  "back": "<b>Answer:</b> \\(V=P(0,T)\\,[S(T)+R(1-S(T))]\\), if recovery of face value is paid at maturity. The loss versus a riskless bond is \\(P(0,T)(1-S(T))(1-R)\\).<br><b>Intuition:</b> The bond pays 1 if the issuer survives and \\(R\\) if it defaults, and the default leg is assumed to pay \\(R\\) at \\(T\\). Probability weights are survival and default, and the discount factor is the same for both.<br><b>Formula:</b> \\[V=P(0,T)\\big[S(T)+R\\,(1-S(T))\\big]=P(0,T)-P(0,T)(1-S(T))(1-R)\\]<br><b>Worked:</b> \\(P=0.90\\), \\(S(5)=0.85\\), \\(R=40\\%\\): \\(V=0.90\\,(0.85+0.06)=0.819\\). The riskless value is 0.900, so the loss is \\(0.90\\times0.15\\times0.60=0.081\\).<br><b>Used in the deck for:</b> CLN and bond pricing (05_credit_cds); CVA and DVA (06_credit_models_cln).",
+  "tags": [
+   "risky_bond",
+   "recovery",
+   "survival",
+   "decomposition",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "For a flat hazard \\(\\lambda\\) and recovery \\(R\\), what is the CDS par spread (credit triangle)? Give the 5y numbers for a 100bp spread at 40% recovery.",
+  "back": "<b>Answer:</b> \\(s\\approx\\lambda(1-R)\\), exact for a continuous premium with zero rates. With 100bp and 40% recovery, \\(\\lambda=1.667\\%\\) and the 5y cumulative PD is 8.0%.<br><b>Intuition:</b> Protection pays \\((1-R)\\) at the default rate \\(\\lambda\\), and the premium is the spread paid while alive. Equating the two legs gives the spread as the loss rate. Discounting changes the mapping at the second order.<br><b>Formula:</b> \\[s=\\lambda(1-R),\\qquad S(T)=e^{-\\lambda T}\\]<br><b>Worked:</b> \\(\\lambda=0.01/0.6=1.667\\%\\); \\(S(5)=e^{-0.0833}=0.9200\\), so the cumulative PD is 8.0%.<br><b>Used in the deck for:</b> CDS and index pricing (05_credit_cds); CDS curve bootstrap (06_credit_models_cln_deep).",
+  "tags": [
+   "credit_triangle",
+   "cds",
+   "hazard",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why do you bootstrap a survival curve pillar by pillar, and what does a forward hazard tell you?",
+  "back": "<b>Answer:</b> Each CDS pillar fixes the hazard of the next segment, given the earlier segments. A forward hazard is the constant hazard over a later interval that reproduces the next pillar's survival. The forward hazard sits above the average when the spread curve is upward sloping.<br><b>Intuition:</b> A 2y CDS spread is an average hazard over \\((0,2]\\), so given the 1y hazard, the segment \\((1,2]\\) must carry the rest. If the 2y average hazard is above the 1y hazard, the forward hazard must be higher still.<br><b>Formula:</b> \\[S(T_2)=S(T_1)\\,\\exp\\!\\big(-\\lambda_{(T_1,T_2]}(T_2-T_1)\\big),\\qquad \\lambda_{(1,2]}=\\frac{-\\ln(S(2)/S(1))}{1}\\]<br><b>Worked:</b> 1y spread 100bp, 2y spread 120bp, \\(R=40\\%\\): \\(\\lambda_{(0,1]}=1.667\\%\\), \\(S(1)=0.98347\\). The 2y average hazard is 2.0%, so \\(S(2)=e^{-0.04}=0.96079\\). The forward hazard over \\((1,2]\\) is \\(0.04-0.01667=2.33\\%\\).<br><b>Used in the deck for:</b> CDS bootstrap chain (06_credit_models_cln_deep); CDS curve construction (05_credit_cds).",
+  "tags": [
+   "bootstrap",
+   "survival_curve",
+   "forward_hazard",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "In Merton's model, write equity as a call on firm value and the debt as a riskless bond less a put. Give the 1y numbers.",
+  "back": "<b>Answer:</b> \\(E=V\\Phi(d_1)-De^{-rT}\\Phi(d_2)\\). Debt is \\(De^{-rT}\\) minus a put on \\(V\\) struck at \\(D\\). Shareholders own the call, and creditors are short the put.<br><b>Intuition:</b> Equity has limited liability: it gets \\(\\max(V_T-D,0)\\), which is a call with strike \\(D\\). Creditors receive \\(\\min(V_T,D)=D-(D-V_T)^+\\), so the debt is a bond less a put. Credit risk is the value of that put.<br><b>Formula:</b> \\[E=V\\,\\Phi(d_1)-D e^{-rT}\\Phi(d_2),\\qquad \\text{Debt}=V-E\\]<br><b>Worked:</b> \\(V=100\\), \\(D=70\\), \\(T=1\\), \\(\\sigma=20\\%\\), \\(r=3\\%\\): \\(E=32.24\\), Debt \\(=67.76\\). The riskless PV of 70 is 67.93, so the credit discount is 0.17 (about 0.25%).<br><b>Used in the deck for:</b> structural credit models (06_credit_models_cln); CLN and funded credit structures (06_credit_models_cln_deep).",
+  "tags": [
+   "merton",
+   "structural_model",
+   "option_view",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Define distance to default in Merton's model and convert it to a PD under the real-world and the risk-neutral drift.",
+  "back": "<b>Answer:</b> \\(DD=\\dfrac{\\ln(V/D)+(\\mu-\\tfrac12\\sigma^2)T}{\\sigma\\sqrt T}\\) and \\(\\mathrm{PD}_{\\mathbb P}=\\Phi(-DD)\\). Under \\(\\mathbb Q\\) use \\(\\mu=r\\). The risk-neutral PD is higher because the drift is lower.<br><b>Intuition:</b> DD is the number of asset-vol standard deviations between the asset value and the default point. A lower drift moves the asset closer to the barrier, so a \\(\\mathbb Q\\) PD is above the \\(\\mathbb P\\) PD for the same asset.<br><b>Formula:</b> \\[\\mathrm{DD}=\\frac{\\ln(V/D)+(\\mu-\\tfrac12\\sigma^2)T}{\\sigma\\sqrt T},\\qquad \\mathrm{PD}=\\Phi(-\\mathrm{DD})\\]<br><b>Worked:</b> \\(V=100\\), \\(D=70\\), \\(T=1\\), \\(\\sigma=20\\%\\), \\(\\mu=6\\%\\): DD \\(=1.98\\), PD \\(=2.37\\%\\). Using \\(\\mu=r=3\\%\\): DD \\(=1.83\\), \\(\\mathrm{PD}_{\\mathbb Q}=3.34\\%\\).<br><b>Used in the deck for:</b> KMV and real-world PD (06_credit_models_cln); the risk-neutral vs real-world PD gap (06_credit_models_cln_deep).",
+  "tags": [
+   "distance_to_default",
+   "kmv",
+   "real_world_pd",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A hazard rate is \\(\\lambda\\). For a flat 2% hazard, give the 5y survival, the 5y cumulative PD and the annual conditional PD.",
+  "back": "<b>Answer:</b> \\(S(T)=e^{-\\lambda T}\\). With \\(\\lambda=2\\%\\): \\(S(5)=0.9048\\), cumulative PD 9.52%, and an annual conditional PD of about 1.98%.<br><b>Intuition:</b> The hazard is the instantaneous conditional default rate, given survival so far. The conditional annual PD is \\(1-e^{-\\lambda}\\), which is slightly below \\(\\lambda\\) because of compounding.<br><b>Formula:</b> \\[S(T)=e^{-\\int_0^T\\lambda(s)\\,ds},\\qquad \\mathrm{PD}(0,T)=1-S(T)\\]<br><b>Worked:</b> \\(e^{-0.1}=0.90484\\), so \\(\\mathrm{PD}(0,5)=9.52\\%\\). The annual conditional PD is \\(1-e^{-0.02}=1.98\\%\\).<br><b>Used in the deck for:</b> survival and hazard definitions used in CDS and CLN pricing (05_credit_cds); credit curves (06_credit_models_cln).",
+  "tags": [
+   "hazard",
+   "survival",
+   "pd",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the par swap rate \\(S\\) from discount factors, and state why the ATM swaption strike is the forward swap rate and not the spot 5y par rate.",
+  "back": "<b>Answer:</b> \\(S(t)=\\dfrac{P(t,T_a)-P(t,T_b)}{A(t)}\\), where \\(A(t)=\\sum\\tau_iP(t,T_i)\\). The ATM strike is the forward swap rate \\(S(0)\\), because the swaption is at the money when its value would be zero if exercised today.<br><b>Intuition:</b> The fixed leg must equal the floating leg at inception, and the floating leg telescopes to \\(P(t,T_a)-P(t,T_b)\\). The fair fixed rate is the ratio of the floating-leg value to the annuity, and it is forward-looking.<br><b>Formula:</b> \\[S(0)=\\frac{P(0,T_a)-P(0,T_b)}{\\sum_{i=a+1}^{b}\\tau_iP(0,T_i)}\\]<br><b>Worked:</b> Annual-compounding discount factors \\(P(0,T)=1.03^{-T}\\), 1y×5y: \\(A(0)=4.446\\), \\(P(0,1)-P(0,6)=0.9709-0.8375=0.1334\\), so \\(S=0.1334/4.446=3.00\\%\\).<br><b>Used in the deck for:</b> swap-rate and annuity definitions across the deck (03_rates_options), CMS (03_rates_options_deep).",
+  "tags": [
+   "par_swap_rate",
+   "annuity",
+   "forward_swap",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the value of a forward rate agreement at inception and mark-to-market, and how does it link to the caplet?",
+  "back": "<b>Answer:</b> \\(\\mathrm{FRA}=N\\tau P(0,T_1)(F-K)\\) at \\(T_0\\)-fixed forwards. A caplet is an FRA with a floor at zero (its positive part), so an FRA is the linear building block that caps and swaps are built from.<br><b>Intuition:</b> An FRA locks the forward. Its value is linear in \\(F\\), so it has no optionality. A caplet only pays when the FRA is in the money, and the cap pays the positive part of each FRA.<br><b>Formula:</b> \\[\\mathrm{FRA}=N\\,\\tau\\,P(0,T_1)\\,(F-K)\\]<br><b>Worked:</b> 10m, \\(\\tau=0.25\\), \\(P(0,1.25)=0.9632\\), \\(F=3.5\\%\\), \\(K=3.0\\%\\): \\(10^7\\times0.25\\times0.9632\\times0.005=12{,}040\\).<br><b>Used in the deck for:</b> linear building blocks for swaps and caps (03_rates_options); floating-leg value in swap pricing (02_swaps_curves).",
+  "tags": [
+   "fra",
+   "linear_instrument",
+   "building_block",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Caplet price \\(=N\\tau\\,{{c1::\\(P(0,T_1)\\)}}\\,[F\\Phi(d_1)-K\\Phi(d_2)]\\). The volatility in \\(d_1,d_2\\) is quoted over the {{c2::fixing date \\(T_0\\)}}, not the payment date.",
+  "back": "The discount factor is at the payment date, and the volatility is at the fixing date.",
+  "tags": [
+   "caplet",
+   "black76",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "ATM Black swaption value per unit annuity is \\(S(2\\Phi(\\sigma\\sqrt T/2)-1)\\approx{{c1::\\(0.4\\,S\\,\\sigma\\sqrt T\\)}}\\), so the ATM premium is almost linear in vol.",
+  "back": "Use \\(2\\Phi(x)-1\\approx 2\\phi(0)x\\) with \\(\\phi(0)=0.3989\\).",
+  "tags": [
+   "swaption",
+   "atm",
+   "cloze",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Vasicek stationary standard deviation is {{c1::\\(\\sigma/\\sqrt{2a}\\)}}, and the mean-reversion half-life is {{c2::\\(\\ln 2/a\\)}}.",
+  "back": "With \\(a=0.5\\) the half-life is 1.39y and the stationary sd equals \\(\\sigma\\) when \\(a=0.5\\).",
+  "tags": [
+   "vasicek",
+   "mean_reversion",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Ho–Lee has no mean reversion, so \\(\\mathrm{Var}(r_t)={{c1::\\(\\sigma^2 t\\)}}\\), which grows without bound with \\(t\\).",
+  "back": "This is the long-end weakness that Hull–White's \\(a>0\\) removes.",
+  "tags": [
+   "ho_lee",
+   "no_mean_reversion",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Monte Carlo standard error is {{c1::\\(s/\\sqrt N\\)}}, so halving it requires {{c2::4 times}} as many paths.",
+  "back": "\\(s\\) is the sample standard deviation of the discounted payoffs.",
+  "tags": [
+   "monte_carlo",
+   "standard_error",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The swaption volatility cube is indexed by {{c1::expiry}}, {{c2::tenor}} and {{c3::strike}}.",
+  "back": "The ATM surface is expiry by tenor; the smile adds the strike direction.",
+  "tags": [
+   "vol_cube",
+   "swaption_vol",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Loss on a risky zero versus a riskless zero equals {{c1::\\(P(0,T)\\,(1-S(T))\\,(1-R)\\)}}, when recovery of face value is paid at maturity.",
+  "back": "With \\(P=0.90\\), \\(S(5)=0.85\\), \\(R=40\\%\\): loss \\(=0.081\\).",
+  "tags": [
+   "risky_bond",
+   "recovery",
+   "cloze",
+   "lvl_foundation"
+  ]
+ }
+]

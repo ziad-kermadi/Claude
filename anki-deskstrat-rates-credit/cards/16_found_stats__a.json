@@ -1,0 +1,501 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PSD 1/4]</b> Context: a 3-asset book, \\(\\Sigma\\) is the covariance matrix of daily returns. Why must \\(\\Sigma\\) be positive semi-definite (PSD), and what does that buy you?",
+  "back": "<b>Answer:</b> For any weight vector \\(w\\), the variance of the portfolio \\(w^\\top X\\) is \\(w^\\top\\Sigma w\\). A variance cannot be negative, so \\(w^\\top\\Sigma w\\ge 0\\) for every \\(w\\). That is the definition of PSD.<br>\n<b>Intuition:</b> every portfolio, long or short, has a non-negative variance. A matrix that gave a negative variance for some combination of positions would describe a return distribution that cannot exist.<br>\n<b>Precise statement:</b> \\(\\Sigma\\succeq 0 \\iff w^\\top\\Sigma w\\ge 0\\ \\forall w \\iff \\lambda_i(\\Sigma)\\ge 0\\ \\forall i\\). Strict positive definiteness (\\(>0\\)) additionally rules out a zero-variance portfolio, i.e. a redundant asset.<br>\n<b>Example:</b> \\(\\Sigma=\\begin{pmatrix}4&2\\\\2&5\\end{pmatrix}\\), \\(w=(1,-1)\\): \\(w^\\top\\Sigma w=4-4+5=5\\ge 0\\).<br>\n<b>Used in the deck for:</b> the Cholesky simulation of correlated shocks (08 coding numerics), PCA of curve changes, and the nearest-correlation repair in chain PSD 2 to 4.",
+  "tags": [
+   "linear_algebra",
+   "psd",
+   "chain_psd",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PSD 2/4]</b> Context: a desk builds a 3x3 correlation matrix from three pairwise estimates, \\(\\rho_{12}=0.9\\), \\(\\rho_{13}=0.9\\), \\(\\rho_{23}=-0.9\\). Is it a valid correlation matrix? Show the test.",
+  "back": "<b>Answer:</b> No. The eigenvalues are \\(-0.8,\\ 1.9,\\ 1.9\\), so the matrix is not PSD.<br>\n<b>Why:</b> asset 1 moves with 2, and asset 1 moves with 3, so 2 and 3 should not be strongly negatively correlated. The three numbers are jointly impossible.<br>\n<b>Test:</b> \\(\\det C=1+2\\rho_{12}\\rho_{13}\\rho_{23}-\\rho_{12}^2-\\rho_{13}^2-\\rho_{23}^2=1-1.458-2.430=-2.888<0\\). The determinant is the product of the eigenvalues, so a negative value already proves a negative eigenvalue.<br>\n<b>Interviewer follow-up:</b> Why can a 2x2 correlation matrix never fail this test? For 2x2, PSD only needs \\(\\det=1-\\rho^2\\ge 0\\), i.e. \\(|\\rho|\\le 1\\), which is automatic. The constraint couples three or more pairs.",
+  "tags": [
+   "linear_algebra",
+   "psd",
+   "chain_psd",
+   "numerical",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PSD 3/4]</b> Context: the matrix from 2/4 is repaired using a rounded version with \\(\\rho_{12}=0.94\\), \\(\\rho_{13}=-0.94\\), \\(\\rho_{23}=-0.50\\) (eigenvalues \\(-0.103,\\ 0.5,\\ 2.603\\)). Give the nearest valid correlation matrix in the Frobenius norm and compare eigenvalue clipping with Higham's method.",
+  "back": "<b>Answer:</b> Higham's algorithm gives the nearest correlation matrix in the Frobenius norm. Eigenvalue clipping gives a valid matrix quickly, but not the nearest one.<br>\n<b>Eigenvalue clipping:</b> set negative eigenvalues to 0 (or a small \\(\\epsilon\\)), rebuild \\(X=V\\Lambda^+V^\\top\\), then rescale to unit diagonal, \\(C=D^{-1/2}XD^{-1/2}\\) with \\(D=\\mathrm{diag}(X)\\). Result (approx.): \\(\\rho_{12}=0.869,\\ \\rho_{13}=-0.869,\\ \\rho_{23}=-0.510\\), \\(\\|C-C_{\\rm clip}\\|_F\\approx 0.143\\).<br>\n<b>Higham (2002):</b> alternate between projecting onto the PSD cone (eigenvalue clipping) and resetting the diagonal to 1, using Dykstra's correction for the nearest-point version. Result (approx.): \\(\\rho_{12}=0.876,\\ \\rho_{13}=-0.876,\\ \\rho_{23}=-0.536\\), \\(\\|C-C_H\\|_F\\approx 0.137\\). Higham is nearer.<br>\n<b>Caveat:</b> the nearest matrix here is singular (smallest eigenvalue 0). Cholesky on it is fragile, so add a tiny diagonal loading if the factorisation must run.<br>\n<b>Used in the deck for:</b> the desk repair step in chain PSD 4/4.",
+  "tags": [
+   "linear_algebra",
+   "psd",
+   "chain_psd",
+   "numerical",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PSD 4/4]</b> Context: at 16:10 the Monte Carlo engine throws \"matrix not positive definite\" when it runs Cholesky on the 12-factor correlation matrix, which was built from pairwise-complete historical data. Walk through what you do before the pricing run.",
+  "back": "<ol>\n<li><b>Diagnose:</b> compute the smallest eigenvalue of the matrix, not the pairwise numbers. Find the pairs that conflict, typically |ρ| close to 1 with sign inconsistencies. Pairwise-complete estimation over different sample windows is the usual cause: each entry comes from a different sample, so the joint constraint is not enforced.</li>\n<li><b>Repair:</b> Higham nearest correlation matrix with unit diagonal, preferred; eigenvalue clipping with rescale is the fast fallback. Add a small diagonal loading (e.g. \\(10^{-8}\\)) so Cholesky runs with strictly positive pivots.</li>\n<li><b>Quantify:</b> record the largest absolute entry change and the Frobenius distance. Check that the repaired matrix moves the risk numbers (CVA or VaR) by an immaterial amount. If one pair moves far more than its estimation error would suggest, the input window is wrong: fix the data, do not repair the matrix.</li>\n<li><b>Control:</b> log the repair and the affected pairs in the model-risk record, and compare with yesterday's matrix so that a repair does not create a day-to-day jump in the book.</li>\n</ol>\n<b>Interviewer follow-up:</b> Why is pairwise-complete correlation not guaranteed PSD? Each entry is estimated on its own sample, so nothing forces the assembled matrix to satisfy the joint PSD constraint.<br>\n<b>Used in the deck for:</b> Monte Carlo correlation setup (08 coding numerics, correlated Brownian drivers).",
+  "tags": [
+   "linear_algebra",
+   "psd",
+   "chain_psd",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: COLLIN 1/4]</b> Context: a 5y position is hedged with a 4y and a 6y swap, whose yield changes have correlation 0.999. An OLS regression gives hedge betas \\((0.5,0.5)\\). Why are these betas unreliable, and what does a 0.1% error in one covariance entry do?",
+  "back": "<b>Answer:</b> the two regressors carry almost the same risk. Only their sum is well determined. The difference is set by tiny differences in the data, so it swings wildly.<br>\n<b>Calculation:</b> \\(\\Sigma=\\begin{pmatrix}1&0.999\\\\0.999&1\\end{pmatrix}\\), true \\(\\beta_0=(0.5,0.5)\\), so \\(c=\\Sigma\\beta_0\\approx(0.9995,0.9995)\\). Perturb \\(c\\) by \\((+0.001,-0.001)\\), a 0.1% error. Since \\(\\Sigma^{-1}=\\frac{1}{1-\\rho^2}\\begin{pmatrix}1&-\\rho\\\\-\\rho&1\\end{pmatrix}\\), we get \\(\\delta\\beta=\\frac{\\varepsilon}{1-\\rho}(1,-1)^\\top=(+1,-1)\\) with \\(\\varepsilon=0.001\\), \\(1-\\rho=0.001\\). New betas: \\((1.5,\\,-0.5)\\).<br>\n<b>Lesson:</b> a 0.1% input error moves each coefficient by 200% of its true size. The sum \\(\\beta_1+\\beta_2=1\\) is unchanged, which is the well-determined combination.<br>\n<b>Interviewer follow-up:</b> why is the sum stable? \\(\\Sigma\\) has eigenvalue \\(1+\\rho=1.999\\) on \\((1,1)\\) and \\(1-\\rho=0.001\\) on \\((1,-1)\\). The hedge difference lives in the 0.001 direction.",
+  "tags": [
+   "regression",
+   "collinearity",
+   "chain_collin",
+   "mental_math",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: COLLIN 2/4]</b> Context: the same two-swap hedge, \\(\\rho=0.999\\). Define the condition number, compute it, and state the bound that turns relative input error into relative error in the hedge betas.",
+  "back": "<b>Definition:</b> \\(\\kappa(A)=\\sigma_{\\max}(A)/\\sigma_{\\min}(A)\\), the ratio of largest to smallest singular value. For a symmetric PD matrix this is \\(\\lambda_{\\max}/\\lambda_{\\min}\\).<br>\n<b>Computation:</b> the eigenvalues of \\(\\begin{pmatrix}1&\\rho\\\\\\rho&1\\end{pmatrix}\\) are \\(1\\pm\\rho\\), so \\(\\kappa=\\frac{1+\\rho}{1-\\rho}=\\frac{1.999}{0.001}=1999\\). The design matrix \\(X\\) itself has \\(\\kappa(X)=\\sqrt{\\kappa(X^\\top X)}\\approx 44.7\\).<br>\n<b>Bound:</b> for \\(A\\beta=c\\), \\(\\frac{\\|\\delta\\beta\\|}{\\|\\beta\\|}\\le\\kappa(A)\\,\\frac{\\|\\delta c\\|}{\\|c\\|}\\) to first order. Here \\(1999\\times0.1\\%\\approx 200\\%\\), which is exactly the \\(\\pm1\\) shift on \\(\\beta=0.5\\) in 1/4.<br>\n<b>Used in the deck for:</b> ridge as a conditioning fix (4/4), and the QR versus normal-equations card (\\(\\kappa^2\\) loss).",
+  "tags": [
+   "linear_algebra",
+   "condition_number",
+   "chain_collin",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: COLLIN 3/4]</b> Context: the two-swap hedge with pairwise regressor correlation 0.999. Define the variance inflation factor (VIF), compute it, and say how you would use it in a hedge regression.",
+  "back": "<b>Definition:</b> \\(\\mathrm{VIF}_j=\\frac{1}{1-R_j^2}\\), where \\(R_j^2\\) is the \\(R^2\\) from regressing regressor \\(j\\) on all the others. With two regressors \\(R_j^2=\\rho^2=0.998001\\), so \\(\\mathrm{VIF}=1/0.001999=500.25\\).<br>\n<b>Link to conditioning:</b> for standardised regressors, \\(\\mathrm{VIF}_j=[\\Sigma_{xx}^{-1}]_{jj}\\). The VIFs are the diagonal of the inverse correlation matrix, and the condition number is the spread of its eigenvalues.<br>\n<b>Use:</b> the usual rule of thumb (approx.) flags VIF above 5 to 10. Treat it as a warning, not a test. The real question is whether each instrument is needed for the hedge and whether its coefficient has a stable economic sign.<br>\n<b>Used in the deck for:</b> multicollinearity diagnostics in factor-model and hedge regressions.",
+  "tags": [
+   "regression",
+   "collinearity",
+   "chain_collin",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: COLLIN 4/4]</b> Context: with \\(X^\\top X=\\begin{pmatrix}1&0.99\\\\0.99&1\\end{pmatrix}\\) and \\(X^\\top y=(1,\\,0.99)^\\top\\), OLS gives \\((1,0)\\). Add a ridge penalty \\(\\lambda=0.1\\). What is the new hedge, why does it move, and what is the price?",
+  "back": "<b>Ridge estimator:</b> \\(\\hat\\beta_\\lambda=(X^\\top X+\\lambda I)^{-1}X^\\top y\\), the minimiser of \\(\\tfrac12\\|y-X\\beta\\|^2+\\tfrac{\\lambda}{2}\\|\\beta\\|^2\\).<br>\n<b>Compute:</b> \\(X^\\top X+0.1I=\\begin{pmatrix}1.1&0.99\\\\0.99&1.1\\end{pmatrix}\\), determinant 0.2299, so \\(\\hat\\beta_\\lambda\\approx(0.522,\\ 0.431)\\).<br>\n<b>Why it moves:</b> the penalty adds \\(\\lambda\\) to every eigenvalue. The eigenvalues of \\(X^\\top X\\) go from \\((1.99,\\,0.01)\\) to \\((2.09,\\,0.11)\\), so \\(\\kappa\\) falls from 199 to 19. The estimate stops chasing the noisy difference and splits the effect across the two correlated swaps.<br>\n<b>Price:</b> the estimate is biased towards zero and towards equal weights, in exchange for lower variance. \\(\\lambda\\) is set by cross-validation or by a prior: the ridge solution is the posterior mean under a \\(N(0,\\sigma^2/\\lambda)\\) prior.<br>\n<b>Used in the deck for:</b> regularised hedge estimates; contrast with the lasso in the standalone regularisation card.",
+  "tags": [
+   "regression",
+   "regularisation",
+   "chain_collin",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: INF 1/4]</b> Context: daily-change regression of a 2y spread on a 10y yield change, n=100, residual variance \\(\\hat\\sigma^2=4\\), \\(S_{xx}=\\sum(x_i-\\bar x)^2=25\\), \\(\\hat\\beta=1.0\\). Give the standard error and t-statistic, and the formula they rest on.",
+  "back": "<b>Answer:</b> \\(\\mathrm{SE}(\\hat\\beta)=\\sqrt{\\hat\\sigma^2/S_{xx}}=\\sqrt{4/25}=0.40\\), so \\(t=1.0/0.40=2.5\\).<br>\n<b>Formula:</b> under homoskedastic, uncorrelated errors, \\(\\mathrm{Var}(\\hat\\beta\\mid X)=\\sigma^2(X^\\top X)^{-1}\\), with \\(\\hat\\sigma^2=\\mathrm{SSR}/(n-k)\\). In simple regression \\((X^\\top X)^{-1}_{22}=1/S_{xx}\\).<br>\n<b>Reading:</b> \\(t=2.5\\) exceeds the two-sided 5% critical value (approx. 1.98 with 98 degrees of freedom). The formula is only valid if the errors are uncorrelated, which is what chains 2/4 to 4/4 attack.<br>\n<b>Used in the deck for:</b> the standard errors on every hedge beta and the overlapping-return corrections below.",
+  "tags": [
+   "regression",
+   "standard_errors",
+   "chain_inference",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: INF 2/4]</b> Context: you regress 10-day forward returns on a 10-day signal, sampled daily, so consecutive observations overlap by 9 days. The daily shocks are iid. Why are the residuals autocorrelated, and at which lags?",
+  "back": "<b>Answer:</b> each observation shares 9 of its 10 daily shocks with the next. Residuals inherit that overlap.<br>\n<b>Derivation:</b> for iid daily shocks with variance \\(\\sigma^2\\) and h-day sums \\(y_t=\\sum_{i=0}^{h-1}r_{t-i}\\): \\(\\mathrm{Var}(y_t)=h\\sigma^2\\), and \\(\\mathrm{Cov}(y_t,y_{t+j})=(h-j)\\sigma^2\\) for \\(0\\le j<h\\), zero beyond. So \\(\\rho_j=\\frac{h-j}{h}\\) for \\(j=1,\\dots,h-1\\) and \\(0\\) for \\(j\\ge h\\). For \\(h=10\\): 0.9, 0.8, ..., 0.1, then 0.<br>\n<b>Consequence:</b> the residuals are an MA(\\(h-1\\)) process, so the usual \"independent observations\" standard error is wrong. Whether the bias is large is the next card.<br>\n<b>Interviewer follow-up:</b> why does sampling every 10 days (non-overlapping) avoid this? The sums no longer share shocks, so \\(\\rho_j=0\\) for all \\(j\\ge1\\), at the cost of 10x fewer observations.<br><b>Used in the deck for:</b> the overlap correction in INF 3/4 and 4/4, and any overlapping-horizon backtest.",
+  "tags": [
+   "regression",
+   "autocorrelation",
+   "chain_inference",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: INF 3/4]</b> Context: the regression in 2/4 gives \\(\\hat\\beta=0.8\\) with a naive OLS standard error of 0.20 (t = 4.0). A colleague says the signal is clearly significant. Quantify what the overlap does to the standard error.",
+  "back": "<b>Answer:</b> the naive SE assumes no autocorrelation. With h-day overlap the true variance of the sample mean-type estimator is about \\(h\\) times the naive one, so the SE is about \\(\\sqrt h\\) times larger: \\(\\sqrt{10}\\approx 3.16\\). Corrected SE \\(\\approx 0.20\\times3.16=0.63\\), so \\(t\\approx 0.8/0.63=1.26\\). Not significant at 5%.<br>\n<b>Why \\(h\\):</b> the sum of autocovariances is \\(\\sum_{|j|<h}(h-|j|)\\sigma^2=h^2\\sigma^2\\), against the naive \\(h\\sigma^2\\) per observation. The ratio is \\(h\\).<br>\n<b>Check (Monte Carlo, h=10, T=2000, 4000 replications):</b> true variance of the sample mean over naive variance = 9.9, so the SE factor is 3.15. Matches \\(\\sqrt{10}\\).<br>\n<b>Where it breaks:</b> the \\(\\sqrt h\\) rule is exact for a mean; for a regression on a persistent signal the factor depends on the signal's autocorrelation. Use the HAC estimator in 4/4.<br>\n<b>Interviewer follow-up:</b> so what do you tell the PM? The signal is not established at 5%. Report HAC standard errors, or re-estimate on non-overlapping windows, before sizing the trade.",
+  "tags": [
+   "regression",
+   "autocorrelation",
+   "case_study",
+   "chain_inference",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: INF 4/4]</b> Context: the 10-day regression with daily sampling (\\(h=10\\)). Write the Newey–West (HAC) long-run variance, state the number of lags and the weights, and say why that lag choice is the right one.",
+  "back": "<b>Long-run variance:</b> \\(\\hat S=\\hat\\gamma_0+2\\sum_{j=1}^{L}w_j\\hat\\gamma_j\\), with Bartlett weights \\(w_j=1-\\frac{j}{L+1}\\). Here \\(\\hat\\gamma_j\\) is the sample autocovariance of the score \\(u_t=x_t\\hat\\varepsilon_t\\).<br>\n<b>Scalar slope variance:</b> \\(\\widehat{\\mathrm{Var}}(\\hat\\beta)=\\dfrac{\\sum_t u_t^2+2\\sum_{j=1}^{L}w_j\\sum_t u_t u_{t-j}}{\\left(\\sum_t x_t^2\\right)^2}\\). With \\(L=0\\) this is the White (HC0) estimator, so HAC also covers heteroskedasticity.<br>\n<b>Lag choice:</b> the induced residual autocorrelation is zero beyond lag \\(h-1\\), so use \\(L\\ge h-1=9\\). Using \\(L<9\\) keeps part of the overlap and understates the SE. The Bartlett weights keep \\(\\hat S\\) non-negative.<br>\n<b>Where it breaks:</b> with few independent blocks (small T) the HAC estimate is noisy and biased downward. Cross-check with non-overlapping sampling.<br>\n<b>Used in the deck for:</b> any backtest or signal regression on overlapping horizons.",
+  "tags": [
+   "regression",
+   "hac",
+   "derivation",
+   "chain_inference",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does the product \\(Ax\\) do, and how do you read the columns of \\(A\\)? Give a risk example.",
+  "back": "<b>Answer:</b> \\(Ax\\) is a linear map from \\(\\mathbb{R}^n\\) to \\(\\mathbb{R}^m\\). The columns \\(a_j\\) of \\(A\\) are the images of the basis vectors, and \\(Ax=\\sum_j x_j a_j\\). The output is a weighted sum of the columns, weighted by \\(x\\).<br>\n<b>Intuition:</b> the matrix turns a vector of exposures into a vector of outcomes. If \\(x\\) holds instrument notionals and \\(A\\) maps them to tenor DV01s, column \\(j\\) is the tenor profile of one unit of instrument \\(j\\).<br>\n<b>Example:</b> \\(A=\\begin{pmatrix}1&2\\\\0&1\\end{pmatrix}\\), \\(x=(3,-1)\\): \\(Ax=3(1,0)^\\top-1\\cdot(2,1)^\\top=(1,-1)^\\top\\).<br>\n<b>Used in the deck for:</b> factor-to-bucket mapping in the PCA hedge (01 govies deep), the Cholesky step \\(x=Lz\\), and regression design matrices.",
+  "tags": [
+   "linear_algebra",
+   "matrix_mult",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Let \\(A=\\begin{pmatrix}1&1\\\\0&1\\end{pmatrix}\\) (a shear) and \\(B=\\begin{pmatrix}0&-1\\\\1&0\\end{pmatrix}\\) (a quarter turn). Compute \\(AB\\) and \\(BA\\). What does the difference tell you about composing risk maps?",
+  "back": "<b>Answer:</b> \\(AB=\\begin{pmatrix}1&-1\\\\1&0\\end{pmatrix}\\), \\(BA=\\begin{pmatrix}0&-1\\\\1&1\\end{pmatrix}\\). They differ, so matrix multiplication is not commutative.<br>\n<b>Intuition:</b> \\(ABx\\) means apply \\(B\\) first, then \\(A\\). Order matters when the transformations do not commute, for example mapping instruments to buckets and then buckets to factors versus the reverse.<br>\n<b>Rules to keep:</b> \\((AB)x=A(Bx)\\); \\(\\det(AB)=\\det A\\,\\det B\\); \\((AB)^\\top=B^\\top A^\\top\\). The last rule is what gives the sandwich \\(W\\Sigma W^\\top\\) for a portfolio variance.<br>\n<b>Used in the deck for:</b> chaining instrument-to-factor mappings in the scenario and PCA chapters.",
+  "tags": [
+   "linear_algebra",
+   "matrix_mult",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two instruments have DV01 profiles \\(a_1=(1,2)\\) and \\(a_2=(2,4)\\) across two buckets. Write \\(A=[a_1\\ a_2]\\). What are its rank and determinant, and what does a zero determinant mean for the hedge?",
+  "back": "<b>Answer:</b> rank 1 and determinant 0, because column 2 is exactly twice column 1. \\(A\\) is singular and has no inverse.<br>\n<b>Meaning:</b> determinant is the signed volume scaling of the map. Zero means the map squashes the plane onto a line, so one dimension of risk is lost. Rank counts the independent risk directions the book carries.<br>\n<b>Hedge consequence:</b> \\(x=(2,-1)\\) gives \\(Ax=2a_1-a_2=(0,0)\\). Long 2 units of instrument 1 against short 1 unit of instrument 2 has zero risk in both buckets. The two instruments are the same risk, so the hedge ratio is not identified.<br>\n<b>Used in the deck for:</b> the redundant-instrument check before a bucket hedge is set up (01 govies).",
+  "tags": [
+   "linear_algebra",
+   "rank",
+   "determinant",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Invert \\(M=\\begin{pmatrix}4&7\\\\2&6\\end{pmatrix}\\). Give the determinant, the inverse, and check it.",
+  "back": "<b>Answer:</b> \\(\\det M=4\\cdot6-7\\cdot2=10\\). The 2x2 rule \\(M^{-1}=\\frac{1}{ad-bc}\\begin{pmatrix}d&-b\\\\-c&a\\end{pmatrix}\\) gives \\(M^{-1}=\\frac{1}{10}\\begin{pmatrix}6&-7\\\\-2&4\\end{pmatrix}=\\begin{pmatrix}0.6&-0.7\\\\-0.2&0.4\\end{pmatrix}\\).<br>\n<b>Check:</b> row 1 of \\(M\\) times column 1 of \\(M^{-1}\\) gives \\(4(0.6)+7(-0.2)=2.4-1.4=1\\), and row 1 times column 2 gives \\(4(-0.7)+7(0.4)=0\\).<br>\n<b>Practice:</b> you solve \\(Mx=b\\) without forming \\(M^{-1}\\). See the standalone card on solving versus inverting.<br>\n<b>Used in the deck for:</b> the bootstrap Jacobian solve in 08 coding numerics.",
+  "tags": [
+   "linear_algebra",
+   "inverse",
+   "mental_math",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Find the eigenvalues and eigenvectors of \\(A=\\begin{pmatrix}4&1\\\\2&3\\end{pmatrix}\\). Show the working and check it.",
+  "back": "<b>Characteristic polynomial:</b> \\(\\det(A-\\lambda I)=(4-\\lambda)(3-\\lambda)-2=\\lambda^2-7\\lambda+10=(\\lambda-5)(\\lambda-2)\\). So \\(\\lambda_1=5\\), \\(\\lambda_2=2\\). Check: trace \\(=7\\), determinant \\(=10\\).<br>\n<b>\\(\\lambda=5\\):</b> \\(A-5I=\\begin{pmatrix}-1&1\\\\2&-2\\end{pmatrix}\\), so \\(v_1=(1,1)^\\top\\). Check \\(Av_1=(5,5)^\\top=5v_1\\).<br>\n<b>\\(\\lambda=2\\):</b> \\(A-2I=\\begin{pmatrix}2&1\\\\2&1\\end{pmatrix}\\), so \\(v_2=(1,-2)^\\top\\). Check \\(Av_2=(2,-4)^\\top=2v_2\\).<br>\n<b>Intuition:</b> eigenvectors are the directions the map only stretches. \\(v_1\\) is stretched by 5, \\(v_2\\) by 2. The matrix is not symmetric, so the eigenvectors are not orthogonal: \\(v_1\\cdot v_2=-1\\neq0\\).<br>\n<b>Used in the deck for:</b> stability of linear recurrences (\\(A^n v=\\lambda^n v\\)) and the AR(1) and OU dynamics in 08 coding numerics.",
+  "tags": [
+   "linear_algebra",
+   "eigen",
+   "mental_math",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "For symmetric \\(\\Sigma\\) with eigenvalues \\(\\lambda_1\\ge\\dots\\ge\\lambda_n\\), show that \\(\\max_{\\|v\\|=1}v^\\top\\Sigma v=\\lambda_1\\), attained at the eigenvector. Why does this give the first principal component?",
+  "back": "<b>Derivation:</b> spectral theorem, \\(\\Sigma=Q\\Lambda Q^\\top\\) with \\(Q\\) orthogonal. Put \\(y=Q^\\top v\\), so \\(\\|y\\|=\\|v\\|=1\\). Then \\(v^\\top\\Sigma v=y^\\top\\Lambda y=\\sum_i\\lambda_i y_i^2\\le\\lambda_1\\sum_i y_i^2=\\lambda_1\\). Equality holds iff \\(y=e_1\\), i.e. \\(v\\) is the first eigenvector. Repeating the argument over directions orthogonal to the earlier eigenvectors gives \\(\\lambda_2,\\lambda_3,\\dots\\).<br>\n<b>PCA reading:</b> \\(\\mathrm{Var}(v^\\top X)=v^\\top\\Sigma v\\). The unit-length portfolio with the largest variance is PC1, and its variance is \\(\\lambda_1\\).<br>\n<b>Example:</b> \\(\\Sigma=\\begin{pmatrix}2&1\\\\1&2\\end{pmatrix}\\) (eigenvalues 3 and 1). The best direction is \\((1,1)/\\sqrt2\\), with variance \\(3\\).<br>\n<b>Where it breaks:</b> for a non-symmetric \\(A\\), the max of \\(v^\\top Av\\) over unit \\(v\\) is \\(\\lambda_{\\max}\\bigl((A+A^\\top)/2\\bigr)\\), the symmetric part, not an eigenvalue of \\(A\\). The unit-length constraint is needed; without it the max is unbounded.<br><b>Used in the deck for:</b> PC1 variance in the PCA hedge (01 govies deep) and the SVD-PCA card in this subdeck.",
+  "tags": [
+   "linear_algebra",
+   "pca",
+   "derivation",
+   "eigen",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A real symmetric \\(n\\times n\\) matrix has {{c1::real}} eigenvalues and {{c2::orthonormal}} eigenvectors, so \\(A=Q\\Lambda Q^\\top\\) with \\(Q^\\top Q=I\\) and \\(\\Lambda=\\mathrm{diag}(\\lambda_i)\\). For a non-symmetric matrix this {{c3::fails in general}}, because eigenvectors need not be orthogonal and eigenvalues may be complex.",
+  "back": "Example: \\(\\Sigma=\\begin{pmatrix}4&2\\\\2&2\\end{pmatrix}\\) has eigenvalues \\(3\\pm\\sqrt5\\approx 5.236,\\ 0.764\\). Checks: trace \\(6=5.236+0.764\\), determinant \\(4=5.236\\times0.764\\). Used in: PCA, the PSD test, and the Cholesky card.",
+  "tags": [
+   "linear_algebra",
+   "spectral",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A symmetric matrix is positive definite iff {{c1::all eigenvalues are strictly positive}}, equivalently {{c2::all leading principal minors are strictly positive}} (Sylvester's criterion). For \\(\\Sigma=\\begin{pmatrix}4&2\\\\2&5\\end{pmatrix}\\) the leading minors are {{c3::4 and 16}}, so \\(\\Sigma\\) is PD.",
+  "back": "Positive definite guarantees a unique Cholesky factor with positive diagonal. Positive semi-definite needs all principal minors (not only leading ones) to be non-negative, so the leading-minor test alone is not enough for a PSD claim. Example: \\(\\det\\Sigma=20-4=16\\).<br><b>Used in the deck for:</b> the PD check before Cholesky in PSD 4/4 and the nearest-correlation repair.",
+  "tags": [
+   "linear_algebra",
+   "psd",
+   "sylvester",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Factor \\(\\Sigma=\\begin{pmatrix}4&2\\\\2&5\\end{pmatrix}=LL^\\top\\) with \\(L\\) lower triangular. Then use \\(L\\) to turn two independent standard normals into two normals with covariance \\(\\Sigma\\).",
+  "back": "<b>Solve:</b> \\(\\ell_{11}^2=4\\Rightarrow\\ell_{11}=2\\). \\(\\ell_{11}\\ell_{21}=2\\Rightarrow\\ell_{21}=1\\). \\(\\ell_{21}^2+\\ell_{22}^2=5\\Rightarrow\\ell_{22}=2\\). So \\(L=\\begin{pmatrix}2&0\\\\1&2\\end{pmatrix}\\). Check: \\(LL^\\top=\\begin{pmatrix}4&2\\\\2&1+4\\end{pmatrix}=\\Sigma\\).<br>\n<b>Simulation:</b> with \\(z\\sim N(0,I)\\), \\(x=Lz\\) has covariance \\(LIL^\\top=\\Sigma\\). Explicitly \\(x_1=2z_1\\), \\(x_2=z_1+2z_2\\).<br>\n<b>Intuition:</b> \\(\\ell_{21}=\\mathrm{Cov}(x_1,x_2)/\\sqrt{\\mathrm{Var}(x_1)}\\) is the part of \\(x_2\\) explained by \\(x_1\\). The residual variance is \\(5-1=4=\\ell_{22}^2\\).<br>\n<b>Used in the deck for:</b> correlated Brownian drivers and Gaussian-copula simulation (08 coding numerics, 06 credit models).",
+  "tags": [
+   "linear_algebra",
+   "cholesky",
+   "simulation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Let \\(X\\in\\mathbb{R}^{n\\times p}\\) be the centred data matrix (rows are observations) with sample covariance \\(S=X^\\top X/(n-1)\\). Use the SVD \\(X=U\\Sigma V^\\top\\) to show what the principal directions, variances and scores are, and why you prefer the SVD numerically.",
+  "back": "<b>Derivation:</b> \\(X^\\top X=V\\Sigma^2V^\\top\\) because \\(U^\\top U=I\\). So \\(S=V\\,\\frac{\\Sigma^2}{n-1}\\,V^\\top\\). The columns of \\(V\\) are the eigenvectors of \\(S\\) (the loadings), and the eigenvalues are \\(\\lambda_i=\\sigma_i^2/(n-1)\\).<br>\n<b>Scores:</b> \\(XV=U\\Sigma\\), so the PC scores are the columns \\(\\sigma_iu_i\\). Variance explained by PC \\(i\\) is \\(\\lambda_i/\\sum_j\\lambda_j=\\sigma_i^2/\\sum_j\\sigma_j^2\\).<br>\n<b>Numerics:</b> forming \\(X^\\top X\\) squares the condition number. The SVD works on \\(X\\) and sees \\(\\kappa(X)\\). For yield-curve changes with tiny eigenvalues, this is the difference between a stable and a corrupted small PC.<br>\n<b>Where it breaks:</b> uncentred data gives a second-moment matrix, not a covariance. PCA on correlations differs from PCA on covariances unless the variables are standardised.<br>\n<b>Interviewer follow-up:</b> why are the right singular vectors the loadings? \\(V\\) gives the directions in variable space. \\(U\\) gives the unit-norm scores, which are not directions in the original variables.",
+  "tags": [
+   "linear_algebra",
+   "svd",
+   "pca",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Daily changes of the 2y, 5y and 10y yields (bp) have covariance matrix (illustrative, not market data) \\(\\Sigma=\\begin{pmatrix}16&13.6&9.8\\\\13.6&16&12.6\\\\9.8&12.6&12.25\\end{pmatrix}\\). Run PCA step by step: eigenvalues, variance explained, the PC1 loadings, and how a desk uses PC2 and PC3.",
+  "back": "<ol>\n<li><b>Eigenvalues:</b> \\(\\lambda=(39.01,\\ 4.34,\\ 0.898)\\), trace 44.25.</li>\n<li><b>Variance explained:</b> PC1 88.2%, PC2 9.8%, PC3 2.0%. Cumulative 98.0% after PC2.</li>\n<li><b>Loadings (unit norm, sign fixed by convention):</b> PC1 \\(\\approx(0.588,\\ 0.627,\\ 0.511)\\): a parallel shift. PC2 \\(\\approx(0.747,\\,-0.178,\\,-0.641)\\): a steepener or flattener, 2y against 10y. PC3 \\(\\approx(0.311,\\,-0.758,\\,0.573)\\): curvature, belly against wings.</li>\n<li><b>Factor size:</b> the standard deviation along PC1 is \\(\\sqrt{39.01}\\approx 6.25\\) bp per day, and along PC3 \\(\\sqrt{0.898}\\approx 0.95\\) bp per day.</li>\n<li><b>Desk use:</b> a PC-neutral trade sets exposures to PC1 and PC2 to zero and leaves PC3 curvature risk. PC3 is only 2% of variance but is what a butterfly trades, so it is kept.</li>\n</ol>\n<b>Interviewer follow-up:</b> how many PCs do you keep? Keep the ones whose residual risk matters for the book, not only those above a variance threshold.",
+  "tags": [
+   "linear_algebra",
+   "pca",
+   "case_study",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the OLS estimator \\(\\hat\\beta=(X^\\top X)^{-1}X^\\top y\\) from \\(\\min_\\beta\\|y-X\\beta\\|^2\\). State the condition that makes it unique, and the geometric meaning of the normal equations.",
+  "back": "<b>Derivation:</b> \\(S(\\beta)=y^\\top y-2\\beta^\\top X^\\top y+\\beta^\\top X^\\top X\\beta\\). Gradient: \\(\\nabla S=-2X^\\top y+2X^\\top X\\beta\\). Setting it to zero gives the normal equations \\(X^\\top X\\hat\\beta=X^\\top y\\).<br>\n<b>Uniqueness:</b> the Hessian \\(2X^\\top X\\) is positive definite iff \\(X\\) has full column rank \\(k\\). Otherwise there are infinitely many minimisers.<br>\n<b>Geometry:</b> the residual \\(e=y-X\\hat\\beta\\) satisfies \\(X^\\top e=0\\), so it is orthogonal to every column of \\(X\\). The fitted values \\(X\\hat\\beta\\) are the orthogonal projection of \\(y\\) onto the column space of \\(X\\).<br>\n<b>Used in the deck for:</b> every regression hedge ratio, the ridge derivation, and the QR comparison below.",
+  "tags": [
+   "regression",
+   "derivation",
+   "least_squares",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The hat matrix \\(H=X(X^\\top X)^{-1}X^\\top\\) is {{c1::symmetric and idempotent}}, so it is an orthogonal projection onto \\(\\mathrm{col}(X)\\), with \\(\\hat y=Hy\\). Its trace is \\(\\mathrm{tr}(H)=\\){{c2::k}}, the number of parameters, and the average leverage is {{c3::\\(k/n\\)}}.",
+  "back": "Residuals are \\(e=(I-H)y\\), which projects onto the orthogonal complement. \\(\\mathrm{tr}(H)=\\mathrm{tr}\\bigl((X^\\top X)^{-1}X^\\top X\\bigr)=\\mathrm{tr}(I_k)=k\\). Example: \\(n=50\\), \\(k=3\\), so average leverage \\(=0.06\\). This trace gives \\(E[e^\\top e]=\\sigma^2\\,\\mathrm{tr}(I-H)=\\sigma^2(n-k)\\), which justifies \\(s^2=e^\\top e/(n-k)\\).<br><b>Used in the deck for:</b> the residual degrees of freedom in the SE formulas and the leverage checks on outliers.",
+  "tags": [
+   "regression",
+   "projection",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You estimate OLS on a 50-observation, 2-regressor hedge with \\(\\kappa(X)\\approx 7\\times10^4\\) in double precision (\\(\\varepsilon_{\\rm mach}\\approx2.2\\times10^{-16}\\)). Explain why the normal equations lose precision compared with QR, and which method you would use.",
+  "back": "<b>Normal equations:</b> form \\(X^\\top X\\), then solve. Since \\(\\kappa(X^\\top X)=\\kappa(X)^2\\), the relative error is about \\(\\kappa(X)^2\\varepsilon_{\\rm mach}\\), about \\(10^{-6}\\) at this \\(\\kappa\\), i.e. about 6 digits lost.<br>\n<b>QR:</b> \\(X=QR\\) with \\(R\\) triangular; solve \\(R\\hat\\beta=Q^\\top y\\). The error is about \\(\\kappa(X)\\varepsilon_{\\rm mach}\\).<br>\n<b>Numerical test:</b> columns \\((1,\\ 1+10^{-4}t)\\), \\(t\\in[0,1]\\), with \\(\\kappa(X)\\approx6.8\\times10^4\\) and \\(\\kappa(X^\\top X)\\approx4.6\\times10^9\\). Relative coefficient error: normal equations \\(\\approx8\\times10^{-7}\\), QR \\(\\approx6\\times10^{-12}\\).<br>\n<b>Decision:</b> use QR (or SVD) for ill-conditioned hedges. Normal equations are fine for well-conditioned designs with huge n, where cost matters.<br>\n<b>Used in the deck for:</b> the calibration and bootstrap solvers in 08 coding numerics.",
+  "tags": [
+   "regression",
+   "numerical",
+   "qr",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "For \\(f(x)=x^\\top Ax\\) with \\(A\\) not necessarily symmetric, derive \\(\\nabla f\\). Apply it to \\(A=\\begin{pmatrix}2&1\\\\0&3\\end{pmatrix}\\) at \\(x=(1,2)^\\top\\).",
+  "back": "<b>Derivation:</b> \\(f=\\sum_{i,j}A_{ij}x_ix_j\\). Then \\(\\partial f/\\partial x_k=\\sum_j A_{kj}x_j+\\sum_i A_{ik}x_i=(Ax)_k+(A^\\top x)_k\\). So \\(\\nabla f=(A+A^\\top)x\\). If \\(A\\) is symmetric, \\(\\nabla f=2Ax\\).<br>\n<b>Example:</b> \\(f=2x_1^2+x_1x_2+3x_2^2\\), so \\(\\nabla f=(4x_1+x_2,\\ x_1+6x_2)\\). At \\((1,2)\\): \\((6,13)\\). Matrix form: \\((A+A^\\top)x=\\begin{pmatrix}4&1\\\\1&6\\end{pmatrix}(1,2)^\\top=(6,13)^\\top\\).<br>\n<b>Used in the deck for:</b> the OLS loss gradient \\(-2X^\\top(y-X\\beta)\\), the Levenberg–Marquardt step in 08 coding numerics, and the delta-method variance.",
+  "tags": [
+   "matrix_calculus",
+   "derivation",
+   "linear_algebra",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "State the classical linear-model assumptions under which OLS is BLUE (Gauss–Markov). Which assumptions are needed for unbiasedness, and which for the textbook standard errors?",
+  "back": "<b>Assumptions:</b>\n<ol>\n<li>Linearity: \\(y=X\\beta+\\varepsilon\\).</li>\n<li>Strict exogeneity: \\(E[\\varepsilon\\mid X]=0\\). Needed for unbiasedness. Fails under omitted variables, measurement error in \\(X\\), or simultaneity.</li>\n<li>No perfect multicollinearity: \\(\\mathrm{rank}(X)=k\\). Needed for identification.</li>\n<li>Spherical errors: \\(\\mathrm{Var}(\\varepsilon\\mid X)=\\sigma^2 I\\). Needed for efficiency and for the textbook SE formula.</li>\n</ol>\n<b>Gauss–Markov:</b> under 1 to 4, OLS has the smallest variance among linear unbiased estimators. Normality is not needed for BLUE. It is needed for exact finite-sample t and F distributions.<br>\n<b>Interviewer trap:</b> BLUE says nothing about biased estimators. A ridge estimator can have lower mean-squared error than OLS while being biased.<br>\n<b>Used in the deck for:</b> the validity conditions behind the SE and HAC chains.",
+  "tags": [
+   "regression",
+   "gauss_markov",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Show that \\(\\hat\\beta\\) is unbiased under strict exogeneity, and derive its conditional variance under spherical errors. Also explain why \\(s^2=e^\\top e/(n-k)\\) is unbiased for \\(\\sigma^2\\).",
+  "back": "<b>Unbiasedness:</b> \\(\\hat\\beta=(X^\\top X)^{-1}X^\\top(X\\beta+\\varepsilon)=\\beta+(X^\\top X)^{-1}X^\\top\\varepsilon\\). So \\(E[\\hat\\beta\\mid X]=\\beta+(X^\\top X)^{-1}X^\\top E[\\varepsilon\\mid X]=\\beta\\). Iterated expectations gives the unconditional result.<br>\n<b>Variance:</b> \\(\\mathrm{Var}(\\hat\\beta\\mid X)=(X^\\top X)^{-1}X^\\top(\\sigma^2 I)X(X^\\top X)^{-1}=\\sigma^2(X^\\top X)^{-1}\\).<br>\n<b>Estimating \\(\\sigma^2\\):</b> \\(e=(I-H)\\varepsilon\\), so \\(E[e^\\top e]=\\sigma^2\\,\\mathrm{tr}(I-H)=\\sigma^2(n-k)\\). Hence \\(s^2\\) is unbiased.<br>\n<b>Where it breaks:</b> with lagged dependent variables and serially correlated errors, \\(E[\\varepsilon\\mid X]\\neq0\\) and unbiasedness fails. Overlapping returns alone do not break it, since they only distort the SEs.<br><b>Used in the deck for:</b> every OLS hedge beta; the variance formula feeds the SE chain INF 1/4.",
+  "tags": [
+   "regression",
+   "derivation",
+   "gauss_markov",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A regression of daily spread changes on 3 explanatory factors uses \\(n=50\\), \\(\\mathrm{SST}=100\\) and \\(\\mathrm{SSR}=30\\). Compute \\(R^2\\) and adjusted \\(R^2\\). Why adjust, and what does a high \\(R^2\\) not tell you?",
+  "back": "<b>Computation:</b> \\(R^2=1-\\mathrm{SSR}/\\mathrm{SST}=0.70\\). Adjusted: \\(\\bar R^2=1-(1-R^2)\\frac{n-1}{n-k-1}=1-0.30\\times\\frac{49}{46}=0.680\\), with \\(k=3\\) regressors plus an intercept.<br>\n<b>Why adjust:</b> \\(R^2\\) never falls when a regressor is added, because SSR cannot increase. The adjusted version charges for parameters, so it can fall when a useless regressor is added.<br>\n<b>What it does not tell you:</b> a high \\(R^2\\) does not make the coefficients stable (collinearity), does not validate exogeneity, and does not make a hedge good out of sample. Judge a hedge by the out-of-sample variance of hedged P&L.<br>\n<b>Used in the deck for:</b> hedge effectiveness reporting and factor-model fit.",
+  "tags": [
+   "regression",
+   "r_squared",
+   "mental_math",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In simple regression with an intercept, \\(R^2=\\){{c1::\\(\\mathrm{corr}(x,y)^2\\)}} and the slope is \\({{c2::\\(\\mathrm{corr}(x,y)\\,\\sigma_y/\\sigma_x\\)}}\\). For 5y against 10y daily changes with \\(\\rho=0.9\\), \\(\\sigma_5=1.2\\) bp and \\(\\sigma_{10}=1.0\\) bp, the slope is {{c3::1.08}} and \\(R^2={{c4::0.81}}\\).",
+  "back": "Check: slope \\(=0.9\\times1.2/1.0=1.08\\). \\(R^2=0.81\\), so the best hedge removes 81% of the variance and \\(19\\%\\) remains. Residual standard deviation fraction \\(\\sqrt{0.19}=0.436\\), which reappears in the hedge case study.<br><b>Used in the deck for:</b> hedge effectiveness reporting (standalone R-squared card) and the variance-explained reading.",
+  "tags": [
+   "regression",
+   "r_squared",
+   "hedge_ratio",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You are long £100m of a 5y bullet bond with DV01 £100,000 per bp. The hedge is a 10y swap with DV01 £82,000 per bp per £100m notional. Daily 5y changes have std 1.2 bp, 10y std 1.0 bp, correlation 0.9. Compare the DV01-neutral hedge with the minimum-variance regression beta hedge: notional and one-day P&L volatility.",
+  "back": "<b>Setup:</b> \\(\\Delta P=-\\mathrm{DV01}_5\\,\\Delta y_5\\). A hedge with DV01 \\(H\\) gives P&L \\(-H\\,\\Delta y_{10}\\). The 10y swap costs £820 DV01 per £1m notional.<br>\n<b>1. DV01-neutral:</b> \\(H=100{,}000\\), notional \\(=100{,}000/820=\\pounds121.95\\)m. One-day P&L std \\(=\\mathrm{DV01}_5\\sqrt{\\sigma_5^2+\\sigma_{10}^2-2\\rho\\sigma_5\\sigma_{10}}=100{,}000\\sqrt{0.28}\\approx\\pounds52.9\\)k.<br>\n<b>2. Beta (minimum variance) hedge:</b> \\(\\beta=\\rho\\sigma_5/\\sigma_{10}=1.08\\). \\(H=108{,}000\\), notional \\(=\\pounds131.7\\)m. One-day P&L std \\(=\\mathrm{DV01}_5\\,\\sigma_5\\sqrt{1-\\rho^2}=100{,}000\\times1.2\\times\\sqrt{0.19}\\approx\\pounds52.3\\)k.<br>\n<b>Unhedged:</b> \\(\\pounds120\\)k.<br>\n<b>Reading:</b> the beta hedge takes 8% more DV01 and cuts volatility only slightly here, because \\(\\rho\\) is high. The gap widens when \\(\\rho\\) is lower or the vols differ.<br>\n<b>Interviewer follow-up:</b> why does minimum variance differ from DV01-neutral? Because \\(\\beta=\\rho\\sigma_5/\\sigma_{10}\\), which equals 1 only when \\(\\rho=1\\) and the vols match. In practice, keep the DV01-neutral figure as the risk limit and use beta for the P&L-vol target.",
+  "tags": [
+   "regression",
+   "hedge_ratio",
+   "case_study",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "The true model is \\(y=\\beta_1x_1+\\beta_2x_2+\\varepsilon\\). You regress \\(y\\) on \\(x_1\\) only. Derive the probability limit of the slope and its sign. Take \\(\\beta_1=1.0\\), \\(\\beta_2=0.5\\), \\(\\mathrm{Cov}(x_1,x_2)/\\mathrm{Var}(x_1)=0.6\\).",
+  "back": "<b>Derivation:</b> \\(\\hat\\beta_1^{\\rm short}=\\frac{\\mathrm{Cov}(x_1,y)}{\\mathrm{Var}(x_1)}=\\frac{\\beta_1\\mathrm{Var}(x_1)+\\beta_2\\mathrm{Cov}(x_1,x_2)}{\\mathrm{Var}(x_1)}=\\beta_1+\\beta_2\\delta\\), where \\(\\delta=\\mathrm{Cov}(x_1,x_2)/\\mathrm{Var}(x_1)\\) is the slope of \\(x_2\\) on \\(x_1\\). The bias is \\(\\beta_2\\delta\\), positive when the two have the same sign.<br>\n<b>Numbers:</b> bias \\(=0.5\\times0.6=0.3\\), so the short regression estimates \\(1.3\\) instead of \\(1.0\\).<br>\n<b>Where it breaks:</b> with \\(\\delta=0\\) the slope is unbiased. Adding a post-treatment variable or a collider creates bias, so more controls are not always safer. Adding a regressor with \\(\\delta\\approx 1\\) inflates variance instead (VIF).<br>\n<b>Desk case:</b> a 5y-only hedge regression that omits the curve factor gives a biased hedge ratio, so the hedge covers the level but leaves the slope exposed.",
+  "tags": [
+   "regression",
+   "omitted_variable_bias",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the heteroskedasticity-robust (White, HC0) covariance of \\(\\hat\\beta\\). Explain when the classical formula goes wrong and what it does to unbiasedness.",
+  "back": "<b>Derivation:</b> \\(\\hat\\beta-\\beta=(X^\\top X)^{-1}X^\\top\\varepsilon\\). With \\(\\mathrm{Var}(\\varepsilon\\mid X)=\\Omega=\\mathrm{diag}(\\sigma_i^2)\\): \\(\\mathrm{Var}(\\hat\\beta\\mid X)=(X^\\top X)^{-1}\\bigl(X^\\top\\Omega X\\bigr)(X^\\top X)^{-1}\\). White replaces \\(\\sigma_i^2\\) by \\(e_i^2\\): \\(\\widehat V=(X^\\top X)^{-1}\\bigl(\\sum_i e_i^2x_ix_i^\\top\\bigr)(X^\\top X)^{-1}\\). HC1 adds a factor \\(n/(n-k)\\).<br>\n<b>Consequences:</b> OLS stays unbiased and consistent under heteroskedasticity. Classical SEs are wrong, and their direction depends on how the variance moves with \\(x\\).<br>\n<b>Where it breaks:</b> HC0 is biased downward in small samples (use HC1 or HC3). Robust SEs do not fix a misspecified mean. For time series, use HAC.<br>\n<b>Interviewer follow-up:</b> why not WLS, if you know the variance? WLS is efficient, but wrong weights are costly. Robust OLS SEs are the safe default.<br><b>Used in the deck for:</b> robust SEs in cross-sectional regressions; HAC generalises it in INF 4/4.",
+  "tags": [
+   "regression",
+   "heteroskedasticity",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You regress \\(y\\) on a noisy proxy \\(x^*=x+u\\) of the true driver \\(x\\), with \\(u\\) independent of \\(x\\) and \\(\\varepsilon\\). Derive the probability limit of the slope. Then compute it for \\(\\beta=1.2\\), \\(\\sigma_x^2=1\\), \\(\\sigma_u^2=0.25\\).",
+  "back": "<b>Derivation:</b> with \\(y=\\beta x+\\varepsilon\\), \\(\\mathrm{Cov}(x^*,y)=\\beta\\sigma_x^2\\) and \\(\\mathrm{Var}(x^*)=\\sigma_x^2+\\sigma_u^2\\). So \\(\\mathrm{plim}\\,\\hat\\beta=\\beta\\,\\lambda\\), with reliability \\(\\lambda=\\frac{\\sigma_x^2}{\\sigma_x^2+\\sigma_u^2}\\).<br>\n<b>Numbers:</b> \\(\\lambda=1/1.25=0.8\\), so \\(\\mathrm{plim}\\,\\hat\\beta=1.2\\times0.8=0.96\\). With one regressor the bias is always towards zero.<br>\n<b>Desk case:</b> a generic swap rate used as a proxy for a specific bond's risk factor gives a regression hedge ratio that is too small, so the hedge is too light.<br>\n<b>Where it breaks:</b> noise in \\(y\\) is harmless (it only inflates SEs). With several regressors, error in one contaminates the others, and the bias can go either way.<br>\n<b>Interviewer follow-up:</b> what if both series are noisy? Use total least squares (next card).",
+  "tags": [
+   "regression",
+   "errors_in_variables",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ordinary regression of \\(y\\) on \\(x\\) and of \\(x\\) on \\(y\\) give different slopes when both series are noisy. For a hedge with comparable noise in both legs, set up total least squares (orthogonal regression). With the scatter matrix \\(\\Sigma=\\begin{pmatrix}1&0.9\\\\0.9&1.5\\end{pmatrix}\\) for \\((x,y)\\), find the TLS slope and compare with the two OLS slopes.",
+  "back": "<b>Set-up:</b> TLS minimises the sum of squared perpendicular distances to a line \\(n^\\top z=c\\), with unit normal \\(n\\). The solution is \\(n\\) = the eigenvector of the smallest eigenvalue of the scatter matrix (equivalently, the last right singular vector of the centred data \\([x\\ y]\\)). For \\(y=\\alpha+\\beta x\\), \\(\\beta=-n_1/n_2\\).<br>\n<b>Compute:</b> eigenvalues \\(0.316\\) and \\(2.184\\). The smallest gives \\(n\\approx(-0.796,\\ 0.605)\\), so \\(\\beta=0.796/0.605\\approx1.316\\).<br>\n<b>Compare:</b> OLS of \\(y\\) on \\(x\\) gives \\(0.9\\). OLS of \\(x\\) on \\(y\\), inverted to the \\(y\\)-on-\\(x\\) scale, gives \\(1/(0.9/1.5)=1.667\\). TLS \\(1.316\\) sits between them.<br>\n<b>Caveats:</b> TLS assumes equal error variances (or a known ratio, as in Deming regression). It is not scale-invariant, so standardise first.",
+  "tags": [
+   "regression",
+   "errors_in_variables",
+   "svd",
+   "hedge_ratio",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does the lasso penalty \\(\\lambda\\|\\beta\\|_1\\) do that the ridge penalty \\(\\lambda\\|\\beta\\|_2^2\\) does not? Under an orthonormal design with OLS estimates \\(0.8\\) and \\(0.2\\) and \\(\\lambda=0.3\\), give both estimators.",
+  "back": "<b>Objectives:</b> ridge \\(\\tfrac12\\|y-X\\beta\\|^2+\\tfrac{\\lambda}{2}\\|\\beta\\|^2\\) gives \\(\\hat\\beta_{\\rm OLS}/(1+\\lambda)\\) under an orthonormal design. Lasso \\(\\tfrac12\\|y-X\\beta\\|^2+\\lambda\\|\\beta\\|_1\\) gives soft thresholding, \\(\\mathrm{sign}(\\hat\\beta)(|\\hat\\beta|-\\lambda)_+\\).<br>\n<b>Numbers:</b> ridge \\(0.8\\to0.615\\), \\(0.2\\to0.154\\). Lasso \\(0.8\\to0.5\\), \\(0.2\\to0\\).<br>\n<b>Why:</b> the \\(\\ell_1\\) ball has corners on the axes, so the lasso solution often sits exactly on an axis, giving exact zeros and variable selection. The \\(\\ell_2\\) ball is smooth, so ridge shrinks every coefficient and never sets one to zero.<br>\n<b>Desk use:</b> lasso to pick a sparse set of key-rate hedges from many instruments. Ridge when all instruments matter and collinearity is the issue (chain COLLIN 4/4).<br>\n<b>Interviewer trap:</b> with correlated regressors the lasso picks one of them arbitrarily and unstably. Elastic net mixes the two penalties to fix this.",
+  "tags": [
+   "regularisation",
+   "lasso",
+   "ridge",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two instruments give a hedge regression \\(\\beta=\\Sigma_{xx}^{-1}\\Sigma_{xy}\\) (population normal equations). With \\(\\Sigma_{xx}=\\begin{pmatrix}1&0.5\\\\0.5&1\\end{pmatrix}\\) and \\(\\Sigma_{xy}=(0.8,0.2)^\\top\\), find the hedge betas. Explain what the formula says about a hedge with correlated instruments.",
+  "back": "<b>Solve:</b> \\(\\Sigma_{xx}^{-1}=\\frac{1}{0.75}\\begin{pmatrix}1&-0.5\\\\-0.5&1\\end{pmatrix}\\). So \\(\\beta=\\frac{1}{0.75}(0.8-0.1,\\ -0.4+0.2)=(0.933,\\ -0.267)\\).<br>\n<b>Reading:</b> each beta is the covariance with the target, corrected for what the other instrument already explains. Instrument 2 has a positive raw covariance (0.2) but gets a negative beta, because instrument 1 already captures most of it through the 0.5 correlation.<br>\n<b>Practical point:</b> the sign flip is a hedge-construction effect, not a view on the instrument. Explain it to the desk before a trader reads it as a short position in the second swap.<br><b>Used in the deck for:</b> beta-neutral butterfly hedges (01 govies deep).",
+  "tags": [
+   "regression",
+   "hedge_ratio",
+   "multi_instrument",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Explain the two ways to factor a covariance matrix for simulation: the Cholesky factor \\(B\\) with \\(BB^\\top=\\Sigma\\), and the eigen factor \\(B=V\\sqrt{\\Lambda}\\). Both give correct correlated shocks, so which do you use, and why?",
+  "back": "<b>Both are valid:</b> \\(BB^\\top=\\Sigma\\) in each case, so \\(x=Bz\\) has covariance \\(\\Sigma\\) for \\(z\\sim N(0,I)\\).<br>\n<b>Cholesky:</b> \\(B\\) is lower triangular, cheap to compute (about \\(n^3/3\\) flops), and exists only for PD \\(\\Sigma\\). It fails with a tiny negative eigenvalue, which is the usual failure on a repaired matrix.<br>\n<b>Eigen factor:</b> \\(V\\sqrt\\Lambda\\) works for PSD matrices with zero eigenvalues, so it does not fail on a boundary case. It is more expensive. It also gives a principled reduced-factor model: drop the small-eigenvalue columns to simulate a low-dimensional factor structure.<br>\n<b>Choice:</b> Cholesky for a PD matrix in a pricing loop. Eigen factor when the matrix is singular, or when you want to truncate it to a few factors.<br>\n<b>Used in the deck for:</b> the correlated-driver setup in 08 coding numerics.",
+  "tags": [
+   "linear_algebra",
+   "simulation",
+   "cholesky",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Weighted least squares: \\(\\hat\\beta_{\\rm WLS}=(X^\\top WX)^{-1}X^\\top Wy\\) with weights {{c1::\\(w_i=1/\\sigma_i^2\\)}}. Two observations of one level, \\(y_1=10\\) (variance 1) and \\(y_2=16\\) (variance 4), give a WLS mean of {{c2::11.2}} against an OLS mean of 13.",
+  "back": "<b>Variances:</b> WLS \\(=1/1.25=0.8\\); OLS \\(=(1+4)/4=1.25\\). WLS puts more weight on the precise observation and has the smaller variance. It is BLUE for the transformed model under the usual assumptions.<br>\n<b>Caveat:</b> if the variance weights are wrong, WLS can do worse than OLS with robust SEs.<br><b>Used in the deck for:</b> weighting in the calibration least-squares problems (08 coding numerics).",
+  "tags": [
+   "regression",
+   "wls",
+   "gls",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Principal-component regression (PCR) regresses \\(y\\) on the top \\(k\\) principal components of \\(X\\). Compare it with ridge. Which directions does each shrink, and what does each cost?",
+  "back": "<b>PCR:</b> project \\(X\\) on its top \\(k\\) eigenvectors and regress on those scores. Directions with eigenvalues below the cut-off are set to zero. This is a hard filter: each direction gets weight 1 or 0.<br>\n<b>Ridge:</b> each direction \\(i\\) with eigenvalue \\(\\lambda_i\\) is multiplied by \\(\\lambda_i/(\\lambda_i+\\lambda)\\). This is a soft filter, so the small-eigenvalue directions are shrunk most, not cut.<br>\n<b>Cost:</b> both are biased. PCR's bias is in the directions it drops, which can carry the signal you want (a small PC can be the one that predicts). Ridge keeps every direction but shrinks them all.<br>\n<b>Desk view:</b> PCR matches a hedge built on PCs. If you hedge with PC1 and PC2 only, you are doing PCR implicitly, and the discarded PC3 is the residual risk you carry.<br><b>Used in the deck for:</b> PCA-based hedges (01 govies deep) against ridge in COLLIN 4/4.",
+  "tags": [
+   "regularisation",
+   "pca",
+   "regression",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Explain why you never invert a matrix to solve \\(Ax=b\\) in production. What do you do instead, and what does ill-conditioning do to the error?",
+  "back": "<b>Answer:</b> forming \\(A^{-1}\\) costs more than a factorisation and adds an extra rounding step. Solve with a factorisation: Cholesky for PD \\(A\\) (forward and back substitution), QR for least squares, or LU in general.<br>\n<b>Error:</b> the relative error of the computed \\(x\\) scales with \\(\\kappa(A)\\varepsilon_{\\rm mach}\\), whichever method is used. Inversion does not avoid this, it only adds rounding noise on top.<br>\n<b>Practice:</b> call a solver that takes the factor, reuse it for several right-hand sides, and check the residual \\(\\|Ax-b\\|\\) as well as the condition number. A small residual with a large \\(\\kappa\\) still gives an inaccurate \\(x\\).<br>\n<b>Used in the deck for:</b> bootstrap Jacobian solves and calibration Jacobians (08 coding numerics).",
+  "tags": [
+   "numerical",
+   "linear_algebra",
+   "desk_practice",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Under normality, write the log-likelihood of the linear model \\(y=X\\beta+\\varepsilon\\), \\(\\varepsilon\\sim N(0,\\sigma^2I)\\). Derive the score with respect to \\(\\beta\\) and show that the maximum-likelihood estimate of \\(\\beta\\) is OLS.",
+  "back": "<b>Log-likelihood:</b> \\(\\ell(\\beta,\\sigma^2)=-\\tfrac n2\\log(2\\pi\\sigma^2)-\\dfrac{\\|y-X\\beta\\|^2}{2\\sigma^2}\\).<br>\n<b>Score:</b> \\(\\partial\\ell/\\partial\\beta=X^\\top(y-X\\beta)/\\sigma^2\\), using the gradient rule \\(\\nabla\\|y-X\\beta\\|^2=-2X^\\top(y-X\\beta)\\).<br>\n<b>MLE:</b> setting the score to zero gives \\(X^\\top X\\beta=X^\\top y\\), the normal equations. So under normality, OLS equals MLE for \\(\\beta\\), whatever \\(\\sigma^2\\) is. The MLE of \\(\\sigma^2\\) is \\(\\mathrm{SSR}/n\\), biased, which is why the deck uses \\(\\mathrm{SSR}/(n-k)\\).<br>\n<b>Used in the deck for:</b> the Fisher information behind the SE formula.",
+  "tags": [
+   "regression",
+   "maximum_likelihood",
+   "matrix_calculus",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a Gaussian vector \\(x\\) with mean \\(\\mu\\) and covariance \\(\\Sigma\\), the squared Mahalanobis distance \\(d^2=(x-\\mu)^\\top\\Sigma^{-1}(x-\\mu)\\) is {{c1::chi-squared with n degrees of freedom}} (n = dimension). For \\(\\Sigma=\\begin{pmatrix}4&2\\\\2&5\\end{pmatrix}\\) and \\(x=(2,1)^\\top\\) with \\(\\mu=0\\), \\(d^2=\\){{c2::1}}.",
+  "back": "Compute: \\(\\Sigma^{-1}=\\frac{1}{16}\\begin{pmatrix}5&-2\\\\-2&4\\end{pmatrix}\\), so \\(d^2=\\frac{1}{16}(5\\cdot4-2\\cdot2\\cdot2\\cdot1+4\\cdot1)=\\frac{16}{16}=1\\). Writing \\(\\Sigma=LL^\\top\\), \\(d^2=\\|L^{-1}(x-\\mu)\\|^2\\): the Cholesky factor whitens the vector. Used in: stress-testing a correlated book and outlier detection.",
+  "tags": [
+   "linear_algebra",
+   "mahalanobis",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For the single restriction \\(R\\beta=r\\), the Wald statistic is \\(F=(R\\hat\\beta-r)^2/\\bigl(R\\,\\widehat{\\mathrm{Var}}(\\hat\\beta)R^\\top\\bigr)\\), and for one restriction \\(F=t^2\\). Test \\(\\beta_1=\\beta_2\\) with \\(\\hat\\beta=(0.5,\\,0.3)\\) and \\(\\widehat{\\mathrm{Var}}=\\begin{pmatrix}0.04&0.01\\\\0.01&0.09\\end{pmatrix}\\): \\(F=\\){{c1::0.364}}, \\(t=\\){{c2::0.603}}, and the two-sided normal p-value is about {{c3::0.55}}, so the two betas are {{c4::not}} significantly different.",
+  "back": "Compute: \\(R\\hat\\beta=0.2\\), \\(\\mathrm{Var}(R\\hat\\beta)=0.04+0.09-2(0.01)=0.11\\). \\(F=0.04/0.11=0.364\\), \\(t=\\sqrt F=0.603\\). Under the null this is about F(1, \\(\\infty\\)) with critical value 3.84, so do not reject. Used in: testing whether two key-rate hedge betas are equal.",
+  "tags": [
+   "regression",
+   "hypothesis_test",
+   "lvl_foundation"
+  ]
+ }
+]

@@ -1,0 +1,538 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: COMPOUND 1/3]</b> Context: a 5.00% annual-compounded rate. Convert it to the equivalent semi-annual, quarterly and continuously compounded rates, and say what they have in common.",
+  "back": "<b>Answer:</b> Semi-annual 4.94%, quarterly 4.91%, continuous 4.88%. All four quotes describe the same one-year growth factor of 1.05.<br><b>Intuition:</b> More compounding periods per year means each period's rate is smaller for the same annual growth, so the quoted nominal rate falls as frequency rises. Continuous compounding is the limit as the frequency goes to infinity.<br><b>Formula:</b> \\( (1+\\tfrac{r_m}{m})^m = 1.05 \\Rightarrow r_m = m\\left(1.05^{1/m}-1\\right)\\); continuous \\( r_c=\\ln 1.05 \\).<br><b>Worked example:</b> Semi: \\(2(1.05^{0.5}-1)=4.9390\\%\\). Quarterly: \\(4(1.05^{0.25}-1)=4.9089\\%\\). Continuous: \\(\\ln 1.05=4.8790\\%\\). Check: \\(e^{0.04879}=1.05\\).<br><b>Used in the deck for:</b> converting quoted swap and bond yields to one basis before comparing them (the semi-annual gilt and annual Bund quotes), and the continuous convention in the discount-factor cards.",
+  "tags": [
+   "foundations",
+   "compounding",
+   "chain_compound",
+   "convention",
+   "mental_math",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: COMPOUND 2/3]</b> Context: 100 invested at 6.00% for 10 years. Compare the terminal value under annual, semi-annual and continuous compounding. Why do models prefer the continuous convention?",
+  "back": "<b>Answer:</b> Annual 179.08, semi-annual 180.61, continuous 182.21. Continuous compounding turns growth into an exponential, so the discount factor is \\(e^{-zT}\\) and the log of the discount factor is linear in T.<br><b>Intuition:</b> Under continuous compounding the growth over any interval is \\(e^{r\\Delta t}\\), so intervals multiply with no reinvestment frequency to track. The discount factor, its log and the forward rate become simple algebra.<br><b>Formula:</b> \\(FV = P(1+r/m)^{mT} \\to P e^{rT}\\) as \\(m\\to\\infty\\); \\(DF(T)=e^{-z(T)T}\\), \\(z(T)=-\\ln DF(T)/T\\).<br><b>Worked example:</b> \\(100\\times1.06^{10}=179.08\\); \\(100\\times1.03^{20}=180.61\\); \\(100e^{0.6}=182.21\\). The continuous value is about 1.75% above the annual one, since \\(e^{0.6}/1.06^{10}\\approx1.0175\\).<br><b>Used in the deck for:</b> the discount-factor and forward-rate definitions in the curve cards, and the continuous-time short-rate models in the pricing-model cards.",
+  "tags": [
+   "foundations",
+   "compounding",
+   "chain_compound",
+   "convention",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: COMPOUND 3/3]</b> Context: a 6-month USD money-market deposit at 5.00% simple, ACT/360, 182 days. Give its discount factor and the equivalent continuously compounded zero rate on an ACT/365F basis. Why is simple interest the right convention below one year?",
+  "back": "<b>Answer:</b> \\(DF = 0.975345\\). The continuous ACT/365F zero equivalent is 5.0064%.<br><b>Intuition:</b> A 6-month deposit pays interest once, at maturity, so there is nothing to compound within the period. Simple interest is the correct form for a single payment. The continuous equivalent sits slightly above 5.00% because ACT/360 gives about 1.4% more accrual than ACT/365F (365/360 = 1.0139).<br><b>Formula:</b> \\( DF(T)=\\dfrac{1}{1+L\\tau} \\) with \\(\\tau\\) on the market day count; then \\( z=-\\ln DF/t \\) with \\(t\\) on a different basis.<br><b>Worked example:</b> \\(\\tau=182/360=0.50556\\), \\(1+0.05\\times0.50556=1.025278\\), so \\(DF=0.975345\\). On ACT/365F, \\(t=182/365=0.49863\\) and \\(z=-\\ln(0.975345)/0.49863=5.0064\\%\\).<br><b>Used in the deck for:</b> bootstrapping the short end of a SOFR or €STR curve from deposit pillars, and the day-count conversions in the rates cards.",
+  "tags": [
+   "foundations",
+   "compounding",
+   "chain_compound",
+   "day_count",
+   "mental_math",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A rate of 4.00% compounded semi-annually is worth {{c1::4.04%}} per year compounded annually, because \\(1.02^2=1.0404\\).",
+  "back": "Effective annual rate = \\((1+r/m)^m-1\\). The effective rate exceeds the nominal rate whenever \\(m>1\\), so always convert quoted rates to a common frequency before comparing them.",
+  "tags": [
+   "foundations",
+   "compounding",
+   "convention",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A deposit quoted at 7.50% compounded quarterly has an annual effective rate of {{c1::7.71%}} and a continuously compounded equivalent of {{c2::7.43%}}.",
+  "back": "Effective: \\((1+0.075/4)^4-1=7.7136\\%\\). Continuous: \\(4\\ln(1+0.075/4)=7.4306\\%\\). The continuous rate is the one a discount factor \\(e^{-zT}\\) uses.",
+  "tags": [
+   "foundations",
+   "compounding",
+   "convention",
+   "mental_math",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: DAYCOUNT 1/3]</b> Context: a notional of 1,000,000, a rate of 5.00% and a period of 90 actual days. Compute the accrual under ACT/360 and under ACT/365F. What does each convention do to the same nominal rate?",
+  "back": "<b>Answer:</b> ACT/360 accrues 12,500.00; ACT/365F accrues 12,328.77. The ACT/360 accrual is about 1.4% larger for the same nominal rate.<br><b>Intuition:</b> The day-count fraction is the share of a year the period represents. ACT/360 treats a year as 360 days, so each actual day counts 1/360 rather than 1/365.<br><b>Formula:</b> \\( \\text{accrual} = N\\times r\\times \\dfrac{d}{B} \\), with \\(B=360\\) or \\(365\\).<br><b>Worked example:</b> \\(1{,}000{,}000\\times0.05\\times90/360=12{,}500.00\\); \\(\\times 90/365=12{,}328.77\\); difference 171.23 (\\(365/360-1=1.4\\%\\)).<br><b>Used in the deck for:</b> rate conversions between conventions (the repo and swap cards), and the compounded RFR accrual cards where daily fixings are weighted by ACT/360 or ACT/365F day counts.",
+  "tags": [
+   "foundations",
+   "day_count",
+   "chain_daycount",
+   "convention",
+   "mental_math",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: DAYCOUNT 2/3]</b> Context: 30/360 (US) accrual from 31 Aug 2026 to 28 Feb 2027 on 1,000,000 at 5.00%. How many days does 30/360 count, and what does ACT/365F give for the same dates?",
+  "back": "<b>Answer:</b> 30/360 counts 178 days, a year fraction of 178/360 = 0.4944. ACT/365F counts 181 actual days, a fraction of 0.4959.<br><b>Intuition:</b> 30/360 assumes every month has 30 days, so the odd end-of-month days are normalised away. The start day 31 is cut to 30, and the end day 28 is left as it is.<br><b>Formula:</b> \\( \\text{days}=360(Y_2-Y_1)+30(M_2-M_1)+(D_2-D_1) \\), with \\(D_1=31\\to30\\).<br><b>Worked example:</b> \\(360(1)+30(2-8)+(28-30)=178\\). Accrual: \\(1{,}000{,}000\\times0.05\\times178/360=24{,}722.22\\) against \\(24{,}794.52\\) on ACT/365F.<br><b>Where it breaks:</b> the end-of-February rule only applies when the start date is also the last day of February, so it does not change this count. Check the exact variant (US, European 30E/360) in the term sheet.<br><b>Used in the deck for:</b> fixed legs and corporate-bond coupons quoted on 30/360 (the corporate-bond and EUR fixed-leg cards).",
+  "tags": [
+   "foundations",
+   "day_count",
+   "chain_daycount",
+   "convention",
+   "mental_math",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: DAYCOUNT 3/3]</b> Context: a bond with a 2.50% annual coupon, a coupon period from 1 Jan 2026 to 1 Jan 2027 (365 days), settling on 20 Apr 2026, ACT/ACT ICMA. What is the accrued interest per 100 face?",
+  "back": "<b>Answer:</b> Accrued = \\(0.7466\\) per 100 face.<br><b>Intuition:</b> ACT/ACT ICMA measures the accrual against the length of the quasi-coupon period, so accrued is always a fraction of one coupon: days elapsed over days in the period, times the coupon for that period.<br><b>Formula:</b> \\( AI = c_{\\text{period}}\\times\\dfrac{d_{\\text{elapsed}}}{E} \\), with \\(c_{\\text{period}}\\) the coupon per period and \\(E\\) the days in the quasi-coupon period.<br><b>Worked example:</b> \\(2.50\\times 109/365 = 0.7466\\). For a semi-annual bond, \\(c_{\\text{period}}\\) is half the annual coupon and \\(E\\) is the length of the semi-annual period (about 181 to 184 days).<br><b>Where it breaks:</b> a long or short first coupon uses quasi-coupon dates rather than the actual issue date, so compute the notional period first.<br><b>Used in the deck for:</b> accrued interest for gilts and Bunds (ACT/ACT ICMA) in the govies cards, and the dirty-to-clean conversion in the futures invoice-price cards.",
+  "tags": [
+   "foundations",
+   "day_count",
+   "chain_daycount",
+   "convention",
+   "bonds",
+   "mental_math",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "SONIA accrues on {{c1::ACT/365F}}; SOFR and €STR accrue on {{c2::ACT/360}}; UK gilts accrue on {{c3::ACT/ACT ICMA}}.",
+  "back": "US corporate bonds are normally on 30/360. The day count is part of the instrument: the same 5% gives a different accrual on each basis, and comparing rates across bases needs a conversion (ACT/360 to ACT/365F multiplies the rate by 365/360).",
+  "tags": [
+   "foundations",
+   "day_count",
+   "convention",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A coupon date is Sunday 31 May 2026 and the convention is modified following. What is the adjusted payment date, and why not simply \"following\"?",
+  "back": "<b>Answer:</b> Friday 29 May 2026.<br><b>Intuition:</b> Following would roll to Monday 1 June, which falls in the next month. Modified following takes the next business day unless that crosses the month end, and then it goes back to the previous business day, so the cash stays in the same calendar month.<br><b>Formula:</b> \\( \\text{adj}(d)=\\text{following}(d)\\) unless that date is in the next month, in which case \\(\\text{preceding}(d)\\).<br><b>Worked example:</b> 31 May 2026 (Sun) \\(\\to\\) following Mon 1 June (new month) \\(\\to\\) preceding Fri 29 May. The same rule takes Sat 31 Oct 2026 to Fri 30 Oct, not Mon 2 Nov.<br><b>Used in the deck for:</b> payment schedules in the bond and swap cards, and the business-day arithmetic in the compounded RFR lookback cards.",
+  "tags": [
+   "foundations",
+   "convention",
+   "business_day",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why does the business-day convention matter for the price, given that the accrual is fixed by the day count? Give a numerical sense of the effect of a two-day payment shift at 5%.",
+  "back": "<b>Answer:</b> The convention sets when cash is paid, so it sets that cash flow's discount factor. Under many conventions it also sets the accrual end date. A 2-day shift at a 5% rate moves the discount factor by about 0.027% of the cash flow.<br><b>Intuition:</b> A cash flow discounted from a later date is worth less by the rate times the extra time. Month-end dates matter most: a non-adjusted month-end can move a whole month of accrual if the convention is applied to the accrual dates.<br><b>Formula:</b> \\( \\Delta DF/DF \\approx -r\\,\\Delta t \\); with \\(r=5\\%\\), \\(\\Delta t=2/365\\): \\(\\approx -0.027\\%\\).<br><b>Worked example:</b> On a 1,000,000 cash flow, a 2-day shift is worth about 274 at 5%. On a 100,000,000 portfolio of such flows it is about 27,400, which is a P&amp;L explain item, not noise.<br><b>Used in the deck for:</b> the cash-flow timing tolerances in the curve and swap cards, and the P&amp;L explain checks on coupon dates.",
+  "tags": [
+   "foundations",
+   "convention",
+   "business_day",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: FWD_CURVE 1/3]</b> Context: a continuously compounded curve with \\(DF(2y)=e^{-0.06}=0.941765\\). Derive the 2-year zero rate, and state what a zero rate is an average of.",
+  "back": "<b>Answer:</b> \\(z(2)=-\\ln DF(2)/2=3.00\\%\\). A zero rate is the single constant rate that reproduces the discount factor, and it is the average of the instantaneous forwards from 0 to T.<br><b>Intuition:</b> The zero rate is a time-average. It compresses the whole path of forwards from today to T into one number, so a zero that rises with T means the forwards at the far end are above it.<br><b>Formula:</b> \\( DF(T)=e^{-z(T)T} \\), \\( z(T)=\\dfrac{1}{T}\\displaystyle\\int_0^T f(s)\\,ds \\).<br><b>Worked example:</b> \\(-\\ln(0.941765)=0.06\\), so \\(z(2)=0.06/2=3.00\\%\\).<br><b>Used in the deck for:</b> turning discount factors into zero rates in every curve card, and the zero-rate interpolation cards.",
+  "tags": [
+   "foundations",
+   "curve",
+   "chain_fwd_curve",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: FWD_CURVE 2/3]</b> Context: continuous zero rates \\(z(1)=3.00\\%\\) and \\(z(2)=3.50\\%\\). Derive the forward rate \\(f(1,2)\\) for the year starting at 1y, and check it reproduces the 2y discount factor.",
+  "back": "<b>Answer:</b> \\(f(1,2)=4.00\\%\\).<br><b>Intuition:</b> An investor who rolls 1y then the forward for year two earns the same as a 2-year zero only if the forward is \\(f(1,2)\\). That makes the forward the marginal rate implied by the two zeros.<br><b>Formula:</b> \\( DF(1)\\,e^{-f(1,2)} = DF(2) \\;\\Rightarrow\\; f(1,2)=2z(2)-z(1) \\).<br><b>Worked example:</b> \\(2(3.50\\%)-3.00\\%=4.00\\%\\). Check: \\(e^{-0.03}\\times e^{-0.04}=e^{-0.07}=e^{-0.035\\times2}\\).<br><b>Where it breaks:</b> this is the continuous-compounding form. With annual compounding the same forward is \\((1+z_2)^2/(1+z_1)-1\\), which is not \\(2z_2-z_1\\).<br><b>Used in the deck for:</b> forward-rate agreement and forward-starting swap pricing, and the term-structure cards in this subdeck.",
+  "tags": [
+   "foundations",
+   "curve",
+   "chain_fwd_curve",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: FWD_CURVE 3/3]</b> Context: continuous zero curve \\(z(T)=3.00\\%+0.5\\%\\times T\\). Derive the instantaneous forward \\(f(T)\\), evaluate \\(f(2)\\), and explain why the 2y zero (4.00%) sits below \\(f(2)=5.00\\%\\).",
+  "back": "<b>Answer:</b> \\(f(T)=0.03+0.01T\\), so \\(f(2)=5.00\\%\\). The 2y zero is 4.00%, below the forward, because the curve is upward sloping.<br><b>Intuition:</b> The marginal rate at T is the zero plus the effect of T moving the average. On an upward slope the marginal rate pulls the average up, so the forward sits above the zero. The reverse holds on a downward slope.<br><b>Formula:</b> \\( f(T)=-\\dfrac{\\partial \\ln DF(T)}{\\partial T}=z(T)+T\\,z'(T) \\).<br><b>Worked example:</b> \\(z(2)+2z'(2)=0.04+2(0.005)=0.05\\). Also \\(T z(T)=0.03T+0.005T^2\\), whose derivative is \\(0.03+0.01T\\).<br><b>Used in the deck for:</b> the forwards-above-zeros statement in the curve-shape cards, and the convexity adjustment cards where the forward is taken off the instantaneous curve.",
+  "tags": [
+   "foundations",
+   "curve",
+   "chain_fwd_curve",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "With annual compounding the one-year forward starting in year 1 is \\(f=\\dfrac{DF_1}{DF_2}-1\\). With \\(DF_1=0.970874\\) and \\(DF_2=0.924197\\) the forward is {{c1::5.05%}}.",
+  "back": "\\(0.970874/0.924197=1.0505\\). The 2y zero is 4.02% (annual) against 3.00% for 1y, so the forward (about 5.05%) sits above both, as expected on a steep upward curve.",
+  "tags": [
+   "foundations",
+   "curve",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 3.00% semi-annual bond with face 100 has 45 days elapsed in a 182-day coupon period and a clean price of 100.00. What are the accrued interest and the dirty price?",
+  "back": "<b>Answer:</b> Accrued = 0.3709, dirty = 100.3709.<br><b>Intuition:</b> The buyer pays the seller for the coupon earned since the last coupon date. The clean price excludes that accrual, so it is the number quoted in the market.<br><b>Formula:</b> \\( AI=\\dfrac{c}{f}\\times\\dfrac{d}{E} \\) with \\(c/f = 1.50\\), \\(d=45\\), \\(E=182\\); \\( P_{dirty}=P_{clean}+AI \\).<br><b>Worked example:</b> \\(1.50\\times45/182=0.3709\\), so dirty = \\(100.00+0.3709=100.3709\\).<br><b>Used in the deck for:</b> the clean-dirty conversion in the gilt cards and the invoice price in the bond-futures cards.",
+  "tags": [
+   "foundations",
+   "bonds",
+   "convention",
+   "mental_math",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why do bonds quote a clean price instead of a dirty price? A bond has a clean price of 98.50 and accrued interest of 0.85. What does the buyer pay?",
+  "back": "<b>Answer:</b> The buyer pays the dirty (invoice) price of 99.35. The clean price is quoted so that it does not drift up by the accrual and drop by the full coupon on each coupon date.<br><b>Intuition:</b> Without the convention, a quoted price would climb every day as the coupon accrues, then fall sharply on the coupon date. That sawtooth says nothing about a change in yield, so the market strips it out.<br><b>Formula:</b> \\( P_{dirty}=P_{clean}+AI \\).<br><b>Worked example:</b> \\(98.50+0.85=99.35\\). Yields are computed on the dirty price, because that is the cash the buyer actually pays.<br><b>Used in the deck for:</b> the YTM calculations (which use the dirty price) and the invoice-price cards for bond futures.",
+  "tags": [
+   "foundations",
+   "bonds",
+   "convention",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 1.5-year bond pays a 4.00% semi-annual coupon on face 100. Using a flat continuously compounded zero rate of 3.00%, what is its dirty price, and why does it trade at a premium?",
+  "back": "<b>Answer:</b> Dirty price = 101.42.<br><b>Intuition:</b> A bond's price is the sum of each cash flow times its discount factor. Its 4% coupon exceeds the 3% discount rate, so the bond is worth more than its face value.<br><b>Formula:</b> \\( P=\\sum_i CF_i\\,e^{-z t_i} \\), with \\(t_i=0.5,\\,1.0,\\,1.5\\) years.<br><b>Worked example:</b> \\(2e^{-0.015}+2e^{-0.03}+102e^{-0.045}=1.9702+1.9409+97.5117=101.42\\).<br><b>Used in the deck for:</b> pricing from a curve in the bootstrap and par-bond cards.",
+  "tags": [
+   "foundations",
+   "bonds",
+   "mental_math",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 2-year 5.00% semi-annual par bond (price 100, YTM 5.00%). Its coupons are reinvested at 3.00% (bond-equivalent) rather than at the YTM. What is the realised yield, and why does it differ from the YTM?",
+  "back": "<b>Answer:</b> About 4.93% bond-equivalent, against the 5.00% YTM.<br><b>Intuition:</b> YTM is only realised if every coupon is reinvested at the YTM itself. A lower reinvestment rate leaves less terminal wealth, so the realised return falls below the quoted yield.<br><b>Formula:</b> \\( TV=\\sum_k c\\,(1+\\tfrac{r}{2})^{n-k}+100 \\); realised \\(=2\\left[(TV/100)^{1/n}-1\\right]\\) with \\(n\\) half-years.<br><b>Worked example:</b> Coupons 2.50, reinvested at 1.50% per half-year: \\(TV=2.50(1.015^3+1.015^2+1.015+1)+100=110.23\\). Then \\(2[(1.1023)^{1/4}-1]=4.93\\%\\).<br><b>Where it breaks:</b> the gap grows with the reinvestment shortfall and the bond's duration, since more of its value sits in the far-dated principal.<br><b>Used in the deck for:</b> horizon and total-return analysis, the carry and roll cards, and the critique of YTM when comparing bonds with different coupons.",
+  "tags": [
+   "foundations",
+   "bonds",
+   "yield",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Name three flaws of yield to maturity as a measure of relative value. Why can two bonds with the same YTM have very different economics?",
+  "back": "<b>Answer:</b> (1) It assumes coupons are reinvested at the YTM. (2) It is one rate applied to all cash flows, so it hides the term structure. (3) It is not additive: the YTM of a portfolio is not the weighted average of the YTMs.<br><b>Intuition:</b> YTM is the single rate that makes the bond's present value equal its price. It is therefore a blended rate that depends on the timing and size of each coupon, and it cannot separate the curve's shape from the bond's own cash flows.<br><b>Formula:</b> \\( P=\\sum_t CF_t(1+y/2)^{-2t} \\), solved for the single \\(y\\).<br><b>Worked example:</b> a 2y and a 10y bond with the same YTM are priced off completely different spot rates on a sloping curve, so the YTM does not say which bond is cheap.<br><b>Where it breaks:</b> YTM is not defined uniquely for some instruments (for example multiple sign changes in the cash flows), so use zero rates when that happens.<br><b>Used in the deck for:</b> why the desk quotes spreads over the curve (the Z-spread cards), and why the curve builders work with zero rates, not YTMs.",
+  "tags": [
+   "foundations",
+   "bonds",
+   "yield",
+   "convention",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 10-year 5.00% annual-coupon bond per 100 face. What is its price at a 4.00%, 5.00% and 6.00% yield, and what do the three prices tell you about premium, par and discount?",
+  "back": "<b>Answer:</b> 108.11 at 4%, 100.00 at 5%, 92.64 at 6%. Coupon equal to yield gives par; coupon above yield gives a premium; coupon below yield gives a discount.<br><b>Intuition:</b> Price and yield move in opposite directions, and the relationship is convex: the price rises faster when yields fall than it falls when they rise by the same amount.<br><b>Formula:</b> \\( P(y)=\\sum_{t=1}^{10}\\dfrac{5}{(1+y)^t}+\\dfrac{100}{(1+y)^{10}} \\).<br><b>Worked example:</b> \\(P(4\\%)=108.11\\), \\(P(5\\%)=100.00\\), \\(P(6\\%)=92.64\\). The moves are \\(+8.11\\) and \\(-7.36\\), so the curve bends.<br><b>Used in the deck for:</b> the price-yield curve used in the duration and convexity cards.",
+  "tags": [
+   "foundations",
+   "bonds",
+   "price_yield",
+   "mental_math",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 2-year 5.00% annual-coupon bond at a 3.00% yield, with the yield unchanged. What is the price today and in one year, and why does the premium decay?",
+  "back": "<b>Answer:</b> 103.83 today, 101.94 in one year.<br><b>Intuition:</b> With yield unchanged, the bond's price converges to face value at maturity. The premium decays towards par as the cash flows get closer, which is the pull-to-par effect.<br><b>Formula:</b> \\( P_0=\\sum_{t=1}^{2}\\dfrac{5}{1.03^t}+\\dfrac{100}{1.03^2} \\); after one year \\(P_1=\\dfrac{105}{1.03}\\).<br><b>Worked example:</b> \\(P_0=103.83\\); \\(P_1=105/1.03=101.94\\). The premium falls by 1.89 in a year, with no change in yield.<br><b>Used in the deck for:</b> the carry and roll-down cards, where the pull-to-par effect is the source of the ageing return.",
+  "tags": [
+   "foundations",
+   "bonds",
+   "price_yield",
+   "mental_math",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: DURATION 1/4]</b> Context: a 3-year 5.00% annual-coupon bond at a 5.00% yield, price 100. Define Macaulay duration and compute it.",
+  "back": "<b>Answer:</b> \\(D_{Mac}=2.8594\\) years.<br><b>Intuition:</b> Macaulay duration is the present-value-weighted average time to the cash flows, the balance point of the bond's value along the time axis. A zero's balance point is its maturity, and coupons pull it earlier.<br><b>Formula:</b> \\( D_{Mac}=\\dfrac{1}{P}\\sum_t t\\,PV_t \\).<br><b>Worked example:</b> PVs: 4.7619 (t=1), 4.5351 (t=2), 90.7029 (t=3). Weighted: \\((1\\times4.7619+2\\times4.5351+3\\times90.7029)/100=285.94/100=2.8594\\).<br><b>Used in the deck for:</b> DV01 and hedge sizing (the next cards in this chain), and the coupon-versus-zero comparison.",
+  "tags": [
+   "foundations",
+   "duration",
+   "chain_duration",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: DURATION 2/4]</b> Context: the same bond, \\(D_{Mac}=2.8594\\), price 100, yield 5.00%. Derive modified duration and use it to estimate the price change for a +100bp move.",
+  "back": "<b>Answer:</b> \\(D_{mod}=2.7232\\). For a +100bp move, \\(\\Delta P/P\\approx-2.72\\%\\), or about \\(-2.72\\) points.<br><b>Intuition:</b> Modified duration is the elasticity of price to yield: the percentage price change per unit change in yield. It is Macaulay duration rescaled by the compounding factor.<br><b>Formula:</b> \\( D_{mod}=\\dfrac{D_{Mac}}{1+y/m} \\), \\( \\dfrac{\\Delta P}{P}\\approx -D_{mod}\\,\\Delta y \\).<br><b>Worked example:</b> \\(2.8594/1.05=2.7232\\); \\(-2.7232\\times0.01=-2.72\\%\\). Full repricing at 6.00% gives 97.3270, a change of \\(-2.67\\%\\). The 0.05-point gap is convexity (card 4).<br><b>Where it breaks:</b> for a semi-annual bond divide by \\(1+y/2\\), not by \\(1+y\\). The approximation is linear, so it always overstates the loss on a rate rise.<br><b>Used in the deck for:</b> every P&L and hedge estimate in the govies and swaps cards.",
+  "tags": [
+   "foundations",
+   "duration",
+   "chain_duration",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: DURATION 3/4]</b> Context: a long £10m face position in the same 3-year 5% bond at par, with \\(D_{mod}=2.7232\\). Define DV01 and compute it. What is the sign for a long position?",
+  "back": "<b>Answer:</b> DV01 is about £2,723 per bp. A long £10m position loses about £2,723 when yields rise by 1bp.<br><b>Intuition:</b> DV01 converts duration into money. It is the currency change in value for a 1bp move in yield, so it can be added across positions and compared across instruments. For a long position the sign is negative in the yield direction.<br><b>Formula:</b> \\( DV01 = D_{mod}\\times MV\\times 10^{-4} \\) per 1bp move.<br><b>Worked example:</b> \\(MV=10{,}000{,}000\\) (par), so \\(DV01=2.7232\\times10{,}000{,}000\\times0.0001=2{,}723.25\\). In swaps the same measure is usually quoted as PV01.<br><b>Used in the deck for:</b> hedging a bond with futures or another bond (the next card), and the DV01-neutral curve trades (2s10s, 5s30s) in the curves subdeck.",
+  "tags": [
+   "foundations",
+   "duration",
+   "dv01",
+   "chain_duration",
+   "risk",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: DURATION 4/4]</b> Context: the same bond. Full repricing gives -2.6730% for a +1% yield move and +2.7751% for a -1% move. Convexity is about 10.21. Show the second-order approximation and its error.",
+  "back": "<b>Answer:</b> Adding \\(\\tfrac12 C\\Delta y^2\\) to the duration term gives -2.6722% for +1% (error 0.0008 points) and -5.2424% for +2% (error -0.0062 points).<br><b>Intuition:</b> Convexity is the curvature of the price-yield relation. Duration alone is a tangent line, which overstates the loss on a rise and understates the gain on a fall. Vanilla bonds are positively convex.<br><b>Formula:</b> \\( C=\\dfrac{1}{P}\\dfrac{d^2P}{dy^2}\\approx10.21 \\); \\( \\dfrac{\\Delta P}{P}\\approx -D_{mod}\\Delta y+\\tfrac12 C\\,\\Delta y^2 \\).<br><b>Worked example:</b> For +1%: \\(-2.7232+\\tfrac12(10.21)(0.0001)\\times100=-2.7232+0.0510=-2.6722\\%\\). For +2%: \\(-5.4465+0.2042=-5.2423\\%\\) against full repricing of \\(-5.2486\\%\\).<br><b>Where it breaks:</b> the approximation degrades for large moves and for bonds with embedded options, where effective convexity can be negative.<br><b>Used in the deck for:</b> P&L explain on large moves, the callable and mortgage-type cards where convexity turns negative, and the convexity-versus-carry trade-off.",
+  "tags": [
+   "foundations",
+   "duration",
+   "convexity",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why is the Macaulay duration of a 5-year 5.00% annual-coupon bond at a 5.00% yield about 4.55, rather than 5.00 for a 5-year zero at the same yield?",
+  "back": "<b>Answer:</b> The coupons pay cash early, which lowers the value-weighted average time. A zero has all its cash at maturity, so its Macaulay duration equals its maturity.<br><b>Intuition:</b> Duration is a PV-weighted average of cash-flow times. Coupons move part of the value earlier, so the average falls below maturity.<br><b>Formula:</b> \\( D_{zero}=T \\), \\( D_{coupon}=\\dfrac{1}{P}\\sum_t t\\,PV_t \\).<br><b>Worked example:</b> Zero: \\(D_{Mac}=5.00\\), \\(D_{mod}=5/1.05=4.76\\). Coupon bond: \\(D_{Mac}=4.55\\), \\(D_{mod}=4.33\\).<br><b>Used in the deck for:</b> the duration-matching and zero-coupon-equivalent cards, where a zero is the simplest hedge building block.",
+  "tags": [
+   "foundations",
+   "duration",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A long £10m face of the 3-year 5% par bond (DV01 £2,723/bp) is to be hedged with a 10-year 4% annual par bond whose DV01 is £8,111/bp per £10m face. How much face of the 10-year bond should be shorted?",
+  "back": "<b>Answer:</b> About £3.36m face of the 10-year bond.<br><b>Intuition:</b> A DV01 hedge equalises the money sensitivity to a 1bp parallel move. The hedge notional scales inversely with the hedge instrument's DV01.<br><b>Formula:</b> \\( N_B=N_A\\times \\dfrac{DV01_A}{DV01_B} \\).<br><b>Worked example:</b> \\(10\\text{m}\\times2{,}723/8{,}111=3.36\\text{m}\\). Check: \\(3.36\\text{m}\\times8{,}111/10\\text{m}=2{,}725\\) per bp against 2,723 on the long.<br><b>Where it breaks:</b> a DV01 hedge is neutral only for a parallel move. A 3y-against-10y pair still carries a slope exposure, so state the curve risk left over.<br><b>Used in the deck for:</b> DV01-neutral bond and futures hedges, and the two-bond curve trades in the curves subdeck.",
+  "tags": [
+   "foundations",
+   "duration",
+   "dv01",
+   "hedging",
+   "mental_math",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a bond position with market value MV and modified duration \\(D_{mod}\\), the DV01 is approximately {{c1::\\(D_{mod}\\times MV\\times 10^{-4}\\)}}. For MV £10m and \\(D_{mod}=2.72\\), this is about {{c2::£2,720 per bp}}.",
+  "back": "The 10^-4 converts a yield move of 1bp into a fraction of the market value. The product is a currency amount per bp, so DV01s of different instruments add directly.",
+  "tags": [
+   "foundations",
+   "duration",
+   "dv01",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Given annual-compounded zeros of 4.00% for 1y and 4.20% for 2y, what is the 2-year par yield, and why is it below the 2y zero?",
+  "back": "<b>Answer:</b> The 2y par yield is 4.1959%, a little below the 2y zero of 4.20%.<br><b>Intuition:</b> A par bond prices at 100, so its coupon is a blend of the discount factors to each cash-flow date. The 1y rate gets the first coupon and the 2y rate gets the final coupon and principal. On an upward-sloping curve the blend sits below the longest zero.<br><b>Formula:</b> \\( y_{par}(2)=\\dfrac{1-DF_2}{DF_1+DF_2} \\) with annual coupons.<br><b>Worked example:</b> \\(DF_1=1/1.04=0.961538\\), \\(DF_2=1/1.042^2=0.921010\\); \\(y_{par}=(1-DF_2)/(DF_1+DF_2)=4.1959\\%\\).<br><b>Used in the deck for:</b> the par-to-zero bootstrap in the swaps and curves cards, and the par-swap-rate versus zero confusion in swap pricing.",
+  "tags": [
+   "foundations",
+   "curve",
+   "convention",
+   "mental_math",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "On an upward-sloping curve (1y 4.00%, 2y 4.20%, annual), order the 2y par yield, the 2y zero and the 1y-1y forward. Explain the ordering.",
+  "back": "<b>Answer:</b> Par 4.196% < zero 4.20% < forward 4.40%.<br><b>Intuition:</b> The forward is the marginal rate for year two. To lift the 2-year average above the 1-year rate, the year-two rate must sit above the 2y zero, and the par yield sits below the zero because it blends the lower near-term rates in.<br><b>Formula:</b> \\( f_{1,2}=\\dfrac{(1+z_2)^2}{1+z_1}-1 \\).<br><b>Worked example:</b> \\(1.042^2/1.04-1=4.4004\\%\\). The par yield 4.1959% lies below the zero 4.20%, which lies below the forward.<br><b>Where it breaks:</b> on a downward-sloping curve the ordering flips: the forward is below the zero, and the par yield is above it.<br><b>Used in the deck for:</b> forward-rate and par-rate comparisons in the swap cards, and the roll-down cards where the curve shape drives the return.",
+  "tags": [
+   "foundations",
+   "curve",
+   "convention",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "With annual coupons, the 2-year par yield is {{c1::\\(\\dfrac{1-DF_2}{DF_1+DF_2}\\)}}, which is the coupon that prices a 2-year bond at par.",
+  "back": "The par yield uses the discount factors of each cash-flow date, so it is a blend of the zeros, not a zero rate itself. For a 1-year maturity it reduces to the zero, since \\(y_{par}(1)=1/DF_1-1\\).",
+  "tags": [
+   "foundations",
+   "curve",
+   "convention",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "On an upward-sloping curve with 1y 3.00% and 2y 3.50% (annual), what is the 1y-1y forward, and is it above or below the 2y spot?",
+  "back": "<b>Answer:</b> 4.00%, above the 2y spot of 3.50%.<br><b>Intuition:</b> To earn the 2y average of 3.50% on an upward curve, the year-two rate must be higher than the year-one rate, so the forward sits above the 2y spot.<br><b>Formula:</b> \\( f=\\dfrac{(1+z_2)^2}{1+z_1}-1 \\).<br><b>Worked example:</b> \\(1.035^2/1.03-1=4.0024\\%\\). Check: \\(2(3.50)-3.00=4.00\\%\\) to first order.<br><b>Used in the deck for:</b> FRA and forward-starting pricing, and the carry and roll cards in this subdeck.",
+  "tags": [
+   "foundations",
+   "curve",
+   "convention",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "On a downward-sloping curve (1y 5.00%, 2y 4.60%, annual), is the 1y-1y forward above or below the spot rates? Compute it.",
+  "back": "<b>Answer:</b> Below both: the forward is 4.20%, below the 2y spot of 4.60% and the 1y spot of 5.00%.<br><b>Intuition:</b> On a downward slope the year-two rate must be lower than the year-one rate to bring the 2-year average down, so the forward falls below the spot.<br><b>Formula:</b> \\( f=\\dfrac{(1+z_2)^2}{1+z_1}-1 \\).<br><b>Worked example:</b> \\(1.046^2/1.05-1=4.2015\\%\\). Check: \\(2(4.60)-5.00=4.20\\%\\).<br><b>Used in the deck for:</b> the inverted-curve cards, where forwards below spot signal the market's expected easing path.",
+  "tags": [
+   "foundations",
+   "curve",
+   "convention",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BOOTSTRAP 1/3]</b> Context: the 1y zero is 3.00% annual, so \\(DF_1=0.970874\\). A 2-year 4.00% annual-coupon bond trades at par, 100. Solve for \\(DF_2\\).",
+  "back": "<b>Answer:</b> \\(DF_2=0.924197\\).<br><b>Intuition:</b> The bond's two cash flows must add up to its price. The first coupon is discounted with the known \\(DF_1\\), so the second discount factor is the only unknown.<br><b>Formula:</b> \\( 100=4\\,DF_1+104\\,DF_2 \\Rightarrow DF_2=\\dfrac{100-4DF_1}{104} \\).<br><b>Worked example:</b> \\(4\\times0.970874=3.883495\\); \\((100-3.883495)/104=0.924197\\).<br><b>Used in the deck for:</b> the sequential bootstrap in the OIS and credit curve cards, which uses the same step with a different instrument.",
+  "tags": [
+   "foundations",
+   "curve",
+   "bootstrap",
+   "chain_bootstrap",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BOOTSTRAP 2/3]</b> Context: \\(DF_2=0.924197\\) from step 1. Convert it to the 2-year zero rate (annual compounding), and explain why it sits above the 4.00% coupon.",
+  "back": "<b>Answer:</b> \\(z_2=DF_2^{-1/2}-1=4.0202\\%\\).<br><b>Intuition:</b> The par bond's 4% coupon blends a 3% one-year cash flow with a longer one. The one-year zero is lower than the coupon, so the year-two zero has to be higher than 4% to make the bond price at par.<br><b>Formula:</b> \\( z_2=DF_2^{-1/2}-1 \\).<br><b>Worked example:</b> \\(0.924197^{-1/2}=1.040202\\), so \\(z_2=4.0202\\%\\).<br><b>Used in the deck for:</b> zero-rate curves built from coupon bonds (the gilt curve cards), and the check that a par bond's coupon is not its zero rate.",
+  "tags": [
+   "foundations",
+   "curve",
+   "bootstrap",
+   "chain_bootstrap",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BOOTSTRAP 3/3]</b> Context: the same curve. The 2y bond's price input moves from 100.00 to 100.10 because of a stale quote. What does the 2y zero move to, and what does that say about the bootstrap?",
+  "back": "<b>Answer:</b> The 2y zero falls from 4.0202% to 3.9661%, a move of about -5.4bp for a 0.10 price move. The last pillar absorbs the whole price error.<br><b>Intuition:</b> The 2y discount factor is the small residual of a 104 cash flow, so a small price error becomes a visible rate error. A higher price means a lower yield, and the stale quote feeds straight into the pillar.<br><b>Formula:</b> \\( \\dfrac{\\partial DF_2}{\\partial P}=\\dfrac{1}{104} \\), \\( \\Delta z\\approx-\\tfrac12\\,DF_2^{-3/2}\\,\\dfrac{\\Delta P}{104} \\).<br><b>Worked example:</b> \\(\\Delta DF_2=0.10/104=+0.000962\\); \\(z_2=(0.925159)^{-1/2}-1=3.9661\\%\\). Approximation: \\(-\\tfrac12(0.924197)^{-3/2}(0.000962)=-0.0541\\%\\), i.e. -5.4bp.<br><b>Where it breaks:</b> this is a sequential bootstrap. Global solves spread the error across pillars, which is why the choice of method matters for risk.<br><b>Used in the deck for:</b> the bucketed-DV01 and curve-Jacobian cards, and the stale-quote risk discussion in the curve-building cards.",
+  "tags": [
+   "foundations",
+   "curve",
+   "bootstrap",
+   "chain_bootstrap",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: TERM 1/3]</b> Context: the 1y zero is 3.00% and the market expects the 1y rate in one year to be 4.00%. Under the pure expectations hypothesis (EH), what is the 2y zero rate?",
+  "back": "<b>Answer:</b> About 3.50%. Exactly, with annual compounding, 3.4988%.<br><b>Intuition:</b> Under pure expectations an investor is indifferent between a 2-year zero and rolling two 1-year deposits, so the 2y yield is the geometric average of today's 1y rate and the expected 1y rate in one year.<br><b>Formula:</b> \\( (1+z_2)^2=(1+r_1)\\,(1+E[r_{1,1}]) \\).<br><b>Worked example:</b> \\((1.03\\times1.04)^{1/2}-1=3.4988\\%\\).<br><b>Where it breaks:</b> EH ignores the compensation for bearing duration risk. If investors demand a premium, the market's forward sits above the expected spot rate.<br><b>Used in the deck for:</b> the expectations decomposition in the rates-views cards, and the term-premium card that follows in this chain.",
+  "tags": [
+   "foundations",
+   "term_structure",
+   "chain_term",
+   "convention",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: TERM 2/3]</b> Context: the same 1y rate (3.00%) and the expected 1y rate in one year (4.00%), but the market's 1y-1y forward is 4.30%. Define the term premium and compute it.",
+  "back": "<b>Answer:</b> Term premium = 4.30% - 4.00% = 30bp.<br><b>Intuition:</b> The forward is what the market locks in today. The gap over the expected spot rate is compensation for holding the longer bond and bearing the risk that rates rise, which is the term or liquidity premium.<br><b>Formula:</b> \\( f(1,2)\\approx E[r_{1,1}]+TP_{1,2} \\) (approx.; ignores convexity and compounding).<br><b>Worked example:</b> \\(4.30\\%-4.00\\%=0.30\\%=30\\) bp.<br><b>Where it breaks:</b> the premium is not observed directly. It is estimated from models (for example Adrian, Crump and Moench), and the estimates depend on the expectations input, so treat any single number as approximate.<br><b>Used in the deck for:</b> the gilt term-premium card and the QE card, where central-bank purchases compress this premium.",
+  "tags": [
+   "foundations",
+   "term_structure",
+   "chain_term",
+   "convention",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: TERM 3/3]</b> Context: pension schemes must hold long gilts to match liabilities, while banks prefer short maturities. What does preferred habitat theory predict for the 30y term premium, and how does it differ from the liquidity-premium view?",
+  "back": "<b>Answer:</b> Under preferred habitat, investors have a maturity segment they prefer and move out of it only for a premium. The 30y premium therefore depends on the supply and demand in that segment, not only on time to maturity.<br><b>Intuition:</b> Liquidity-premium theory says the premium rises smoothly with maturity to compensate for risk. Preferred habitat says the curve is segmented: a large, fixed pension demand for long bonds lowers the long-end premium, while heavy long-end issuance raises it.<br><b>Formula:</b> No closed form. The test is the sign of the response: a shift in supply or demand in one segment moves that segment's yield more than its neighbours.<br><b>Worked example:</b> If the debt office adds long gilts while pension demand is fixed, the 30y yield must rise enough to attract buyers out of their habitat. The size of that rise depends on demand elasticity, which has no universal value.<br><b>Used in the deck for:</b> the auction-supply and QE cards, where the term-premium effect of issuance and purchases is the key scenario.",
+  "tags": [
+   "foundations",
+   "term_structure",
+   "chain_term",
+   "convention",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 5-year 3.00% par bond at a 3.00% yield, financed at a 2.80% repo rate for 3 months. The 4.75-year point is at 2.95%. Estimate carry and roll-down per 100 of price over the 3 months, and the total.",
+  "back": "<b>Answer:</b> Carry about 0.05, roll-down about 0.22, total about 0.27 points over 3 months. A rise of about 6bp in yields would wipe the total out.<br><b>Intuition:</b> Carry is what the position earns above its funding if the curve does not move. Roll-down is the price gain as the bond ages onto a lower-yielding point on an upward-sloping curve.<br><b>Formula:</b> \\( \\text{carry}\\approx(y-r)\\,\\tau \\cdot 100 \\); \\( \\text{roll}\\approx D_{mod}(4.75y)\\times\\Delta y \\).<br><b>Worked example:</b> Carry: \\((3.00\\%-2.80\\%)\\times0.25\\times100=0.05\\). Roll: \\(4.34\\times0.05\\%\\times100=0.22\\). Breakeven yield rise \\(\\approx0.27/4.34\\approx6\\)bp. Exact check: a 4.75y bond at an unchanged 3.00% has dirty price \\(100\\times1.03^{0.25}=100.74\\), and at 2.95% it is 100.96.<br><b>Where it breaks:</b> with exact compounding carry is about 0.04, since accretion (0.74) less financing (0.70) is 0.04. The simple formula is an approximation.<br><b>Used in the deck for:</b> the carry-plus-roll cushion cards, and the roll-down signal in the curve-trade cards.",
+  "tags": [
+   "foundations",
+   "carry_roll",
+   "mental_math",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A nominal yield of 4.50% and expected inflation of 2.00%. What is the real yield under the exact Fisher relation, and what does the additive approximation give?",
+  "back": "<b>Answer:</b> Real yield 2.45% exact; the additive shortcut gives 2.50%.<br><b>Intuition:</b> Real and nominal returns compound together, so the real yield is the ratio of growth factors, not a difference. The additive approximation ignores the cross term between real return and inflation.<br><b>Formula:</b> \\( 1+n=(1+r)(1+\\pi) \\Rightarrow r=\\dfrac{1+n}{1+\\pi}-1=\\dfrac{n-\\pi}{1+\\pi} \\).<br><b>Worked example:</b> \\(1.045/1.02-1=2.4510\\%\\); \\((4.50-2.00)/1.02=2.4510\\%\\). The shortcut \\(n-\\pi=2.50\\%\\) overstates by about 5bp.<br><b>Used in the deck for:</b> linker real yields and the RPI breakeven cards in the inflation subdeck.",
+  "tags": [
+   "foundations",
+   "inflation",
+   "fisher",
+   "mental_math",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why does the additive Fisher approximation \\(n\\approx r+\\pi\\) fail at high inflation? Quantify the error for \\(n=8.00\\%\\) and \\(\\pi=6.00\\%\\).",
+  "back": "<b>Answer:</b> The exact real yield is 1.89%, against 2.00% from the additive shortcut: an error of about -11bp.<br><b>Intuition:</b> The exact formula is \\((n-\\pi)/(1+\\pi)\\). The denominator \\(1+\\pi\\) shrinks the real return by the inflation factor, and the error grows with the product \\(\\pi\\) times the real yield.<br><b>Formula:</b> \\( r=\\dfrac{n-\\pi}{1+\\pi}\\approx(n-\\pi)-\\pi(n-\\pi) \\).<br><b>Worked example:</b> \\((8.00-6.00)/1.06=1.8868\\%\\). Shortcut: \\(2.00\\%\\). Error \\(\\approx-\\pi(n-\\pi)=-0.06\\times2.00=-0.12\\), with a small second-order correction, giving -0.11.<br><b>Where it breaks:</b> at low inflation the error is small, so the additive form is a fine mental shortcut for policy-level discussions.<br><b>Used in the deck for:</b> the convexity and Jensen derivations in the inflation cards, where the Fisher gap matters for pricing linkers.",
+  "tags": [
+   "foundations",
+   "inflation",
+   "fisher",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A curve has 2y 3.00%, 5y 3.40% and 10y 4.00%. Define level, slope and curvature using these three points, compute them, and say what each means.",
+  "back": "<b>Answer:</b> Level 3.47%, slope 100bp (10y minus 2y), curvature -20bp (2 times 5y minus 2y minus 10y).<br><b>Intuition:</b> Level is the parallel shift of the curve. Slope is the steepness between the ends. Curvature measures the belly (5y) against the average of the wings: positive means a hump, negative means the belly is rich relative to the wings.<br><b>Formula:</b> \\( L=\\dfrac{y_2+y_5+y_{10}}{3},\\; S=y_{10}-y_2,\\; C=2y_5-y_2-y_{10} \\).<br><b>Worked example:</b> \\(L=(3.00+3.40+4.00)/3=3.47\\%\\); \\(S=4.00-3.00=1.00\\%\\); \\(C=6.80-3.00-4.00=-0.20\\%\\), so the 5y yield sits 10bp below the average of the wings, and curvature is defined as twice that gap.<br><b>Used in the deck for:</b> the 2s5s10s butterfly sizing in the curves subdeck, and the PCA cards where level, slope and curvature are the first three components.",
+  "tags": [
+   "foundations",
+   "curve",
+   "convention",
+   "mental_math",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "An inverted 2s10s curve has a {{c1::negative slope}}. The usual reading is that the market expects {{c2::lower average short rates over the next decade}}, and/or has a {{c3::low or negative term premium}}.",
+  "back": "Inversion is a signal to read carefully, not a forecast on its own. Decompose the 10y yield into expected short rates and term premium before drawing a conclusion.",
+  "tags": [
+   "foundations",
+   "curve",
+   "term_structure",
+   "lvl_foundation"
+  ]
+ }
+]

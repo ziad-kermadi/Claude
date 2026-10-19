@@ -1,0 +1,541 @@
+[
+ {
+  "type": "basic",
+  "front": "What is the mean squared error of an estimator, how does it split into bias and variance, and why can a biased estimator beat an unbiased one? Test it on the sample variance with divisor \\(n\\) versus \\(n-1\\), for \\(n=10\\) i.i.d. normal observations with \\(\\sigma^2=4\\).",
+  "back": "<b>Answer:</b> \\(\\mathrm{MSE}(\\hat\\theta)=\\mathrm{Var}(\\hat\\theta)+\\mathrm{Bias}(\\hat\\theta)^2\\). A biased estimator wins when it removes more variance than the squared bias it adds.<br>\n<b>Intuition:</b> MSE is the total error budget. Bias is a systematic miss; variance is scatter around the estimator's own mean. Accepting a little bias for a lot less scatter lowers total error.<br>\n<b>Statement:</b> \\(\\mathrm{MSE}=\\mathbb E[(\\hat\\theta-\\theta)^2]=\\mathrm{Var}(\\hat\\theta)+(\\mathbb E\\hat\\theta-\\theta)^2\\).<br>\n<b>Worked example:</b> Since \\((n-1)\\hat\\sigma^2_{\\text{unb}}/\\sigma^2\\sim\\chi^2_{n-1}\\), \\(\\mathrm{Var}(\\hat\\sigma^2_{\\text{unb}})=2\\sigma^4/(n-1)\\). The divisor-\\(n\\) (MLE) estimator has \\(\\mathrm{Var}=2(n-1)\\sigma^4/n^2\\) and \\(\\mathrm{Bias}=-\\sigma^2/n\\). With \\(n=10,\\ \\sigma^2=4\\):<br>\n&nbsp;&nbsp;MLE: variance 2.88, bias \\(-0.40\\), bias\\(^2\\) 0.16, MSE <b>3.04</b>.<br>\n&nbsp;&nbsp;Unbiased: variance 3.56, bias 0, MSE <b>3.56</b>.<br>\nThe biased divisor-\\(n\\) estimator has the lower MSE.<br>\n<b>Used in the deck for:</b> the bias-variance trade-off behind the shrinkage cards (Bayes chain, Ledoit–Wolf) later in this file.",
+  "tags": [
+   "statistics",
+   "estimators",
+   "bias_variance",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Define an unbiased estimator and a consistent estimator. The sample variance with divisor \\(n\\) is biased: does that matter asymptotically? Give its bias for \\(n=10,\\ 100,\\ 1000\\) when \\(\\sigma^2=4\\).",
+  "back": "<b>Answer:</b> Unbiased: \\(\\mathbb E[\\hat\\theta]=\\theta\\) for every \\(n\\). Consistent: \\(\\hat\\theta_n\\to\\theta\\) in probability as \\(n\\to\\infty\\). The divisor-\\(n\\) variance is biased but consistent, because its bias \\(-\\sigma^2/n\\) vanishes.<br>\n<b>Intuition:</b> A bias that decays like \\(1/n\\) is a finite-sample problem. Consistency only asks that the error disappear eventually; unbiasedness is a finite-sample property that can be traded for lower MSE (previous card).<br>\n<b>Statement:</b> \\(\\mathbb E[\\hat\\sigma^2_{\\text{MLE}}]=\\frac{n-1}{n}\\sigma^2\\), so the bias is \\(-\\sigma^2/n\\). Consistency follows from the law of large numbers, since \\(\\frac1n\\sum_i(x_i-\\mu)^2\\to\\sigma^2\\) and the correction for estimating \\(\\mu\\) is \\(O(1/n)\\).<br>\n<b>Worked example:</b> With \\(\\sigma^2=4\\): \\(n=10\\) gives bias \\(-0.40\\) (10% of \\(\\sigma^2\\)); \\(n=100\\) gives \\(-0.04\\) (1%); \\(n=1000\\) gives \\(-0.004\\) (0.1%).<br>\n<b>Used in the deck for:</b> the n-versus-(n-1) choice in any realised-variance or covariance estimator in this file; the same finite-sample logic applies to the sample covariance in the Ledoit–Wolf card.",
+  "tags": [
+   "statistics",
+   "estimators",
+   "consistency",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the maximum likelihood estimators of the mean and variance of an i.i.d. normal sample \\(x_1,\\dots,x_n\\). Show the step where the variance estimator becomes biased, then check it on the sample \\(\\{1,2,3,4,6\\}\\).",
+  "back": "<b>Answer:</b> \\(\\hat\\mu=\\bar x\\) and \\(\\hat\\sigma^2=\\frac1n\\sum_i(x_i-\\bar x)^2\\). The variance estimator is biased because \\(\\bar x\\) is estimated from the same data.<br>\n<b>Derivation:</b><br>\n1. Log-likelihood: \\(\\ell(\\mu,\\sigma^2)=-\\frac n2\\ln(2\\pi\\sigma^2)-\\frac1{2\\sigma^2}\\sum_i(x_i-\\mu)^2\\).<br>\n2. \\(\\partial\\ell/\\partial\\mu=\\frac1{\\sigma^2}\\sum_i(x_i-\\mu)=0\\Rightarrow\\hat\\mu=\\bar x\\). The mean condition does not involve \\(\\sigma^2\\), so it decouples.<br>\n3. Substitute \\(\\hat\\mu\\) and differentiate in \\(\\sigma^2\\): \\(-\\frac{n}{2\\sigma^2}+\\frac{1}{2\\sigma^4}\\sum_i(x_i-\\bar x)^2=0\\Rightarrow\\hat\\sigma^2=\\frac1n\\sum_i(x_i-\\bar x)^2\\).<br>\n4. Bias: \\(\\mathbb E\\sum_i(x_i-\\bar x)^2=(n-1)\\sigma^2\\), so \\(\\mathbb E\\hat\\sigma^2=\\frac{n-1}{n}\\sigma^2\\). One degree of freedom is spent estimating \\(\\mu\\).<br>\n<b>Check:</b> \\(\\bar x=3.2\\), \\(\\sum(x_i-\\bar x)^2=14.80\\), so \\(\\hat\\sigma^2=2.96\\) and the unbiased \\(s^2=3.70\\).<br>\n<b>Where it breaks:</b> the bias and the \\(\\chi^2\\) variance results use iid normality. Under fat tails the sample mean is still unbiased, but the variance of \\(\\hat\\sigma^2\\) rises with excess kurtosis.",
+  "tags": [
+   "statistics",
+   "estimators",
+   "mle",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A portfolio of firms is observed for total exposure \\(T\\) firm-years and suffers \\(D\\) defaults. Under a constant hazard \\(\\lambda\\), derive the MLE of \\(\\lambda\\), its standard error and an approximate 95% interval. Apply it to \\(D=12\\), \\(T=2{,}400\\) firm-years.",
+  "back": "<b>Answer:</b> \\(\\hat\\lambda=D/T\\), with \\(\\mathrm{SE}\\approx\\hat\\lambda/\\sqrt D\\). For \\(D=12\\), \\(T=2{,}400\\): \\(\\hat\\lambda=0.50\\%\\) per year, Wald 95% interval \\([0.22\\%,\\,0.78\\%]\\). The exact Poisson interval is \\([0.26\\%,\\,0.87\\%]\\), which is wider on the upside because \\(D\\) is small.<br>\n<b>Derivation:</b> Firm \\(i\\) is observed for \\(t_i\\) years. A default contributes density \\(\\lambda e^{-\\lambda t_i}\\) and a censored firm contributes survival \\(e^{-\\lambda t_i}\\). So \\(L=\\lambda^D e^{-\\lambda T}\\) with \\(T=\\sum_i t_i\\), and \\(\\ell=D\\ln\\lambda-\\lambda T\\). The first-order condition \\(D/\\lambda-T=0\\) gives \\(\\hat\\lambda=D/T\\). The Fisher information is \\(-\\ell''=D/\\lambda^2\\), so \\(\\mathrm{Var}(\\hat\\lambda)\\approx\\lambda^2/D\\).<br>\n<b>Worked example:</b> \\(\\hat\\lambda=12/2400=0.0050\\), a 50bp hazard. \\(\\mathrm{SE}=0.0050/\\sqrt{12}=0.00144\\) (14bp). The 95% Wald band is \\(0.0050\\pm1.96\\times0.00144\\). Annual PD is \\(1-e^{-\\lambda}=0.499\\%\\).<br>\n<b>Interviewer trap:</b> this is a real-world (P-measure) hazard. A CDS-implied hazard from the credit cards is risk-neutral and will be higher because it carries a risk premium.<br>\n<b>Where it breaks:</b> the Wald interval is poor for small \\(D\\); the constant-hazard assumption fails over the credit cycle; and \\(T\\) must be firm-years at risk, not calendar time.<br>\n<b>Used in the deck for:</b> PD inputs in the credit model cards (05 and 06) and the Bayesian beta-binomial update (chain BAYES).",
+  "tags": [
+   "statistics",
+   "estimators",
+   "hazard_rate",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The standard error of the sample standard deviation of \\(n\\) i.i.d. normal observations is approximately {{c1::\\(\\sigma/\\sqrt{2n}\\)}}. For a 20% annual vol estimated from 252 daily returns, the one-standard-error band is about {{c2::\\(\\pm0.9\\)}} vol points.",
+  "back": "<b>Derivation:</b> \\(\\mathrm{Var}(s^2)=2\\sigma^4/(n-1)\\) under normality. The delta method gives \\(\\mathrm{SE}(s)\\approx\\mathrm{SE}(s^2)/(2\\sigma)=\\sigma/\\sqrt{2(n-1)}\\). Numerically, \\(0.20/\\sqrt{504}=0.0089\\).<br>\nFat tails raise this standard error, because the variance of \\(s^2\\) grows with kurtosis.<br>\n<b>Used in the deck for:</b> the error bars on any vol-based sizing or calibration in this file, and the kurtosis cards below.",
+  "tags": [
+   "statistics",
+   "estimators",
+   "standard_error",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "State the Cramér–Rao lower bound for an unbiased estimator of the mean of a normal sample with known \\(\\sigma\\). Why is the sample mean efficient, and what is the bound for \\(n=25,\\ \\sigma=2\\)?",
+  "back": "<b>Answer:</b> \\(\\mathrm{Var}(\\hat\\mu)\\ge 1/I_n(\\mu)=\\sigma^2/n\\) for any unbiased \\(\\hat\\mu\\). The sample mean attains it, so it is efficient. For \\(n=25\\), \\(\\sigma=2\\): bound \\(=4/25=0.16\\), SE \\(\\ge0.40\\).<br>\n<b>Intuition:</b> Fisher information is the expected curvature of the log-likelihood. A sharply peaked likelihood pins the parameter down. Each normal observation contributes \\(1/\\sigma^2\\), so \\(n\\) observations contribute \\(n/\\sigma^2\\).<br>\n<b>Statement:</b> \\(I_n(\\mu)=-\\mathbb E[\\partial_\\mu^2\\ell]=n/\\sigma^2\\). Equality holds when the score is linear in the estimator: \\(\\partial_\\mu\\ell=\\frac{n}{\\sigma^2}(\\bar x-\\mu)\\).<br>\n<b>Worked example:</b> The sample median is also consistent, but its asymptotic variance is \\((\\pi/2)\\sigma^2/n=0.251\\) for these numbers, which is 57% larger than the bound.<br>\n<b>Used in the deck for:</b> the efficiency benchmark behind the MLE derivations in this file, and the sample-mean standard error used in the Sharpe cards.",
+  "tags": [
+   "statistics",
+   "estimators",
+   "efficiency",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BAYES 1/4]</b> Context: a manager's annual alpha is modelled as \\(\\mu\\sim N(m_0,v_0)\\) before seeing the track record. The track record gives a sample mean \\(\\bar x\\) with sampling variance \\(v=\\sigma^2/n\\). State the conjugate normal-normal posterior and explain what the precision-additive rule means.",
+  "back": "<b>Answer:</b> \\(\\mu\\mid\\bar x\\sim N(m_1,v_1)\\) with precision \\(1/v_1=1/v_0+1/v\\), and mean \\(m_1=v_1\\bigl(m_0/v_0+\\bar x/v\\bigr)\\).<br>\n<b>Intuition:</b> Precisions (inverse variances) add. The posterior mean is the precision-weighted average of the prior mean and the data, so the more precise source counts for more.<br>\n<b>Statement:</b> \\(m_1=m_0+w\\,(\\bar x-m_0)\\) with data weight \\(w=\\dfrac{v_0}{v_0+v}\\). The posterior variance is smaller than both \\(v_0\\) and \\(v\\).<br>\n<b>Worked example:</b> If \\(v_0=v\\), the data weight is \\(1/2\\): the posterior mean is the midpoint of \\(m_0\\) and \\(\\bar x\\), and the posterior variance is \\(v/2\\).<br>\n<b>Used in the deck for:</b> chain BAYES 2/4 to 4/4 below, and the Ledoit–Wolf shrinkage card.",
+  "tags": [
+   "statistics",
+   "bayesian",
+   "chain_bayes",
+   "conjugate_prior",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BAYES 2/4]</b> Context: prior alpha \\(N(2\\%,\\,1\\%^2)\\). A 3-year track record gives \\(\\bar x=6\\%\\) with standard error 3%. Compute the posterior mean and standard deviation and the data weight. How much does the track record move the prior?",
+  "back": "<b>Answer:</b> Posterior \\(N(2.40\\%,\\ 0.95\\%^2)\\). The data weight is 10%, so the posterior mean moves only 40bp toward the 6% track record.<br>\n<b>Worked example:</b> \\(v_0=10^{-4}\\), \\(v=9\\times10^{-4}\\). Weight \\(w=v_0/(v_0+v)=10^{-4}/10^{-3}=0.10\\). Posterior mean \\(=2\\%+0.10\\times(6\\%-2\\%)=2.40\\%\\). Posterior precision \\(=1/v_0+1/v=10{,}000+1{,}111=11{,}111\\), so \\(v_1=9.0\\times10^{-5}\\) and the posterior sd is \\(0.95\\%\\).<br>\n<b>Sanity check:</b> the posterior sd is below both the prior sd (1%) and the data sd (3%). A short, noisy record should move a prior only a little.<br>\n<b>Used in the deck for:</b> how far a short track record should move a manager's alpha or a PD estimate; continues in BAYES 3/4 and 4/4.",
+  "tags": [
+   "statistics",
+   "bayesian",
+   "chain_bayes",
+   "conjugate_prior",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BAYES 3/4]</b> Context: a loan book's annual default probability \\(p\\) has prior \\(\\mathrm{Beta}(2,98)\\), mean 2%. In \\(n=100\\) loans, \\(k=3\\) defaulted in the year. Derive the posterior, then give its mean and standard deviation.",
+  "back": "<b>Answer:</b> Posterior \\(\\mathrm{Beta}(a+k,\\ b+n-k)=\\mathrm{Beta}(5,195)\\). Mean 2.50%, sd 1.10%. The prior sd is 1.39%.<br>\n<b>Derivation:</b> The binomial likelihood is \\(\\binom nk p^k(1-p)^{n-k}\\). Multiplying by the prior kernel \\(p^{a-1}(1-p)^{b-1}\\) gives \\(p^{a+k-1}(1-p)^{b+n-k-1}\\), which is a Beta kernel.<br>\n<b>Worked example:</b> Posterior mean \\(=\\dfrac{a+k}{a+b+n}=\\dfrac{5}{200}=2.50\\%\\). The observed 3% is shrunk toward the 2% prior. Posterior variance \\(=\\dfrac{ab'}{(a'+b')^2(a'+b'+1)}=\\dfrac{5\\cdot195}{200^2\\cdot201}\\), giving sd 1.10%.<br>\n<b>Pseudo-observation view:</b> the prior \\(a+b=100\\) is worth 100 loans of evidence, which is why 3 defaults in 100 loans barely move it.<br>\n<b>Used in the deck for:</b> the frequentist counterpart in E4 (hazard MLE) and PD estimation in the credit model cards (06).",
+  "tags": [
+   "statistics",
+   "bayesian",
+   "chain_bayes",
+   "beta_binomial",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BAYES 4/4]</b> Context: in the track-record example the data weight was 10%. A PM asks whether this heavy shrinkage is a bug or a feature, and how it relates to James–Stein and Ledoit–Wolf. Answer with the formula and say when the data should dominate.",
+  "back": "<b>Answer:</b> Shrinkage is the Bayes optimum under the stated prior. The posterior mean is \\((1-w)\\,m_0+w\\,\\bar x\\) with \\(w=v_0/(v_0+v)\\). It is a feature when the sampling variance is large relative to the prior dispersion, and the data only dominate when \\(v\\ll v_0\\).<br>\n<b>Worked example:</b> keep the prior \\(N(2\\%,1\\%^2)\\) and let the track record's standard error fall from 3% to 1% (\\(v=10^{-4}\\)). Then \\(w=10^{-4}/(2\\times10^{-4})=0.5\\), and the posterior mean is \\(2\\%+0.5\\times4\\%=4.0\\%\\). The data now carry half the weight.<br>\n<b>Connection:</b> James–Stein (1961) shows that shrinking a vector of means toward a common target has lower total MSE than the MLE when there are at least three means. Ledoit–Wolf (cards below) is the covariance-matrix analogue of the same weighted average.<br>\n<b>Where it breaks:</b> the prior must not be chosen from the same data (double counting); an over-tight prior gives a posterior that is too narrow and overconfident.<br>\n<b>Used in the deck for:</b> the Ledoit–Wolf card and the correlation-noise card later in this file.",
+  "tags": [
+   "statistics",
+   "bayesian",
+   "chain_bayes",
+   "shrinkage",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A systematic strategy earns a mean daily return of 0.05% with daily standard deviation 1.00% over 250 days. Define the p-value for the test of zero mean, compute it, and state the two most common misreadings.",
+  "back": "<b>Answer:</b> \\(p=P(|T|\\ge|t_{\\text{obs}}|\\mid H_0)\\). Here \\(t=0.79\\) and \\(p=0.43\\). It is not the probability that the strategy has no edge.<br>\n<b>Intuition:</b> The p-value asks how surprising this sample would be if the strategy truly earned nothing. It says nothing about how likely the strategy is to work.<br>\n<b>Statement:</b> \\(t=\\dfrac{\\bar r}{s/\\sqrt n}\\), and \\(p=2\\bigl(1-\\Phi(|t|)\\bigr)\\) in the normal approximation. For 250 observations the t-distribution is almost identical.<br>\n<b>Worked example:</b> \\(t=0.0005/(0.01/\\sqrt{250})=0.79\\), so \\(p=2(1-\\Phi(0.79))=0.43\\). The 5% two-sided threshold is 1.96, so the result is not significant.<br>\n<b>Misreadings:</b> (1) \\(p=0.43\\) does not mean a 57% chance the strategy works. (2) A small p-value is not an effect size; with enough data a tiny return becomes significant without being economically useful.<br>\n<b>Used in the deck for:</b> every significance statement in the power, multiple-testing and Sharpe cards below.",
+  "tags": [
+   "statistics",
+   "hypothesis_testing",
+   "p_value",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a two-sided test at 5% with 80% power, the detectable effect scales with \\(z_{0.975}+z_{0.80}=\\){{c1::2.80}}. The required sample size is \\(n\\approx\\bigl((z_{0.975}+z_{0.80})\\,\\sigma/\\delta\\bigr)^2=\\){{c2::7.85}}\\(\\,\\sigma^2/\\delta^2\\), where \\(\\delta\\) is the effect size.",
+  "back": "<b>Definitions:</b> Type I error = rejecting \\(H_0\\) when true (size \\(\\alpha\\)). Type II error = failing to reject when \\(H_1\\) holds (\\(\\beta\\)). Power = \\(1-\\beta\\), the probability of rejecting under the alternative. Power rises with \\(\\delta\\sqrt n/\\sigma\\) and with \\(\\alpha\\).<br>\n<b>Used in the deck for:</b> the track-record card (H3) and the Bonferroni chain, where a stricter threshold lowers power.",
+  "tags": [
+   "statistics",
+   "hypothesis_testing",
+   "power",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Case study. A PM says a strategy with a true annual Sharpe of 0.5 is clearly good after 5 years. How many years of data does a two-sided 5% test need to reach 80% power against zero? Show the arithmetic and the power after 5 years.",
+  "back": "<b>Answer:</b> About 31 years. After 5 years the power is only about 20%.<br>\n<b>Derivation:</b> For an annual Sharpe estimated from \\(T\\) years of returns, the t-statistic is approximately \\(\\widehat{SR}\\sqrt T\\), with mean \\(SR\\sqrt T\\) under the alternative. Power 80% at 5% two-sided needs \\(SR\\sqrt T\\ge z_{0.975}+z_{0.80}=2.80\\). So \\(\\sqrt T\\ge 2.80/0.5=5.60\\) and \\(T\\ge31.4\\) years.<br>\n<b>Worked example:</b> At \\(T=5\\), the expected t-statistic is \\(0.5\\sqrt5=1.12\\). Power \\(=P(Z>1.96-1.12)=P(Z>0.84)\\approx0.20\\). A 5-year track record with a genuine Sharpe of 0.5 is significant only about one time in five.<br>\n<b>Sanity check:</b> a Sharpe ratio of 1.0 needs only \\((2.80/1.0)^2\\approx 8\\) years for 80% power, so the sample needed scales with \\(1/SR^2\\).<br>\n<b>Where it breaks:</b> Sharpe ratios are not constant across regimes; returns are fat-tailed and possibly autocorrelated (Lo 2002, card S1); and the test ignores the number of strategies tried (chain MULT). The 31-year figure is therefore a lower bound.<br>\n<b>Used in the deck for:</b> strat conversations about track-record credibility, and the Sharpe standard error card (S1) and deflated Sharpe card (MULT 4/4).",
+  "tags": [
+   "statistics",
+   "hypothesis_testing",
+   "sharpe_ratio",
+   "case_study",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: MULT 1/4]</b> Context: a desk screens \\(m\\) independent trading signals, each tested at 5% significance, and none has a true edge. Derive the probability that at least one looks significant (the familywise error rate) and evaluate it for \\(m=20\\) and \\(m=100\\).",
+  "back": "<b>Answer:</b> \\(\\mathrm{FWER}=1-(1-\\alpha)^m\\). For \\(m=20\\) it is 64%; for \\(m=100\\) it is 99.4%.<br>\n<b>Derivation:</b> Under independence, \\(P(\\text{no false rejection})=(1-\\alpha)^m\\). The complement is the FWER.<br>\n<b>Intuition:</b> each test is a lottery ticket with a 5% chance of winning. The chance of at least one winning ticket grows with the number bought.<br>\n<b>Worked example:</b> \\(1-0.95^{20}=0.642\\) and \\(1-0.95^{100}=0.994\\). A \"best of 20 signals\" is significant by chance about two times in three.<br>\n<b>Where it breaks:</b> correlated signals (common factors) give a smaller FWER than the formula, but the winner's curse remains: the best signal's estimate is inflated even when it is not formally significant.<br>\n<b>Used in the deck for:</b> the Bonferroni and Holm card, the BH card and the deflated Sharpe card below.",
+  "tags": [
+   "statistics",
+   "multiple_testing",
+   "chain_mult",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: MULT 2/4]</b> Context: 5 signals have p-values 0.001, 0.012, 0.021, 0.040, 0.300, tested at familywise level 5%. State the Bonferroni and Holm rules, and count the rejections under each.",
+  "back": "<b>Answer:</b> Bonferroni rejects 1 (\\(p\\le0.010\\)). Holm rejects 2.<br>\n<b>Bonferroni:</b> reject \\(H_i\\) if \\(p_i\\le\\alpha/m\\). It controls the FWER under any dependence structure.<br>\n<b>Holm (step-down):</b> order \\(p_{(1)}\\le\\dots\\le p_{(m)}\\). For \\(k=1,2,\\dots\\), reject while \\(p_{(k)}\\le\\alpha/(m-k+1)\\); stop at the first failure. Holm also controls the FWER under arbitrary dependence and is never less powerful than Bonferroni.<br>\n<b>Worked example:</b> Bonferroni threshold \\(0.05/5=0.010\\): only \\(p=0.001\\) passes. Holm: \\(k=1\\): \\(0.001\\le0.05/5=0.0100\\) yes. \\(k=2\\): \\(0.012\\le0.05/4=0.0125\\) yes. \\(k=3\\): \\(0.021\\le0.05/3=0.0167\\) no, stop. Two rejections.<br>\n<b>Used in the deck for:</b> the FWER-versus-FDR choice in chain card MULT 3/4 and the screening discussion in the overfitting card (O1).",
+  "tags": [
+   "statistics",
+   "multiple_testing",
+   "chain_mult",
+   "bonferroni",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: MULT 3/4]</b> Context: the same five p-values, but the desk accepts a 5% false discovery rate rather than a 5% chance of any false positive. State the Benjamini–Hochberg rule, apply it, and say exactly what it controls.",
+  "back": "<b>Answer:</b> BH rejects 4 hypotheses: the largest \\(k\\) with \\(p_{(k)}\\le kq/m\\) is \\(k=4\\), since \\(0.040\\le0.040\\).<br>\n<b>Rule:</b> sort the p-values; find the largest \\(k\\) with \\(p_{(k)}\\le (k/m)\\,q\\); reject the \\(k\\) smallest. It controls the false discovery rate \\(\\mathrm{FDR}=\\mathbb E[V/\\max(R,1)]\\le q\\), where \\(V\\) is the number of false rejections and \\(R\\) the total rejections. The guarantee needs independence or positive regression dependence. Under arbitrary dependence, the Benjamini–Yekutieli version multiplies the threshold by \\(\\sum_{i=1}^m 1/i\\).<br>\n<b>Worked example:</b> thresholds \\(kq/m=0.01,\\,0.02,\\,0.03,\\,0.04,\\,0.05\\). Compare with \\(p=0.001,\\,0.012,\\,0.021,\\,0.040,\\,0.300\\): the first four pass. So 4 rejections, against 2 under Holm and 1 under Bonferroni. On average at most 5% of the rejections are false.<br>\n<b>Where it breaks:</b> the FDR is an expectation; a single run can have more false discoveries. BH gives no FWER protection.<br>\n<b>Used in the deck for:</b> research pipelines that screen many signals and accept some false positives, contrasted with the deflated Sharpe card (MULT 4/4).",
+  "tags": [
+   "statistics",
+   "multiple_testing",
+   "chain_mult",
+   "false_discovery_rate",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: MULT 4/4]</b> Context: a researcher tried \\(N=100\\) strategy variants and reports the best annualised Sharpe ratio. Explain the deflated Sharpe ratio idea (Bailey and López de Prado). Compute the expected best Sharpe under no skill when the cross-trial standard deviation of Sharpe estimates is 0.25.",
+  "back": "<b>Answer:</b> The expected maximum of \\(N\\) zero-skill Sharpe estimates is \\(\\sigma_{SR}\\bigl[(1-\\gamma)\\Phi^{-1}(1-\\tfrac1N)+\\gamma\\,\\Phi^{-1}(1-\\tfrac1{Ne})\\bigr]\\), with \\(\\gamma\\approx0.5772\\). With \\(\\sigma_{SR}=0.25\\) and \\(N=100\\) this is about 0.63. A reported Sharpe must beat this benchmark before it is evidence of skill.<br>\n<b>Intuition:</b> the maximum of many noisy estimates is biased upward even when no variant has skill. The deflated Sharpe ratio asks how likely it is that the observed Sharpe exceeds the benchmark that the best of \\(N\\) null trials would reach, adjusting for non-normal returns.<br>\n<b>Statement:</b> benchmark \\(SR_0=\\sqrt{\\mathrm{Var}[\\widehat{SR}]}\\,\\bigl[(1-\\gamma)\\Phi^{-1}(1-1/N)+\\gamma\\Phi^{-1}(1-1/(Ne))\\bigr]\\) (Bailey and López de Prado, 2014). The deflated Sharpe ratio is the probability that the true Sharpe exceeds \\(SR_0\\).<br>\n<b>Worked example:</b> \\(\\Phi^{-1}(0.99)=2.326\\), \\(\\Phi^{-1}(1-1/(100e))=2.680\\). So \\(0.25\\times(0.4228\\times2.326+0.5772\\times2.680)=0.25\\times2.53=0.63\\). A reported 0.9 is only 0.27 above the benchmark. Over 5 years its standard error is about 0.45 (card S1), so it is not significant.<br>\n<b>Where it breaks:</b> \\(N\\) must be the number of effectively independent trials, not the raw count; correlated variants have fewer. Undisclosed trials cannot be corrected for.<br>\n<b>Used in the deck for:</b> the overfitting card (O1) and the Sharpe standard error card (S1).",
+  "tags": [
+   "statistics",
+   "multiple_testing",
+   "chain_mult",
+   "deflated_sharpe",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Case study. A 3-year track record of monthly returns shows an annualised Sharpe ratio of 1.0. Give the standard error (Lo 2002, i.i.d. case), the 95% confidence interval and the t-statistic. Is it significant at 5%, and what should the PM ask next?",
+  "back": "<b>Answer:</b> SE \\(\\approx0.59\\). The 95% interval is about \\((-0.15,\\ 2.15)\\). The t-statistic is 1.73, below 1.96, so the record is not significant at 5% on its own.<br>\n<b>Derivation:</b> for a per-period Sharpe \\(SR_q\\) estimated from \\(T_q\\) i.i.d. periods, Lo (2002) gives \\(\\mathrm{Var}(\\widehat{SR}_q)\\approx(1+\\tfrac12SR_q^2)/T_q\\). Annualising with \\(q=12\\) (so \\(SR=\\sqrt{12}\\,SR_q\\) and \\(T_q=12T\\)) gives \\(\\mathrm{SE}(\\widehat{SR})\\approx\\sqrt{(1+SR^2/24)/T}\\), with \\(T\\) in years.<br>\n<b>Worked example:</b> \\(SR=1.0\\), \\(T=3\\): \\(\\sqrt{(1+1/24)/3}=0.59\\). The 95% interval is \\(1.0\\pm1.96\\times0.59\\), i.e. \\((-0.15,\\ 2.15)\\). The t-statistic is \\(SR\\sqrt T=1.73\\). The same Sharpe over 5 years gives SE 0.46 and t = 2.24, which is significant.<br>\n<b>Where it breaks:</b> the formula assumes i.i.d. returns. With positive autocorrelation (smoothed NAVs, illiquid marks) the naive \\(\\sqrt{12}\\) annualisation overstates the Sharpe ratio (Lo 2002). Fat tails and skew change the SE too; the deflated Sharpe card (MULT 4/4) handles selection.<br>\n<b>Used in the deck for:</b> track-record credibility (H3), the deflated Sharpe chain (MULT 4/4), and the block-bootstrap card (BS2).",
+  "tags": [
+   "statistics",
+   "sharpe_ratio",
+   "case_study",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "State the difference between strict and weak (covariance) stationarity of a process \\(y_t\\). Give one example where each property holds and one where it fails, and say why a random walk fails.",
+  "back": "<b>Answer:</b> Strict stationarity: the joint distribution of \\((y_{t_1},\\dots,y_{t_k})\\) is invariant to time shifts. Weak stationarity: \\(\\mathbb E y_t=\\mu\\), \\(\\mathrm{Var}(y_t)=\\gamma_0<\\infty\\), and \\(\\mathrm{Cov}(y_t,y_{t+h})=\\gamma_h\\) depend only on \\(h\\). Strict implies weak when second moments exist; for Gaussian processes the two coincide.<br>\n<b>Intuition:</b> stationarity means the statistics are stable, so a sample average over history says something about the future. Without it, estimates depend on which regime the sample happened to cover.<br>\n<b>Examples:</b> white noise is both. A random walk \\(y_t=y_{t-1}+\\varepsilon_t\\) fails both, because \\(\\mathrm{Var}(y_t)=t\\sigma^2\\) grows without bound.<br>\n<b>Worked example:</b> with daily \\(\\sigma=1\\%\\), the level has sd \\(1\\%\\sqrt{250}=15.8\\%\\) after one year, and the sd keeps growing with the square root of time.<br>\n<b>Used in the deck for:</b> the unit-root chain (UNIT 1/4 to 4/4) and the spurious regression card, and the AR(1) and OU cards in 08 numerics.",
+  "tags": [
+   "statistics",
+   "time_series",
+   "stationarity",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the mean, variance and autocorrelation function of the stationary AR(1) process \\(y_t=c+\\varphi y_{t-1}+\\varepsilon_t\\), with \\(\\varepsilon_t\\) white noise of variance \\(\\sigma^2\\) and \\(|\\varphi|<1\\). Give the half-life of a shock for \\(\\varphi=0.9\\).",
+  "back": "<b>Answer:</b> \\(\\mu=c/(1-\\varphi)\\), \\(\\gamma_0=\\sigma^2/(1-\\varphi^2)\\), \\(\\rho_h=\\varphi^h\\). For \\(\\varphi=0.9\\) the ACF half-life is \\(\\ln\\tfrac12/\\ln\\varphi=6.6\\) periods.<br>\n<b>Derivation:</b><br>\n1. Mean: taking expectations, \\(\\mu=c+\\varphi\\mu\\), so \\(\\mu=c/(1-\\varphi)\\). This needs \\(|\\varphi|<1\\).<br>\n2. Demean: let \\(x_t=y_t-\\mu\\), so \\(x_t=\\varphi x_{t-1}+\\varepsilon_t\\).<br>\n3. Variance: square and take expectations. \\(\\varepsilon_t\\) is uncorrelated with the past, so \\(\\gamma_0=\\varphi^2\\gamma_0+\\sigma^2\\), giving \\(\\gamma_0=\\sigma^2/(1-\\varphi^2)\\).<br>\n4. Yule–Walker: multiply by \\(x_{t-h}\\), \\(h\\ge1\\), and take expectations. This gives \\(\\gamma_h=\\varphi\\gamma_{h-1}\\), so \\(\\rho_h=\\varphi^h\\).<br>\n5. Half-life: \\(\\varphi^h=\\tfrac12\\) gives \\(h=\\ln\\tfrac12/\\ln\\varphi=6.58\\).<br>\n<b>Worked example:</b> with \\(\\varphi=0.9\\), \\(\\sigma=1\\): \\(\\gamma_0=1/0.19=5.263\\) (sd 2.29), and \\(\\rho_5=0.9^5=0.590\\).<br>\n<b>Where it breaks:</b> the formulas need \\(|\\varphi|<1\\). At \\(\\varphi=1\\) the variance diverges. Near the unit root, the sample ACF is biased downward (Kendall's bias, card in 08 numerics).<br>\n<b>Used in the deck for:</b> mean-reversion half-lives of spreads in the unit-root chain and the OU discretisation in 08 numerics.",
+  "tags": [
+   "statistics",
+   "time_series",
+   "ar1",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "For \\(y_t=\\varepsilon_t+\\theta\\varepsilon_{t-1}\\) with white noise \\(\\varepsilon\\), derive the autocorrelation function. Why is \\(|\\rho_1|\\le\\tfrac12\\) for an MA(1), and why does the ACF cut off after lag 1? Evaluate it for \\(\\theta=0.5\\). Then say what happens to overlapping 5-day returns built from daily data.",
+  "back": "<b>Answer:</b> \\(\\rho_1=\\theta/(1+\\theta^2)\\) and \\(\\rho_h=0\\) for \\(h\\ge2\\). For \\(\\theta=0.5\\), \\(\\rho_1=0.40\\).<br>\n<b>Derivation:</b> \\(\\gamma_0=(1+\\theta^2)\\sigma^2\\). \\(\\gamma_1=\\mathrm{Cov}(\\varepsilon_t+\\theta\\varepsilon_{t-1},\\,\\varepsilon_{t-1}+\\theta\\varepsilon_{t-2})=\\theta\\sigma^2\\). For \\(h\\ge2\\) the two terms share no \\(\\varepsilon\\), so \\(\\gamma_h=0\\). Hence \\(\\rho_1=\\theta/(1+\\theta^2)\\). Since \\(1+\\theta^2\\ge2|\\theta|\\), the bound \\(|\\rho_1|\\le\\tfrac12\\) holds, with equality at \\(|\\theta|=1\\).<br>\n<b>Worked example:</b> \\(\\theta=0.5\\): \\(\\rho_1=0.5/1.25=0.40\\), \\(\\rho_2=0\\). Invertibility (\\(|\\theta|<1\\)) selects the representation in which the innovation can be recovered from history.<br>\n<b>Caution:</b> the \\(\\tfrac12\\) bound is for MA(1) only. Overlapping 5-day returns are a sum of five daily shocks, which is an MA(4) with all coefficients equal to 1. Then \\(\\rho_h=(5-h)/5\\), so \\(\\rho_1=0.80\\). Overlapping horizons create strong autocorrelation that a naive standard error ignores.<br>\n<b>Used in the deck for:</b> overlapping-horizon return tests and 10-day VaR backtests in 09 scenarios and regulation.",
+  "tags": [
+   "statistics",
+   "time_series",
+   "ma1",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Identification from correlograms: an AR(p) process has an ACF that {{c1::tails off geometrically}}, and a PACF that {{c2::cuts off after lag p}}. An MA(q) process has an ACF that {{c3::cuts off after lag q}}.",
+  "back": "<b>Mixed case:</b> an ARMA(1,1) with \\(\\varphi=0.9\\), \\(\\theta=0.5\\) has \\(\\rho_1=\\dfrac{(1+\\varphi\\theta)(\\varphi+\\theta)}{1+2\\varphi\\theta+\\theta^2}=0.944\\), \\(\\rho_2=\\varphi\\rho_1=0.850\\), and \\(\\rho_h=\\varphi\\rho_{h-1}\\) for \\(h\\ge2\\). Both its ACF and PACF tail off, so the correlogram alone cannot separate the orders by cut-off.<br>\n<b>Used in the deck for:</b> model identification in the time-series cards of this file (AR(1), MA(1)).",
+  "tags": [
+   "statistics",
+   "time_series",
+   "arma",
+   "identification",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: UNIT 1/4]</b> Context: a 10-year rate moves daily by i.i.d. shocks of 1bp, so \\(y_t=y_{t-1}+\\varepsilon_t\\). Explain why this is a unit-root (I(1)) process, what the variance of the level and the forecast uncertainty are after \\(t\\) days, and why a shock never decays.",
+  "back": "<b>Answer:</b> The autoregressive coefficient is exactly 1. \\(\\mathrm{Var}(y_t)=t\\sigma^2\\) grows linearly in time. The h-step forecast standard deviation is \\(\\sigma\\sqrt h\\). A shock has a permanent effect: \\(\\mathbb E[y_{t+h}\\mid\\mathcal F_t]=y_t\\).<br>\n<b>Intuition:</b> the process has no anchor, so its level wanders with no long-run mean and no stationary distribution. Any regression on levels is therefore suspect.<br>\n<b>Worked example:</b> with a 1bp daily sd, the sd after 252 days is \\(\\sqrt{252}=15.9\\)bp. After four years (1008 days) it is \\(\\sqrt{1008}=31.7\\)bp.<br>\n<b>Used in the deck for:</b> why rate levels are differenced before any regression (UNIT 4/4 and the spurious-regression card).",
+  "tags": [
+   "statistics",
+   "time_series",
+   "unit_root",
+   "chain_unit",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: UNIT 2/4]</b> Context: testing whether a rate spread is I(1) with the augmented Dickey–Fuller (ADF) test. Write the ADF regression and its null, explain why the t-statistic is not referred to the t-distribution, and state the 5% Dickey–Fuller critical value with a constant.",
+  "back": "<b>Answer:</b> ADF regression: \\(\\Delta y_t=\\alpha+\\gamma\\,y_{t-1}+\\sum_{i=1}^{p}\\delta_i\\Delta y_{t-i}+\\varepsilon_t\\). Null \\(H_0:\\gamma=0\\) (unit root), alternative \\(\\gamma<0\\). The 5% critical value with a constant is about \\(-2.86\\) (1%: \\(-3.43\\); 10%: \\(-2.57\\)), not \\(-1.645\\).<br>\n<b>Why not the t-distribution:</b> under \\(H_0\\) the regressor \\(y_{t-1}\\) is I(1), so the OLS t-statistic follows the non-standard Dickey–Fuller distribution, a functional of Brownian motion that sits well to the left. Using normal or t critical values over-rejects stationarity.<br>\n<b>Worked example:</b> \\(\\hat\\tau=-3.1\\) rejects the unit root at 5% (since \\(-3.1<-2.86\\)) but not at 1% (\\(-3.43\\)). Under a naive \\(-1.645\\) threshold you would reject far too often.<br>\n<b>Where it breaks:</b> too few lags leave autocorrelation in the residuals and distort the size; structural breaks lower power and can produce spurious rejections; failing to reject is not proof of a unit root.<br>\n<b>Used in the deck for:</b> the spread stationarity checks in UNIT 3/4 and UNIT 4/4, and the cointegration card (C2).",
+  "tags": [
+   "statistics",
+   "time_series",
+   "unit_root",
+   "adf",
+   "chain_unit",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: UNIT 3/4]</b> Context: a stock-versus-ETF spread is fitted as an AR(1) on daily data with \\(\\hat\\varphi=0.98\\) from \\(n=250\\) days. Compute its half-life, the standard error of \\(\\hat\\varphi\\) under the stationary approximation, and the t-statistic against \\(\\varphi=1\\). Can the test reject a unit root?",
+  "back": "<b>Answer:</b> half-life \\(\\ln\\tfrac12/\\ln0.98=34.3\\) days. \\(\\mathrm{SE}(\\hat\\varphi)\\approx\\sqrt{(1-\\varphi^2)/n}=\\sqrt{0.0396/250}=0.0126\\). The t-statistic is \\((0.98-1)/0.0126=-1.59\\), above \\(-2.86\\), so the test cannot reject a unit root at 5%.<br>\n<b>Intuition:</b> a 34-day half-life is economically interesting: a spread that reverts over weeks is tradeable. But one year of data cannot separate a 0.98 AR(1) from a random walk. The test has little power when the root is close to 1.<br>\n<b>Caveat:</b> the naive stationary SE is only a guide. The formal ADF test uses Dickey–Fuller critical values, but the conclusion here is the same.<br>\n<b>Where it breaks:</b> the half-life of a fitted spread is an estimate with wide error bars. Detecting a 34-day half-life reliably needs several times that span of data, so acting on the fitted half-life without a test is overconfident.<br>\n<b>Used in the deck for:</b> pairs and spread trades in the cointegration card (C2), and the OU half-life in 08 numerics.",
+  "tags": [
+   "statistics",
+   "time_series",
+   "unit_root",
+   "half_life",
+   "chain_unit",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: UNIT 4/4]</b> Context: a desk wants to regress a 10-year swap rate on a 2-year swap rate. Both series fail the ADF test. Should it regress levels, regress first differences or model a cointegrated system? Give the trade-off and the error-correction form.",
+  "back": "<b>Answer:</b> Regressing levels of I(1) series gives spurious results (card C1). Differences are I(0) and safe, but they discard the long-run relation. If the series are cointegrated, the error-correction model (ECM) keeps the levels and the short-run dynamics.<br>\n<b>ECM form:</b> \\(\\Delta y_t=\\alpha+\\lambda\\,(y_{t-1}-\\theta x_{t-1})+\\text{short-run terms}+\\varepsilon_t\\), with \\(\\lambda<0\\). \\(\\theta\\) is the cointegrating coefficient, and \\(\\lambda\\) is the speed of adjustment back to equilibrium.<br>\n<b>Worked example:</b> with \\(\\lambda=-0.05\\) per day, the deviation halves in \\(\\ln0.5/\\ln0.95=13.5\\) days. A quoted spread that moves 5% of its gap each day is a concrete, testable half-life.<br>\n<b>Trade-off:</b> differences are safe but silent on the level; the ECM is informative about the level, but it depends on the cointegration holding.<br>\n<b>Where it breaks:</b> \\(\\theta\\) is estimated, and the residual-based test uses critical values more negative than the ADF table. If the relation breaks (a regime change), the spread is no longer stationary.<br>\n<b>Used in the deck for:</b> curve and spread trades in 02 swaps and curves, and the Engle–Granger and Kalman hedge-ratio cards in 08 numerics.",
+  "tags": [
+   "statistics",
+   "time_series",
+   "cointegration",
+   "error_correction",
+   "chain_unit",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two independent random walks are regressed on each other with \\(n=100\\) observations. What typical \\(R^2\\), t-statistic and Durbin–Watson values do you see, and why are they misleading? Use the Granger–Newbold (1974) simulation.",
+  "back": "<b>Answer:</b> The regression looks significant when it is not. In a simulation of 1,000 pairs with \\(n=100\\): median \\(R^2\\) about 0.17; \\(R^2>0.5\\) in about 17% of runs; \\(|t|>2\\) in about 75% of runs; median Durbin–Watson about 0.15. A DW well below \\(R^2\\) is the classic warning.<br>\n<b>Intuition:</b> two random walks both wander, so any two trending series look related. OLS standard errors assume stationary errors. With I(1) residuals they are far too small.<br>\n<b>Worked example:</b> the simulation above is approximate (1,000 runs, \\(n=100\\)). The result is not a fluke of one seed: the \\(t\\)-test rejects in most runs although the true coefficient is zero.<br>\n<b>Fixes:</b> difference the series to I(0) before regressing; or test for cointegration and use an ECM (UNIT 4/4); or regress returns, not prices.<br>\n<b>Where it breaks:</b> a low DW is a warning, not a test. A regression of stationary series can have \\(R^2>DW\\) and still be valid.<br>\n<b>Used in the deck for:</b> why yield betas in the govies deep cards (01) and curve-spread regressions are run on changes, not levels.",
+  "tags": [
+   "statistics",
+   "time_series",
+   "spurious_regression",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Two I(1) series \\(y_t,x_t\\) are cointegrated if some \\(\\beta\\) makes \\(y_t-\\beta x_t\\) {{c1::I(0)}}. The Granger representation theorem says cointegration is equivalent to an {{c2::error-correction}} model, in which at least one series adjusts to the {{c3::previous-period deviation from equilibrium}}.",
+  "back": "<b>Example:</b> let \\(x_t\\) be a random walk and \\(y_t=2x_t+u_t\\), with \\(u_t\\) stationary. Each level wanders, but the spread \\(y_t-2x_t=u_t\\) is stationary. The hedge ratio is the cointegrating coefficient \\(\\beta=2\\), which is not the return beta from a regression of changes.<br>\n<b>Used in the deck for:</b> the ECM card (UNIT 4/4) and the Kalman time-varying hedge ratio in 08 numerics.",
+  "tags": [
+   "statistics",
+   "time_series",
+   "cointegration",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: GARCH 1/3]</b> Context: daily returns of a rates future show volatility clustering, with positive and slowly decaying autocorrelation in squared returns. Write the GARCH(1,1) recursion, interpret each term and state the stationarity condition.",
+  "back": "<b>Answer:</b> \\(\\sigma_t^2=\\omega+\\alpha\\,\\varepsilon_{t-1}^2+\\beta\\,\\sigma_{t-1}^2\\), with \\(\\omega>0\\), \\(\\alpha,\\beta\\ge0\\). Covariance stationarity needs \\(\\alpha+\\beta<1\\).<br>\n<b>Intuition:</b> yesterday's surprise (\\(\\alpha\\)) and yesterday's variance (\\(\\beta\\)) both feed today's variance. Large moves beget large moves, which is clustering. The \\(\\omega\\) term sets the anchor the variance reverts to.<br>\n<b>ARCH(\\(\\infty\\)) view:</b> \\(\\sigma_t^2=\\dfrac{\\omega}{1-\\beta}+\\alpha\\sum_{i\\ge1}\\beta^{i-1}\\varepsilon_{t-i}^2\\). The weights on past squared shocks decay geometrically at rate \\(\\beta\\).<br>\n<b>Where it breaks:</b> the symmetric form treats up and down moves the same, so the leverage effect needs GJR or EGARCH. Fat-tailed innovations need a Student-t likelihood.<br>\n<b>Used in the deck for:</b> the vol inputs to VaR in 09 scenarios and regulation, and the EWMA card (W1), which is a special case.",
+  "tags": [
+   "statistics",
+   "volatility",
+   "garch",
+   "chain_garch",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: GARCH 2/3]</b> Context: a GARCH(1,1) for daily returns with \\(\\omega=2\\times10^{-6}\\), \\(\\alpha=0.08\\), \\(\\beta=0.90\\). Derive the unconditional variance, give the unconditional daily and annual vol, and compute the half-life of a volatility shock.",
+  "back": "<b>Answer:</b> \\(\\sigma^2_{LR}=\\omega/(1-\\alpha-\\beta)=10^{-4}\\), so the daily vol is 1.00% and the annual vol is 15.9% (using \\(\\sqrt{252}\\)). The persistence is 0.98 and the half-life is 34.3 days.<br>\n<b>Derivation:</b> take expectations of the recursion with a stationary variance: \\(\\sigma^2=\\omega+(\\alpha+\\beta)\\sigma^2\\), so \\(\\sigma^2=\\omega/(1-\\alpha-\\beta)\\). Deviations from \\(\\sigma^2_{LR}\\) decay by \\((\\alpha+\\beta)^h\\) in expectation, so the half-life is \\(h=\\ln\\tfrac12/\\ln0.98=34.3\\) days.<br>\n<b>Worked example:</b> \\(\\omega/(1-\\alpha-\\beta)=2\\times10^{-6}/0.02=10^{-4}\\). The daily vol is \\(\\sqrt{10^{-4}}=1.00\\%\\), and the annual vol is \\(1.00\\%\\times\\sqrt{252}=15.9\\%\\).<br>\n<b>Where it breaks:</b> the half-life describes the forecast of the conditional variance, not a path. With \\(\\alpha+\\beta=1\\) (IGARCH, EWMA) there is no mean reversion and no finite unconditional variance. Estimated persistence is imprecise, so a 34-day half-life has wide error bars.<br>\n<b>Used in the deck for:</b> the mean-reverting forecast in GARCH 3/3 and the EWMA comparison in W1.",
+  "tags": [
+   "statistics",
+   "volatility",
+   "garch",
+   "half_life",
+   "chain_garch",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: GARCH 3/3]</b> Context: the same GARCH(1,1) (\\(\\omega=2\\times10^{-6}\\), \\(\\alpha=0.08\\), \\(\\beta=0.90\\)). Today's vol is 1.00% and the return today is a 3% move. Give the one-step variance, the expected variance \\(h\\) days ahead, and the 10-day vol. Compare with the square-root-of-time rule.",
+  "back": "<b>Answer:</b> \\(\\sigma^2_{t+1}=1.64\\times10^{-4}\\), a daily vol of 1.28%. The 10-day cumulative variance is \\(1.585\\times10^{-3}\\), a 10-day sd of 3.98%. The square-root-of-time rule on today's 1.00% gives 3.16%.<br>\n<b>Derivation:</b> \\(\\sigma^2_{t+1}=\\omega+\\alpha\\varepsilon_t^2+\\beta\\sigma_t^2=2\\times10^{-6}+0.08\\times9\\times10^{-4}+0.90\\times10^{-4}\\). Since \\(\\mathbb E_t[\\varepsilon_{t+h}^2]=\\mathbb E_t[\\sigma_{t+h}^2]\\), the expected variance \\(m_h=\\mathbb E_t\\sigma^2_{t+h}\\) follows \\(m_{h+1}=\\omega+(\\alpha+\\beta)m_h\\). Hence \\(m_h=\\sigma^2_{LR}+(\\alpha+\\beta)^{h-1}(m_1-\\sigma^2_{LR})\\).<br>\n<b>Worked example:</b> \\(m_1=1.64\\times10^{-4}\\); \\(m_{10}=10^{-4}+0.98^{9}\\times6.4\\times10^{-5}=1.534\\times10^{-4}\\), a 10-day vol of 1.24%. Summing \\(m_1\\) to \\(m_{10}\\) gives \\(1.585\\times10^{-3}\\), a 10-day sd of 3.98%. This is above 3.16%, because the 3% move lifts the variance path. Holding the one-step vol of 1.28% flat would give 4.05%.<br>\n<b>Where it breaks:</b> the model treats a \\(+3\\%\\) and a \\(-3\\%\\) move alike, which is wrong for equities (leverage effect). Parameters are estimated with error and can shift across regimes.<br>\n<b>Used in the deck for:</b> the 10-day horizon in VaR (09), where the square-root-of-time rule is the flat-vol special case.",
+  "tags": [
+   "statistics",
+   "volatility",
+   "garch",
+   "forecast",
+   "chain_garch",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A RiskMetrics EWMA with \\(\\lambda=0.94\\) updates \\(\\sigma_t^2=\\lambda\\sigma_{t-1}^2+(1-\\lambda)r_{t-1}^2\\). Yesterday's vol was 1.00% and yesterday's return was \\(-2.50\\%\\). Compute today's variance and vol, the effective window and the half-life. Explain why EWMA is a GARCH(1,1) with \\(\\omega=0\\) and \\(\\alpha+\\beta=1\\).",
+  "back": "<b>Answer:</b> \\(\\sigma_t^2=1.315\\times10^{-4}\\), so \\(\\sigma_t=1.15\\%\\). The effective window is \\(1/(1-\\lambda)\\approx16.7\\) days, and the half-life of a weight is \\(\\ln\\tfrac12/\\ln0.94=11.2\\) days.<br>\n<b>Worked example:</b> \\(0.94\\times10^{-4}=9.40\\times10^{-5}\\); \\(0.06\\times(0.025)^2=3.75\\times10^{-5}\\); sum \\(=1.315\\times10^{-4}\\), so \\(\\sigma_t=\\sqrt{1.315\\times10^{-4}}=1.147\\%\\).<br>\n<b>GARCH link:</b> set \\(\\omega=0\\), \\(\\alpha=1-\\lambda=0.06\\), \\(\\beta=\\lambda=0.94\\). Then \\(\\alpha+\\beta=1\\) (IGARCH): there is no unconditional variance, and the forecast is flat at \\(\\sigma_t\\) for every horizon. Compare GARCH 3/3, where the forecast reverts to \\(\\sigma^2_{LR}\\).<br>\n<b>Where it breaks:</b> \\(\\lambda=0.94\\) is a daily-data convention. It reacts slowly after a regime change, and it ignores any long-run mean.<br>\n<b>Used in the deck for:</b> realised-vol inputs to VaR (09) and the GARCH forecast comparison in GARCH 3/3.",
+  "tags": [
+   "statistics",
+   "volatility",
+   "ewma",
+   "case_study",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Scale a Student-t with \\(\\nu=5\\) degrees of freedom to unit variance. Compare its 95% and 99% quantiles with the normal ones. Where do the two cross, and what does that mean for a Gaussian 99% VaR multiplier applied to fat-tailed P&amp;L?",
+  "back": "<b>Answer:</b> the scaled t(5) has 95% quantile 1.56 (normal 1.64) and 99% quantile 2.61 (normal 2.33). The crossover is near the 97% level. Beyond it the scaled t is larger, so a Gaussian 99% multiplier understates tail loss.<br>\n<b>Derivation:</b> \\(\\mathrm{Var}(T_\\nu)=\\nu/(\\nu-2)\\), so the unit-variance version is \\(X=T_\\nu\\sqrt{(\\nu-2)/\\nu}\\), with quantile \\(q_X(p)=t_\\nu(p)\\sqrt{(\\nu-2)/\\nu}\\).<br>\n<b>Worked example:</b> \\(t_5(0.95)=2.015\\) and \\(t_5(0.99)=3.365\\). With \\(\\sqrt{3/5}=0.775\\), these become 1.561 and 2.606. The normal quantiles are 1.645 and 2.326.<br>\n<b>Intuition:</b> for the same variance, the t puts less mass in the shoulders and more in the far tail. A multiplier calibrated to the body of the distribution misses the tail.<br>\n<b>Where it breaks:</b> \\(\\nu\\) is itself estimated with large error. Volatility clustering can matter more than tail shape for 1-day VaR, and the t assumes i.i.d. draws.<br>\n<b>Used in the deck for:</b> the FRTB expected-shortfall discussion in 09 scenarios and regulation, and the VaR and ES cards below.",
+  "tags": [
+   "statistics",
+   "fat_tails",
+   "student_t",
+   "var",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A Student-t with \\(\\nu\\) degrees of freedom has variance \\(\\nu/(\\nu-2)\\) for \\(\\nu>2\\) and excess kurtosis {{c1::\\(6/(\\nu-4)\\)}} for \\(\\nu>4\\). The fourth moment is infinite for \\(\\nu\\le\\){{c2::4}}. For \\(\\nu=5\\) the excess kurtosis is {{c3::6}}.",
+  "back": "<b>Explanation:</b> the normal has excess kurtosis 0. The t with \\(\\nu=5\\) has excess kurtosis 6, so its sample kurtosis converges slowly and is noisy. Daily return data often shows excess kurtosis well above zero (approx.), which suggests \\(\\nu\\) in the 4 to 6 range.<br>\n<b>Used in the deck for:</b> the scaled-t quantile card (F1) and the sample-variance standard error (E5), where kurtosis inflates the error bars.",
+  "tags": [
+   "statistics",
+   "fat_tails",
+   "kurtosis",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Define \\(\\mathrm{VaR}_\\alpha\\) and \\(\\mathrm{ES}_\\alpha\\) for a loss \\(L\\). Derive the expected shortfall of a normal loss \\(L\\sim N(0,\\sigma^2)\\) at 97.5% and at 99%.",
+  "back": "<b>Answer:</b> \\(\\mathrm{VaR}_\\alpha(L)=\\inf\\{x:P(L\\le x)\\ge\\alpha\\}\\), the \\(\\alpha\\)-quantile. \\(\\mathrm{ES}_\\alpha(L)=\\dfrac1{1-\\alpha}\\int_\\alpha^1\\mathrm{VaR}_u(L)\\,du\\), which for continuous \\(L\\) equals \\(\\mathbb E[L\\mid L\\ge\\mathrm{VaR}_\\alpha]\\). For the normal, \\(\\mathrm{ES}_\\alpha=\\sigma\\,\\varphi(z_\\alpha)/(1-\\alpha)\\). This gives 2.34\\(\\sigma\\) at 97.5% and 2.67\\(\\sigma\\) at 99%.<br>\n<b>Intuition:</b> VaR gives the threshold; ES gives the average loss beyond it. ES sees the shape of the tail, which VaR ignores.<br>\n<b>Derivation:</b> for \\(L\\sim N(0,\\sigma^2)\\), \\(\\mathbb E[L\\mid L>\\sigma z]=\\sigma\\varphi(z)/(1-\\Phi(z))\\) (the truncated normal mean). With \\(1-\\Phi(z)=1-\\alpha\\), this is the formula above.<br>\n<b>Worked example:</b> \\(z_{0.975}=1.960\\), \\(\\varphi=0.0584\\), so \\(\\mathrm{ES}=2.338\\sigma\\). \\(z_{0.99}=2.326\\), \\(\\varphi=0.0267\\), so \\(\\mathrm{ES}=2.665\\sigma\\). For daily P&amp;L with \\(\\sigma=\\)£10m, ES(97.5%) is £23.4m.<br>\n<b>Where it breaks:</b> ES from few tail observations is noisy. ES is not elicitable (Gneiting 2011), so a single forecast cannot be scored by a standard proper score; backtesting ES is harder than backtesting VaR.<br>\n<b>Used in the deck for:</b> the FRTB expected-shortfall card in 09 scenarios and regulation, and the VaR counterexample and coherence cards below.",
+  "tags": [
+   "statistics",
+   "risk_measures",
+   "var",
+   "expected_shortfall",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two independent loans each default with probability 4% over the horizon, with loss 1 on default and 0 otherwise. Compute \\(\\mathrm{VaR}_{95\\%}\\) of each loan and of the two-loan sum. Show that VaR violates subadditivity, then compute the ES of each and check that ES does not.",
+  "back": "<b>Answer:</b> \\(\\mathrm{VaR}_{95}\\) of each loan is 0; of the pair it is 1. So \\(\\mathrm{VaR}(L_1+L_2)=1>0+0\\): VaR is not subadditive. \\(\\mathrm{ES}_{95}\\) of each loan is 0.80; of the pair it is 1.032. The pair's ES is below the sum of 1.60, so ES holds.<br>\n<b>Worked example:</b> single loan: \\(P(L=0)=0.96\\ge0.95\\), so \\(\\mathrm{VaR}=0\\). Pair: \\(P(0)=0.9216\\), \\(P(1)=0.0768\\), \\(P(2)=0.0016\\). \\(P(L\\le0)=0.9216<0.95\\), so \\(\\mathrm{VaR}=1\\). ES single: \\(\\frac1{0.05}\\int_{0.95}^1\\mathrm{VaR}_u\\,du=\\frac1{0.05}(0.04\\times1)=0.80\\). ES pair: \\(\\frac1{0.05}\\bigl[\\int_{0.95}^{0.9984}1\\,du+\\int_{0.9984}^{1}2\\,du\\bigr]=\\frac{0.0484+0.0032}{0.05}=1.032\\).<br>\n<b>Intuition:</b> VaR ignores what happens beyond the threshold. Diversification can push the quantile into a state where losses are larger, so VaR can penalise a diversified book. Under VaR, splitting a portfolio into entities can look safer than it is.<br>\n<b>Where it breaks:</b> for elliptical distributions such as the normal, VaR is subadditive. The failure needs discrete or heavy-tailed losses like this one.<br>\n<b>Used in the deck for:</b> the coherence derivation (next card) and the FRTB move to ES in 09 scenarios and regulation.",
+  "tags": [
+   "statistics",
+   "risk_measures",
+   "coherence",
+   "subadditivity",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Explain why expected shortfall is a coherent risk measure. Derive subadditivity from the dual representation \\(\\mathrm{ES}_\\alpha(L)=\\sup\\{\\mathbb E_Q[L]:\\ dQ/dP\\le1/(1-\\alpha)\\}\\), and say where that representation comes from.",
+  "back": "<b>Answer:</b> ES is coherent (Artzner, Delbaen, Eber and Heath, 1999): it is monotone, translation-equivariant, positively homogeneous and subadditive. Subadditivity follows directly from the sup form.<br>\n<b>Derivation:</b><br>\n1. Subadditivity: for any admissible \\(Q\\), \\(\\mathbb E_Q[L_1+L_2]=\\mathbb E_Q[L_1]+\\mathbb E_Q[L_2]\\le\\mathrm{ES}(L_1)+\\mathrm{ES}(L_2)\\), since each term is at most its own supremum. Taking the supremum over \\(Q\\) gives \\(\\mathrm{ES}(L_1+L_2)\\le\\mathrm{ES}(L_1)+\\mathrm{ES}(L_2)\\).<br>\n2. Positive homogeneity: \\(\\mathrm{ES}(cL)=c\\,\\mathrm{ES}(L)\\) for \\(c\\ge0\\), since \\(\\mathbb E_Q\\) is linear.<br>\n3. Translation: \\(\\mathrm{ES}(L+c)=\\mathrm{ES}(L)+c\\), since each \\(Q\\) is a probability measure.<br>\n4. Monotonicity: \\(L_1\\le L_2\\) implies \\(\\mathbb E_Q[L_1]\\le\\mathbb E_Q[L_2]\\) for every \\(Q\\).<br>\n<b>Origin of the representation:</b> \\(Q\\) may reweight the worst \\(1-\\alpha\\) of probability by at most a factor \\(1/(1-\\alpha)\\). The supremum is attained by putting density \\(1/(1-\\alpha)\\) on the tail event \\(\\{L\\ge\\mathrm{VaR}_\\alpha\\}\\), which gives \\(\\mathbb E_Q[L]=\\mathrm{ES}_\\alpha\\).<br>\n<b>Where it breaks:</b> coherence says nothing about estimation error or model risk in the tail. VaR fails subadditivity (previous card), while ES is not elicitable, so ES forecasts are harder to validate.<br>\n<b>Used in the deck for:</b> the FRTB ES discussion in 09 scenarios and regulation, and the two-loan counterexample card above.",
+  "tags": [
+   "statistics",
+   "risk_measures",
+   "coherence",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Sample correlation from \\(N\\) variables and \\(T\\) observations has \\(q=N/T\\). For pure noise the eigenvalues fall in the Marchenko–Pastur bulk, which runs from {{c1::\\((1-\\sqrt q)^2\\)}} to {{c2::\\((1+\\sqrt q)^2\\)}}. For \\(N=100\\), \\(T=250\\), the upper edge is {{c3::2.66}}, so eigenvalues above it carry signal.",
+  "back": "<b>Cleaning:</b> keep the eigenvalues above the upper edge (market and sector factors). Replace the bulk eigenvalues by their average, which preserves the trace, then rescale to a unit diagonal. In a simulation of 20 pure-noise \\(250\\times100\\) samples, the largest eigenvalue averaged about 2.52, so finite-sample fluctuations pull it toward the edge. The threshold is therefore approximate.<br>\n<b>Used in the deck for:</b> the Cholesky simulation of correlated drivers in 08 numerics, and the Ledoit–Wolf card below.",
+  "tags": [
+   "statistics",
+   "random_matrix",
+   "correlation",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Your sample covariance for 100 assets from 250 daily observations is noisy. Explain Ledoit–Wolf shrinkage \\(S^*=\\delta F+(1-\\delta)S\\): what is the target \\(F\\), what sets \\(\\delta\\), and what does a sample correlation of 0.80 become if the target is 0.30 and \\(\\delta=0.4\\)?",
+  "back": "<b>Answer:</b> shrink the sample covariance \\(S\\) toward a structured target \\(F\\) (the identity or a constant-correlation matrix). The weight \\(\\delta\\in[0,1]\\) is chosen analytically to minimise expected squared error (Ledoit and Wolf, 2004). Here the shrunk correlation is \\(0.4\\times0.30+0.6\\times0.80=0.60\\).<br>\n<b>Intuition:</b> noise hurts most through the many small off-diagonal estimates. The target is biased but has little variance. The mix trades bias for variance, the same logic as the MSE decomposition in the first card of this file.<br>\n<b>What sets \\(\\delta\\):</b> more noise (higher \\(N/T\\)) and more dispersion in the sample correlations around the target both push \\(\\delta\\) up. For fixed \\(N\\), more data pushes it down.<br>\n<b>Effect on eigenvalues:</b> shrinkage pulls the largest eigenvalue down and the small ones up, which is the same distortion the random-matrix cleaning card corrects.<br>\n<b>Where it breaks:</b> a constant-correlation target is wrong if sector structure is strong; with very short histories, shrinkage cannot recover real signal; and the target must be chosen before looking at the data.<br>\n<b>Used in the deck for:</b> covariance inputs to multi-asset VaR and the Cholesky simulation in 08 numerics.",
+  "tags": [
+   "statistics",
+   "shrinkage",
+   "covariance",
+   "ledoit_wolf",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Resampling \\(n\\) observations with replacement, each original observation appears in a given bootstrap sample with probability {{c1::\\(1-(1-1/n)^n\\)}}. As \\(n\\to\\infty\\) this tends to {{c2::\\(1-1/e\\approx63.2\\%\\)}}, so about {{c3::36.8\\%}} of the data is left out of each resample.",
+  "back": "<b>Worked example:</b> for \\(n=100\\), \\(1-0.99^{100}=63.4\\%\\). The bootstrap standard error of a statistic is the standard deviation of its value across \\(B\\) resamples. The i.i.d. bootstrap assumes independent observations, so it understates uncertainty when the data are autocorrelated (next card).<br>\n<b>Used in the deck for:</b> the block bootstrap card below and the confidence intervals in the backtest cards.",
+  "tags": [
+   "statistics",
+   "bootstrap",
+   "resampling",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Daily spread changes follow an AR(1) with \\(\\varphi=0.9\\), and you have \\(n=500\\) observations. Why does an i.i.d. bootstrap understate the standard error of the mean? Give the variance inflation factor, the effective sample size and a sensible block length, and state the stationary bootstrap.",
+  "back": "<b>Answer:</b> the i.i.d. bootstrap ignores positive autocorrelation. The variance of the mean is inflated by \\((1+\\varphi)/(1-\\varphi)=19\\) relative to the i.i.d. case, so the i.i.d. standard error is too small by \\(\\sqrt{19}\\approx4.36\\times\\). The effective sample size is \\(n/19\\approx26\\). Blocks should span the correlation time; \\(\\varphi^{21}=0.11\\), so blocks of about 20 days are a reasonable start.<br>\n<b>Derivation:</b> \\(\\mathrm{Var}(\\bar y)\\approx\\dfrac{\\gamma_0}{n}\\bigl(1+2\\sum_{h\\ge1}\\rho_h\\bigr)\\). With \\(\\rho_h=\\varphi^h\\), \\(\\sum_{h\\ge1}\\varphi^h=\\varphi/(1-\\varphi)=9\\), so \\(1+2\\times9=19\\).<br>\n<b>Block bootstrap:</b> resample overlapping blocks of fixed length \\(b\\) (moving-block), or blocks with geometrically distributed lengths of mean \\(b\\) (the stationary bootstrap of Politis and Romano, 1994). Within a block the autocorrelation is kept.<br>\n<b>Where it breaks:</b> blocks that are too short miss correlation; blocks that are too long leave too few distinct blocks, so the variance estimate is itself noisy. Block resampling also keeps the regime mix only roughly right for series with regime changes.<br>\n<b>Used in the deck for:</b> backtest confidence intervals, and as the time-series fix for the Sharpe standard error (S1).",
+  "tags": [
+   "statistics",
+   "bootstrap",
+   "time_series",
+   "block_bootstrap",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why does random k-fold cross-validation leak information when a model forecasts 5-day forward returns? Describe walk-forward validation, and give one concrete leak with dates.",
+  "back": "<b>Answer:</b> a random fold puts observations whose labels overlap the test period into training. The model then learns from outcomes that overlap the test.<br>\n<b>Worked example:</b> the label for day 10 is the return from the close of day 10 to the close of day 15. If day 12 is in the test fold, the training label for day 10 contains the price move that the test label for day 12 depends on. The model sees part of the answer, and out-of-sample accuracy is inflated.<br>\n<b>Walk-forward:</b> train on days \\(1\\) to \\(T\\), test on \\(T+1\\) to \\(T+h\\), then roll the origin forward. Never shuffle. The out-of-sample results are concatenated into one path.<br>\n<b>Intuition:</b> time order is information. Shuffling destroys the causal structure that a live model faces.<br>\n<b>Where it breaks:</b> walk-forward gives one path, so the performance estimate has high variance and depends on regime. Labels can still overlap at the boundary between train and test, which the next card addresses.<br>\n<b>Used in the deck for:</b> the overfitting card (O1) and the purging and embargo card below.",
+  "tags": [
+   "statistics",
+   "cross_validation",
+   "time_series",
+   "leakage",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A model labels each day with its 5-day forward return and is validated on a test block of days 500 to 599. Specify the training observations to purge and the embargo after the test block. Why is an embargo still needed after purging?",
+  "back": "<b>Answer:</b> purge training observations whose label interval \\([t,t+5]\\) overlaps the test label interval. Then embargo a further gap of 5 days after the test block. Purging removes the direct label overlap. The embargo removes the residual dependence that flows from the test period into the training data that follows it.<br>\n<b>Worked example:</b> the test labels run to day 604. Training days 495 to 499 have labels that reach into days 500 to 504, so they are purged. Training days 600 to 604 are embargoed, because their features (for example a 20-day rolling vol) share information with the test block. Training then uses days 1 to 494 and 605 onward, dropping 10 days.<br>\n<b>Why the embargo matters:</b> purging only handles the labels. Features with rolling windows and serial correlation carry information across the boundary after the test block.<br>\n<b>Where it breaks:</b> the purge must match the label horizon and the longest feature lookback. The embargo length is a judgement call (López de Prado, 2018 proposes a fraction of the sample). Removing 10 of 100 days is expensive on short samples.<br>\n<b>Used in the deck for:</b> validation design for any signal model in the overfitting card (O1), and the walk-forward card (CV1) above.",
+  "tags": [
+   "statistics",
+   "cross_validation",
+   "purging",
+   "embargo",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Define overfitting in a backtest in terms of degrees of freedom. A zero-skill strategy is picked as the best of 100 variants, judged on 5 years of returns. What annualised Sharpe should you expect from the best one, and what does this imply for parameter choice?",
+  "back": "<b>Answer:</b> the best of 100 zero-skill variants shows an annualised Sharpe of about 1.13. Overfitting is fitting noise by searching many variants or parameter values against the same sample. The reported Sharpe is inflated by the search itself.<br>\n<b>Worked example:</b> under the null, the annualised Sharpe over 5 years has standard error \\(\\sqrt{(1+0)/5}=0.447\\). The expected maximum of 100 draws is about \\(0.447\\times2.53=1.13\\), the same formula as the deflated Sharpe card (MULT 4/4) with \\(\\sigma=\\mathrm{SE}\\).<br>\n<b>Degrees of freedom:</b> the number of choices, not the number of parameters, is what counts. A 10-by-10 grid over two parameters is 100 trials, with the same penalty.<br>\n<b>Where it breaks:</b> the 1.13 assumes independent variants. Correlated variants have fewer effective trials, so the penalty is smaller, but it is not zero. Short samples have the largest penalty. The honest fixes are a held-out period, walk-forward validation, or deflating the Sharpe for the number of trials.<br>\n<b>Used in the deck for:</b> the deflated Sharpe chain (MULT 4/4) and the validation cards (CV1, CV2).",
+  "tags": [
+   "statistics",
+   "overfitting",
+   "backtest",
+   "multiple_testing",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Name four ways look-ahead bias enters a historical backtest. Then fix the rule \"buy when today's close is above yesterday's close, trade at today's close\", which uses information available only at that close.",
+  "back": "<b>Answer:</b> look-ahead bias means the signal uses information that is not available at the time of the decision. The rule trades at the same close used to form the signal. The fix is to trade on the next bar, at the next open or close.<br>\n<b>Four common sources:</b><br>\n<ul><li>Revised data: using the final revised macro print instead of the first release available at the time (use point-in-time vintages).</li>\n<li>Survivorship: using today's index constituents for history, which drops names that were removed or defaulted.</li>\n<li>Timing: a signal formed from a full-day close and executed at that same close, or with a time-zone or settlement mismatch.</li>\n<li>Full-sample estimation: standardising a signal with the full-sample mean and standard deviation, or fitting a hedge ratio or PCA on data after the decision date.</li></ul>\n<b>Fix:</b> decide at close \\(t\\), execute at the open of \\(t+1\\). Standardise with an expanding or rolling window, so the value at \\(t\\) uses only data up to \\(t\\).<br>\n<b>Why it matters:</b> the bias always flatters performance, so a surprisingly good backtest is the first thing to audit.<br>\n<b>Where it breaks:</b> some leakage is subtle (timestamps, corporate-action adjustments). Showing that a one-bar delay barely changes results does not prove the absence of look-ahead for a slower signal.<br>\n<b>Used in the deck for:</b> validating the backtest figures in the Sharpe card (S1), the walk-forward card (CV1) and the overfitting card (O1).",
+  "tags": [
+   "statistics",
+   "backtest",
+   "look_ahead_bias",
+   "convention",
+   "lvl_foundation"
+  ]
+ }
+]

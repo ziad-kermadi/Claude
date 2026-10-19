@@ -1,0 +1,504 @@
+[
+ {
+  "type": "basic",
+  "front": "What is the discount factor of a 91-day USD deposit at 4.00% simple (Act/360), and how much interest does 10m of notional earn? Why is a money-market deposit quoted simple rather than compounded?",
+  "back": "<b>Answer:</b> \\(DF=1/(1+r\\tau)\\) with \\(\\tau=91/360\\). Interest \\(=N\\,r\\,\\tau\\), paid once at maturity.<br>\n<b>Intuition:</b> a deposit pays a single coupon at maturity, so there is no intra-period compounding to model. Simple interest keeps the discount factor a single reciprocal.<br>\n<b>Formula:</b> \\[DF(0,T)=\\frac{1}{1+r\\,\\tau},\\qquad I=N\\,r\\,\\tau\\]\n<b>Worked:</b> \\(\\tau=91/360=0.252778\\), so \\(DF=1/(1+0.04\\times0.252778)=0.989990\\). On 10m: \\(I=10{,}000{,}000\\times0.04\\times91/360=101{,}111.11\\).<br>\n<b>Used in the deck for:</b> the short end of OIS and deposit bootstraps (02), the FRA settlement formula (this subdeck), and the forward-rate identity behind swap valuation.",
+  "tags": [
+   "money_market",
+   "deposit",
+   "day_count",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 91-day US T-bill is quoted at a 4.00% discount rate. What is its price per 100 face, and why is its money-market yield above the discount rate?",
+  "back": "<b>Answer:</b> \\(P=100(1-d\\tau)=98.9889\\). Its money-market yield is 4.0409% and its bond-equivalent yield 4.0970%, both above the 4.00% discount rate.<br>\n<b>Intuition:</b> a discount instrument returns face at maturity, and the return is earned on the lower price. The same economic rate looks higher once it is expressed as a yield on the price actually paid.<br>\n<b>Formula:</b> \\[P=100\\Bigl(1-d\\,\\tfrac{t}{360}\\Bigr),\\qquad y_{MM}=\\frac{100-P}{P}\\cdot\\frac{360}{t},\\qquad y_{BEY}=\\frac{100-P}{P}\\cdot\\frac{365}{t}\\]\n<b>Worked:</b> \\(t=91\\), so \\(100-P=1.0111\\). \\(y_{MM}=1.0111/98.9889\\times360/91=4.0409\\%\\). \\(y_{BEY}=4.0970\\%\\).<br>\n<b>Used in the deck for:</b> converting bill quotes before they enter a curve build (02), and the Act/360 versus Act/365 yield comparisons in the repo cards (11).",
+  "tags": [
+   "money_market",
+   "t_bill",
+   "quoting",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A 182-day money-market rate of 4.00% on Act/360 pays the same interest as {{c1::4.0556%}} on Act/365F, because \\(r_{365}=r_{360}\\times\\){{c2::365/360}}.",
+  "back": "Equal interest means \\(N\\,r_{360}\\,\\tfrac{182}{360}=N\\,r_{365}\\,\\tfrac{182}{365}\\). Check: \\(4.00\\times365/360=4.0556\\%\\). Putting every quote on one basis before bootstrapping avoids a silent 1.4% relative error in the rate level.<br>\n<b>Used in the deck for:</b> GBP (Act/365F) against USD and EUR (Act/360) quote handling in the curve builds (02).",
+  "tags": [
+   "money_market",
+   "day_count",
+   "convention",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why is 3-month commercial paper quoted on a discount basis, and why does the CP-to-OIS spread widen in bank funding stress?",
+  "back": "<b>Answer:</b> CP is a short unsecured promissory note sold below face, so its quote is a discount rate, as for a T-bill. The CP-OIS spread prices unsecured bank credit over a secured or overnight benchmark.<br>\n<b>Intuition:</b> the CP buyer is exposed to the issuer for the whole life of the paper, so the spread moves with bank credit and liquidity, not with the overnight rate. US CP is typically capped at 270 days to stay outside SEC registration.<br>\n<b>Worked:</b> a 90-day CP at a 4.20% discount rate trades at \\(100(1-0.042\\times90/360)=98.950\\). Its money-market yield is \\(4.2446\\%\\), about 4.5bp above the discount quote.<br>\n<b>Used in the deck for:</b> the unsecured term-funding leg in cross-currency and FRA-basis discussions (02), and the credit-sensitive side of the money-market curve.",
+  "tags": [
+   "money_market",
+   "commercial_paper",
+   "credit",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "SONIA is the {{c1::unsecured}} overnight sterling rate, published by the {{c2::Bank of England}} and computed from transaction-based wholesale deposit rates as a {{c3::trimmed mean}}. It accrues on {{c4::Act/365F}}.",
+  "back": "Unsecured means the rate carries a small overnight bank-credit element, which is why SONIA sits differently from a collateralised rate. The trimmed mean removes outlier trades.<br>\n<b>Used in the deck for:</b> GBP OIS and SONIA swap curves (02), SONIA compounding (this subdeck), and gilt repo against SONIA (01).",
+  "tags": [
+   "rfr",
+   "sonia",
+   "convention",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "SOFR measures overnight {{c1::secured}} borrowing against US {{c2::Treasury}} collateral in the repo market. It is published by the {{c3::Federal Reserve Bank of New York}} as a {{c4::volume-weighted median}} of transactions and accrues on {{c5::Act/360}}.",
+  "back": "Because it is collateralised, SOFR carries little bank-credit premium. It reacts to repo conditions, Treasury specialness and quarter-end pressure, which is why it behaves differently from SONIA or €STR.<br>\n<b>Used in the deck for:</b> SOFR OIS and compounded-RFR coupons (02), SR3 futures (this subdeck), and the RFR basis discussion (R5 in this subdeck).",
+  "tags": [
+   "rfr",
+   "sofr",
+   "repo",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does €STR measure, and how is it calculated? Name the two properties that separate it from SOFR.",
+  "back": "<b>Answer:</b> €STR (ESTER) is the unsecured overnight rate on wholesale deposits placed by euro-area banks. The ECB publishes it as a volume-weighted trimmed mean.<br>\n<b>Intuition:</b> it is a realised, backward-looking overnight fixing. A term view has to come from compounding or a forward curve, not from a quote.<br>\n<b>Two properties vs SOFR:</b> (i) it is unsecured, so it contains bank credit and liquidity; (ii) its counterparties are euro-area banks, not Treasury collateral.<br>\n<b>Used in the deck for:</b> compounded €STR OIS (02), the EURIBOR-€STR basis (02), and the RFR fallback mechanics (02).",
+  "tags": [
+   "rfr",
+   "estr",
+   "convention",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why does EURIBOR still exist alongside €STR, and what does EURIBOR measure that €STR does not?",
+  "back": "<b>Answer:</b> EURIBOR is a forward-looking term rate (one week to twelve months) published by EMMI from bank panel data. It reflects expected unsecured bank funding over a stated term, which €STR does not.<br>\n<b>Intuition:</b> loans, bonds and many swaps are written on a term rate that fixes once and needs no compounding. An overnight rate is a poor fit for that cash-flow pattern. The EURIBOR-€STR basis is the price of the term credit and liquidity premium.<br>\n<b>Method note:</b> EURIBOR uses a hybrid methodology, with transaction data first and model-based judgement where data is thin (approx.; check current EMMI documentation).<br>\n<b>Used in the deck for:</b> the EURIBOR-€STR basis in curve builds (02), legacy and term-rate swaps (02), and FRA-to-futures hedging (this subdeck).",
+  "tags": [
+   "rfr",
+   "euribor",
+   "term_rate",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why is a SOFR-minus-SONIA (or SOFR-minus-€STR) spread not a pure credit spread, and what does it contain?",
+  "back": "<b>Answer:</b> the spread mixes three effects: bank credit (in the unsecured rates, not in SOFR), funding liquidity, and the collateral-scarcity premium in Treasury repo (specialness and quarter-end spikes in SOFR).<br>\n<b>Intuition:</b> two overnight rates on different collateral and with different counterparties differ even when the banks are equally creditworthy. Treat the spread as a basis to model, not as a credit spread to hedge.<br>\n<b>Consequence:</b> a cross-currency or cross-market RFR basis mixes credit, funding and repo scarcity, so a curve builder carries a separate basis curve rather than reading the spread as bank credit.<br>\n<b>Used in the deck for:</b> the cross-currency RFR basis (02) and quarter-end repo spikes (11).",
+  "tags": [
+   "rfr",
+   "basis",
+   "repo",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A compounded SOFR coupon covers 7 calendar days: Mon 4.00% (1 day), Tue 4.20% (1 day), Wed 4.10% (1 day), Thu 4.00% (1 day), Fri 4.30% (3 days, Fri to Sun). Compute the compounded rate on Act/360 and compare it with the day-weighted simple average.",
+  "back": "<b>Answer:</b> compounded 4.1727%, simple day-weighted 4.1714%. The uplift is about 0.13bp.<br>\n<b>Intuition:</b> compounding adds only cross terms \\(r_ir_jd_id_j/360^2\\), which are second order in the rate. For rates near 4% the gap to the simple average is tiny, and it grows with the square of the rate and with the length of the period.<br>\n<b>Formula:</b> \\[R=\\frac{360}{D}\\Bigl(\\prod_{i}\\Bigl(1+\\frac{r_i\\,d_i}{360}\\Bigr)-1\\Bigr),\\qquad D=\\sum_i d_i=7\\]\n<b>Worked:</b> \\(\\prod_i(1+r_id_i/360)=(1+0.04/360)(1+0.042/360)(1+0.041/360)(1+0.04/360)(1+0.043\\times3/360)\\). Multiply by \\(360/7\\) and subtract 1 to get 4.1727%. The simple average is \\((4.00+4.20+4.10+4.00+3\\times4.30)/7=4.1714\\%\\).<br>\n<b>Used in the deck for:</b> every compounded RFR projection (02), and the weekend-factor convention behind the compounding cards in this subdeck.",
+  "tags": [
+   "sofr",
+   "compounding",
+   "worked_example",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is a lookback in a compounded RFR coupon? Write the coupon formula and say which rate applies to accrual day \\(i\\).",
+  "back": "<b>Answer:</b> with a \\(d\\)-business-day lookback, accrual day \\(i\\) uses the rate fixed \\(d\\) business days earlier, but its weight stays the accrual day count \\(n_i\\). \\[R=\\frac{360}{D}\\Bigl(\\prod_i\\Bigl(1+\\frac{r_{i-d}\\,n_i}{360}\\Bigr)-1\\Bigr)\\]\n<b>Intuition:</b> the last \\(d\\) business days of fixings are known \\(d\\) days before the period ends, so the coupon is fully determined before the payment date. This allows payment on the accrual end date.<br>\n<b>Example:</b> with \\(d=2\\), Monday's accrual uses Thursday's fixing, since Friday is one business day back and Thursday is two.<br>\n<b>Consequence:</b> the rate and the weight now refer to different dates, so the product no longer telescopes to a ratio of discount factors at the accrual dates.<br>\n<b>Used in the deck for:</b> payment-timing conventions for RFR swaps (02), the lockout comparison in the compounding cards (02), and RFR caplet convexity (03).",
+  "tags": [
+   "sofr",
+   "compounding",
+   "lookback",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How does an observation shift differ from a lookback in a compounded RFR coupon, and which of them preserves the telescoping identity on a deterministic curve?",
+  "back": "<b>Answer:</b> an observation shift moves the fixing dates and the day weights back by \\(s\\) days together. A lookback keeps the accrual weights and moves only the fixings. Only the shift keeps the telescoping, and it telescopes to discount factors on the shifted dates.<br>\n<b>Formula:</b> \\[R_{\\text{shift}}=\\frac{360}{D}\\Bigl(\\prod_j\\Bigl(1+\\frac{r_j\\,m_j}{360}\\Bigr)-1\\Bigr),\\qquad m_j=\\text{days in shifted window } j\\]\n<b>Telescoping:</b> with \\(m_j\\) matching the shifted windows, \\(\\prod_j(1+r_jm_j/360)=DF(t_0-s)/DF(t_n-s)\\). The coupon is therefore a ratio on the shifted dates, and it differs from the accrual-date ratio by the curve move over \\(s\\) days.<br>\n<b>Interview point:</b> the first-order effect of a payment convention is roughly the forward slope times \\(s\\), the same size as the lookback effect in the next card.<br>\n<b>Where it breaks:</b> the identity is exact only on a deterministic curve. With a stochastic projection the shift adds a convexity term as well.<br>\n<b>Used in the deck for:</b> SOFR and SONIA swap valuation conventions (02) and the caplet pricing in the RFR cards (03).",
+  "tags": [
+   "sofr",
+   "compounding",
+   "observation_shift",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Forward overnight rates rise linearly by 10bp across a 91-day quarter on an upward-sloping curve. The coupon uses a 7-calendar-day lookback. Estimate the change in the compounded coupon relative to the forward-implied value, and say when the effect vanishes.",
+  "back": "<b>Answer:</b> the coupon is about 0.8bp lower than the forward-implied value. The effect vanishes on a flat curve.<br>\n<b>Intuition:</b> a lookback samples the curve \\(s\\) days early. On an upward slope the earlier rates are lower, so the average is pulled down. The effect is first order in the slope and does not depend on the level of rates.<br>\n<b>Formula:</b> \\[\\Delta R\\approx-\\frac{s}{D}\\,\\bigl(f(t_n)-f(t_0)\\bigr)=-\\frac{7}{91}\\times10\\text{bp}\\approx-0.8\\text{bp}\\]\n<b>Interview point:</b> the lookback is a deterministic timing adjustment on the curve. The stochastic convexity it adds on top is a separate and usually small term. On a flat curve the shifted window has the same average rate, so the adjustment is zero.<br>\n<b>Used in the deck for:</b> lookback adjustments in RFR swap valuation (02) and the convexity side of RFR caplets (03).",
+  "tags": [
+   "sofr",
+   "compounding",
+   "lookback",
+   "convexity",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How is a FRA settled? Give the settlement amount for 10m notional, a 4.00% contract rate, a 6-month period (\\(\\tau=0.5\\)), and a fixing at 4.50%.",
+  "back": "<b>Answer:</b> cash settlement at the start of the period is \\[S=N\\,\\tau\\,\\frac{F-K}{1+F\\tau}\\] Here \\(10{,}000{,}000\\times0.5\\times0.005/1.0225=24{,}449.88\\), paid by the seller to the buyer.<br>\n<b>Intuition:</b> the amount that would be paid at period end is \\(N(F-K)\\tau\\). Settlement happens at the fixing, so the amount is discounted at the fixed rate \\(F\\) over the period.<br>\n<b>Used in the deck for:</b> the FRA leg of short-end strips (02), the FRA-to-STIR DV01 hedge (this subdeck), and the FRA-strip reading of a swap (02).",
+  "tags": [
+   "fra",
+   "settlement",
+   "money_market",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "In an FRA, which party is the buyer, what does the buyer pay and receive, and what is the sign of its settlement when the reference rate fixes above the contract rate?",
+  "back": "<b>Answer:</b> the buyer pays the contract rate \\(K\\) and receives the reference rate \\(F\\). When \\(F\\) exceeds \\(K\\), the buyer receives a positive settlement and the seller pays.<br>\n<b>Intuition:</b> the buyer is a borrower who locks a rate, so it gains when rates rise. Economically it is a fixed-rate payer on a single period, and its P&amp;L has the same sign as a payer swap.<br>\n<b>Check:</b> with \\(F-K=+0.50\\%\\) the buyer is paid, as in the settlement amount of the previous card.<br>\n<b>Used in the deck for:</b> the short-end DV01 sign convention in swap and FRA risk (02), and the STIR hedge direction in the FRA hedge card in this subdeck.",
+  "tags": [
+   "fra",
+   "sign_convention",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You own the buyer side of a 6-month FRA on 10m, contract rate 4.00%, one month before fixing. The forward for the period is now 4.50%, and \\(P(t,T_2)=0.9780\\). What is the value to the buyer, and what is the FRA DV01?",
+  "back": "<b>Answer:</b> \\(V_t=N\\tau(F_t-K)P(t,T_2)=10{,}000{,}000\\times0.5\\times0.005\\times0.9780=24{,}450\\). DV01 \\(\\approx N\\tau P(t,T_2)\\times1\\text{bp}\\approx489\\) per bp, not \\(N\\tau\\times1\\text{bp}=500\\).<br>\n<b>Derivation:</b> discount the settlement from the previous card at \\(T_1\\): \\(P(t,T_1)\\,N\\tau(F_t-K)/(1+F_t\\tau)\\). Use the forward identity \\(1+F_t\\tau=P(t,T_1)/P(t,T_2)\\) to get the closed form above.<br>\n<b>Where it breaks:</b> the identity assumes one curve for projection and discounting. With a basis, \\(P(t,T_2)\\) comes from the discounting curve while \\(F_t\\) comes from the projection curve.<br>\n<b>Used in the deck for:</b> mid-life FRA and swap-strip valuation (02), and the STIR DV01 hedge in this subdeck.",
+  "tags": [
+   "fra",
+   "valuation",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A {{c1::3x6}} FRA starts in {{c2::3}} months and ends in 6 months. Its reference rate is a {{c3::3-month}} rate fixed on the start date, and its settlement is paid {{c4::at the start of the period}}, discounted at the fixing rate.",
+  "back": "The \"3x6\" notation gives the start and end in months. Settlement at \\(T_1\\) is why the FRA formula discounts at the fixing rate and not at the rate on the discount curve.<br>\n<b>Used in the deck for:</b> FRA strips and the 3M reference rate at the short end of the curve (02).",
+  "tags": [
+   "fra",
+   "convention",
+   "quoting",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "EUR 6M EURIBOR swaps pay a fixed leg {{c1::annually}} on {{c2::30E/360}} against a float leg {{c3::semi-annually}} on {{c4::Act/360}}. €STR OIS and SOFR OIS pay {{c5::annually}} on both legs on {{c6::Act/360}}.",
+  "back": "The schedules differ leg by leg, so the annuity and PV01 must be built on each leg's own dates and day counts, never on a single \\(\\tau=1\\) grid.<br>\n<b>Used in the deck for:</b> PV01 and annuity conventions (SWAP_PAR chain in this subdeck), OIS bootstraps (02), and swap risk in the books (09).",
+  "tags": [
+   "swaps",
+   "convention",
+   "day_count",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Decompose a payer swap (pay fixed, receive float) into bond positions. Why does the payer gain when rates rise, and what drives its sensitivity?",
+  "back": "<b>Answer:</b> a payer is a long floater minus a fixed-coupon bond, with the notional exchanges cancelling. The floater trades near par at each reset, so the payer is effectively short a fixed-coupon bond. A short bond gains when rates rise.<br>\n<b>Formula (single curve):</b> \\[V_{\\text{pay}}=N\\bigl(P(t,T_{\\text{next}})-P(t,T_n)\\bigr)-N\\,K\\sum_i\\tau_iP(t,t_i)\\]\n<b>Intuition:</b> the float leg is sensitive only to the time to the next reset. The fixed leg carries the whole duration of the swap, measured by the annuity \\(A=\\sum_i\\tau_iP(t,t_i)\\).<br>\n<b>Used in the deck for:</b> payer and receiver risk and the DV01 sign (02), payer-receiver parity in swaptions (03), and the hedge direction for fixed-rate books (09).",
+  "tags": [
+   "swaps",
+   "payer",
+   "decomposition",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SWAP_PAR 1/3]</b> Context: single curve, 5-year annual fixed-for-float swap on 100m, floats reset at par each period, and discount factors \\(P(0,t_i)\\) are given. Derive the par fixed rate \\(S\\) that gives zero PV at inception.",
+  "back": "<b>Answer:</b> \\[S=\\frac{1-P(0,T_n)}{A},\\qquad A=\\sum_{i=1}^{n}\\tau_i\\,P(0,t_i)\\]\n<b>Derivation:</b> the float leg resets at par, so its PV is \\(N\\sum_i\\bigl(P(0,t_{i-1})-P(0,t_i)\\bigr)=N(1-P(0,T_n))\\). The fixed leg is \\(NS\\,A\\). Equate the two legs and divide by \\(NA\\).<br>\n<b>Check:</b> flat 4% annual curve, \\(P_i=1.04^{-i}\\): \\(A=4.451822\\), \\(P_5=0.821927\\), so \\(S=(1-0.821927)/4.451822=4.0000\\%\\). Non-flat zero rates of 3.8, 3.9, 4.0, 4.1, 4.2% give \\(A=4.444318\\), \\(P_5=0.814069\\), and \\(S=4.1836\\%\\).<br>\n<b>Intuition:</b> the par rate is the annuity-weighted average of the forwards, so it always lies within the range of those forwards.<br>\n<b>Where it breaks:</b> the telescoping holds only if projection and discounting use the same curve. In multi-curve pricing the float leg needs its own forwards and a basis term, and the closed form no longer applies.<br>\n<b>Used in the deck for:</b> the swap-rate solve in curve bootstraps (02), the underlying in swaption pricing (03), and CMS convexity (03).",
+  "tags": [
+   "chain_swap_par",
+   "swaps",
+   "annuity",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SWAP_PAR 2/3]</b> Context: the same 5-year annual swap on 100m, flat 4% curve, annuity \\(A=4.451822\\) from the previous card. Give the PV01 of the fixed leg and the sign of a payer's PV01.",
+  "back": "<b>Answer:</b> the fixed-leg PV01 is \\(N\\,A\\times1\\text{bp}=100{,}000{,}000\\times4.451822\\times0.0001=44{,}518\\) per bp. A payer gains about +44,518 for a +1bp rise in the par rate, and a receiver loses the same amount.<br>\n<b>Intuition:</b> the annuity converts a rate move into a PV change, measured in units of notional. It is the duration of the fixed leg in disguise.<br>\n<b>Caveat:</b> \\(A\\) is held fixed here. A full bump-and-reprice also moves \\(A\\) and the float leg, so the bump-and-reprice PV01 differs by a second-order amount.<br>\n<b>Used in the deck for:</b> hedge sizing and PV01 of swap books (02, 09), and the annuity measure in swaption pricing (03).",
+  "tags": [
+   "chain_swap_par",
+   "swaps",
+   "pv01",
+   "annuity",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SWAP_PAR 3/3]</b> Context: 5-year annual payer on 100m, struck at 4.00%, which is the par rate on today's flat 4% curve. All rates rise 25bp in parallel to a flat 4.25% curve. Revalue the payer, give the receiver's value, and state the change.",
+  "back": "<b>Answer:</b> exact revaluation on the 4.25% curve: \\(A=4.420729\\), \\(P_5=1.0425^{-5}\\), and \\(V_{\\text{pay}}=N[(1-P_5)-KA]=+1{,}105{,}182\\). The receiver is worth \\(-1{,}105{,}182\\).<br>\n<b>Linear estimate:</b> \\(V\\approx NA(S_{\\text{new}}-K)=100\\text{m}\\times4.451822\\times0.0025=1{,}112{,}956\\). The estimate is about 7,800 too high because \\(A\\) falls from 4.4518 to 4.4207 when rates rise.<br>\n<b>Intuition:</b> the payer gains because it is short a fixed-coupon bond. Over 25bp the gain is almost linear, and the small gap is the change in the annuity.<br>\n<b>Used in the deck for:</b> P&amp;L explain on swap books (desk-practice cards), swap DV01 (02), and payer-receiver symmetry in swaptions (03).",
+  "tags": [
+   "chain_swap_par",
+   "swaps",
+   "pnl",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 10y 3M-vs-6M EURIBOR basis swap quotes −1bp on the 3M leg. What does the quote mean, and what is its value on 100m notional, taking the 10y float annuity as about 8.0?",
+  "back": "<b>Answer:</b> by convention the spread sits on the 3M leg. The 3M leg pays 3M EURIBOR plus \\(s\\), with \\(s=-1\\)bp, against 6M EURIBOR flat, and \\(s\\) makes the two legs equal in PV at inception. Each bp on the 3M leg is worth \\(N\\times1\\text{bp}\\times A\\approx100\\text{m}\\times0.0001\\times8.0=80{,}000\\).<br>\n<b>Sign:</b> a receiver of the 3M leg with \\(s=-1\\)bp loses about 80,000 relative to the flat leg. The sign flips for a payer of the 3M leg.<br>\n<b>Used in the deck for:</b> multi-curve bootstraps and tenor-basis marks (02), and EURIBOR-€STR basis risk (09).",
+  "tags": [
+   "swaps",
+   "basis",
+   "tenor",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why does tenor basis exist between 3M and 6M term rates, and why does a curve builder need separate forward curves for each tenor?",
+  "back": "<b>Answer:</b> a 6M term rate locks in bank credit and funding liquidity for six months, and a 3M rate for three. Hedgers and loan books demand different tenors, and the price of the difference is the tenor basis.<br>\n<b>Intuition:</b> two term rates on the same date embed different credit and liquidity exposure, so they are different risks even though both are \"term EURIBOR\". Each forward curve is a projection curve, and each must reprice its own quotes.<br>\n<b>Consequence:</b> once the basis is non-zero, one curve cannot reprice a 3M swap and a 6M swap at the same time. The builder carries one projection curve per tenor and a separate discount curve.<br>\n<b>Used in the deck for:</b> multi-curve bootstrap design (02), the EURIBOR-€STR basis (02), and tenor-basis PV01 in risk (09).",
+  "tags": [
+   "swaps",
+   "tenor_basis",
+   "multicurve",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A USD/EUR cross-currency swap exchanges notionals at spot 1.10 USD per EUR. What are the cash flows at inception and maturity for EUR 100m, and where does the basis spread sit?",
+  "back": "<b>Answer:</b> at inception EUR 100m is exchanged for USD 110m (\\(100\\times1.10\\)), so PV at inception is zero. Each leg pays interest on its own notional in its own currency. At maturity the same notionals are exchanged back at the original rate, so the principal carries no FX exposure.<br>\n<b>Basis convention:</b> the xccy basis is quoted as a spread on the non-USD leg. A negative basis means the non-USD leg pays below its benchmark, which is how USD scarcity shows up in the quote.<br>\n<b>Intuition:</b> the notional exchange turns an FX forward into a financing trade. The coupons carry only the rate differential plus the basis.<br>\n<b>Used in the deck for:</b> the xccy basis chains in 02 and the funding valuation adjustment in XVA (10).",
+  "tags": [
+   "swaps",
+   "cross_currency",
+   "basis",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: FUT_CONV 1/3]</b> Context: a 3M SOFR future settles on the compounded SOFR average over its quarter, and its price is 100 minus that average. Compare a futures contract with a forward on the same rate, and state what daily margining does to the cash flows.",
+  "back": "<b>Answer:</b> a forward pays once at expiry. A futures contract is marked to market and margined in cash every day, so the investor's cash flows depend on the path of rates before expiry.<br>\n<b>Intuition:</b> the margin cash moves in the same states as the rate, so it is reinvested or financed at rates correlated with the rate being traded. If that correlation were zero, futures and forwards would price the same. The correlation is what makes them differ.<br>\n<b>Formula:</b> the futures rate \\(F^{\\text{fut}}\\) and forward rate \\(F^{\\text{fwd}}\\) differ by the convexity bias \\(\\approx\\tfrac12\\sigma^2T_1T_2\\) (next two cards).<br>\n<b>Used in the deck for:</b> futures-strip convexity in curve builds (02), SR3 and SONIA futures hedges (this subdeck), and the futures-versus-OIS basis in funding.",
+  "tags": [
+   "chain_fut_conv",
+   "futures",
+   "margin",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: FUT_CONV 2/3]</b> Context: the same 3M rate future, price = 100 minus the rate. Which direction does the convexity bias push the futures rate relative to the forward rate, and what is the margin-flow intuition?",
+  "back": "<b>Answer:</b> the futures rate sits above the forward rate, so the futures price is below the forward price. The bias is positive: \\(F^{\\text{fut}}-F^{\\text{fwd}}>0\\).<br>\n<b>Intuition:</b> a short futures position receives margin when rates rise, because the price falls and the short gains. That margin is invested at the higher rates that occur in the same states, so the short is paid in high-rate states and its position is worth more. The market therefore prices the future lower, which means a higher rate.<br>\n<b>Check:</b> a long futures position pays margin in high-rate states, and the same reasoning makes that worse for the long, so the long demands a lower futures price.<br>\n<b>Where it breaks:</b> if the traded rate were negatively correlated with the margin financing rate, the bias would flip sign. On a deterministic curve the bias is zero.<br>\n<b>Used in the deck for:</b> futures-versus-forward strip conversion (02) and the sign of STIR hedge adjustments (this subdeck).",
+  "tags": [
+   "chain_fut_conv",
+   "futures",
+   "convexity",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: FUT_CONV 3/3]</b> Context: normal rate volatility of 1% a year, flat. Estimate the convexity bias in bp for futures whose reference period is \\([T_1,T_2]=[1,1.25]\\), \\([2,2.25]\\) and \\([3,3.25]\\) years.",
+  "back": "<b>Answer:</b> \\[\\text{bias}\\approx\\tfrac12\\sigma^2T_1T_2\\] gives 0.625bp, 2.25bp and 4.875bp (about 4.9bp). The bias grows with the product of the two times, so it is quadratic in maturity.<br>\n<b>Worked:</b> for \\([1,1.25]\\): \\(\\tfrac12\\times(0.01)^2\\times1\\times1.25=6.25\\times10^{-5}=0.625\\)bp. For \\([3,3.25]\\): \\(\\tfrac12\\times10^{-4}\\times3\\times3.25=4.875\\)bp.<br>\n<b>Where it breaks:</b> this is the first-order Gaussian (Ho-Lee-style) result with constant vol and no mean reversion. Mean reversion lowers the bias, and a Hull-White model is needed for multi-year strips.<br>\n<b>Used in the deck for:</b> futures-strip convexity adjustments (02), and the choice between futures and swaps for 2-3 year hedges (03).",
+  "tags": [
+   "chain_fut_conv",
+   "futures",
+   "convexity",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A 3M SOFR future at 96.20 implies an average rate of {{c1::3.80%}}. An SR3 contract on $1m notional has a DV01 of {{c2::$25}} per bp, so a 10bp rise in rates costs a long position {{c3::$250}} per contract.",
+  "back": "Price = 100 minus the average rate. DV01 = \\(1{,}000{,}000\\times0.25\\times0.0001=\\$25\\). Ten bp is \\(10\\times\\$25=\\$250\\). This is first-order, and it ignores the compounding within the quarter.<br>\n<b>Used in the deck for:</b> STIR hedging of FRA and swap DV01 (U5 in this subdeck), and futures strips (02).",
+  "tags": [
+   "futures",
+   "stir",
+   "dv01",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A dealer is long a 3x9 FRA on 10m (accrual 6 months, \\(\\tau=0.5\\), \\(P(0,T_2)=0.98\\)). Estimate its DV01 in dollars per bp, and the number of SR3 contracts needed to hedge it, split across the two quarters it covers.",
+  "back": "<b>Answer:</b> DV01 \\(\\approx N\\tau P(0,T_2)\\times1\\text{bp}=10{,}000{,}000\\times0.5\\times0.98\\times0.0001=\\$490\\) per bp. Each SR3 contract has $25 per bp, so the hedge is about 20 contracts, or about 10 in each of the two quarters.<br>\n<b>Intuition:</b> the FRA's forward spans two quarters, so its exposure splits across the two SR3 contracts in those quarters. The hedge ratio is the FRA DV01 divided by the contract DV01.<br>\n<b>Where it breaks:</b> SR3 settles on the compounded average over each quarter, so the strip is only a proxy for the 6-month forward. The residual is the forward-to-quarter mismatch and the convexity bias of the strip.<br>\n<b>Used in the deck for:</b> FRA and short-end swap hedging (02), and STIR book hedging in the desk workflow cards (18).",
+  "tags": [
+   "futures",
+   "hedge",
+   "fra",
+   "dv01",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A bond future is priced at 110.00. Bond A has dirty price 115.50 and conversion factor 1.0450. Bond B has dirty price 102.30 and conversion factor 0.9200. At zero carry, which bond is cheaper to deliver, and at what futures price does the choice switch?",
+  "back": "<b>Answer:</b> the short delivers the bond that minimises \\(P_{\\text{dirty}}-F\\cdot CF\\) at zero carry. A: \\(115.50-110\\times1.0450=0.55\\). B: \\(102.30-110\\times0.9200=1.10\\). Bond A is cheaper, so A is the CTD.<br>\n<b>Switch:</b> \\(A-B=13.20-0.125F\\) is zero at \\(F=105.6\\). Above 105.6 the higher-CF bond A is the CTD, and below it bond B is.<br>\n<b>Intuition:</b> the delivery payment is \\(F\\cdot CF\\), so a higher CF pays more as the future rises, and the CTD moves toward high-CF bonds as the price rises.<br>\n<b>Where it breaks:</b> carry changes the answer. The full test is the highest implied repo rate, which includes coupon income and accrued interest before delivery.<br>\n<b>Used in the deck for:</b> CTD and basis-trade cards (01), and the implied-repo switch in delivery (01).",
+  "tags": [
+   "futures",
+   "bond_future",
+   "ctd",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why is the bond futures price below the forward price of the CTD bond, and what is the sign of the short's delivery option?",
+  "back": "<b>Answer:</b> the short holds delivery options, including the choice of bond and the timing of delivery. Options have non-negative value to their holder, so the short's position is worth more than a fixed-bond forward, and the futures price sits below the CTD forward by the value of those options.<br>\n<b>Intuition:</b> the long has given away the option, so the long pays less for the future than for a fixed bond delivered on the same date.<br>\n<b>Used in the deck for:</b> the cash-futures basis (01), gross and net basis (01), and the value of the wildcard in basis trades (01).",
+  "tags": [
+   "futures",
+   "bond_future",
+   "delivery_option",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In a classic repo, the coupon paid during the term goes to the {{c1::cash borrower (the seller)}} as a manufactured payment. In a sell/buy-back the bond is sold outright, so the coupon goes to the {{c2::buyer}} and the {{c3::repurchase price}} is adjusted for it.",
+  "back": "Both forms give the same economics for the cash rate, since the seller pays interest on the cash. The difference is legal ownership and the coupon flow.<br>\n<b>Used in the deck for:</b> repo financing and the coupon flow in basis trades (01, 11).",
+  "tags": [
+   "repo",
+   "classic_repo",
+   "sell_buyback",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A dealer borrows £50m against gilts for 7 days at a 4.00% repo rate (Act/360). What is the interest, and in a sell/buy-back where the bond is sold at par, what is the repurchase price per 100?",
+  "back": "<b>Answer:</b> interest \\(=50{,}000{,}000\\times0.04\\times7/360=\\pounds38{,}888.89\\). The repurchase price is \\(100+0.0778\\), or 100.0778 per 100 sold, so the repurchase amount is £50,038,888.89.<br>\n<b>Intuition:</b> the repo rate is simple interest on the cash. In a sell/buy-back it is embedded in the forward price of the bond.<br>\n<b>Check:</b> \\(38{,}888.89/50{,}000{,}000=0.0778\\%\\).<br>\n<b>Used in the deck for:</b> the financing cost of basis trades and the year-end turn cost (11).",
+  "tags": [
+   "repo",
+   "sell_buyback",
+   "interest",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A dealer pledges £100m of gilts in repo with a 2% haircut. How much cash is lent, what is the haircut for, and what drives its size?",
+  "back": "<b>Answer:</b> cash \\(=MV\\times(1-h)=\\pounds98\\text{m}\\). The £2m difference is excess collateral held by the cash lender.<br>\n<b>Intuition:</b> the haircut protects the cash lender against a fall in collateral value between margin calls, and against the cost of selling the collateral on default. It rises with collateral volatility, weaker credit and a longer liquidity horizon.<br>\n<b>Consequence:</b> the dealer funds the haircut with its own capital, so the 2% is the equity-like share of the position.<br>\n<b>Used in the deck for:</b> repo funding and the haircut stress in the balance-sheet cards (11).",
+  "tags": [
+   "repo",
+   "haircut",
+   "collateral",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does a zero-coupon inflation swap pay at maturity, and what is its par fixed rate if the index grows 10% over five years?",
+  "back": "<b>Answer:</b> the inflation leg pays \\(N\\,I(T)/I(0)\\) at maturity, and the fixed leg pays \\(N(1+K)^T\\). The par rate solves \\((1+K)^T=E^T[I(T)/I(0)]\\). For a 10% index rise over five years, \\(K=1.10^{1/5}-1=1.9245\\%\\).<br>\n<b>Intuition:</b> the swap exchanges the cumulative index growth for one annualised number, which is the average inflation the market expects in compounding terms.<br>\n<b>Caveat:</b> the expectation is taken under the T-forward measure, so convexity, lag and seasonal terms can move the par rate away from the naive index ratio.<br>\n<b>Used in the deck for:</b> breakeven curve bootstraps (04), ZCIIS and linker hedges (04), and the UK RPI lag in ZCIIS (04).",
+  "tags": [
+   "inflation",
+   "zciis",
+   "breakeven",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A year-on-year inflation swap pays the annual index change each year. The index grows 2.5% in year 1 and 3.0% in year 2. What is the cumulative two-year index growth, and how does the YoY leg differ from a zero-coupon swap with the same maturity?",
+  "back": "<b>Answer:</b> cumulative growth is \\(1.025\\times1.03=1.05575\\), a 5.575% total. The equivalent annualised rate is \\(\\sqrt{1.05575}-1=2.7497\\%\\).<br>\n<b>Difference:</b> a YoY swap settles each year on that year's index change. A zero-coupon swap settles once, on the cumulative change, at maturity. The fixed rates differ because the YoY leg pays each year's cash on its own timing and each fixing carries its own convexity.<br>\n<b>Used in the deck for:</b> YoY caps and floors (03, 04) and breakeven term-structure construction (04).",
+  "tags": [
+   "inflation",
+   "yoy",
+   "zciis",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Is breakeven inflation exactly the nominal yield minus the real yield? For a nominal yield of 4.60% and a real yield of 1.40%, give the exact and approximate breakevens and the size of the gap.",
+  "back": "<b>Answer:</b> no. The exact Fisher form is \\((1+n)=(1+r)(1+\\pi)\\), so \\(\\pi=(1+n)/(1+r)-1=3.1558\\%\\). The approximation \\(n-r\\) gives 3.20%. The gap is 4.4bp, which equals \\(r\\pi\\) to first order.<br>\n<b>Intuition:</b> the real yield also earns the inflation accrual, so the cross term \\(r\\pi\\) is missing from the difference. The gap widens with the level of rates.<br>\n<b>Caveat:</b> a market breakeven also contains the inflation risk premium and a liquidity premium. The Fisher identity gives only the expected-inflation part.<br>\n<b>Used in the deck for:</b> linker breakeven decompositions (04) and the real-yield sign convention in the linker cards (04).",
+  "tags": [
+   "inflation",
+   "breakeven",
+   "fisher",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CDS_HAZARD 1/3]</b> Context: a 5-year CDS at 150bp, recovery 40%, flat hazard rate from the credit-triangle approximation \\(\\lambda=s/(1-R)=2.5\\%\\). Give the survival probability to 5 years and the cumulative 5-year risk-neutral default probability.",
+  "back": "<b>Answer:</b> \\(S(5)=\\exp(-0.025\\times5)=0.8825\\), so the cumulative PD is \\(1-S(5)=11.75\\%\\).<br>\n<b>Intuition:</b> survival is the probability of no default by time \\(t\\). With a constant hazard, the conditional default rate per unit time is the same at every date, so survival decays exponentially.<br>\n<b>Formula:</b> \\[S(t)=e^{-\\lambda t},\\qquad PD(0,t)=1-S(t),\\qquad f(t)=\\lambda S(t)\\]\n<b>Used in the deck for:</b> the CDS bootstrap (05), CLN and risky-bond pricing (06), and credit-triangle sanity checks (05).",
+  "tags": [
+   "chain_cds_hazard",
+   "credit",
+   "hazard",
+   "survival",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CDS_HAZARD 2/3]</b> Context: same name, \\(\\lambda=2.5\\%\\), \\(R=40\\%\\), 5-year horizon. Give the expected loss over the horizon in percent of notional, and compare the average annual loss rate with the instantaneous loss rate \\(\\lambda(1-R)\\).",
+  "back": "<b>Answer:</b> \\(EL=PD\\times LGD=11.75\\%\\times60\\%=7.05\\%\\) of notional over five years. The average annual loss rate is \\(7.05\\%/5\\approx1.41\\%\\) per year.<br>\n<b>Check:</b> the instantaneous loss rate at \\(t=0\\) is \\(\\lambda(1-R)=2.5\\%\\times0.6=1.5\\%\\). It falls over time as survivors shrink, so the five-year average is lower, at about 1.41%.<br>\n<b>Where it breaks:</b> this expected loss is a risk-neutral quantity. It equals the actuarial loss only if a real-world default probability is used.<br>\n<b>Used in the deck for:</b> expected-loss pricing in CVA and credit portfolios (10), and CLN loss modelling (06).",
+  "tags": [
+   "chain_cds_hazard",
+   "credit",
+   "expected_loss",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CDS_HAZARD 3/3]</b> Context: same name, recovery 40%. The 5-year spread widens from 150bp to 300bp. Find the new hazard and the new 5-year PD, and say whether the PD doubles when the spread doubles.",
+  "back": "<b>Answer:</b> \\(\\lambda=300\\text{bp}/0.6=5.0\\%\\), \\(S(5)=e^{-0.25}=0.7788\\), so the cumulative PD is 22.12%, up from 11.75%.<br>\n<b>Intuition:</b> the spread is proportional to the hazard, but the PD is a non-linear function of it. Doubling the hazard raises the PD by a factor of \\((1-e^{-0.25})/(1-e^{-0.125})=1.88\\), not 2.<br>\n<b>Interview trap:</b> sizing a PD hedge by scaling the PD linearly with the spread overstates the move by about 6%. The exact factor matters for long-dated CLN and CVA hedges.<br>\n<b>Used in the deck for:</b> spread-to-PD mapping in CVA and CLN sensitivities (06, 10).",
+  "tags": [
+   "chain_cds_hazard",
+   "credit",
+   "hazard",
+   "sensitivity",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why does the CDS premium leg include accrued premium at default, and how large is it for a quarterly 100bp CDS if default occurs on average mid-quarter?",
+  "back": "<b>Answer:</b> the protection buyer owes the running premium accrued from the last coupon date to the default date. For a default at a uniform point in a quarter, the average accrual is half a quarter, 0.125 years. The accrued payment is \\(100\\text{bp}\\times0.125=0.125\\%\\) of notional per default.<br>\n<b>Intuition:</b> the premium is paid for protection up to the default date, so the coupon period ends early. This small add-on enters the risky annuity (RPV01).<br>\n<b>Effect:</b> the accrual-on-default term raises the RPV01 for a given hazard, so the par spread for a given hazard is slightly lower than the formula without accrual.<br>\n<b>Used in the deck for:</b> RPV01 and risky-annuity definitions (05), and the ISDA CDS model (05).",
+  "tags": [
+   "cds",
+   "premium_leg",
+   "accrual",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 5-year CDS has a market par spread of 300bp, a standard running coupon of 100bp and an RPV01 of 4.50. What is the upfront, and which side pays it?",
+  "back": "<b>Answer:</b> the upfront is \\((s-c)\\times RPV01=(3.00\\%-1.00\\%)\\times4.50=9.0\\) points per 100 notional. The protection buyer receives the 9 points, because its 100bp coupon is below the market spread.<br>\n<b>Check:</b> the buyer's value is \\(N(s-c)\\,RPV01\\). It is positive when the market spread is above the coupon, so the seller pays the upfront to the buyer.<br>\n<b>Intuition:</b> the standard coupon is fixed by convention, so the PV difference between the market spread and the coupon is paid up front.<br>\n<b>Used in the deck for:</b> single-name CDS quoting and upfront conventions (05), and CDS-bond basis trades (05).",
+  "tags": [
+   "cds",
+   "upfront",
+   "convention",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why is the spread of an equal-weight CDS index approximately the average of its constituent spreads, and what makes the quoted index differ from that intrinsic spread?",
+  "back": "<b>Answer:</b> the index pays on the same notional share of each name, so its premium is the average of the constituent premiums, weighted by each name's RPV01 and close to a simple average when durations match. That average is the intrinsic spread. Example: constituent spreads of 40, 60 and 80bp give an intrinsic spread of 60bp.<br>\n<b>Intuition:</b> the index is a basket of single-name CDS with equal notional each. The gap between the quote and the intrinsic spread is the index basis. It comes from liquidity, roll, and the difference between index and single-name risk.<br>\n<b>Used in the deck for:</b> index-intrinsic basis trades (05), and index knockout options and single-name index hedges (05).",
+  "tags": [
+   "cds_index",
+   "basis",
+   "credit",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 5.5-year corporate bond yields 5.40%. The government curve has 5y at 4.10% and 6y at 4.20%. What is the G-spread, and what is its main weakness for a bond with embedded options?",
+  "back": "<b>Answer:</b> the interpolated government yield at 5.5 years is 4.15%, so \\(G=5.40\\%-4.15\\%=125\\)bp.<br>\n<b>Intuition:</b> the G-spread is a yield difference against an interpolated benchmark. It compares yields, so the government curve shape and the bond's coupon structure are not separated.<br>\n<b>Weakness:</b> for a bond with embedded options the yield includes the value of the option, so the G-spread mixes credit with optionality. The Z-spread, which discounts each cash flow on the curve, is the better measure in that case.<br>\n<b>Used in the deck for:</b> corporate bond relative value (05) and the conversions between G, I, Z and ASW spreads (05, 01).",
+  "tags": [
+   "credit",
+   "g_spread",
+   "bond_spread",
+   "lvl_foundation"
+  ]
+ }
+]

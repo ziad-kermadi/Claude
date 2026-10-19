@@ -1,0 +1,532 @@
+[
+ {
+  "type": "basic",
+  "front": "What are the three IFRS 13 fair value levels, and how do you assign a level to a rates or credit position?",
+  "back": "<b>Headline:</b> the level is set by the <i>lowest-level input that is significant to the whole measurement</i>, not by the product name.<br>\n<b>Level 1:</b> unadjusted quoted prices in an active market for an identical instrument. Example: on-the-run gilt prices, exchange-traded SONIA futures.<br>\n<b>Level 2:</b> observable inputs other than Level 1 quotes. Example: SONIA and SOFR swap curves, broker-observable swaption vols at liquid points, CDS on liquid names.<br>\n<b>Level 3:</b> significant unobservable inputs. Example: a 10y×30y vol with no quotes, a 10y-2y CMS correlation, a bond-CDS basis for a name with no CDS quotes.<br>\n<b>Interviewer follow-up:</b> a swaption is priced off observed vols, but the desk adds a model-based adjustment that is not observable. Does the level change? Only if that adjustment is significant to the measurement as a whole. It is a documented judgement, not an automatic rule.",
+  "tags": [
+   "desk_practice",
+   "ifrs13",
+   "fair_value",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Who marks what in the end-of-day process, and why must that separation hold?",
+  "back": "<b>Headline:</b> traders own the market levels, strats own the tools that turn levels into marks, and a control function independent of both verifies the result.<br>\n<ul>\n<li><b>Traders</b> set the curves, vol surfaces and spreads they can justify from observable market activity (quotes, trades, client levels) and sign off the EOD marks for their book.</li>\n<li><b>Strats</b> own the pricing and marking library, the curve build, the vol-surface fitting logic, the sensitivities and the P&amp;L explain. They change the tool, not the market level.</li>\n<li><b>Valuation control and product control</b> set the snap with the desk, run independent price verification (IPV), own the valuation adjustments and report the results to P&amp;L sign-off.</li>\n</ul>\nWhy it matters: if the person who holds the position also chooses the market input, the mark is no longer evidence. A strat who moves a level to fit a P&amp;L target has broken the separation even if the tool is correct.<br>\n<b>Interviewer follow-up:</b> a trader asks you to hard-code a vol that is \"obviously right\" for the EOD run. What do you do? Route it as a documented input change with a source, and let valuation control see it in the same day's marks.",
+  "tags": [
+   "desk_practice",
+   "marking",
+   "governance",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The EOD snap is the time at which the desk captures market data for marking. Every market point in one mark must carry a {{c1::common timestamp}}, because mixing times creates {{c2::artificial P&amp;L moves}} that the P&amp;L explain then has to chase.",
+  "back": "<b>Headline:</b> the snap time is set by policy with valuation control. It is often around the London close, but the exact time is a firm rule, not a market convention (approx.; firm-specific). Stale points, meaning a quote or trade older than the snap by more than the policy age, must be flagged in the stale-mark report, not carried silently.",
+  "tags": [
+   "desk_practice",
+   "marking",
+   "snap",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Define day-one P&amp;L. Why does the accounting treatment differ when the model's fair value depends on unobservable inputs?",
+  "back": "<b>Headline:</b> day-one P&amp;L is the gap between the transaction price and the fair value your model gives on trade date. Under IFRS 9 (and IAS 39 before it) that gap is recognised at inception only when the fair value is evidenced by a Level 1 price, or by a valuation technique that uses only observable market data (IFRS 9 B5.1.2A; IAS 39 AG76).<br>\nIf the valuation uses significant unobservable inputs, the gap is <b>deferred</b>. It is recognised later only to the extent that it arises from a change in a factor, including time, that market participants would take into account.<br>\nWhy it matters on a desk: without deferral, a Level 3 trade could book an immediate gain from a model assumption nobody can verify.<br>\n<b>Interviewer follow-up:</b> a trader says the model is \"more accurate than the market\" and wants the day-one gain booked. What is the answer? The accounting test is observability of the inputs, not the trader's view of accuracy. The gain is deferred until the inputs are observable or the trade ends.",
+  "tags": [
+   "desk_practice",
+   "day_one_pnl",
+   "ifrs9",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Desk marks are typically taken at {{c1::mid}}. To get to the exit price, valuation control holds a close-out reserve of roughly {{c2::half the bid-offer spread times the position's sensitivity}}, because closing a position crosses only {{c3::half}} of the spread from mid.",
+  "back": "<b>Why half:</b> a mid mark sits midway between bid and offer. Closing a long or short position costs one half-spread against mid. The reserve is a prudent-valuation adjustment on the book, not a P&amp;L estimate of the trade (approx.; the precise method follows the prudent valuation rules and the firm's approved approach).",
+  "tags": [
+   "desk_practice",
+   "marking",
+   "bid_offer",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 10y×30y swaption vol point has no broker quotes. How do you mark it at EOD, and what do you reserve for?",
+  "back": "<b>Headline:</b> anchor to the nearest sourced points, extend with a documented rule, check the extension for arbitrage, and reserve for what is not observed.<br>\n<ol>\n<li>Fit the surface on the liquid grid (for example the 10y expiry and below, plus any observable 30y-tenor points) with SABR or ZABR per expiry.</li>\n<li>Extend to the 10y×30y point with a rule set by policy, for example a normal-vol extension tied to the historical vol of the forward over a stated window. Do not invent a point the market has not shown.</li>\n<li>Check calendar and strike arbitrage at the extension. Total variance \\(\\sigma_N^2 T\\) must increase in \\(T\\), and the butterfly must be non-negative.</li>\n<li>Classify the point as Level 3 and hold an extrapolation reserve equal to the gap between the chosen rule and a reasonable alternative (for example, flat last-good vol against a historical-based rule).</li>\n</ol>\n<b>Interviewer follow-up:</b> why not use the last good quote? It carries the old regime and goes stale, so the mark becomes a view with no owner. You need a rule, an alternative, and a review cadence.",
+  "tags": [
+   "desk_practice",
+   "marking",
+   "vol",
+   "illiquid",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How do you mark an off-the-run gilt with no fresh trade, and what is the P&amp;L of a 0.5bp mark error on £250m nominal at a price of 98.00 with modified duration 6.0?",
+  "back": "<b>Headline:</b> mark off the on-the-run benchmark at the same maturity, plus the observed off-the-run premium. Do not mark it at the on-the-run yield.<br>\n<b>Method:</b> yield = interpolated on-the-run yield + off-the-run premium, where the premium comes from recent trades in the bond or comparable bonds, a regression on age and coupon, or an IPV source.<br>\n<b>Worked:</b> market value \\(= £250\\text{m}\\times0.98 = £245\\text{m}\\). DV01 \\(= £245\\text{m}\\times 6.0\\times 0.0001 = £147{,}000\\) per bp. A 0.5bp mark error gives \\(0.5\\times £147{,}000 = £73{,}500\\).<br>\n<b>Interviewer follow-up:</b> name the two failure modes. (1) Marking off the wrong benchmark after a new issue or a roll. (2) Carrying a premium from a period when the bond traded special in repo, which no longer applies.",
+  "tags": [
+   "desk_practice",
+   "marking",
+   "govies",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 5y single-name CDS has no quotes for the day. Describe the proxy you would use to mark it, and compute the spread for: bond z-spread 210bp, bond-CDS basis -15bp, recovery 40%.",
+  "back": "<b>Headline:</b> build a proxy from the bond curve and the name's bond-CDS basis. Label it Level 3 if the basis is not observable.<br>\n<ol>\n<li>Take the bond z-spread on a comparable, same-seniority bond of similar maturity: 210bp.</li>\n<li>Add the name's historical bond-CDS basis, defined as CDS spread minus bond spread: \\(210 + (-15) = 195\\)bp.</li>\n<li>Convert to a hazard rate for the model: \\(\\lambda \\approx s/(1-R) = 0.0195/0.60 \\approx 3.25\\%\\).</li>\n<li>Cross-check against the sector and rating curve, and against the index beta.</li>\n</ol>\n<b>Interviewer follow-up:</b> the basis moves sign and size around events. What do you do? Keep a basis history per name and hold a basis reserve when the history is thin, because a stable proxy with an unknown basis is not a mark.",
+  "tags": [
+   "desk_practice",
+   "marking",
+   "cds",
+   "basis",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is Totem, and how do you use a consensus service in marking and IPV?",
+  "back": "<b>Headline:</b> Totem is a consensus service. It aggregates pricing from market participants into a consensus level. On a desk it is an external reference: typically an IPV input, or a cross-check on a Level 2 or Level 3 point.<br>\nPractical rules: use the consensus with its timestamp, and check it against the snap. A consensus struck at a different time is a timing break, not a valuation view. Treat it as an indicative reference, not a firm quote.<br>\nDo not assume its methodology, coverage or contributor set in an interview. State that you would confirm these in the vendor documentation before relying on the service for a specific product (approx.; not verified in this card).<br>\n<b>Interviewer follow-up:</b> the consensus is 2bp away from your mark on a liquid swap. Is that a break? Check the timestamps first, then the tolerance for that product, then whether the consensus is stale for that tenor.",
+  "tags": [
+   "desk_practice",
+   "ipv",
+   "consensus",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For IPV, the source must be {{c1::independent of the trader}} and {{c2::time-matched to the snap}}. Among sources for a liquid swap, an {{c3::executed trade}} is preferred to an indicative quote, and a model-based proxy is the last resort.",
+  "back": "<b>Typical order (policy-dependent):</b> (1) recent executed trades in the same product, tenor and convention, time-matched; (2) broker or dealer quotes, with each recorded as indicative or executable; (3) consensus and evaluated prices, for example Totem or Bloomberg BVAL, which are indicative estimates and not firm prices; (4) a model proxy, which is Level 3 and needs a reserve. The trader's own marks and a model the trader built never count as independent.",
+  "tags": [
+   "desk_practice",
+   "ipv",
+   "sources",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How should IPV tolerances be set? Why is one fixed bp threshold for all products wrong?",
+  "back": "<b>Headline:</b> the tolerance should reflect how precisely the market point is known. A fixed threshold creates false breaks on illiquid points and misses real breaks on liquid ones.<br>\n<ul>\n<li>Scale the tolerance to the tradeable width: a multiple of the typical half bid-offer for the product and tenor, with a floor. The multiple and the floor are policy choices.</li>\n<li>Add the dispersion across sources, so a point where brokers disagree gets a wider band.</li>\n<li>Calibrate against history: check the threshold catches the breaks that later led to P&amp;L adjustments, and does not generate breaks that were all resolved as \"noise\".</li>\n<li>Report break rates by desk, product and Level. A rising rate on one point is a stale-marking signal, not a tolerance problem.</li>\n</ul>\n<b>Interviewer follow-up:</b> a 1bp tolerance on a 30y swap gives many breaks. Do you widen it? First check whether the source is stale or the desk point is stale. Widen only if the width is genuinely unobservable.",
+  "tags": [
+   "desk_practice",
+   "ipv",
+   "tolerance",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "An IPV break of £1.2m appears on a 10y CMS spread book at T+1. Walk through how you resolve it, who signs off, and what happens if it stays open.",
+  "back": "<b>Headline:</b> decide with evidence who is right. The outcome is either a documented mark with no P&amp;L effect, or an adjustment that goes through the desk's P&amp;L.<br>\n<ol>\n<li><b>Confirm the break is real.</b> Same trade, same conventions, same snap, same timestamp on both sides.</li>\n<li><b>Decompose it:</b> market data difference, model difference, calibration or parameter difference, and trade-terms difference. Each has a different owner.</li>\n<li><b>If the independent source is the better evidence</b> (executed or time-matched), adjust the mark and book the IPV adjustment through the desk's P&amp;L. Record it in the break log.</li>\n<li><b>If the desk is better</b> (a documented fact the source cannot see), close the break with a written rationale, signed by valuation control.</li>\n<li><b>If it cannot be resolved</b> (typical for Level 3), hold an IPV reserve until the evidence arrives.</li>\n</ol>\n<b>Ageing and escalation:</b> breaks are aged. Any break open beyond the policy period escalates to the desk head, then to the valuation committee. A break that recurs on the same point each day is a stale-marking problem, not a series of new breaks.<br>\n<b>Interviewer follow-up:</b> who books the adjustment? Through the desk's P&amp;L as a valuation adjustment, with valuation control's sign-off and visibility to the desk head.",
+  "tags": [
+   "desk_practice",
+   "ipv",
+   "breaks",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "It is 16:15. The 5y×5y GBP swaption vol is marked 15bp of normal vol above the consensus, and the vega is £40k per bp. What do you check before EOD sign-off, and what is the P&amp;L at stake?",
+  "back": "<b>P&amp;L at stake:</b> \\(15 \\times £40\\text{k} = £600\\text{k}\\), first-order (vega approximation).<br>\n<b>Check order:</b>\n<ol>\n<li><b>Timestamps:</b> is the consensus struck at the same time as the snap? A 16:15 check against a 15:00 consensus is a timing problem.</li>\n<li><b>Input provenance:</b> was the desk's point changed by a click, from a stale screen, or from a fitted surface?</li>\n<li><b>Surface fit:</b> does the 5y×5y point sit on a smooth fit to its neighbours? If the residual is large, the point is the problem, not the market.</li>\n<li><b>Parameter drift:</b> did the SABR parameters for this expiry move, and why?</li>\n<li><b>Decision:</b> if the consensus is time-matched and the desk point is not supported, adjust the mark before sign-off and log it. If the desk is right, document the reason.</li>\n</ol>\n<b>Interviewer follow-up:</b> the desk asks to sign off today and resolve tomorrow. What is the answer? Only if the break is below the tolerance or the source is not time-matched. Otherwise the mark is adjusted before sign-off, because an open break at close flows into the official P&amp;L.",
+  "tags": [
+   "desk_practice",
+   "marking",
+   "ipv",
+   "scenario",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Classify each for IFRS 13 level and say what decides it: (a) a 30y GBP swap, (b) a 10y×30y swaption, (c) a CDS on an illiquid name, (d) a CMS spread option, (e) a Bermudan swaption.",
+  "back": "<b>Headline:</b> the level is set by the least observable input that is significant to the total value.<br>\n<ul>\n<li><b>(a) 30y GBP swap:</b> Level 2 if the 30y swap points are observable and tradeable. The question is whether the 30y point is observed or extrapolated; if extrapolated and significant, Level 3 for that part.</li>\n<li><b>(b) 10y×30y swaption:</b> Level 2 if broker vols are observed at that point. Level 3 if the vol is extrapolated.</li>\n<li><b>(c) Illiquid name CDS:</b> Level 3 when the spread comes from a proxy whose basis is unobservable. Level 2 only if the proxy inputs are observable and the adjustments are not significant.</li>\n<li><b>(d) CMS spread option:</b> Level 3, because the 10y-2y correlation is not observable at the tenor.</li>\n<li><b>(e) Bermudan swaption:</b> Level 2 for the observed co-terminal vols, but Level 3 if the mean reversion or the calibration choice is significant and unobservable (approx.; a judgement to document).</li>\n</ul>\n<b>Interviewer follow-up:</b> the (e) classification flips if the desk adds a calibrated parameter with no observable counterpart. Why? Because that parameter then becomes a significant unobservable input.",
+  "tags": [
+   "desk_practice",
+   "ifrs13",
+   "level_classification",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A Level 3 trade carries a deferred day-one gain of £400k. What happens to the deferred balance if the model input becomes observable in year 2, and what happens if the trade terminates early?",
+  "back": "<b>Headline:</b> the deferred balance is released in line with the observable factors, not on a fixed calendar, and any remaining balance is typically recognised on termination or maturity (policy; approx.).<br>\n<ul>\n<li><b>Input becomes observable in year 2:</b> the part of the deferred gain that arises from the newly observable factor is recognised then. The unexplained remainder stays deferred.</li>\n<li><b>Early termination:</b> the trade is extinguished, so no further inputs are needed. The remaining deferred balance is recognised at termination (policy-dependent; check the firm's accounting policy).</li>\n<li><b>Amortisation:</b> straight-line release over life is an allowed policy choice in some firms, but it is not a rule the standard fixes. State the firm's policy in the answer.</li>\n</ul>\n<b>Interviewer follow-up:</b> why does the early termination matter for a desk? Because a dealer that terminates a Level 3 trade with a deferred gain books that gain at that moment. That creates an incentive to terminate, so the termination must be reviewed by valuation control.",
+  "tags": [
+   "desk_practice",
+   "day_one_pnl",
+   "ifrs9",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 10y IRS book has a net DV01 of £150k per bp, and the quoted bid-offer is 0.6bp in yield. Compute the close-out reserve. Why is it half the spread, and why net rather than gross?",
+  "back": "<b>Headline:</b> reserve \\(= \\tfrac12 \\times \\text{bid-offer} \\times |\\text{DV01}| = 0.5\\times 0.6\\times £150\\text{k} = £45\\text{k}\\).<br>\n<b>Why half:</b> the mid mark sits halfway between bid and offer. Closing crosses one half-spread.<br>\n<b>Why net:</b> offsetting positions in the same instrument and tenor can be closed together at one cost, so the net is what must be crossed. Positions that cannot be netted, such as different tenors or different instruments that cannot be closed together, are measured gross (approx.; check the firm's approved method against the prudent valuation rules).<br>\n<b>Interviewer follow-up:</b> the 0.6bp is the average. What is the trap? Using the average on a book whose spread is much wider in the tails. Use the bid-offer for the relevant size and tenor, not a headline average.",
+  "tags": [
+   "desk_practice",
+   "bid_offer",
+   "close_out",
+   "case_study",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Your Bermudan prices £0.35 per 100 below a challenger LMM on £200m notional. How big is the model reserve, and how do benchmarking and challenger results feed it when they disagree?",
+  "back": "<b>Headline:</b> the reserve is sized on the measured gap between the approved model and the challenger, \\(0.35/100 \\times £200\\text{m} = £700\\text{k}\\), taken on the side that reduces the book's value.<br>\n<ul>\n<li><b>Challenger:</b> a deliberately different model (here one-factor versus multi-factor) built to test the main model's assumptions.</li>\n<li><b>Benchmarking:</b> comparing the model with an external reference for the same instrument: market prices where they exist, a simpler closed form, or a Monte Carlo run with known error.</li>\n<li><b>When they disagree:</b> the gap is itself the model risk measure. Escalate it to model risk, hold the reserve, and review it when the model is validated again, when new evidence arrives, or when the position is closed.</li>\n</ul>\n<b>Interviewer follow-up:</b> why not simply average the two models? Because the book is marked with the approved model, and an average is a new model with no validation. The reserve measures the uncertainty, it does not replace the mark.",
+  "tags": [
+   "desk_practice",
+   "model_risk",
+   "model_reserve",
+   "benchmarking",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Your Bermudan mean reversion is set at 0.03 with a calibration standard error of 0.008. The value sensitivity is about -£1.2m per 0.01 of mean reversion. Size the parameter uncertainty reserve at 90% confidence.",
+  "back": "<b>Headline:</b> the reserve is the value move at the 90% one-sided bound of the parameter, which is \\(z = 1.2816\\) standard errors.<br>\n<b>Worked:</b> the bound is \\(1.2816 \\times 0.008 = 0.01025\\) of mean reversion. The sensitivity is \\(£1.2\\text{m}/0.01 = £120\\text{m}\\) per unit, so the value move is \\(120\\text{m} \\times 0.01025 \\approx £1.23\\text{m}\\). The parameter reserve is about £1.23m (inputs illustrative, not a market observation).<br>\nTwo checks: the sign of the move (take the adverse direction for the book), and whether the sensitivity is linear over the band. For a band this size, check a full revaluation at the bound, not only the first-order number.<br>\n<b>Interviewer follow-up:</b> why one-sided? A one-sided bound asks how bad the loss could be on the adverse side. Check the firm's definition of the confidence level before you quote a number (approx.; see the 90% stretch card).",
+  "tags": [
+   "desk_practice",
+   "prudent_valuation",
+   "parameter_uncertainty",
+   "case_study",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A book holds £1bn nominal of one 30y gilt, but the depth you can trade in one clip is about £200m. The bid-offer on the excess is 0.2bp of yield and the modified duration is 8.0. How do you size the concentration reserve?",
+  "back": "<b>Headline:</b> the excess above what the market absorbs at a normal exit cost carries a larger exit cost. Size it on the excess position, not the whole book.<br>\n<b>Worked (illustrative inputs):</b> excess \\(= £1\\text{bn} - £200\\text{m} = £800\\text{m}\\). DV01 of the excess \\(= £800\\text{m}\\times 8.0 \\times 0.0001 = £640\\text{k}\\) per bp. Cost to exit at 0.2bp \\(= £640\\text{k} \\times 0.2 = £128\\text{k}\\).<br>\nThe real method also considers a longer exit horizon and a wider spread for the excess (approx.; check the approved method). The point for the interview is the structure: excess, depth and a wider exit cost.<br>\n<b>Interviewer follow-up:</b> why not reserve the whole £1bn at the same spread? Because the first £200m is what the market absorbs at the normal cost. Reserving the whole book overstates the cost and hides the real concentration.",
+  "tags": [
+   "desk_practice",
+   "concentration",
+   "prudent_valuation",
+   "case_study",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Prudent valuation uses nine AVA categories: market price uncertainty, close-out cost, model risk, {{c1::unearned credit spreads}}, {{c2::investing and funding costs}}, concentrated positions, future administrative costs, {{c3::early termination}} and operational risk.",
+  "back": "Mnemonic for a desk: the first three are about the price, the middle three about the position and its cost, and the last three about the process. The exact category wording and the calculation for each follow the EBA technical standards and the UK prudent valuation rules (approx.; wording unverified in this card).",
+  "tags": [
+   "desk_practice",
+   "prudent_valuation",
+   "ava",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Under prudent valuation each AVA is measured at a {{c1::90%}} confidence level, the category AVAs are summed into a total, and the total is {{c2::deducted from CET1}} capital (approx.; check the UK rule version and any after-tax treatment).",
+  "back": "<b>Interviewer follow-up:</b> what does 90% mean here? It is a statement about the loss distribution for that category: the reserve should cover the loss in about nine out of ten outcomes of that uncertainty. Do not confuse this one-sided reading with a two-sided 90% interval; see the stretch card on the 90% quantile.",
+  "tags": [
+   "desk_practice",
+   "prudent_valuation",
+   "ava",
+   "regulation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Describe the core approach and the fallback approach to AVA. When would a desk be forced onto the fallback, and why is that a problem?",
+  "back": "<b>Headline:</b> the core approach is the bank's own calculation of each AVA category from its data, models and controls. The fallback, also called the simplified approach, is a prescribed percentage applied to the absolute exposure of the category (the percentages are in the technical standards; not quoted here, approx.; unverified).<br>\n<ul>\n<li><b>Forced onto fallback:</b> when the bank cannot meet the core approach's requirements, typically missing data, a model that has not been validated, or controls that are not adequate for the calculation.</li>\n<li><b>Why it is a problem:</b> the fallback is a blunt, conservative number that does not reflect the desk's actual market or position. It is also a signal to the regulator and to the firm's model governance that the core calculation is not working.</li>\n</ul>\n<b>Interviewer follow-up:</b> a desk prefers the fallback because it is cheaper. What do you say? It is a capital cost, and it is not a free choice for a desk. Fix the data or the model and move to the core approach.",
+  "tags": [
+   "desk_practice",
+   "prudent_valuation",
+   "ava",
+   "regulation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What must a model inventory record for each model, and who owns what?",
+  "back": "<b>Headline:</b> the inventory is the single list of every model in use, with its owner, scope, status and limits. A model that is not in the inventory cannot be used to mark a position.<br>\n<ul>\n<li><b>Identity and ownership:</b> model name, business owner, model developer, and the desk or product areas it marks.</li>\n<li><b>Scope and use:</b> products, risk factors and use cases (valuation, risk, capital, pricing). Each use is a separate approval.</li>\n<li><b>Materiality tier:</b> the risk rating that sets the validation depth and review frequency.</li>\n<li><b>Status:</b> approved, approved with conditions, under validation, or retired; plus the date of the last validation and the next review.</li>\n<li><b>Limitations and usage restrictions:</b> the conditions under which the model should not be used.</li>\n<li><b>Dependencies and change history:</b> data feeds, calibration sets and versions.</li>\n</ul>\n<b>Interviewer follow-up:</b> who owns the inventory? The first line (model owner and desk) maintains the entries, and the second line (model risk) challenges them. Neither owns the whole record alone.",
+  "tags": [
+   "desk_practice",
+   "model_governance",
+   "inventory",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does an independent model validation cover, and what are the possible outcomes?",
+  "back": "<b>Headline:</b> validation tests whether the model is conceptually sound, correctly implemented, and fit for each use. The validator must be independent of the developers and the desk that uses the model.<br>\n<ul>\n<li><b>Conceptual soundness:</b> the theory, the assumptions and whether they fit the product (for example, a one-factor model for a product whose value depends on a correlation).</li>\n<li><b>Implementation:</b> code against specification, numerics, convergence, and edge cases (negative rates, zero vols, very long tenors).</li>\n<li><b>Calibration:</b> stability of parameters, fit quality, and sensitivity of prices to inputs.</li>\n<li><b>Benchmarking and outcomes:</b> comparison with alternatives, back-testing and hedge performance.</li>\n<li><b>Limitations and usage:</b> whether the stated limits are accurate and enforced.</li>\n</ul>\n<b>Outcomes:</b> approve, approve with conditions (usage limits, a reserve, a deadline for remediation), or reject. A rejected model cannot mark new positions.<br>\n<b>Interviewer follow-up:</b> what does \"independent\" mean in practice? The validator does not report into the model developer or the desk, and the validator has the authority to restrict use.",
+  "tags": [
+   "desk_practice",
+   "model_governance",
+   "validation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A one-factor Hull-White model is approved for Bermudan swaptions. The desk now wants to use it to mark a CMS spread note. What is the governance answer?",
+  "back": "<b>Headline:</b> no. The approval covers a product and a risk set. A CMS spread note depends on the 10y-2y correlation, which a one-factor model cannot represent. This is a new scope, not a parameter change.<br>\n<ul>\n<li><b>Record the limitation:</b> the one-factor model does not capture the spread correlation, so it cannot mark that risk.</li>\n<li><b>Route the new use:</b> a model change or a new product approval, with a validator assigned.</li>\n<li><b>Interim position:</b> either an already approved model that covers the correlation, with a reserve for the uncertainty, or a limited use with explicit limits, a reserve and an expiry. Do not mark the note with the one-factor model and call the output \"approved\".</li>\n</ul>\n<b>Interviewer follow-up:</b> the desk says the error is small for the current book. What do you answer? Usage limits are about scope, not size. Size is evidence for the reserve, and the reserve does not make an out-of-scope model in-scope.",
+  "tags": [
+   "desk_practice",
+   "model_governance",
+   "limitations",
+   "scenario",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "PRA supervisory statement SS1/23 sets model risk management principles for UK banks and took effect on {{c1::17 May 2024}}. It has {{c2::five}} principles covering model identification and classification, governance, development and use, independent validation, and model risk mitigants (approx.; principle wording unverified).",
+  "back": "<b>Why it matters on a desk:</b> valuation models are in scope as models that inform decisions. The principles make the inventory, the tiering, the validation and the usage limits a supervisory expectation, not an internal preference. Check the exact scope wording and the mapping to valuation models with the firm's model risk team before quoting it (approx.).",
+  "tags": [
+   "desk_practice",
+   "model_governance",
+   "regulation",
+   "pra",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Walk through a new product approval (NPA) for a new structured trade. What must the strat provide, and what blocks trading?",
+  "back": "<b>Headline:</b> the strat supplies the evidence that the product can be priced, risked, booked, hedged and explained. No trading until the sign-offs are complete (firm process; approx.).<br>\n<ol>\n<li><b>Product definition:</b> term sheet, payoff, cash flows, and the risk factors the payoff depends on.</li>\n<li><b>Pricing model:</b> method, calibration inputs, which inputs are observable and at what IFRS 13 level, and the known limitations.</li>\n<li><b>Valuation and IPV plan:</b> sources for each input, the expected Level 3 share, and the reserves that will apply.</li>\n<li><b>Risk:</b> bucketed sensitivities, scenarios, inclusion in VaR or stress, and limits.</li>\n<li><b>Booking and lifecycle:</b> trade capture, static data, cash-flow generation, fixings, exercise and termination events.</li>\n<li><b>Hedging:</b> the hedge instruments, the expected residual, and the hedge-effectiveness test.</li>\n<li><b>P&amp;L explain:</b> which risk factors the explain covers, and the residual threshold.</li>\n<li><b>Model approval:</b> the model's validation status and usage scope, as above.</li>\n</ol>\n<b>Sign-offs:</b> product control, market risk, credit risk, operations, legal, tax and compliance (firm-specific). A missing sign-off blocks trading, and a trade booked before approval is a control breach.<br>\n<b>Interviewer follow-up:</b> which item most often stops an NPA? The model approval and the P&amp;L explain, because a product that cannot be explained daily cannot be controlled.",
+  "tags": [
+   "desk_practice",
+   "npa",
+   "governance",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A callable CMS spread note has a client committed for next Monday. The pricing model is not yet validated. What do you tell the desk and the NPA committee?",
+  "back": "<b>Answer:</b> the trade does not book on the unvalidated model. A client commitment is a business timing issue, not a control exception.<br>\n<ul>\n<li><b>Options that keep control:</b> (1) use a model that is approved and covers the correlation, with a conservative reserve; (2) delay the trade until validation; (3) a limited pilot under written conditions, with limits, a reserve, daily reporting and an expiry, only if the committee allows it.</li>\n<li><b>What the strat must not do:</b> price on a spreadsheet that has not gone through the model process and call it approved, or book first and get approval after.</li>\n<li><b>What the strat provides:</b> the list of gaps (validation, correlation source, P&amp;L explain coverage), with an estimate of the time and the reserve for each.</li>\n</ul>\n<b>Interviewer follow-up:</b> the client says a competitor will quote on Monday anyway. The answer is the same: the desk does not earn the trade by skipping validation, and the reserve for an unvalidated structure can exceed the margin.",
+  "tags": [
+   "desk_practice",
+   "npa",
+   "model_governance",
+   "scenario",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A calibrated parameter, such as the Bermudan mean reversion, is a {{c1::marked input}} that drives the value. Its source, range and sensitivity must be documented, and a change to it is a {{c2::valuation change}} needing valuation control sign-off. If the change moves the parameter outside the {{c3::approved range}}, it is a model change.",
+  "back": "<b>Practical point:</b> the parameter is owned by the strat, reviewed by model risk, and reported with its standard error. Its uncertainty is a parameter reserve (see the 90% parameter AVA card), not a hidden choice inside the calibration code.",
+  "tags": [
+   "desk_practice",
+   "calibration",
+   "model_governance",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "On the same day, the trader asks to move the Bermudan mean reversion from 0.03 to 0.05 to match a broker quote. Walk through the governance response and the valuation check.",
+  "back": "<b>Headline:</b> the change is a valuation change with a model implication. It is not a trading adjustment, and it needs evidence and sign-off before it reaches the marks.<br>\n<ol>\n<li><b>Ask what the broker quote is.</b> A single quote for a Bermudan-related product is not a calibration target unless it is time-matched, executable, and on the same structure.</li>\n<li><b>Re-calibrate the surface</b> with the new parameter and check the calibration error on the co-terminal set. If the fit worsens, the change is not supported by the calibration.</li>\n<li><b>Quantify the move.</b> With an illustrative sensitivity of -£1.2m per 0.01 of mean reversion, moving by 0.02 is about \\(2 \\times 1.2 = £2.4\\text{m}\\), linear approximation only. Check the full revaluation.</li>\n<li><b>Decide:</b> if it is outside the approved range it is a model change. Otherwise valuation control signs off the change with the evidence, and the change is logged with the date.</li>\n</ol>\n<b>Interviewer follow-up:</b> the trader says the broker quote is the market. What is the answer? The market is the evidence, but one quote is not a calibration. The governance question is whether the quote is a stable, time-matched, executable price on the same structure.",
+  "tags": [
+   "desk_practice",
+   "calibration",
+   "model_governance",
+   "scenario",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "[Chain: CMS_L3 1/3] Context: a book of one £100m long 1y-expiry 10s2s CMS spread call, strike 1.00%. Forwards: 10y CMS 4.20%, 2y CMS 3.10%. Normal vols 100bp (10y) and 85bp (2y). Desk correlation 0.60. Discount factor 0.9615. Mark the trade and say why it is Level 3.<br>Explain the marking model and the result.",
+  "back": "<b>Headline:</b> marked at \\(\\text{PV} \\approx £371.9\\text{k}\\), which is 38.7bp of notional (Level 3, because the 10y-2y correlation has no observable market at this tenor).<br>\n<b>Spread forward and vol:</b> \\(F_s = 4.20\\% - 3.10\\% = 1.10\\%\\). Spread vol: \\(\\sigma_s = \\sqrt{\\sigma_1^2+\\sigma_2^2-2\\rho\\sigma_1\\sigma_2} = \\sqrt{1.00^2 + 0.85^2 - 2(0.60)(1.00)(0.85)}\\times 10^{-2} = 83.8\\)bp.<br>\n<b>Bachelier price:</b> \\(d = (F_s-K)/(\\sigma_s\\sqrt{T}) = 0.10/0.838 = 0.119\\). Price \\(= (F_s-K)\\Phi(d) + \\sigma_s\\sqrt{T}\\phi(d) = 0.10\\%\\times0.547 + 0.838\\%\\times0.396 \\approx 38.7\\)bp. PV \\(= 0.9615\\times£100\\text{m}\\times 0.00387 \\approx £371.9\\text{k}\\).<br>\n<b>Why Level 3:</b> the spread vol depends on the correlation, and the desk's \\(\\rho = 0.60\\) is an internal estimate. No tradeable, time-matched price pins it down. Convexity and measure adjustments are assumed to be in the forwards (approx.; state this in the model documentation).<br>\n<b>Interviewer follow-up:</b> what is the correlation sensitivity? About -£37k to -£39k per 0.10 of \\(\\rho\\) near 0.60, so the correlation is the main unobservable driver.",
+  "tags": [
+   "desk_practice",
+   "case_study",
+   "cms_spread",
+   "level3",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "[Chain: STALE_CDS 1/2] Context: a 5y single-name, the desk is short protection on $25m, with a 100bp contract coupon. The desk mark is 180bp, from a last trade three weeks ago. A broker IPV quote is 215bp. Compute the seller's MTM under both marks, and the IPV break.",
+  "back": "<b>Headline:</b> the break is about £351k, and the desk's stale mark is the problem.<br>\n<b>Method:</b> flat 4% discounting, recovery 40%, \\(\\lambda = s/(1-R)\\), quarterly premium with accrual on default. RPV01 is 4.20 at 180bp and 4.14 at 215bp.<br>\n<b>Seller MTM = -(s_mkt - s_contract) x RPV01 x N:</b> at 180bp, \\(-(0.80\\%)\\times 4.20\\times\\$25\\text{m} \\approx -\\$840\\text{k}\\). At 215bp, \\(-(1.15\\%)\\times 4.14\\times\\$25\\text{m} \\approx -\\$1.19\\text{m}\\).<br>\n<b>IPV break:</b> \\(\\$1.19\\text{m} - \\$0.84\\text{m} \\approx \\$351\\text{k}\\), which is about 35bp of spread on an RPV01 of about 4.2 with $25m. CS01 at 180bp is about $10.5k per bp.<br>\n<b>Interviewer follow-up:</b> the break is 35bp. Is the desk's mark the only stale point? Check the timestamps of both sides. A stale mark that moves only on an index move is wrong by the name-specific part, which is the next card.",
+  "tags": [
+   "desk_practice",
+   "case_study",
+   "cds",
+   "ipv",
+   "stale_mark",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "[Chain: WING 1/2] Context: month-end. The desk is long £1bn nominal of a 1y×10y payer swaption struck 200bp out of the money (forward 3.50%, strike 5.50%). Annuity 8.1, normal vol 100bp in the market. The desk's wing mark is 70bp, unchanged since an older vol regime. Compute the mismark and say what the vega approximation would have said.",
+  "back": "<b>Headline:</b> the wing is understated by about £652k on a full revaluation. A vega shortcut gives about £1.31m, which is roughly double, and that is the trap.<br>\n<b>Full revaluation:</b> at 100bp the value is \\(8.1\\times 0.0688\\%\\times £1\\text{bn} \\approx £688\\text{k}\\). At 70bp it is about £36k. The difference is about £652k.<br>\n<b>Vega shortcut:</b> at 100bp the vega is \\(A\\,N\\sqrt{T}\\,\\phi(d)\\) with \\(d = -2.0\\) and \\(\\phi(-2)=0.054\\), so about £43.7k per bp, times 30bp, gives £1.31m. The shortcut assumes vega stays at its 100bp value across the move. On a far out-of-the-money wing vega falls as vol falls, so the shortcut overstates the move.<br>\n<b>How it was found:</b> the month-end IPV compared the wing with a broker wing quote and with a smile fit, and both were about 30bp higher. The stale wing had carried the old regime through the strike grid.<br>\n<b>Interviewer follow-up:</b> why is the vega shortcut dangerous in a month-end P&amp;L? It is the number a trader will quote in the room, and it overstates the adjustment by about 2x for this move. Use full revaluation for mismarks that large.",
+  "tags": [
+   "desk_practice",
+   "case_study",
+   "vol",
+   "wing",
+   "month_end",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "[Chain: CMS_L3 2/3] Context: same £100m 10s2s spread call, desk mark 38.7bp (PV £371.9k at \\(\\rho = 0.60\\)). The independent evidence supports \\(\\rho = 0.60\\) with a standard error of 0.10. Size the correlation reserve at 90% one-sided, and say which side of the band it sits on.",
+  "back": "<b>Headline:</b> the reserve is about <b>£54k</b>, taken on the side that lowers the call's value, which is the higher-\\(\\rho\\) side.<br>\n<b>Bounds:</b> \\(\\rho \\pm 1.2816\\times0.10\\) gives 0.472 and 0.728.<br>\n<b>Full revaluation at the bounds:</b> at \\(\\rho = 0.728\\) the PV is about £317.9k, so the reserve is \\(£371.9\\text{k} - £317.9\\text{k} \\approx £54\\text{k}\\). At \\(\\rho = 0.472\\) the PV is about £418k, a gain of about £46k. The reserve is taken on the adverse side only.<br>\n<b>Why the sides differ:</b> the price is convex in \\(\\rho\\) through the spread vol, so the two bounds are not symmetric around the mark.<br>\n<b>Interviewer follow-up:</b> why not use the 0.45 to 0.75 band from the broker range? A range of quotes is a dispersion of views, not a statistical bound. State which one you used, and whether the consensus is inside it.",
+  "tags": [
+   "desk_practice",
+   "case_study",
+   "cms_spread",
+   "correlation",
+   "prudent_valuation",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "[Chain: CMS_L3 3/3] Context: the £54k correlation reserve on the call. The book has 40 more 10s2s spread options in other strikes, all marked on the same \\(\\rho\\). (a) How do you apportion the reserve across trades? (b) Does the reserve diversify across trades? (c) How does it unwind?",
+  "back": "<b>Headline:</b> one parameter, one uncertainty. Every trade that depends on the same \\(\\rho\\) adds to the same exposure and does not diversify against the others.<br>\n<ul>\n<li><b>(a) Measure at book level:</b> revalue the whole correlation-dependent book at the bounds, with full revaluation, not by scaling one trade. Apportion the book reserve to trades only for reporting, using each trade's share of the correlation sensitivity.</li>\n<li><b>(b) Diversification:</b> it applies only across independent uncertainties, for example a 10y-2y correlation and a separate, unrelated parameter. The same \\(\\rho\\) on forty trades is one uncertainty, not forty.</li>\n<li><b>(c) Unwind:</b> the reserve falls when a time-matched, executable price appears for the tenor, when a hedge with an observable instrument is put on, or when trades mature or terminate. Each release is documented and approved by valuation control.</li>\n</ul>\n<b>Interviewer follow-up:</b> a trader says the correlation is clearly 0.6 and wants no reserve. The answer: a view is not an observable input. The reserve stays until a time-matched source supports the view.",
+  "tags": [
+   "desk_practice",
+   "case_study",
+   "cms_spread",
+   "prudent_valuation",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "[Chain: STALE_CDS 2/2] Context: over the same three weeks the index moved +10bp. The desk's mark is 180bp, the broker quote is 215bp, and the desk's last trade is dated three weeks ago. Decompose the 35bp break and decide what to book.",
+  "back": "<b>Headline:</b> about 10bp of the move is market, and about 25bp is name-specific. The stale mark was not index-adjusted, and the quote needs a check before it is accepted.<br>\n<ul>\n<li><b>Index-driven part:</b> with an index beta of about 1 (approx.), the mark should have moved to 190bp. That is about \\(10\\text{bp}\\times4.2\\times\\$25\\text{m}\\approx \\$105\\text{k}\\) of the break.</li>\n<li><b>Name-specific residual:</b> about 25bp, roughly \\(25\\text{bp}\\times4.1\\times\\$25\\text{m}\\approx \\$260\\text{k}\\).</li>\n<li><b>Checks before booking:</b> is the broker quote dated today and from more than one dealer? Is there name news? Is the bond-CDS basis consistent with 215bp? If the quote is itself stale, it is not an IPV source.</li>\n<li><b>Decision:</b> if the quote is current and supported, adjust to 215bp and book the break through P&amp;L. If not, hold an IPV reserve on the residual and escalate the quote issue.</li>\n</ul>\n<b>Interviewer follow-up:</b> what is the risk of accepting the broker quote blindly? A single stale or off-market quote can move the mark by hundreds of thousands. Always check the quote's date and its source count.",
+  "tags": [
+   "desk_practice",
+   "case_study",
+   "cds",
+   "ipv",
+   "stale_mark",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "[Chain: WING 2/2] Context: the strikes 5.00%, 5.25% and 5.50% (25bp spacing) on the same 1y×10y expiry, with consistent normal vols 102bp, 101bp and 100bp, give a butterfly of about +5.1bp of notional. With the 5.50% wing at 70bp, the butterfly becomes negative. What does a negative butterfly tell you, and how does it change the mark?",
+  "back": "<b>Headline:</b> a negative butterfly means the surface implies a negative probability density. That is an arbitrage, so the wing is wrong, not merely a different view.<br>\n<b>Test:</b> for equally spaced strikes \\(K-h, K, K+h\\), the butterfly \\(C(K-h) - 2C(K) + C(K+h)\\) must be non-negative. Here \\(25.88 - 2\\times13.81 + 0.36 \\approx -1.4\\)bp of notional at 70bp, against \\(25.88-2\\times13.81+6.88 \\approx +5.1\\)bp when the wing is 100bp.<br>\n<b>What to do:</b> the wing mark must be corrected to a value that keeps the butterfly non-negative, and the correction is measured by full revaluation (see the previous card). A negative butterfly is a hard flag in the IPV, not a tolerance question.<br>\n<b>Interviewer follow-up:</b> the trader says the wing is \"illiquid, so the arbitrage check does not apply\". What is the answer? Illiquidity makes the value uncertain, but it does not make a negative-density surface valid. Use the arbitrage check as a boundary and reserve for the uncertainty inside the boundary.",
+  "tags": [
+   "desk_practice",
+   "case_study",
+   "vol",
+   "arbitrage",
+   "wing",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Five dealer quotes for the same 10y swap rate are 4.82%, 4.85%, 4.86%, 4.90% and 5.40%. Compute the mean, the median and the trimmed mean. Which would you use for IPV, and what do you do with the 5.40%?",
+  "back": "<b>Numbers:</b> mean \\(= 4.966\\%\\) (about 4.97%); median \\(= 4.86\\%\\); trimmed mean (drop the highest and lowest, average the middle three) \\(= 4.87\\%\\).<br>\n<b>Choice:</b> the outlier pulls the mean up by about 10bp from the median. A robust statistic is the median or a trimmed mean, set by the source policy. The trimmed mean keeps more information, the median is less sensitive to the choice of trim.<br>\n<b>The 5.40% quote:</b> do not average it in and do not silently drop it. Log it, check its timestamp and whether it is stale or off-market, and report the source's contribution. An outlier that is right is a signal of a regime move; one that is wrong is a data problem.<br>\n<b>Interviewer follow-up:</b> if you use the median, can the desk still be right when it sits between two dealers? Yes, but the median is a measure of a consensus, not of truth. The IPV conclusion still depends on the desk's trade evidence.",
+  "tags": [
+   "desk_practice",
+   "consensus",
+   "ipv",
+   "statistics",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "The desk snaps at 16:00 and the IPV source is struck at 17:00. The 2y swap rate moves 4bp between the two times, and the desk's 2y DV01 is £180k per bp. The break is £720k. How do you tell a timing break from a valuation break?",
+  "back": "<b>Headline:</b> re-mark the desk's book at the IPV source time. If the break disappears, it is timing, not valuation.<br>\n<ol>\n<li><b>Re-run the mark at 17:00</b> with the same model and the same inputs, using the market data available at that time. Compare with the source.</li>\n<li><b>Check the timestamps on both sides</b> and the intraday move in the 2y. A 4bp move means \\(4 \\times £180\\text{k} = £720\\text{k}\\) of exposure in the gap.</li>\n<li><b>Decompose the break:</b> timing (the move between snaps), data (a different curve or a different point) and valuation (model or convention). Only the last is a valuation issue.</li>\n<li><b>Fix the process, not the number:</b> a source struck at a different time from the snap is a control gap. Move the IPV to a time-matched source or change the snap by policy.</li>\n</ol>\n<b>Interviewer follow-up:</b> the desk says it is long and gained on the 4bp move, so the break is in its favour. Does that matter? It matters for the sign of the timing, but not for the test: the break is still a timing mismatch to explain.",
+  "tags": [
+   "desk_practice",
+   "snap",
+   "ipv",
+   "timing",
+   "scenario",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a normal uncertainty, the one-sided 90% quantile is {{c1::1.2816}} standard deviations and the two-sided 90% interval uses {{c2::1.6449}}. For a standard deviation of £1.5m, the one-sided 90% reserve is about {{c3::£1.92m}}, against about £2.47m two-sided.",
+  "back": "<b>Why it matters:</b> the number you quote must match the firm's and the rule's confidence convention. Using the two-sided quantile when the rule is one-sided over-reserves by about 28% for the same uncertainty. Confirm the definition in the rule text before quoting it (approx.; unverified here).",
+  "tags": [
+   "desk_practice",
+   "prudent_valuation",
+   "quantile",
+   "statistics",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A Bermudan swaption is Level 3. The independent price is £2.0m below the desk's mark, and the independent view uses a different mean reversion and a different set of co-terminal calibration vols. How do you split the £2.0m between market, parameter and model, and what is left unexplained?",
+  "back": "<b>Headline:</b> re-mark sequentially and attribute each step. The attribution depends on the order, so state the order and report the residual.<br>\n<ol>\n<li><b>Market step:</b> keep the desk's model and mean reversion, and replace the desk's calibration vols with the independent set. The change is the market effect.</li>\n<li><b>Parameter step:</b> apply the independent mean reversion on top. The change is the parameter effect.</li>\n<li><b>Model step:</b> apply the independent model (or the independent implementation) on top. The change is the model effect.</li>\n<li><b>Residual:</b> whatever is left after the three steps is unexplained. Hold a reserve for it until it is explained.</li>\n</ol>\n<b>Interviewer follow-up:</b> does the order matter? Yes. Market first and parameter second gives a different split from parameter first and market second, because the effects interact. Report the order, and show the interaction term as its own line if it is material.",
+  "tags": [
+   "desk_practice",
+   "ipv",
+   "bermudan",
+   "attribution",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A desk's model is above the challenger by £0.5m on Bermudan trade A, and below it by £0.3m on Bermudan trade B. Is the model reserve £0.8m, £0.5m or £0.2m?",
+  "back": "<b>Headline:</b> the answer depends on whether the two trades can be closed out together. For two bespoke Bermudans they usually cannot, so the reserve is the adverse-side sum per trade: £0.5m (only the adverse difference on A).<br>\n<ul>\n<li><b>Gross of favourable differences (£0.8m):</b> too conservative, because it reserves the desk's favourable side, which is not a loss.</li>\n<li><b>Netted (£0.2m):</b> only valid if the trades offset each other in a close-out, for example the same instrument on opposite sides.</li>\n<li><b>Adverse-only per trade (£0.5m):</b> the usual prudent answer where the trades cannot be netted. Confirm the firm's policy (approx.).</li>\n</ul>\n<b>Interviewer follow-up:</b> why not offset in the book, since the desk's net P&amp;L is £0.2m? Because the reserve is an exit cost, and an exit of trade A does not carry trade B's gain with it.",
+  "tags": [
+   "desk_practice",
+   "model_reserve",
+   "netting",
+   "prudent_valuation",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why can't the IPV tolerance be used as the valuation reserve for an illiquid point?",
+  "back": "<b>Headline:</b> the tolerance is a break-detection threshold, and the reserve is a measure of the uncertainty of the value. They answer different questions.<br>\n<ul>\n<li><b>The tolerance</b> says whether two sources disagree enough to investigate. A mark inside the tolerance can still be uncertain by much more than the tolerance, for example when both sources are indicative.</li>\n<li><b>The reserve</b> measures how far the true exit value could be from the mark, at a stated confidence level, using the uncertainty distribution of the input.</li>\n<li><b>Consequence:</b> a point that passes IPV every day can carry a large reserve. A point that breaks once can carry a small one, after it is resolved.</li>\n</ul>\n<b>Interviewer follow-up:</b> the desk argues that because the mark passed IPV it needs no reserve. What is the answer? IPV tests agreement with another source. It does not test the exit cost, the model risk or the parameter uncertainty, which need their own reserves.",
+  "tags": [
+   "desk_practice",
+   "ipv",
+   "prudent_valuation",
+   "concept",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two parameter reserves on the same Bermudan are £1.2m for mean reversion and £0.9m for vol-of-vol, each at 90% one-sided. The naive total is £2.1m. What is the combined reserve, and what depends on it?",
+  "back": "<b>Headline:</b> the naive sum assumes the two parameter errors move the value in the same direction with full correlation. The combined reserve depends on the correlation of the two value effects.<br>\nUnder a normal approximation, \\(\\text{AVA}=\\sqrt{a^2+b^2+2\\rho ab}\\) with \\(a=1.2\\), \\(b=0.9\\):<ul>\n<li>If the value effects offset (\\(\\rho=-0.6\\)): \\(\\sqrt{2.25 - 1.30} \\approx £0.98\\text{m}\\).</li>\n<li>If they add (\\(\\rho=+0.6\\)): \\(\\sqrt{2.25 + 1.30} \\approx £1.88\\text{m}\\).</li>\n<li>Naive sum: £2.1m, which is the most conservative and is only right at \\(\\rho=+1\\).</li>\n</ul>\n<b>Interviewer follow-up:</b> what decides \\(\\rho\\)? The sign and size of the two sensitivities across the calibration errors. Estimate it from the calibration covariance, not by assumption, and document it (approx.; the firm's approved aggregation governs).",
+  "tags": [
+   "desk_practice",
+   "parameter_uncertainty",
+   "prudent_valuation",
+   "aggregation",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "At month end a CMS spread book moves from Level 2 to Level 3, because the broker screen that gave the spread vol has been withdrawn. What are the accounting, valuation and governance consequences?",
+  "back": "<b>Headline:</b> the book's fair value does not change, but the evidence behind it does, and that changes the disclosure, the reserves and the approval status.<br>\n<ul>\n<li><b>Accounting:</b> the instrument is reclassified to Level 3 under IFRS 13. Transfers between levels are disclosed (approx.; check the reporting requirement). The day-one deferral analysis is revisited for any trades that were booked on a Level 2 basis.</li>\n<li><b>Valuation:</b> the unobservable input now needs a documented source, a reserve for its uncertainty, and an IPV plan that is not just a broker screen.</li>\n<li><b>Governance:</b> the model's usage scope is checked against the new evidence. If the approval assumed the screen, the approval is no longer valid for this use until it is re-reviewed.</li>\n<li><b>Reporting:</b> the Level 3 share rises, and the desk must explain the move in the monthly risk and valuation pack.</li>\n</ul>\n<b>Interviewer follow-up:</b> is the desk allowed to move the book back to Level 2 when the screen returns? Only with the same evidence standard: an observable, time-matched source that supports the input as significant and observable.",
+  "tags": [
+   "desk_practice",
+   "ifrs13",
+   "level3",
+   "month_end",
+   "governance",
+   "lvl_stretch"
+  ]
+ }
+]
