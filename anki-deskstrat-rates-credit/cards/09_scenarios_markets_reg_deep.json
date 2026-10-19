@@ -1,347 +1,347 @@
 [
-  {
-    "type": "basic",
-    "front": "<b>[Chain: RFQ_GILT 1/5]</b> Context: a client sells £50m nominal of a 10y gilt (modified duration about 8.0, so cash DV01 about £40k/bp) to the dealer. Mid yield is 4.20%.<br><br>How do you price the bid, and what are the components of the spread to mid?",
-    "back": "<b>Answer:</b> the bid yield is mid plus a half-spread, plus the marginal inventory cost of the trade, plus any adverse-selection premium. Price follows from yield through the bond's price-yield formula.<br><br>\n<ul>\n<li><b>Half-spread:</b> the dealer's gross round-trip cost, split per side. Assume 0.5bp.</li>\n<li><b>Marginal inventory cost:</b> the change in inventory cost caused by this trade. Assume 0.5bp (see step 2).</li>\n<li><b>Adverse-selection premium:</b> widened for clients with negative markouts (see step 5). Zero here.</li>\n</ul>\nResult: the dealer buys at 4.21%, which is 1.0bp above mid. The client's cost against mid is \\(1.0 \\times 40{,}000 = \\pounds 40\\text{k}\\).<br><br>\n<b>Interviewer follow-up:</b> Why does the price move by yield times DV01 and not by a price tick? Because the DV01 is the price sensitivity per bp of yield, so a 1bp yield concession is worth about DV01 in cash.",
-    "tags": [
-      "rfq_gilt",
-      "chain",
-      "gilts",
-      "execution",
-      "desk_strat"
-    ]
-  },
-  {
-    "type": "basic",
-    "front": "<b>[Chain: RFQ_GILT 2/5]</b> Context: the dealer in step 1 is already long £60m of this gilt and buys another £50m, so post-trade it is long £110m. The bid is 4.21%.<br><br>How does inventory enter the quote? Use an Avellaneda-Stoikov style skew and compute the marginal part for this trade.",
-    "back": "<b>Answer:</b> inventory shifts the reservation yield linearly in position: \\(r(q) = \\text{mid} + k\\,q\\). Assume \\(k = 0.01\\)bp per £1m of net long nominal, so the skew is 0.6bp at £60m and 1.1bp at £110m.<br><br>\n<ul>\n<li><b>Pre-trade skew:</b> 0.6bp, already held in the book's mark. It is not charged again on this trade.</li>\n<li><b>Post-trade skew:</b> 1.1bp.</li>\n<li><b>Marginal cost of the trade:</b> \\(1.1 - 0.6 = 0.5\\)bp. Add this to the 0.5bp half-spread for a total of 1.0bp, which matches step 1.</li>\n</ul>\nA long inventory raises the yield the dealer will quote, because the dealer is paid more to hold more risk. This is the Avellaneda-Stoikov reservation price, \\(r = s - q\\gamma\\sigma^2(T-t)\\), written in yield terms with the sign flipped.<br><br>\n<b>Interviewer follow-up:</b> Why charge the marginal skew rather than the full skew? The existing inventory is sunk for this trade. Charging the full skew would double-count a cost already in the mark, and would quote the client a price that does not depend on the size they trade.",
-    "tags": [
-      "rfq_gilt",
-      "chain",
-      "inventory",
-      "skew",
-      "market_making"
-    ]
-  },
-  {
-    "type": "basic",
-    "front": "<b>[Chain: RFQ_GILT 3/5]</b> Context: the dealer bought £50m of 10y gilts at 4.21%, adding £40k/bp of long DV01. It hedges that trade with 10y gilt futures, which have an assumed DV01 of £85 per contract (approximate, CTD-based).<br><br>How many contracts, and in which direction? What risk does a DV01-matched hedge leave behind?",
-    "back": "<b>Answer:</b> sell \\(40{,}000 / 85 = 470.6\\), so sell <b>471</b> contracts. That is about £47.1m of futures notional at £100k per contract. The short futures offset the long cash.<br><br>\nResidual risk after DV01 matching:\n<ul>\n<li><b>Basis:</b> the cash bond does not move one-for-one with the CTD-based future. Cash minus CF times futures changes when the bond cheapens or richens against the CTD.</li>\n<li><b>CTD switch:</b> the future reprices when a different bond becomes cheapest to deliver.</li>\n<li><b>Convexity and DV01 drift:</b> a DV01 match is exact only for a small parallel move at the moment of hedging.</li>\n<li><b>Funding:</b> the cash position is repo-funded, and the futures carry a different financing implicit in the conversion factor.</li>\n</ul>\n<b>Interviewer follow-up:</b> Could you hedge with the CTD cash bond instead? Yes, and that tracks better, but shorting the CTD costs specialness in repo and is harder to source at size.",
-    "tags": [
-      "rfq_gilt",
-      "chain",
-      "futures",
-      "hedge_ratio",
-      "gilts"
-    ]
-  },
-  {
-    "type": "basic",
-    "front": "<b>[Chain: RFQ_GILT 4/5]</b> Context: the dealer is long £50m of the traded gilt (DV01 £40k/bp) and short 471 futures (DV01 £85 each). The traded gilt is not the CTD. The market yield is unchanged, but the traded gilt cheapens by 1.5bp against the CTD-implied yield.<br><br>What is the P&L, and how do you measure the hedge's effectiveness over time?",
-    "back": "<b>Answer:</b> the parallel hedge is flat, so the loss is the relative move times cash DV01: \\(1.5 \\times 40{,}000 = \\pounds 60\\text{k}\\).<br><br>\nMeasurement:\n<ul>\n<li>Basis \\(B = P_\\text{cash} - CF \\cdot F\\). Its daily change is the hedge error.</li>\n<li>Hedge effectiveness: regress daily cash-yield changes on futures-yield changes. A beta near 1 and a high \\(R^2\\) mean the hedge is working. The residual variance is the basis risk.</li>\n<li>Track the basis by component (repo specialness, CTD identity, delivery-option value). A mismatch in one of these explains most of the unhedged variance.</li>\n</ul>\n<b>Interviewer follow-up:</b> Is a 1.5bp relative move big? For a 10y gilt against its CTD it is a meaningful move on an illiquid name. The desk should size it against the stated limit for basis risk, not against the parallel DV01.",
-    "tags": [
-      "rfq_gilt",
-      "chain",
-      "basis",
-      "hedge_effectiveness",
-      "gilts"
-    ]
-  },
-  {
-    "type": "basic",
-    "front": "<b>[Chain: RFQ_GILT 5/5]</b> Context: the client sold £50m at 4.21% (dealer bought, dealer edge +1bp against the 4.20% mid at trade). The mid then moves to 4.22% after 5 minutes and 4.23% after 30 minutes. The futures hedge was executed at the time of the trade.<br><br>Compute the 5-minute and 30-minute markouts, unhedged and hedged. What does the result say about this client?",
-    "back": "<b>Answer:</b> a markout is the change in the mid after the trade, signed from the dealer's position. The dealer is long, so a rise in yield is a loss.<br><br>\n<ul>\n<li><b>Edge at trade:</b> +1bp, which is \\(+\\pounds 40\\text{k}\\).</li>\n<li><b>5-minute markout, unhedged:</b> yield up 1bp, so \\(-1\\)bp \\(= -\\pounds 40\\text{k}\\). Net edge after markout is zero.</li>\n<li><b>5-minute markout, hedged:</b> the short futures gain about the same, so the hedged markout is near zero. Hedged markouts isolate the basis and hedge latency, not the client's information.</li>\n<li><b>30-minute markout, unhedged:</b> yield up 2bp in total, so \\(-\\pounds 80\\text{k}\\) cumulative.</li>\n</ul>\nUse the unhedged markout to judge information, because the client's order carries the signal. Use the hedged markout to judge execution quality.<br><br>\n<b>Interviewer follow-up:</b> How do you separate hedging latency from information? Compare markouts at sub-second and few-second horizons (latency) with 5- to 30-minute horizons (information). Latency shows up early and decays; information builds over time.",
-    "tags": [
-      "rfq_gilt",
-      "chain",
-      "tca",
-      "markouts",
-      "adverse_selection"
-    ]
-  },
-  {
-    "type": "basic",
-    "front": "<b>[Chain: FRTB_SBM 1/4]</b> Context: a GBP interest-rate delta bucket has two weighted sensitivities, \\(WS_{2y} = +\\pounds 10\\text{m}\\) and \\(WS_{10y} = -\\pounds 8\\text{m}\\), and tenor correlation \\(\\rho = 0.9\\). These are illustrative values, not official risk weights or correlations.<br><br>Compute the bucket's delta charge, and explain why the offset is smaller than the simple sum of the two.",
-    "back": "<b>Answer:</b> \\(K_b = \\sqrt{WS_1^2 + WS_2^2 + 2\\rho\\,WS_1 WS_2} = \\sqrt{100 + 64 - 2(0.9)(80)} = \\sqrt{20} \\approx \\pounds 4.47\\text{m}\\).<br><br>\n<ul>\n<li>Simple sum of absolute values: \\(10 + 8 = \\pounds 18\\text{m}\\). This is the ceiling if correlations were 1 and signs were the same.</li>\n<li>Full netting: \\(|10 - 8| = \\pounds 2\\text{m}\\). This is the floor when \\(\\rho = 1\\) and the signs are opposite.</li>\n<li>The charge sits between these because \\(\\rho = 0.9 < 1\\) lets the two legs partly diversify.</li>\n</ul>\nSanity check: with the same signs and \\(\\rho = 0.9\\), \\(K = \\sqrt{164 + 144} \\approx \\pounds 17.6\\text{m}\\), which is below the simple sum of \\(\\pounds 18\\text{m}\\). The formula reduces to the simple sum only at \\(\\rho = 1\\).<br><br>\n<b>Interviewer follow-up:</b> Why is the charge not zero for a DV01-neutral steepener? A 2s10s steepener can be DV01-neutral and still leave a non-zero charge, because the curve move that matters is the decorrelation between tenors, not the parallel move.",
-    "tags": [
-      "frtb_sbm",
-      "chain",
-      "delta",
-      "capital",
-      "regulation"
-    ]
-  },
-  {
-    "type": "basic",
-    "front": "<b>[Chain: FRTB_SBM 2/4]</b> Context: the same bucket as step 1 (\\(WS_{2y} = +\\pounds 10\\text{m}\\), \\(WS_{10y} = -\\pounds 8\\text{m}\\), base \\(\\rho = 0.9\\)). The SBM computes charges under three correlation scenarios and takes the largest.<br><br>State the scenario correlations, compute each charge, and say which scenario binds. Then say which scenario binds for a same-sign book.",
-    "back": "<b>Answer:</b> the correlation scenarios are (verify exact wording in the MAR21 text before use):\n<ul>\n<li>Low: \\(\\rho_\\text{low} = \\max(2\\rho - 1,\\ 0.75\\rho) = \\max(0.80,\\ 0.675) = 0.80\\), giving \\(K_\\text{low} = \\sqrt{164 - 2(0.8)(80)} = \\sqrt{36} = \\pounds 6.0\\text{m}\\).</li>\n<li>Medium: \\(\\rho = 0.9\\), giving \\(\\pounds 4.47\\text{m}\\).</li>\n<li>High: \\(\\rho_\\text{high} = \\min(1.25\\rho,\\ 1) = 1.0\\), giving \\(\\sqrt{164 - 160} = \\pounds 2.0\\text{m}\\).</li>\n</ul>\nThe low-correlation scenario binds (\\(\\pounds 6.0\\text{m}\\)) because it weakens the offset between opposite-sign legs. For a same-sign book the sign of the cross term flips, so the high scenario gives the largest charge: \\(\\rho = 1\\) and same signs give \\(\\sqrt{164+160}\\) at \\(\\rho=1\\), or \\(\\pounds 18\\text{m}\\). The low scenario gives \\(\\sqrt{164+128} \\approx \\pounds 17.1\\text{m}\\), so high binds.<br><br>\n<b>Interviewer follow-up:</b> Why does the regulator use max over scenarios instead of the base correlation? To stop a desk from choosing its own correlation. The max forces a conservative charge for whichever side of the correlation uncertainty hurts the book.",
-    "tags": [
-      "frtb_sbm",
-      "chain",
-      "correlation",
-      "scenarios",
-      "capital"
-    ]
-  },
-  {
-    "type": "basic",
-    "front": "<b>[Chain: FRTB_SBM 3/4]</b> Context: the SBM has delta, vega and curvature charges. Consider a short-option position in the same rates factor whose delta is already hedged with futures, so that net delta is zero and the book has negative gamma.<br><br>Define the curvature risk variables \\(CVR^{\\pm}\\). Why does a delta-hedged short-gamma book still attract a curvature charge?",
-    "back": "<b>Answer:</b> \\(CVR^{\\pm}\\) is the P&amp;L under an up or down shock in the risk factor, with the first-order (delta) part removed:\n\\[ CVR^{\\pm} = V(x \\pm \\text{shock}) - V(x) - \\delta \\cdot (\\pm\\text{shock}). \\]\nFor a delta-hedged book, \\(\\delta = 0\\) at the current point, so \\(CVR^{\\pm} \\approx \\tfrac12 \\Gamma (\\text{shock})^2\\). With \\(\\Gamma < 0\\), both \\(CVR^{+}\\) and \\(CVR^{-}\\) are negative, which is a loss in either direction.<br><br>\nThe charge is driven by the worse of the two shocks, and a futures hedge cannot remove the second-order loss, because futures have zero gamma. Only an offsetting option position with the same risk factor reduces the charge.<br><br>\n<b>Interviewer follow-up:</b> Why is the delta hedge not enough? Delta hedges remove the first-order move. Curvature is a second-order exposure, so only instruments with matching convexity offset it.",
-    "tags": [
-      "frtb_sbm",
-      "chain",
-      "curvature",
-      "gamma",
-      "capital"
-    ]
-  },
-  {
-    "type": "basic",
-    "front": "<b>[Chain: FRTB_SBM 4/4]</b> Context: a rates desk uses the internal model approach (IMA) for market-risk capital. Its risk-theoretical P&amp;L (RTPL) fails the P&amp;L attribution test (PLA) for the desk: the Spearman correlation falls below the green threshold of about 0.8.<br><br>What happens to the desk's capital, and what must the desk do operationally?",
-    "back": "<b>Answer:</b> the desk loses IMA eligibility for capital and reverts to the standardised approach (SA) for that desk until it passes the test again. The capital effect can be large.<br><br>\nIllustrative numbers (not official): IMA expected-shortfall capital of £40m against SA capital of £110m. The extra £70m at a 12% cost of equity costs about \\(70 \\times 0.12 = \\pounds 8.4\\text{m}\\) per year.<br><br>\nOperational response:\n<ul>\n<li>Diagnose the gap between hypothetical P&amp;L (HPL) and RTPL. Common causes are missing risk factors, different pricing or bump conventions, and intraday trades.</li>\n<li>Fix the model rather than only adding capital. Re-admission requires passing the test again, so the desk must show the fix works on the data.</li>\n</ul>\n<b>Interviewer follow-up:</b> Why does failing the PLA matter more than a backtesting exception? Backtesting tests the model's VaR or ES against realised loss. PLA tests whether the risk model describes the desk's actual P&amp;L drivers, so a failure removes the model from the capital calculation for the desk.",
-    "tags": [
-      "frtb_sbm",
-      "chain",
-      "pla",
-      "ima",
-      "regulation"
-    ]
-  },
-  {
-    "type": "basic",
-    "front": "<b>[Chain: VOL_MARGIN 1/5]</b> Context: a rates book with DV01 of £800k/bp has CCP initial margin (IM) of £120m at a normal vol of 90bp/yr. Implied vol jumps to 130bp/yr.<br><br>Estimate the new IM, assuming IM is linear in vol. What is the same-day cash call from IM alone?",
-    "back": "<b>Answer:</b> IM scales with vol, so \\(120 \\times 130/90 = \\pounds 173.3\\text{m}\\). The increase is \\(\\pounds 53.3\\text{m}\\), or +44%.<br><br>\nCaveats:\n<ul>\n<li>Linearity holds only for a linear book. Options add gamma, so IM can rise faster than vol near strikes.</li>\n<li>IM uses a stressed look-back and a quantile, so the response to a vol jump lags and can be lumpy when the look-back window rolls.</li>\n<li>Margin is not a loss. It is collateral against future close-out, and it is a liquidity shock even when MTM is unchanged.</li>\n</ul>\n<b>Interviewer follow-up:</b> Why is this a liquidity problem and not a loss? The P&amp;L on the position has not changed. The desk must post cash now against a risk estimate, so the cost is funding and forced sales, not a realised loss.",
-    "tags": [
-      "vol_margin",
-      "chain",
-      "ccp",
-      "initial_margin",
-      "liquidity"
-    ]
-  },
-  {
-    "type": "basic",
-    "front": "<b>[Chain: VOL_MARGIN 2/5]</b> Context: the desk in step 1 faces a £53.3m increase in IM. The same day, a 25bp rally adds variation margin on DV01 £800k/bp, which is £20m.<br><br>What is the total same-day cash call, and how does margin create a procyclical feedback loop?",
-    "back": "<b>Answer:</b> total call \\(= 53.3 + 20.0 = \\pounds 73.3\\text{m}\\), paid in cash, typically the same day.<br><br>\nFeedback loop:\n<ol>\n<li>Vol rises, so IM rises across the market.</li>\n<li>Participants raise cash by selling liquid bonds and unwinding basis trades.</li>\n<li>Selling lowers prices, so holders who are long the sold bonds post more variation margin.</li>\n<li>The lower prices and wider spreads raise realised vol, which feeds back into the IM look-back.</li>\n</ol>\nEach step is individually rational. The loop is procyclical because the margin rule takes the stressed state as an input to the collateral it demands.<br><br>\n<b>Interviewer follow-up:</b> Why isn't the CCP at fault? The margin model is correct for one member facing a stressed close-out. The problem is the aggregate, when many members sell into the same market at the same time.",
-    "tags": [
-      "vol_margin",
-      "chain",
-      "ccp",
-      "procyclicality",
-      "margin"
-    ]
-  },
-  {
-    "type": "basic",
-    "front": "<b>[Chain: VOL_MARGIN 3/5]</b> Context: several leveraged holders must raise cash at once. They sell £500m of 10y gilts into a thin market, and yields rise 10bp in the session. Modified duration is 8.0.<br><br>What is the mark-to-market loss on the £500m sold, and why does a forced seller hurt holders who did not sell?",
-    "back": "<b>Answer:</b> the price falls by about \\(8.0 \\times 0.10\\% = 0.8\\%\\), so the loss on £500m is \\(\\pounds 4.0\\text{m}\\). This is the dash for cash: forced sales lower prices and raise yields for everyone.<br><br>\nSecond-round effects:\n<ul>\n<li><b>Other holders:</b> the same 10bp rise is a mark-to-market loss on their bonds. Their variation margin and collateral calls rise.</li>\n<li><b>Liquidity:</b> dealers widen bid-offer and cut balance-sheet capacity when inventory rises, so the market is thinner than the last price suggests.</li>\n<li><b>Hedges:</b> basis and swap-spread positions that were hedged assuming stable repo can move against holders.</li>\n</ul>\n<b>Interviewer follow-up:</b> Why is the first-round loss of £4.0m not the whole story? The fall in price raises margin calls and forces further sales. The first-round loss is a lower bound on the cost to the system.",
-    "tags": [
-      "vol_margin",
-      "chain",
-      "dash_for_cash",
-      "liquidity",
-      "fire_sale"
-    ]
-  },
-  {
-    "type": "basic",
-    "front": "<b>[Chain: VOL_MARGIN 4/5]</b> Context: a fund finances £500m of gilts in repo. As vol rises, the haircut on the collateral moves from 2% to 8%, and the repo spread widens by 50bp on the £400m it borrows (the rest is funded by equity).<br><br>How much extra equity does the haircut require, and what does the spread cost per day? Which of the two matters more in a dislocation?",
-    "back": "<b>Answer:</b>\n<ul>\n<li><b>Haircut:</b> the extra equity is \\(500 \\times (8\\% - 2\\%) = \\pounds 30\\text{m}\\). This is a cash need, not a rate.</li>\n<li><b>Spread:</b> \\(400\\text{m} \\times 0.50\\% / 365 \\approx \\pounds 5.5\\text{k}\\) per day, or about \\(\\pounds 164\\text{k}\\) over 30 days.</li>\n</ul>\nThe haircut matters more. Repo dislocation is mostly a quantity problem: lenders withdraw or raise haircuts, and the cash has to come from somewhere. The rate change is small in P&amp;L.<br><br>\n<b>Interviewer follow-up:</b> Why do haircuts rise in stress? Lenders set haircuts from collateral volatility and liquidity. Both rise in a sell-off, so haircuts are procyclical in the same way as IM.",
-    "tags": [
-      "vol_margin",
-      "chain",
-      "repo",
-      "haircuts",
-      "funding"
-    ]
-  },
-  {
-    "type": "basic",
-    "front": "<b>[Chain: VOL_MARGIN 5/5]</b> Context: the stress scenario from the chain: IM rises £53.3m, a 25bp rally adds £20m of VM, and the repo haircut add-on on £500m is £30m.<br><br>How do you size a liquidity buffer for this scenario, and why should the buffer be held as cash or central-bank-eligible collateral rather than as repo capacity?",
-    "back": "<b>Answer:</b> the buffer is \\(53.3 + 20.0 + 30.0 = \\pounds 103.3\\text{m}\\), before any margin for the time it takes to raise cash.<br><br>\nTrade-offs:\n<ul>\n<li><b>Cash:</b> certain, but earns below the funding rate, so carrying it costs the spread between the two.</li>\n<li><b>Repo capacity:</b> cheap in normal times, but it disappears in the same stress that triggers the calls. Haircuts rise and lenders withdraw together. A buffer that relies on repo fails when it is needed.</li>\n<li><b>Eligible collateral:</b> can be repo'd or pledged at a central bank in some regimes, but the eligibility rules and haircuts are the same rules that move in stress, so it is a partial hedge.</li>\n</ul>\n<b>Interviewer follow-up:</b> What is the correlation problem? The calls, the haircut increase and the loss of repo all come from the same vol shock. A buffer sized as if they were independent understates the need.",
-    "tags": [
-      "vol_margin",
-      "chain",
-      "liquidity_buffer",
-      "stress",
-      "funding"
-    ]
-  },
-  {
-    "type": "basic",
-    "front": "<b>Derivation: Avellaneda-Stoikov reservation price.</b> A dealer has wealth \\(x\\), inventory \\(q\\) (units), and mid price \\(s_t\\) with \\(ds = \\sigma\\,dW\\). There are no further fills in the window. Utility is CARA, \\(u(w) = -e^{-\\gamma w}\\), with risk aversion \\(\\gamma\\). Let \\(\\tau = T - t\\). Derive the indifference bid and ask, and their midpoint.",
-    "back": "<b>Step 1 (terminal wealth).</b> With no further trades, \\(X_T = x + q s_T\\). Since \\(s_T - s_t\\) is Gaussian with variance \\(\\sigma^2\\tau\\),\n\\[ \\mathbb{E}\\big[-e^{-\\gamma X_T}\\,\\big|\\,\\mathcal{F}_t\\big] = -\\exp\\!\\big(-\\gamma(x+qs_t) + \\tfrac12\\gamma^2q^2\\sigma^2\\tau\\big). \\]\n<b>Step 2 (indifference bid).</b> The dealer is indifferent to buying one unit at \\(r_b\\) when \\(u(x - r_b,\\ q+1,\\ s) = u(x,\\ q,\\ s)\\) in expectation. Equate exponents:\n\\[ -\\gamma(x - r_b + (q+1)s) + \\tfrac12\\gamma^2(q+1)^2\\sigma^2\\tau = -\\gamma(x+qs) + \\tfrac12\\gamma^2q^2\\sigma^2\\tau. \\]\nThis gives \\(r_b = s - \\tfrac12\\gamma(2q+1)\\sigma^2\\tau\\).<br>\n<b>Step 3 (indifference ask).</b> For selling one unit at \\(p\\), the same argument gives \\(p = s - \\tfrac12\\gamma(2q-1)\\sigma^2\\tau\\).<br>\n<b>Step 4 (width).</b> \\(p - r_b = \\gamma\\sigma^2\\tau\\), independent of \\(q\\).<br>\n<b>Step 5 (midpoint).</b> \\(\\tfrac12(p + r_b) = s - q\\gamma\\sigma^2\\tau\\). This is the reservation price \\(r = s - q\\gamma\\sigma^2(T-t)\\).<br><br>\nNumbers: \\(\\sigma = 2\\) per root-day, \\(\\gamma = 0.01\\), \\(\\tau = 0.25\\) day, \\(q = +3\\). Then \\(r = s - 0.03\\) and the indifference width is \\(0.01\\).<br><br>\n<b>Where it breaks:</b> constant \\(\\sigma\\), Gaussian mid with no drift, and no fills. Fills change wealth and add the arrival term, which is the next derivation.",
-    "tags": [
-      "avellaneda_stoikov",
-      "derivation",
-      "market_making",
-      "utility"
-    ]
-  },
-  {
-    "type": "basic",
-    "front": "<b>Derivation: Avellaneda-Stoikov half-spread with fill arrivals.</b> A fill at distance \\(\\delta\\) from the reservation price arrives as a Poisson event with intensity \\(\\lambda(\\delta) = A e^{-k\\delta}\\). Under CARA, the utility gain of a sure cash amount \\(G\\), in cash units, is \\((1-e^{-\\gamma G})/\\gamma\\). The dealer maximises \\(f(\\delta) = A e^{-k\\delta}(1-e^{-\\gamma\\delta})/\\gamma\\) per unit time. Find the optimal \\(\\delta^*\\), and the total quoted spread.",
-    "back": "<b>Step 1 (objective).</b> \\(f(\\delta) = \\frac{A}{\\gamma}\\, e^{-k\\delta}\\,(1 - e^{-\\gamma\\delta})\\).<br>\n<b>Step 2 (first-order condition).</b> \\(f'(\\delta) = \\frac{A}{\\gamma}\\big[-k e^{-k\\delta}(1-e^{-\\gamma\\delta}) + \\gamma e^{-k\\delta}e^{-\\gamma\\delta}\\big] = 0\\). Dividing by \\(\\frac{A}{\\gamma} e^{-k\\delta}\\):\n\\[ k(1 - e^{-\\gamma\\delta}) = \\gamma e^{-\\gamma\\delta} \\;\\Rightarrow\\; e^{-\\gamma\\delta} = \\frac{k}{k+\\gamma}. \\]\n<b>Step 3 (solve).</b> \\(\\delta^* = \\tfrac{1}{\\gamma}\\ln\\!\\big(1 + \\tfrac{\\gamma}{k}\\big)\\).<br>\n<b>Step 4 (risk-neutral limit).</b> As \\(\\gamma \\to 0\\), \\(\\tfrac{1}{\\gamma}\\ln(1+\\gamma/k) \\to 1/k\\). This matches maximising \\(\\delta e^{-k\\delta}\\), which gives \\(\\delta = 1/k\\).<br>\n<b>Step 5 (total spread).</b> Add the two sides and the reservation-price width from the previous derivation:\n\\[ \\delta^a + \\delta^b = \\tfrac{2}{\\gamma}\\ln\\!\\big(1+\\tfrac{\\gamma}{k}\\big) + \\gamma\\sigma^2(T-t). \\]\nNumbers: \\(\\gamma = 0.1\\), \\(k = 1.5\\). Then \\(\\delta^* = 0.645\\) against \\(1/k = 0.667\\).<br><br>\n<b>Where it breaks:</b> the decoupling of the fill value from the inventory risk is an approximation. The additive split of the spread is exact only in a regime where the inventory-risk term is small relative to the arrival term. The fill curve (\\(A\\), \\(k\\)) is assumed exponential, which is an estimate and not a law.",
-    "tags": [
-      "avellaneda_stoikov",
-      "derivation",
-      "market_making",
-      "spread"
-    ]
-  },
-  {
-    "type": "basic",
-    "front": "<b>Derivation: Almgren-Chriss optimal liquidation path (linear temporary impact).</b> Sell \\(X\\) shares over \\([0,T]\\). Inventory is \\(x(t)\\), with \\(x(0)=X\\) and \\(x(T)=0\\). Trading rate is \\(v = -\\dot x\\). Temporary impact costs \\(\\eta v\\) per share, so expected impact cost is \\(\\eta\\int v^2\\,dt\\). The price is Brownian with vol \\(\\sigma\\), so the variance of the remaining position is \\(\\sigma^2\\int x^2\\,dt\\). Minimise \\(\\mathbb{E}[\\text{cost}] + \\lambda\\,\\text{Var}\\). Derive \\(x(t)\\).",
-    "back": "<b>Step 1 (functional).</b> \\(J[x] = \\int_0^T (\\eta\\dot x^2 + \\lambda\\sigma^2 x^2)\\,dt\\).<br>\n<b>Step 2 (Euler-Lagrange).</b> With \\(L = \\eta\\dot x^2 + \\lambda\\sigma^2x^2\\), \\(\\frac{d}{dt}\\frac{\\partial L}{\\partial\\dot x} = \\frac{\\partial L}{\\partial x}\\) gives \\(2\\eta\\ddot x = 2\\lambda\\sigma^2 x\\), so \\(\\ddot x = \\kappa^2 x\\) with \\(\\kappa^2 = \\lambda\\sigma^2/\\eta\\).<br>\n<b>Step 3 (general solution).</b> \\(x(t) = A\\cosh\\kappa t + B\\sinh\\kappa t\\).<br>\n<b>Step 4 (boundary conditions).</b> \\(x(0) = X\\) and \\(x(T)=0\\) give\n\\[ x(t) = X\\,\\frac{\\sinh\\big(\\kappa(T-t)\\big)}{\\sinh(\\kappa T)}. \\]\n<b>Step 5 (checks).</b> As \\(\\kappa \\to 0\\), \\(x(t) \\to X(T-t)/T\\), which is constant-rate trading. The trading rate \\(v = X\\kappa\\cosh(\\kappa(T-t))/\\sinh(\\kappa T)\\) is positive and front-loaded.<br>\nNumbers: \\(\\kappa T = 2\\) gives \\(x(T/2) = X\\sinh 1/\\sinh 2 = 0.324X\\). Two-thirds of the position is sold by mid-horizon, against half under a linear schedule.<br><br>\n<b>Where it breaks:</b> permanent impact shifts the drift and the solution, and the full model includes it. Discrete trading and non-Gaussian returns change the variance term. Variance is not the same risk measure as expected shortfall. \\(\\eta\\) is often non-linear in trade rate in practice.",
-    "tags": [
-      "almgren_chriss",
-      "derivation",
-      "execution",
-      "impact"
-    ]
-  },
-  {
-    "type": "basic",
-    "front": "<b>Derivation: what the square-root impact law implies for execution cost.</b> Take as given the empirical law that the fractional impact of a metaorder of size \\(Q\\) executed in one day against daily volume \\(V\\) is \\(I = Y\\sigma\\sqrt{Q/V}\\), with \\(Y\\) of order one (approx.) and \\(\\sigma\\) the daily vol in fractional terms. Derive the total cost of executing \\(Q\\) over \\(n\\) days at constant daily size, and the ratio to the one-day cost.",
-    "back": "<b>Step 1 (daily size).</b> Each day trades \\(q = Q/n\\).<br>\n<b>Step 2 (daily impact).</b> \\(I_d = Y\\sigma\\sqrt{q/V} = Y\\sigma\\sqrt{Q/(nV)}\\).<br>\n<b>Step 3 (daily cost).</b> Cost per day is \\(q\\cdot I_d\\cdot P\\), where \\(P\\) is the value per unit.<br>\n<b>Step 4 (total).</b> Summing over \\(n\\) days,\n\\[ C_n = n\\cdot\\frac{Q}{n}\\cdot Y\\sigma\\sqrt{\\frac{Q}{nV}}\\,P = \\frac{Y\\sigma Q^{3/2}}{\\sqrt{nV}}\\,P. \\]\n<b>Step 5 (ratio).</b> \\(C_n / C_1 = 1/\\sqrt{n}\\). Splitting over four days halves the total cost. The average impact per unit value also falls as \\(1/\\sqrt{n}\\).<br>\nNumbers: \\(Q = 1\\text{m}\\) shares, \\(V = 10\\text{m}\\) shares per day, \\(\\sigma = 2\\%\\) per day, \\(Y = 1\\). One day gives \\(0.632\\%\\) of value. Four days gives \\(0.316\\%\\).<br><br>\n<b>Where it breaks:</b> the exponent 0.5 is empirical and varies by market and period (approx.). Impact decays between days, which the constant-size model ignores; persistent impact makes the \\(1/\\sqrt{n}\\) benefit smaller. Splitting also adds price risk over the longer horizon, which is the Almgren-Chriss trade-off.",
-    "tags": [
-      "square_root_law",
-      "derivation",
-      "market_impact",
-      "execution"
-    ]
-  },
-  {
-    "type": "basic",
-    "front": "<b>Derivation: why the FRTB SBM delta charge has the form \\(\\sqrt{\\sum WS^2 + \\sum \\rho\\,WS\\,WS}\\).</b> Within a bucket, let \\(WS_k = s_k \\cdot RW_k\\) be the weighted sensitivity of risk factor \\(k\\), and let \\(\\rho_{kl}\\) be the correlation between factors \\(k\\) and \\(l\\). Derive the bucket charge \\(K_b\\), then the cross-bucket aggregation, and state where the scheme departs from a pure variance calculation.",
-    "back": "<b>Step 1 (variance of a linear combination).</b> Let \\(\\varepsilon_k\\) be unit-variance shocks with \\(\\text{Corr}(\\varepsilon_k,\\varepsilon_l)=\\rho_{kl}\\). Then\n\\[ \\text{Var}\\Big(\\sum_k WS_k\\,\\varepsilon_k\\Big) = \\sum_k\\sum_l \\rho_{kl}WS_kWS_l = \\sum_k WS_k^2 + \\sum_{k\\neq l}\\rho_{kl}WS_kWS_l. \\]\n<b>Step 2 (bucket charge).</b> \\(K_b\\) is the square root of this quantity: a one-sigma aggregate of the bucket's weighted exposure.<br>\n<b>Step 3 (truncation).</b> Define \\(S_b = \\min\\big(\\max(\\sum_k WS_k, -K_b), K_b\\big)\\). The truncation stops one bucket from offsetting another by more than its own charge.<br>\n<b>Step 4 (cross-bucket).</b> The delta charge is \\(\\sqrt{\\sum_b K_b^2 + \\sum_{b\\neq c}\\gamma_{bc}S_bS_c}\\), with \\(\\gamma_{bc}\\) the inter-bucket correlations.<br>\nNumbers: for the two-tenor bucket from the chain, \\(K = \\sqrt{100 + 64 - 2(0.9)(80)} = 4.47\\).<br><br>\n<b>Where it breaks:</b> the quadratic form needs a positive semi-definite correlation matrix. If it is not, the square root is undefined, so the scheme must floor or adjust it. The charge is a Gaussian one-sigma measure and carries no fat-tail information. The scenarios and the truncation are regulatory calibrations, not consequences of the variance argument.",
-    "tags": [
-      "frtb_sbm",
-      "derivation",
-      "aggregation",
-      "capital"
-    ]
-  },
-  {
-    "type": "basic",
-    "front": "<b>Derivation: SA-CCR exposure at default for one uncollateralised 10y receiver swap.</b> Derive \\(EAD = \\alpha(RC + PFE)\\), with \\(\\alpha = 1.4\\), \\(PFE = \\text{multiplier} \\times \\text{AddOn}\\), and the IR add-on for one trade. Use notional \\(N = \\pounds 100\\text{m}\\), spot start, maturity 10y, and check the case where the netting set's MTM \\(V\\) and collateral \\(C\\) are both zero.",
-    "back": "<b>Step 1 (replacement cost).</b> For an unmargined netting set, \\(RC = \\max(V - C,\\ 0)\\), ignoring thresholds and minimum transfer amounts. With \\(V = C = 0\\), \\(RC = 0\\).<br>\n<b>Step 2 (add-on).</b> The IR add-on is \\(\\text{AddOn} = SF \\cdot d \\cdot \\delta \\cdot MF\\), where \\(SF = 0.5\\%\\) (to verify), \\(\\delta = +1\\) for a long position, \\(MF = \\sqrt{\\min(M, 1)}\\) for unmargined trades with \\(M\\) in years, and \\(d = N\\cdot SD\\) with\n\\[ SD = \\frac{e^{-0.05S} - e^{-0.05E}}{0.05}. \\]\nFor spot start, \\(S = 0\\) and \\(E = 10\\), so \\(SD = (1 - e^{-0.5})/0.05 = 7.87\\) and \\(d = \\pounds 787\\text{m}\\). Then \\(\\text{AddOn} = 0.005 \\times 787\\text{m} = \\pounds 3.93\\text{m}\\).<br>\n<b>Step 3 (multiplier).</b> \\(\\text{multiplier} = \\min\\Big\\{1,\\ \\text{floor} + (1-\\text{floor})\\exp\\!\\big(\\tfrac{V-C}{2(1-\\text{floor})\\text{AddOn}}\\big)\\Big\\}\\), floor \\(= 5\\%\\). At \\(V = C\\), the exponent is 0 and the multiplier is 1.<br>\n<b>Step 4 (EAD).</b> \\(EAD = 1.4 \\times (0 + 1 \\times 3.93) = \\pounds 5.51\\text{m}\\). If \\(V - C = -5\\text{m}\\) instead, the multiplier is \\(0.537\\), \\(PFE = 2.11\\text{m}\\), and \\(EAD = \\pounds 2.96\\text{m}\\).<br><br>\n<b>Where it breaks:</b> \\(\\alpha = 1.4\\), the 5% floor and \\(SF\\) are regulatory calibrations, not derived quantities. Multi-trade netting sets aggregate add-ons across asset classes using correlations. Margined trades use a margin period of risk, which changes \\(MF\\). Thresholds and MTAs enter \\(RC\\) and are omitted here.",
-    "tags": [
-      "sa_ccr",
-      "derivation",
-      "ead",
-      "counterparty_credit",
-      "regulation"
-    ]
-  },
-  {
-    "type": "basic",
-    "front": "<b>Derivation: P&amp;L explain for a rates book by Taylor expansion.</b> Let the position value be \\(P(t, y_1,\\dots,y_n)\\). Derive the explained P&amp;L for a time step and a set of yield moves, and identify the terms that go into the unexplained residual.",
-    "back": "<b>Step 1 (expansion).</b> For small moves,\n\\[ \\Delta P \\approx \\Theta\\,\\Delta t + \\sum_i D_i\\,\\Delta y_i + \\tfrac12\\sum_i \\Gamma_i\\,\\Delta y_i^2 + \\sum_{i<j}\\Gamma_{ij}\\Delta y_i\\Delta y_j, \\]\nwith \\(D_i = \\partial P/\\partial y_i\\) (DV01 with sign), \\(\\Gamma_i = \\partial^2 P/\\partial y_i^2\\), and \\(\\Theta\\) the time decay with the curve held fixed.<br>\n<b>Step 2 (carry and roll).</b> \\(\\Theta\\) splits into accrual minus funding (carry) and the change from rolling down a sloped curve (roll). Keep them separate, or roll-down is double-counted with time decay.<br>\n<b>Step 3 (error).</b> The remainder after the quadratic term is \\(O(\\Delta y^3)\\). For a 3bp move on a bond with convexity 24 (years squared), the quadratic term is \\(\\tfrac12 \\cdot 24 \\cdot (3\\times10^{-4})^2 = 1.08\\times10^{-6}\\) per unit of notional. That is about £108 on £100m.<br>\n<b>Step 4 (residual).</b> \\(\\text{Unexplained} = P_\\text{actual} - \\sum(\\text{explained terms})\\). It contains bump-size error, unmodelled curve shape, cross-gamma that is not in the bump set, new trades, funding changes and mark differences.<br><br>\n<b>Where it breaks:</b> the explained terms are only as good as the sensitivities. Sensitivities from different bump sizes or pricers do not sum to the same answer. Path dependence, option vol moves (vega) and funding rates that are not in the model all show up as residual.",
-    "tags": [
-      "pnl_attribution",
-      "derivation",
-      "greeks",
-      "risk"
-    ]
-  },
-  {
-    "type": "basic",
-    "front": "<b>Case study: daily P&amp;L attribution for a curve book.</b> End-of-day book:\n<ul>\n<li>Long £100m 5y gilt: modified duration 4.5, convexity 24, yield 4.50%. Signed DV01 (P&amp;L per +1bp) is \\(-\\pounds 45\\text{k}\\).</li>\n<li>Short £150m 10y gilt: modified duration 8.0, convexity 80, yield 4.60%. Signed DV01 is \\(+\\pounds 120\\text{k}\\).</li>\n<li>Receive fixed £80m 2y SONIA swap at 4.05% fixed against SONIA 4.20%: signed DV01 \\(-\\pounds 15.2\\text{k}\\), convexity 6.</li>\n</ul>\nFunding is repo at 4.20%. Yield moves over the day: 2y \\(-6\\)bp, 5y \\(-3\\)bp, 10y \\(-1\\)bp. The 5y bond's roll-down over the day is worth \\(+\\pounds 4.5\\text{k}\\). The desk's actual P&amp;L from marks is \\(+\\pounds 113{,}000\\). Attribute carry, roll, delta, gamma, and the unexplained residual.",
-    "back": "<b>Answer:</b>\n<table>\n<tr><th>Component</th><th>Calculation</th><th>£</th></tr>\n<tr><td>Carry (accrual less funding)</td><td>5y: \\(0.30\\% \\times 100\\text{m}/365\\); 10y: \\(-0.40\\% \\times 150\\text{m}/365\\); 2y: \\(-0.15\\% \\times 80\\text{m}/365\\)</td><td>\\(+822 - 1{,}644 - 329 = -1{,}151\\)</td></tr>\n<tr><td>Roll-down</td><td>given</td><td>\\(+4{,}500\\)</td></tr>\n<tr><td>Delta</td><td>5y: \\(-45\\text{k} \\times (-3)\\); 10y: \\(+120\\text{k} \\times (-1)\\); 2y: \\(-15.2\\text{k} \\times (-6)\\)</td><td>\\(+135{,}000 - 120{,}000 + 91{,}200 = +106{,}200\\)</td></tr>\n<tr><td>Gamma</td><td>\\(\\tfrac12 C\\,\\Delta y^2 N\\), sign by position</td><td>\\(+108 - 60 + 86 = +134\\)</td></tr>\n<tr><td><b>Explained</b></td><td></td><td><b>109,684</b></td></tr>\n<tr><td>Actual</td><td>from marks</td><td>113,000</td></tr>\n<tr><td><b>Unexplained</b></td><td>actual less explained</td><td><b>3,316</b></td></tr>\n</table>\nSanity check: the residual is about 3% of the day's P&amp;L. Gamma is about £134 against delta of £106k, so the day's moves are too small for convexity to matter. The residual is more likely from the 2y move, since one 2y DV01 does not capture a shape change between 2y and 5y, or from a mark difference on the 2y swap. Investigate those before accepting the residual.<br><br>\n<b>Interviewer follow-up:</b> When does gamma matter for this book? For a multi-day move of 20bp or more, \\(\\tfrac12 C \\Delta y^2\\) grows with the square of the move, so the quadratic term becomes material on the 10y short.",
-    "tags": [
-      "pnl_attribution",
-      "case_study",
-      "curve",
-      "greeks",
-      "carry"
-    ]
-  },
-  {
-    "type": "basic",
-    "front": "<b>Case study: quoting a client trade against inventory.</b> The dealer is long rates risk, with DV01 of \\(+\\pounds 120\\text{k}/\\text{bp}\\) (a receiver book that gains when rates fall). Mid for 10y SONIA swap is 4.200%. Half-spread is 0.5bp per side. The desk's inventory cost is calibrated at 0.5bp per £100k/bp of DV01 on the marginal trade. A client wants to pay fixed £50m 10y, which adds about £40k/bp of receiver DV01. Quote both sides, and say what happens to a client who wants to reduce the position.",
-    "back": "<b>Step 1 (marginal cost).</b> The trade moves DV01 from 120k to 160k. Marginal inventory cost is \\(0.5 \\times (160-120)/100 = 0.2\\)bp. Use the marginal, not the full skew, because the existing 120k is already marked.<br>\n<b>Step 2 (client pays fixed, adds risk).</b> The dealer receives fixed. It requires more: \\(4.200\\% + 0.5 + 0.2 = 4.207\\%\\).<br>\n<b>Step 3 (client receives fixed, reduces risk).</b> The dealer pays fixed. A reducing trade is worth more to the dealer, so it pays more: \\(4.200\\% - 0.5 + 0.2 = 4.197\\%\\). The skew moves both sides up by 0.2bp.<br>\n<b>Step 4 (cost to the client).</b> Paying fixed at 4.207% costs \\(0.7\\text{bp} \\times \\text{DV01}\\). On £50m with DV01 £40k/bp that is £28k against mid.<br><br>\nSanity check: the quotes are symmetric about the skewed mid (4.202%), and the dealer earns 1bp total on the round trip, as expected from a 0.5bp half-spread per side.<br><br>\n<b>Where it breaks:</b> the 0.5bp per £100k/bp is a calibration that depends on the desk's risk appetite and on current vol. A skew that is stale after vol moves gives a wrong price. Reducing clients are only attractive if the skew is large enough to matter against their own cost.",
-    "tags": [
-      "skew",
-      "case_study",
-      "inventory",
-      "market_making",
-      "swaps"
-    ]
-  },
-  {
-    "type": "basic",
-    "front": "<b>Case study: capital-adjusted pricing of a long-dated swap.</b> The dealer pays fixed on a £100m 30y swap, uncollateralised, with a counterparty. Use SA-CCR EAD \\(= 1.4 \\times \\text{AddOn}\\) with the IR add-on from the SA-CCR derivation, a capital charge of 8% of EAD (illustrative, RW 100%), a hurdle rate of 10%, risk-free 4% (flat), and annual steps. The 30y DV01 at a 4.2% rate is about £178k/bp. Compute the KVA (capital valuation adjustment) and express it as a fixed-rate spread.",
-    "back": "<b>Step 1 (EAD profile).</b> With remaining maturity \\(T_r = 30 - t\\), \\(EAD_t = 1.4 \\times 0.005 \\times 100\\text{m} \\times SD(T_r)\\) with \\(SD(T_r) = (1 - e^{-0.05T_r})/0.05\\). At \\(t = 0\\), \\(SD = 15.54\\) and \\(EAD = \\pounds 10.9\\text{m}\\). At \\(t = 29\\), \\(EAD = \\pounds 0.68\\text{m}\\).<br>\n<b>Step 2 (capital).</b> \\(K_t = 0.08\\cdot EAD_t\\), so \\(K_0 = \\pounds 0.87\\text{m}\\).<br>\n<b>Step 3 (KVA).</b> \\(\\text{KVA} = \\sum_t K_t\\,(h - r)\\,DF_t\\), with \\(h - r = 6\\%\\) and \\(DF_t = e^{-0.04(t+0.5)}\\). The sum is about \\(\\pounds 662\\text{k}\\).<br>\n<b>Step 4 (rate equivalent).</b> \\(\\pounds 662\\text{k} / \\pounds 178\\text{k per bp} = 3.7\\)bp of fixed rate. The upfront is 0.66% of notional. The fixed-rate form is the one a client can compare against a quote.<br><br>\nSanity check: the KVA falls with the EAD profile, because the SA-CCR add-on decays as remaining maturity shortens. The largest capital is at trade inception.<br><br>\n<b>Where it breaks:</b> the 8% capital ratio, the 100% RW and the 10% hurdle are illustrative. Real KVA uses the bank's own capital framework and hurdle, a netting-set-level EAD, and a funding curve rather than a flat rate. The result is also sensitive to the SF and the 0.05 exponent in SA-CCR, both of which should be checked.",
-    "tags": [
-      "kva",
-      "case_study",
-      "capital",
-      "sa_ccr",
-      "pricing"
-    ]
-  },
-  {
-    "type": "basic",
-    "front": "<b>Case study: liquidity-adjusted VaR for a gilt position.</b> Long £400m 10y gilts, modified duration 8.0, so DV01 is £320k/bp. Daily yield move is normal with \\(\\sigma = 4\\)bp. Full bid-offer in yield has mean 0.3bp and standard deviation 0.2bp, uncorrelated with yield for this exercise. Use \\(z_{99\\%} = 2.326\\). Compute 1-day VaR, the liquidity cost, LVaR, and 5-day VaR with a 5-day liquidity horizon.",
-    "back": "<b>Step 1 (VaR).</b> \\(VaR_{1d} = z\\cdot\\sigma\\cdot DV01 = 2.326 \\times 4 \\times 320\\text{k} = \\pounds 2.98\\text{m}\\).<br>\n<b>Step 2 (liquidity cost).</b> Use the stochastic half-spread: \\(LC = \\tfrac12(\\mu_s + z\\sigma_s)\\cdot DV01 = \\tfrac12(0.3 + 2.326 \\times 0.2) \\times 320\\text{k} = 0.3825 \\times 320\\text{k} = \\pounds 122\\text{k}\\).<br>\n<b>Step 3 (LVaR, 1-day).</b> \\(LVaR = 2.98 + 0.12 = \\pounds 3.10\\text{m}\\).<br>\n<b>Step 4 (5-day, liquidity horizon).</b> \\(VaR_{5d} = 2.98 \\times \\sqrt{5} = \\pounds 6.66\\text{m}\\), plus \\(LC\\) of £122k gives \\(\\pounds 6.78\\text{m}\\).<br><br>\nSanity check: the liquidity charge is about 4% of VaR. The horizon scaling is the larger effect, so a position that takes five days to exit carries a 2.2x VaR, not 1x.<br><br>\n<b>Where it breaks:</b> the half-spread charge assumes exit at quoted spread, with no impact. A large exit moves the price, so the impact should follow the square-root law, which gives a much larger charge for a position that is large relative to daily volume. The cross term between yield moves and spread moves is missing, and spreads usually widen in sell-offs, so the true LVaR is higher than this estimate.",
-    "tags": [
-      "liquidity",
-      "var",
-      "case_study",
-      "lvar",
-      "risk"
-    ]
-  },
-  {
-    "type": "cloze",
-    "front": "With no arrivals, the Avellaneda-Stoikov indifference bid-ask width is {{c1::\\(\\gamma\\sigma^2(T-t)\\)}}, and the reservation price is the midpoint of the bid and ask indifference prices.",
-    "back": "Derived from \\(r_b = s - \\tfrac12\\gamma(2q+1)\\sigma^2\\tau\\) and \\(p = s - \\tfrac12\\gamma(2q-1)\\sigma^2\\tau\\). Their difference is \\(\\gamma\\sigma^2\\tau\\), independent of \\(q\\).",
-    "tags": [
-      "avellaneda_stoikov",
-      "derivation",
-      "market_making"
-    ]
-  },
-  {
-    "type": "cloze",
-    "front": "In Almgren-Chriss with temporary impact \\(\\eta\\) and risk aversion \\(\\lambda\\), the decay constant is {{c1::\\(\\kappa = \\sqrt{\\lambda\\sigma^2/\\eta}\\)}}, and as \\(\\kappa T \\to 0\\) the optimal path tends to {{c2::constant-rate (linear) execution}}.",
-    "back": "From \\(\\ddot x = \\kappa^2 x\\) with \\(x(0)=X\\), \\(x(T)=0\\). The solution is \\(X\\sinh(\\kappa(T-t))/\\sinh(\\kappa T)\\), which tends to \\(X(T-t)/T\\) as \\(\\kappa \\to 0\\).",
-    "tags": [
-      "almgren_chriss",
-      "derivation",
-      "execution"
-    ]
-  },
-  {
-    "type": "cloze",
-    "front": "Under the square-root impact law, executing a metaorder over {{c1::\\(n\\)}} days instead of one reduces total impact cost by a factor of {{c2::\\(\\sqrt{n}\\)}}, so four days halves the cost.",
-    "back": "Total cost is \\(Y\\sigma Q^{3/2}/\\sqrt{nV}\\), so \\(C_n/C_1 = 1/\\sqrt{n}\\). The 1/sqrt(n) benefit assumes impact fully decays between days, which is optimistic.",
-    "tags": [
-      "square_root_law",
-      "derivation",
-      "market_impact"
-    ]
-  },
-  {
-    "type": "cloze",
-    "front": "In SA-CCR, the supervisory duration for interest-rate trades is \\(SD = (e^{-0.05S} - e^{-0.05E})/0.05\\), so a 10y spot-start IRS has \\(SD \\approx\\) {{c1::7.87}}, and an add-on on a £100m notional of {{c2::£3.93m}} at \\(SF = 0.5\\%\\).",
-    "back": "\\(SD = (1 - e^{-0.5})/0.05 = 7.87\\). Add-on is \\(0.005 \\times 100\\text{m} \\times 7.87 = \\pounds 3.93\\text{m}\\). The SF and the 0.05 exponent should be verified against the current SA-CCR text.",
-    "tags": [
-      "sa_ccr",
-      "ead",
-      "convention",
-      "counterparty_credit"
-    ]
-  },
-  {
-    "type": "cloze",
-    "front": "A bond with convexity 24 (years squared) per unit notional, moved by 3bp, has a second-order P&amp;L of about {{c1::\\(1.08\\times10^{-6}\\)}} per unit of notional, or about {{c2::£108}} on £100m.",
-    "back": "\\(\\tfrac12 \\cdot 24 \\cdot (3\\times10^{-4})^2 = 1.08\\times10^{-6}\\). On £100m this is \\(\\pounds 108\\). Gamma matters on large moves or large books, not on daily 1-3bp moves.",
-    "tags": [
-      "pnl_attribution",
-      "greeks",
-      "mental_math"
-    ]
-  }
+ {
+  "type": "basic",
+  "front": "<b>[Chain: RFQ_GILT 1/5]</b> Context: a client sells £50m nominal of a 10y gilt (modified duration about 8.0, so cash DV01 about £40k/bp) to the dealer. Mid yield is 4.20%.<br><br>How do you price the bid, and what are the components of the spread to mid?",
+  "back": "<b>Answer:</b> the bid yield is mid plus a half-spread, plus the marginal inventory cost of the trade, plus any adverse-selection premium. Price follows from yield through the bond's price-yield formula.<br><br>\n<ul>\n<li><b>Half-spread:</b> the dealer's gross round-trip cost, split per side. Assume 0.5bp.</li>\n<li><b>Marginal inventory cost:</b> the change in inventory cost caused by this trade. Assume 0.5bp (see step 2).</li>\n<li><b>Adverse-selection premium:</b> widened for clients with negative markouts (see step 5). Zero here.</li>\n</ul>\nResult: the dealer buys at 4.21%, which is 1.0bp above mid. The client's cost against mid is \\(1.0 \\times 40{,}000 = \\pounds 40\\text{k}\\).<br><br>\n<b>Interviewer follow-up:</b> Why does the price move by yield times DV01 and not by a price tick? Because the DV01 is the price sensitivity per bp of yield, so a 1bp yield concession is worth about DV01 in cash.",
+  "tags": [
+   "rfq_gilt",
+   "chain",
+   "gilts",
+   "execution",
+   "desk_strat"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: RFQ_GILT 2/5]</b> Context: the dealer in step 1 is already long £60m of this gilt and buys another £50m, so post-trade it is long £110m. The bid is 4.21%.<br><br>How does inventory enter the quote? Use an Avellaneda-Stoikov style skew and compute the marginal part for this trade.",
+  "back": "<b>Answer:</b> inventory shifts the reservation yield linearly in position: \\(r(q) = \\text{mid} + k\\,q\\). Assume \\(k = 0.01\\)bp per £1m of net long nominal, so the skew is 0.6bp at £60m and 1.1bp at £110m.<br><br>\n<ul>\n<li><b>Pre-trade skew:</b> 0.6bp, already held in the book's mark. It is not charged again on this trade.</li>\n<li><b>Post-trade skew:</b> 1.1bp.</li>\n<li><b>Marginal cost of the trade:</b> \\(1.1 - 0.6 = 0.5\\)bp. Add this to the 0.5bp half-spread for a total of 1.0bp, which matches step 1.</li>\n</ul>\nA long inventory raises the yield the dealer will quote, because the dealer is paid more to hold more risk. This is the Avellaneda-Stoikov reservation price, \\(r = s - q\\gamma\\sigma^2(T-t)\\), written in yield terms with the sign flipped.<br><br>\n<b>Interviewer follow-up:</b> Why charge the marginal skew rather than the full skew? The existing inventory is sunk for this trade. Charging the full skew would double-count a cost already in the mark, and would quote the client a price that does not depend on the size they trade.",
+  "tags": [
+   "rfq_gilt",
+   "chain",
+   "inventory",
+   "skew",
+   "market_making"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: RFQ_GILT 3/5]</b> Context: the dealer bought £50m of 10y gilts at 4.21%, adding £40k/bp of long DV01. It hedges that trade with 10y gilt futures, which have an assumed DV01 of £85 per contract (approximate, CTD-based).<br><br>How many contracts, and in which direction? What risk does a DV01-matched hedge leave behind?",
+  "back": "<b>Answer:</b> sell \\(40{,}000 / 85 = 470.6\\), so sell <b>471</b> contracts. That is about £47.1m of futures notional at £100k per contract. The short futures offset the long cash.<br><br>\nResidual risk after DV01 matching:\n<ul>\n<li><b>Basis:</b> the cash bond does not move one-for-one with the CTD-based future. Cash minus CF times futures changes when the bond cheapens or richens against the CTD.</li>\n<li><b>CTD switch:</b> the future reprices when a different bond becomes cheapest to deliver.</li>\n<li><b>Convexity and DV01 drift:</b> a DV01 match is exact only for a small parallel move at the moment of hedging.</li>\n<li><b>Funding:</b> the cash position is repo-funded, and the futures carry a different financing implicit in the conversion factor.</li>\n</ul>\n<b>Interviewer follow-up:</b> Could you hedge with the CTD cash bond instead? Yes, and that tracks better, but shorting the CTD costs specialness in repo and is harder to source at size.",
+  "tags": [
+   "rfq_gilt",
+   "chain",
+   "futures",
+   "hedge_ratio",
+   "gilts"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: RFQ_GILT 4/5]</b> Context: the dealer is long £50m of the traded gilt (DV01 £40k/bp) and short 471 futures (DV01 £85 each). The traded gilt is not the CTD. The market yield is unchanged, but the traded gilt cheapens by 1.5bp against the CTD-implied yield.<br><br>What is the P&L, and how do you measure the hedge's effectiveness over time?",
+  "back": "<b>Answer:</b> the parallel hedge is flat, so the loss is the relative move times cash DV01: \\(1.5 \\times 40{,}000 = \\pounds 60\\text{k}\\).<br><br>\nMeasurement:\n<ul>\n<li>Basis \\(B = P_\\text{cash} - CF \\cdot F\\). Its daily change is the hedge error.</li>\n<li>Hedge effectiveness: regress daily cash-yield changes on futures-yield changes. A beta near 1 and a high \\(R^2\\) mean the hedge is working. The residual variance is the basis risk.</li>\n<li>Track the basis by component (repo specialness, CTD identity, delivery-option value). A mismatch in one of these explains most of the unhedged variance.</li>\n</ul>\n<b>Interviewer follow-up:</b> Is a 1.5bp relative move big? For a 10y gilt against its CTD it is a meaningful move on an illiquid name. The desk should size it against the stated limit for basis risk, not against the parallel DV01.",
+  "tags": [
+   "rfq_gilt",
+   "chain",
+   "basis",
+   "hedge_effectiveness",
+   "gilts"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: RFQ_GILT 5/5]</b> Context: the client sold £50m at 4.21% (dealer bought, dealer edge +1bp against the 4.20% mid at trade). The mid then moves to 4.22% after 5 minutes and 4.23% after 30 minutes. The futures hedge was executed at the time of the trade.<br><br>Compute the 5-minute and 30-minute markouts, unhedged and hedged. What does the result say about this client?",
+  "back": "<b>Answer:</b> a markout is the change in the mid after the trade (from the 4.20% trade mid), signed from the dealer's position. The dealer is long, so a rise in yield is a loss.<br><br>\n<ul><li><b>Edge at trade:</b> +1bp (bought at 4.21% vs 4.20% mid), which is \\(+\\pounds 40\\text{k}\\).</li><li><b>5-minute markout, unhedged:</b> mid 4.20% to 4.22% is +2bp against a long, so \\(-2\\text{bp} = -\\pounds 80\\text{k}\\). Net after markout: 1 - 2 = -1bp, or -\\pounds 40k.</li><li><b>5-minute markout, hedged:</b> the short futures offset the parallel move, so the hedged markout is near zero. The hedged P&amp;L still shows the edge less basis and latency.</li><li><b>30-minute markout, unhedged:</b> mid 4.20% to 4.23% is +3bp, so \\(-3\\text{bp} = -\\pounds 120\\text{k}\\). Net after markout: 1 - 3 = -2bp, or -\\pounds 80k.</li></ul>Reading: the edge is gone within 5 minutes and negative by 30 minutes. This is the signature of informed flow, so tighten the client's quote or cut the size. Use the unhedged markout to judge information and the hedged markout to judge execution quality.<br><br><b>Interviewer follow-up:</b> How do you separate hedging latency from information? Compare markouts at sub-second and few-second horizons (latency) with 5- to 30-minute horizons (information). Latency shows up early and decays; information builds over time.",
+  "tags": [
+   "rfq_gilt",
+   "chain",
+   "tca",
+   "markouts",
+   "adverse_selection"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: FRTB_SBM 1/4]</b> Context: a GBP interest-rate delta bucket has two weighted sensitivities, \\(WS_{2y} = +\\pounds 10\\text{m}\\) and \\(WS_{10y} = -\\pounds 8\\text{m}\\), and tenor correlation \\(\\rho = 0.9\\). These are illustrative values, not official risk weights or correlations.<br><br>Compute the bucket's delta charge, and explain why the offset is smaller than the simple sum of the two.",
+  "back": "<b>Answer:</b> \\(K_b = \\sqrt{WS_1^2 + WS_2^2 + 2\\rho\\,WS_1 WS_2} = \\sqrt{100 + 64 - 2(0.9)(80)} = \\sqrt{20} \\approx \\pounds 4.47\\text{m}\\).<br><br>\n<ul>\n<li>Simple sum of absolute values: \\(10 + 8 = \\pounds 18\\text{m}\\). This is the ceiling if correlations were 1 and signs were the same.</li>\n<li>Full netting: \\(|10 - 8| = \\pounds 2\\text{m}\\). This is the floor when \\(\\rho = 1\\) and the signs are opposite.</li>\n<li>The charge sits between these because \\(\\rho = 0.9 < 1\\) lets the two legs partly diversify.</li>\n</ul>\nSanity check: with the same signs and \\(\\rho = 0.9\\), \\(K = \\sqrt{164 + 144} \\approx \\pounds 17.6\\text{m}\\), which is below the simple sum of \\(\\pounds 18\\text{m}\\). The formula reduces to the simple sum only at \\(\\rho = 1\\).<br><br>\n<b>Interviewer follow-up:</b> Why is the charge not zero for a DV01-neutral steepener? A 2s10s steepener can be DV01-neutral and still leave a non-zero charge, because the curve move that matters is the decorrelation between tenors, not the parallel move.",
+  "tags": [
+   "frtb_sbm",
+   "chain",
+   "delta",
+   "capital",
+   "regulation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: FRTB_SBM 2/4]</b> Context: the same bucket as step 1 (\\(WS_{2y} = +\\pounds 10\\text{m}\\), \\(WS_{10y} = -\\pounds 8\\text{m}\\), base \\(\\rho = 0.9\\)). The SBM computes charges under three correlation scenarios and takes the largest.<br><br>State the scenario correlations, compute each charge, and say which scenario binds. Then say which scenario binds for a same-sign book.",
+  "back": "<b>Answer:</b> the correlation scenarios are (MAR21.6; the 1.25 and 0.75 multipliers are confirmed by secondary FRTB docs, the max/min forms are from memory and unverified against the BCBS text):\n<ul>\n<li>Low: \\(\\rho_\\text{low} = \\max(2\\rho - 1,\\ 0.75\\rho) = \\max(0.80,\\ 0.675) = 0.80\\), giving \\(K_\\text{low} = \\sqrt{164 - 2(0.8)(80)} = \\sqrt{36} = \\pounds 6.0\\text{m}\\).</li>\n<li>Medium: \\(\\rho = 0.9\\), giving \\(\\pounds 4.47\\text{m}\\).</li>\n<li>High: \\(\\rho_\\text{high} = \\min(1.25\\rho,\\ 1) = 1.0\\), giving \\(\\sqrt{164 - 160} = \\pounds 2.0\\text{m}\\).</li>\n</ul>\nThe low-correlation scenario binds (\\(\\pounds 6.0\\text{m}\\)) because it weakens the offset between opposite-sign legs. For a same-sign book the sign of the cross term flips, so the high scenario gives the largest charge: \\(\\rho = 1\\) and same signs give \\(\\sqrt{164+160}\\) at \\(\\rho=1\\), or \\(\\pounds 18\\text{m}\\). The low scenario gives \\(\\sqrt{164+128} \\approx \\pounds 17.1\\text{m}\\), so high binds.<br><br>\n<b>Interviewer follow-up:</b> Why does the regulator use max over scenarios instead of the base correlation? To stop a desk from choosing its own correlation. The max forces a conservative charge for whichever side of the correlation uncertainty hurts the book.",
+  "tags": [
+   "frtb_sbm",
+   "chain",
+   "correlation",
+   "scenarios",
+   "capital"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: FRTB_SBM 3/4]</b> Context: the SBM has delta, vega and curvature charges. Consider a short-option position in the same rates factor whose delta is already hedged with futures, so that net delta is zero and the book has negative gamma.<br><br>Define the curvature risk variables \\(CVR^{\\pm}\\). Why does a delta-hedged short-gamma book still attract a curvature charge?",
+  "back": "<b>Answer:</b> \\(CVR^{\\pm}\\) is the P&amp;L under an up or down shock in the risk factor, with the first-order (delta) part removed:\n\\[ CVR^{\\pm} = V(x \\pm \\text{shock}) - V(x) - \\delta \\cdot (\\pm\\text{shock}). \\]\nFor a delta-hedged book, \\(\\delta = 0\\) at the current point, so \\(CVR^{\\pm} \\approx \\tfrac12 \\Gamma (\\text{shock})^2\\). With \\(\\Gamma < 0\\), both \\(CVR^{+}\\) and \\(CVR^{-}\\) are negative, which is a loss in either direction.<br><br>\nThe charge is driven by the worse of the two shocks, and a futures hedge cannot remove the second-order loss, because futures have zero gamma. Only an offsetting option position with the same risk factor reduces the charge.<br><br>\n<b>Interviewer follow-up:</b> Why is the delta hedge not enough? Delta hedges remove the first-order move. Curvature is a second-order exposure, so only instruments with matching convexity offset it.",
+  "tags": [
+   "frtb_sbm",
+   "chain",
+   "curvature",
+   "gamma",
+   "capital"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: FRTB_SBM 4/4]</b> Context: a rates desk uses the internal model approach (IMA) for market-risk capital. Its risk-theoretical P&amp;L (RTPL) fails the P&amp;L attribution test (PLA) for the desk: the Spearman correlation falls to 0.65, below the red threshold of about 0.7.<br><br>What happens to the desk's capital, and what must the desk do operationally?",
+  "back": "<b>Answer:</b> the desk loses IMA eligibility for capital and reverts to the standardised approach (SA) for that desk until it passes the test again. A Spearman between 0.7 and 0.8 would instead be amber: IMA kept with a capital surcharge. The capital effect can be large.<br><br>\nIllustrative numbers (not official): IMA expected-shortfall capital of £40m against SA capital of £110m. The extra £70m at a 12% cost of equity costs about \\(70 \\times 0.12 = \\pounds 8.4\\text{m}\\) per year.<br><br>\nOperational response:\n<ul>\n<li>Diagnose the gap between hypothetical P&amp;L (HPL) and RTPL. Common causes are missing risk factors, different pricing or bump conventions, and intraday trades.</li>\n<li>Fix the model rather than only adding capital. Re-admission requires passing the test again, so the desk must show the fix works on the data.</li>\n</ul>\n<b>Interviewer follow-up:</b> Why does failing the PLA matter more than a backtesting exception? Backtesting tests the model's VaR or ES against realised loss. PLA tests whether the risk model describes the desk's actual P&amp;L drivers, so a failure removes the model from the capital calculation for the desk.",
+  "tags": [
+   "frtb_sbm",
+   "chain",
+   "pla",
+   "ima",
+   "regulation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: VOL_MARGIN 1/5]</b> Context: a rates book with DV01 of £800k/bp has CCP initial margin (IM) of £120m at a normal vol of 90bp/yr. Implied vol jumps to 130bp/yr.<br><br>Estimate the new IM, assuming IM is linear in vol. What is the same-day cash call from IM alone?",
+  "back": "<b>Answer:</b> IM scales with vol, so \\(120 \\times 130/90 = \\pounds 173.3\\text{m}\\). The increase is \\(\\pounds 53.3\\text{m}\\), or +44%.<br><br>\nCaveats:\n<ul>\n<li>Linearity holds only for a linear book. Options add gamma, so IM can rise faster than vol near strikes.</li>\n<li>IM uses a stressed look-back and a quantile, so the response to a vol jump lags and can be lumpy when the look-back window rolls.</li>\n<li>Margin is not a loss. It is collateral against future close-out, and it is a liquidity shock even when MTM is unchanged.</li>\n</ul>\n<b>Interviewer follow-up:</b> Why is this a liquidity problem and not a loss? The P&amp;L on the position has not changed. The desk must post cash now against a risk estimate, so the cost is funding and forced sales, not a realised loss.",
+  "tags": [
+   "vol_margin",
+   "chain",
+   "ccp",
+   "initial_margin",
+   "liquidity"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: VOL_MARGIN 2/5]</b> Context: the desk in step 1 faces a £53.3m increase in IM. The same day, a 25bp rally adds variation margin on DV01 £800k/bp, which is £20m.<br><br>What is the total same-day cash call, and how does margin create a procyclical feedback loop?",
+  "back": "<b>Answer:</b> total call \\(= 53.3 + 20.0 = \\pounds 73.3\\text{m}\\), paid in cash, typically the same day.<br><br>\nFeedback loop:\n<ol>\n<li>Vol rises, so IM rises across the market.</li>\n<li>Participants raise cash by selling liquid bonds and unwinding basis trades.</li>\n<li>Selling lowers prices, so holders who are long the sold bonds post more variation margin.</li>\n<li>The lower prices and wider spreads raise realised vol, which feeds back into the IM look-back.</li>\n</ol>\nEach step is individually rational. The loop is procyclical because the margin rule takes the stressed state as an input to the collateral it demands.<br><br>\n<b>Interviewer follow-up:</b> Why isn't the CCP at fault? The margin model is correct for one member facing a stressed close-out. The problem is the aggregate, when many members sell into the same market at the same time.",
+  "tags": [
+   "vol_margin",
+   "chain",
+   "ccp",
+   "procyclicality",
+   "margin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: VOL_MARGIN 3/5]</b> Context: several leveraged holders must raise cash at once. They sell £500m of 10y gilts into a thin market, and yields rise 10bp in the session. Modified duration is 8.0.<br><br>What is the mark-to-market loss on the £500m sold, and why does a forced seller hurt holders who did not sell?",
+  "back": "<b>Answer:</b> the price falls by about \\(8.0 \\times 0.10\\% = 0.8\\%\\), so the loss on £500m is \\(\\pounds 4.0\\text{m}\\). This is the dash for cash: forced sales lower prices and raise yields for everyone.<br><br>\nSecond-round effects:\n<ul>\n<li><b>Other holders:</b> the same 10bp rise is a mark-to-market loss on their bonds. Their variation margin and collateral calls rise.</li>\n<li><b>Liquidity:</b> dealers widen bid-offer and cut balance-sheet capacity when inventory rises, so the market is thinner than the last price suggests.</li>\n<li><b>Hedges:</b> basis and swap-spread positions that were hedged assuming stable repo can move against holders.</li>\n</ul>\n<b>Interviewer follow-up:</b> Why is the first-round loss of £4.0m not the whole story? The fall in price raises margin calls and forces further sales. The first-round loss is a lower bound on the cost to the system.",
+  "tags": [
+   "vol_margin",
+   "chain",
+   "dash_for_cash",
+   "liquidity",
+   "fire_sale"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: VOL_MARGIN 4/5]</b> Context: a fund finances £500m of gilts in repo. As vol rises, the haircut on the collateral moves from 2% to 8%, and the repo spread widens by 50bp on the £400m it borrows (the rest is funded by equity).<br><br>How much extra equity does the haircut require, and what does the spread cost per day? Which of the two matters more in a dislocation?",
+  "back": "<b>Answer:</b>\n<ul>\n<li><b>Haircut:</b> the extra equity is \\(500 \\times (8\\% - 2\\%) = \\pounds 30\\text{m}\\). This is a cash need, not a rate.</li>\n<li><b>Spread:</b> \\(400\\text{m} \\times 0.50\\% / 365 \\approx \\pounds 5.5\\text{k}\\) per day, or about \\(\\pounds 164\\text{k}\\) over 30 days.</li>\n</ul>\nThe haircut matters more. Repo dislocation is mostly a quantity problem: lenders withdraw or raise haircuts, and the cash has to come from somewhere. The rate change is small in P&amp;L.<br><br>\n<b>Interviewer follow-up:</b> Why do haircuts rise in stress? Lenders set haircuts from collateral volatility and liquidity. Both rise in a sell-off, so haircuts are procyclical in the same way as IM.",
+  "tags": [
+   "vol_margin",
+   "chain",
+   "repo",
+   "haircuts",
+   "funding"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: VOL_MARGIN 5/5]</b> Context: the stress scenario from the chain: IM rises £53.3m, a 25bp rally adds £20m of VM, and the repo haircut add-on on £500m is £30m.<br><br>How do you size a liquidity buffer for this scenario, and why should the buffer be held as cash or central-bank-eligible collateral rather than as repo capacity?",
+  "back": "<b>Answer:</b> the buffer is \\(53.3 + 20.0 + 30.0 = \\pounds 103.3\\text{m}\\), before any margin for the time it takes to raise cash.<br><br>\nTrade-offs:\n<ul>\n<li><b>Cash:</b> certain, but earns below the funding rate, so carrying it costs the spread between the two.</li>\n<li><b>Repo capacity:</b> cheap in normal times, but it disappears in the same stress that triggers the calls. Haircuts rise and lenders withdraw together. A buffer that relies on repo fails when it is needed.</li>\n<li><b>Eligible collateral:</b> can be repo'd or pledged at a central bank in some regimes, but the eligibility rules and haircuts are the same rules that move in stress, so it is a partial hedge.</li>\n</ul>\n<b>Interviewer follow-up:</b> What is the correlation problem? The calls, the haircut increase and the loss of repo all come from the same vol shock. A buffer sized as if they were independent understates the need.",
+  "tags": [
+   "vol_margin",
+   "chain",
+   "liquidity_buffer",
+   "stress",
+   "funding"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: Avellaneda-Stoikov reservation price.</b> A dealer has wealth \\(x\\), inventory \\(q\\) (units), and mid price \\(s_t\\) with \\(ds = \\sigma\\,dW\\). There are no further fills in the window. Utility is CARA, \\(u(w) = -e^{-\\gamma w}\\), with risk aversion \\(\\gamma\\). Let \\(\\tau = T - t\\). Derive the indifference bid and ask, and their midpoint.",
+  "back": "<b>Step 1 (terminal wealth).</b> With no further trades, \\(X_T = x + q s_T\\). Since \\(s_T - s_t\\) is Gaussian with variance \\(\\sigma^2\\tau\\),\n\\[ \\mathbb{E}\\big[-e^{-\\gamma X_T}\\,\\big|\\,\\mathcal{F}_t\\big] = -\\exp\\!\\big(-\\gamma(x+qs_t) + \\tfrac12\\gamma^2q^2\\sigma^2\\tau\\big). \\]\n<b>Step 2 (indifference bid).</b> The dealer is indifferent to buying one unit at \\(r_b\\) when \\(u(x - r_b,\\ q+1,\\ s) = u(x,\\ q,\\ s)\\) in expectation. Equate exponents:\n\\[ -\\gamma(x - r_b + (q+1)s) + \\tfrac12\\gamma^2(q+1)^2\\sigma^2\\tau = -\\gamma(x+qs) + \\tfrac12\\gamma^2q^2\\sigma^2\\tau. \\]\nThis gives \\(r_b = s - \\tfrac12\\gamma(2q+1)\\sigma^2\\tau\\).<br>\n<b>Step 3 (indifference ask).</b> For selling one unit at \\(p\\), the same argument gives \\(p = s - \\tfrac12\\gamma(2q-1)\\sigma^2\\tau\\).<br>\n<b>Step 4 (width).</b> \\(p - r_b = \\gamma\\sigma^2\\tau\\), independent of \\(q\\).<br>\n<b>Step 5 (midpoint).</b> \\(\\tfrac12(p + r_b) = s - q\\gamma\\sigma^2\\tau\\). This is the reservation price \\(r = s - q\\gamma\\sigma^2(T-t)\\).<br><br>\nNumbers: \\(\\sigma = 2\\) per root-day, \\(\\gamma = 0.01\\), \\(\\tau = 0.25\\) day, \\(q = +3\\). Then \\(r = s - 0.03\\) and the indifference width is \\(0.01\\).<br><br>\n<b>Where it breaks:</b> constant \\(\\sigma\\), Gaussian mid with no drift, and no fills. Fills change wealth and add the arrival term, which is the next derivation.",
+  "tags": [
+   "avellaneda_stoikov",
+   "derivation",
+   "market_making",
+   "utility"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: Avellaneda-Stoikov half-spread with fill arrivals.</b> A fill at distance \\(\\delta\\) from the reservation price arrives as a Poisson event with intensity \\(\\lambda(\\delta) = A e^{-k\\delta}\\). Under CARA, the utility gain of a sure cash amount \\(G\\), in cash units, is \\((1-e^{-\\gamma G})/\\gamma\\). The dealer maximises \\(f(\\delta) = A e^{-k\\delta}(1-e^{-\\gamma\\delta})/\\gamma\\) per unit time. Find the optimal \\(\\delta^*\\), and the total quoted spread.",
+  "back": "<b>Step 1 (objective).</b> \\(f(\\delta) = \\frac{A}{\\gamma}\\, e^{-k\\delta}\\,(1 - e^{-\\gamma\\delta})\\).<br>\n<b>Step 2 (first-order condition).</b> \\(f'(\\delta) = \\frac{A}{\\gamma}\\big[-k e^{-k\\delta}(1-e^{-\\gamma\\delta}) + \\gamma e^{-k\\delta}e^{-\\gamma\\delta}\\big] = 0\\). Dividing by \\(\\frac{A}{\\gamma} e^{-k\\delta}\\):\n\\[ k(1 - e^{-\\gamma\\delta}) = \\gamma e^{-\\gamma\\delta} \\;\\Rightarrow\\; e^{-\\gamma\\delta} = \\frac{k}{k+\\gamma}. \\]\n<b>Step 3 (solve).</b> \\(\\delta^* = \\tfrac{1}{\\gamma}\\ln\\!\\big(1 + \\tfrac{\\gamma}{k}\\big)\\).<br>\n<b>Step 4 (risk-neutral limit).</b> As \\(\\gamma \\to 0\\), \\(\\tfrac{1}{\\gamma}\\ln(1+\\gamma/k) \\to 1/k\\). This matches maximising \\(\\delta e^{-k\\delta}\\), which gives \\(\\delta = 1/k\\).<br>\n<b>Step 5 (total spread).</b> Add the two sides and the reservation-price width from the previous derivation:\n\\[ \\delta^a + \\delta^b = \\tfrac{2}{\\gamma}\\ln\\!\\big(1+\\tfrac{\\gamma}{k}\\big) + \\gamma\\sigma^2(T-t). \\]\nNumbers: \\(\\gamma = 0.1\\), \\(k = 1.5\\). Then \\(\\delta^* = 0.645\\) against \\(1/k = 0.667\\).<br><br>\n<b>Where it breaks:</b> the decoupling of the fill value from the inventory risk is an approximation. The additive split of the spread is exact only in a regime where the inventory-risk term is small relative to the arrival term. The fill curve (\\(A\\), \\(k\\)) is assumed exponential, which is an estimate and not a law.",
+  "tags": [
+   "avellaneda_stoikov",
+   "derivation",
+   "market_making",
+   "spread"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: Almgren-Chriss optimal liquidation path (linear temporary impact).</b> Sell \\(X\\) shares over \\([0,T]\\). Inventory is \\(x(t)\\), with \\(x(0)=X\\) and \\(x(T)=0\\). Trading rate is \\(v = -\\dot x\\). Temporary impact costs \\(\\eta v\\) per share, so expected impact cost is \\(\\eta\\int v^2\\,dt\\). The price is Brownian with vol \\(\\sigma\\), so the variance of the remaining position is \\(\\sigma^2\\int x^2\\,dt\\). Minimise \\(\\mathbb{E}[\\text{cost}] + \\lambda\\,\\text{Var}\\). Derive \\(x(t)\\).",
+  "back": "<b>Step 1 (functional).</b> \\(J[x] = \\int_0^T (\\eta\\dot x^2 + \\lambda\\sigma^2 x^2)\\,dt\\).<br>\n<b>Step 2 (Euler-Lagrange).</b> With \\(L = \\eta\\dot x^2 + \\lambda\\sigma^2x^2\\), \\(\\frac{d}{dt}\\frac{\\partial L}{\\partial\\dot x} = \\frac{\\partial L}{\\partial x}\\) gives \\(2\\eta\\ddot x = 2\\lambda\\sigma^2 x\\), so \\(\\ddot x = \\kappa^2 x\\) with \\(\\kappa^2 = \\lambda\\sigma^2/\\eta\\).<br>\n<b>Step 3 (general solution).</b> \\(x(t) = A\\cosh\\kappa t + B\\sinh\\kappa t\\).<br>\n<b>Step 4 (boundary conditions).</b> \\(x(0) = X\\) and \\(x(T)=0\\) give\n\\[ x(t) = X\\,\\frac{\\sinh\\big(\\kappa(T-t)\\big)}{\\sinh(\\kappa T)}. \\]\n<b>Step 5 (checks).</b> As \\(\\kappa \\to 0\\), \\(x(t) \\to X(T-t)/T\\), which is constant-rate trading. The trading rate \\(v = X\\kappa\\cosh(\\kappa(T-t))/\\sinh(\\kappa T)\\) is positive and front-loaded.<br>\nNumbers: \\(\\kappa T = 2\\) gives \\(x(T/2) = X\\sinh 1/\\sinh 2 = 0.324X\\). Two-thirds of the position is sold by mid-horizon, against half under a linear schedule.<br><br>\n<b>Where it breaks:</b> permanent impact shifts the drift and the solution, and the full model includes it. Discrete trading and non-Gaussian returns change the variance term. Variance is not the same risk measure as expected shortfall. \\(\\eta\\) is often non-linear in trade rate in practice.",
+  "tags": [
+   "almgren_chriss",
+   "derivation",
+   "execution",
+   "impact"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: what the square-root impact law implies for execution cost.</b> Take as given the empirical law that the fractional impact of a metaorder of size \\(Q\\) executed in one day against daily volume \\(V\\) is \\(I = Y\\sigma\\sqrt{Q/V}\\), with \\(Y\\) of order one (approx.) and \\(\\sigma\\) the daily vol in fractional terms. Derive the total cost of executing \\(Q\\) over \\(n\\) days at constant daily size, and the ratio to the one-day cost.",
+  "back": "<b>Step 1 (daily size).</b> Each day trades \\(q = Q/n\\).<br>\n<b>Step 2 (daily impact).</b> \\(I_d = Y\\sigma\\sqrt{q/V} = Y\\sigma\\sqrt{Q/(nV)}\\).<br>\n<b>Step 3 (daily cost).</b> Cost per day is \\(q\\cdot I_d\\cdot P\\), where \\(P\\) is the value per unit.<br>\n<b>Step 4 (total).</b> Summing over \\(n\\) days,\n\\[ C_n = n\\cdot\\frac{Q}{n}\\cdot Y\\sigma\\sqrt{\\frac{Q}{nV}}\\,P = \\frac{Y\\sigma Q^{3/2}}{\\sqrt{nV}}\\,P. \\]\n<b>Step 5 (ratio).</b> \\(C_n / C_1 = 1/\\sqrt{n}\\). Splitting over four days halves the total cost. The average impact per unit value also falls as \\(1/\\sqrt{n}\\).<br>\nNumbers: \\(Q = 1\\text{m}\\) shares, \\(V = 10\\text{m}\\) shares per day, \\(\\sigma = 2\\%\\) per day, \\(Y = 1\\). One day gives \\(0.632\\%\\) of value. Four days gives \\(0.316\\%\\).<br><br>\n<b>Where it breaks:</b> the exponent 0.5 is empirical and varies by market and period (approx.). Impact decays between days, which the constant-size model ignores; persistent impact makes the \\(1/\\sqrt{n}\\) benefit smaller. Splitting also adds price risk over the longer horizon, which is the Almgren-Chriss trade-off.",
+  "tags": [
+   "square_root_law",
+   "derivation",
+   "market_impact",
+   "execution"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: why the FRTB SBM delta charge has the form \\(\\sqrt{\\sum WS^2 + \\sum \\rho\\,WS\\,WS}\\).</b> Within a bucket, let \\(WS_k = s_k \\cdot RW_k\\) be the weighted sensitivity of risk factor \\(k\\), and let \\(\\rho_{kl}\\) be the correlation between factors \\(k\\) and \\(l\\). Derive the bucket charge \\(K_b\\), then the cross-bucket aggregation, and state where the scheme departs from a pure variance calculation.",
+  "back": "<b>Step 1 (variance of a linear combination).</b> Let \\(\\varepsilon_k\\) be unit-variance shocks with \\(\\text{Corr}(\\varepsilon_k,\\varepsilon_l)=\\rho_{kl}\\). Then\n\\[ \\text{Var}\\Big(\\sum_k WS_k\\,\\varepsilon_k\\Big) = \\sum_k\\sum_l \\rho_{kl}WS_kWS_l = \\sum_k WS_k^2 + \\sum_{k\\neq l}\\rho_{kl}WS_kWS_l. \\]\n<b>Step 2 (bucket charge).</b> \\(K_b\\) is the square root of this quantity: a one-sigma aggregate of the bucket's weighted exposure.<br>\n<b>Step 3 (truncation).</b> Define \\(S_b = \\min\\big(\\max(\\sum_k WS_k, -K_b), K_b\\big)\\). The truncation stops one bucket from offsetting another by more than its own charge.<br>\n<b>Step 4 (cross-bucket).</b> The delta charge is \\(\\sqrt{\\sum_b K_b^2 + \\sum_{b\\neq c}\\gamma_{bc}S_bS_c}\\), with \\(\\gamma_{bc}\\) the inter-bucket correlations.<br>\nNumbers: for the two-tenor bucket from the chain, \\(K = \\sqrt{100 + 64 - 2(0.9)(80)} = 4.47\\).<br><br>\n<b>Where it breaks:</b> the quadratic form needs a positive semi-definite correlation matrix. If it is not, the square root is undefined, so the scheme must floor or adjust it. The charge is a Gaussian one-sigma measure and carries no fat-tail information. The scenarios and the truncation are regulatory calibrations, not consequences of the variance argument.",
+  "tags": [
+   "frtb_sbm",
+   "derivation",
+   "aggregation",
+   "capital"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: SA-CCR exposure at default for one uncollateralised 10y receiver swap.</b> Derive \\(EAD = \\alpha(RC + PFE)\\), with \\(\\alpha = 1.4\\), \\(PFE = \\text{multiplier} \\times \\text{AddOn}\\), and the IR add-on for one trade. Use notional \\(N = \\pounds 100\\text{m}\\), spot start, maturity 10y, and check the case where the netting set's MTM \\(V\\) and collateral \\(C\\) are both zero.",
+  "back": "<b>Step 1 (replacement cost).</b> For an unmargined netting set, \\(RC = \\max(V - C,\\ 0)\\), ignoring thresholds and minimum transfer amounts. With \\(V = C = 0\\), \\(RC = 0\\).<br>\n<b>Step 2 (add-on).</b> The IR add-on is \\(\\text{AddOn} = SF \\cdot d \\cdot \\delta \\cdot MF\\), where \\(SF = 0.5\\%\\) (to verify), \\(\\delta = -1\\) for a receiver (short-rate) trade (sign convention to verify; the single-trade add-on uses the absolute value, so the numbers below are unchanged), \\(MF = \\sqrt{\\min(M, 1)}\\) for unmargined trades with \\(M\\) in years, and \\(d = N\\cdot SD\\) with\n\\[ SD = \\frac{e^{-0.05S} - e^{-0.05E}}{0.05}. \\]\nFor spot start, \\(S = 0\\) and \\(E = 10\\), so \\(SD = (1 - e^{-0.5})/0.05 = 7.87\\) and \\(d = \\pounds 787\\text{m}\\). Then \\(\\text{AddOn} = 0.005 \\times 787\\text{m} = \\pounds 3.93\\text{m}\\).<br>\n<b>Step 3 (multiplier).</b> \\(\\text{multiplier} = \\min\\Big\\{1,\\ \\text{floor} + (1-\\text{floor})\\exp\\!\\big(\\tfrac{V-C}{2(1-\\text{floor})\\text{AddOn}}\\big)\\Big\\}\\), floor \\(= 5\\%\\). At \\(V = C\\), the exponent is 0 and the multiplier is 1.<br>\n<b>Step 4 (EAD).</b> \\(EAD = 1.4 \\times (0 + 1 \\times 3.93) = \\pounds 5.51\\text{m}\\). If \\(V - C = -5\\text{m}\\) instead, the multiplier is \\(0.537\\), \\(PFE = 2.11\\text{m}\\), and \\(EAD = \\pounds 2.96\\text{m}\\).<br><br>\n<b>Where it breaks:</b> \\(\\alpha = 1.4\\), the 5% floor and \\(SF\\) are regulatory calibrations, not derived quantities. Multi-trade netting sets aggregate add-ons across asset classes using correlations. Margined trades use a margin period of risk, which changes \\(MF\\). Thresholds and MTAs enter \\(RC\\) and are omitted here.",
+  "tags": [
+   "sa_ccr",
+   "derivation",
+   "ead",
+   "counterparty_credit",
+   "regulation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: P&amp;L explain for a rates book by Taylor expansion.</b> Let the position value be \\(P(t, y_1,\\dots,y_n)\\). Derive the explained P&amp;L for a time step and a set of yield moves, and identify the terms that go into the unexplained residual.",
+  "back": "<b>Step 1 (expansion).</b> For small moves,\n\\[ \\Delta P \\approx \\Theta\\,\\Delta t + \\sum_i D_i\\,\\Delta y_i + \\tfrac12\\sum_i \\Gamma_i\\,\\Delta y_i^2 + \\sum_{i<j}\\Gamma_{ij}\\Delta y_i\\Delta y_j, \\]\nwith \\(D_i = \\partial P/\\partial y_i\\) (DV01 with sign), \\(\\Gamma_i = \\partial^2 P/\\partial y_i^2\\), and \\(\\Theta\\) the time decay with the curve held fixed.<br>\n<b>Step 2 (carry and roll).</b> \\(\\Theta\\) splits into accrual minus funding (carry) and the change from rolling down a sloped curve (roll). Keep them separate, or roll-down is double-counted with time decay.<br>\n<b>Step 3 (error).</b> The remainder after the quadratic term is \\(O(\\Delta y^3)\\). For a 3bp move on a bond with convexity 24 (years squared), the quadratic term is \\(\\tfrac12 \\cdot 24 \\cdot (3\\times10^{-4})^2 = 1.08\\times10^{-6}\\) per unit of notional. That is about £108 on £100m.<br>\n<b>Step 4 (residual).</b> \\(\\text{Unexplained} = P_\\text{actual} - \\sum(\\text{explained terms})\\). It contains bump-size error, unmodelled curve shape, cross-gamma that is not in the bump set, new trades, funding changes and mark differences.<br><br>\n<b>Where it breaks:</b> the explained terms are only as good as the sensitivities. Sensitivities from different bump sizes or pricers do not sum to the same answer. Path dependence, option vol moves (vega) and funding rates that are not in the model all show up as residual.",
+  "tags": [
+   "pnl_attribution",
+   "derivation",
+   "greeks",
+   "risk"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: daily P&amp;L attribution for a curve book.</b> End-of-day book:\n<ul>\n<li>Long £100m 5y gilt: modified duration 4.5, convexity 24, yield 4.50%. Signed DV01 (P&amp;L per +1bp) is \\(-\\pounds 45\\text{k}\\).</li>\n<li>Short £150m 10y gilt: modified duration 8.0, convexity 80, yield 4.60%. Signed DV01 is \\(+\\pounds 120\\text{k}\\).</li>\n<li>Receive fixed £80m 2y SONIA swap at 4.05% fixed against SONIA 4.20%: signed DV01 \\(-\\pounds 15.2\\text{k}\\), convexity 6.</li>\n</ul>\nFunding is repo at 4.20%. Yield moves over the day: 2y \\(-6\\)bp, 5y \\(-3\\)bp, 10y \\(-1\\)bp. The 5y bond's roll-down over the day is worth \\(+\\pounds 4.5\\text{k}\\). The desk's actual P&amp;L from marks is \\(+\\pounds 113{,}000\\). Attribute carry, roll, delta, gamma, and the unexplained residual.",
+  "back": "<b>Answer:</b>\n<table>\n<tr><th>Component</th><th>Calculation</th><th>£</th></tr>\n<tr><td>Carry (accrual less funding)</td><td>5y: \\(0.30\\% \\times 100\\text{m}/365\\); 10y: \\(-0.40\\% \\times 150\\text{m}/365\\); 2y: \\(-0.15\\% \\times 80\\text{m}/365\\)</td><td>\\(+822 - 1{,}644 - 329 = -1{,}151\\)</td></tr>\n<tr><td>Roll-down</td><td>given</td><td>\\(+4{,}500\\)</td></tr>\n<tr><td>Delta</td><td>5y: \\(-45\\text{k} \\times (-3)\\); 10y: \\(+120\\text{k} \\times (-1)\\); 2y: \\(-15.2\\text{k} \\times (-6)\\)</td><td>\\(+135{,}000 - 120{,}000 + 91{,}200 = +106{,}200\\)</td></tr>\n<tr><td>Gamma</td><td>\\(\\tfrac12 C\\,\\Delta y^2 N\\), sign by position</td><td>\\(+108 - 60 + 86 = +134\\)</td></tr>\n<tr><td><b>Explained</b></td><td></td><td><b>109,683</b></td></tr>\n<tr><td>Actual</td><td>from marks</td><td>113,000</td></tr>\n<tr><td><b>Unexplained</b></td><td>actual less explained</td><td><b>3,317</b></td></tr>\n</table>\nSanity check: the residual is about 3% of the day's P&amp;L. Gamma is about £134 against delta of £106k, so the day's moves are too small for convexity to matter. The residual is more likely from the 2y move, since one 2y DV01 does not capture a shape change between 2y and 5y, or from a mark difference on the 2y swap. Investigate those before accepting the residual.<br><br>\n<b>Interviewer follow-up:</b> When does gamma matter for this book? For a multi-day move of 20bp or more, \\(\\tfrac12 C \\Delta y^2\\) grows with the square of the move, so the quadratic term becomes material on the 10y short.",
+  "tags": [
+   "pnl_attribution",
+   "case_study",
+   "curve",
+   "greeks",
+   "carry"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: quoting a client trade against inventory.</b> The dealer is long rates risk, with DV01 of \\(+\\pounds 120\\text{k}/\\text{bp}\\) (a receiver book that gains when rates fall). Mid for 10y SONIA swap is 4.200%. Half-spread is 0.5bp per side. The desk's inventory cost is calibrated at 0.5bp per £100k/bp of DV01 on the marginal trade. A client wants to pay fixed £50m 10y, which adds about £40k/bp of receiver DV01. Quote both sides, and say what happens to a client who wants to reduce the position.",
+  "back": "<b>Step 1 (marginal cost).</b> The trade moves DV01 from 120k to 160k. Marginal inventory cost is \\(0.5 \\times (160-120)/100 = 0.2\\)bp. Use the marginal, not the full skew, because the existing 120k is already marked.<br>\n<b>Step 2 (client pays fixed, adds risk).</b> The dealer receives fixed. It requires more: \\(4.200\\% + 0.5 + 0.2 = 4.207\\%\\).<br>\n<b>Step 3 (client receives fixed, reduces risk).</b> The dealer pays fixed. A reducing trade is worth more to the dealer, so it pays more: \\(4.200\\% - 0.5 + 0.2 = 4.197\\%\\). The skew moves both sides up by 0.2bp.<br>\n<b>Step 4 (cost to the client).</b> Paying fixed at 4.207% costs \\(0.7\\text{bp} \\times \\text{DV01}\\). On £50m with DV01 £40k/bp that is £28k against mid.<br><br>\nSanity check: the quotes are symmetric about the skewed mid (4.202%), and the dealer earns 1bp total on the round trip, as expected from a 0.5bp half-spread per side.<br><br>\n<b>Where it breaks:</b> the 0.5bp per £100k/bp is a calibration that depends on the desk's risk appetite and on current vol. A skew that is stale after vol moves gives a wrong price. Reducing clients are only attractive if the skew is large enough to matter against their own cost.",
+  "tags": [
+   "skew",
+   "case_study",
+   "inventory",
+   "market_making",
+   "swaps"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: capital-adjusted pricing of a long-dated swap.</b> The dealer pays fixed on a £100m 30y swap, uncollateralised, with a counterparty. Use SA-CCR EAD \\(= 1.4 \\times \\text{AddOn}\\) with the IR add-on from the SA-CCR derivation, a capital charge of 8% of EAD (illustrative, RW 100%), a hurdle rate of 10%, risk-free 4% (flat), and annual steps. The 30y DV01 at a 4.2% rate is about £178k/bp. Compute the KVA (capital valuation adjustment) and express it as a fixed-rate spread.",
+  "back": "<b>Step 1 (EAD profile).</b> With remaining maturity \\(T_r = 30 - t\\), \\(EAD_t = 1.4 \\times 0.005 \\times 100\\text{m} \\times SD(T_r)\\) with \\(SD(T_r) = (1 - e^{-0.05T_r})/0.05\\). At \\(t = 0\\), \\(SD = 15.54\\) and \\(EAD = \\pounds 10.9\\text{m}\\). At \\(t = 29\\), \\(EAD = \\pounds 0.68\\text{m}\\).<br>\n<b>Step 2 (capital).</b> \\(K_t = 0.08\\cdot EAD_t\\), so \\(K_0 = \\pounds 0.87\\text{m}\\).<br>\n<b>Step 3 (KVA).</b> \\(\\text{KVA} = \\sum_t K_t\\,(h - r)\\,DF_t\\), with \\(h - r = 6\\%\\) and \\(DF_t = e^{-0.04(t+0.5)}\\). The sum is about \\(\\pounds 662\\text{k}\\).<br>\n<b>Step 4 (rate equivalent).</b> \\(\\pounds 662\\text{k} / \\pounds 178\\text{k per bp} = 3.7\\)bp of fixed rate. The upfront is 0.66% of notional. The fixed-rate form is the one a client can compare against a quote.<br><br>\nSanity check: the KVA falls with the EAD profile, because the SA-CCR add-on decays as remaining maturity shortens. The largest capital is at trade inception.<br><br>\n<b>Where it breaks:</b> the 8% capital ratio, the 100% RW and the 10% hurdle are illustrative. Real KVA uses the bank's own capital framework and hurdle, a netting-set-level EAD, and a funding curve rather than a flat rate. The result is also sensitive to the SF and the 0.05 exponent in SA-CCR, both of which should be checked.",
+  "tags": [
+   "kva",
+   "case_study",
+   "capital",
+   "sa_ccr",
+   "pricing"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: liquidity-adjusted VaR for a gilt position.</b> Long £400m 10y gilts, modified duration 8.0, so DV01 is £320k/bp. Daily yield move is normal with \\(\\sigma = 4\\)bp. Full bid-offer in yield has mean 0.3bp and standard deviation 0.2bp, uncorrelated with yield for this exercise. Use \\(z_{99\\%} = 2.326\\). Compute 1-day VaR, the liquidity cost, LVaR, and 5-day VaR with a 5-day liquidity horizon.",
+  "back": "<b>Step 1 (VaR).</b> \\(VaR_{1d} = z\\cdot\\sigma\\cdot DV01 = 2.326 \\times 4 \\times 320\\text{k} = \\pounds 2.98\\text{m}\\).<br>\n<b>Step 2 (liquidity cost).</b> Use the stochastic half-spread: \\(LC = \\tfrac12(\\mu_s + z\\sigma_s)\\cdot DV01 = \\tfrac12(0.3 + 2.326 \\times 0.2) \\times 320\\text{k} = 0.3825 \\times 320\\text{k} = \\pounds 122\\text{k}\\).<br>\n<b>Step 3 (LVaR, 1-day).</b> \\(LVaR = 2.98 + 0.12 = \\pounds 3.10\\text{m}\\).<br>\n<b>Step 4 (5-day, liquidity horizon).</b> \\(VaR_{5d} = 2.98 \\times \\sqrt{5} = \\pounds 6.66\\text{m}\\), plus \\(LC\\) of £122k gives \\(\\pounds 6.78\\text{m}\\).<br><br>\nSanity check: the liquidity charge is about 4% of VaR. The horizon scaling is the larger effect, so a position that takes five days to exit carries a 2.2x VaR, not 1x.<br><br>\n<b>Where it breaks:</b> the half-spread charge assumes exit at quoted spread, with no impact. A large exit moves the price, so the impact should follow the square-root law, which gives a much larger charge for a position that is large relative to daily volume. The cross term between yield moves and spread moves is missing, and spreads usually widen in sell-offs, so the true LVaR is higher than this estimate.",
+  "tags": [
+   "liquidity",
+   "var",
+   "case_study",
+   "lvar",
+   "risk"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "With no arrivals, the Avellaneda-Stoikov indifference bid-ask width is {{c1::\\(\\gamma\\sigma^2(T-t)\\)}}, and the reservation price is the midpoint of the bid and ask indifference prices.",
+  "back": "Derived from \\(r_b = s - \\tfrac12\\gamma(2q+1)\\sigma^2\\tau\\) and \\(p = s - \\tfrac12\\gamma(2q-1)\\sigma^2\\tau\\). Their difference is \\(\\gamma\\sigma^2\\tau\\), independent of \\(q\\).",
+  "tags": [
+   "avellaneda_stoikov",
+   "derivation",
+   "market_making"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In Almgren-Chriss with temporary impact \\(\\eta\\) and risk aversion \\(\\lambda\\), the decay constant is {{c1::\\(\\kappa = \\sqrt{\\lambda\\sigma^2/\\eta}\\)}}, and as \\(\\kappa T \\to 0\\) the optimal path tends to {{c2::constant-rate (linear) execution}}.",
+  "back": "From \\(\\ddot x = \\kappa^2 x\\) with \\(x(0)=X\\), \\(x(T)=0\\). The solution is \\(X\\sinh(\\kappa(T-t))/\\sinh(\\kappa T)\\), which tends to \\(X(T-t)/T\\) as \\(\\kappa \\to 0\\).",
+  "tags": [
+   "almgren_chriss",
+   "derivation",
+   "execution"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Under the square-root impact law, executing a metaorder over {{c1::\\(n\\)}} days instead of one reduces total impact cost by a factor of {{c2::\\(\\sqrt{n}\\)}}, so four days halves the cost.",
+  "back": "Total cost is \\(Y\\sigma Q^{3/2}/\\sqrt{nV}\\), so \\(C_n/C_1 = 1/\\sqrt{n}\\). The 1/sqrt(n) benefit assumes impact fully decays between days, which is optimistic.",
+  "tags": [
+   "square_root_law",
+   "derivation",
+   "market_impact"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In SA-CCR, the supervisory duration for interest-rate trades is \\(SD = (e^{-0.05S} - e^{-0.05E})/0.05\\), so a 10y spot-start IRS has \\(SD \\approx\\) {{c1::7.87}}, and an add-on on a £100m notional of {{c2::£3.93m}} at \\(SF = 0.5\\%\\).",
+  "back": "\\(SD = (1 - e^{-0.5})/0.05 = 7.87\\). Add-on is \\(0.005 \\times 100\\text{m} \\times 7.87 = \\pounds 3.93\\text{m}\\). The SF and the 0.05 exponent should be verified against the current SA-CCR text.",
+  "tags": [
+   "sa_ccr",
+   "ead",
+   "convention",
+   "counterparty_credit"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A bond with convexity 24 (years squared) per unit notional, moved by 3bp, has a second-order P&amp;L of about {{c1::\\(1.08\\times10^{-6}\\)}} per unit of notional, or about {{c2::£108}} on £100m.",
+  "back": "\\(\\tfrac12 \\cdot 24 \\cdot (3\\times10^{-4})^2 = 1.08\\times10^{-6}\\). On £100m this is \\(\\pounds 108\\). Gamma matters on large moves or large books, not on daily 1-3bp moves.",
+  "tags": [
+   "pnl_attribution",
+   "greeks",
+   "mental_math"
+  ]
+ }
 ]
