@@ -1,0 +1,991 @@
+[
+ {
+  "type": "basic",
+  "front": "A standard 8×8 chessboard has squares a1 and h8 removed. Can the remaining 62 squares be covered exactly by 31 non-overlapping dominoes, each covering two edge-adjacent squares?",
+  "back": "<b>Answer:</b> No.<br><b>Structure:</b> s_invariant, s_parity. Trigger: every domino covers one black and one white square.<br><b>Key move:</b> Colour square \\((i,j)\\) black when \\(i+j\\) is even.<br><b>Working:</b> \\(a_1\\) and \\(h_8\\) are both black (\\(0+0\\), \\(7+7\\) even). Removing them leaves 30 black and 32 white squares. A tiling needs equal counts, so none exists.<br><b>Sanity check:</b> Only the colour count matters; the same test kills any board whose removed squares unbalance the colours.<br><b>Transfer:</b> A 3×3 board minus two opposite corners (5 even and 4 odd squares; removing two even leaves 3 vs 4). Also any board with an odd number of squares.",
+  "tags": [
+   "s_invariant",
+   "s_parity",
+   "chessboard",
+   "tiling",
+   "dominoes",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Chameleons come in three colours: 13 red, 15 green, 17 blue. When two chameleons of different colours meet, both change to the third colour. Can all the chameleons end up the same colour?",
+  "back": "<b>Answer:</b> No.<br><b>Structure:</b> s_invariant. Trigger: a meeting changes the counts by \\((-1,-1,+2)\\), so every difference of two counts changes by a multiple of 3.<br><b>Key move:</b> The differences of the counts mod 3 are invariant.<br><b>Working:</b> \\(13\\equiv1\\), \\(15\\equiv0\\), \\(17\\equiv2 \\pmod 3\\). All three residues differ. Monochrome needs two counts equal to 0, which are congruent mod 3; that never happens here.<br><b>Sanity check:</b> \\(14,15,17\\) has \\(14\\equiv17\\pmod 3\\), and a breadth-first search over all starts with counts up to 6 matches this criterion exactly.<br><b>Transfer:</b> The piles version (next card).",
+  "tags": [
+   "s_invariant",
+   "s_parity",
+   "chameleons",
+   "invariant",
+   "mod_arithmetic",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Three piles hold 13, 15 and 17 stones. A move takes one stone from each of two different non-empty piles and adds two stones to the third pile. Can you reach a position with two of the piles empty?",
+  "back": "<b>Classic:</b> chameleons, three colours that change in pairs when they meet.<br><b>Mapping:</b> pile sizes are colour counts; the move \\((-1,-1,+2)\\) is one meeting. The invariant is the residue of differences mod 3.<br><b>Answer:</b> No. The residues mod 3 are 1, 0, 2, all distinct, so two piles can never both be empty.",
+  "tags": [
+   "s_invariant",
+   "s_parity",
+   "piles",
+   "invariant",
+   "mod_arithmetic",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for a colouring or parity argument, and why does a balanced colour count not prove that a region can be tiled?",
+  "back": "<b>Triggers:</b> tiling by dominoes or bricks; a move that changes a count by a fixed amount; \\\"can you reach state X\\\" questions with a preserved count.<br><b>Move:</b> find a colouring or weight (mod k) that every piece or move changes in a fixed way, then compare totals.<br><b>Example:</b> 8×8 minus two opposite corners is impossible because the removed squares share a colour.<br><b>Failure mode:</b> balance is necessary, not sufficient. A 4×4 board minus the squares at (row, column) (1,1), (1,3), (3,4), (4,3) has 6 black and 6 white squares, yet no domino tiling exists (exhaustive search).",
+  "tags": [
+   "s_invariant",
+   "s_parity",
+   "tiling",
+   "colouring",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A frog starts at position 0 on the integer line. Each jump moves it exactly +2 or −2. Can it ever reach position 1?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_parity (invariant mod 2).<br><b>Trigger:</b> every move changes the position by an even number.<br><b>Key move:</b> Track the position mod 2.<br><b>Answer:</b> No. The frog stays on even integers forever.",
+  "tags": [
+   "s_parity",
+   "s_invariant",
+   "frog",
+   "random_walk",
+   "parity",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "The numbers 1, 2, …, 10 are written on a board. Repeatedly erase two numbers \\(a\\) and \\(b\\) and write \\(|a-b|\\) in their place. The process stops when one number remains. Is that final number odd or even?",
+  "back": "<b>Answer:</b> Odd.<br><b>Structure:</b> s_invariant, s_parity. Trigger: two numbers are replaced by one with a simple relation to their sum.<br><b>Key move:</b> \\(|a-b|\\equiv a+b \\pmod 2\\), so the parity of the sum is invariant.<br><b>Working:</b> The sum changes by \\(|a-b|-(a+b)=-2\\min(a,b)\\), which is even. The starting sum is \\(55\\), odd, so the last number is odd.<br><b>Sanity check:</b> 20,000 random runs all ended on an odd number.<br><b>Transfer:</b> Replacing \\(a,b\\) by \\(a+b\\) keeps the sum exactly; a game where each move flips two coins keeps the parity of heads.",
+  "tags": [
+   "s_invariant",
+   "s_parity",
+   "board_game",
+   "invariant",
+   "parity",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "100 lockers are all closed. For each \\(k=1,\\dots,100\\), student \\(k\\) toggles every locker whose number is a multiple of \\(k\\) (open becomes closed and vice versa). Which lockers are open after student 100 has passed?",
+  "back": "<b>Answer:</b> The perfect squares \\(1,4,9,\\dots,100\\): ten lockers.<br><b>Structure:</b> s_parity, s_bijection. Trigger: locker \\(n\\) is toggled once per divisor of \\(n\\), and divisors pair up as \\(d\\leftrightarrow n/d\\).<br><b>Key move:</b> Locker \\(n\\) ends open iff it has an odd number of divisors.<br><b>Working:</b> Divisors pair as \\(d, n/d\\) unless \\(d=n/d\\), i.e. \\(n\\) is a square. Squares up to 100 are \\(1^2,\\dots,10^2\\).<br><b>Sanity check:</b> Direct simulation of the 100 students gives exactly these ten.<br><b>Transfer:</b> Counting integers with an odd number of divisors (next card).",
+  "tags": [
+   "s_parity",
+   "s_bijection",
+   "lockers",
+   "divisors",
+   "toggling",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How many integers from 1 to 1000 have an odd number of positive divisors?",
+  "back": "<b>Classic:</b> 100 lockers, toggled by students, where the open ones are the squares.<br><b>Mapping:</b> each divisor is one toggle; an odd toggle count means the item ends in the 'on' state; divisors pair up except for squares.<br><b>Answer:</b> 31. The squares \\(1^2,\\dots,31^2\\) are at most 1000, and \\(32^2=1024>1000\\).",
+  "tags": [
+   "s_parity",
+   "s_bijection",
+   "divisors",
+   "counting",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "At a party of \\(n\\ge 2\\) people, every pair either shook hands or did not. Prove that some two people shook hands the same number of times.",
+  "back": "<b>Answer:</b> Always true: two people have the same number of handshakes.<br><b>Structure:</b> s_extremal, s_pigeonhole. Trigger: a count with values in a fixed range, where the extreme values interact.<br><b>Key move:</b> Degrees lie in \\(\\{0,\\dots,n-1\\}\\). Someone with degree \\(n-1\\) shook everyone, so nobody has degree 0. The values 0 and \\(n-1\\) never occur together.<br><b>Working:</b> The \\(n\\) degrees therefore take at most \\(n-1\\) distinct values, and pigeonhole gives two equal ones.<br><b>Sanity check:</b> Exhaustive check of every graph on \\(n=2,\\dots,6\\) people: each has two people of equal degree.<br><b>Transfer:</b> Round-robin tournament with no draws: two teams have the same number of wins.",
+  "tags": [
+   "s_extremal",
+   "s_pigeonhole",
+   "parties",
+   "graphs",
+   "degrees",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Six people are at a party. Prove that some three of them are mutual acquaintances, or some three are mutual strangers.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_pigeonhole, s_extremal (Ramsey-type).<br><b>Trigger:</b> every pair is labelled friend or stranger; fix one person and split the other five by label.<br><b>Key move:</b> Five others, two labels, so one label has at least three: call them A, B, C. If two of them are friends, they form a triangle with the fixed person. Otherwise A, B, C are mutual strangers.<br><b>Answer:</b> Yes. Five people are not enough (a pentagon-and-pentagram colouring avoids both, checked by exhaustive search), so \\(R(3,3)=6\\).",
+  "tags": [
+   "s_pigeonhole",
+   "s_extremal",
+   "ramsey",
+   "parties",
+   "graphs",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Five pirates, ranked 1 (most senior) to 5, have 100 gold coins to divide. Pirate 1 proposes a split. All pirates vote. If at least half accept, the split stands. Otherwise the proposer is thrown overboard and the next most senior pirate proposes to the rest. Pirates are rational: first they want to survive, then to maximise gold. What does pirate 1 propose?",
+  "back": "<b>Answer:</b> \\((98,0,1,0,1)\\): pirate 1 keeps 98; pirates 3 and 5 get one coin each.<br><b>Structure:</b> s_backward_induction, s_game_theory_equilibrium. Trigger: a finite sequence of proposals where a rejection removes the proposer.<br><b>Key move:</b> Solve the smallest game and go up. A pirate's price for a vote is what he would get in the smaller game; buy the cheapest votes.<br><b>Working:</b> 2 pirates: pirate 1 keeps 100. 3 pirates: he needs one more vote; pirate 3 gets 0 in the 2-pirate game, so offer 1: \\((99,0,1)\\). 4 pirates: one more vote is needed; pirate 3 gets 0 in the 3-pirate game: \\((99,0,1,0)\\). 5 pirates: two more votes are needed; pirates 3 and 5 get 0 in the 4-pirate game, so each is offered 1: \\(100-2=98\\) kept.<br><b>Sanity check:</b> Payoffs sum to 100, and the majority is exactly 3 of 5.<br><b>Transfer:</b> Six pirates gives \\((98,0,1,0,1,0)\\) (see the six-pirate card); three pirates gives \\((99,0,1)\\).",
+  "tags": [
+   "s_backward_induction",
+   "s_game_theory_equilibrium",
+   "pirates",
+   "game_theory",
+   "coins",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Five pirates divide 100 gold coins by the classic sequential rule (the proposer needs at least half the votes, including his own; a rejected proposal kills the proposer). Change one rule: if a proposal is rejected, everyone dies and nobody gets any coins. Pirate 1 still needs at least half the votes. What does pirate 1 propose now?",
+  "back": "<b>What breaks:</b> the tail of the argument. In the classic game a rejected pirate expects a future share, which sets the price of his vote. With no future round, a rejection gives every other pirate 0.<br><b>Fix:</b> Pirate 1 needs 2 votes from pirates 2 to 5 (3 of 5 with his own). Each costs 1 coin, and any two pirates will do.<br><b>New answer:</b> Pirate 1 keeps 98; any two of pirates 2 to 5 get 1 coin each, the rest get 0 (for example \\((98,1,1,0,0)\\)).",
+  "tags": [
+   "s_backward_induction",
+   "s_game_theory_equilibrium",
+   "pirates",
+   "game_theory",
+   "coins",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Five pirates split 100 coins under the classic rule: the most senior proposes, a proposal needs at least half the votes, and a rejected proposer is thrown overboard, so the game continues with one fewer pirate.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_backward_induction.<br><b>Trigger:</b> a finite sequence of offers in which each rejection removes one player, so each later player's continuation value is known.<br><b>Key move:</b> Solve from the last round upwards. Each voter's price is what he would get in the smaller game; the proposer buys the cheapest majority.<br><b>Answer:</b> \\((98,0,1,0,1)\\).",
+  "tags": [
+   "s_backward_induction",
+   "pirates",
+   "game_theory",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you solve a game by backward induction, and what breaks it?",
+  "back": "<b>Triggers:</b> a finite, sequential, perfect-information game where the last decision is easy.<br><b>Move:</b> solve the last node, then propagate the optimal choice backwards. In the pirate game, solve the two-pirate case and recurse upwards.<br><b>Example:</b> the five-pirate split \\((98,0,1,0,1)\\).<br><b>Failure mode:</b> no last node (infinite horizon), simultaneous moves, hidden information, or payoffs that depend on history (repeated games). Then the recursion has nothing to start from; use equilibrium or dynamic programming over states instead.",
+  "tags": [
+   "s_backward_induction",
+   "s_game_theory_equilibrium",
+   "pirates",
+   "toolkit",
+   "game_theory",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "100 prisoners stand in a line facing forward. Each wears a red or blue hat chosen by a fair coin. Each sees the hats of everyone in front and none behind. Starting from the back, each prisoner calls out one colour in turn, and everyone hears all earlier calls. There is no other communication. The goal is to maximise the number of correct calls. What can be guaranteed, and what is the expected number of correct calls with random hats?",
+  "back": "<b>Answer:</b> 99 correct calls can always be guaranteed; the expected number with random hats is \\(99.5\\).<br><b>Structure:</b> s_parity, s_information_design. Trigger: each prisoner's unknown hat is determined by one shared bit (a parity) plus the hats he can see.<br><b>Key move:</b> The back prisoner calls the parity of the 99 hats in front of him. Each later prisoner then deduces his own hat from that parity and the hats between him and the back, which are already known.<br><b>Working:</b> Number the prisoners \\(1\\) (front) to \\(100\\) (back), red = 1. Prisoner 100 calls \\(p=\\sum_{i\\le 99}h_i \\bmod 2\\): correct with probability 1/2. Prisoner \\(k\\le 99\\) knows \\(p\\), the hats in front of him, and the correctly called hats behind him, so \\(h_k=p-\\sum_{i\\ne k,\\,i\\le 99}h_i \\pmod 2\\) is determined. Expected correct: \\(\\tfrac12+99=99.5\\).<br><b>Sanity check:</b> Brute force over all deterministic sequential strategies for 3 prisoners gives 2 correct in the worst case, which is \\(n-1\\).<br><b>Transfer:</b> The switches version (twin card).",
+  "tags": [
+   "s_parity",
+   "s_information_design",
+   "hats",
+   "prisoners",
+   "parity",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "100 prisoners stand in a line, each with a red or blue hat from a fair coin. Each sees all hats in front and none behind. Starting from the back, each calls a colour aloud, and everyone hears all earlier calls. The group wants as many correct calls as possible.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_parity: a shared parity as a broadcast.<br><b>Trigger:</b> each person sees everything except his own hat, so one shared bit about the total is enough to fix every hat in sequence.<br><b>Key move:</b> One prisoner sacrifices his call to broadcast the parity of the others' hats; the rest deduce their own hats in turn.<br><b>Answer:</b> 99 correct guaranteed; 99.5 expected under random hats.",
+  "tags": [
+   "s_parity",
+   "s_information_design",
+   "hats",
+   "prisoners",
+   "parity",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "The same line of 100 prisoners: each sees all hats in front, calls in turn from the back, and hears all earlier calls. But each hat is one of three colours (red, blue, green), uniform and independent. What is the guaranteed number of correct calls, and what is the expected number for the best code you know?",
+  "back": "<b>What breaks:</b> a parity carries one binary fact. With three colours the back prisoner must broadcast a value mod 3.<br><b>Fix:</b> Let the back prisoner call \\(s=\\sum_{\\text{front}}h_i \\bmod 3\\), read as a colour. Each later prisoner then computes \\(h_k=s-\\sum_{i\\ne k}h_i \\pmod 3\\) from the hats he sees and the correct calls behind him.<br><b>New answer:</b> 99 correct guaranteed; expected \\(99+\\tfrac13\\), since only the back prisoner's call is random (correct with probability 1/3). The mod-3 code gives a worst case of 2 correct for 3 prisoners and 3 for 4 (checked over all hat assignments).",
+  "tags": [
+   "s_parity",
+   "s_information_design",
+   "hats",
+   "prisoners",
+   "modular_code",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "100 people stand in a queue facing forward. Each has a lamp at their feet that is on or off at random. Each sees the lamps of everyone in front and none behind. Starting from the back, each calls out whether their own lamp is on, and everyone hears all earlier calls. How many calls can be guaranteed correct?",
+  "back": "<b>Classic:</b> 100 prisoners and red/blue hats, with a parity code.<br><b>Mapping:</b> lamp on = red hat; seeing the lamps in front = seeing the hats in front; calling in turn from the back = the classic order.<br><b>Answer:</b> 99 guaranteed, 99.5 expected. The back person calls the parity of the lamps in front; each later person deduces his own lamp from that parity and the lamps between him and the back.",
+  "tags": [
+   "s_parity",
+   "s_information_design",
+   "lamps",
+   "parity",
+   "information",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Infinitely many prisoners stand in a line with red and blue hats. Does the finite parity trick still work, and what changes when the line has no back?",
+  "back": "<b>Triggers:</b> hat-guessing or sequential-call problems with a shared broadcast.<br><b>Move:</b> the parity code needs a last prisoner to start the chain. With infinitely many prisoners there is no back, so the broadcast cannot start.<br><b>Example:</b> with \\(n\\) finite, the code gives \\(n-1\\) correct. For an infinite line where each prisoner sees all the hats in front of him, the axiom of choice gives a strategy in which only finitely many guess wrong (Hardin and Taylor, 2008).<br><b>Failure mode:</b> do not carry the infinite result back to the finite case, and do not drop the axiom of choice without re-deriving the claim.",
+  "tags": [
+   "s_parity",
+   "s_information_design",
+   "hats",
+   "infinite",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A building has 100 floors. You have two identical eggs. An egg dropped from floor \\(f\\) breaks if \\(f\\) is at or above an unknown threshold \\(t\\) in \\(\\{1,\\dots,100\\}\\), or above 100 if none is in range, and survives otherwise. A broken egg is lost. What is the minimum worst-case number of drops needed to find \\(t\\)?",
+  "back": "<b>Answer:</b> 14 drops.<br><b>Structure:</b> s_dynamic_programming, s_extremal. Trigger: a fixed budget of tests, one breakable resource that is lost on failure.<br><b>Key move:</b> Drop from floor 14 first; if it survives, drop from 27, then 39, and so on, with steps shrinking by one. This uses the second egg as a linear scan at the end.<br><b>Working:</b> With \\(m\\) drops and 2 eggs, the number of resolvable thresholds is \\(\\binom m1+\\binom m2=\\tfrac{m(m+1)}2\\). Need \\(\\tfrac{m(m+1)}2\\ge 101\\) for thresholds in 1..100 or none: \\(m=13\\) gives 91, \\(m=14\\) gives 105.<br><b>Sanity check:</b> Dynamic programming over (eggs, drops) gives the same values for all small floor counts checked.<br><b>Transfer:</b> The 1000-floor version (below) and the three-egg version (chain).",
+  "tags": [
+   "s_dynamic_programming",
+   "s_extremal",
+   "egg_drop",
+   "dynamic_programming",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: EGG 1/4]</b> Setup: 2 identical eggs and 100 floors. An egg breaks when dropped from floor \\(f\\) at or above an unknown threshold in 1..100, or survives if the threshold is higher. A broken egg is lost. What is the minimum worst-case number of drops to find the threshold?",
+  "back": "<b>Answer:</b> 14 drops.<br><b>Why:</b> With \\(m\\) drops and 2 eggs, the number of thresholds you can separate is \\(m(m+1)/2\\), so you need \\(m(m+1)/2\\ge 101\\). \\(m=13\\) separates only 91; \\(m=14\\) separates 105.",
+  "tags": [
+   "s_dynamic_programming",
+   "s_extremal",
+   "egg_drop",
+   "dynamic_programming",
+   "fmt_chain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: EGG 2/4]</b> Same setup: 2 eggs, 100 floors, unknown threshold. Where do you make the first drop, and why do the next steps get smaller?",
+  "back": "<b>Answer:</b> First drop from floor 14. If it survives, the next drop is from 27, then 39, 50, 60, and so on, with steps 14, 13, 12, …, 1.<br><b>Why:</b> If the first egg breaks at 14, the second egg must scan floors 1 to 13 one at a time: 13 more drops, 14 in total. If it survives and breaks at 27, the second egg scans floors 15 to 26: 12 more drops, again 14 in total. Each step shrinks by one so the worst case stays at 14.",
+  "tags": [
+   "s_dynamic_programming",
+   "s_extremal",
+   "egg_drop",
+   "dynamic_programming",
+   "fmt_chain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: EGG 3/4]</b> Same building (100 floors, unknown threshold, identical eggs that are lost when broken), now with 3 eggs. What is the minimum worst-case number of drops?",
+  "back": "<b>Answer:</b> 9 drops.<br><b>Why:</b> With \\(k\\) eggs and \\(m\\) drops you can separate \\(\\sum_{i=1}^{k}\\binom mi\\) thresholds. For \\(k=3\\): \\(m=8\\) gives \\(8+28+56=92\\lt 101\\); \\(m=9\\) gives \\(9+36+84=129\\ge 101\\).",
+  "tags": [
+   "s_dynamic_programming",
+   "s_extremal",
+   "egg_drop",
+   "dynamic_programming",
+   "fmt_chain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: EGG 4/4]</b> Edge cases of the same drop problem. (a) One egg, 100 floors. (b) Two eggs, 1000 floors. (c) Two eggs, \\(n\\) floors, \\(n\\) large: roughly how many drops?",
+  "back": "<b>Answers:</b> (a) 100 drops: with one egg you must scan every floor from the bottom up. (b) 45 drops: \\(45\\cdot46/2=1035\\ge1000\\), while \\(44\\cdot45/2=990\\lt 1000\\). (c) About \\(\\sqrt{2n}\\), since \\(m(m+1)/2\\ge n\\) gives \\(m\\approx\\sqrt{2n}\\).",
+  "tags": [
+   "s_dynamic_programming",
+   "s_extremal",
+   "egg_drop",
+   "dynamic_programming",
+   "fmt_chain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two identical eggs and a building with 1000 floors (unknown threshold, eggs lost when broken, otherwise the same rules as the 100-floor problem). What is the minimum worst-case number of drops?",
+  "back": "<b>What breaks:</b> nothing structural. Only the building size changes, so the staircase of steps gets longer.<br><b>Fix:</b> The same triangular staircase: start at floor \\(m\\), then steps \\(m-1,m-2,\\dots\\). The worst case is \\(m\\), where \\(m(m+1)/2\\ge 1000\\).<br><b>New answer:</b> 45 (first drop from floor 45, then 44, 43, …). Check: \\(44\\cdot45/2=990\\lt 1000\\le 45\\cdot46/2=1035\\).",
+  "tags": [
+   "s_dynamic_programming",
+   "s_extremal",
+   "egg_drop",
+   "dynamic_programming",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You have two ropes. Each takes exactly 60 minutes to burn from one end to the other, but the rate varies along each rope and you cannot see where it is fast or slow. You have a lighter. How do you measure exactly 45 minutes?",
+  "back": "<b>Answer:</b> Light rope A at both ends and rope B at one end at the same moment. When A has burned out (30 minutes), light B's other end. B then burns out 15 minutes later: 45 in total.<br><b>Structure:</b> s_invariant, s_symmetry. Trigger: a fire front moves at a speed that depends only on position, so burn-time adds along the rope.<br><b>Key move:</b> Lit from both ends, the two fronts meet at half the one-end time. Let \\(v(x)\\) be the local burn speed: one end gives \\(\\int_0^L dx/v=60\\). Two ends: the fronts meet at time \\(t\\) with \\(\\int_0^{x}dx/v=t\\) and \\(\\int_x^{L}dx/v=t\\), so \\(2t=60\\), \\(t=30\\).<br><b>Working:</b> At 30 minutes, B has a remaining one-end burn time of 30. Lit at both ends, it takes \\(30/2=15\\) more minutes. Total \\(30+15=45\\).<br><b>Sanity check:</b> With uniform burn the same numbers come out; the integral argument shows the profile does not matter.<br><b>Transfer:</b> Measuring 30 minutes with a single rope (light both ends).",
+  "tags": [
+   "s_invariant",
+   "s_symmetry",
+   "burning_ropes",
+   "timing",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A rope burns for exactly 60 minutes when lit at one end, but its burn rate varies along its length. If you light both ends at the same time, how long until it is completely burnt?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_invariant (burn time is additive along the rope).<br><b>Trigger:</b> the fronts from both ends each cross half of the rope at the same position-dependent speed.<br><b>Key move:</b> The fronts meet when the two one-end burn times add to the total: \\(2t=60\\).<br><b>Answer:</b> 30 minutes, whatever the profile.",
+  "tags": [
+   "s_invariant",
+   "s_symmetry",
+   "burning_ropes",
+   "timing",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Twelve coins look identical. Exactly one is counterfeit: it weighs differently from the others, heavier or lighter, and you do not know which. You have a balance scale and no genuine coin to use as a reference. What is the minimum number of weighings that always identifies the counterfeit and whether it is heavier or lighter? Give the number and the argument.",
+  "back": "<b>Answer:</b> 3 weighings. Two are not enough.<br><b>Structure:</b> s_information_design. Trigger: each weighing has three outcomes (left heavier, right heavier, balanced).<br><b>Key move:</b> Count possibilities: 12 coins times 2 directions gives 24 possibilities.<br><b>Working:</b> \\(3^2=9\\lt 24\\), so 2 weighings cannot separate them. \\(3^3=27\\ge 24\\) is the counting condition, and a 3-weighing strategy exists: weigh 1–4 against 5–8 first, then branch with coin sets chosen so each outcome leaves few enough candidates, and use coins proved genuine as references.<br><b>Sanity check:</b> Exhaustive search confirms 12 coins in 3 weighings without a spare genuine coin. Adding one spare genuine coin also allows 13.<br><b>Transfer:</b> 13 coins without a spare genuine coin cannot be done (card on the spare coin).",
+  "tags": [
+   "s_information_design",
+   "coins",
+   "balance_scale",
+   "information",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Balance problem with one counterfeit coin of unknown direction among \\(n\\) coins. Counting bound: with \\(k\\) weighings you need {{c1::\\(3^k \\ge 2n\\)}}. Is the counting bound enough to decide feasibility?",
+  "back": "<b>Triggers:</b> a hidden item with a few possible states, and tests with a few outcomes (balance scale, lights, switches). Count states and outcomes first.<br><b>Move:</b> compare the number of states (here \\(2n\\), one per coin and direction) with the outcomes \\(3^k\\). Also check whether a genuine reference is available: each weighing needs equal pans.<br><b>Example:</b> 12 coins: \\(24\\le 27\\), so 3 weighings is the minimum and it works.<br><b>Failure mode:</b> the counting bound is necessary, not sufficient. Four coins in two weighings satisfy \\(9\\ge 8\\) but are impossible without a spare genuine coin (exhaustive search). Thirteen coins in three weighings satisfy \\(27\\ge 26\\) and also need a spare.",
+  "tags": [
+   "s_information_design",
+   "coins",
+   "balance_scale",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Now the counterfeit coin is known to be heavier (its direction is known). Using 2 weighings and no genuine coin, what is the largest number of coins for which you can always find the counterfeit?",
+  "back": "<b>What breaks:</b> the factor 2 for direction disappears: there are now \\(n\\) possibilities, not \\(2n\\).<br><b>Fix:</b> Counting gives \\(n\\le 3^k\\). Construction for \\(k=2\\): split into three groups of three. Weigh one group against another; the heavier pan contains the counterfeit (or the third group if balanced). Then weigh one coin against another from that group.<br><b>New answer:</b> 9 coins (10 coins are impossible by counting).",
+  "tags": [
+   "s_information_design",
+   "coins",
+   "balance_scale",
+   "perturbation",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A jeweller has 13 coins, exactly one of which is counterfeit with a different weight (direction unknown). She has a balance but no genuine coin. Can she always find the counterfeit and its direction in 3 weighings?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_information_design.<br><b>Trigger:</b> the counting bound passes (\\(26\\le 27\\)), but every weighing must use equal pans with no known genuine coin, which the count alone does not capture.<br><b>Key move:</b> Check the reference-coin constraint with a search or a case tree, not just the count.<br><b>Answer:</b> No, not without a spare genuine coin (exhaustive search). With one spare genuine coin it is possible.",
+  "tags": [
+   "s_information_design",
+   "coins",
+   "balance_scale",
+   "reference_coin",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Of 1000 identical bottles of wine, exactly one is poisoned. Rats die within an hour of drinking poison. You have one hour and unlimited rats. Each rat may drink from any set of bottles, and all tests run at once. What is the minimum number of rats needed to find the poisoned bottle?",
+  "back": "<b>Answer:</b> 10 rats.<br><b>Structure:</b> s_information_design. Trigger: one hidden item among \\(N\\) and tests that give one yes/no answer each.<br><b>Key move:</b> Number the bottles 0 to 999 in binary. Rat \\(i\\) drinks every bottle whose \\(i\\)-th bit is 1. The set of dead rats spells the poisoned bottle's number.<br><b>Working:</b> \\(r\\) rats give \\(2^r\\) outcomes, so we need \\(2^r\\ge 1000\\). \\(2^9=512\\lt 1000\\) and \\(2^{10}=1024\\ge1000\\).<br><b>Sanity check:</b> Ten rats distinguish 1024 codes, so 1000 bottles fit with spare codes.<br><b>Transfer:</b> Finding one defective item among \\(N\\) by parallel yes/no tests needs \\(\\lceil\\log_2 N\\rceil\\) tests (for example, faulty chips).",
+  "tags": [
+   "s_information_design",
+   "poison",
+   "binary_encoding",
+   "rats",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "One poisoned bottle among \\(N\\), all tests run in one round, each rat gives a single yes/no answer. The minimum number of rats is {{c1::\\(\\lceil \\log_2 N \\rceil\\)}}, because each rat contributes {{c2::one bit}} of the answer.",
+  "back": "<b>Triggers:</b> locating one special item with parallel yes/no tests; any problem where each test returns one bit.<br><b>Move:</b> label items in binary; each test reads one bit of the label.<br><b>Example:</b> 1000 bottles need 10 rats.<br><b>Failure mode:</b> the bound is per round of parallel tests. When tests can return more than one bit (a measured quantity), or when subjects can be reused across rounds, the count changes.",
+  "tags": [
+   "s_information_design",
+   "s_extremal",
+   "poison",
+   "binary_encoding",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Three heaps hold 3, 4 and 5 counters. Two players alternate. A move removes any positive number of counters from one heap. The player who takes the last counter wins. The first player is to move. Is the first player winning? Give a winning move.",
+  "back": "<b>Answer:</b> Winning. Remove 2 counters from the 3-heap, leaving \\((1,4,5)\\).<br><b>Structure:</b> s_invariant (bitwise XOR of heap sizes), s_game_theory_equilibrium. Trigger: several independent heaps, each move touches one heap.<br><b>Key move:</b> A position is losing for the player to move iff the XOR of the heap sizes is 0.<br><b>Working:</b> \\(3\\oplus4\\oplus5=2\\neq0\\). Find a heap \\(h\\) with \\(h\\oplus2<h\\): here \\(3\\), since \\(3\\oplus2=1\\). Moving to 1 gives \\(1\\oplus4\\oplus5=0\\).<br><b>Sanity check:</b> Exhaustive check of all positions with heaps up to 5 confirms the XOR rule.<br><b>Transfer:</b> Any sum of independent heap games (Sprague-Grundy).",
+  "tags": [
+   "s_invariant",
+   "s_game_theory_equilibrium",
+   "nim",
+   "xor",
+   "take_away",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Same three heaps of 3, 4 and 5 counters, but the player who takes the last counter now loses (misère play). The first player moves. Who wins, and what is the first move?",
+  "back": "<b>What breaks:</b> the XOR rule changes only when every heap has at most one counter, where the last move is forced and the parity of the count matters.<br><b>Fix:</b> Misère rule: if some heap has at least 2 counters, the mover wins iff the XOR is nonzero; if all heaps have at most 1, the mover wins iff the number of nonempty heaps is even.<br><b>New answer:</b> The first player still wins. Move 3 to 1, leaving \\((1,4,5)\\): XOR 0 with a heap of size at least 2, which is losing for the opponent. Exhaustive check with heaps up to 5 confirms this.",
+  "tags": [
+   "s_invariant",
+   "s_game_theory_equilibrium",
+   "nim",
+   "misere",
+   "perturbation",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Three piles of coins, sizes known. A move removes any positive number of coins from one pile. The player who takes the last coin wins. Who wins with perfect play?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_invariant (XOR of pile sizes; Sprague-Grundy for a sum of impartial games).<br><b>Trigger:</b> several heaps, each move touches one heap, normal play, and no shared resource.<br><b>Key move:</b> Losing positions for the mover are those with XOR 0. From a nonzero XOR, move one heap \\(h\\) to \\(h\\oplus X\\), where \\(X\\) is the total XOR.<br><b>Answer:</b> The mover wins iff the XOR is nonzero.",
+  "tags": [
+   "s_invariant",
+   "s_game_theory_equilibrium",
+   "nim",
+   "xor",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A pile has 10 counters. Two players alternate removing 1, 3 or 4 counters. The player who takes the last counter wins. With perfect play, who wins, and what is a winning first move? Give the Grundy value of the pile too.",
+  "back": "<b>Answer:</b> The first player wins by taking 1 (leaving 9). The Grundy value of 10 is 1.<br><b>Structure:</b> s_dynamic_programming, s_game_theory_equilibrium. Trigger: a single pile with a fixed set of moves, which is a one-dimensional recursion.<br><b>Key move:</b> A position is losing iff every move leads to a winning position. Compute from 0 upwards.<br><b>Working:</b> Grundy values for \\(n=0..10\\): 0,1,0,1,2,3,2,0,1,0,1 (each the mex of reachable values). Losing positions: 0, 2, 7, 9. \\(g(10)=\\operatorname{mex}\\{g(9),g(7),g(6)\\}=\\operatorname{mex}\\{0,0,2\\}=1\\).<br><b>Sanity check:</b> The losing positions form a short repeating pattern; a table to 30 shows no exception in the range checked.<br><b>Transfer:</b> Sums of such piles combine Grundy values by XOR (toolkit card).",
+  "tags": [
+   "s_dynamic_programming",
+   "s_game_theory_equilibrium",
+   "subtraction_game",
+   "grundy",
+   "take_away",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Three bowls hold 3, 4 and 5 sweets. On a turn, a child eats any positive number of sweets from one bowl. The child who eats the last sweet wins. The first child moves first. Who wins with perfect play?",
+  "back": "<b>Classic:</b> Nim with three heaps.<br><b>Mapping:</b> bowls are heaps; eating sweets is removing counters; the last sweet is the last counter.<br><b>Answer:</b> The first child wins. \\(3\\oplus4\\oplus5=2\\neq 0\\); eating 2 sweets from the 3-bowl leaves XOR 0.",
+  "tags": [
+   "s_invariant",
+   "s_game_theory_equilibrium",
+   "nim",
+   "sweets",
+   "xor",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Sum of independent impartial games under normal play: each component has a Grundy value, and the total position is losing for the mover exactly when {{c1::the XOR of the Grundy values is 0}}. The values combine by {{c1::XOR}}.",
+  "back": "<b>Triggers:</b> several separate games, both players have the same moves, and the last player to move wins.<br><b>Move:</b> compute each component's Grundy value (the mex of the values reachable in one move); XOR them.<br><b>Example:</b> the subtraction game with moves {1,3,4} has Grundy values 0,1,0,1,2,3,2,0,1,0,1 for 0 to 10.<br><b>Failure mode:</b> misère play (the endgame changes), partizan games where the players have different moves (Grundy theory does not apply), and games with cycles.",
+  "tags": [
+   "s_dynamic_programming",
+   "s_game_theory_equilibrium",
+   "grundy",
+   "xor",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "100 stones are on a table. Two players alternately take 1 to 10 stones. The player who takes the last stone wins. With perfect play, who wins, and what is the first move?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_invariant (modular complement).<br><b>Trigger:</b> moves of size 1 to \\(k\\) with a fixed maximum; positions that are multiples of \\(k+1\\) are losing.<br><b>Key move:</b> Keep each round at a total of 11: answer any move of \\(x\\) with \\(11-x\\).<br><b>Answer:</b> First player wins: take 1, leaving 99 (a multiple of 11).",
+  "tags": [
+   "s_invariant",
+   "take_away",
+   "modular",
+   "games",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A pile of 1000 stones. Two players alternately take 1 to 6 stones. The player who takes the last stone wins. With perfect play, who wins?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_invariant (modular complement: each round totals 7).<br><b>Trigger:</b> a fixed maximum move \\(k\\); multiples of \\(k+1\\) are losing positions.<br><b>Key move:</b> On your turn, leave a multiple of 7.<br><b>Answer:</b> First player wins. \\(1000\\equiv 6\\pmod 7\\), so take 6, leaving 994 = 7·142.",
+  "tags": [
+   "s_invariant",
+   "take_away",
+   "modular",
+   "games",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A deck has 26 red and 26 black cards, shuffled. You turn cards over one at a time. Before each turn you may stop; you then win if the next card turned over is red. If you never stop, you win nothing. What is the maximum probability of winning under optimal play?",
+  "back": "<b>Answer:</b> 1/2. No stopping rule that stops by the last card beats 1/2.<br><b>Structure:</b> s_martingale, s_optional_stopping. Trigger: a finite shuffled deck and a stopping rule chosen from observed cards.<br><b>Key move:</b> Let \\(p_n\\) be the fraction of red cards among those not yet turned over. Given the past, the next card is red with probability \\(p_n\\), so \\(p_n\\) is a martingale.<br><b>Working:</b> Stopping at a time \\(T\\le 51\\) wins with probability \\(E[p_T]\\). Optional stopping for bounded \\(T\\) gives \\(E[p_T]=p_0=1/2\\). Dynamic programming over (red left, black left) with \\(V(r,b)=\\max\\{\\tfrac{r}{r+b},\\,\\tfrac{r}{r+b}V(r-1,b)+\\tfrac{b}{r+b}V(r,b-1)\\}\\) gives exactly \\(V(26,26)=1/2\\).<br><b>Sanity check:</b> \\(V(1,1)=1/2\\). The same recursion gives \\(V(30,20)=3/5\\).<br><b>Transfer:</b> The perturbed deck (next card); the urn twin.",
+  "tags": [
+   "s_martingale",
+   "s_optional_stopping",
+   "cards",
+   "red_black",
+   "stopping",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "The same red/black game (turn cards, stop, win if the next card is red), but the deck has 30 red and 20 black cards. What is the maximum win probability under optimal play?",
+  "back": "<b>What breaks:</b> nothing in the argument. The martingale now starts at \\(p_0=30/50\\), not \\(1/2\\).<br><b>Fix:</b> Same optional stopping: win probability \\(=E[p_T]=p_0\\), and dynamic programming confirms it.<br><b>New answer:</b> 3/5. Every stopping rule gives 3/5. For 27 red and 26 black the answer would be 27/53.",
+  "tags": [
+   "s_martingale",
+   "s_optional_stopping",
+   "cards",
+   "red_black",
+   "perturbation",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "An urn holds 26 red and 26 black balls. Balls are drawn without replacement until the urn is empty. What is the probability that the 37th ball drawn is red?",
+  "back": "<b>Classic:</b> the red/black deck game, where the next card after a stopping time is red with probability 1/2.<br><b>Mapping:</b> the 37th ball is the card turned over after 36 draws; all orderings are equally likely, so every draw position is exchangeable with the first.<br><b>Answer:</b> 1/2.",
+  "tags": [
+   "s_symmetry",
+   "s_martingale",
+   "urn",
+   "exchangeability",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You are paid 1 if the next card turned over from a shuffled deck of 26 red and 26 black cards is red, and lose 1 if it is black. You may stop at any time. What is your expected profit under the best stopping rule?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_optional_stopping, s_martingale.<br><b>Trigger:</b> a bounded game where the payoff is a \\(\\pm1\\) bet on a fair next draw, with a stopping choice.<br><b>Key move:</b> The conditional mean of the bet is \\(2p_n-1\\), and \\(p_n\\) is a martingale with mean \\(1/2\\), so the expected profit is 0.<br><b>Answer:</b> 0 under every stopping rule (no edge from timing).",
+  "tags": [
+   "s_optional_stopping",
+   "s_martingale",
+   "cards",
+   "betting",
+   "stopping",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "100 applicants arrive in random order. You interview each one and must hire or reject immediately; rejected applicants cannot be recalled. You only learn each applicant's rank among those seen so far. You want to hire the single best applicant. What is the best success probability, and what rule achieves it?",
+  "back": "<b>Answer:</b> About 0.3710. Reject the first 37 or 38 applicants (both give 0.37101 or 0.37104), then hire the first one better than everyone seen so far.<br><b>Structure:</b> s_dynamic_programming, s_extremal. Trigger: irrevocable choices with only relative information.<br><b>Key move:</b> Threshold rule: reject the first \\(r-1\\), then take the first relative best. Success probability \\(P(r)=\\frac{r-1}{n}\\sum_{i=r}^{n}\\frac{1}{i-1}\\).<br><b>Working:</b> Candidate \\(i\\) is hired and is the best iff he is the overall best (probability \\(1/n\\)) and the best of the first \\(i-1\\) is among the first \\(r-1\\) (probability \\((r-1)/(i-1)\\)). Sum over \\(i\\).<br><b>Sanity check:</b> The limit is \\(1/e\\approx0.3679\\). A Monte Carlo of 100,000 trials gives 0.373, within sampling error of 0.371.<br><b>Transfer:</b> The house-hunting twin and the forced-hire perturbation.",
+  "tags": [
+   "s_dynamic_programming",
+   "s_extremal",
+   "secretary",
+   "optimal_stopping",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You interview 100 candidates in random order. You must hire or reject each one on the spot and cannot recall anyone you rejected. Your only goal is to hire the single best candidate.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_dynamic_programming, s_extremal (optimal stopping with a threshold).<br><b>Trigger:</b> irrevocable choices, random order, only relative ranks observable, and a payoff of 1 only for the single best.<br><b>Key move:</b> Skip the first \\(n/e\\), then take the first candidate who beats everyone seen.<br><b>Answer:</b> Success probability tends to \\(1/e\\approx0.368\\); for \\(n=100\\) the best threshold gives 0.3710.",
+  "tags": [
+   "s_dynamic_programming",
+   "s_extremal",
+   "secretary",
+   "optimal_stopping",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "The secretary problem with 100 applicants in random order (hire or reject immediately, no recall, goal: the single best). New rule: if you reach the last applicant without having hired anyone, you must hire him. Does the best success probability change?",
+  "back": "<b>What breaks:</b> the usual claim that rejecting the last applicant is a free choice; the forced rule removes that choice.<br><b>Fix:</b> The last applicant is the best of all \\(n\\) exactly when he is the best of the \\(n\\) seen, i.e. when he is a relative best. Then the unforced rule hires him anyway. If he is not the best, both rules fail.<br><b>New answer:</b> No change. The success probability and the optimal threshold are identical (checked exhaustively for \\(n=7\\) at every threshold).",
+  "tags": [
+   "s_dynamic_programming",
+   "s_extremal",
+   "secretary",
+   "perturbation",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When is the 1/e secretary rule the right tool, and when does it fail?",
+  "back": "<b>Triggers:</b> one irrevocable choice from a stream in random order; only relative ranks are available, or the payoff is 1 only for the best.<br><b>Move:</b> skip the first \\(n/e\\) (about 37% for \\(n=100\\)), then take the first candidate better than all seen. Success is about \\(1/e\\).<br><b>Example:</b> \\(n=100\\), \\(r=38\\), success 0.3710.<br><b>Failure mode:</b> if actual values are known, use a value threshold instead, which depends on the distribution; if recall is allowed, if several hires count, or if the order is not random, the rule changes.",
+  "tags": [
+   "s_dynamic_programming",
+   "s_extremal",
+   "secretary",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You visit 100 houses in random order, one per day. After each visit you must buy that house or let it go forever. You want the single best house out of the 100, judged only by comparing each house with those already seen. What is the best probability of buying the best house, and what rule achieves it?",
+  "back": "<b>Classic:</b> the secretary problem (best of 100 candidates interviewed in random order, no recall).<br><b>Mapping:</b> houses are applicants; buying is hiring; the comparison is the relative rank.<br><b>Answer:</b> About 0.3710. Skip the first 37 or 38 houses, then buy the first one better than all seen so far.",
+  "tags": [
+   "s_dynamic_programming",
+   "s_extremal",
+   "houses",
+   "optimal_stopping",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Alice and Bob duel with a shot each in turn, Alice first. Alice hits with probability 1/3 per shot and Bob with probability 1/2. The duel stops at the first hit. What is the probability that Alice hits first?",
+  "back": "<b>Answer:</b> 1/2. In general, the first shooter wins with probability \\(\\frac{a}{a+b-ab}\\), and here \\(\\frac{1/3}{2/3}=\\frac12\\).<br><b>Structure:</b> s_first_step_conditioning, s_recursion. Trigger: alternating turns with a constant hit probability.<br><b>Key move:</b> First step: \\(P=a+(1-a)(1-b)P\\), so \\(P=\\dfrac{a}{1-(1-a)(1-b)}\\).<br><b>Working:</b> \\((1-a)(1-b)=\\tfrac23\\cdot\\tfrac12=\\tfrac13\\), so \\(P=\\tfrac{1/3}{2/3}=\\tfrac12\\).<br><b>Sanity check:</b> \\(a=1\\) gives 1, and \\(b=0\\) gives 1.<br><b>Transfer:</b> The reversed duel (next card); the truel (card after).",
+  "tags": [
+   "s_first_step_conditioning",
+   "s_recursion",
+   "duel",
+   "geometric",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "The same duel (hit probabilities 1/3 for Alice and 1/2 for Bob, shots alternate, the duel stops at the first hit), but Bob shoots first. What is the probability that Alice hits first?",
+  "back": "<b>What breaks:</b> the first-mover advantage now belongs to Bob, so the formula applies with the roles swapped.<br><b>Fix:</b> Bob's probability of hitting first is \\(\\dfrac{b}{1-(1-a)(1-b)}\\).<br><b>New answer:</b> Bob hits first with probability 3/4, so Alice hits first with probability 1/4.",
+  "tags": [
+   "s_first_step_conditioning",
+   "s_recursion",
+   "duel",
+   "perturbation",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Three duellists A, B and C stand at the corners of a triangle. On each turn the living duellist shoots at one living opponent of his choice. Hit probabilities: A 1/3, B 1/2, C 1 (C never misses). Shots go in the order A, B, C, repeating; the dead do not shoot. No one fires into the air. Each duellist wants to be the last one alive. Who should A shoot at first, and what is A's probability of winning?",
+  "back": "<b>Answer:</b> A should shoot at C first. A then wins with probability 13/36 (about 0.361), B with 5/12 (about 0.417), C with 2/9 (about 0.222).<br><b>Structure:</b> s_game_theory_equilibrium, s_first_step_conditioning. Trigger: three or more players, each maximising own survival.<br><b>Key move:</b> Solve the two-player states as duels first, then compare each target for the shooter in the three-player state.<br><b>Working:</b> Aiming at B gives A \\(5/18\\approx0.278\\); aiming at C gives \\(13/36\\). Shooting C first removes the one duellist who never misses, the largest threat to A. The stationary policy was solved exactly as a linear system.<br><b>Sanity check:</b> \\(13+15+8=36\\), so the three probabilities sum to 1.<br><b>Transfer:</b> The duel with the order reversed (card before).",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "s_first_step_conditioning",
+   "truel",
+   "duel",
+   "game_theory",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "In a truel, how do you choose a shooter's target, and how do you check the choice?",
+  "back": "<b>Triggers:</b> three or more shooters, each maximising own survival, shots taken in turn.<br><b>Move:</b> solve each two-player state as a duel; then for the three-player state compare each target's value for the shooter and take the best. Use exact fractions, and a linear system when the policy loops.<br><b>Example:</b> A (1/3), B (1/2), C (1): aiming at C gives A 13/36; aiming at B gives 5/18.<br><b>Failure mode:</b> the answer depends on the accuracies and on whether deliberate misses are allowed; a choice that is best in one state may change once misses create loops, so solve the whole system.",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "s_first_step_conditioning",
+   "truel",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(n\\) players each choose an integer from 0 to 100. The prize goes to the player whose number is closest to two-thirds of the average of all chosen numbers. Assume common knowledge of rationality. What number should each player choose?",
+  "back": "<b>Answer:</b> 0, the unique equilibrium.<br><b>Structure:</b> s_game_theory_equilibrium. Trigger: a target that is a fixed fraction (below 1) of the average.<br><b>Key move:</b> Iterated elimination of dominated strategies: if everyone is known to pick at most \\(M\\), the target is at most \\(2M/3\\), so picks above \\(2M/3\\) are dominated.<br><b>Working:</b> \\(100\\to66.7\\to44.4\\to\\cdots\\). After 12 rounds the bound is \\(100\\,(2/3)^{12}\\approx0.77\\lt 1\\), so only 0 survives among integers.<br><b>Sanity check:</b> Each round removes a third of the remaining range.<br><b>Transfer:</b> The half-of-average twin (next card).",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "guessing_game",
+   "iterated_dominance",
+   "nash",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two players simultaneously play rock-paper-scissors: win = +1, lose = −1, tie = 0. What is the Nash equilibrium, and what is the value of the game?",
+  "back": "<b>Answer:</b> Each plays rock, paper and scissors with probability 1/3. The value is 0.<br><b>Structure:</b> s_game_theory_equilibrium. Trigger: a zero-sum game with no pure equilibrium.<br><b>Key move:</b> Make the opponent indifferent between replies: a mixed strategy under which every pure reply has the same expected payoff.<br><b>Working:</b> Against uniform play each pure reply earns \\(\\tfrac13(1+0-1)=0\\), so no reply gains and the uniform strategy guarantees 0.<br><b>Sanity check:</b> A biased strategy (rock with probability 0.5) gives the opponent a positive expected gain from paper.<br><b>Transfer:</b> Matching pennies (1/2 each, value 0).",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "rock_paper_scissors",
+   "mixed_strategy",
+   "nash",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two firms sell identical products at the same constant marginal cost \\(c\\). Each simultaneously posts a price. Consumers buy from the cheaper firm, splitting evenly on a tie. What is the Nash equilibrium?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_game_theory_equilibrium.<br><b>Trigger:</b> simultaneous price choices with winner-takes-all demand; undercutting is profitable whenever price is above cost.<br><b>Key move:</b> Undercut until price equals marginal cost; a further cut would make profit negative.<br><b>Answer:</b> Both firms price at \\(c\\) and earn zero profit. This is the unique equilibrium.",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "bertrand",
+   "pricing",
+   "nash",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Each of \\(n\\) players picks an integer from 0 to 100. The player whose number is closest to half of the group's average wins a prize. Under common knowledge of rationality, which number wins?",
+  "back": "<b>Classic:</b> the two-thirds-of-the-average guessing game.<br><b>Mapping:</b> the target fraction is 1/2 instead of 2/3, so each elimination round halves the top of the range.<br><b>Answer:</b> 0. After 7 rounds \\(100/2^7\\lt 1\\).",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "guessing_game",
+   "iterated_dominance",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Three bidders each have a private value drawn uniformly from \\([0,1]\\), independent of the others. In a sealed first-price auction the highest bid wins and pays its own bid. Assume a symmetric, increasing equilibrium. What is the equilibrium bid as a function of value?",
+  "back": "<b>Answer:</b> \\(b(v)=\\tfrac23 v\\).<br><b>Structure:</b> s_game_theory_equilibrium, s_order_statistics. Trigger: private values, sealed bids, pay-your-own-bid.<br><b>Key move:</b> A bid \\(b\\) beats both rivals iff each rival's value is below \\(\\tfrac32 b\\) (they bid \\(\\tfrac23X\\)). That has probability \\((\\tfrac32 b)^2\\). Maximise \\((v-b)\\cdot\\tfrac94 b^2\\).<br><b>Working:</b> First-order condition: \\(\\tfrac{d}{db}[(v-b)b^2]=2vb-3b^2=0\\), so \\(b=\\tfrac23v\\). In general, with n bidders, \\(b(v)=\\tfrac{n-1}{n}v\\).<br><b>Sanity check:</b> A grid search over bids confirms \\(\\tfrac23v\\) at \\(v=0.2,0.5,0.9\\); with 2 bidders the same method gives \\(v/2\\).<br><b>Transfer:</b> Second-price auction (truthful, next card) and the two-bidder version (later card).",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "s_order_statistics",
+   "auction",
+   "first_price",
+   "bidding",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A sealed-bid second-price auction (Vickrey): the highest bid wins and pays the second-highest bid. You value the item at \\(v\\). What should you bid?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_game_theory_equilibrium (dominant strategy).<br><b>Trigger:</b> the price paid does not depend on your own bid, only on rivals' bids.<br><b>Key move:</b> Bidding your value weakly dominates every other bid: you win exactly when winning is profitable.<br><b>Answer:</b> Bid \\(v\\) (truthful). Any deviation either loses a profitable win or wins a loss.",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "auction",
+   "second_price",
+   "dominant_strategy",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When does the winner's curse arise in an auction, and how do you correct for it?",
+  "back": "<b>Triggers:</b> common value (one true value that bidders estimate with noise); the winner is the bidder with the highest estimate.<br><b>Move:</b> condition on winning. Your estimate is biased upward when you are the highest of several noisy estimates, so bid the expected value given that you won, not your raw estimate.<br><b>Example:</b> a jar of coins guessed by several people; the highest guess is likely an overestimate.<br><b>Failure mode:</b> with independent private values there is no common true value to overpay for, so no curse.",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "s_conditional_expectation_tower",
+   "auction",
+   "winners_curse",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A two-bidder auction with values uniform on \\([0,1]\\), private and independent. The highest bid wins and pays its own bid (first price). In the second-price version, truthful bidding is optimal. What is the symmetric equilibrium bid for value \\(v\\) in the first-price version?",
+  "back": "<b>What breaks:</b> truthful bidding. Under first price the winner pays his own bid, so bidding his value gives zero surplus, and the incentive to shade appears.<br><b>Fix:</b> If the rival bids \\(x/2\\), a bid \\(b\\) wins with probability \\(2b\\). Maximise \\((v-b)\\cdot 2b\\): first-order condition \\(2v-4b=0\\).<br><b>New answer:</b> \\(b(v)=v/2\\), which is the formula \\((n-1)v/n\\) with \\(n=2\\).",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "s_order_statistics",
+   "auction",
+   "first_price",
+   "perturbation",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Four people must cross a bridge at night. They have one torch, the bridge holds at most two people, and each pair crosses at the speed of the slower one. Their crossing times are 1, 2, 5 and 10 minutes. What is the minimum total time?",
+  "back": "<b>Answer:</b> 17 minutes.<br><b>Structure:</b> s_dynamic_programming. Trigger: a shared torch must come back, and a pair's cost is its slower member.<br><b>Key move:</b> Send the two fastest over, the fastest returns the torch; then the two slowest cross together, the second-fastest returns, and the two fastest cross.<br><b>Working:</b> \\((1,2)\\) cross: 2. 1 returns: 1. \\((5,10)\\) cross: 10. 2 returns: 2. \\((1,2)\\) cross: 2. Total \\(2+1+10+2+2=17\\). For sorted times \\(a\\le b\\le c\\le d\\), the answer is \\(\\min(a+3b+d,\\;2a+c+d)\\), which gives 17 here.<br><b>Sanity check:</b> An exhaustive shortest-path search over all states confirms 17.<br><b>Transfer:</b> The capacity-three variant (next card); the 1, 2, 5, 8 times give 15.",
+  "tags": [
+   "s_dynamic_programming",
+   "bridge_torch",
+   "crossing",
+   "shortest_path",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "The same four people (1, 2, 5, 10 minutes) and one torch, but the bridge now holds up to three people at once (the group still moves at the slowest member's pace). What is the minimum total time?",
+  "back": "<b>What breaks:</b> the two-person pairing bound. With capacity 3 the slowest person can cross with two others and nobody needs to escort him back.<br><b>Fix:</b> Let 1 and 2 cross (2), 1 returns (1), then 1, 5 and 10 cross together (10).<br><b>New answer:</b> 13 minutes. Exhaustive shortest-path search confirms this is optimal.",
+  "tags": [
+   "s_dynamic_programming",
+   "bridge_torch",
+   "perturbation",
+   "crossing",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Four people with different crossing times share one torch on a bridge that holds two people. Which structure applies, and what is the key decision?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_dynamic_programming (state: who is on each side, and where the torch is).<br><b>Trigger:</b> a shared resource (the torch) must return, and a pair's cost is its slower member's time.<br><b>Key move:</b> Two patterns compete: the two slowest cross together, or the fastest escorts each slow person. Compare \\(a+3b+d\\) and \\(2a+c+d\\) for sorted times \\(a\\le b\\le c\\le d\\).<br><b>Answer:</b> The minimum of those two; for \\((1,2,5,10)\\) it is 17.",
+  "tags": [
+   "s_dynamic_programming",
+   "bridge_torch",
+   "crossing",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the smaller angle between the hour and minute hands of a clock at 3:15?",
+  "back": "<b>Answer:</b> \\(7.5^\\circ\\).<br><b>Structure:</b> s_dimensional_analysis (rates). Trigger: two hands turning at constant rates.<br><b>Key move:</b> The hour hand turns \\(0.5^\\circ\\) per minute and the minute hand \\(6^\\circ\\) per minute; the angle is \\(|30h-5.5m|\\).<br><b>Working:</b> At 3:15 the hour hand is at \\(90+7.5=97.5^\\circ\\) and the minute hand at \\(90^\\circ\\). Difference \\(7.5^\\circ\\).<br><b>Sanity check:</b> The hands start 90° apart at 3:00 and close at \\(5.5^\\circ\\) per minute: \\(90-15\\cdot5.5=7.5\\).<br><b>Transfer:</b> Overlaps of the two hands (next card).",
+  "tags": [
+   "s_dimensional_analysis",
+   "clock",
+   "angles",
+   "mental_math",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How many times in 24 hours do the hour and minute hands of a clock exactly overlap?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_dimensional_analysis (relative rate).<br><b>Trigger:</b> two hands with constant rates; they coincide when the relative angle is a multiple of 360°.<br><b>Key move:</b> Relative speed is \\(6-0.5=5.5^\\circ\\) per minute, so overlaps are \\(720/11\\) minutes apart.<br><b>Answer:</b> 22 times in 24 hours (11 in 12 hours).",
+  "tags": [
+   "s_dimensional_analysis",
+   "clock",
+   "angles",
+   "mental_math",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A stick of length 1 m has \\(n\\) ants at independent uniform positions, each facing a random direction. All walk at 1 m/min. When two meet they reverse direction; an ant that reaches an end falls off. What is the expected time until the last ant falls off, for general \\(n\\) and for \\(n=2\\)?",
+  "back": "<b>Answer:</b> \\(\\frac{n}{n+1}\\) minutes; for \\(n=2\\), \\(\\tfrac23\\) minutes.<br><b>Structure:</b> s_bijection (ghost relabelling), s_order_statistics. Trigger: identical speeds and collisions that reverse direction, which is the same as passing through with identities swapped.<br><b>Key move:</b> Ignore collisions and let ghosts pass through. The set of fall times is unchanged, and each ghost falls at its distance to the end it faces.<br><b>Working:</b> Each ghost's distance to its facing end is uniform on \\([0,1]\\). The last fall is the maximum of \\(n\\) i.i.d. uniforms, with mean \\(n/(n+1)\\).<br><b>Sanity check:</b> \\(n=1\\) gives 1/2. Monte Carlo of the ghost model over 200,000 trials gives 0.6665 (n=2), 0.7499 (n=3), 0.8333 (n=5).<br><b>Transfer:</b> Light or cars passing through each other; the same bijection.",
+  "tags": [
+   "s_bijection",
+   "s_order_statistics",
+   "ants",
+   "stick",
+   "relabelling",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ants on a stick bounce off each other when they meet, all at the same speed. What structure gives the time of the last fall without tracking collisions?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_bijection (relabelling / ghost trick).<br><b>Trigger:</b> identical speeds, so reversing on collision is the same as passing through with identities swapped.<br><b>Key move:</b> The multiset of fall times is the same for ghosts, so the last fall equals the largest ghost fall time.<br><b>Answer:</b> The last fall time is the maximum over ants of their distance to the end they face.",
+  "tags": [
+   "s_bijection",
+   "ants",
+   "relabelling",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Five sailors and a monkey are on an island with a pile of coconuts. At night, each sailor in turn gives one coconut to the monkey, divides the rest into five equal piles, and keeps one pile (leaving the other four). In the morning the remaining pile divides into five equal piles with none left over. What is the smallest starting pile?",
+  "back": "<b>Answer:</b> 3121 (= \\(5^5-4\\)).<br><b>Structure:</b> s_recursion, s_invariant (congruence mod 5). Trigger: repeated divide-and-keep with one leftover each step.<br><b>Key move:</b> A night turns \\(N\\) into \\(\\tfrac45(N-1)\\), which needs \\(N\\equiv1\\pmod5\\). Work out the chain for a candidate and check each step.<br><b>Working:</b> For \\(N=3121\\): 3121, 2496, 1996, 1596, 1276, 1020. Each step has the form \\(N\\equiv1\\pmod5\\), and \\(1020=5\\cdot204\\) splits exactly in the morning.<br><b>Sanity check:</b> Brute-force search over candidates gives 3121 as the smallest.<br><b>Transfer:</b> Three merchants and coins (twin card), and the general formula \\(n^n-(n-1)\\).",
+  "tags": [
+   "s_recursion",
+   "s_invariant",
+   "coconuts",
+   "monkey",
+   "sailors",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A bag holds coins. Three merchants each take turns at night: each removes one coin for charity, splits the rest into three equal heaps, and keeps one heap. In the morning the remaining heap splits into three equal heaps with none left over. What is the smallest starting number of coins?",
+  "back": "<b>Classic:</b> the monkey and coconuts problem with three sailors.<br><b>Mapping:</b> charity coin = the monkey's coconut; merchants = sailors; heaps = piles.<br><b>Answer:</b> 25 coins. Check: \\(25\\to16\\to10\\to6\\), and \\(6=3\\cdot2\\) splits exactly. In general the answer is \\(n^n-(n-1)\\), so \\(3^3-2=25\\).",
+  "tags": [
+   "s_recursion",
+   "s_invariant",
+   "coins",
+   "congruences",
+   "recursion",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A room has one light bulb, initially off. Outside are three switches; exactly one controls the bulb. You may set the switches however you like, but you may enter the room only once. How do you find the switch that controls the bulb?",
+  "back": "<b>Answer:</b> Turn switch A on and wait a few minutes. Turn A off, turn B on, then enter. If the bulb is lit, it is B. If it is off and warm, it is A. If it is off and cold, it is C.<br><b>Structure:</b> s_information_design. Trigger: one observation that carries more than two states.<br><b>Key move:</b> Use heat as a second channel: the bulb shows three observable states (on, off-warm, off-cold).<br><b>Working:</b> Three switches need three distinguishable outcomes; a single on/off reading gives only two.<br><b>Sanity check:</b> Three outcomes for three switches; a fourth switch would need a fourth observable state.<br><b>Transfer:</b> Any one-observation problem with more than two hidden labels: find a second measurable signal.",
+  "tags": [
+   "s_information_design",
+   "light_bulbs",
+   "switches",
+   "information",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A room has one light bulb, and you may enter it only once. How many switches can you identify with a single visit, and what triggers the answer?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_information_design.<br><b>Trigger:</b> one observation, but the bulb gives more than on/off: on, off-but-warm, off-and-cold.<br><b>Key move:</b> Count observable states, not just the on/off bit.<br><b>Answer:</b> Three switches (on, warm-off, cold-off), using the timing trick from the previous solve.",
+  "tags": [
+   "s_information_design",
+   "light_bulbs",
+   "switches",
+   "information",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "On an island, 100 people have blue eyes and the rest have brown eyes. Each sees everyone else's eyes but not their own. There are no mirrors and no communication. Each person follows this rule: as soon as you know your own eye colour, leave the island at dawn the next morning. A visiting guru says in front of everyone: 'At least one of you has blue eyes.' Everyone accepts it and is perfectly logical. What happens?",
+  "back": "<b>Answer:</b> All 100 blue-eyed people leave together on the 100th night after the guru's statement. Brown-eyed people never leave.<br><b>Structure:</b> s_recursion (induction on common knowledge). Trigger: a public statement makes a fact common knowledge; each night's silence is public information.<br><b>Key move:</b> With \\(k\\) blue-eyed people, a blue-eyed person sees \\(k-1\\) blue eyes. If nobody has left by night \\(k-1\\), everyone infers there are at least \\(k\\), so the blue-eyed leave on night \\(k\\).<br><b>Working:</b> With one blue-eyed person, he sees no blue eyes and leaves on night 1 because of the guru. With two, each sees one and waits; both leave on night 2. Induction gives night \\(b\\) for \\(b\\) blue-eyed people.<br><b>Sanity check:</b> A possible-worlds elimination check for 1 to 5 blue-eyed people confirms they leave together on night \\(b\\).<br><b>Transfer:</b> Muddy children (twin card).",
+  "tags": [
+   "s_recursion",
+   "blue_eyes",
+   "common_knowledge",
+   "islanders",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "The same island: 100 blue-eyed people, others brown-eyed, each sees everyone else's eyes but not their own, no mirrors, and everyone leaves at dawn once they know their own colour. This time no guru speaks, and nobody announces anything. What happens?",
+  "back": "<b>What breaks:</b> the common-knowledge chain never starts. Each person sees only others' eyes, and no statement makes the count common knowledge.<br><b>Fix:</b> None needed; without the statement, a blue-eyed person who sees 99 blue eyes cannot tell whether he is blue, because the brown-eyed view looks identical from his side of the information.<br><b>New answer:</b> Nobody ever leaves. Possible-world elimination with no announcement removes no possibilities, so nobody knows their own colour (checked with a 3-person model).",
+  "tags": [
+   "s_recursion",
+   "blue_eyes",
+   "common_knowledge",
+   "perturbation",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Several children play in mud, and some of them have muddy foreheads. Each sees the others' foreheads but not their own. A father says aloud that at least one child is muddy. Then each minute, every child who knows he is muddy steps forward. Children are perfectly logical, and everyone hears the father. If exactly \\(k\\) children are muddy, when do the muddy children step forward?",
+  "back": "<b>Classic:</b> blue-eyed islanders (the guru's statement gives common knowledge of 'at least one').<br><b>Mapping:</b> muddy forehead = blue eye; the father = the guru; stepping forward = leaving the island.<br><b>Answer:</b> All \\(k\\) muddy children step forward together in round \\(k\\). The same induction and the same elimination check apply.",
+  "tags": [
+   "s_recursion",
+   "muddy_children",
+   "common_knowledge",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When does an announcement create common knowledge, and when does it only create shared knowledge?",
+  "back": "<b>Triggers:</b> a public announcement that everyone hears, where everyone knows that everyone heard it; reasoning about others' knowledge of others' knowledge.<br><b>Move:</b> after each public event, remove the possibilities inconsistent with what was observed (silence, action, or a statement). Track what each agent knows.<br><b>Example:</b> the guru's statement makes 'at least one blue' common knowledge; each night's non-departure reveals a little more.<br><b>Failure mode:</b> a private message, or one that not everyone hears, gives shared knowledge at most a few levels deep; without a public announcement the chain never starts (the no-guru variant).",
+  "tags": [
+   "s_recursion",
+   "common_knowledge",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Six pirates, ranked 1 (most senior) to 6, divide 100 gold coins by the classic rules: the most senior proposes; a proposal needs at least half the votes, the proposer's own included; a rejected proposer is thrown overboard. Pirates first want to survive, then to maximise gold. What does pirate 1 propose?",
+  "back": "<b>Answer:</b> \\((98,0,1,0,1,0)\\): pirate 1 keeps 98; pirates 3 and 5 get one coin each.<br><b>Structure:</b> s_backward_induction, s_game_theory_equilibrium.<br><b>Key move:</b> Six pirates need 3 votes (his own plus 2). Buy the two cheapest votes, which are the juniors who get 0 in the five-pirate game.<br><b>Working:</b> The five-pirate split \\((98,0,1,0,1)\\) gives pirates 2 to 6 the values 98, 0, 1, 0, 1 in that order. The zeros are pirates 3 and 5, so each is offered 1 coin: \\(100-2=98\\) kept.<br><b>Sanity check:</b> Payoffs sum to 100, and the majority is exactly 3 of 6.<br><b>Transfer:</b> The five-pirate split (card above).",
+  "tags": [
+   "s_backward_induction",
+   "s_game_theory_equilibrium",
+   "pirates",
+   "game_theory",
+   "coins",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 5×5 board has two opposite corners removed. Can the remaining 23 squares be covered exactly by 1×2 dominoes?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_parity (counting).<br><b>Trigger:</b> a domino covers exactly two squares, so the number of squares must be even.<br><b>Key move:</b> Count the squares before looking at colours.<br><b>Answer:</b> No. 25 − 2 = 23 is odd, so no domino tiling exists.",
+  "tags": [
+   "s_parity",
+   "tiling",
+   "dominoes",
+   "counting",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Same subtraction game as before: a pile of 10 counters, two players alternate, the last counter wins. This time the allowed moves are 1, 2 or 4 counters. With perfect play, who wins, and what is the winning first move?",
+  "back": "<b>What breaks:</b> the losing positions. With moves {1,3,4} they are 0, 2, 7, 9. With moves {1,2,4} they are 0, 3, 6, 9, repeating with period 3.<br><b>Fix:</b> Recompute the Grundy values for \\(n=0..10\\): 0,1,2,0,1,2,0,1,2,0,1.<br><b>New answer:</b> The first player still wins: take 1, leaving 9, which is losing. Grundy value of 10 is 1.",
+  "tags": [
+   "s_dynamic_programming",
+   "s_game_theory_equilibrium",
+   "subtraction_game",
+   "grundy",
+   "perturbation",
+   "fmt_perturb"
+  ]
+ }
+]
