@@ -52,10 +52,10 @@ report(1, "fixed points of f(s)=s: only s=1", 1, 1 if set(roots) == {sp.Integer(
 report(1, "f'(1) = mean offspring = 1", 1, int(sp.diff(fexpr, s).subs(s, 1)))
 report(1, "f(s)-s = (s-1)^2/3 (double root)", 1, 1 if sp.simplify(fexpr - s - (s - 1) ** 2 / 3) == 0 else 0)
 # iterate f_n(0): extinction by generation n tends to 1 (slowly, critical case)
-q = F(0)
+q = 0.0
 for _ in range(1000):
     q = (1 + q + q * q) / 3
-report(1, "f_1000(0) > 0.99 (extinction certain)", 1, 1 if float(q) > 0.99 else 0, extra=f"(f_1000(0)={float(q):.5f})")
+report(1, "f_1000(0) > 0.99 (extinction certain)", 1, 1 if q > 0.99 else 0, extra=f"(f_1000(0)={q:.5f})")
 q2 = (1 + F(1, 3) + F(1, 9)) / 3  # f(f(0)), f(0)=1/3
 report(1, "P(Z_2 = 0) = f(f(0)) = 13/27", F(13, 27), q2)
 N = 100000
@@ -356,11 +356,13 @@ report(10, "P(best) with threshold 3 = 0.3987 (2 d.p. 0.40)", 1,
 m3 = 3
 E_rule = F(0)
 pno = F(1)  # P(no selection among m+1..k-1)
-for k in range(m3 + 1, nS + 1):
+for k in range(m3 + 1, nS):
     pk = pno / k
     E_rule += pk * F(nS + 1, k + 1)
     pno *= (1 - F(1, k))
-# nothing selected: last candidate forced, its absolute rank has mean r given relative rank r
+# k = n: selected if relatively best (R_n = 1) and nothing earlier was selected
+E_rule += (pno / nS) * F(nS + 1, nS + 1)
+# nothing selected among m+1..n-1: the last candidate is forced, and A_n = R_n exactly
 E_rule += pno * sum(F(1, nS) * r for r in range(2, nS + 1))
 rule_e = np.zeros(Np); sel = np.zeros(Np, bool)
 for k in range(1, nS + 1):
@@ -373,7 +375,7 @@ mc_check(10, "1/e rule (m=3) E[rank]: formula vs MC", E_rule, float(rule_e.mean(
          float(rule_e.std(ddof=1) / math.sqrt(Np)), Np)
 report(10, "1/e rule is NOT optimal for E[rank]: E_rule > optimum", 1, 1 if E_rule > V_opt else 0,
        extra=f"(E_rule={float(E_rule):.4f})")
-report(10, "E_rule exact = 569/200", F(569, 200), E_rule)
+report(10, "E_rule exact = 121/40", F(121, 40), E_rule)
 rel2_hired = any(policy[k][2] for k in range(2, nS + 1))
 report(10, "optimal expected-rank rule hires a relative 2nd-best at some k", 1, 1 if rel2_hired else 0)
 

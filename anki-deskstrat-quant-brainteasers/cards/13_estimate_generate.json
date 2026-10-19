@@ -344,7 +344,7 @@
   "back": "<b>Bounds:</b> \\(P(D\\mid +)\\le 1\\) trivially. The base rate gives the scale: \\(P(D\\mid +)\\approx \\frac{\\text{prevalence}}{\\text{prevalence}+\\text{FPR}}\\).<br><b>Ballpark:</b> \\(0.01/(0.01+0.05)=1/6\\approx 0.17\\).<br><b>Exact:</b> \\(\\frac{0.01\\cdot 0.99}{0.01\\cdot 0.99+0.99\\cdot 0.05}=\\frac16\\approx 0.1667\\).<br><b>Gap lesson:</b> The 99% sensitivity cancels exactly here, leaving prevalence over prevalence-plus-FPR. The lesson is base-rate neglect: most positives are false because the false-positive rate dwarfs the prevalence.",
   "tags": [
    "s_bayes",
-   "bayes",
+   "bayesian_updating",
    "conditional_probability",
    "fmt_estimate"
   ],
@@ -538,7 +538,7 @@
   "tags": [
    "s_convexity_jensen",
    "exponential",
-   "medians",
+   "median",
    "fmt_estimate"
   ]
  },
@@ -655,7 +655,7 @@
   "back": "<b>Model problem:</b> A coin is fair or has \\(P(H)=0.8\\), each with prior \\(1/2\\). You flip until the first tail, then stop. You observe exactly 3 heads before that tail. What is the probability the coin is biased?<br><b>Solution:</b> Likelihood of the full observed sequence HHHT: fair gives \\((1/2)^4=1/16\\), biased gives \\(0.8^3\\cdot0.2=0.1024\\). Posterior \\(=\\frac{0.1024}{0.1024+0.0625}\\).<br><b>Answer:</b> \\(\\approx 0.621\\). Simulation gives 0.622.<br><b>What forces the structure:</b> (1) The stopping rule is data-dependent: the stop at the first tail is part of the observed event, so the likelihood must include the final tail. (2) Biased coins produce longer heads runs, so the length of the run carries information. (3) The posterior uses the full sequence, not the head count alone. Dropping the stop gives \\(P(3H)=\\tfrac18\\) vs \\(0.512\\) and the wrong answer 0.80.<br><b>Check your own:</b><ol><li>Write the likelihood of the complete observed event, including what stopped the process.</li><li>Compare with the naive model where only the count is recorded; the two answers must differ, or the stop carries no information.</li><li>The posterior must lie between the prior 1/2 and 1, and move toward 'biased' with more heads.</li></ol>",
   "tags": [
    "s_bayes",
-   "bayes",
+   "bayesian_updating",
    "stopping_rules",
    "fmt_generate"
   ]
@@ -916,7 +916,7 @@
    "s_change_of_measure",
    "s_replication",
    "girsanov",
-   "digital_option",
+   "digital",
    "fmt_generate"
   ]
  },

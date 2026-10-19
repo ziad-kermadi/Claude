@@ -712,8 +712,7 @@
    "s_complement",
    "s_bijection",
    "poker",
-   "cards",
-   "generalisation"
+   "cards"
   ],
   "hints": [
    "With seven cards and thirteen ranks, what does a hand with all seven ranks different require, and how many ranks does such a hand use?",
@@ -1284,6 +1283,214 @@
    "s_bijection",
    "identities",
    "generating_function"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How many permutations of \\(\\{1,2,\\dots,9\\}\\) contain no increasing subsequence of length 4 and no decreasing subsequence of length 4?",
+  "back": "<b>Answer:</b> \\(42^2=1764\\)<br><b>Structure:</b> s_extremal with s_bijection: the Robinson-Schensted correspondence turns the two chain conditions into one shape condition.<br><b>Key move:</b> RSK sends a permutation to a pair of standard Young tableaux of one shape \\(\\lambda\\). The first row length is the longest increasing subsequence and the number of rows is the longest decreasing one. Both at most 3 means \\(\\lambda\\) fits in a \\(3\\times3\\) box, and for \\(|\\lambda|=9\\) the only such shape is \\((3,3,3)\\).<br><b>Working:</b> The hook length formula gives \\(f^{(3,3,3)}=\\dfrac{9!}{\\prod\\text{hooks}}=\\dfrac{362880}{8640}=42\\). RSK then counts the permutations as \\(\\sum_\\lambda (f^\\lambda)^2=42^2=1764\\).<br><b>Sanity check:</b> This is a fraction \\(1764/9!\\approx0.005\\) of all permutations. The count is zero at \\(n=10\\), which is Erdős-Szekeres: \\(10=3\\cdot3+1\\).<br><b>Transfer:</b> Permutations avoiding only 123 number \\(C_9=4862\\) (Catalan), a different shape count. Longest monotone subsequences of a uniform random permutation are about \\(2\\sqrt n\\).",
+  "tags": [
+   "fmt_solve",
+   "s_extremal",
+   "s_bijection",
+   "erdos_szekeres",
+   "permutations",
+   "monotone_subsequences"
+  ],
+  "hints": [
+   "Think of a permutation as the point set \\((i,\\pi(i))\\). Which increasing and decreasing chains can every such point set be forced to contain, and what does avoiding both say about the shape of the set?",
+   "Names the move: Robinson-Schensted insertion, a bijection from permutations to pairs of standard Young tableaux of the same shape. The row and column lengths of that shape are the two longest chains.",
+   "Setup: the answer is \\(\\sum_\\lambda (f^\\lambda)^2\\) over shapes \\(\\lambda\\) of size 9 that fit in a \\(3\\times3\\) box. Compute \\(f^\\lambda\\) with the hook length formula."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> Five points are placed anywhere in the unit square \\([0,1]^2\\). What is the largest possible value of the smallest pairwise Euclidean distance between them?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_pigeonhole with s_extremal: cut the region into cells of small diameter, so a pigeon count forces two points close together.<br><b>Trigger:</b> a fixed number of points in a bounded region, with a max-min question about the closest pair.<br><b>Key move:</b> Cut the square into four closed sub-squares of side \\(\\tfrac12\\). Five points in four cells put two points in one cell, and two points in a closed \\(\\tfrac12\\times\\tfrac12\\) cell are at distance at most \\(\\tfrac{\\sqrt2}{2}\\), the cell diagonal.<br><b>Answer:</b> \\(\\dfrac{\\sqrt2}{2}\\approx0.7071\\). It is attained by the four corners plus the centre: centre-to-corner distance is \\(\\tfrac{\\sqrt2}{2}\\), and corner-to-corner distance is at least 1.",
+  "tags": [
+   "fmt_recognise",
+   "s_pigeonhole",
+   "s_extremal",
+   "unit_square",
+   "distance"
+  ],
+  "figs_back": [
+   "fgA_square_cells"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: any 7 integers contain a nonempty subset whose sum is divisible by 7. Change: you are given only 6 integers. Must a nonempty subset with sum divisible by 7 still exist?",
+  "back": "<b>What breaks:</b> the proof uses the prefix sums \\(S_0=0,S_1,\\dots,S_7\\) of the 7 integers: 8 values in 7 residues, so two agree mod 7, and the block between them has sum divisible by 7. With 6 integers you only get \\(S_0,\\dots,S_6\\): 7 values in 7 residues, and no collision is forced.<br><b>Fix:</b> look for a counterexample. Take \\(1,1,1,1,1,1\\). Its nonempty subset sums are \\(1,\\dots,6\\), none divisible by 7.<br><b>New answer:</b> No. Six integers do not guarantee such a subset, and the all-ones example is a counterexample.",
+  "tags": [
+   "fmt_perturb",
+   "s_pigeonhole",
+   "subset_sums",
+   "divisibility",
+   "prefix_sums"
+  ],
+  "hints": [
+   "Which argument proves the 7-integer case, and how many objects does it place into how many boxes? Recount for 6 integers.",
+   "Names the move: pigeonhole on the prefix sums \\(S_0,\\dots,S_n\\) modulo \\(n\\). A repeated residue \\(S_i\\equiv S_j\\) gives a block of consecutive integers whose sum is divisible by \\(n\\).",
+   "Setup: with six integers, list the residues of \\(S_0,\\dots,S_6\\) mod 7 and check whether a repeat is forced. Then test a constant sequence \\(k,k,\\dots,k\\)."
+  ],
+  "figs_back": [
+   "fgA_prefix_clock"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for pigeonhole on a chain cover, and when does it fail?",
+  "back": "<b>Triggers:</b> a forbidden relation between pairs of objects (for example \"differ by exactly 2\"), where the ground set can be covered by disjoint pairs that are themselves forbidden. Taking more objects than there are pairs then forces a forbidden pair.<br><b>Move:</b> partition the ground set into pairs \\(\\{x,x+2\\}\\) (or chains) and count them. Canonical example: \\(\\{1,\\dots,100\\}\\) splits into the 50 pairs \\(\\{1,3\\},\\{5,7\\},\\dots,\\{97,99\\}\\) and \\(\\{2,4\\},\\dots,\\{98,100\\}\\). Any 51 integers from 1 to 100 contain two that differ by exactly 2, and 50 need not: take \\(1,2,5,6,9,10,\\dots\\).<br><b>Failure mode:</b> the boxes must cover the conflict graph by edges and singletons. This is exact for disjoint paths, as here, but not in general. An odd cycle of conflicts needs one extra box, so the box count overstates the largest safe set; compute the independence number directly in that case.",
+  "tags": [
+   "fmt_toolkit",
+   "s_pigeonhole",
+   "s_extremal",
+   "pairing",
+   "forced_collision"
+  ],
+  "figs_back": [
+   "fgA_chain_pairs"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A bag holds one ticket for each number from 1 to 200. Without looking, you draw tickets one at a time. What is the smallest number you must draw to guarantee that four of the drawn tickets leave the same remainder on division by 9?",
+  "back": "<b>Classic:</b> generalised pigeonhole. With \\(n\\) boxes, forcing \\(r\\) objects into one box needs \\(n(r-1)+1\\) objects.<br><b>Mapping:</b> the remainder mod 9 is the box, a ticket is an object, and four tickets with one remainder are four in one box. Each remainder occurs at least 22 times in 1 to 200, so the bag can supply three tickets per remainder.<br><b>Answer:</b> \\(9\\cdot3+1=28\\).<br><b>Sanity check:</b> 27 tickets with three per remainder avoid the event, so 28 is the minimum.<br><b>Transfer:</b> birthday triples: with 365 birthdays, three people share one for sure once there are \\(2\\cdot365+1=731\\) people.",
+  "tags": [
+   "fmt_twin",
+   "s_pigeonhole",
+   "s_extremal",
+   "remainders",
+   "forced_collision"
+  ],
+  "hints": [
+   "Treat the remainder on division by 9 as a label with nine possible values. How many tickets can you hold while every label appears at most three times?",
+   "Names the move: pigeonhole with boxes equal to remainders. Find the largest draw that keeps every box at most three, then add one.",
+   "Setup: let \\(n_r\\) be the number of drawn tickets with remainder \\(r\\). Write the total as \\(\\sum_r n_r\\) and the constraint as \\(n_r\\le3\\)."
+  ],
+  "figs_back": [
+   "fgA_residue_boxes"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How many non-decreasing sequences of integers \\(1\\le a_1\\le a_2\\le a_3\\le a_4\\le a_5\\le 8\\) are there?",
+  "back": "<b>Answer:</b> \\(\\binom{12}{5}=792\\)<br><b>Structure:</b> s_stars_bars with s_bijection: a non-decreasing sequence is a multiset of size 5 from 8 values. Repeats are allowed, so choosing 5 distinct values does not count it.<br><b>Key move:</b> Set \\(b_i=a_i+i-1\\). Then \\(1\\le b_1<b_2<\\dots<b_5\\le 12\\), and this is a bijection onto the 5-element subsets of \\(\\{1,\\dots,12\\}\\). Equal neighbours \\(a_i=a_{i+1}\\) become consecutive \\(b\\)'s.<br><b>Working:</b> \\(\\binom{12}{5}=\\dfrac{12\\cdot11\\cdot10\\cdot9\\cdot8}{5!}=792\\). For example \\((1,1,3,6,6)\\mapsto(1,2,5,9,10)\\).<br><b>Sanity check:</b> Strictly increasing sequences alone number \\(\\binom85=56\\). Allowing repeats must add many more, and 792 is consistent with that.<br><b>Transfer:</b> monomials of degree 5 in 8 variables; sorted outcomes of 5 dice with 8 faces; multisets of 5 sweets from 8 flavours.",
+  "tags": [
+   "fmt_solve",
+   "s_stars_bars",
+   "s_bijection",
+   "counting",
+   "multisets"
+  ],
+  "hints": [
+   "Repeats are allowed, so a plain choice of values is not enough. Is there a shift that turns each non-decreasing sequence into one with distinct entries?",
+   "Names the move: add \\(i-1\\) to the \\(i\\)-th term. This turns the sequence into a strictly increasing one on a larger range.",
+   "Setup: with \\(b_i=a_i+i-1\\), find the range of the \\(b_i\\) and count the subsets of that range with 5 elements."
+  ],
+  "figs_back": [
+   "fgA_monotone_path"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How many integer solutions are there to \\(x_1+x_2+x_3+x_4=15\\) with \\(2\\le x_i\\le 7\\) for every \\(i\\)?",
+  "back": "<b>Answer:</b> 104<br><b>Structure:</b> s_stars_bars with s_inclusion_exclusion: the lower bounds are removed by a shift, and the upper bounds by inclusion-exclusion.<br><b>Key move:</b> Put \\(y_i=x_i-2\\), so \\(0\\le y_i\\le5\\) and \\(\\sum y_i=7\\). Count the non-negative solutions, then subtract those in which some \\(y_i\\ge6\\).<br><b>Working:</b> Without the cap, \\(\\binom{7+3}{3}=120\\). For a fixed \\(i\\), \\(y_i\\ge6\\) becomes \\(y_i'=y_i-6\\ge0\\) with sum 1, giving \\(\\binom{1+3}{3}=4\\) ways, so subtract \\(4\\cdot4=16\\). Two capped variables need a sum of at least 12 > 7, so no further term appears. Answer \\(120-16=104\\).<br><b>Sanity check:</b> The map \\(y\\mapsto5-y\\) sends sum 7 to sum 13, so 104 is also the count for sum 13. Enumeration of all \\(6^4\\) tuples gives 104.<br><b>Transfer:</b> sums of four dice with faces 2 to 7; a budget split among four capped items.",
+  "tags": [
+   "fmt_solve",
+   "s_stars_bars",
+   "s_inclusion_exclusion",
+   "bounded_compositions",
+   "counting"
+  ],
+  "hints": [
+   "Lower bounds are awkward for stars and bars. Is there a substitution that makes every variable start at zero?",
+   "Names the move: shift by the lower bound, then count the solutions that break an upper cap by inclusion-exclusion over the variables that break it.",
+   "Setup: with \\(y_i=x_i-2\\), write \\(\\sum y_i=7\\) with \\(0\\le y_i\\le5\\). Ask how many \\(y_i\\) can exceed 5 at the same time."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> How many non-negative integer solutions are there to \\(x_1+x_2+x_3+x_4=21\\) in which \\(x_1\\) is odd and \\(x_2,x_3,x_4\\) are all even?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_stars_bars with a parity constraint: substitute to remove the parity condition, then count with stars and bars.<br><b>Trigger:</b> an integer sum in which each variable must lie in a fixed residue class mod 2.<br><b>Key move:</b> Write \\(x_1=2a+1\\) and \\(x_j=2b_j\\) for \\(j=2,3,4\\), with \\(a,b_j\\ge0\\). Then \\(2(a+b_2+b_3+b_4)+1=21\\), so \\(a+b_2+b_3+b_4=10\\).<br><b>Answer:</b> \\(\\binom{13}{3}=286\\).",
+  "tags": [
+   "fmt_recognise",
+   "s_stars_bars",
+   "parity",
+   "integer_solutions",
+   "stars_bars"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Count the ways four fair dice can total 14 (ordered outcomes, each die showing 1 to 6).<br><br><b>Proposed solution:</b><br><b>L1.</b> Put \\(y_i=x_i-1\\ge0\\), so \\(\\sum y_i=10\\).<br><b>L2.</b> Non-negative solutions of \\(\\sum_{i=1}^{4}y_i=10\\) number \\(\\binom{13}{3}=286\\).<br><b>L3.</b> Each \\(y_i\\) is at most 5 automatically once the total is 10, so the answer is 286.<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L3. The cap \\(y_i\\le5\\) is not implied by \\(\\sum y_i=10\\). The point \\((y_1,y_2,y_3,y_4)=(10,0,0,0)\\) satisfies the sum, but it gives \\(x_1=11\\), which a die cannot show.<br><b>Why it fails:</b> stars and bars counts every non-negative solution, so L2 is right only for the uncapped count. The cap must be removed by inclusion-exclusion.<br><b>Correct answer:</b> \\(\\binom{13}{3}-4\\binom{7}{3}=286-140=146\\). The violations \\(y_i\\ge6\\) leave a sum of 4 (35 ways each), and two violations are impossible.<br><b>Smell:</b> after the substitution, check whether a single variable can exceed its cap for the given total. If it can, the stars-and-bars count overcounts.",
+  "tags": [
+   "fmt_debug",
+   "s_stars_bars",
+   "s_inclusion_exclusion",
+   "dice",
+   "err_missing_cap"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Four fair six-sided dice are rolled and their face values are added. Using the generating function of one die, find the probability that the total is exactly \\(10\\).",
+  "back": "<b>Answer:</b> \\(P(S=10)=\\frac{80}{1296}=\\frac{5}{81}\\approx 0.0617\\).<br><b>Structure:</b> s_generating_function. Trigger: the total of independent dice is a sum of independent terms, so its PGF is the product of the single-die PGFs.<br><b>Key move:</b> Write \\(s+s^2+\\dots+s^6=s\\,\\frac{1-s^6}{1-s}\\). Then \\(P(S=10)\\) is a coefficient of a product of simple series.<br><b>Working:</b> \\([s^{10}]\\,(s+\\dots+s^6)^4=[s^6]\\,(1-s^6)^4(1-s)^{-4}\\). Since \\([s^k](1-s)^{-4}=\\binom{k+3}{3}\\), the constant term of \\((1-s^6)^4\\) gives \\(\\binom{9}{3}=84\\), and the \\(-4s^6\\) term gives \\(-4\\binom{3}{3}=-4\\). So \\(80\\) of the \\(6^4=1296\\) outcomes total 10.<br><b>Sanity check:</b> The mean total is \\(14\\) and the variance is \\(4\\cdot\\frac{35}{12}\\approx 11.67\\). A normal approximation gives a density of about \\(0.059\\) at 10, close to the exact \\(0.062\\).<br><b>Transfer:</b> The same coefficient extraction counts outcomes for any number of dice and any target total, without enumerating \\(6^n\\) outcomes.",
+  "tags": [
+   "s_generating_function",
+   "dice",
+   "sums_of_dice",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Each die contributes one face value. Is there a polynomial whose exponents are the face values, so that the total of four dice is a power of it?",
+   "Name the move: write one die's generating function in closed form, using \\(s+\\dots+s^6=s\\frac{1-s^6}{1-s}\\), and extract one coefficient.",
+   "After removing the factor \\(s^4\\), only the constant and \\(s^6\\) terms of \\((1-s^6)^4\\) can contribute to \\(s^6\\). Use \\((1-s)^{-4}=\\sum_k\\binom{k+3}{3}s^k\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A strip of 10 unit cells is tiled with two kinds of piece: a single cell, which comes in one colour, and a domino covering two adjacent cells, which comes in two colours. How many tilings of the strip are there?",
+  "back": "<b>Answer:</b> \\(a_{10}=683\\).<br><b>Structure:</b> s_generating_function with s_recursion. Trigger: a count of tilings of a strip, where the last piece is one of finitely many types of fixed length.<br><b>Key move:</b> Condition on the last piece: \\(a_n=a_{n-1}+2a_{n-2}\\), with \\(a_0=a_1=1\\). Then \\(A(x)=\\sum_n a_nx^n\\) satisfies \\(A(x)(1-x-2x^2)=1\\).<br><b>Working:</b> \\(A(x)=\\frac{1}{(1-2x)(1+x)}=\\frac{2/3}{1-2x}+\\frac{1/3}{1+x}\\), so \\(a_n=\\frac{2^{n+1}+(-1)^n}{3}\\). The first terms are \\(1,1,3,5,11,21,43,85,171,341,683\\).<br><b>Sanity check:</b> \\(a_{10}/a_9=683/341\\approx 2.003\\). Each step has one way to add a single cell and two ways to add a domino, so the growth rate is the root of \\(\\lambda^2=\\lambda+2\\) that is positive, namely 2.<br><b>Transfer:</b> With one domino colour the recurrence becomes \\(a_n=a_{n-1}+a_{n-2}\\) (Fibonacci), and the growth rate drops from 2 to the golden ratio.",
+  "tags": [
+   "s_generating_function",
+   "s_recursion",
+   "tilings",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Look at the last cell. Which piece covers it, and how long is the rest of the strip?",
+   "Name the move: a linear recurrence. Multiply it by \\(x^n\\), sum over \\(n\\), and get an equation for \\(A(x)=\\sum_n a_nx^n\\).",
+   "Factor \\(1-x-2x^2\\), then split \\(\\frac{1}{1-x-2x^2}\\) into partial fractions."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A coin lands heads with probability \\(\\tfrac14\\). It is flipped \\(5\\) times. What is the probability that the number of heads is even?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_generating_function evaluated at \\(s=-1\\) (the parity sign trick).<br><b>Trigger:</b> 'even number of' asks for the sum of the even-index coefficients of a PGF, and the count is a sum of independent Bernoulli trials.<br><b>Key move:</b> \\(G(s)=E[s^N]=(q+ps)^5\\). Then \\(G(1)=1\\) and \\(G(-1)=(q-p)^5\\), and \\(P(N\\text{ even})=\\tfrac12\\bigl(G(1)+G(-1)\\bigr)\\).<br><b>Answer:</b> \\(\\frac{1+(q-p)^5}{2}=\\frac{1+(1/2)^5}{2}=\\frac{33}{64}\\approx 0.516\\).",
+  "tags": [
+   "s_generating_function",
+   "s_parity",
+   "coins",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A casino wants two custom dice. Each die has six faces, and each face shows a positive whole number (repeats allowed). Players roll one of each die and add the two face values. The casino wants the total to follow exactly the same distribution as the total of two ordinary dice labelled \\(1\\) to \\(6\\). Find labels for the two dice that do this, other than the ordinary labels. Are there any others, up to swapping the dice?",
+  "back": "<b>Answer:</b> \\(\\{1,2,2,3,3,4\\}\\) and \\(\\{1,3,4,5,6,8\\}\\). Up to swapping the two dice, these are the only labels besides the ordinary ones.<br><b>Structure:</b> s_generating_function. This is the Sicherman pair. Trigger: the total of two dice has a PGF equal to the product of the two single-die PGFs, so a relabelling is a factorisation problem.<br><b>Key move:</b> A die with faces \\(F\\) has PGF \\(G_F(s)=\\sum_{f\\in F}s^f\\). Two dice reproduce the standard total law iff \\(G_AG_B=(s+\\dots+s^6)^2\\). Factor \\(s+\\dots+s^6=s(1+s)(1+s+s^2)(1-s+s^2)\\), and use \\(1+s^3=(1+s)(1-s+s^2)\\) to regroup the factors.<br><b>Working:</b> \\(G_A=s(1+s)(1+s+s^2)=s+2s^2+2s^3+s^4\\), so \\(A=\\{1,2,2,3,3,4\\}\\). \\(G_B=s(1+s^3)(1+s+s^2)(1-s+s^2)=s+s^3+s^4+s^5+s^6+s^8\\), so \\(B=\\{1,3,4,5,6,8\\}\\). Their product is \\((s+\\dots+s^6)^2\\).<br><b>Sanity check:</b> The face sums are \\(15\\) and \\(27\\), so the mean total is \\(\\frac{15}{6}+\\frac{27}{6}=7\\), as for two ordinary dice. The largest label cannot exceed 11, because the largest total is 12 and the other die has a label at least 1. An exhaustive search over label sets from 1 to 11 finds no other pair.<br><b>Transfer:</b> The same test decides whether two dice with given face counts can be relabelled: factor the single-die PGF into cyclotomic pieces and look for a regrouping into two products with non-negative coefficients.",
+  "tags": [
+   "s_generating_function",
+   "dice",
+   "relabelling",
+   "fmt_twin"
+  ],
+  "hints": [
+   "A die is a random exponent: the total of two dice is a product of two polynomials in \\(s\\). What does a product of two face polynomials look like?",
+   "Name the move: factor the single-die polynomial into cyclotomic factors, then regroup those factors into two new polynomials with non-negative coefficients.",
+   "Use \\(1+s^3=(1+s)(1-s+s^2)\\) to see which factors can be moved between the two dice. Each new die polynomial must have total coefficient 6."
   ]
  }
 ]

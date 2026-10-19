@@ -70,8 +70,7 @@
    "s_invariant",
    "s_parity",
    "tiling",
-   "colouring",
-   "toolkit",
+   "colourings",
    "fmt_toolkit"
   ],
   "figs_back": [
@@ -239,7 +238,6 @@
    "s_backward_induction",
    "s_game_theory_equilibrium",
    "pirates",
-   "toolkit",
    "game_theory",
    "fmt_toolkit"
   ]
@@ -329,7 +327,6 @@
    "s_information_design",
    "hats",
    "infinite",
-   "toolkit",
    "fmt_toolkit"
   ]
  },
@@ -504,7 +501,6 @@
    "s_information_design",
    "coins",
    "balance_scale",
-   "toolkit",
    "fmt_toolkit"
   ]
  },
@@ -516,7 +512,6 @@
    "s_information_design",
    "coins",
    "balance_scale",
-   "perturbation",
    "fmt_perturb"
   ],
   "hints": [
@@ -566,7 +561,6 @@
    "s_extremal",
    "poison",
    "binary_encoding",
-   "toolkit",
    "fmt_toolkit"
   ],
   "figs_back": [
@@ -603,7 +597,6 @@
    "s_game_theory_equilibrium",
    "nim",
    "misere",
-   "perturbation",
    "fmt_perturb"
   ],
   "hints": [
@@ -678,7 +671,6 @@
    "s_game_theory_equilibrium",
    "grundy",
    "xor",
-   "toolkit",
    "fmt_toolkit"
   ],
   "figs_back": [
@@ -721,7 +713,7 @@
    "s_optional_stopping",
    "cards",
    "red_black",
-   "stopping",
+   "stopping_rules",
    "fmt_solve"
   ],
   "hints": [
@@ -742,7 +734,6 @@
    "s_optional_stopping",
    "cards",
    "red_black",
-   "perturbation",
    "fmt_perturb"
   ],
   "hints": [
@@ -780,7 +771,7 @@
    "s_martingale",
    "cards",
    "betting",
-   "stopping",
+   "stopping_rules",
    "fmt_recognise"
   ]
  },
@@ -827,7 +818,6 @@
    "s_dynamic_programming",
    "s_extremal",
    "secretary",
-   "perturbation",
    "fmt_perturb"
   ],
   "hints": [
@@ -844,7 +834,6 @@
    "s_dynamic_programming",
    "s_extremal",
    "secretary",
-   "toolkit",
    "fmt_toolkit"
   ]
  },
@@ -896,7 +885,6 @@
    "s_first_step_conditioning",
    "s_recursion",
    "duel",
-   "perturbation",
    "fmt_perturb"
   ],
   "hints": [
@@ -934,7 +922,6 @@
    "s_game_theory_equilibrium",
    "s_first_step_conditioning",
    "truel",
-   "toolkit",
    "fmt_toolkit"
   ]
  },
@@ -1048,7 +1035,6 @@
    "s_conditional_expectation_tower",
    "auction",
    "winners_curse",
-   "toolkit",
    "fmt_toolkit"
   ]
  },
@@ -1061,7 +1047,6 @@
    "s_order_statistics",
    "auction",
    "first_price",
-   "perturbation",
    "fmt_perturb"
   ],
   "hints": [
@@ -1100,7 +1085,6 @@
   "tags": [
    "s_dynamic_programming",
    "bridge_torch",
-   "perturbation",
    "crossing",
    "fmt_perturb"
   ],
@@ -1164,7 +1148,7 @@
    "s_bijection",
    "s_order_statistics",
    "ants",
-   "stick",
+   "broken_stick",
    "relabelling",
    "fmt_solve"
   ],
@@ -1293,7 +1277,6 @@
    "s_recursion",
    "blue_eyes",
    "common_knowledge",
-   "perturbation",
    "fmt_perturb"
   ],
   "hints": [
@@ -1328,7 +1311,6 @@
   "tags": [
    "s_recursion",
    "common_knowledge",
-   "toolkit",
    "fmt_toolkit"
   ]
  },
@@ -1374,7 +1356,6 @@
    "s_game_theory_equilibrium",
    "subtraction_game",
    "grundy",
-   "perturbation",
    "fmt_perturb"
   ],
   "hints": [
@@ -1384,6 +1365,167 @@
   ],
   "figs_back": [
    "f06_sub_124_grundy"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "The numbers \\(1,2,3,4\\) are written on a board. A move erases two numbers \\(a\\) and \\(b\\) and writes \\(a+b+ab\\) in their place. After three moves one number remains. What is it?",
+  "back": "<b>Answer:</b> 119<br><b>Structure:</b> s_invariant: a multiplicative weight is conserved by the move.<br><b>Key move:</b> \\((1+a)(1+b)=1+a+b+ab\\). So the move replaces \\(a,b\\) by \\(a+b+ab\\), which leaves \\(P=\\prod(1+x)\\) over the board unchanged.<br><b>Working:</b> Initially \\(P=(2)(3)(4)(5)=120\\). The final single number \\(x\\) has \\(1+x=P=120\\), so \\(x=119\\), whatever the order of moves.<br><b>Sanity check:</b> Two numbers: \\(1,1\\mapsto3\\), and \\((1+1)(1+1)=4=1+3\\). Every merge order of \\(1,2,3,4\\) gives 119 (checked by enumeration).<br><b>Transfer:</b> failure probabilities multiply. With \\(q=1-x\\), the merge \\(x\\oplus y=x+y-xy\\) becomes \\(q_xq_y\\), so the same identity governs independent survival.",
+  "tags": [
+   "fmt_solve",
+   "s_invariant",
+   "board_game",
+   "multiplicative_invariant",
+   "merge"
+  ],
+  "hints": [
+   "Is there a function \\(f\\) of a single number such that the product of \\(f\\) over the board does not change when two numbers are merged?",
+   "Names the move: a multiplicative invariant under the merge. Look for \\(f\\) with \\(f(a+b+ab)=f(a)f(b)\\).",
+   "Setup: let \\(P\\) be the product of \\(1+x\\) over the board. Compute \\(P\\) at the start and relate it to the single final number."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "In the 15-puzzle, fifteen numbered tiles and one blank fill a \\(4\\times4\\) frame, and a tile slides into the blank. What fraction of the \\(16!\\) labelled arrangements of the tiles and blank can be reached from the solved position?",
+  "back": "<b>Answer:</b> \\(\\tfrac12\\), so \\(16!/2=10\\,461\\,394\\,944\\,000\\) arrangements are reachable.<br><b>Structure:</b> s_invariant with s_parity: a parity invariant combining the permutation sign with the blank's row.<br><b>Key move:</b> Read the tiles row by row, and let \\(\\operatorname{inv}\\) be the number of inversions of that sequence with the blank removed. Let \\(r\\) be the blank's row from the top. A horizontal slide keeps both quantities, and a vertical slide changes \\(\\operatorname{inv}\\) by an odd amount and \\(r\\) by 1. So \\(\\operatorname{inv}+r\\pmod2\\) never changes.<br><b>Working:</b> The invariant is a single bit, and the reachable states are exactly those with the solved state's parity (Johnson and Story 1879; Wilson 1974). Hence the reachable count is \\(16!/2\\). Swapping the tiles 14 and 15 flips the parity, so that configuration is unsolvable.<br><b>Sanity check:</b> The bit splits the states evenly, so the fraction is \\(1/2\\). Enumeration of the reachable states on \\(2\\times2\\), \\(2\\times3\\), \\(2\\times4\\) and \\(3\\times3\\) boards gives exactly \\(1/2\\) each time.<br><b>Transfer:</b> the same parity bit decides any sliding puzzle on an even-width board, and a single transposition of two tiles is never reachable.",
+  "tags": [
+   "fmt_solve",
+   "s_invariant",
+   "s_parity",
+   "sliding_puzzle",
+   "permutations"
+  ],
+  "hints": [
+   "Each slide swaps the blank with a neighbouring tile. What does a swap do to the sign of a permutation, and what does moving the blank one row do?",
+   "Names the move: a parity invariant that combines the sign of the tile permutation with the blank's row.",
+   "Setup: let \\(\\operatorname{inv}\\) count the inversions of the tile sequence read row by row, and let \\(r\\) be the blank's row. Show that \\(\\operatorname{inv}+r\\) mod 2 is preserved by a vertical slide, then count the states with the right parity."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: an \\(8\\times8\\) board with \\(a_1\\) and \\(h_8\\) removed cannot be covered by 31 dominoes, since the colour counts are 30 and 32. Change: the pieces are now L-shaped trominoes (three squares of a \\(2\\times2\\) block), and only \\(a_1\\) is removed. Can the remaining 63 squares be covered exactly by L-trominoes? If so, how many are used?",
+  "back": "<b>What breaks:</b> the colour count no longer obstructs. Every L-tromino lies in a \\(2\\times2\\) block and covers two squares of one colour and one of the other, so the colour counts need not balance. The only obstruction left is divisibility, \\(63=3\\cdot21\\).<br><b>Fix:</b> induction on \\(2^n\\times2^n\\) boards with one square removed. Split the board into four quadrants, and handle the quadrant holding the removed square by induction. Place one tromino at the centre covering the inner corner of each of the other three quadrants. Each of those quadrants then has one missing square, so induction applies again. The \\(4\\times4\\) case is in the figure, with five trominoes.<br><b>New answer:</b> Yes. \\(63/3=21\\) L-trominoes.",
+  "tags": [
+   "fmt_perturb",
+   "s_invariant",
+   "s_parity",
+   "tiling",
+   "trominoes",
+   "chessboard"
+  ],
+  "hints": [
+   "How many squares of each colour does an L-tromino cover? Can the colour count still produce a contradiction?",
+   "Names the move: a recursive construction on boards of side \\(2^n\\) with one square removed, using the four quadrants and one central tromino.",
+   "Setup: the area fixes the number of trominoes. Try a \\(4\\times4\\) board minus a corner first, and split it into four \\(2\\times2\\) quadrants."
+  ],
+  "figs_back": [
+   "fgA_tromino_4x4"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> Ten lamps stand in a row, all off. Button \\(i\\) (for \\(i=1,\\dots,8\\)) toggles lamps \\(i\\), \\(i+1\\) and \\(i+2\\). Can you reach the state in which only lamp 1 is on?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_invariant with s_parity: a linear (xor) invariant over the field of two elements.<br><b>Trigger:</b> each press adds a fixed 0/1 vector mod 2, so look for weights \\(c_j\\) whose weighted sum mod 2 is unchanged by every button.<br><b>Key move:</b> Take \\(c=(1,1,0,1,1,0,1,1,0,1)\\). Any three consecutive positions of this period-3 pattern contain exactly two 1s, so each press changes \\(\\sum_j c_jx_j\\) by 2, which is even.<br><b>Answer:</b> No. From all-off the weighted sum is 0, while lamp 1 alone has weighted sum \\(c_1=1\\).<br><b>Working:</b> The 8 button vectors are independent (each has a distinct leading lamp), so the reachable patterns form an 8-dimensional subspace: \\(256\\) of the \\(2^{10}\\) patterns, a quarter. The weight vector \\(c\\) is the single linear check that cuts out this subspace.",
+  "tags": [
+   "fmt_recognise",
+   "s_invariant",
+   "s_parity",
+   "lamps",
+   "xor"
+  ],
+  "figs_back": [
+   "fgA_lamp_weights"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Six cards are labelled \\(1\\) to \\(6\\). A machine takes any two cards, discards them, and returns one card whose label is the remainder, on division by 7, of the product of the two labels. The machine runs until one card is left. What is its label?",
+  "back": "<b>Answer:</b> 6.<br><b>Classic:</b> a conserved quantity under a binary operation. Replacing two numbers by their sum mod \\(k\\) keeps the total mod \\(k\\), so the last number is the total mod \\(k\\), whatever the order.<br><b>Mapping:</b> the labels \\(1,\\dots,6\\) are the non-zero residues mod 7, which form a group under multiplication. Addition becomes multiplication, so the conserved quantity is the product mod 7.<br><b>Working:</b> \\(1\\cdot2\\cdots6=720\\equiv6\\pmod7\\), in line with Wilson's theorem \\((p-1)!\\equiv-1\\pmod p\\). Each step keeps the product mod 7, and the last label lies in \\(\\{1,\\dots,6\\}\\), so it is 6.<br><b>Sanity check:</b> The sum version would give \\(21\\equiv0\\), so the group structure matters. Every merge order gives 6 (checked by enumeration).<br><b>Transfer:</b> any operation from a finite group gives an order-independent final value, for example the XOR of bits in lamp games.",
+  "tags": [
+   "fmt_twin",
+   "s_invariant",
+   "modular",
+   "group_invariant",
+   "board_game"
+  ],
+  "hints": [
+   "Does the final card depend on the order of operations? Look for a quantity that every operation keeps unchanged.",
+   "Names the move: a total conserved under a binary operation. The sum mod \\(k\\) is the familiar case. Ask whether a different operation on the labels is also conserved.",
+   "Setup: let \\(P\\) be the product of the labels modulo 7. Compute \\(P\\) at the start and check that one step leaves it unchanged."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for a monovariant, and when does it fail?",
+  "back": "<b>Triggers:</b> a process that must stop, or a question about how many steps it takes; a non-negative integer that strictly decreases at every legal move.<br><b>Move:</b> find \\(\\Phi\\ge0\\) that drops by a known amount at each step. Then \\(\\Phi\\) bounds the number of steps, and if the drop is always exactly 1, the number of steps is fixed.<br><b>Canonical example:</b> sorting by adjacent swaps. Let \\(\\Phi\\) be the number of inversions. Each adjacent swap of an out-of-order pair removes exactly one inversion, so reversing 10 distinct numbers takes exactly \\(\\binom{10}{2}=45\\) such swaps, whatever order of adjacent out-of-order swaps is used.<br><b>Failure mode:</b> the drop varies from move to move, so \\(\\Phi\\) bounds the steps but does not fix them; \\(\\Phi\\) can increase on some legal move; or \\(\\Phi\\) is not bounded below. A monovariant also says nothing about the final state.",
+  "tags": [
+   "fmt_toolkit",
+   "s_invariant",
+   "s_extremal",
+   "monovariant",
+   "sorting",
+   "termination"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ten candidates arrive in uniformly random order. You see each candidate's rank relative to those already seen, you must hire or reject at once, and you cannot recall anyone. You must hire exactly one candidate. The usual goal is to maximise \\(P(\\text{hire the best})\\), and for that goal the optimal rule rejects the first three and then hires the first relative best. Change the goal: minimise the expected rank of the hire, where rank 1 is best. Does the same rule remain optimal? Find the optimal expected rank.",
+  "back": "<b>Answer:</b> The same rule is not optimal for this goal. The optimal expected rank is \\(\\frac{3223}{1260}\\approx 2.558\\). The rule that rejects three and then takes the first relative best has expected rank \\(\\frac{121}{40}=3.025\\).<br><b>Structure:</b> s_optimal_stopping with s_dynamic_programming. Trigger: a no-recall hire decision that sees only relative ranks, with a reward that now depends on the rank rather than on a 0-1 event.<br><b>What breaks:</b> For \\(P(\\text{best})\\) the reward is an indicator, and the continuation value depends only on whether the current candidate is relatively best, which gives a single threshold. For expected rank, the candidate who is the \\(r\\)-th best of the first \\(k\\) has expected final rank \\(\\frac{r(n+1)}{k+1}\\), which grows with \\(r\\). A relative second-best can be worth hiring late, so the stopping set is no longer 'relative best only'.<br><b>Key move:</b> Backward induction on relative rank: \\(V_n(r)=r\\), and for \\(k<n\\), \\(V_k(r)=\\min\\bigl(\\frac{r(n+1)}{k+1},\\,C_k\\bigr)\\) with \\(C_k=\\frac{1}{k+1}\\sum_{s=1}^{k+1}V_{k+1}(s)\\).<br><b>Working:</b> The recursion gives \\(V_1(1)=\\frac{3223}{1260}\\). For the threshold-3 rule, \\(P(\\text{best})=\\frac{3}{10}\\sum_{j=4}^{10}\\frac{1}{j-1}=\\frac{3349}{8400}\\approx 0.3987\\), which is the maximum over thresholds, and its expected rank is \\(\\frac{121}{40}\\).<br><b>Sanity check:</b> A random hire has expected rank \\(5.5\\) and the best possible is 1, so 2.56 sits between them. A simulation of \\(10^6\\) random orders agrees with \\(2.558\\) within one standard error.<br><b>Transfer:</b> The same recursion handles any reward that depends on the relative rank at the time of hire, such as a payoff for hiring one of the best two.",
+  "tags": [
+   "s_optimal_stopping",
+   "s_dynamic_programming",
+   "secretary_problem",
+   "relative_rank",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "Under the usual goal, what is the reward for hiring a candidate who is not the best? Does it matter how far from the best they are?",
+   "Name the move: backward induction on the relative rank. For the expected rank, what is the expected absolute rank of a candidate who is the \\(r\\)-th best of the first \\(k\\)?",
+   "Set \\(V_{10}(r)=r\\). Step back one time at a time, comparing \\(\\frac{r(n+1)}{k+1}\\) with the expected value of continuing, and read the answer at \\(k=1\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair six-sided die can be rolled up to four times. After any roll you may stop and take that roll's face value as your payoff. If you have not stopped after the fourth roll, you take the fourth roll's face. Find the maximum expected payoff.",
+  "back": "<b>Answer:</b> \\(\\frac{89}{18}\\approx 4.944\\).<br><b>Structure:</b> s_optimal_stopping with s_dynamic_programming (backward induction on the rolls left). Trigger: i.i.d. draws, a stop-or-continue choice, and a fixed horizon.<br><b>Key move:</b> Let \\(W_m\\) be the value with \\(m\\) rolls to go. Then \\(W_1=\\frac72\\) and \\(W_m=E[\\max(X,W_{m-1})]\\). Accept a roll with face \\(x\\) when \\(x\\ge W_{m-1}\\).<br><b>Working:</b> \\(W_2=\\frac{3\\cdot\\frac72+4+5+6}{6}=\\frac{17}{4}\\). \\(W_3=\\frac{4\\cdot\\frac{17}{4}+5+6}{6}=\\frac{14}{3}\\). \\(W_4=\\frac{4\\cdot\\frac{14}{3}+5+6}{6}=\\frac{89}{18}\\). With four rolls to go, accept the first roll only on a 5 or 6.<br><b>Sanity check:</b> The single-roll mean is \\(3.5\\) and the best face is 6, and \\(4.94\\) lies between. A simulation of \\(2\\cdot10^5\\) games agrees within one standard error.<br><b>Transfer:</b> The two-roll version is the first step of the same recursion, with value \\(\\frac{17}{4}\\).",
+  "tags": [
+   "s_optimal_stopping",
+   "s_dynamic_programming",
+   "dice",
+   "fmt_solve"
+  ],
+  "hints": [
+   "With one roll left, what is your best payoff? Does that depend on earlier rolls?",
+   "Name the move: backward induction on the number of rolls left. For each count, compare the face with the value of having one fewer roll.",
+   "Start from \\(W_1=\\frac72\\). Compute \\(W_2=E[\\max(X,W_1)]\\), then \\(W_3\\) and \\(W_4\\) the same way, and read the first-roll threshold from \\(W_3\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Three decision times. At time 1 you may stop and receive \\(1\\), which is certain. If you continue, at time 2 you see \\(R_2\\): it is \\(0\\) with probability \\(0.7\\) and \\(3\\) with probability \\(0.3\\). You may then stop and receive \\(R_2\\), or continue to time 3 and receive \\(2\\) for certain.<br><br><b>Proposed solution:</b><br>L1. At time 1, compare the sure \\(1\\) with the expected next reward, \\(E[R_2]=0.9\\). Since \\(1>0.9\\), stop.<br>L2. The value is \\(1\\).<br><br>Find the flaw. What is the optimal value at time 1?",
+  "back": "<b>Flaw:</b> Line L1 compares stopping with the expected next reward alone. It ignores the option to keep going past time 2. The one-step rule treats the future as worth only one step, but at time 2 you can refuse a 0 and still collect 2 at time 3.<br><b>Correct answer:</b> \\(\\frac{23}{10}\\). At time 2 stop if \\(R_2\\ge2\\), which means stop when \\(R_2=3\\). So the value of continuing at time 1 is \\(0.3\\cdot3+0.7\\cdot2=2.3\\), which beats the sure 1.<br><b>Smell:</b> A rule that compares the sure payoff with only the next observation has dropped the option value beyond one step. Run backward induction to the horizon before trusting it.",
+  "tags": [
+   "s_optimal_stopping",
+   "s_dynamic_programming",
+   "one_step_lookahead",
+   "fmt_debug"
+  ],
+  "figs_back": [
+   "fgB_lookahead_tree"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ten independent events occur at times \\(1\\) to \\(10\\). Event \\(k\\) occurs with probability \\(\\frac{1}{k+1}\\), independently of the others. You observe the events in time order and may stop at any event. You win if the event you stop at is the last event that occurs over the ten times. Find the best achievable probability of winning.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_optimal_stopping with s_indicators: Bruss's odds theorem for the last success of independent events.<br><b>Trigger:</b> independent indicators, a win only on the last one that occurs, and a win probability that is a product over the later events.<br><b>Key move:</b> The odds are \\(r_k=\\frac{p_k}{1-p_k}=\\frac1k\\). Stop at the first event at or after index \\(s\\), where \\(s\\) is the largest index with \\(\\sum_{k\\ge s}r_k\\ge1\\).<br><b>Answer:</b> \\(s=4\\), since \\(\\frac14+\\dots+\\frac1{10}=\\frac{2761}{2520}\\ge1\\) but \\(\\frac15+\\dots+\\frac1{10}\\approx0.85<1\\). Then \\(P(\\text{win})=\\prod_{k\\ge4}(1-p_k)\\cdot\\sum_{k\\ge4}r_k=\\frac{4}{11}\\cdot\\frac{2761}{2520}=\\frac{251}{630}\\approx 0.398\\).<br><b>Sanity check:</b> Bruss's theorem guarantees at least \\(\\frac1e\\approx0.368\\), and 0.398 is above it. A simulation of \\(2\\cdot10^5\\) runs agrees within one standard error.<br><b>Transfer:</b> The same rule applies to any sequence of independent events, such as offers that arrive with known probabilities, and the stopping index is read off from the odds.",
+  "tags": [
+   "s_optimal_stopping",
+   "s_indicators",
+   "odds_algorithm",
+   "fmt_recognise"
+  ],
+  "figs_back": [
+   "fgB_odds_tail"
   ]
  }
 ]

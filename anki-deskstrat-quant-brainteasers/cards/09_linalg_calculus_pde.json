@@ -169,7 +169,6 @@
    "s_eigen",
    "psd",
    "gram_matrix",
-   "twin",
    "fmt_twin"
   ],
   "hints": [
@@ -186,7 +185,6 @@
    "s_lagrange",
    "min_norm",
    "linear_constraint",
-   "twin",
    "fmt_twin"
   ],
   "hints": [
@@ -234,7 +232,6 @@
    "s_lagrange",
    "portfolio",
    "min_variance",
-   "chain",
    "fmt_chain"
   ],
   "hints": [
@@ -254,7 +251,6 @@
    "s_lagrange",
    "portfolio",
    "correlation",
-   "chain",
    "fmt_chain"
   ],
   "hints": [
@@ -274,7 +270,6 @@
    "s_lagrange",
    "portfolio",
    "min_variance",
-   "chain",
    "fmt_chain"
   ],
   "hints": [
@@ -291,7 +286,6 @@
    "s_change_of_measure",
    "gaussian_integral",
    "polar_coordinates",
-   "chain",
    "fmt_chain"
   ],
   "hints": [
@@ -308,7 +302,6 @@
    "s_recursion",
    "gaussian_integral",
    "moments",
-   "chain",
    "fmt_chain"
   ],
   "hints": [
@@ -325,7 +318,6 @@
    "s_recursion",
    "gaussian_integral",
    "moments",
-   "chain",
    "fmt_chain"
   ],
   "hints": [
@@ -342,7 +334,6 @@
    "s_change_of_measure",
    "gaussian_integral",
    "completing_square",
-   "chain",
    "fmt_chain"
   ],
   "hints": [
@@ -372,8 +363,7 @@
   "tags": [
    "s_recursion",
    "gamma_function",
-   "exponential_distribution",
-   "twin",
+   "exponential",
    "fmt_twin"
   ],
   "hints": [
@@ -421,7 +411,6 @@
   "tags": [
    "s_recursion",
    "integration_by_parts",
-   "toolkit",
    "fmt_toolkit"
   ]
  },
@@ -575,7 +564,6 @@
   "back": "<b>Triggers:</b> a smooth function near a point you know exactly (\\(\\sqrt{100}\\), \\(\\ln1\\), \\(e^0\\)), and a small \\(\\varepsilon\\).<br><b>Move:</b> \\(f(a+\\varepsilon)\\approx f(a)+f'(a)\\varepsilon+\\tfrac12f''(a)\\varepsilon^2\\); error about \\(f'''\\varepsilon^3/6\\).<br><b>Canonical example:</b> \\(\\sqrt{101}\\), \\(\\ln1.05\\), \\(e^{0.1}\\).<br><b>Failure mode:</b> the target is far from the expansion point (\\(\\sqrt2\\) from \\(\\sqrt1\\) is not small), a singularity or kink nearby (\\(\\ln x\\) near 0, \\(|x|\\) at 0), or fast-growing derivatives (\\(e^x\\) for large \\(x\\)). The sign of \\(f''\\) tells you whether the first-order estimate over- or undershoots.",
   "tags": [
    "s_taylor",
-   "toolkit",
    "approximation",
    "fmt_toolkit"
   ]
@@ -634,7 +622,6 @@
    "s_taylor",
    "newton_method",
    "reciprocal",
-   "twin",
    "fmt_twin"
   ],
   "hints": [
@@ -683,7 +670,6 @@
   "tags": [
    "s_convexity_jensen",
    "volatility_drag",
-   "probability",
    "fmt_perturb"
   ],
   "hints": [
@@ -874,7 +860,6 @@
    "s_eigen",
    "finite_difference",
    "implicit_schemes",
-   "toolkit",
    "fmt_toolkit"
   ],
   "figs_back": [
@@ -981,7 +966,6 @@
    "s_variance_decomposition",
    "monte_carlo",
    "variance_reduction",
-   "toolkit",
    "fmt_toolkit"
   ]
  },
@@ -1075,7 +1059,6 @@
    "s_taylor",
    "newton_method",
    "root_finding",
-   "toolkit",
    "fmt_toolkit"
   ]
  },
@@ -1087,7 +1070,6 @@
    "s_clt_normal_approx",
    "random_walk",
    "binomial",
-   "twin",
    "fmt_twin"
   ],
   "hints": [
@@ -1105,7 +1087,7 @@
   "back": "<b>Answer:</b> \\(E|Z|=\\sqrt{2/\\pi}\\approx0.7979\\).<br><b>Structure:</b> s_symmetry (even integrand; fold onto \\((0,\\infty)\\)).<br><b>Key move:</b> \\(x\\varphi(x)=-\\varphi'(x)\\) with \\(\\varphi\\) the standard normal density.<br><b>Working:</b> \\(E|Z|=2\\int_0^\\infty x\\varphi(x)dx=\\tfrac{2}{\\sqrt{2\\pi}}\\big[-e^{-x^2/2}\\big]_0^\\infty=\\sqrt{2/\\pi}\\).<br><b>Sanity check:</b> Jensen gives \\(E|Z|\\le\\sqrt{EZ^2}=1\\); \\(0.798<1\\). Simulation of \\(10^5\\) draws agrees.<br><b>Transfer:</b> the mean absolute deviation of \\(N(\\mu,\\sigma^2)\\) is \\(\\sigma\\sqrt{2/\\pi}\\).",
   "tags": [
    "s_symmetry",
-   "normal_distribution",
+   "normal",
    "absolute_moment",
    "fmt_solve"
   ],

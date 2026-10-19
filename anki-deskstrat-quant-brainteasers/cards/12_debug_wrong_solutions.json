@@ -71,7 +71,7 @@
   "tags": [
    "s_indicators",
    "s_inclusion_exclusion",
-   "birthdays",
+   "birthday",
    "fmt_debug",
    "err_union_bound"
   ]
@@ -737,7 +737,7 @@
   "back": "<b>Faulty line:</b> L2: the p-value as \\(P(H_0\\mid\\text{data})\\).<br><b>Why it fails:</b> The p-value is \\(P(\\text{data this extreme}\\mid H_0)\\). Swapping the conditional is the base-rate error again. \\(P(H_0\\mid\\text{data})\\) needs a prior and the likelihood under the alternative.<br><b>Correct answer:</b> The p-value alone does not determine \\(P(H_0\\mid\\text{data})\\). Example: with equal prior and a likelihood ratio of 10 in favour of \\(H_1\\), \\(P(H_0\\mid\\text{data})=1/11\\approx0.09\\). The posterior depends on the likelihood ratio, not on the p-value alone.<br><b>Smell:</b> A p-value conditions on the null. Any statement 'the null is probably true' needs a prior and the alternative. Flip the conditional before reading a p-value as a posterior.",
   "tags": [
    "s_bayes",
-   "p_value",
+   "p_values",
    "fmt_debug",
    "err_pvalue"
   ]

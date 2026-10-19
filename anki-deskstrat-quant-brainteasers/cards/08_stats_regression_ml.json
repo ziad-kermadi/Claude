@@ -638,7 +638,6 @@
   "tags": [
    "s_conditional_expectation_tower",
    "ols",
-   "derivation",
    "fmt_solve"
   ],
   "hints": [
@@ -1140,6 +1139,309 @@
   ],
   "figs_back": [
    "f08_expected_max"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X\\sim\\text{Binomial}(100,\\tfrac12)\\). Bound \\(P(X\\ge60)\\) with (a) Markov, (b) Chebyshev, (c) Chernoff, (d) Hoeffding. Then give the exact value to four significant figures, and order the four bounds against it.",
+  "back": "<b>Answer:</b> exact \\(0.02844\\). (a) Markov \\(\\tfrac56\\approx0.833\\). (b) Chebyshev \\(\\tfrac14=0.25\\). (c) Chernoff \\(e^{-100D}\\approx0.1335\\), with \\(D=0.6\\ln1.2+0.4\\ln0.8\\approx0.02014\\). (d) Hoeffding \\(e^{-2}\\approx0.1353\\). Order: exact \\(<\\) Chernoff \\(<\\) Hoeffding \\(<\\) Chebyshev \\(<\\) Markov.<br><b>Structure:</b> s_tail_sum (Markov is the tail-sum bound) with s_convexity_jensen (Chernoff applies Markov to \\(e^{\\lambda X}\\)). Trigger: a tail probability for a sum of independent pieces.<br><b>Key move:</b> each bound is the same tail seen through different information: Markov uses \\(\\mathbb E X\\), Chebyshev uses \\(\\operatorname{Var}X\\), Chernoff uses the moment generating function, and Hoeffding uses bounded summands.<br><b>Working:</b> Markov \\(\\dfrac{50}{60}\\). Chebyshev \\(P(X-50\\ge10)\\le\\dfrac{\\operatorname{Var}X}{10^2}=\\dfrac{25}{100}\\). Chernoff \\(P\\le\\min_\\lambda e^{-60\\lambda}\\big(\\tfrac{1+e^\\lambda}{2}\\big)^{100}=e^{-100D}\\). Hoeffding \\(\\exp(-2\\cdot10^2/100)=e^{-2}\\).<br><b>Sanity check:</b> the exact tail is about 4.7 times below Chernoff, the tightest of the four here. Chernoff and Hoeffding decay exponentially in \\(n\\), while Markov and Chebyshev decay only like \\(1/t\\) and \\(1/t^2\\). Simulation of \\(10^6\\) binomials gives \\(0.0287\\pm0.0002\\), within two standard errors of the exact value.<br><b>Transfer:</b> a backtest of 100 independent days with a 60% hit rate by chance; at least 60 heads in 100 fair tosses.",
+  "tags": [
+   "s_tail_sum",
+   "s_convexity_jensen",
+   "binomial",
+   "tail_bounds",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Each bound uses a different amount of information about \\(X\\): its mean, its variance, its whole moment generating function, or only the range of each summand. Which is which?",
+   "Name the moves: Chernoff optimises \\(e^{-60\\lambda}\\mathbb E e^{\\lambda X}\\) over \\(\\lambda\\). For a binomial, the optimum is governed by the relative entropy of \\(\\tfrac{60}{100}\\) against \\(\\tfrac12\\).",
+   "Hoeffding bounds \\(P(X-\\mathbb EX\\ge t)\\) by \\(\\exp(-2t^2/n)\\) for \\(n\\) summands in \\([0,1]\\). Set \\(t=10\\)."
+  ],
+  "figs_back": [
+   "fgC_tail_bounds"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A strategy's daily hit rate \\(p\\) is estimated by \\(\\hat p\\), the average over \\(n\\) independent days. Use Hoeffding's inequality to choose \\(n\\) so that \\(P(|\\hat p-p|\\ge0.02)\\le0.05\\). Then change one assumption: only overestimation matters, so you need \\(P(\\hat p-p\\ge0.02)\\le0.05\\). What minimal \\(n\\) does that give, and which step of the two-sided argument no longer applies?",
+  "back": "<b>Answer:</b> two-sided \\(n=4612\\), from \\(n\\ge\\ln(40)/(2\\cdot0.02^2)=4611.1\\). One-sided \\(n=3745\\), from \\(n\\ge\\ln(20)/(2\\cdot0.02^2)=3744.7\\).<br><b>Structure:</b> s_tail_sum (Hoeffding's tail bound) with s_convexity_jensen (Hoeffding's lemma). Trigger: the mean of bounded i.i.d. outcomes and a fixed error tolerance.<br><b>What breaks:</b> the factor \\(2\\) from the union bound over the two tails. With one tail, the requirement is \\(e^{-2n\\varepsilon^2}\\le\\delta\\), so \\(\\ln(1/\\delta)\\) replaces \\(\\ln(2/\\delta)\\). Nothing else changes, because each tail is a one-sided Hoeffding bound.<br><b>Working:</b> two-sided \\(2e^{-2n\\varepsilon^2}\\le\\delta\\) gives \\(n\\ge\\dfrac{\\ln(2/\\delta)}{2\\varepsilon^2}=\\dfrac{\\ln40}{0.0008}\\approx4611.1\\). One-sided \\(e^{-2n\\varepsilon^2}\\le\\delta\\) gives \\(n\\ge\\dfrac{\\ln20}{0.0008}\\approx3744.7\\).<br><b>Sanity check:</b> for \\(p=\\tfrac12\\) the CLT gives about \\(2401\\) two-sided, since \\(n\\ge(1.96/\\varepsilon)^2\\cdot\\tfrac14\\). Hoeffding is about twice that, the price of a distribution-free bound. Simulation at \\(n=4612\\) gives \\(P(|\\hat p-\\tfrac12|\\ge0.02)\\approx0.0064\\), below \\(0.05\\).<br><b>Transfer:</b> the sample size for a survey's margin of error when each response is a yes or no.",
+  "tags": [
+   "s_tail_sum",
+   "s_convexity_jensen",
+   "concentration",
+   "sample_size",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "Which step in the two-sided argument produces a factor that a one-sided statement does not need?",
+   "Name the move: a union bound over the two tails, each bounded by Hoeffding.",
+   "Write each one-tail bound as \\(\\exp(-2n\\varepsilon^2)\\). Two tails give \\(2\\exp(-2n\\varepsilon^2)\\le\\delta\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for Chebyshev's inequality, when is it tight, and when does it fail?",
+  "back": "<b>Triggers:</b> you know only a mean \\(\\mu\\) and a variance \\(\\sigma^2\\), and you need \\(P(|Y-\\mu|\\ge k\\sigma)\\).<br><b>Move:</b> \\(P(|Y-\\mu|\\ge k\\sigma)\\le\\dfrac1{k^2}\\), by applying Markov to \\((Y-\\mu)^2\\).<br><b>Tight case:</b> a three-point law with mass \\(\\dfrac1{2k^2}\\) at each of \\(\\mu\\pm k\\sigma\\), and the rest at \\(\\mu\\). For \\(k=2\\), \\(\\mu=0\\), \\(\\sigma=1\\): \\(P(Y=\\pm2)=\\tfrac18\\), \\(P(Y=0)=\\tfrac34\\), so \\(P(|Y|\\ge2)=\\tfrac14=\\tfrac1{k^2}\\). Check: \\(\\mathbb E Y^2=2\\cdot\\tfrac18\\cdot4=1\\).<br><b>Failure:</b> it uses only two moments, so it is loose for smooth laws. For a standard normal, \\(P(|Z|\\ge2)=0.0455\\), under a fifth of the bound \\(0.25\\). For \\(k\\le1\\) the bound is at least \\(1\\) and says nothing.",
+  "tags": [
+   "s_tail_sum",
+   "chebyshev",
+   "variance",
+   "fmt_toolkit"
+  ],
+  "figs_back": [
+   "fgC_chebyshev_tight"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You need to bound the upper tail of a sum \\(X\\) of independent pieces. Which of Markov, Chebyshev, Chernoff and Hoeffding do you reach for when (a) only the mean is trusted, (b) the pieces are bounded and you need a sample size, (c) you need the exponential rate? When does each fail? Use \\(P(X\\ge60)\\) for \\(X\\sim\\text{Binomial}(100,\\tfrac12)\\) as the test case.",
+  "back": "<b>(a) Markov:</b> \\(P(X\\ge t)\\le\\mathbb E X/t\\) for \\(X\\ge0\\). Needs only the mean and decays like \\(1/t\\). Fails when the mean is not small relative to \\(t\\), and for signed quantities.<br><b>(b) Hoeffding:</b> \\(P(\\bar X-\\mu\\ge t)\\le\\exp(-2nt^2/(b-a)^2)\\) for independent summands in \\([a,b]\\). Dimension-free, and it gives sample sizes directly. Fails when the variance is much smaller than the range, as near \\(p=0\\) or \\(p=1\\), where Bernstein's bound is tighter.<br><b>(c) Chernoff:</b> \\(P(X\\ge t)\\le\\min_\\lambda e^{-\\lambda t}\\mathbb E e^{\\lambda X}\\). Exponential in \\(n\\) with the optimal rate. Needs a finite moment generating function, and fails for heavy tails or dependent summands.<br><b>Between them:</b> Chebyshev needs only the variance and decays like \\(1/t^2\\).<br><b>Test case:</b> Markov \\(0.833\\), Chebyshev \\(0.25\\), Chernoff \\(0.1335\\), Hoeffding \\(0.1353\\), exact \\(0.0284\\). Both exponential bounds are about five times the exact value at \\(t=10\\), because they drop the polynomial prefactor of the true tail.",
+  "tags": [
+   "s_tail_sum",
+   "s_convexity_jensen",
+   "concentration",
+   "tail_bounds",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two independent random walks \\(X_t\\) and \\(Y_t\\), each with i.i.d. standard normal increments, are observed for \\(t=1,\\dots,200\\). You regress \\(Y_t\\) on \\(X_t\\) with an intercept. The slope has \\(t=12\\) and \\(R^2=0.6\\). Does \\(X\\) explain \\(Y\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Answer:</b> No. The fit is spurious: the two series share no common driver, so the regression shows no relationship.<br><b>Structure:</b> s_clt_normal_approx (the normal limit of the \\(t\\)-test assumes stationary errors) and s_variance_decomposition (\\(R^2\\) is measuring two shared trends, not a relation). Trigger: both series are I(1) random walks, so the regression residual is itself a random walk.<br><b>Key move:</b> with a unit root in both series the residual inherits the stochastic trend. The usual \\(t\\) is not \\(N(0,1)\\) and \\(R^2\\) does not tend to zero. Granger and Newbold's warning sign is \\(R^2 > \\mathrm{DW}\\).<br><b>Working:</b> for independent random walks the slope is \\(O_p(1)\\) but its \\(t\\)-statistic grows like \\(\\sqrt T\\), so most samples cross \\(|t|=2\\). Simulation with \\(T=200\\) gives \\(P(|t|>1.96)\\approx 0.83\\), median \\(R^2\\approx 0.17\\) and median Durbin–Watson \\(\\approx 0.08\\).<br><b>Sanity check:</b> a Durbin–Watson statistic near 0 means the residuals are close to a random walk. Inference is valid only after cointegration is shown, for example by Engle–Granger on the residual.<br><b>Transfer:</b> two unrelated stocks that both trended up over the same year; the cumulative profit and loss of two independent strategies regressed on each other.",
+  "tags": [
+   "s_clt_normal_approx",
+   "s_variance_decomposition",
+   "spurious_regression",
+   "unit_root",
+   "fmt_recognise"
+  ],
+  "figs_back": [
+   "fgE_spurious_paths"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Known problem:</b> the augmented Dickey–Fuller test with a constant has 5% critical value \\(-2.86\\), so you reject a unit root in a series when \\(\\tau<-2.86\\). <b>Perturb:</b> \\(Y_t\\) and \\(X_t\\) are both I(1). You regress \\(Y_t\\) on \\(X_t\\) with an intercept, take the residuals \\(\\hat u_t\\), and run the same test on \\(\\hat u_t\\) with the \\(-2.86\\) table. What breaks, and what is the correct 5% critical value for a two-variable Engle–Granger test?",
+  "back": "<b>What breaks:</b> the residuals are estimated, not observed. OLS chooses the intercept and slope to make \\(\\sum\\hat u_t^2\\) as small as possible, which pushes \\(\\hat u_t\\) toward stationarity before the unit-root test sees them. The null distribution of \\(\\tau\\) therefore shifts left, and the \\(-2.86\\) table over-rejects.<br><b>Fix:</b> use the Engle–Granger (MacKinnon) residual-based critical values. For two variables with an intercept in the cointegrating regression, the asymptotic 5% value is \\(-3.34\\) (1%: \\(-3.90\\)).<br><b>New answer:</b> reject cointegration only if \\(\\tau<-3.34\\). When no cointegration exists, the \\(-2.86\\) table rejects about 15% of the time (\\(T=500\\), \\(10^5\\) simulated pairs), three times the nominal 5%.<br><b>Sanity check:</b> the Dickey–Fuller distribution with a constant has its 5% point near \\(-2.86\\) (simulated \\(-2.87\\) at \\(T=1000\\)). The residual-based distribution sits further left, so its critical value is more negative.<br><b>Transfer:</b> testing whether a fitted hedge residual is stationary when the hedge ratio was estimated from the same data.",
+  "tags": [
+   "s_clt_normal_approx",
+   "s_variance_decomposition",
+   "cointegration",
+   "engle_granger",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "What are OLS choosing the intercept and slope to minimise, and what does that do to the residuals before the unit-root test sees them?",
+   "The residuals are estimated, not observed. Ask whether the null distribution of the test statistic depends only on the unit-root null, or also on the estimation step that produced the residuals.",
+   "Simulate two independent random walks of length 500, regress one on the other with an intercept, run the lag-zero unit-root test on the residuals, and read off the 5% quantile of the statistic over many replications."
+  ],
+  "figs_back": [
+   "fgE_eg_cv"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A pair is cointegrated. Its daily log-spread \\(s_t=\\ln P^A_t-\\beta\\ln P^B_t-\\mu\\) follows \\(s_{t+1}=\\varphi s_t+\\varepsilon_{t+1}\\) with \\(\\varphi=0.98\\), where \\(\\varepsilon\\) is i.i.d. normal with standard deviation \\(0.4\\%\\). (a) Half-life of a deviation, in trading days. (b) Stationary standard deviation of \\(s_t\\). (c) Probability that \\(s_t\\) is more than two stationary standard deviations from its mean on a random day. (d) The continuous-time mean-reversion speed \\(\\kappa\\) per day that this implies.",
+  "back": "<b>Answer:</b> (a) about 34 days. (b) \\(\\approx 2.01\\%\\). (c) \\(\\approx 0.0455\\). (d) \\(\\kappa=-\\ln\\varphi\\approx 0.0202\\) per day.<br><b>Structure:</b> s_recursion (the AR(1) recursion) and s_conditional_expectation_tower (the expected deviation \\(k\\) days ahead is \\(\\varphi^k\\) times today's). Trigger: a cointegrated spread sampled daily is a discrete Ornstein–Uhlenbeck process.<br><b>Key move:</b> \\(E[s_{t+k}\\mid s_t]=\\varphi^k s_t\\), so the half-life is \\(\\ln 0.5/\\ln\\varphi\\). The stationary variance is \\(\\sigma_\\varepsilon^2/(1-\\varphi^2)\\).<br><b>Working:</b> \\(\\ln 0.5/\\ln 0.98=34.3\\). \\(\\mathrm{sd}=0.004/\\sqrt{1-0.9604}=0.004/0.199=0.0201\\). Because \\(s\\) is Gaussian, \\(P(|s-\\mu|>2\\,\\mathrm{sd})=2(1-\\Phi(2))=0.0455\\). Simulation over 2,000 paths of 5,000 days gives 0.045.<br><b>Sanity check:</b> a 34-day half-life is slow. The expected gain from entering two standard deviations out takes several weeks to close, so the holding cost and the hedge drift matter.<br><b>Transfer:</b> an OU-modelled basis or a volatility spread sampled daily.",
+  "tags": [
+   "s_recursion",
+   "s_conditional_expectation_tower",
+   "pairs_trading",
+   "ou_process",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Start from today's deviation from the mean. How does its expected value change after \\(k\\) days, and what happens over one day?",
+   "The expected deviation after \\(k\\) days is \\(\\varphi^k\\) times today's. Set that factor to one half to get the half-life. For the stationary variance, use the fact that the variance is unchanged from one day to the next.",
+   "The stationary variance \\(v\\) satisfies \\(v=\\varphi^2 v+\\sigma_\\varepsilon^2\\). Solve it, then express the tail as a standard normal probability at two."
+  ],
+  "figs_back": [
+   "fgE_ou_spread"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two equities in the same sector, \\(P^A_t\\) and \\(P^B_t\\), have daily closes over three years (\\(T=750\\)). A junior analyst regresses \\(\\ln P^A_t\\) on \\(\\ln P^B_t\\), gets \\(R^2=0.8\\), and writes: <i>\"\\(R^2=0.8\\) means 80% of \\(A\\)'s variation is explained by \\(B\\). The two prices share a common driver, so the spread \\(\\ln P^A-\\beta\\ln P^B\\) must be mean-reverting. Trade it with \\(\\beta\\) from the slope.\"</i><br><br>Find the flaw.",
+  "back": "<b>Faulty line:</b> \"so the spread must be mean-reverting.\" A high \\(R^2\\) between the levels of two trending series says the levels move together. It says nothing about whether the residual \\(u_t=\\ln P^A_t-\\beta\\ln P^B_t\\) is stationary. Independent random walks of 750 days reach \\(R^2>0.8\\) in about 1.5% of pairs (simulated). That is rare, so the level fit looks informative, but it cannot tell a stationary residual from a wandering one.<br><b>Why it fails:</b> both prices can carry a stochastic trend that is not shared. A slope from a non-cointegrated regression is not a stable hedge ratio, and the spread drifts.<br><b>Correct:</b> test \\(\\hat u_t\\) for a unit root with Engle–Granger critical values (about \\(-3.34\\) at 5% for two variables with an intercept). Estimate a half-life for the residual only if that test rejects.<br><b>Smell:</b> a large \\(R^2\\) or a significant slope between two trending levels is what unrelated trending series also produce. Test the residual for stationarity, never the fit.<br><b>Transfer:</b> the spurious regression card for independent random walks, earlier in this set.",
+  "tags": [
+   "s_variance_decomposition",
+   "s_clt_normal_approx",
+   "cointegration",
+   "r_squared",
+   "fmt_debug"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Daily returns \\(r_t=\\sigma_t z_t\\), with \\(z_t\\) i.i.d. standard normal and \\(\\sigma_t^2=\\omega+\\alpha r_{t-1}^2+\\beta\\sigma_{t-1}^2\\), where \\(\\omega=2\\times10^{-6}\\), \\(\\alpha=0.08\\), \\(\\beta=0.90\\). (a) Unconditional daily variance and volatility. (b) Annualised volatility with 252 trading days. (c) Persistence \\(\\alpha+\\beta\\) and the volatility half-life in days.",
+  "back": "<b>Answer:</b> (a) \\(\\sigma^2=\\omega/(1-\\alpha-\\beta)=10^{-4}\\), so daily volatility is \\(1.00\\%\\). (b) \\(\\sqrt{252}\\times 1\\%\\approx 15.87\\%\\). (c) \\(\\alpha+\\beta=0.98\\), and the half-life is \\(\\ln 0.5/\\ln 0.98\\approx 34\\) days.<br><b>Structure:</b> s_linearity_expectation (take expectations of the variance recursion) and s_recursion. Trigger: a variance recursion whose unconditional level is asked for, with \\(E[z^2]=1\\).<br><b>Key move:</b> \\(E[r_t^2]=E[\\sigma_t^2]\\) by the tower property, so \\(V=\\omega+(\\alpha+\\beta)V\\).<br><b>Working:</b> \\(V=\\omega/(1-\\alpha-\\beta)=2\\times10^{-6}/0.02=10^{-4}\\). The deviation \\(\\sigma_t^2-V\\) is multiplied by \\(\\alpha+\\beta\\) each day on average, so it decays with half-life \\(\\ln 0.5/\\ln(\\alpha+\\beta)\\).<br><b>Sanity check:</b> a simulation of 20,000 paths gives a long-run variance of \\(1.00\\times10^{-4}\\).<br><b>Transfer:</b> any AR(1) recursion for a variance or a log-variance; the same algebra gives its stationary level.",
+  "tags": [
+   "s_linearity_expectation",
+   "s_recursion",
+   "garch",
+   "volatility",
+   "half_life",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Take expectations of both sides of the variance recursion in the stationary regime. What does \\(E[r_{t-1}^2]\\) equal?",
+   "Use \\(E[r^2]=E[\\sigma^2]\\), so the recursion becomes a linear equation in the single unknown long-run level.",
+   "Set \\(V=\\omega+(\\alpha+\\beta)V\\) and solve. For the half-life, ask how many steps it takes for \\((\\alpha+\\beta)^k\\) to fall to one half."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Same GARCH(1,1) as before (\\(\\omega=2\\times10^{-6}\\), \\(\\alpha=0.08\\), \\(\\beta=0.90\\)). Today's data give the one-step forecast \\(\\sigma^2_{t+1}=4\\times10^{-4}\\). (a) Give \\(E_t[\\sigma^2_{t+k}]\\) for \\(k\\ge1\\) in closed form, and the daily volatility forecast at \\(k=1,10,30\\). (b) Now set \\(\\alpha+\\beta=1\\) with the same \\(\\omega\\) and \\(\\sigma^2_{t+1}\\) (IGARCH). Give \\(E_t[\\sigma^2_{t+k}]\\) and the volatility at \\(k=10,30\\).",
+  "back": "<b>Answer:</b> (a) \\(E_t[\\sigma^2_{t+k}]=V+(\\alpha+\\beta)^{k-1}(\\sigma^2_{t+1}-V)\\) with \\(V=10^{-4}\\). Volatility: \\(2.00\\%\\) at \\(k=1\\), \\(1.87\\%\\) at \\(k=10\\), \\(1.63\\%\\) at \\(k=30\\). (b) \\(E_t[\\sigma^2_{t+k}]=\\sigma^2_{t+1}+(k-1)\\omega\\): volatility \\(2.04\\%\\) at \\(k=10\\) and \\(2.14\\%\\) at \\(k=30\\), still rising.<br><b>Structure:</b> s_recursion (the forecast is a linear recursion in expected variance) and s_linearity_expectation. Trigger: a multi-step forecast of a GARCH variance.<br><b>Key move:</b> \\(E_t[\\sigma^2_{t+j+1}]=\\omega+(\\alpha+\\beta)E_t[\\sigma^2_{t+j}]\\), because \\(E[r^2\\mid\\text{past}]=\\sigma^2\\). Subtracting \\(V\\), the gap shrinks geometrically.<br><b>Working:</b> the gap \\(\\sigma^2_{t+k}-V\\) is multiplied by \\(0.98\\) each step, so the factor is \\(0.98^9=0.834\\) at \\(k=10\\) and \\(0.98^{29}=0.555\\) at \\(k=30\\). At \\(k=10\\): \\(10^{-4}+0.834\\times3\\times10^{-4}=3.50\\times10^{-4}\\). At \\(k=30\\): \\(2.67\\times10^{-4}\\). In (b) there is no reversion, so each day adds \\(\\omega\\).<br><b>Sanity check:</b> in (a) the far-future forecast tends to \\(V\\); in (b) it grows without bound. A simulation with \\(2\\times10^5\\) paths gives \\(3.50\\times10^{-4}\\) at \\(k=10\\) and \\(2.66\\times10^{-4}\\) at \\(k=30\\), within simulation error of the closed forms (standard error \\(0.004\\times10^{-4}\\)).<br><b>Transfer:</b> the same algebra gives the mean reversion of any AR(1) with coefficient \\(\\alpha+\\beta\\).",
+  "tags": [
+   "s_recursion",
+   "s_linearity_expectation",
+   "garch",
+   "volatility_forecast",
+   "igarch",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Is the expected variance on day \\(k\\) closer to, or further from, the long-run level than on day \\(k-1\\)?",
+   "Write \\(E_t[\\sigma^2_{t+j+1}]\\) using the recursion. Remember that \\(E[r^2\\mid\\text{past}]=\\sigma^2\\), so the shock term averages to the current variance.",
+   "Let \\(g_k=E_t[\\sigma^2_{t+k}]-V\\). Show that \\(g_{k+1}=(\\alpha+\\beta)g_k\\), then iterate from \\(g_1=\\sigma^2_{t+1}-V\\)."
+  ],
+  "figs_back": [
+   "fgE_garch_h_step"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Daily returns \\(r_t=\\sigma_t z_t\\) with \\(z_t\\) i.i.d. standard normal, and \\(\\sigma_t^2\\) following a GARCH(1,1) with \\(\\alpha=0.10\\), \\(\\beta=0.85\\), stationary with a finite fourth moment. Given \\(\\sigma_t\\), each return is normal, yet the unconditional sample of returns looks heavy-tailed. Roughly what is the unconditional kurtosis \\(E[r^4]/E[r^2]^2\\), and what produces it?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Answer:</b> about \\(3.77\\), against 3 for a normal. Excess kurtosis is about \\(0.77\\).<br><b>Structure:</b> s_convexity_jensen (the unconditional law is a scale mixture of normals) and s_conditional_expectation_tower. Trigger: conditionally normal returns with a random, persistent variance.<br><b>Key move:</b> \\(E[r^4\\mid\\sigma]=3\\sigma^4\\), so \\(E[r^4]=3E[\\sigma^4]\\ge 3(E[\\sigma^2])^2\\) by Jensen. The GARCH recursion gives \\(E[\\sigma^4]\\) in closed form.<br><b>Working:</b> \\(\\kappa=\\dfrac{3(1-(\\alpha+\\beta)^2)}{1-(\\alpha+\\beta)^2-2\\alpha^2}=\\dfrac{3(0.0975)}{0.0775}\\approx 3.77\\). The fourth moment is finite when \\(3\\alpha^2+2\\alpha\\beta+\\beta^2<1\\), which here is \\(0.92<1\\).<br><b>Sanity check:</b> \\(\\alpha\\to0\\) gives 3, a normal with no volatility clustering. Kurtosis rises without limit as \\(3\\alpha^2+2\\alpha\\beta+\\beta^2\\) approaches 1. A simulation of 20,000 paths of 1,500 days gives 3.77 with standard error 0.009.<br><b>Transfer:</b> a Student-t as a normal divided by a square-root chi-squared variable, which is the same scale-mixture mechanism with a different mixing law.",
+  "tags": [
+   "s_convexity_jensen",
+   "s_conditional_expectation_tower",
+   "garch",
+   "fat_tails",
+   "kurtosis",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A latent level \\(x\\) has prior \\(x\\sim N(0,4)\\). You observe \\(y=x+v\\) with \\(v\\sim N(0,1)\\) independent of \\(x\\), and see \\(y=2\\). (a) Posterior mean and variance of \\(x\\). (b) The gain \\(K\\) such that the posterior mean is the prior mean plus \\(K\\) times the innovation. (c) The posterior precision, written as a sum.",
+  "back": "<b>Answer:</b> (a) posterior \\(N(1.6,\\,0.8)\\). (b) \\(K=4/5\\). (c) precision \\(1/0.8=1/4+1/1=1.25\\).<br><b>Structure:</b> s_bayes (normal prior, normal likelihood) and s_conditional_expectation_tower (the posterior mean is the conditional expectation given \\(y\\)). Trigger: a Gaussian state observed with additive Gaussian noise.<br><b>Key move:</b> posterior precision is the sum of the precisions, and the posterior mean is the prior mean plus \\(K=P/(P+R)\\) times \\(y\\) minus the prior mean. This is the Kalman update for a scalar state with no dynamics.<br><b>Working:</b> \\(K=4/(4+1)=0.8\\). Posterior mean \\(0+0.8\\times2=1.6\\). Posterior variance \\((1-K)P=0.2\\times4=0.8=PR/(P+R)\\).<br><b>Sanity check:</b> the posterior mean lies between the prior mean 0 and the observation 2, and closer to 2, because the observation is more precise than the prior (\\(R=1\\lt P=4\\)). As \\(P\\to\\infty\\), \\(K\\to1\\) and the posterior mean becomes the observation.<br><b>Transfer:</b> a noisy analyst estimate of a drift, with the prior taken from a long-run average; the same update.",
+  "tags": [
+   "s_bayes",
+   "s_conditional_expectation_tower",
+   "kalman_filter",
+   "normal_normal",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Which source of information is more precise here, the prior or the observation?",
+   "For normal-normal, the posterior precision is the sum of the precisions, and the posterior mean is a precision-weighted average of the prior mean and the observation.",
+   "Write the posterior mean as \\(m+K(y-m)\\) with \\(K=P/(P+R)\\), then evaluate with \\(m=0\\), \\(P=4\\), \\(R=1\\) and \\(y=2\\)."
+  ],
+  "figs_back": [
+   "fgE_normal_update"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Local-level model: \\(x_t=x_{t-1}+w_t\\), \\(w_t\\sim N(0,Q)\\), and \\(y_t=x_t+v_t\\), \\(v_t\\sim N(0,R)\\), with \\(Q=1\\) and \\(R=4\\). Let \\(p_t\\) be the predicted variance of \\(x_t\\) before \\(y_t\\) is observed, and \\(K_t\\) the gain. (a) Steady-state \\(p\\) and \\(K\\). (b) Start from a posterior variance \\(P_0=10\\) at time 0. Give \\(K_1,K_2,K_3\\) exactly. (c) The limits of \\(K\\) as \\(Q/R\\to0\\) and as \\(Q/R\\to\\infty\\).",
+  "back": "<b>Answer:</b> (a) \\(p=\\tfrac{1+\\sqrt{17}}{2}\\approx2.562\\), \\(K\\approx0.390\\). (b) \\(K_1=\\tfrac{11}{15}\\approx0.733\\), \\(K_2=\\tfrac{59}{119}\\approx0.496\\), \\(K_3=\\tfrac{355}{831}\\approx0.427\\). (c) \\(K\\approx\\sqrt{Q/R}\\to0\\) as \\(Q/R\\to0\\), and \\(K\\to1\\) as \\(Q/R\\to\\infty\\).<br><b>Structure:</b> s_recursion (a Riccati recursion for the variance) and s_bayes (each step is a normal-normal update). Trigger: a random-walk state, so the variance grows by \\(Q\\) before every update.<br><b>Key move:</b> \\(p_{t+1}=P_t+Q\\) and \\(P_t=p_tR/(p_t+R)\\). In steady state \\(p=pR/(p+R)+Q\\), which is the quadratic \\(p^2-Qp-QR=0\\).<br><b>Working:</b> \\(p=(Q+\\sqrt{Q^2+4QR})/2=(1+\\sqrt{17})/2\\), and \\(K=p/(p+4)=0.390\\). Part (b): \\(p_1=10+1=11\\), \\(K_1=11/15\\), \\(P_1=44/15\\); \\(p_2=59/15\\), \\(K_2=59/119\\), \\(P_2=236/119\\); \\(p_3=355/119\\), \\(K_3=355/831\\).<br><b>Sanity check:</b> iterating the recursion 400 steps from \\(P_0=10\\) converges to \\(0.3904\\). With \\(Q\\ll R\\) the gain is small and the filter averages over a long window; with \\(Q\\gg R\\) it follows the data.<br><b>Transfer:</b> the EWMA weights in the next card; the same quadratic gives the steady state of any random-walk state.",
+  "tags": [
+   "s_recursion",
+   "s_bayes",
+   "kalman_filter",
+   "local_level",
+   "steady_state",
+   "fmt_solve"
+  ],
+  "hints": [
+   "In a random-walk state model, does the variance settle over time? What makes it grow between updates?",
+   "Express the predicted variance after one update as the posterior variance plus \\(Q\\), and the posterior variance as a function of the predicted one. In steady state these are the same number.",
+   "Write \\(p=\\frac{pR}{p+R}+Q\\), multiply out by \\(p+R\\), and solve the resulting quadratic for \\(p\\). Then \\(K=p/(p+R)\\)."
+  ],
+  "figs_back": [
+   "fgE_gain_converge"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When can an exponentially weighted moving average (EWMA) stand in for a Kalman filter, and when does the substitution fail?",
+  "back": "<b>Trigger:</b> one slowly drifting level (a random-walk state) seen through noise, updated with a constant gain. <b>Move:</b> the gain and the smoothing constant are linked by \\(\\lambda=1-K\\), where \\(K=p/(p+R)\\) and \\(p\\) is the steady predicted variance, which solves \\(p^2-Qp-QR=0\\). <b>Canonical:</b> with \\(R=1\\), \\(\\lambda=0.94\\) gives \\(K=0.06\\), \\(p=3/47\\) and \\(Q/R=423/110450\\approx0.0038\\). So a random-walk level smoothed with \\(\\lambda=0.94\\) is the steady-state Kalman filter for that signal-to-noise ratio.<br><b>Failure mode:</b> the state is mean-reverting. For \\(x_t=\\varphi x_{t-1}+w_t\\) with \\(\\varphi<1\\), the steady filter is \\(\\hat x_t=(1-K)\\varphi\\,\\hat x_{t-1}+Ky_t\\). Its weights fall by \\((1-K)\\varphi\\), not \\(1-K\\), so the EWMA is exact only when \\(\\varphi=1\\). An EWMA also reports no predictive variance, and it cannot use a known change in the noise \\(R_t\\).",
+  "tags": [
+   "s_recursion",
+   "s_bayes",
+   "ewma",
+   "kalman_filter",
+   "signal_to_noise",
+   "fmt_toolkit"
+  ],
+  "figs_back": [
+   "fgE_ewma_weights"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Known problem:</b> a static OLS hedge ratio \\(y_t=\\beta x_t+\\varepsilon_t\\), estimated over two years, gives \\(\\beta=1.20\\), so the hedge is 1.20 units of \\(x\\) per unit of \\(y\\) forever. <b>Perturb:</b> the true \\(\\beta_t\\) drifts as \\(\\beta_t=\\beta_{t-1}+w_t\\), with \\(w_t\\sim N(0,0.0004)\\), and \\(\\varepsilon_t\\sim N(0,0.01)\\). Filter \\(\\beta_t\\) with a Kalman filter. Yesterday's posterior is \\(\\beta=1.20\\) with variance \\(P=0.01\\). Today \\(x=2.0\\) and \\(y=2.5\\). Give today's posterior \\(\\beta\\) and its variance, and say what breaks in the static hedge.",
+  "back": "<b>What breaks:</b> the static hedge assumes one \\(\\beta\\) for the whole sample. With a drifting \\(\\beta\\), the OLS average lags the current relation, and it gives no measure of how uncertain today's hedge is.<br><b>Fix:</b> a Kalman filter with state \\(\\beta_t\\) and observation \\(y_t=x_t\\beta_t+\\varepsilon_t\\).<br><b>Working:</b> predicted variance \\(P^-=0.01+0.0004=0.0104\\). Innovation \\(y-x\\beta^-=2.5-2.4=0.1\\). Innovation variance \\(x^2P^-+R=0.0416+0.01=0.0516\\). Gain \\(K=P^-x/0.0516=52/129\\approx0.403\\). Posterior \\(\\beta=1.20+0.403\\times0.1=1.2403\\), and posterior variance \\((1-Kx)P^-=0.00202\\).<br><b>New answer:</b> \\(\\beta_t\\approx1.240\\), variance \\(\\approx0.0020\\). The hedge moves up by 0.04 on one observation, because the state variance is large relative to the noise.<br><b>Sanity check:</b> with \\(Q=0\\) the gain falls like \\(1/t\\) and the filter becomes recursive OLS. With \\(Q\\) large it chases every point. The posterior variance falls from 0.0104 to 0.0020 after one observation.<br><b>Transfer:</b> a time-varying beta in a pairs book; the same filter updates a time-varying loading on a factor.",
+  "tags": [
+   "s_recursion",
+   "s_conditional_expectation_tower",
+   "hedge_ratio",
+   "kalman_filter",
+   "time_varying_beta",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "What does yesterday's estimate say about today's \\(\\beta\\), and how far did today's observation disagree with it?",
+   "Predict the state and its variance first, then compare the observed \\(y\\) with the prediction \\(x\\beta^-\\).",
+   "The gain is \\(K=P^-x/(x^2P^-+R)\\). Update \\(\\beta\\) by \\(K\\) times the innovation, and \\(P\\) by \\((1-Kx)P^-\\)."
+  ],
+  "figs_back": [
+   "fgE_hedge_path"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A damped spring is kicked once a second by independent shocks with mean 0 and variance 1. Each second it keeps 90% of its previous displacement and then receives its own kick. In the long run, what is the variance of the displacement? After a large displacement with no further kicks, how many seconds until the expected displacement halves?",
+  "back": "<b>Answer:</b> stationary variance \\(1/(1-0.81)=100/19\\approx5.26\\), so sd \\(\\approx2.29\\). Half-life \\(\\ln0.5/\\ln0.9\\approx6.6\\) seconds.<br><b>Structure:</b> the classic is the AR(1) process, with s_recursion (unroll the recursion) and s_linearity_expectation (the variance of a sum of independent kicks). Trigger: a fixed fraction of the past carries forward, plus fresh independent noise.<br><b>Key move:</b> unroll to \\(x_t=\\sum_{k\\ge0}0.9^k\\varepsilon_{t-k}\\). Independent kicks add in variance, so kick \\(k\\) seconds ago carries weight \\(0.9^{2k}\\).<br><b>Working:</b> \\(\\mathrm{Var}=\\sum_k 0.9^{2k}=1/(1-0.81)=100/19\\). The expected displacement \\(k\\) seconds after a displacement \\(x\\) is \\(0.9^k x\\), so the half-life is \\(\\ln0.5/\\ln0.9=6.58\\) seconds.<br><b>Sanity check:</b> with no damping (factor 1) the variance is infinite, as for a random walk. With no memory (factor 0) it is 1, the shock itself. A simulation of 200,000 paths gives 5.24 (standard error 0.02), consistent with 5.26.<br><b>Transfer:</b> the stationary variance of a mean-reverting inventory, or of an OU process sampled at fixed steps.",
+  "tags": [
+   "s_recursion",
+   "s_linearity_expectation",
+   "ar1",
+   "stationary_variance",
+   "half_life",
+   "fmt_twin"
+  ],
+  "hints": [
+   "Does the displacement settle into a long-run distribution, and what determines how spread out it is?",
+   "Unroll the recursion into a weighted sum of past kicks. How much weight does a kick from \\(k\\) seconds ago carry?",
+   "Independent kicks add in variance, so the total variance is the sum of the squared weights. Sum the geometric series whose ratio is \\(0.9^2\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 50-observation daily series is fitted by OLS as \\(x_t=a+\\varphi x_{t-1}+\\varepsilon_t\\), giving \\(\\hat\\varphi=0.90\\). Is the true \\(\\varphi\\) above, below or equal to 0.90?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_taylor (first-order expansion of the small-sample bias, in powers of \\(1/T\\)). <b>Trigger:</b> a lagged-dependent-variable regression on a short, highly persistent series, so the regressor is nearly a unit-root process. <b>Key move:</b> Kendall's approximation \\(E[\\hat\\varphi]-\\varphi\\approx-(1+3\\varphi)/T\\). The bias is negative and largest in size near \\(\\varphi=1\\).<br><b>Answer:</b> most likely above 0.90. The expected bias pushes the estimate down, so the true \\(\\varphi\\) is probably nearer 0.97 to 1. A single estimate of 0.90 is what a near-unit-root series typically gives.<br><b>Working:</b> at \\(T=50\\) the approximate bias is \\(-0.02\\) at \\(\\varphi=0\\), \\(-0.074\\) at \\(\\varphi=0.9\\) and \\(-0.08\\) at \\(\\varphi=1\\). Simulation gives \\(E[\\hat\\varphi]\\approx0.88\\) at \\(\\varphi=0.97\\), \\(\\approx0.885\\) at \\(0.98\\) and \\(\\approx0.90\\) at \\(1\\). The sampling sd of \\(\\hat\\varphi\\) is about 0.08, far larger than the 0.014 gap in means between \\(0.98\\) and \\(1\\), so 50 points cannot tell them apart.<br><b>Sanity check:</b> \\(\\varphi=0\\) gives the smallest bias, \\(-1/T\\). The bias is largest at the unit root, where the estimator is also least precise.<br><b>Transfer:</b> a half-life fitted from 50 daily observations comes out too short, because the estimate of \\(\\varphi\\) is biased down and \\(\\ln 0.5/\\ln\\hat\\varphi\\) is then too small.",
+  "tags": [
+   "s_taylor",
+   "ar1",
+   "ols_bias",
+   "unit_root",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derive B from A.</b> A: the Ornstein–Uhlenbeck process \\(dX_t=-\\kappa(X_t-\\mu)\\,dt+\\sigma\\,dW_t\\), observed every \\(\\Delta\\) years. B: the AR(1) \\(X_{t+\\Delta}-\\mu=\\varphi(X_t-\\mu)+e_{t+\\Delta}\\). Give \\(\\varphi\\) and the variance of \\(e\\) in terms of \\(\\kappa\\), \\(\\sigma\\) and \\(\\Delta\\). Then, for monthly data with fitted \\(\\varphi=0.9\\) and residual sd 0.02, recover \\(\\kappa\\) per year, the half-life and the stationary sd of \\(X\\).",
+  "back": "<b>Answer:</b> \\(\\varphi=e^{-\\kappa\\Delta}\\) and \\(\\mathrm{Var}(e)=\\sigma^2(1-e^{-2\\kappa\\Delta})/(2\\kappa)=\\sigma^2(1-\\varphi^2)/(2\\kappa)\\). Monthly: \\(\\kappa=-12\\ln0.9\\approx1.26\\) per year, half-life \\(\\ln2/\\kappa\\approx0.548\\) years (about 6.6 months), stationary sd \\(0.02/\\sqrt{0.19}\\approx4.59\\%\\), and \\(\\sigma\\approx0.073\\) per square root of a year.<br><b>Bridge:</b> (1) Solve the SDE with the integrating factor \\(e^{\\kappa t}\\): \\(X_{t+\\Delta}-\\mu=(X_t-\\mu)e^{-\\kappa\\Delta}+\\sigma\\int_t^{t+\\Delta}e^{-\\kappa(t+\\Delta-s)}dW_s\\). (2) The integral is Gaussian with mean 0 and variance \\(\\sigma^2(1-e^{-2\\kappa\\Delta})/(2\\kappa)\\), by the Itô isometry. (3) Read off \\(\\varphi\\) and \\(\\mathrm{Var}(e)\\). (4) Invert: \\(\\kappa=-\\ln\\varphi/\\Delta\\) and \\(\\sigma^2=2\\kappa\\,\\mathrm{Var}(e)/(1-\\varphi^2)\\). (5) The stationary variance is \\(\\sigma^2/(2\\kappa)=\\mathrm{Var}(e)/(1-\\varphi^2)\\).<br><b>Structure:</b> s_recursion (the exact solution is a recursion on the sampling grid) and s_dimensional_analysis (a rate per year against steps per month). Trigger: an OU process sampled exactly at a fixed step.<br><b>Sanity check:</b> as \\(\\Delta\\to0\\), \\(\\varphi\\approx1-\\kappa\\Delta\\). An Euler scheme also gives \\(\\varphi=1-\\kappa\\Delta\\), so reading \\(\\kappa\\) as \\((1-\\varphi)/\\Delta\\) is the Euler reading. It gives 1.2 per year here, against the exact 1.26.<br><b>Transfer:</b> a spread sampled every five minutes on an intraday grid. The same mapping applies with \\(\\Delta\\) set to five minutes in years.",
+  "tags": [
+   "s_recursion",
+   "s_dimensional_analysis",
+   "ornstein_uhlenbeck",
+   "ar1",
+   "discretisation",
+   "fmt_connect"
   ]
  }
 ]
