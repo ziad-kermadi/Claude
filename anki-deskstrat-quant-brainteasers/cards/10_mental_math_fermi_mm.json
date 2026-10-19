@@ -63,7 +63,7 @@
  {
   "type": "basic",
   "front": "Estimate \\(1.05^{10}\\) to four significant figures without a calculator.",
-  "back": "<b>Answer:</b> \\(1.05^{10}\\approx1.6289\\).<br><b>Structure:</b> s_taylor: log-series approximation. Powers become exponentials of a sum.<br><b>Key move:</b> \\((1+r)^n=\\exp(n\\ln(1+r))\\) and \\(\\ln(1+r)\\approx r-r^2/2+r^3/3\\).<br><b>Working:</b> \\(\\ln1.05\\approx0.05-0.00125+0.0000417=0.048792\\). Then \\(e^{0.48792}\\approx1.6289\\) (exact \\(1.628895\\)).<br><b>Sanity check:</b> \\(1.05^{10}\\) is a little above 1.6, which matches the 5%-for-10-years memory.<br><b>Transfer:</b> \\(1.07^{10}\\approx1.967\\) (close to 2). \\(1.04^{25}\\approx2.666\\).",
+  "back": "<b>Answer:</b> \\(1.05^{10}\\approx1.6289\\).<br><b>Structure:</b> s_taylor: log-series approximation. Powers become exponentials of a sum.<br><b>Key move:</b> \\((1+r)^n=\\exp(n\\ln(1+r))\\) and \\(\\ln(1+r)\\approx r-r^2/2+r^3/3\\).<br><b>Working:</b> \\(\\ln1.05\\approx0.05-0.00125+0.0000417=0.048792\\). Then \\(e^{0.48792}\\approx1.6289\\) (exact \\(1.628895\\)).<br><b>Sanity check:</b> \\(1.05^{10}\\) is a little above 1.6. Handy anchor: 5% for 10 years is about 1.63.<br><b>Transfer:</b> \\(1.07^{10}\\approx1.967\\) (close to 2). \\(1.04^{25}\\approx2.666\\).",
   "tags": [
    "s_taylor",
    "mental_math",
@@ -74,7 +74,7 @@
  {
   "type": "basic",
   "front": "You approximate \\((1.01)^{100}\\) by \\(e^{100\\cdot0.01}=e\\). What breaks, and by how much?",
-  "back": "<b>What breaks:</b> \\(\\ln(1+r)<r\\), so replacing \\(\\ln(1+r)\\) with \\(r\\) overstates the exponent by about \\(nr^2/2\\). Here that is \\(100\\cdot0.00005=0.005\\), an overstatement of about 0.5%.<br><b>Fix:</b> Keep the second-order term: exponent \\(n(r-r^2/2)=100(0.01-0.00005)=0.995\\).<br><b>New answer:</b> \\(e^{0.995}\\approx2.7046\\), against the exact \\(1.01^{100}=2.7048\\). The true value is \\(2.7048\\), not \\(e=2.7183\\).",
+  "back": "<b>What breaks:</b> \\(\\ln(1+r)&lt;r\\), so replacing \\(\\ln(1+r)\\) with \\(r\\) overstates the exponent by about \\(nr^2/2\\). Here that is \\(100\\cdot0.00005=0.005\\), an overstatement of about 0.5%.<br><b>Fix:</b> Keep the second-order term: exponent \\(n(r-r^2/2)=100(0.01-0.00005)=0.995\\).<br><b>New answer:</b> \\(e^{0.995}\\approx2.7046\\), against the exact \\(1.01^{100}=2.7048\\). The true value is \\(2.7048\\), not \\(e=2.7183\\).",
   "tags": [
    "s_taylor",
    "mental_math",
@@ -85,7 +85,7 @@
  {
   "type": "basic",
   "front": "Estimate \\(\\ln 1.1\\) to four significant figures without a calculator.",
-  "back": "<b>Answer:</b> \\(\\ln1.1\\approx0.09531\\).<br><b>Structure:</b> s_taylor: series expansion of \\(\\ln(1+x)\\) at \\(x=0\\).<br><b>Key move:</b> \\(\\ln(1+x)=x-x^2/2+x^3/3-x^4/4+\\dots\\), with \\(x=0.1\\).<br><b>Working:</b> \\(0.1-0.005+0.000333=0.095333\\). The fourth term \\(-0.000025\\) gives \\(0.095308\\). Exact \\(0.095310\\).<br><b>Sanity check:</b> \\(\\ln(1+x)<x\\) because \\(\\ln\\) is concave, consistent with \\(0.0953<0.1\\).<br><b>Transfer:</b> \\(\\ln1.02\\approx0.02-0.0002+0.0000027=0.0198027\\) (exact \\(0.0198026\\)).",
+  "back": "<b>Answer:</b> \\(\\ln1.1\\approx0.09531\\).<br><b>Structure:</b> s_taylor: series expansion of \\(\\ln(1+x)\\) at \\(x=0\\).<br><b>Key move:</b> \\(\\ln(1+x)=x-x^2/2+x^3/3-x^4/4+\\dots\\), with \\(x=0.1\\).<br><b>Working:</b> \\(0.1-0.005+0.000333=0.095333\\). The fourth term \\(-0.000025\\) gives \\(0.095308\\). Exact \\(0.095310\\).<br><b>Sanity check:</b> \\(\\ln(1+x)&lt;x\\) because \\(\\ln\\) is concave, consistent with \\(0.0953&lt;0.1\\).<br><b>Transfer:</b> \\(\\ln1.02\\approx0.02-0.0002+0.0000027=0.0198027\\) (exact \\(0.0198026\\)).",
   "tags": [
    "s_taylor",
    "mental_math",
@@ -230,7 +230,7 @@
  {
   "type": "basic",
   "front": "Estimate \\(\\sqrt{252}\\) without a calculator, anchoring at a nearby square.",
-  "back": "<b>Answer:</b> \\(\\sqrt{252}\\approx15.875\\) (exact \\(15.8745\\)).<br><b>Structure:</b> s_taylor: anchor on the nearest perfect square and expand.<br><b>Key move:</b> \\(\\sqrt{256-4}=16\\sqrt{1-1/64}\\approx16(1-1/128)\\).<br><b>Working:</b> \\(16\\times(1-0.0078125)=15.875\\).<br><b>Sanity check:</b> \\(15<\\sqrt{252}<16\\). The answer is just under 16, as expected for an argument just under 256.<br><b>Transfer:</b> \\(\\sqrt{365}\\approx19(1+2/361)\\approx19.105\\) (exact \\(19.105\\)).",
+  "back": "<b>Answer:</b> \\(\\sqrt{252}\\approx15.875\\) (exact \\(15.8745\\)).<br><b>Structure:</b> s_taylor: anchor on the nearest perfect square and expand.<br><b>Key move:</b> \\(\\sqrt{256-4}=16\\sqrt{1-1/64}\\approx16(1-1/128)\\).<br><b>Working:</b> \\(16\\times(1-0.0078125)=15.875\\).<br><b>Sanity check:</b> \\(15&lt;\\sqrt{252}&lt;16\\). The answer is just under 16, as expected for an argument just under 256.<br><b>Transfer:</b> \\(\\sqrt{365}\\approx19(1+2/361)\\approx19.105\\) (exact \\(19.105\\)).",
   "tags": [
    "s_taylor",
    "mental_math",
@@ -263,7 +263,7 @@
  {
   "type": "basic",
   "front": "Newton's method for a reciprocal, \\(x_{k+1}=x_k(2-7x_k)\\), started at \\(x_0=0.3\\). What breaks?",
-  "back": "<b>What breaks:</b> The iteration only converges when \\(0<x_0<2/7\\). Here \\(x_0=0.3>0.2857\\), so \\(|1-7x_0|=1.1>1\\) and the error grows at each step.<br><b>Fix:</b> Start inside the basin: take \\(x_0=0.14\\), which is below \\(2/7\\) and close to \\(1/7\\).<br><b>New answer:</b> Iterates: \\(0.3\\to-0.03\\to-0.066\\to-0.163\\to-0.514\\), diverging. From \\(x_0=0.14\\) the iterates go to \\(1/7\\).",
+  "back": "<b>What breaks:</b> The iteration only converges when \\(0&lt;x_0&lt;2/7\\). Here \\(x_0=0.3&gt;0.2857\\), so \\(|1-7x_0|=1.1&gt;1\\) and the error grows at each step.<br><b>Fix:</b> Start inside the basin: take \\(x_0=0.14\\), which is below \\(2/7\\) and close to \\(1/7\\).<br><b>New answer:</b> Iterates: \\(0.3\\to-0.03\\to-0.066\\to-0.163\\to-0.514\\), diverging. From \\(x_0=0.14\\) the iterates go to \\(1/7\\).",
   "tags": [
    "s_recursion",
    "mental_math",
@@ -307,7 +307,7 @@
  {
   "type": "basic",
   "front": "A single liquid FTSE stock has average daily value traded of £500m and an average trade of £10k. How many trades per day, and how often does one trade?",
-  "back": "<b>Answer:</b> About 50,000 trades per day, so one trade every 0.6 seconds over an 8.5-hour session.<br><b>Structure:</b> s_fermi with s_dimensional_analysis: divide notional by ticket size to get a count.<br><b>Key move:</b> Count = notional \\(\\div\\) average ticket size. Rate = session length \\(\\div\\) count.<br><b>Working:</b> \\(5\\times10^8/10^4=5\\times10^4\\). Session \\(=8.5\\times3600=30600\\) s. \\(30600/50000=0.61\\) s.<br><b>Sanity check:</b> Units check: £ divided by £ per trade gives trades. The result is plausible for an algorithmic stock.<br><b>Transfer:</b> Check the units before trusting the output: a ticket size in pence instead of pounds would move the count by a factor of 100.",
+  "back": "<b>Answer:</b> About 50,000 trades per day, so one trade every 0.6 seconds over an 8.5-hour session.<br><b>Structure:</b> s_fermi with s_dimensional_analysis: divide notional by ticket size to get a count.<br><b>Key move:</b> Count = notional \\(\\div\\) average ticket size. Rate = session length \\(\\div\\) count.<br><b>Working:</b> \\(5\\times10^8/10^4=5\\times10^4\\). Session \\(=8.5\\times3600=30600\\) s. \\(30600/50000=0.61\\) s.<br><b>Sanity check:</b> Units check: £ divided by £ per trade gives trades. The result is plausible for an algorithmic stock.<br><b>Transfer:</b> Same method for a liquid ETF with £2bn average daily value and £5k average trade: \\(4\\times10^5\\) trades a day.",
   "tags": [
    "s_fermi",
    "s_dimensional_analysis",
@@ -352,8 +352,8 @@
  },
  {
   "type": "basic",
-  "front": "Estimate the annual gross P&L of quoting one liquid stock: 1m shares a day at £10, you take 5% of volume, earn half-spread of 5 bp. 252 days. Then adjust for adverse selection.",
-  "back": "<b>Answer:</b> About £63k gross per year, about £30k after assuming adverse selection halves the edge.<br><b>Structure:</b> s_fermi with s_linearity_expectation: P&amp;L equals trades times edge per trade.<br><b>Key move:</b> P&amp;L = (volume) \\(\\times\\) (share you capture) \\(\\times\\) (edge per unit). Edge per unit = half-spread minus adverse selection.<br><b>Working:</b> Notional \\(=10^6\\times£10=£10^7\\). Captured \\(=5\\%\\times£10^7=£5\\times10^5\\). Edge \\(=5\\) bp so \\(£250\\)/day. Over 252 days \\(=£63000\\).<br><b>Sanity check:</b> The answer is linear in every input. Doubling the spread doubles the gross, but only if flow stays the same.<br><b>Transfer:</b> Same method for the expected P&L of a bank's FX desk, replacing volume with client flow.",
+  "front": "Estimate the annual gross P&amp;L of quoting one liquid stock: 1m shares a day at £10, you take 5% of volume, earn half-spread of 5 bp. 252 days. Then adjust for adverse selection.",
+  "back": "<b>Answer:</b> About £63k gross per year, about £30k after assuming adverse selection halves the edge.<br><b>Structure:</b> s_fermi with s_linearity_expectation: P&amp;L equals trades times edge per trade.<br><b>Key move:</b> P&amp;L = (volume) \\(\\times\\) (share you capture) \\(\\times\\) (edge per unit). Edge per unit = half-spread minus adverse selection.<br><b>Working:</b> Notional \\(=10^6\\times£10=£10^7\\). Captured \\(=5\\%\\times£10^7=£5\\times10^5\\). Edge \\(=5\\) bp so \\(£250\\)/day. Over 252 days \\(=£63000\\).<br><b>Sanity check:</b> The answer is linear in every input. Doubling the spread doubles the gross, but only if flow stays the same.<br><b>Transfer:</b> Same method for the expected P&amp;L of a bank's FX desk, replacing volume with client flow.",
   "tags": [
    "s_fermi",
    "s_linearity_expectation",
@@ -433,7 +433,7 @@
  {
   "type": "basic",
   "front": "Two independent draws, each uniform on (0,1). What is the expected value of the larger one?",
-  "back": "<b>Classic:</b> Expected maximum of two fair dice, \\(161/36\\approx4.47\\).<br><b>Mapping:</b> Tail-sum: \\(E[\\max]=\\int_0^1 P(\\max>x)\\,dx\\) with \\(P(\\max\\le x)=x^2\\). For dice the same sum runs over the 6 faces.<br><b>Answer:</b> \\(\\int_0^1(1-x^2)\\,dx=2/3\\). Discrete dice: \\(161/36=4.4722\\), from exact enumeration of the 36 outcomes.",
+  "back": "<b>Classic:</b> Expected maximum of two fair dice, \\(161/36\\approx4.47\\).<br><b>Mapping:</b> Tail-sum: \\(E[\\max]=\\int_0^1 P(\\max&gt;x)\\,dx\\) with \\(P(\\max\\le x)=x^2\\). For dice the same sum runs over the 6 faces.<br><b>Answer:</b> \\(\\int_0^1(1-x^2)\\,dx=2/3\\). Discrete dice: \\(161/36=4.4722\\), from exact enumeration of the 36 outcomes.",
   "tags": [
    "s_order_statistics",
    "market_making",
@@ -454,8 +454,8 @@
  },
  {
   "type": "basic",
-  "front": "Market on value \\(V\\sim U[0,100]\\). You quote an ask of 50. One informed buyer lifts it only when \\(V>50\\). Expected P&amp;L per fill and per order? Break-even ask?",
-  "back": "<b>Answer:</b> Per fill, \\(-25\\). Per informed order (unconditional), \\(-12.5\\). Break-even ask is 100.<br><b>Structure:</b> s_conditional_expectation_tower and s_game_theory_equilibrium: the winner's curse. Getting filled reveals \\(V>a\\).<br><b>Key move:</b> A fill at \\(a\\) happens only when \\(V>a\\), so \\(E[V\\mid\\text{fill}]=(a+100)/2>a\\). Your loss per fill is \\((100-a)/2\\).<br><b>Working:</b> \\(E[V\\mid V>50]=75\\), so P&amp;L per fill \\(=50-75=-25\\). Unconditional \\(=-(100-a)^2/200=-12.5\\). Monte Carlo of \\(10^6\\) gave \\(-12.50\\) and \\(-24.99\\).<br><b>Sanity check:</b> Loss shrinks to zero only as \\(a\\to100\\). Against informed flow alone, no ask below 100 breaks even.<br><b>Transfer:</b> The same arithmetic applies to a bid hit by an informed seller.",
+  "front": "Market on value \\(V\\sim U[0,100]\\). You quote an ask of 50. One informed buyer lifts it only when \\(V&gt;50\\). Expected P&amp;L per fill and per order? Break-even ask?",
+  "back": "<b>Answer:</b> Per fill, \\(-25\\). Per informed order (unconditional), \\(-12.5\\). Break-even ask is 100.<br><b>Structure:</b> s_conditional_expectation_tower and s_game_theory_equilibrium: the winner's curse. Getting filled reveals \\(V&gt;a\\).<br><b>Key move:</b> A fill at \\(a\\) happens only when \\(V&gt;a\\), so \\(E[V\\mid\\text{fill}]=(a+100)/2&gt;a\\). Your loss per fill is \\((100-a)/2\\).<br><b>Working:</b> \\(E[V\\mid V&gt;50]=75\\), so P&amp;L per fill \\(=50-75=-25\\). Unconditional \\(=-(100-a)^2/200=-12.5\\). Monte Carlo of \\(10^6\\) gave \\(-12.50\\) and \\(-24.99\\).<br><b>Sanity check:</b> Loss shrinks to zero only as \\(a\\to100\\). Against informed flow alone, no ask below 100 breaks even.<br><b>Transfer:</b> The same arithmetic applies to a bid hit by an informed seller.",
   "tags": [
    "s_conditional_expectation_tower",
    "s_game_theory_equilibrium",
@@ -468,7 +468,7 @@
  {
   "type": "basic",
   "front": "You quote an ask of 50 on \\(V\\sim U[0,100]\\), and you are lifted. What is your fair value for the asset now?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
-  "back": "<b>Structure:</b> s_conditional_expectation_tower: being filled is evidence about the value.<br><b>Trigger:</b> A fill at a price reveals which side of the threshold the value lies on.<br><b>Key move:</b> Fair value becomes \\(E[V\\mid V>50]\\).<br><b>Answer:</b> 75, not 50. For a bid hit at 50 instead, the fair value is \\(E[V\\mid V<50]=25\\).",
+  "back": "<b>Structure:</b> s_conditional_expectation_tower: being filled is evidence about the value.<br><b>Trigger:</b> A fill at a price reveals which side of the threshold the value lies on.<br><b>Key move:</b> Fair value becomes \\(E[V\\mid V&gt;50]\\).<br><b>Answer:</b> 75, not 50. For a bid hit at 50 instead, the fair value is \\(E[V\\mid V&lt;50]=25\\).",
   "tags": [
    "s_conditional_expectation_tower",
    "market_making",
@@ -502,7 +502,7 @@
  },
  {
   "type": "cloze",
-  "front": "For \\(V\\sim U[0,100]\\), \\(E[V\\mid V>a]=\\){{c1::\\((a+100)/2\\)}}, so a lift at ask \\(a\\) costs {{c2::\\((100-a)/2\\)}} per fill.",
+  "front": "For \\(V\\sim U[0,100]\\), \\(E[V\\mid V&gt;a]=\\){{c1::\\((a+100)/2\\)}}, so a lift at ask \\(a\\) costs {{c2::\\((100-a)/2\\)}} per fill.",
   "back": "Check at \\(a=50\\): conditional mean 75, cost 25. This matches the Monte Carlo in the winner's-curse solve card. The same logic runs for a bid hit by an informed seller.",
   "tags": [
    "s_conditional_expectation_tower",
@@ -537,7 +537,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: MM session 1/4]</b> Market on the sum of two fair dice. Your fair value is 7 (no information). You quote bid 6, ask 8.<br><b>Question:</b> A buyer lifts your 8 and you know nothing more about them. What is your edge against fair value, and what is your position?",
-  "back": "<b>Answer:</b> +1 edge, short 1 at 8.<br><b>Structure:</b> s_game_theory_equilibrium<br><b>Key move:</b> An uninformed fill earns half the spread against fair value.<br><b>Working:</b> Edge = ask minus fair = \\(8-7=1\\). Position short 1.<br><b>Sanity check:</b> Mark at 7 gives \\(+1\\). The full round trip is 2, as in the next card of this chain.<br><b>Transfer:</b> A spread of 2 is worth 1 per side against a uninformed flow.",
+  "back": "<b>Answer:</b> +1 edge, short 1 at 8.<br><b>Structure:</b> s_game_theory_equilibrium<br><b>Key move:</b> An uninformed fill earns half the spread against fair value.<br><b>Working:</b> Edge = ask minus fair = \\(8-7=1\\). Position short 1.<br><b>Sanity check:</b> Mark at 7 gives \\(+1\\). The full round trip is 2, as in the next card of this chain.<br><b>Transfer:</b> A spread of 2 is worth 1 per side against uninformed flow.",
   "tags": [
    "s_game_theory_equilibrium",
    "market_making",
@@ -587,7 +587,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: Kelly 1/3]</b> Even-money coin, \\(p=0.6\\). You bet a fraction \\(f\\) of bankroll on each flip.<br><b>Question:</b> What is the Kelly fraction \\(f^*\\), and the growth per bet at \\(f^*\\)?",
-  "back": "<b>Answer:</b> \\(f^*=0.20\\), growth \\(g^*=0.0201\\) per bet (2.01% in log terms).<br><b>Structure:</b> s_kelly_log_utility<br><b>Key move:</b> Maximise \\(g(f)=p\\ln(1+f)+q\\ln(1-f)\\) and set the derivative to zero.<br><b>Working:</b> \\(g'(f)=p/(1+f)-q/(1-f)=0\\), so \\(f^*=p-q=0.2\\). \\(g(0.2)=0.6\\ln1.2+0.4\\ln0.8=0.02014\\).<br><b>Sanity check:</b> Small bets: \\(g\\approx f(p-q)\\) for tiny \\(f\\), so growth is increasing until the optimum.<br><b>Transfer:</b> A 55/45 even-money coin gives \\(f^*=0.10\\).",
+  "back": "<b>Answer:</b> \\(f^*=0.20\\), growth \\(g^*=0.0201\\) per bet (2.01% in log terms).<br><b>Structure:</b> s_kelly_log_utility<br><b>Key move:</b> Maximise \\(g(f)=p\\ln(1+f)+q\\ln(1-f)\\) and set the derivative to zero.<br><b>Working:</b> \\(g'(f)=p/(1+f)-q/(1-f)=0\\), so \\(f^*=p-q=0.2\\). \\(g(0.2)=0.6\\ln1.2+0.4\\ln0.8=0.02014\\).<br><b>Sanity check:</b> \\(g\\) is concave in \\(f\\) with \\(g(0)=0\\), so there is a single maximiser, and it is interior.<br><b>Transfer:</b> A 55/45 even-money coin gives \\(f^*=0.10\\).",
   "tags": [
    "s_kelly_log_utility",
    "market_making",
@@ -670,7 +670,7 @@
  {
   "type": "basic",
   "front": "Coin with \\(p=0.6\\), even money. You bet full Kelly, \\(f=0.2\\), each flip. What is the chance your wealth ever falls to half its starting value? Give a rigorous bound and check by simulation.",
-  "back": "<b>Answer:</b> At most \\(1/2\\). Simulation over 1000 bets gave 0.456.<br><b>Structure:</b> s_martingale and s_optional_stopping: \\(1/W_t\\) is a martingale, so Doob's maximal inequality bounds the drawdown.<br><b>Key move:</b> Choose \\(f^*=0.2\\). Then \\(E[1/(1+fX)]=0.6/1.2+0.4/0.8=1\\), so \\(M_t=1/W_t\\) is a positive martingale with \\(M_0=1\\).<br><b>Working:</b> \\(P(\\sup_t M_t\\ge2)\\le E[M_0]/2=1/2\\). Event \\(\\sup M\\ge2\\) is the same as \\(W\\) falling to \\(1/2\\). Simulation of \\(10^5\\) paths over 1000 bets gave 0.456.<br><b>Sanity check:</b> The bound is loose for this edge, which is consistent with the simulation sitting below it.<br><b>Transfer:</b> Under half-Kelly, \\(1/W\\) is a supermartingale, since \\(E[1/(1+0.1X)]=0.99<1\\), so the same bound still holds, and the drawdown probability is much lower.",
+  "back": "<b>Answer:</b> At most \\(1/2\\). Simulation over 1000 bets gave 0.456.<br><b>Structure:</b> s_martingale and s_optional_stopping: \\(1/W_t\\) is a martingale, so Doob's maximal inequality bounds the drawdown.<br><b>Key move:</b> Choose \\(f^*=0.2\\). Then \\(E[1/(1+fX)]=0.6/1.2+0.4/0.8=1\\), so \\(M_t=1/W_t\\) is a positive martingale with \\(M_0=1\\).<br><b>Working:</b> \\(P(\\sup_t M_t\\ge2)\\le E[M_0]/2=1/2\\). Event \\(\\sup M\\ge2\\) is the same as \\(W\\) falling to \\(1/2\\). Simulation of \\(10^5\\) paths over 1000 bets gave 0.456.<br><b>Sanity check:</b> The bound is loose for this edge, which is consistent with the simulation sitting below it.<br><b>Transfer:</b> Under half-Kelly, \\(1/W\\) is a supermartingale, since \\(E[1/(1+0.1X)]=0.99&lt;1\\), so the same bound still holds, and the drawdown probability is much lower.",
   "tags": [
    "s_martingale",
    "s_optional_stopping",
@@ -719,7 +719,7 @@
  {
   "type": "basic",
   "front": "Double-or-nothing, \\(p=0.6\\), 10 flips, bankroll 100, bet everything each flip. Expected final wealth? Probability of surviving all 10? Median?",
-  "back": "<b>Answer:</b> EV \\(\\approx619\\). P(all 10 wins) \\(=0.006\\). Median wealth is 0.<br><b>Structure:</b> s_convexity_jensen and s_kelly_log_utility: expected value and median come apart under a multiplicative bet.<br><b>Key move:</b> EV multiplies by \\(2p=1.2\\) per flip. Median requires surviving the whole path.<br><b>Working:</b> \\(100\\cdot1.2^{10}=619\\). \\(0.6^{10}=0.00605\\). The median is 0 because \\(P(W=0)=0.994>1/2\\).<br><b>Sanity check:</b> A positive expected value does not imply a positive median. Full bet maximises mean and kills the median.<br><b>Transfer:</b> A bet with a 10% chance of a 10x win and a 90% chance of 0 has the same pattern.",
+  "back": "<b>Answer:</b> EV \\(\\approx619\\). P(all 10 wins) \\(=0.006\\). Median wealth is 0.<br><b>Structure:</b> s_convexity_jensen and s_kelly_log_utility: expected value and median come apart under a multiplicative bet.<br><b>Key move:</b> EV multiplies by \\(2p=1.2\\) per flip. Median requires surviving the whole path.<br><b>Working:</b> \\(100\\cdot1.2^{10}=619\\). \\(0.6^{10}=0.00605\\). The median is 0 because \\(P(W=0)=0.994&gt;1/2\\).<br><b>Sanity check:</b> A positive expected value does not imply a positive median. Full bet maximises mean and kills the median.<br><b>Transfer:</b> A bet with a 10% chance of a 10x win and a 90% chance of 0 has the same pattern.",
   "tags": [
    "s_convexity_jensen",
    "s_kelly_log_utility",
@@ -814,7 +814,7 @@
  {
   "type": "basic",
   "front": "Each round multiplies your bankroll by \\(1+f\\) with probability 0.6 and by \\(1-f\\) with probability 0.4. You want the best median bankroll after 1000 rounds. Which \\(f\\)?",
-  "back": "<b>Classic:</b> Kelly criterion (Kelly 1956, Breiman): maximising the median of a multiplicative bankroll is maximising expected log growth.<br><b>Mapping:</b> Median of \\(\\prod(1+fX_i)\\) equals \\(\\exp(\\sum\\ln(1+fX_i))\\) in the limit, so maximise \\(E\\ln(1+fX)\\).<br><b>Answer:</b> \\(f^*=p-q=0.2\\), with growth \\(0.0201\\) per round.",
+  "back": "<b>Classic:</b> Kelly criterion (Kelly 1956, Breiman): maximising the median of a multiplicative bankroll is maximising expected log growth.<br><b>Mapping:</b> The log of the bankroll is a sum of i.i.d. terms \\(\\ln(1+fX_i)\\), so its typical growth rate is \\(E\\ln(1+fX)\\). Maximise that.<br><b>Answer:</b> \\(f^*=p-q=0.2\\), with growth \\(0.0201\\) per round.",
   "tags": [
    "s_kelly_log_utility",
    "kelly",
@@ -847,7 +847,7 @@
  {
   "type": "basic",
   "front": "A bet has expected value +5% of stake, but a loss wipes out the whole bankroll. The win probability is 0.51 at even money. Do you bet all?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
-  "back": "<b>Structure:</b> s_convexity_jensen: the expected log of wealth, not expected wealth, governs the long run.<br><b>Trigger:</b> A loss that takes wealth to zero makes expected log utility \\(-\\infty\\), however small the chance.<br><b>Key move:</b> \\(E[\\ln W]=0.51\\ln2+0.49\\ln0=-\\infty\\). Choose \\(f<1\\), with Kelly \\(f^*=0.02\\).<br><b>Answer:</b> No. Bet the Kelly fraction, \\(0.51-0.49=0.02\\).",
+  "back": "<b>Structure:</b> s_convexity_jensen: the expected log of wealth, not expected wealth, governs the long run.<br><b>Trigger:</b> A loss that takes wealth to zero makes expected log utility \\(-\\infty\\), however small the chance.<br><b>Key move:</b> \\(E[\\ln W]=0.51\\ln2+0.49\\ln0=-\\infty\\). Choose \\(f&lt;1\\), with Kelly \\(f^*=0.02\\).<br><b>Answer:</b> No. Bet the Kelly fraction, \\(0.51-0.49=0.02\\).",
   "tags": [
    "s_convexity_jensen",
    "s_kelly_log_utility",
