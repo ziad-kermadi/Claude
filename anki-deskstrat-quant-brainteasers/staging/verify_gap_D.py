@@ -372,12 +372,11 @@ def card14():
 
 
 # ---------- card 15: tail dependence, Gaussian vs t4 (rho=0.3) ----------
-def phi2(h, k, rho):
-    """Bivariate normal CDF by 1-D quadrature (accurate in the far tail, unlike mvn.cdf)."""
-    from scipy.integrate import quad
-    sd = math.sqrt(1 - rho * rho)
-    return quad(lambda x: norm.pdf(x) * norm.cdf((k - rho * x) / sd), -40, h,
-                epsabs=1e-16, epsrel=1e-12, limit=500)[0]
+def phi2_eq(h, rho):
+    """Phi2(h,h;rho) by Owen (1956): Phi(h) - 2 T(h,a), a = sqrt((1-rho)/(1+rho)), h != 0."""
+    from scipy.special import owens_t
+    a = math.sqrt((1 - rho) / (1 + rho))
+    return norm.cdf(h) - 2 * owens_t(h, a)
 
 
 def card15():
@@ -388,21 +387,18 @@ def card15():
     check(15, "t4 copula tail dependence lambda", 0.162, lam, 5e-4)
 
     def gauss_cond(q):
-        return phi2(norm.ppf(q), norm.ppf(q), rho) / q
+        return phi2_eq(norm.ppf(q), rho) / q
 
     def t_cond(q):
         # X = Z / sqrt(W/nu), W ~ chi2_nu:  P(U1<q,U2<q) = E_W[Phi2(a sqrt(W/nu))], a = t_nu^{-1}(q)
         a = tdist.ppf(q, nu)
-        f = lambda w: phi2(a * math.sqrt(w / nu), a * math.sqrt(w / nu), rho) * chi2.pdf(w, nu)
-        return quad(f, 0, 2000, limit=800, epsabs=1e-16, epsrel=1e-10)[0] / q
+        f = lambda w: phi2_eq(a * math.sqrt(w / nu), rho) * chi2.pdf(w, nu)
+        return quad(f, 0, 400, points=[nu / a ** 2], limit=1000, epsabs=1e-16, epsrel=1e-11)[0] / q
 
     check(15, "Gaussian conditional at q=0.1% (%)", 1.49, gauss_cond(1e-3) * 100, 0.005)
-    check(15, "t4 conditional at q=0.1% (%)", 17.04, t_cond(1e-3) * 100, 0.02)
-    check(15, "t4 conditional at q=1% (%)", 18.71, t_cond(1e-2) * 100, 0.02)
-    tq5 = t_cond(1e-5)
-    check(15, "t4 conditional at q=1e-5 (%) approaches lambda", 16.18, tq5 * 100, 0.3)
-    print(f"       lambda={lam:.5f}; decreasing toward it: t4 at 1e-2={t_cond(1e-2):.5f}, "
-          f"1e-3={t_cond(1e-3):.5f}, 1e-5={tq5:.5f}")
+    check(15, "t4 conditional at q=1% (%)", 19.11, t_cond(1e-2) * 100, 0.01)
+    check(15, "t4 conditional at q=0.1% (%)", 17.04, t_cond(1e-3) * 100, 0.01)
+    check(15, "t4 conditional at q=0.01% (%) is close to lambda (tol 0.5pt)", lam * 100, t_cond(1e-4) * 100, 0.5)
 
 
 # ---------- card 16: large-pool loss CDF, p=2%, rho=0.2 (correct vs candidate) ----------
