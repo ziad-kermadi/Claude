@@ -7,6 +7,11 @@
    "s_taylor",
    "mental_math",
    "fmt_solve"
+  ],
+  "hints": [
+   "Is there a round number close to 53 whose square you know instantly?",
+   "Expand around that round base point: write 53 as the round number plus a small offset and use \\((a+b)^2\\).",
+   "\\((50+a)^2=50^2+2\\cdot 50\\cdot a+a^2\\), with \\(a\\) the offset from 50."
   ]
  },
  {
@@ -27,6 +32,11 @@
    "s_taylor",
    "mental_math",
    "fmt_solve"
+  ],
+  "hints": [
+   "Are the two factors symmetric about some round number?",
+   "Write both factors as a common centre plus or minus the same offset, then use the difference of squares.",
+   "\\((c-d)(c+d)=c^2-d^2\\), with \\(c\\) the centre and \\(d\\) the offset."
   ]
  },
  {
@@ -69,6 +79,11 @@
    "mental_math",
    "compounding",
    "fmt_solve"
+  ],
+  "hints": [
+   "Can a power be rewritten as an exponential, so that a logarithm does the work?",
+   "Use \\((1+r)^n=\\exp\\bigl(n\\ln(1+r)\\bigr)\\), and series-expand \\(\\ln(1+r)\\) for the small rate \\(r\\).",
+   "\\(\\ln(1.05)\\approx 0.05-\\dfrac{0.05^2}{2}+\\dfrac{0.05^3}{3}\\), then multiply by \\(n=10\\) and exponentiate."
   ]
  },
  {
@@ -80,6 +95,11 @@
    "mental_math",
    "compounding",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Does \\(\\ln(1+r)\\) sit above or below \\(r\\), and by how much at \\(r=0.01\\)?",
+   "Keep the second-order term of \\(\\ln(1+r)\\) and see how the exponent changes.",
+   "Exponent \\(=100\\ln(1.01)\\approx 100\\,(r-\\tfrac{r^2}{2})\\) with \\(r=0.01\\)."
   ]
  },
  {
@@ -91,6 +111,11 @@
    "mental_math",
    "logs",
    "fmt_solve"
+  ],
+  "hints": [
+   "Is there a series in powers of \\(x\\) that gives \\(\\ln(1+x)\\) directly, with \\(x\\) small here?",
+   "Use the alternating Taylor series of \\(\\ln(1+x)\\) about \\(x=0\\).",
+   "\\(\\ln(1+x)=x-\\dfrac{x^2}{2}+\\dfrac{x^3}{3}-\\cdots\\), with \\(x=0.1\\)."
   ]
  },
  {
@@ -102,6 +127,11 @@
    "mental_math",
    "fractions",
    "fmt_solve"
+  ],
+  "hints": [
+   "What does each step of long division by 7 depend on, and does the process ever repeat?",
+   "Track the remainder after each step: the next digit and remainder depend only on the current remainder, so look for a cycle.",
+   "Let \\(r_0=1\\). Then \\(r_{k+1}=10\\,r_k \\bmod 7\\). Compute \\(r_1,r_2,\\dots\\) until one repeats."
   ]
  },
  {
@@ -124,6 +154,11 @@
    "mental_math",
    "sqrt",
    "fmt_solve"
+  ],
+  "hints": [
+   "Which function has \\(\\sqrt{2}\\) as its root, and what iteration does Newton's method give for it?",
+   "Apply Newton's method to \\(f(x)=x^2-2\\). Each step averages the guess with \\(2\\) divided by the guess.",
+   "\\(x_1=\\tfrac12\\!\\left(x_0+\\dfrac{2}{x_0}\\right)\\) with \\(x_0=1.5\\), then repeat with \\(x_1\\)."
   ]
  },
  {
@@ -135,6 +170,11 @@
    "mental_math",
    "volatility",
    "fmt_solve"
+  ],
+  "hints": [
+   "If daily shocks are independent, how does the variance of a one-year move compare with the variance of one day?",
+   "Variance is additive over independent periods, so the standard deviation scales with the square root of the time fraction.",
+   "\\(\\sigma_{\\text{day}}=\\sigma_{\\text{year}}\\sqrt{\\Delta t}\\), where \\(\\Delta t\\) is one trading day as a fraction of a trading year."
   ]
  },
  {
@@ -156,6 +196,11 @@
    "s_sqrt_time_scaling",
    "volatility",
    "fmt_twin"
+  ],
+  "hints": [
+   "After 252 independent steps of equal size, how does the spread of the total compare with the spread of one step?",
+   "Independent unit-variance shocks add in variance, so the standard deviation of the total is the square root of the variance of the sum.",
+   "\\(\\operatorname{Var}\\bigl(\\sum_{i=1}^{252}X_i\\bigr)=\\sum_{i=1}^{252}\\operatorname{Var}(X_i)\\), with \\(\\operatorname{Var}(X_i)=1\\)."
   ]
  },
  {
@@ -178,6 +223,11 @@
    "mental_math",
    "normal",
    "fmt_solve"
+  ],
+  "hints": [
+   "Which two-sided coverage does the interval \\(\\pm k\\sigma\\) give, and what does \\(\\Phi(k)\\) describe?",
+   "Two-sided coverage is \\(2\\Phi(k)-1\\). One-sided quantiles are the inverse of \\(\\Phi\\) at the target probability.",
+   "\\(P(|Z|\\le k)=2\\Phi(k)-1\\). Evaluate it at \\(k=1\\), then \\(k=2\\) and \\(k=3\\)."
   ]
  },
  {
@@ -189,6 +239,11 @@
    "mental_math",
    "normal",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Does a fatter-tailed distribution with the same variance put more or less mass beyond 1.645, and at which quantile does it differ most?",
+   "Rescale a Student-t to unit variance before reading its quantile. The scaling factor depends on its degrees of freedom.",
+   "Quantile \\(=t_\\nu(p)\\sqrt{(\\nu-2)/\\nu}\\) with \\(\\nu=3\\), where \\(t_\\nu(p)\\) is the Student-t quantile."
   ]
  },
  {
@@ -213,6 +268,11 @@
    "mental_math",
    "options",
    "fmt_solve"
+  ],
+  "hints": [
+   "Does the price of an at-the-money option depend on the stock level and volatility separately, or only through a combined quantity?",
+   "Use dimensional analysis: the price is \\(S\\) times a function of \\(\\sigma\\sqrt T\\). Expand that function near zero, where the at-the-money call sits in the middle of the normal distribution.",
+   "Call \\(=S\\,[2N(\\tfrac12\\sigma\\sqrt T)-1]\\). Expand \\(N\\) about 0 to first order, using \\(N'(0)=\\varphi(0)\\)."
   ]
  },
  {
@@ -236,6 +296,11 @@
    "mental_math",
    "sqrt",
    "fmt_solve"
+  ],
+  "hints": [
+   "Is there a perfect square close to 252, and is 252 just below or above it?",
+   "Anchor at the nearest square and expand the square root of a number close to 1 to first order.",
+   "\\(\\sqrt{252}=\\sqrt{256}\\,\\sqrt{1-\\tfrac{4}{256}}\\), then expand the second factor to first order."
   ]
  },
  {
@@ -258,6 +323,11 @@
    "mental_math",
    "fractions",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Does the factor of 2 in the denominator change the repeating block, or only what comes before it?",
+   "Write \\(1/14=\\tfrac12\\cdot\\tfrac17\\) and treat the two factors separately.",
+   "Start from \\(\\tfrac17=0.\\overline{142857}\\) and halve it digit by digit, noting where the decimal point sits."
   ]
  },
  {
@@ -269,6 +339,11 @@
    "mental_math",
    "sqrt",
    "fmt_perturb"
+  ],
+  "hints": [
+   "For which starting values does this iteration settle down, and what does the error do at each step?",
+   "Track the error \\(e_k=1-7x_k\\). Find how \\(e_{k+1}\\) depends on \\(e_k\\), then check whether \\(|e_k|\\) shrinks.",
+   "Compute \\(e_0=1-7x_0\\) for \\(x_0=0.3\\), and write \\(e_{k+1}\\) in terms of \\(e_k\\)."
   ]
  },
  {
@@ -280,6 +355,11 @@
    "mental_math",
    "volatility",
    "fmt_perturb"
+  ],
+  "hints": [
+   "If each day's return depends on yesterday's, do variances over several days still add up linearly?",
+   "The variance of an n-day sum includes covariance terms. Sum the autocorrelations to get the variance ratio for the annual horizon.",
+   "Variance ratio \\(=1+2\\sum_{k\\ge1}\\rho^k\\), with \\(\\rho=0.1\\)."
   ]
  },
  {
@@ -291,6 +371,11 @@
    "fermi",
    "mental_math",
    "fmt_solve"
+  ],
+  "hints": [
+   "Which two quantities multiply to give a total weight, and roughly how many of each are there?",
+   "Decompose the total as a count times a mass per item. Bound each factor with a low and high case, then multiply the bounds.",
+   "Total \\(\\approx N\\times\\bar m\\), where \\(N\\) is the fleet size and \\(\\bar m\\) the average mass, each with a low and high estimate."
   ]
  },
  {
@@ -302,6 +387,11 @@
    "fermi",
    "fx",
    "fmt_solve"
+  ],
+  "hints": [
+   "Can the same turnover be reached from two independent directions, one from the bottom up and one from a known global total?",
+   "Triangulate: build one bottom-up estimate from desks and trades, one top-down from global turnover and London's share, then combine them.",
+   "Bottom-up \\(=\\text{desks}\\times\\text{trades per desk}\\times\\text{average size}\\). Top-down \\(=\\text{global turnover}\\times\\text{London share}\\)."
   ]
  },
  {
@@ -314,6 +404,11 @@
    "fermi",
    "market_making",
    "fmt_solve"
+  ],
+  "hints": [
+   "What unit cancels when you divide total value traded by the value of one trade, and what is left?",
+   "Count = total value divided by average trade size. Then convert the count into a time gap using the length of the trading session.",
+   "\\(N=\\dfrac{\\text{daily value traded}}{\\text{average trade size}}\\), then gap \\(=\\dfrac{\\text{session length}}{N}\\)."
   ]
  },
  {
@@ -337,6 +432,11 @@
    "fermi",
    "uncertainty",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Do the bus count and the bus mass really vary independently when both grow with city size?",
+   "Combine the correlated pair into one factor first: its log-variance includes the cross term \\(2\\rho\\sigma_1\\sigma_2\\).",
+   "\\(\\operatorname{Var}(\\ln N+\\ln m)=\\sigma_N^2+\\sigma_m^2+2\\rho\\,\\sigma_N\\sigma_m\\). Use this for the pair, then multiply in the other three factors."
   ]
  },
  {
@@ -348,6 +448,11 @@
    "s_fermi",
    "fermi",
    "fmt_twin"
+  ],
+  "hints": [
+   "What is the expected value of the largest of many independent draws from a bell curve, and how does it grow with the number of draws?",
+   "This is the expected maximum of N i.i.d. standard normals. Work with the distribution of the maximum rather than a rule of thumb.",
+   "\\(P(\\max\\le x)=\\Phi(x)^{1000}\\). Then \\(E[\\max]=\\int_0^\\infty\\bigl(1-\\Phi(x)^{1000}\\bigr)\\,dx-\\int_{-\\infty}^0\\Phi(x)^{1000}\\,dx\\)."
   ]
  },
  {
@@ -360,6 +465,11 @@
    "fermi",
    "market_making",
    "fmt_solve"
+  ],
+  "hints": [
+   "Which quantity is the product of traded volume, the share you capture, and the edge earned per unit?",
+   "Use linearity: gross P&amp;L is volume captured times edge per share, then haircut the edge for adverse selection.",
+   "Edge per share \\(=\\) half-spread \\(\\times\\) price. Daily P&amp;L \\(=\\) shares captured \\(\\times\\) edge, then multiply by 252 days."
   ]
  },
  {
@@ -383,6 +493,11 @@
    "fermi",
    "volatility",
    "fmt_solve"
+  ],
+  "hints": [
+   "How does the standard error of a sample standard deviation shrink as the sample grows?",
+   "Use the normal approximation for the relative standard error of a sample sd, then invert it to solve for the sample size.",
+   "Relative error \\(\\approx \\dfrac{1}{\\sqrt{2n}}\\). Set this equal to the target \\(\\epsilon\\) and solve for \\(n\\)."
   ]
  },
  {
@@ -395,6 +510,11 @@
    "market_making",
    "dice",
    "fmt_solve"
+  ],
+  "hints": [
+   "Can the sum of two independent dice be built from two single-die quantities?",
+   "Use linearity for the mean and additivity of variance for independent summands. The width is the standard deviation.",
+   "\\(E[S]=E[D_1]+E[D_2]\\) and \\(\\operatorname{Var}(S)=\\operatorname{Var}(D_1)+\\operatorname{Var}(D_2)\\), where \\(D\\) is one fair die."
   ]
  },
  {
@@ -417,6 +537,11 @@
    "market_making",
    "cards",
    "fmt_perturb"
+  ],
+  "hints": [
+   "What happens to the variance of a count of red cards when every draw is independent of the others?",
+   "Replacement makes the draws independent, so the count is binomial. Drop the correction factor that only applies without replacement.",
+   "Count \\(X\\sim\\text{Bin}(n,p)\\) with \\(n=10\\). Write \\(\\operatorname{Var}(X)\\) in terms of \\(n\\) and \\(p\\)."
   ]
  },
  {
@@ -439,6 +564,11 @@
    "market_making",
    "dice",
    "fmt_twin"
+  ],
+  "hints": [
+   "For two independent draws, what is the probability that both fall below a level \\(x\\)?",
+   "Map the larger draw through its distribution: its cumulative probability is the square of the single-draw one. Integrate the survival function.",
+   "\\(E[\\max]=\\int_0^1\\bigl(1-P(\\max\\le x)\\bigr)\\,dx\\), and \\(P(\\max\\le x)\\) is the square of the single-draw cumulative probability."
   ]
  },
  {
@@ -450,6 +580,11 @@
    "market_making",
    "dice",
    "fmt_solve"
+  ],
+  "hints": [
+   "Once you learn the sum is at least 8, which outcomes remain possible, and how likely is each relative to the rest?",
+   "Condition the distribution on the surviving outcomes, renormalise by their total probability, then take the mean.",
+   "\\(E[S\\mid S\\ge8]=\\dfrac{\\sum_{s\\ge8}s\\,P(S=s)}{P(S\\ge8)}\\)."
   ]
  },
  {
@@ -463,6 +598,11 @@
    "winners_curse",
    "adverse_selection",
    "fmt_solve"
+  ],
+  "hints": [
+   "If a buyer lifts your ask only when the value is high, what does that tell you about the value conditional on being filled?",
+   "Condition on the fill event \\(V>50\\). The expected value given a fill is the mean of the value over that restricted interval.",
+   "\\(E[V\\mid V>50]=\\dfrac{\\int_{50}^{100}v\\,\\tfrac{1}{100}\\,dv}{P(V>50)}\\)."
   ]
  },
  {
@@ -486,6 +626,11 @@
    "winners_curse",
    "fermi",
    "fmt_twin"
+  ],
+  "hints": [
+   "Among several noisy estimates, which one are you most likely to pay for, and what does that imply about its error?",
+   "The highest estimate is the maximum of five i.i.d. standard normals, so the overpayment is the expected maximum.",
+   "The density of the maximum of five i.i.d. standard normals is \\(5\\varphi(x)\\Phi(x)^4\\). Write \\(E[\\max]=\\int x\\,5\\varphi(x)\\Phi(x)^4\\,dx\\)."
   ]
  },
  {
@@ -520,6 +665,11 @@
    "market_making",
    "inventory",
    "fmt_solve"
+  ],
+  "hints": [
+   "How should your quote move when you already hold inventory, and in which direction does that position push the price you will trade at?",
+   "Use the inventory skew from stochastic control: the reservation price moves against your position in proportion to inventory.",
+   "Write \\(r=\\text{mid}-q\\,c\\), where \\(q\\) is the signed position and \\(c=\\gamma\\sigma^2(T-t)\\). Identify \\(q\\) and \\(c\\) from the statement, then quote both sides around \\(r\\)."
   ]
  },
  {
@@ -544,6 +694,11 @@
    "market_making",
    "dice",
    "fmt_chain"
+  ],
+  "hints": [
+   "Compare the price you sold at with fair value at that moment: what is the gap, and what position does the sale leave?",
+   "An uninformed fill earns the gap between its price and fair value. The sign of the position follows from which side the buyer took.",
+   "Edge \\(=\\text{ask}-\\text{fair value}\\). Track the quantity sold as a negative position."
   ]
  },
  {
@@ -556,6 +711,11 @@
    "market_making",
    "dice",
    "fmt_chain"
+  ],
+  "hints": [
+   "After a buy and a sell at different prices, what is your net position, and how much cash has changed hands?",
+   "Track position and cash as two separate running totals. Two offsetting fills lock in the difference between their prices.",
+   "Position: \\(-1+1\\). Cash: receipts minus payments, starting from the earlier fill."
   ]
  },
  {
@@ -570,6 +730,11 @@
    "adverse_selection",
    "dice",
    "fmt_chain"
+  ],
+  "hints": [
+   "The buyer has seen information that you have not. How does that change the expected sum?",
+   "Condition on the revealed first die: the second die is still uniform, so the conditional mean is the known face plus the mean of the other die.",
+   "\\(E[S\\mid d_1]=d_1+E[d_2]\\), with \\(d_1\\) the revealed face. Then mark your short at this new fair value."
   ]
  },
  {
@@ -582,6 +747,11 @@
    "market_making",
    "adverse_selection",
    "fmt_chain"
+  ],
+  "hints": [
+   "Which value should your quotes centre on now, and which side of it could an equally informed buyer profitably hit?",
+   "Re-centre the quotes on the updated conditional mean, and keep each quote on the correct side of it so informed buyers cannot profit.",
+   "New mid \\(=E[S\\mid\\text{all information so far}]\\). Quotes are mid \\(\\pm\\) the same half-width, then check each side against that mid."
   ]
  },
  {
@@ -594,6 +764,11 @@
    "kelly",
    "betting",
    "fmt_chain"
+  ],
+  "hints": [
+   "Which bet size maximises the long-run growth of the bankroll rather than its expected value?",
+   "Kelly criterion: maximise the expected log growth per bet over the fraction \\(f\\), and set the derivative to zero.",
+   "\\(g(f)=p\\ln(1+f)+(1-p)\\ln(1-f)\\). Write \\(g'(f)=0\\)."
   ]
  },
  {
@@ -606,6 +781,11 @@
    "kelly",
    "betting",
    "fmt_chain"
+  ],
+  "hints": [
+   "At this bet size, what is the expected log change per flip, and does a positive expected value guarantee long-run growth?",
+   "Use the same growth function \\(g(f)\\), now evaluated at the larger fraction. Growth is concave, so check whether this size lies past the zero-growth point.",
+   "\\(g(0.4)=0.6\\ln(1+0.4)+0.4\\ln(1-0.4)\\)."
   ]
  },
  {
@@ -618,6 +798,11 @@
    "kelly",
    "betting",
    "fmt_chain"
+  ],
+  "hints": [
+   "What fraction of the best growth do you keep at a smaller bet size, and what does that buy in terms of risk?",
+   "Evaluate the same growth function at the half-Kelly size and compare it with the maximum growth you found.",
+   "Ratio \\(=g(f)/g(f^*)\\) with \\(f=f^*/2\\). Compute \\(g(f)\\) from the same formula as before."
   ]
  },
  {
@@ -642,6 +827,11 @@
    "kelly",
    "betting",
    "fmt_solve"
+  ],
+  "hints": [
+   "At even money, how is the optimal bet size related to the edge \\(p-q\\)?",
+   "Kelly criterion for an even-money bet: maximise the expected log growth over \\(f\\).",
+   "\\(g(f)=0.55\\ln(1+f)+0.45\\ln(1-f)\\). Set \\(g'(f)=0\\)."
   ]
  },
  {
@@ -654,6 +844,11 @@
    "kelly",
    "volatility",
    "fmt_solve"
+  ],
+  "hints": [
+   "For a small bet in a continuous model, what does expected log growth depend on besides the mean return?",
+   "Use the continuous approximation: expected log growth is \\(f\\mu-\\tfrac12 f^2\\sigma^2\\). Maximise it over \\(f\\).",
+   "\\(\\dfrac{d}{df}\\!\\left(f\\mu-\\tfrac12 f^2\\sigma^2\\right)=0\\), with \\(\\mu=0.08\\) and \\(\\sigma=0.20\\)."
   ]
  },
  {
@@ -678,6 +873,11 @@
    "kelly",
    "drawdown",
    "fmt_solve"
+  ],
+  "hints": [
+   "Is there a function of wealth whose expected value stays fixed under this bet, so that a maximal inequality can bound the chance of a deep drawdown?",
+   "Use \\(M_t=1/W_t\\). If its one-step expectation equals 1, it is a martingale. Then apply Doob's maximal inequality at the level you care about.",
+   "One step: \\(E\\!\\left[\\dfrac{1}{1+fX}\\right]=\\dfrac{p}{1+f}+\\dfrac{1-p}{1-f}\\), with \\(f=0.2\\) and \\(p=0.6\\)."
   ]
  },
  {
@@ -690,6 +890,11 @@
    "kelly",
    "betting",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Which edge is the bet sized for, and which edge does the coin actually have?",
+   "Recompute the growth function \\(g(f)\\) using the true probability rather than the believed one, at the same bet size.",
+   "\\(g(0.2)=p_{\\text{true}}\\ln(1.2)+(1-p_{\\text{true}})\\ln(0.8)\\). Substitute the true \\(p\\)."
   ]
  },
  {
@@ -703,6 +908,11 @@
    "expected_utility",
    "betting",
    "fmt_solve"
+  ],
+  "hints": [
+   "Which utility makes the price finite even though the expected payoff is infinite, and what equation defines the most you would pay?",
+   "Find the sure amount \\(c\\) whose log utility equals the expected log utility of the game. Then solve numerically.",
+   "\\(\\displaystyle\\sum_{k\\ge1}2^{-k}\\ln(W-c+2^k)=\\ln W\\), to be solved for \\(c\\) with \\(W=100\\)."
   ]
  },
  {
@@ -714,6 +924,11 @@
    "market_making",
    "expected_utility",
    "fmt_perturb"
+  ],
+  "hints": [
+   "What happens to the terms of the sum once the payoff stops doubling?",
+   "Split the sum: the uncapped terms each contribute a fixed amount, and the capped tail is one probability times the cap.",
+   "\\(E=\\sum_{k=1}^{19}2^k\\cdot2^{-k}+2^{20}\\cdot P(k\\ge20)\\). Write \\(P(k\\ge20)\\) as a geometric tail."
   ]
  },
  {
@@ -727,6 +942,11 @@
    "expected_utility",
    "betting",
    "fmt_solve"
+  ],
+  "hints": [
+   "How does expected wealth grow with each bet, and does the typical path survive?",
+   "Expected wealth multiplies by the expected growth factor each flip. The median depends on whether the path stays above zero.",
+   "\\(E[W_{10}]=100\\cdot\\mathbb E[\\text{factor}]^{10}\\). For the median, compare \\(P(W_{10}>0)\\) with \\(1/2\\)."
   ]
  },
  {
@@ -739,6 +959,11 @@
    "expected_utility",
    "betting",
    "fmt_solve"
+  ],
+  "hints": [
+   "What sure amount, with the same log utility as the gamble, would you accept at wealth 100?",
+   "Find the certainty equivalent: the sure amount whose log utility equals the expected log utility of the game.",
+   "\\(\\tfrac12\\ln(103-c)+\\tfrac12\\ln(99-c)=\\ln 100\\). Solve for \\(c\\)."
   ]
  },
  {
@@ -751,6 +976,11 @@
    "cards",
    "betting",
    "fmt_solve"
+  ],
+  "hints": [
+   "Does the chance that the next card is red depend on what has already been dealt?",
+   "Dynamic programming over the remaining deck composition \\((r,b)\\): at each state the best guess is the majority colour, and the rest is the continuation.",
+   "Base case \\(V(0,0)=0\\). Write \\(V(r,b)\\) in terms of \\(V(r-1,b)\\) and \\(V(r,b-1)\\), then evaluate from \\((26,26)\\)."
   ]
  },
  {
@@ -762,6 +992,11 @@
    "market_making",
    "cards",
    "fmt_solve"
+  ],
+  "hints": [
+   "If the remaining deck is balanced, what does an immediate guess earn, and where does the rest of the value come from?",
+   "Same recursion over \\((r,b)\\): the next draw splits the value into two possible remaining decks.",
+   "\\(V(2,2)=\\tfrac12\\bigl(V(1,2)+V(2,1)\\bigr)\\). Write \\(V(1,2)\\) the same way from state \\((1,2)\\)."
   ]
  },
  {
@@ -786,6 +1021,11 @@
    "market_making",
    "cards",
    "fmt_perturb"
+  ],
+  "hints": [
+   "After each card goes back into the deck, is there any information left for the next guess?",
+   "With replacement each draw is an independent fair coin, so the composition carries no information. Add up the expectations of the individual guesses.",
+   "Expected score \\(=\\sum_{i=1}^{52}\\mathbb E[\\text{guess}_i]\\). Find the expectation of one term."
   ]
  },
  {
@@ -797,6 +1037,11 @@
    "market_making",
    "betting",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Does the stopping rule have bounded time or bounded losses, and which of these does the expected-payoff argument require?",
+   "Optional stopping needs bounded time or bounded losses. Cap the loss at \\(N\\) and take \\(N\\) to infinity afterwards.",
+   "Gambler's ruin with barriers at \\(+3\\) and \\(-N\\): the chance of hitting \\(+3\\) first is a linear function of the starting point between the barriers."
   ]
  },
  {
@@ -820,6 +1065,11 @@
    "kelly",
    "betting",
    "fmt_twin"
+  ],
+  "hints": [
+   "Taking logs of the bankroll, what does its path look like as a sum over rounds?",
+   "Classic: the median of a multiplicative bankroll is maximised by maximising expected log growth per round.",
+   "\\(\\ln W_n=\\sum_{i=1}^{n}\\ln(1+fX_i)\\) with \\(X_i=\\pm1\\). Write the expected value of one term."
   ]
  },
  {
@@ -831,6 +1081,11 @@
    "s_optional_stopping",
    "betting",
    "fmt_twin"
+  ],
+  "hints": [
+   "For a fair walk between two barriers, is the chance of hitting one barrier first a simple function of the starting point?",
+   "Gambler's ruin: the walk is a martingale, so the hitting probability is linear in the starting position between the barriers.",
+   "Let \\(h(x)=a+bx\\), with \\(h(-1)=0\\) and \\(h(3)=1\\). Solve for \\(a\\) and \\(b\\), then evaluate at \\(x=0\\)."
   ]
  },
  {
@@ -866,6 +1121,11 @@
    "dice",
    "adverse_selection",
    "fmt_solve"
+  ],
+  "hints": [
+   "The buyer reveals part of the outcome. Does the expected value of the other die change?",
+   "Condition on the revealed face: the other die is still uniform, so only the revealed face shifts the mean.",
+   "\\(E[S\\mid d_1]=d_1+E[d_2]\\), with \\(d_1\\) the revealed face."
   ]
  },
  {
