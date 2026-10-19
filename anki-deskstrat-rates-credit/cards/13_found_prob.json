@@ -1,0 +1,593 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CONDEXP 1/4]</b> Two fair coin tosses. Let \\(X\\) be the number of heads and \\(\\mathcal G=\\sigma(\\text{toss }1)\\), the information available after the first toss only. What is \\(\\mathbb E[X\\mid\\mathcal G]\\), and why is it a random variable rather than a number?",
+  "back": "<b>Answer.</b> \\(\\mathbb E[X\\mid\\mathcal G]\\) is the average of \\(X\\) over everything \\(\\mathcal G\\) cannot distinguish, so it is the best \\(\\mathcal G\\)-measurable estimate of \\(X\\).<br>\n<b>Computation.</b> If toss 1 is H, then \\(X=1+\\text{toss}_2\\) and \\(\\mathbb E[X\\mid\\mathcal G]=1+0.5=1.5\\). If toss 1 is T, then \\(\\mathbb E[X\\mid\\mathcal G]=0+0.5=0.5\\).<br>\nIt is a function of the outcome only through what \\(\\mathcal G\\) reveals, which is why it is random.<br>\n<b>Defining property.</b> It is \\(\\mathcal G\\)-measurable and \\(\\mathbb E[X\\mathbf 1_A]=\\mathbb E[\\mathbb E[X\\mid\\mathcal G]\\mathbf 1_A]\\) for every \\(A\\in\\mathcal G\\). Check with \\(A=\\{\\text{H}\\}\\): \\(\\mathbb E[X\\mathbf 1_A]=0.75\\) and \\(1.5\\times P(A)=0.75\\).<br>\n<b>Interviewer follow-up:</b> averaging the two cell values with their probabilities gives \\(\\mathbb E[X]=1\\), which is the tower property in its simplest form (card 2).<br>\n<b>Used in the deck for:</b> the regression step in Longstaff–Schwartz (conditional expectation of continuation value).",
+  "tags": [
+   "conditional_expectation",
+   "probability",
+   "chain_condexp",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CONDEXP 2/4]</b> Same coins as before: \\(X=\\) number of heads, \\(\\mathcal G=\\sigma(\\text{toss }1)\\), \\(\\mathcal H=\\{\\varnothing,\\Omega\\}\\) (no information). State the tower property for \\(\\mathcal H\\subseteq\\mathcal G\\) and verify it with the numbers.",
+  "back": "<b>Statement.</b> For \\(\\mathcal H\\subseteq\\mathcal G\\): \\(\\mathbb E\\bigl[\\mathbb E[X\\mid\\mathcal G]\\mid\\mathcal H\\bigr]=\\mathbb E[X\\mid\\mathcal H]\\). The smaller sigma-algebra wins.<br>\n<b>Check.</b> \\(\\mathbb E[X\\mid\\mathcal H]=\\mathbb E[X]=1\\). The left side is \\(\\tfrac12(1.5)+\\tfrac12(0.5)=1\\). Equal, as required.<br>\n<b>Intuition.</b> Averaging a finer estimate over coarser information cannot reveal more than the coarser estimate. You cannot go from \\(\\mathbb E[X\\mid\\mathcal H]\\) back up to \\(\\mathbb E[X\\mid\\mathcal G]\\) by re-conditioning.<br>\n<b>Interviewer follow-up:</b> why does \\(\\mathbb E[\\mathbb E[X\\mid\\mathcal G]]=\\mathbb E[X]\\) follow from this? Take \\(\\mathcal H\\) trivial.<br>\n<b>Used in the deck for:</b> the martingale argument that discounted prices are preserved under conditioning.",
+  "tags": [
+   "tower_property",
+   "conditional_expectation",
+   "probability",
+   "chain_condexp",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CONDEXP 3/4]</b> Using the same coins, let \\(K=\\mathbf 1_{\\{\\text{toss}_1=\\text{H}\\}}\\) (which is \\(\\mathcal G\\)-measurable) and \\(Y=\\text{toss}_2\\in\\{0,1\\}\\). Compute \\(\\mathbb E[KY\\mid\\mathcal G]\\) and state the rule you used.",
+  "back": "<b>Rule (pull out what is known).</b> If \\(K\\) is \\(\\mathcal G\\)-measurable (and integrability holds), \\(\\mathbb E[KY\\mid\\mathcal G]=K\\,\\mathbb E[Y\\mid\\mathcal G]\\).<br>\n<b>Computation.</b> \\(\\mathbb E[Y\\mid\\mathcal G]=0.5\\) since toss 2 is independent of toss 1. So \\(\\mathbb E[KY\\mid\\mathcal G]=0.5K\\): equals 0.5 on H and 0 on T.<br>\n<b>Direct check on H.</b> Given toss 1 = H, \\(KY=Y\\), and \\(\\mathbb E[Y]=0.5\\). Matches.<br>\n<b>Why it matters.</b> The hedge gain \\(\\Delta_t(S_{t+1}-S_t)\\) has \\(\\Delta_t\\) known at \\(t\\). Pulling \\(\\Delta_t\\) out of the conditional expectation is how you show the discounted hedged portfolio is a martingale.<br>\n<b>Used in the deck for:</b> replication and martingale arguments for self-financing portfolios.",
+  "tags": [
+   "conditional_expectation",
+   "pull_out_known",
+   "chain_condexp",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CONDEXP 4/4]</b> Let \\(W\\) be a standard Brownian motion with filtration \\(\\mathcal F_t\\), and let \\(0\\le t<T\\). Compute \\(\\mathbb E[W_T^2\\mid\\mathcal F_t]\\) and \\(\\mathbb E[e^{\\sigma W_T}\\mid\\mathcal F_t]\\). Explain the step that makes these computable and why \\(W_t^2-t\\) is then a martingale.",
+  "back": "<b>Key step.</b> Write \\(W_T=W_t+\\Delta\\), where \\(\\Delta\\sim N(0,T-t)\\) is independent of \\(\\mathcal F_t\\). Independence lets \\(W_t\\) be treated as a constant inside the expectation.<br>\n<b>First result.</b> \\(\\mathbb E[(W_t+\\Delta)^2\\mid\\mathcal F_t]=W_t^2+2W_t\\mathbb E[\\Delta]+\\mathbb E[\\Delta^2]=W_t^2+(T-t)\\). Hence \\(\\mathbb E[W_T^2\\mid\\mathcal F_t]-T=W_t^2-t\\) is the martingale property. Example: \\(W_t=1\\), \\(T-t=1\\) gives 2.<br>\n<b>Second result.</b> \\(\\mathbb E[e^{\\sigma(W_t+\\Delta)}\\mid\\mathcal F_t]=e^{\\sigma W_t}\\,e^{\\sigma^2(T-t)/2}\\), using the normal mgf.<br>\n<b>Interviewer follow-up:</b> what would go wrong if \\(\\Delta\\) were correlated with \\(\\mathcal F_t\\)? The conditional expectation would no longer collapse to a constant times a moment, and the tower-based argument fails.<br>\n<b>Verdict:</b> this is the basic recipe behind every \"compute \\(\\mathbb E[\\cdot\\mid\\mathcal F_t]\\)\" question in the deck.",
+  "tags": [
+   "conditional_expectation",
+   "brownian_motion",
+   "martingale",
+   "chain_condexp",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: ITO 1/5]</b> Context: \\(dX_t=a_t\\,dt+b_t\\,dW_t\\) and \\(f(t,x)\\) is \\(C^{1,2}\\). State Itô's lemma for \\(df(t,X_t)\\), and say where the extra \\(\\tfrac12 b^2f_{xx}\\) term comes from.",
+  "back": "<b>Result.</b> \\[df=\\Bigl(\\partial_t f+a\\,\\partial_x f+\\tfrac12 b^2\\,\\partial_{xx}f\\Bigr)dt+b\\,\\partial_x f\\,dW.\\]\n<b>Origin of the extra term.</b> Taylor-expand \\(f\\) to second order: \\(df=f_t\\,dt+f_x\\,dX+\\tfrac12 f_{xx}(dX)^2\\). Ordinary calculus would set \\((dX)^2=0\\). For Brownian increments \\((dW)^2=dt\\), so \\((dX)^2=b^2dt\\) and the term survives.<br>\n<b>Example.</b> \\(f=x^2\\), \\(X=W\\) (\\(a=0,b=1\\)): \\(d(W^2)=2W\\,dW+dt\\). The \\(dt\\) term is the whole reason \\(W^2-t\\) is a martingale.<br>\n<b>Used in the deck for:</b> the GBM solution, the log transform in Black–Scholes, and the Feynman–Kac derivation.",
+  "tags": [
+   "ito",
+   "stochastic_calculus",
+   "chain_ito",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: ITO 2/5]</b> Context: \\(W\\) standard BM, partition \\(0=t_0<\\dots<t_n=T\\) with equal steps \\(\\Delta=T/n\\). Find the limit of \\(\\sum_i (W_{t_{i+1}}-W_{t_i})^2\\) and use it to justify \\(dW^2=dt\\), \\(dt\\,dW=0\\), \\(dt^2=0\\).",
+  "back": "<b>Limit.</b> Each squared increment has mean \\(\\Delta\\) and variance \\(2\\Delta^2\\). The sum has mean \\(T\\) and variance \\(2n\\Delta^2=2T^2/n\\to0\\). So \\(\\sum(\\Delta W_i)^2\\to T\\) in \\(L^2\\). This is the quadratic variation \\([W]_T=T\\).<br>\n<b>Consequences.</b> \\(dW\\,dW=dt\\) in the mean-square sense. The cross term \\(dt\\,dW\\) has variance of order \\(\\Delta^3\\) and vanishes. \\(dt^2\\) is order \\(\\Delta^2\\) and vanishes.<br>\n<b>Contrast.</b> A smooth function has zero quadratic variation, while BM has finite quadratic variation \\(T\\) but infinite total variation. Both facts drive the Itô rules.<br>\n<b>Interviewer follow-up:</b> why does this make the Itô integral differ from a Riemann–Stieltjes integral? Because the second-order term does not vanish, the left-point evaluation matters.<br>\n<b>Used in the deck for:</b> every Itô calculation, including the GBM and OU derivations.",
+  "tags": [
+   "quadratic_variation",
+   "brownian_motion",
+   "ito",
+   "chain_ito",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: ITO 3/5]</b> Context: \\(W\\) standard BM. Derive \\(\\int_0^T W_t\\,dW_t\\) using Itô's lemma and state its mean. Then say what the naive chain rule would give and why it is wrong.",
+  "back": "<b>Derivation.</b> Apply Itô to \\(f(x)=x^2\\): \\(d(W^2)=2W\\,dW+dt\\). Integrate from 0 to \\(T\\): \\(W_T^2=2\\int_0^T W\\,dW+T\\). Therefore \\[\\int_0^T W_t\\,dW_t=\\tfrac12\\bigl(W_T^2-T\\bigr).\\]\n<b>Mean.</b> The Itô integral is a martingale with zero start, so \\(\\mathbb E=0\\). Consistent with \\(\\mathbb E[W_T^2]=T\\).<br>\n<b>Where it breaks.</b> The naive chain rule drops \\(dt\\) and gives \\(\\int W\\,dW=\\tfrac12 W_T^2\\), whose mean is \\(T/2\\neq0\\). The discrepancy is exactly the Itô correction. Stratonovich integrals (midpoint rule) do give \\(\\tfrac12 W_T^2\\), so Itô and Stratonovich differ by \\(\\tfrac12 T\\) here.<br>\n<b>Used in the deck for:</b> Itô isometry checks (card 9) and the variance of hedge errors.",
+  "tags": [
+   "ito",
+   "derivation",
+   "chain_ito",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: ITO 4/5]</b> Context: \\(dS=\\mu S\\,dt+\\sigma S\\,dW\\). Apply Itô to \\(f(S)=\\ln S\\). Give the SDE for \\(\\ln S\\) and the law of \\(\\ln S_T-\\ln S_0\\). Numbers: \\(\\mu=8\\%\\), \\(\\sigma=25\\%\\).",
+  "back": "<b>Derivation.</b> \\(f'=1/S\\), \\(f''=-1/S^2\\). Then \\[d\\ln S=\\frac{dS}{S}-\\frac12\\frac{\\sigma^2S^2}{S^2}\\,dt=\\bigl(\\mu-\\tfrac12\\sigma^2\\bigr)dt+\\sigma\\,dW.\\]\n<b>Law.</b> \\(\\ln S_T-\\ln S_0\\sim N\\bigl((\\mu-\\tfrac12\\sigma^2)T,\\ \\sigma^2T\\bigr)\\). So \\(\\ln S\\) is normal and \\(S\\) is lognormal.<br>\n<b>Numbers.</b> Drift of \\(\\ln S\\) is \\(0.08-0.03125=4.875\\%\\) per year, not 8%. The gap \\(\\tfrac12\\sigma^2\\) is the volatility drag.<br>\n<b>Interviewer follow-up:</b> what is the drift of \\(\\ln S\\) if \\(\\sigma\\) doubles to 50%? \\(0.08-0.125=-4.5\\%\\), so the typical path decays even though the arithmetic mean still grows at 8%.<br>\n<b>Used in the deck for:</b> the GBM solution (chain GBM) and Black–Scholes d1/d2.",
+  "tags": [
+   "ito",
+   "gbm",
+   "lognormal",
+   "chain_ito",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: ITO 5/5]</b> Context: \\(H_t\\) is adapted to the Brownian filtration. State the Itô isometry for \\(\\int_0^T H_t\\,dW_t\\) and verify it with \\(H_t=W_t\\) using the result from ITO 3/5.",
+  "back": "<b>Isometry.</b> \\[\\mathbb E\\Bigl[\\Bigl(\\int_0^T H\\,dW\\Bigr)^2\\Bigr]=\\mathbb E\\Bigl[\\int_0^T H_t^2\\,dt\\Bigr].\\] Cross terms vanish because increments of \\(W\\) on disjoint intervals are uncorrelated and \\(H\\) is adapted.<br>\n<b>Check with \\(H=W\\).</b> Left side: \\(\\mathbb E\\bigl[\\tfrac14(W_T^2-T)^2\\bigr]=\\tfrac14(\\mathbb E W_T^4-2T\\,\\mathbb E W_T^2+T^2)=\\tfrac14(3T^2-2T^2+T^2)=\\tfrac12T^2\\). Right side: \\(\\int_0^T t\\,dt=\\tfrac12T^2\\). Equal.<br>\n<b>Where it breaks.</b> \\(H\\) must be non-anticipating. Taking \\(H_t=W_T\\) (looking ahead) makes the integral \\(W_T\\cdot W_T\\), and the isometry fails.<br>\n<b>Interviewer follow-up:</b> the isometry says the variance of a hedge error is an integral of squared exposure over time. Which quantity plays the role of \\(H\\) in a delta-hedge?<br>\n<b>Used in the deck for:</b> hedge-error variance and the lognormal approximation of discrete hedging.",
+  "tags": [
+   "ito_isometry",
+   "ito",
+   "stochastic_calculus",
+   "chain_ito",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the product rule for Itô processes: if \\(dX=a\\,dt+b\\,dW\\) and \\(dY=c\\,dt+d\\,dW\\), show \\(d(XY)=X\\,dY+Y\\,dX+b\\,d\\,dt\\). Use Itô's lemma on \\(f(x,y)=xy\\).",
+  "back": "<b>Derivation.</b> \\(f_x=y\\), \\(f_y=x\\), \\(f_{xy}=1\\), \\(f_{xx}=f_{yy}=0\\). Two-variable Itô: \\[d(XY)=Y\\,dX+X\\,dY+\\tfrac12\\bigl(f_{xx}(dX)^2+2f_{xy}\\,dX\\,dY+f_{yy}(dY)^2\\bigr).\\] Only the cross term survives: \\(dX\\,dY=bd\\,dt\\). So \\(d(XY)=X\\,dY+Y\\,dX+bd\\,dt\\).<br>\n<b>Check.</b> \\(X=Y=W\\): \\(d(W^2)=2W\\,dW+dt\\), which matches ITO 1/5.<br>\n<b>Where it breaks.</b> If one process has finite variation (e.g. \\(dX=a\\,dt\\) only), \\(dX\\,dY=0\\) and you recover the ordinary product rule.<br>\n<b>Used in the deck for:</b> the Itô drift of discounted prices and the quanto drift adjustment.",
+  "tags": [
+   "ito",
+   "product_rule",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Let \\(M_t=\\exp(\\sigma W_t-\\tfrac12\\sigma^2t)\\). Derive \\(dM_t\\) with Itô's lemma and show \\(M\\) has no drift. Deduce \\(\\mathbb E[e^{\\sigma W_t}]\\).",
+  "back": "<b>Derivation.</b> With \\(f(t,w)=\\exp(\\sigma w-\\tfrac12\\sigma^2t)\\): \\(f_t=-\\tfrac12\\sigma^2 f\\), \\(f_w=\\sigma f\\), \\(f_{ww}=\\sigma^2 f\\). So \\[dM=\\bigl(-\\tfrac12\\sigma^2+\\tfrac12\\sigma^2\\bigr)M\\,dt+\\sigma M\\,dW=\\sigma M\\,dW.\\] No drift term, so \\(M\\) is a local martingale. Novikov's condition holds for constant \\(\\sigma\\), so it is a true martingale with \\(\\mathbb E[M_t]=1\\).<br>\n<b>Consequence.</b> \\(\\mathbb E[e^{\\sigma W_t}]=e^{\\sigma^2t/2}\\), which is the normal mgf at \\(\\sigma\\) with variance \\(t\\). Check: \\(\\sigma=1\\), \\(t=1\\) gives \\(e^{0.5}=1.6487\\).<br>\n<b>Where it breaks.</b> The drift cancels only because the time term is exactly \\(-\\tfrac12\\sigma^2t\\). With time-dependent \\(\\sigma(t)\\) the correction becomes \\(-\\tfrac12\\int_0^t\\sigma^2(s)\\,ds\\).<br>\n<b>Used in the deck for:</b> the Girsanov density (GIRS 2/4) and GBM moments.",
+  "tags": [
+   "martingale",
+   "ito",
+   "exponential_martingale",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: GBM 1/4]</b> Context: \\(dS=\\mu S\\,dt+\\sigma S\\,dW\\), \\(S_0\\) given. Solve the SDE in closed form and verify the solution with Itô's lemma.",
+  "back": "<b>Solution.</b> From ITO 4/5, \\(\\ln S_t=\\ln S_0+(\\mu-\\tfrac12\\sigma^2)t+\\sigma W_t\\), so \\[S_t=S_0\\exp\\Bigl((\\mu-\\tfrac12\\sigma^2)t+\\sigma W_t\\Bigr).\\]\n<b>Verification.</b> Write \\(S=e^X\\) with \\(dX=(\\mu-\\tfrac12\\sigma^2)dt+\\sigma dW\\). Itô on \\(e^X\\): \\(dS=S\\bigl(dX+\\tfrac12\\sigma^2dt\\bigr)=S(\\mu\\,dt+\\sigma\\,dW)\\). Matches.<br>\n<b>Uniqueness.</b> Linear-in-\\(S\\) coefficients satisfy Lipschitz and linear growth conditions, so the solution is pathwise unique.<br>\n<b>Used in the deck for:</b> Black–Scholes, lognormal forward models and the GBM Monte Carlo step.",
+  "tags": [
+   "gbm",
+   "ito",
+   "lognormal",
+   "chain_gbm",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "<b>[Chain: GBM 2/4]</b> Context: \\(S_T=S_0\\exp((\\mu-\\tfrac12\\sigma^2)T+\\sigma W_T)\\) under the real-world measure. Complete the moment formula for \\(\\mathbb E[S_T^n]\\). Numbers: \\(S_0=100\\), \\(\\mu=8\\%\\), \\(\\sigma=25\\%\\), \\(T=2\\).\n\n{{c1::\\(\\mathbb E[S_T^n]=S_0^n\\exp\\!\\bigl(n\\mu T+\\tfrac12 n(n-1)\\sigma^2T\\bigr)\\)}}",
+  "back": "<b>Derivation.</b> \\(S_T^n=S_0^n\\exp\\bigl(n(\\mu-\\tfrac12\\sigma^2)T+n\\sigma W_T\\bigr)\\). Use \\(\\mathbb E[e^{n\\sigma W_T}]=e^{n^2\\sigma^2T/2}\\). The exponent becomes \\(n\\mu T-\\tfrac12 n\\sigma^2T+\\tfrac12 n^2\\sigma^2T=n\\mu T+\\tfrac12 n(n-1)\\sigma^2T\\).<br>\n<b>Numbers.</b> \\(\\mathbb E[S_T]=100e^{0.16}=117.35\\). \\(\\mathbb E[S_T^2]=S_0^2e^{(2\\mu+\\sigma^2)T}=15{,}605\\). \\(\\operatorname{Var}[S_T]=\\mathbb E[S^2]-\\mathbb E[S]^2=1{,}834\\), so the standard deviation is 42.8.<br>\n<b>Sanity.</b> \\(n=1\\) returns \\(S_0e^{\\mu T}\\), the forward-growth result.<br>\n<b>Used in the deck for:</b> moment matching for lognormal approximations and the Jensen check in GBM 3/4.",
+  "tags": [
+   "gbm",
+   "lognormal",
+   "moments",
+   "chain_gbm",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: GBM 3/4]</b> Same GBM: \\(S_0=100\\), \\(\\mu=8\\%\\), \\(\\sigma=25\\%\\), \\(T=2\\). Why is the median of \\(S_T\\) below the mean? Compute both and the ratio. Then state the vol drag for \\(\\sigma=30\\%\\) and \\(\\mu=0\\).",
+  "back": "<b>Median.</b> \\(\\text{median}=S_0e^{(\\mu-\\frac12\\sigma^2)T}=100e^{0.0975}=110.24\\).<br>\n<b>Mean.</b> \\(\\mathbb E[S_T]=117.35\\).<br>\n<b>Ratio.</b> \\(\\mathbb E[S_T]/\\text{median}=e^{\\sigma^2T/2}=e^{0.0625}=1.0645\\), a 6.45% gap.<br>\n<b>Intuition.</b> The lognormal is right-skewed. The mean is pulled up by a few large upside outcomes, while the median sees the typical path. Since \\(\\ln S\\) is normal, the median of \\(S\\) is the exponential of the mean of \\(\\ln S\\).<br>\n<b>Vol drag.</b> With \\(\\mu=0\\) and \\(\\sigma=30\\%\\), the typical log-growth is \\(-\\tfrac12\\sigma^2=-4.5\\%\\) per year, so the median price falls even with zero expected return.<br>\n<b>Interviewer follow-up:</b> is the median or the mean the right quantity for a leveraged position? Leveraged P&amp;L is driven by the log path, which is why the Kelly and geometric-return arguments favour the median.<br>\n<b>Used in the deck for:</b> Jensen-type convexity arguments and the choice between arithmetic and geometric returns.",
+  "tags": [
+   "gbm",
+   "lognormal",
+   "jensen",
+   "case_study",
+   "chain_gbm",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: GBM 4/4]</b> A European call with strike 100 on a stock at 100, \\(T=1\\), \\(\\sigma=20\\%\\). Real-world drift \\(\\mu=8\\%\\), risk-free rate \\(r=3\\%\\). Explain why the Black–Scholes price does not depend on \\(\\mu\\). Quantify the error of using \\(\\mu\\) in place of \\(r\\).",
+  "back": "<b>Answer.</b> The price is the discounted expectation of the payoff under \\(\\mathbb Q\\), where the drift of \\(S\\) is \\(r\\). Under \\(\\mathbb P\\) the drift is \\(\\mu\\), but the change of measure (Girsanov, card GIRS 2/4) replaces \\(\\mu\\) by \\(r\\), with the same \\(\\sigma\\). The drift is a property of the real-world measure only.<br>\n<b>Numbers.</b> \\(e^{-rT}\\mathbb E^{\\mathbb Q}[(S_T-K)^+]=9.41\\) (the Black–Scholes price). Computing the same expectation with drift \\(\\mu=8\\%\\) and discounting at \\(r\\) gives \\(12.73\\), overstated by about 35%.<br>\n<b>Market price of risk.</b> \\(\\theta=(\\mu-r)/\\sigma=0.25\\). The risk premium is exactly what the change of measure removes.<br>\n<b>Interviewer follow-up:</b> if you can hedge, why does \\(\\mu\\) never enter? Because the replicating portfolio's value is a martingale under \\(\\mathbb Q\\), so its drift is \\(r\\) regardless of \\(\\mu\\).<br>\n<b>Used in the deck for:</b> the no-arbitrage pricing argument behind every option pricer.",
+  "tags": [
+   "gbm",
+   "risk_neutral",
+   "market_price_of_risk",
+   "chain_gbm",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: STOP 1/3]</b> Context: \\(W\\) standard BM with filtration \\(\\mathcal F_t\\). Define an adapted martingale and a stopping time. State the optional stopping theorem for a bounded stopping time and give one example.",
+  "back": "<b>Martingale.</b> \\(M\\) is adapted, integrable, and \\(\\mathbb E[M_t\\mid\\mathcal F_s]=M_s\\) for \\(s\\le t\\). <br>\n<b>Stopping time.</b> \\(\\tau\\) is a random time with \\(\\{\\tau\\le t\\}\\in\\mathcal F_t\\) for every \\(t\\). It is decided using only information up to that time; it cannot look ahead.<br>\n<b>Optional stopping.</b> If \\(\\tau\\) is bounded, \\(\\mathbb E[M_\\tau]=\\mathbb E[M_0]\\). More generally this needs uniform integrability of the stopped process.<br>\n<b>Example.</b> \\(W\\) is a martingale, so for bounded \\(\\tau\\) we get \\(\\mathbb E[W_\\tau]=0\\). For \\(\\tau=\\min(\\text{hit }1,\\,T)\\) this holds with \\(T\\) finite.<br>\n<b>Used in the deck for:</b> barrier and exit-time arguments, and the reflection principle.",
+  "tags": [
+   "martingale",
+   "stopping_time",
+   "optional_stopping",
+   "chain_stop",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: STOP 2/3]</b> Context: \\(W_0=0\\). Let \\(\\tau\\) be the first exit time of \\(W\\) from \\((-1,2)\\). Find \\(\\mathbb P(W_\\tau=2)\\) and \\(\\mathbb E[\\tau]\\).",
+  "back": "<b>Probability.</b> Let \\(p=\\mathbb P(W_\\tau=2)\\). Since \\(\\tau\\) is bounded in expectation, optional stopping gives \\(\\mathbb E[W_\\tau]=0=2p-1(1-p)\\), so \\(p=\\tfrac13\\).<br>\n<b>Expected exit time.</b> \\(W_t^2-t\\) is a martingale. Optional stopping gives \\(\\mathbb E[\\tau]=\\mathbb E[W_\\tau^2]=4\\cdot\\tfrac13+1\\cdot\\tfrac23=2\\), which equals \\(ab\\) for exit from \\((-a,b)\\) with \\(a=1,b=2\\).<br>\n<b>Generalisation.</b> From 0, \\(\\mathbb P(\\text{hit }b\\text{ first})=a/(a+b)\\) and \\(\\mathbb E[\\tau]=ab\\).<br>\n<b>Used in the deck for:</b> exit probabilities in barrier and trigger models.",
+  "tags": [
+   "martingale",
+   "gamblers_ruin",
+   "exit_time",
+   "chain_stop",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: STOP 3/3]</b> Context: \\(\\tau\\) is the first time \\(W\\) hits \\(+1\\). Then \\(W_\\tau=1\\) almost surely. A trader argues that optional stopping gives \\(\\mathbb E[W_\\tau]=\\mathbb E[W_0]=0\\). Which hypothesis fails, and what is \\(\\mathbb E[\\tau]\\)?",
+  "back": "<b>Failure.</b> \\(\\tau\\) is finite almost surely but unbounded, and \\(\\mathbb E[\\tau]=\\infty\\). The stopped process \\(W_{t\\wedge\\tau}\\) is not uniformly integrable, so \\(\\mathbb E[W_\\tau]=1\\neq0\\).<br>\n<b>Why \\(\\mathbb E[\\tau]=\\infty\\).</b> \\(\\mathbb P(\\tau>t)=\\mathbb P(\\max_{s\\le t}W_s<1)=\\mathbb P(|W_t|<1)\\approx 0.8/\\sqrt t\\) for large \\(t\\). A tail of order \\(t^{-1/2}\\) has infinite mean.<br>\n<b>Trading meaning.</b> The doubling strategy wins 1 with probability one, but it needs unbounded credit before the win and an unbounded time horizon. Finite capital or a finite horizon restores a finite expectation, and the sure win disappears.<br>\n<b>Interviewer follow-up:</b> what if we stop at \\(\\tau\\wedge T\\)? Then optional stopping holds and \\(\\mathbb E[W_{\\tau\\wedge T}]=0\\), with the atom at \\(+1\\) offset by a negative tail at \\(T\\).<br>\n<b>Used in the deck for:</b> the caveat on exit-time and barrier arguments.",
+  "tags": [
+   "martingale",
+   "optional_stopping",
+   "uniform_integrability",
+   "chain_stop",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive \\(\\mathbb P\\bigl(\\max_{0\\le t\\le T}W_t\\ge b\\bigr)=2\\,\\mathbb P(W_T\\ge b)\\) for standard BM and \\(b>0\\), using the strong Markov property at \\(\\tau_b\\). Evaluate for \\(b=1\\), \\(T=1\\).",
+  "back": "<b>Derivation.</b> Let \\(\\tau_b=\\inf\\{t:W_t=b\\}\\). On \\(\\{\\tau_b\\le T\\}\\), the path after \\(\\tau_b\\) is a BM started at \\(b\\) by strong Markov, and \\(\\tilde W_s=2b-W_{\\tau_b+s}\\) is also a BM. Reflecting the post-hitting path about \\(b\\) gives a bijection between paths that end above \\(b\\) and paths that end below \\(b\\), both with \\(\\tau_b\\le T\\). Hence \\[\\mathbb P(\\tau_b\\le T,\\,W_T<b)=\\mathbb P(\\tau_b\\le T,\\,W_T>b).\\]\nAdding \\(\\mathbb P(\\tau_b\\le T,\\,W_T\\ge b)=\\mathbb P(W_T\\ge b)\\) (continuity forces \\(\\tau_b\\le T\\) when \\(W_T\\ge b\\)) gives \\(\\mathbb P(\\tau_b\\le T)=2\\mathbb P(W_T\\ge b)\\).<br>\n<b>Numbers.</b> \\(2(1-\\Phi(1))=2(0.1587)=31.7\\%\\).<br>\n<b>Where it breaks.</b> The reflection needs a driftless BM. With drift \\(\\mu\\neq0\\) the reflected path has a different law, so use the Girsanov or exponential-martingale route instead.<br>\n<b>Used in the deck for:</b> the Brownian-bridge maximum bounds in the exposure (MPOR) discussion.",
+  "tags": [
+   "reflection_principle",
+   "brownian_motion",
+   "derivation",
+   "strong_markov",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For standard BM, \\(\\mathbb P(\\max_{t\\le T}W_t\\ge b)=\\){{c1::\\(2\\,\\mathbb P(W_T\\ge b)\\)}}. With \\(b=1\\) and \\(T=1\\) this is about {{c2::31.7%}}.",
+  "back": "Reflect the path after the first hitting time of \\(b\\). The event \\(\\{W_T\\ge b\\}\\) is counted once and its mirror image is counted again, giving the factor 2. Numerically \\(2\\times0.1587\\).",
+  "tags": [
+   "reflection_principle",
+   "brownian_motion",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: GIRS 1/4]</b> \\(\\mathbb P\\) is the real-world measure and \\(\\mathbb Q\\) is equivalent to \\(\\mathbb P\\). Define the Radon–Nikodym derivative \\(Z=d\\mathbb Q/d\\mathbb P\\) and write \\(\\mathbb E^{\\mathbb Q}[X]\\) as a \\(\\mathbb P\\)-expectation. Why must \\(Z>0\\) and \\(\\mathbb E^{\\mathbb P}[Z]=1\\)? Give a two-state example.",
+  "back": "<b>Answer.</b> \\(\\mathbb E^{\\mathbb Q}[X]=\\mathbb E^{\\mathbb P}[Z\\,X]\\). Equivalence means the same null sets, which requires \\(Z>0\\) almost surely. Taking \\(X=1\\) gives \\(\\mathbb E^{\\mathbb P}[Z]=1\\).<br>\n<b>Conditional form.</b> \\(Z_t=\\mathbb E^{\\mathbb P}[Z\\mid\\mathcal F_t]\\) is a \\(\\mathbb P\\)-martingale, and Bayes' rule gives \\(\\mathbb E^{\\mathbb Q}[X\\mid\\mathcal F_t]=\\mathbb E^{\\mathbb P}[ZX\\mid\\mathcal F_t]/Z_t\\).<br>\n<b>Example.</b> One coin, \\(\\mathbb P(\\text{up})=0.6\\), \\(\\mathbb Q(\\text{up})=0.5\\). Then \\(Z_{\\text{up}}=0.5/0.6=5/6\\) and \\(Z_{\\text{down}}=0.5/0.4=5/4\\). Check: \\(0.6\\cdot\\tfrac56+0.4\\cdot\\tfrac54=0.5+0.5=1\\).<br>\n<b>Used in the deck for:</b> the forward and annuity measure changes and the Girsanov step in GBM 4/4.",
+  "tags": [
+   "measure_change",
+   "radon_nikodym",
+   "equivalent_measure",
+   "chain_girs",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "<b>[Chain: GIRS 2/4]</b> Under \\(\\mathbb P\\), \\(dS=\\mu S\\,dt+\\sigma S\\,dW\\). Let \\(\\theta=(\\mu-r)/\\sigma\\) and \\(Z_T=\\exp(-\\theta W_T-\\tfrac12\\theta^2T)\\). Then \\(Z_T=d\\mathbb Q/d\\mathbb P\\), and \\(\\tilde W_t=W_t+\\){{c1::\\(\\theta t\\)}} is a \\(\\mathbb Q\\)-Brownian motion, so \\(dS=\\){{c2::\\(rS\\,dt+\\sigma S\\,d\\tilde W\\)}}.",
+  "back": "<b>Why this density.</b> \\(Z_t=\\exp(-\\theta W_t-\\tfrac12\\theta^2t)\\) is the exponential martingale of card 11 with volatility \\(-\\theta\\). Its drift in \\(W\\) is exactly the one that Girsanov removes.<br>\n<b>Substitution.</b> \\(dW=d\\tilde W-\\theta\\,dt\\), so \\(dS=(\\mu-\\sigma\\theta)S\\,dt+\\sigma S\\,d\\tilde W\\). Since \\(\\sigma\\theta=\\mu-r\\), the drift becomes \\(r\\).<br>\n<b>Numbers.</b> \\(\\mu=8\\%\\), \\(r=3\\%\\), \\(\\sigma=20\\%\\) gives \\(\\theta=0.25\\).<br>\n<b>Used in the deck for:</b> the risk-neutral drift and the market price of risk \\(\\theta\\) in every option model.",
+  "tags": [
+   "girsanov",
+   "measure_change",
+   "market_price_of_risk",
+   "cloze",
+   "chain_girs",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: GIRS 3/4]</b> Context: \\(S_0=100\\), horizon one year, \\(\\sigma=20\\%\\), real-world drift \\(\\mu=8\\%\\), risk-neutral rate \\(r=3\\%\\). Compute \\(\\mathbb P(S_1>120)\\) under \\(\\mathbb P\\) and under \\(\\mathbb Q\\). Explain the gap in one line.",
+  "back": "<b>Under P.</b> \\(\\ln S_1\\sim N(\\mu-\\tfrac12\\sigma^2,\\sigma^2)=N(0.06,0.04)\\). Threshold \\(\\ln1.2=0.18232\\), so \\(z=(0.18232-0.06)/0.2=0.612\\) and \\(\\mathbb P=1-\\Phi(0.612)=27.0\\%\\).<br>\n<b>Under Q.</b> Same volatility, drift \\(r\\): \\(\\ln S_1\\sim N(0.01,0.04)\\), \\(z=0.862\\), \\(\\mathbb Q=19.4\\%\\).<br>\n<b>Explanation.</b> Only the drift moved. Q reweights each path by \\(Z_1\\), which penalises the upward paths, so the event \\(\\{S_1>120\\}\\) becomes less likely.<br>\n<b>Interviewer follow-up:</b> the price of a cash-or-nothing digital paying 1 above 120 is \\(e^{-r}\\mathbb Q(S_1>120)=0.9704\\cdot0.1945=0.189\\), not \\(0.9704\\cdot0.2704=0.262\\).<br>\n<b>Used in the deck for:</b> digital and barrier probabilities under the pricing measure.",
+  "tags": [
+   "girsanov",
+   "digital_option",
+   "case_study",
+   "chain_girs",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: GIRS 4/4]</b> From GIRS 3/4: which features of the GBM are unchanged between \\(\\mathbb P\\) and \\(\\mathbb Q\\), and which change? Why does this make implied volatility a measure-independent object?",
+  "back": "<b>Unchanged.</b> The diffusion coefficient \\(\\sigma\\). Quadratic variation is path-wise and equivalent measures agree on which paths are possible, so \\(\\sigma\\) is the same under both. The drift changes from \\(\\mu\\) to \\(r\\).<br>\n<b>Consequence.</b> Option prices depend on \\(\\sigma\\), \\(r\\) and the payoff, not on \\(\\mu\\). The same \\(\\sigma\\) is valid for both measures, so implied vol is a single number per maturity and strike.<br>\n<b>Where it breaks.</b> The argument assumes a complete market with a single \\(\\theta\\). With stochastic volatility the vol risk is unhedgeable, \\(\\mathbb Q\\) is not unique, and the vol drift can change under the chosen pricing measure. The gap is the vol risk premium, which is why the model's own measure matters for calibration.<br>\n<b>Interviewer follow-up:</b> in Heston, what does the pricing measure change? The variance drift shifts by a market price of volatility risk \\(\\lambda_v\\), so the pricing measure needs an extra parameter (the volatility risk premium) to be pinned down.<br>\n<b>Used in the deck for:</b> calibration choices between physical and risk-neutral parameters.",
+  "tags": [
+   "girsanov",
+   "implied_volatility",
+   "measure_change",
+   "chain_girs",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive that for \\(Z_t=\\exp(-\\theta W_t-\\tfrac12\\theta^2t)\\), the process \\(\\tilde W_t=W_t+\\theta t\\) is a \\(\\mathbb Q\\)-Brownian motion with \\(d\\mathbb Q=Z_T\\,d\\mathbb P\\). Use Itô on \\(Z\\) and Bayes' rule, then Lévy's characterisation.",
+  "back": "<b>Step 1.</b> Itô on \\(Z\\) (card 11 with volatility \\(-\\theta\\)): \\(dZ=-\\theta Z\\,dW\\).<br>\n<b>Step 2.</b> Compute \\(d(Z\\tilde W)\\). Here \\(d\\tilde W=dW+\\theta\\,dt\\) and \\(d\\langle Z,\\tilde W\\rangle=-\\theta Z\\,dt\\). So \\[d(Z\\tilde W)=Z\\,d\\tilde W+\\tilde W\\,dZ+d\\langle Z,\\tilde W\\rangle=Z(dW+\\theta dt)-\\theta Z\\tilde W\\,dW-\\theta Z\\,dt=Z(1-\\theta\\tilde W)\\,dW.\\] The \\(dt\\) terms cancel, so \\(Z\\tilde W\\) is a \\(\\mathbb P\\)-local martingale.<br>\n<b>Step 3.</b> Bayes: \\(\\mathbb E^{\\mathbb Q}[\\tilde W_t\\mid\\mathcal F_s]=\\mathbb E^{\\mathbb P}[Z_t\\tilde W_t\\mid\\mathcal F_s]/Z_s=\\tilde W_s\\). So \\(\\tilde W\\) is a \\(\\mathbb Q\\)-martingale.<br>\n<b>Step 4.</b> Its quadratic variation is \\(t\\), so by Lévy's characterisation it is a \\(\\mathbb Q\\)-BM.<br>\n<b>Where it breaks.</b> Novikov's condition \\(\\mathbb E^{\\mathbb P}[\\exp(\\tfrac12\\int_0^T\\theta_s^2ds)]<\\infty\\) must hold for \\(Z\\) to be a true martingale. It holds for constant \\(\\theta\\) and fails for some unbounded path-dependent \\(\\theta\\).<br>\n<b>Used in the deck for:</b> every change of drift used in pricing.",
+  "tags": [
+   "girsanov",
+   "derivation",
+   "bayes_rule",
+   "levy_characterisation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: NUM 1/3]</b> Context: short rate \\(r_t\\), bank account \\(B_t=\\exp(\\int_0^t r_s\\,ds)\\), \\(B_0=1\\). State the risk-neutral pricing formula for a payoff \\(X\\) paid at \\(T\\), and the martingale property of discounted traded assets. Numbers: deterministic \\(r=3\\%\\), \\(X=100\\) at one year.",
+  "back": "<b>Pricing.</b> \\(V_0=\\mathbb E^{\\mathbb Q}[X/B_T]\\), where \\(\\mathbb Q\\) is the measure with \\(B\\) as numeraire.<br>\n<b>Martingale.</b> Any traded asset \\(S\\) has \\(S_t/B_t\\) a \\(\\mathbb Q\\)-martingale (fundamental theorem of asset pricing; no-arbitrage gives the drift \\(r\\)).<br>\n<b>Numbers.</b> \\(V_0=100e^{-0.03}=97.04\\).<br>\n<b>Used in the deck for:</b> all pricing. The next two cards generalise the numeraire.",
+  "tags": [
+   "numeraire",
+   "risk_neutral",
+   "martingale",
+   "chain_numeraire",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: NUM 2/3]</b> Let \\(N\\) be any strictly positive traded asset used as numeraire, with associated measure \\(\\mathbb Q^N\\). State the pricing formula under \\(\\mathbb Q^N\\) and the Radon–Nikodym density \\(d\\mathbb Q^N/d\\mathbb Q\\) on \\(\\mathcal F_T\\). Show the density has mean one.",
+  "back": "<b>Pricing.</b> \\(V_t/N_t\\) is a \\(\\mathbb Q^N\\)-martingale, so \\(V_0=N_0\\,\\mathbb E^{\\mathbb Q^N}[X/N_T]\\).<br>\n<b>Density.</b> \\[\\frac{d\\mathbb Q^N}{d\\mathbb Q}\\Big|_{\\mathcal F_T}=\\frac{N_T}{N_0\\,B_T}\\] (with \\(B_0=1\\)). Equivalently \\((N_T/N_0)(B_0/B_T)\\).<br>\n<b>Mean one.</b> \\(N/B\\) is a \\(\\mathbb Q\\)-martingale, so \\(\\mathbb E^{\\mathbb Q}[N_T/B_T]=N_0/B_0=N_0\\). Divide by \\(N_0\\) to get 1.<br>\n<b>Example.</b> If \\(N\\) is a zero-coupon bond maturing at \\(T\\), \\(N_T=1\\), and the density is \\(1/(P(0,T)\\,B_T)\\), using \\(P(0,T)=\\mathbb E^{\\mathbb Q}[1/B_T]\\). This is the T-forward measure.<br>\n<b>Used in the deck for:</b> forward and annuity measures (swaption and CMS cards).",
+  "tags": [
+   "numeraire",
+   "change_of_numeraire",
+   "radon_nikodym",
+   "chain_numeraire",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: NUM 3/3]</b> Context: stock \\(S_0=100\\), no dividends. The one-year zero-coupon bond is \\(P(0,1)=0.97\\). The forward is \\(F=S_0/P(0,1)\\). Under the one-year forward measure \\(\\mathbb Q^1\\) (numeraire \\(P(\\cdot,1)\\)), check that the claim \\(S_1\\) paid at \\(t=1\\) is worth 100 today. Give the implied continuously compounded rate.",
+  "back": "<b>Forward.</b> \\(F=100/0.97=103.09\\). Since \\(S_t/P(t,1)\\) is a \\(\\mathbb Q^1\\)-martingale, \\(\\mathbb E^{1}[S_1]=S_0/P(0,1)=103.09\\).<br>\n<b>Pricing check.</b> \\(V_0=P(0,1)\\,\\mathbb E^{1}[S_1]=0.97\\times103.09=100.00\\), equal to \\(S_0\\) as the replication argument requires.<br>\n<b>Implied rate.</b> \\(\\ln(1/0.97)=3.05\\%\\) continuously compounded. Without dividends or borrow cost, the forward carries exactly this rate.<br>\n<b>Interviewer follow-up:</b> what changes with a dividend yield \\(q\\)? \\(F=S_0e^{-qT}/P(0,T)\\) and the martingale is \\(S_t e^{-q t}/P(t,T)\\).<br>\n<b>Used in the deck for:</b> forward pricing and the Black-76 formula.",
+  "tags": [
+   "forward_measure",
+   "numeraire",
+   "forward_price",
+   "case_study",
+   "chain_numeraire",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Under \\(\\mathbb Q\\), \\(dS=rS\\,dt+\\sigma S\\,dW^{\\mathbb Q}\\) and \\(B_t=e^{rt}\\). Use Itô to show \\(S_t/B_t\\) is a \\(\\mathbb Q\\)-martingale. Then, with \\(N=P(\\cdot,T)\\) as numeraire and \\(dP=P(r\\,dt+\\sigma_P\\,dW^{\\mathbb Q})\\), show the forward \\(F=S/P\\) has no drift under \\(\\mathbb Q^T\\).",
+  "back": "<b>Step 1.</b> \\(d(1/B)=-r e^{-rt}dt=-\\tfrac{r}{B}dt\\). Product rule: \\(d(S/B)=\\tfrac1B\\,dS+S\\,d(1/B)=\\tfrac{1}{B}\\bigl(rS\\,dt+\\sigma S\\,dW\\bigr)-\\tfrac{rS}{B}dt=\\tfrac{\\sigma S}{B}\\,dW^{\\mathbb Q}\\). No drift, so a martingale.<br>\n<b>Step 2.</b> For \\(F=S/P\\): \\(\\dfrac{dF}{F}=\\dfrac{dS}{S}-\\dfrac{dP}{P}-\\dfrac{d\\langle S,P\\rangle}{SP}+\\dfrac{d\\langle P\\rangle}{P^2}=(\\sigma_S-\\sigma_P)\\,dW^{\\mathbb Q}+(\\sigma_P^2-\\sigma_S\\sigma_P)\\,dt\\).<br>\n<b>Step 3.</b> The kernel for \\(\\mathbb Q^T\\) is the volatility of the ratio \\(P/B\\): \\(dW^{\\mathbb Q}=dW^T+\\sigma_P\\,dt\\). Substituting: drift \\(=(\\sigma_P^2-\\sigma_S\\sigma_P)+(\\sigma_S-\\sigma_P)\\sigma_P=0\\). So \\(dF=F(\\sigma_S-\\sigma_P)\\,dW^T\\).<br>\n<b>Where it breaks.</b> If \\(P\\) and \\(S\\) are driven by different Brownian motions, the cross variation \\(d\\langle S,P\\rangle\\) changes and the kernel needs a vector form. The zero drift is still the right result, with the appropriate correlation.<br>\n<b>Used in the deck for:</b> the drift of forwards under forward measures, underpinning Black-76 and swaption pricing.",
+  "tags": [
+   "numeraire",
+   "forward_measure",
+   "derivation",
+   "martingale",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Context: under \\(\\mathbb Q\\), \\(dX=b(X)\\,dt+a(X)\\,dW\\) and the short rate is \\(r(X)\\). Let \\(u(t,x)=\\mathbb E^{\\mathbb Q}\\bigl[e^{-\\int_t^T r(X_s)ds}g(X_T)\\mid X_t=x\\bigr]\\). Derive the PDE that \\(u\\) satisfies and the terminal condition. Check it with Black–Scholes.",
+  "back": "<b>Derivation.</b> Let \\(M_s=e^{-\\int_t^s r(X_u)du}u(s,X_s)\\). By the tower property \\(M\\) is a \\(\\mathbb Q\\)-martingale. Itô: \\[dM=e^{-\\int r}\\bigl(u_t+b\\,u_x+\\tfrac12a^2u_{xx}-r\\,u\\bigr)ds+e^{-\\int r}a\\,u_x\\,dW.\\] The drift must vanish, so \\[u_t+b\\,u_x+\\tfrac12a^2u_{xx}-r\\,u=0,\\qquad u(T,x)=g(x).\\]\n<b>Black–Scholes check.</b> With \\(b=rx\\), \\(a=\\sigma x\\), \\(g=(x-K)^+\\), this is \\(u_t+rxu_x+\\tfrac12\\sigma^2x^2u_{xx}-ru=0\\), the Black–Scholes PDE.<br>\n<b>Where it breaks.</b> \\(u\\) must be \\(C^{1,2}\\). With a discontinuous payoff, the PDE holds in the weak sense and the classical boundary conditions need care. Using the real-world drift in \\(b\\) gives the wrong price, as in GBM 4/4.<br>\n<b>Used in the deck for:</b> Black–Scholes, the CVA PDE and the Feynman–Kac representation of the risky-bond value (next card).",
+  "tags": [
+   "feynman_kac",
+   "pde",
+   "ito",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A zero-coupon bond on a name with constant intensity \\(\\lambda\\) (under \\(\\mathbb Q\\)) and zero recovery, with constant rate \\(r\\). Write the Feynman–Kac killing representation of \\(P(t,T)\\) and the ODE it solves. Compute \\(P(0,5)\\) for \\(r=3\\%\\), \\(\\lambda=2\\%\\). Then add recovery \\(R=40\\%\\) of par at default and recompute.",
+  "back": "<b>Representation.</b> With zero recovery, \\(P(t,T)=\\mathbb E^{\\mathbb Q}\\bigl[e^{-\\int_t^T r}\\mathbf 1_{\\{\\tau>T\\}}\\mid\\mathcal F_t\\bigr]\\). The default acts as a killing term: the PDE is \\(\\partial_tP-(r+\\lambda)P=0\\), with \\(P(T,T)=1\\).<br>\n<b>Zero recovery.</b> \\(P(0,5)=e^{-(r+\\lambda)\\cdot5}=e^{-0.25}=0.7788\\). The credit spread is \\(\\lambda\\) at zero recovery.<br>\n<b>With recovery R.</b> Add the recovery leg: \\(R\\lambda\\int_0^T e^{-(r+\\lambda)s}ds=R\\frac{\\lambda}{r+\\lambda}(1-e^{-(r+\\lambda)T})\\). Here \\(=0.4\\times0.4\\times0.2212=0.0354\\), so \\(P(0,5)=0.7788+0.0354=0.8142\\).<br>\n<b>Interviewer follow-up:</b> which quantity is the spread then? Roughly \\(\\lambda(1-R)\\) for small rates, which is why the recovery adjustment matters for bond-versus-CDS basis.<br>\n<b>Used in the deck for:</b> risky-bond pricing and the credit triangle.",
+  "tags": [
+   "feynman_kac",
+   "credit_risky_bond",
+   "hazard_rate",
+   "recovery",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: POI 1/3]</b> \\(N_t\\) counts arrivals of a homogeneous Poisson process with rate \\(\\lambda\\). Give the distribution of \\(N_t\\), its mean and variance, and the increment property. Numbers: \\(\\lambda=2\\) per year over one year.",
+  "back": "<b>Distribution.</b> \\(\\mathbb P(N_t=k)=e^{-\\lambda t}(\\lambda t)^k/k!\\).<br>\n<b>Moments.</b> Mean \\(\\lambda t\\), variance \\(\\lambda t\\). The equality of mean and variance is the signature test: an overdispersed count series is not Poisson.<br>\n<b>Increments.</b> Independent and stationary. \\(\\mathbb P(\\text{one arrival in }[t,t+dt])=\\lambda\\,dt+o(dt)\\).<br>\n<b>Numbers.</b> \\(\\lambda=2\\), \\(t=1\\): \\(\\mathbb P(N=0)=e^{-2}=0.1353\\), \\(\\mathbb P(N=1)=0.2707\\).<br>\n<b>Used in the deck for:</b> jump components and first-default counting.",
+  "tags": [
+   "poisson_process",
+   "hazard_rate",
+   "chain_poisson",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: POI 2/3]</b> A default time \\(\\tau\\) is the first arrival of a Poisson process with constant hazard \\(\\lambda=2\\%\\) per year. Give the law of \\(\\tau\\), its mean, \\(\\mathbb P(\\tau>5)\\), and show memorylessness.",
+  "back": "<b>Law.</b> \\(\\mathbb P(\\tau>t)=\\mathbb P(N_t=0)=e^{-\\lambda t}\\), density \\(\\lambda e^{-\\lambda t}\\), mean \\(1/\\lambda=50\\) years.<br>\n<b>Numbers.</b> \\(\\mathbb P(\\tau>5)=e^{-0.1}=0.9048\\).<br>\n<b>Memorylessness.</b> \\(\\mathbb P(\\tau>s+t\\mid\\tau>s)=e^{-\\lambda(s+t)}/e^{-\\lambda s}=e^{-\\lambda t}=\\mathbb P(\\tau>t)\\). A surviving name has the same forward default probability as a fresh one.<br>\n<b>Consequence.</b> A flat hazard gives a flat forward spread, which is why constant-hazard bootstraps need piecewise-constant pieces for a sloped curve.<br>\n<b>Used in the deck for:</b> the flat-hazard CDS approximation and survival probabilities.",
+  "tags": [
+   "exponential_distribution",
+   "memoryless",
+   "hazard_rate",
+   "chain_poisson",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: POI 3/3]</b> Two independent names with default times \\(\\tau_1\\) (hazard \\(\\lambda_1=1\\%\\)) and \\(\\tau_2\\) (hazard \\(\\lambda_2=3\\%\\)), both exponential. Compute \\(\\mathbb P(\\text{some default within 1y})\\), \\(\\mathbb P(\\text{name 1 defaults first, within 1y})\\), and \\(\\mathbb P(\\text{name 1 defaults first, ever})\\).",
+  "back": "<b>Minimum.</b> \\(\\min(\\tau_1,\\tau_2)\\) is exponential with rate \\(\\lambda_1+\\lambda_2=4\\%\\). \\(\\mathbb P(\\text{any default within 1y})=1-e^{-0.04}=3.92\\%\\).<br>\n<b>Who goes first.</b> \\(\\mathbb P(\\tau_1<\\tau_2)=\\lambda_1/(\\lambda_1+\\lambda_2)=0.25\\), independent of when the event happens.<br>\n<b>Within 1y.</b> \\(0.25\\times3.92\\%=0.98\\%\\). Name 2 goes first within the year with \\(0.75\\times3.92\\%=2.94\\%\\). The two sum to 3.92%.<br>\n<b>Ever.</b> The first-to-default share is 0.25 for name 1 at any horizon, because constant hazards make the race time-invariant.<br>\n<b>Interviewer follow-up:</b> what breaks this? Time-varying hazards. Then the share depends on the horizon, and the first-to-default probability needs the full survival curves.<br>\n<b>Used in the deck for:</b> first-to-default basket pricing under constant hazards.",
+  "tags": [
+   "poisson_process",
+   "first_to_default",
+   "hazard_rate",
+   "case_study",
+   "chain_poisson",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a constant hazard \\(\\lambda\\), \\(\\mathbb P(\\tau>s+t\\mid\\tau>s)=\\){{c1::\\(e^{-\\lambda t}\\)}}. This is the {{c2::memoryless}} property, which holds only for the exponential law among continuous distributions.",
+  "back": "Because the property is special, a flat hazard produces a flat forward spread. Any hazard term structure, such as a bootstrapped curve, has to be built from piecewise pieces, and the forward hazard then changes with time.",
+  "tags": [
+   "memoryless",
+   "exponential_distribution",
+   "hazard_rate",
+   "cloze",
+   "chain_poisson",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The characteristic function of \\(X\\sim N(\\mu,\\sigma^2)\\) is \\(\\varphi_X(u)=\\mathbb E[e^{iuX}]=\\){{c1::\\(\\exp\\!\\bigl(i\\mu u-\\tfrac12\\sigma^2u^2\\bigr)\\)}}. For independent \\(X\\) and \\(Y\\), \\(\\varphi_{X+Y}(u)=\\){{c2::\\(\\varphi_X(u)\\,\\varphi_Y(u)\\)}}.",
+  "back": "<b>Derivation.</b> Complete the square in \\(\\int e^{iux}\\phi_{\\mu,\\sigma}(x)\\,dx\\): the exponent \\(iux-\\tfrac{(x-\\mu)^2}{2\\sigma^2}\\) rearranges to \\(i\\mu u-\\tfrac12\\sigma^2u^2\\) plus a term that integrates to one.<br>\n<b>Why it is useful.</b> Sums of independent variables multiply their characteristic functions, and the CF always exists because \\(|\\varphi|\\le1\\). It determines the law uniquely (Lévy inversion), which is the basis of CF-based option pricing (Carr–Madan, Heston).<br>\n<b>Used in the deck for:</b> sums of Gaussian shocks in the normal model and the CF approach to Heston-type pricing.",
+  "tags": [
+   "characteristic_function",
+   "normal_distribution",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Starting from \\(\\log\\varphi_X(u)=i\\mu u-\\tfrac12\\sigma^2u^2\\) for a normal \\(X\\), derive the first two cumulants. State precisely when the moment expansion of a characteristic function fails, with an example.",
+  "back": "<b>Cumulant expansion.</b> \\(\\log\\varphi(u)=\\sum_n\\kappa_n\\frac{(iu)^n}{n!}\\). Matching terms: the \\(iu\\) term gives \\(\\kappa_1=\\mu\\). The \\(-\\tfrac12u^2\\) term is \\(\\kappa_2(iu)^2/2=-\\kappa_2u^2/2\\), so \\(\\kappa_2=\\sigma^2\\). Higher cumulants vanish, which characterises the normal.<br>\n<b>Failure.</b> The CF always exists, but the expansion into moments requires the moment to exist. For the Cauchy law \\(\\varphi(u)=e^{-|u|}\\) is not differentiable at \\(0\\), so no mean exists.<br>\n<b>Interviewer follow-up:</b> why do affine models price with the CF of the log price? Because the CF is often closed form (Riccati ODEs) even when the density is not.<br>\n<b>Used in the deck for:</b> cumulants of log-returns and the CF pricing discussion.",
+  "tags": [
+   "characteristic_function",
+   "cumulants",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "State Jensen's inequality for a convex \\(\\phi\\) and integrable \\(X\\). Illustrate with \\(X\\sim N(0,\\sigma^2)\\), \\(\\phi=\\exp\\), \\(\\sigma=0.2\\). Say what changes for a concave \\(\\phi\\).",
+  "back": "<b>Statement.</b> \\(\\phi(\\mathbb E[X])\\le\\mathbb E[\\phi(X)]\\). Equality holds only if \\(\\phi\\) is affine on the support of \\(X\\), or \\(X\\) is degenerate.<br>\n<b>Proof idea.</b> A convex function is the supremum of its supporting lines. Take the line at \\(\\mathbb E[X]\\) and take expectations.<br>\n<b>Example.</b> \\(\\mathbb E[e^X]=e^{\\sigma^2/2}=e^{0.02}=1.0202\\), while \\(e^{\\mathbb E X}=1\\). The gap is the convexity premium.<br>\n<b>Concave case.</b> The inequality reverses: \\(\\mathbb E[\\phi(X)]\\le\\phi(\\mathbb E X)\\), for example \\(\\mathbb E[\\ln X]\\le\\ln\\mathbb E[X]\\), which is the vol drag in GBM 3/4.<br>\n<b>Used in the deck for:</b> convexity adjustments and the drag between arithmetic and geometric returns.",
+  "tags": [
+   "jensen",
+   "convexity",
+   "inequality",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two applications of Jensen to rates and options. (a) Show \\(\\mathbb E[(F_T-K)^+]\\ge(\\mathbb E[F_T]-K)^+\\). (b) With a random rate \\(r\\) taking 2% and 4% with equal probability, compare \\(\\mathbb E[1/(1+r)]\\) and \\(1/(1+\\mathbb E[r])\\). Which side benefits a holder of a long bond?",
+  "back": "<b>(a)</b> \\(x\\mapsto(x-K)^+\\) is convex. Jensen gives \\(\\mathbb E[(F_T-K)^+]\\ge(\\mathbb E F_T-K)^+\\). The gap is the time value that the option gains from volatility, with the forward held fixed.<br>\n<b>(b)</b> \\(\\mathbb E[1/(1+r)]=\\tfrac12(0.98039+0.96154)=0.970965\\), while \\(1/(1+0.03)=0.970874\\). The random-rate price is higher, by about 0.9bp of value per unit notional.<br>\n<b>Who benefits.</b> A long bond is convex in yield, so its expected value under rate uncertainty is above its value at the expected yield. Holding a convex position benefits from volatility, which is the usual long-gamma intuition.<br>\n<b>Interviewer follow-up:</b> is the convexity premium the same for a forward swap? No. A swap is linear in the rate, so Jensen gives zero, and the adjustment appears only through the annuity measure.<br>\n<b>Used in the deck for:</b> the convexity adjustment and the bond-versus-swap convexity comparison.",
+  "tags": [
+   "jensen",
+   "convexity",
+   "rates",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a standard normal, \\(\\mathbb P(|Z|\\le1)\\approx\\){{c1::68%}}, \\(\\mathbb P(|Z|\\le2)\\approx\\){{c2::95.4%}} and \\(\\mathbb P(|Z|\\le3)\\approx\\){{c3::99.7%}}. One-sided 95% uses \\(z=\\){{c4::1.645}} and one-sided 99% uses \\(z=\\){{c5::2.33}}.",
+  "back": "<b>Anchors.</b> Two-sided 95% uses 1.96. The one-sided 5% tail is 1.645. The 99% one-sided point is 2.326. The 90% one-sided point is 1.28 and the 75% point is 0.674. The density at zero is \\(\\varphi(0)=0.399\\approx0.4\\).<br>\n<b>Use.</b> Convert any quoted confidence into a multiplier before doing arithmetic. Quoting a 99% VaR as \\(2.33\\sigma\\) is the same as saying the one-sided tail is 1%.<br>\n<b>Used in the deck for:</b> VaR, stress and option-implied moves.",
+  "tags": [
+   "normal_distribution",
+   "mental_math",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Without a calculator, estimate \\(\\mathbb P(Z>1)\\), \\(\\mathbb P(Z>2)\\), \\(\\mathbb P(Z>3)\\) and \\(\\mathbb P(Z>2.33)\\) for a standard normal, using only the anchors 68/95/99.7.",
+  "back": "<b>Method.</b> \\(\\mathbb P(|Z|>1)=32\\%\\), so each tail is 16%: \\(\\mathbb P(Z>1)\\approx15.9\\%\\). \\(\\mathbb P(|Z|>2)=4.6\\%\\), so \\(\\mathbb P(Z>2)\\approx2.3\\%\\). \\(\\mathbb P(|Z|>3)=0.27\\%\\), so \\(\\mathbb P(Z>3)\\approx0.135\\%\\).<br>\n<b>Between anchors.</b> \\(\\mathbb P(Z>2.33)\\approx0.99\\%\\), which is the 1% tail. The tail falls by a factor of about 17 between 2σ and 3σ, so each extra σ step is roughly an order of magnitude or more.<br>\n<b>Used in the deck for:</b> scaling moves and checking that a quoted percentile is plausible.",
+  "tags": [
+   "normal_distribution",
+   "mental_math",
+   "tail_probability",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Estimate \\(\\mathbb P(Z>3)\\) with the leading Mills-ratio term \\(\\varphi(z)/z\\). Report the accuracy and the correction that brings it closer.",
+  "back": "<b>Leading term.</b> \\(\\varphi(3)=0.00443\\), so \\(\\varphi(3)/3=0.00148\\), about 0.148%. The exact value is 0.135%, so the leading term overshoots by about 9%.<br>\n<b>Correction.</b> \\(\\mathbb P(Z>z)\\approx\\frac{\\varphi(z)}{z}\\bigl(1-\\frac{1}{z^2}+\\frac{3}{z^4}-\\dots\\bigr)\\). At \\(z=3\\) this is \\(0.00148\\times0.926=0.00137\\), within 1.5% of exact.<br>\n<b>Interviewer follow-up:</b> why does this matter for pricing? Tail probabilities at 4–5σ are where the Gaussian assumption is most often wrong, and the small error in the leading term is a fast-growing error in the tail.<br>\n<b>Used in the deck for:</b> fast tail checks in Gaussian copula and VaR sanity checks.",
+  "tags": [
+   "mills_ratio",
+   "normal_distribution",
+   "tail_probability",
+   "mental_math",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "State Sklar's theorem for two random variables with joint CDF \\(F\\) and marginals \\(F_1,F_2\\). What is a copula, and what does it isolate? Why is Pearson correlation not a property of the copula?",
+  "back": "<b>Sklar.</b> There exists a copula \\(C\\) with \\(F(x_1,x_2)=C\\bigl(F_1(x_1),F_2(x_2)\\bigr)\\). If the marginals are continuous, \\(C\\) is unique. Conversely any copula combined with any marginals gives a valid joint law.<br>\n<b>What it isolates.</b> The copula is the dependence structure on the uniform scale. The margins (e.g. each name's CDS-implied survival) are chosen separately.<br>\n<b>Pearson.</b> Pearson correlation depends on the marginal shapes, so it is not a copula property. Rank-based measures (Kendall, Spearman) depend only on \\(C\\).<br>\n<b>Used in the deck for:</b> separating single-name curves from the joint default model in CDO and basket pricing.",
+  "tags": [
+   "copula",
+   "sklar_theorem",
+   "dependence",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "The Gaussian copula with parameter \\(\\rho\\) is \\(C_\\rho(u_1,u_2)=\\Phi_2\\bigl(\\Phi^{-1}(u_1),\\Phi^{-1}(u_2);\\rho\\bigr)\\). For \\(\\rho=0.5\\), give Kendall's tau and Spearman's rho and explain why they are the natural measures.",
+  "back": "<b>Kendall.</b> \\(\\tau=\\tfrac{2}{\\pi}\\arcsin\\rho=\\tfrac{2}{\\pi}\\cdot\\tfrac{\\pi}{6}=\\tfrac13\\) for \\(\\rho=0.5\\).<br>\n<b>Spearman.</b> \\(\\rho_S=\\tfrac{6}{\\pi}\\arcsin(\\rho/2)=\\tfrac{6}{\\pi}\\arcsin(0.25)=0.4826\\). This is the Pearson correlation of the uniform margins.<br>\n<b>Why they are natural.</b> They depend only on ranks, so they are invariant to the marginal choice. The Gaussian copula's \\(\\rho\\) is the correlation of the normal scores, not of the default indicators or the uniforms.<br>\n<b>Interviewer follow-up:</b> so when you calibrate \\(\\rho\\), do you fit Pearson? You fit to a tranche quote, and the implied \\(\\rho\\) is a model parameter whose rank correlation is a diagnostic only.<br>\n<b>Used in the deck for:</b> the correlation parameter in base-correlation and default-simulation cards.",
+  "tags": [
+   "copula",
+   "gaussian_copula",
+   "rank_correlation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a Gaussian copula with parameter \\(\\rho\\), Kendall's tau equals {{c1::\\(\\tfrac{2}{\\pi}\\arcsin\\rho\\)}}, so \\(\\rho=0.5\\) gives \\(\\tau=\\){{c2::1/3}}.",
+  "back": "The identity comes from the elliptical structure of the normal. It is the only copula-level link between the Gaussian copula parameter and a rank-based dependence measure, and it is useful for checking calibration on a rank basis.",
+  "tags": [
+   "copula",
+   "kendall_tau",
+   "gaussian_copula",
+   "cloze",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Let \\((X,Y)\\) be bivariate normal with zero means, standard deviations \\(\\sigma_x,\\sigma_y\\) and correlation \\(\\rho\\). Derive \\(\\mathbb E[X\\mid Y]\\) and \\(\\operatorname{Var}[X\\mid Y]\\). Evaluate for \\(\\rho=0.6\\), \\(\\sigma_x=2\\), \\(\\sigma_y=1\\), \\(Y=1.5\\).",
+  "back": "<b>Derivation.</b> Write \\(X=\\beta Y+\\varepsilon\\) with \\(\\beta=\\operatorname{Cov}(X,Y)/\\sigma_y^2=\\rho\\sigma_x/\\sigma_y\\). Then \\(\\varepsilon\\) is uncorrelated with \\(Y\\), hence independent of it because the pair is jointly normal. So \\(\\mathbb E[X\\mid Y]=\\beta Y\\) and \\(\\operatorname{Var}[X\\mid Y]=\\operatorname{Var}\\varepsilon=\\sigma_x^2(1-\\rho^2)\\).<br>\n<b>Numbers.</b> \\(\\beta=0.6\\times2/1=1.2\\). \\(\\mathbb E[X\\mid Y=1.5]=1.2\\times1.5=1.8\\). \\(\\operatorname{Var}=4\\times(1-0.36)=2.56\\), a standard deviation of 1.6.<br>\n<b>Used in the deck for:</b> conditional default and regression steps in the Gaussian-copula and Longstaff–Schwartz cards.",
+  "tags": [
+   "conditional_expectation",
+   "bivariate_normal",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "<b>[Chain: OU 1/3]</b> Context: \\(dX=\\kappa(\\theta-X)\\,dt+\\sigma\\,dW\\), \\(X_0=x_0\\). Using the integrating factor \\(e^{\\kappa t}\\), the solution is \\(X_t=\\theta+(x_0-\\theta)\\){{c1::\\(e^{-\\kappa t}\\)}}\\(+\\sigma\\){{c2::\\(\\int_0^t e^{-\\kappa(t-s)}\\,dW_s\\)}}.",
+  "back": "<b>Derivation.</b> Itô on \\(e^{\\kappa t}X_t\\): \\(d(e^{\\kappa t}X)=\\kappa e^{\\kappa t}X\\,dt+e^{\\kappa t}dX=\\kappa\\theta e^{\\kappa t}dt+\\sigma e^{\\kappa t}dW\\). Integrate from 0 to \\(t\\) and divide by \\(e^{\\kappa t}\\).<br>\n<b>Result.</b> The stochastic integral is Gaussian (it is a Wiener integral with deterministic integrand), so \\(X_t\\) is normal with mean \\(\\theta+(x_0-\\theta)e^{-\\kappa t}\\).<br>\n<b>Used in the deck for:</b> the Vasicek short rate and Hull–White calibration cards.",
+  "tags": [
+   "ornstein_uhlenbeck",
+   "vasicek",
+   "ito",
+   "cloze",
+   "chain_ou",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: OU 2/3]</b> Vasicek with \\(r_0=2\\%\\), \\(\\theta=3\\%\\), \\(\\kappa=0.5\\), \\(\\sigma=1\\%\\) per root year. Compute \\(\\mathbb E[r_1]\\), \\(\\operatorname{sd}[r_1]\\) and \\(\\mathbb P(r_1<0)\\).",
+  "back": "<b>Mean.</b> \\(\\theta+(r_0-\\theta)e^{-0.5}=3\\%-1\\%\\times0.6065=2.393\\%\\).<br>\n<b>Variance.</b> \\(\\sigma^2(1-e^{-2\\kappa})/(2\\kappa)=10^{-4}(1-e^{-1})/1=6.32\\times10^{-5}\\). Standard deviation \\(0.795\\%\\).<br>\n<b>Negative probability.</b> \\(\\mathbb P(r_1<0)=\\Phi(-2.393/0.795)=\\Phi(-3.01)\\approx0.13\\%\\).<br>\n<b>Interviewer follow-up:</b> the long-run mean is 3%, but the one-year-ahead distribution is already fairly tight, and most of the mass sits near the forward. The Gaussian tail is the feature to discuss.<br>\n<b>Used in the deck for:</b> Vasicek and Hull–White case studies.",
+  "tags": [
+   "ornstein_uhlenbeck",
+   "vasicek",
+   "case_study",
+   "chain_ou",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: OU 3/3]</b> Same Vasicek model (\\(\\theta=3\\%\\), \\(\\sigma=1\\%\\), \\(\\kappa=0.5\\)) at long horizons. Give the stationary law, the probability that \\(r\\) is negative under the stationary law, and the main limitation an interviewer will probe.",
+  "back": "<b>Stationary law.</b> \\(N\\bigl(\\theta,\\ \\sigma^2/(2\\kappa)\\bigr)\\). Stationary standard deviation \\(=1\\%/\\sqrt{1}=1\\%\\).<br>\n<b>Negative mass.</b> \\(\\mathbb P(r<0)=\\Phi(-\\theta/\\text{sd})=\\Phi(-3)=0.135\\%\\).<br>\n<b>Where it breaks.</b> A Gaussian has positive mass on every negative level, so the model can never impose a floor, and the probability of deeply negative rates is set by the normal tail. Calibration of \\(\\sigma\\) also depends on \\(\\kappa\\): if \\(\\kappa\\to0\\), the stationary variance blows up.<br>\n<b>Interviewer follow-up:</b> why is normal volatility the convention after 2015? Because a lognormal model cannot price rates at or below zero, and the normal (Bachelier) vol remains defined for negative forwards.<br>\n<b>Used in the deck for:</b> the choice of normal versus lognormal vol and the Hull–White model.",
+  "tags": [
+   "ornstein_uhlenbeck",
+   "vasicek",
+   "negative_rates",
+   "stationary_distribution",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For \\(dX=\\mu\\,dt+\\sigma\\,dW\\), Itô's lemma gives \\(df(X)=\\){{c1::\\(\\bigl(f'(X)\\mu+\\tfrac12\\sigma^2f''(X)\\bigr)\\,dt\\)}}\\(+\\sigma f'(X)\\,dW\\). The term \\(\\tfrac12\\sigma^2 f''\\,dt\\) is the {{c2::Itô correction}}, and it is absent in ordinary calculus.",
+  "back": "The correction comes from \\((dX)^2=\\sigma^2dt\\). It is what makes \\(\\ln S\\) drift at \\(\\mu-\\tfrac12\\sigma^2\\) under GBM (ITO 4/5), and it is why a naive chain rule gives the wrong expectation in ITO 3/5.",
+  "tags": [
+   "ito",
+   "ito_correction",
+   "cloze",
+   "chain_ito",
+   "lvl_foundation"
+  ]
+ }
+]
