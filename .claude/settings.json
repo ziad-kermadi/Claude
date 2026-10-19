@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "mkdir -p ~/.claude && [ -f ~/.claude/socratic-config.json ] || cp \"$CLAUDE_PROJECT_DIR/.claude/socratic-config.json\" ~/.claude/socratic-config.json"
+          }
+        ]
+      }
+    ]
+  }
+}

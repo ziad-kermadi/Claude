@@ -1,0 +1,879 @@
+== 01_govies.json 47
+  - Gilt pricing: how do clean and dirty prices relate, and how is accrued interest computed for a semi-annual gil
+  - A 4% semi-annual gilt (face 100) has 61 days elapsed in a 182-day coupon period and a clean price of 98.50. Wh
+  - Explain the ex-dividend mechanic for a UK gilt. What happens to accrued and to the dirty-clean relation for a 
+  - GBP money-market and SONIA accrue on {{c1::Actual/365 Fixed}}. {{c2::SOFR}} and {{c3::€STR}} accrue on {{c4::A
+  - Index-linked gilts: how is the principal indexed, and why does the indexation lag matter for a real-yield trad
+  - Index-linked gilts issued before about 2005 use an {{c1::8-month}} indexation lag; later issues use a {{c2::3-
+  - A UK gilt yield is quoted on a semi-annual basis. What is the annual effective equivalent of a 4.00% semi-annu
+  - Derive the modified duration of a bond from its price-yield relationship and show \(\Delta P/P \approx -D_{mod
+  - A 10-year par bond with a 5% semi-annual coupon trades at 100 with a 5% yield. Estimate modified duration and 
+  - Why is DV01 the right risk measure for a desk, and how does convexity change the P&L of a 100bp move? Give app
+  - A long position in a 10y callable bond (issuer call at par; yield 5%; option-free duration about 7.8) is hedge
+  - What are key-rate durations, and why does their sum equal effective duration? What is the trade-off in using t
+  - A zero-coupon bond with maturity T and annual-compounding yield y has Macaulay duration {{c1::T}}, modified du
+  - Define carry on a long gilt position financed in repo. Give a mental-math estimate over one quarter for a 10-y
+  - Explain roll-down for a bond on an upward-sloping curve. Estimate the 3-month roll-down return for a 10y bond 
+  - Combine carry and roll-down for a 3-month horizon. Using the numbers from the previous two cards, what is the 
+  - A desk chooses between a 10y bond (yield 4.00%, \(D_{mod}\approx8.2\), roll slope 12bp per year at 10y) and a 
+  - Derive the approximate par-par asset swap spread for a bond with coupon \(c\), price \(P\), swap rate \(S_n\) 
+  - Contrast the I-spread, Z-spread and G-spread for a corporate bond. Which is most appropriate for a gilt, and w
+  - The Z-spread is the constant spread added to the {{c1::zero}} curve that equates the bond's {{c2::dirty}} pric
+  - Write the invoice price for a bond future delivery and explain each term. Give a numeric example with futures 
+  - What is the conversion factor for a bond future, and why does it make the cheapest-to-deliver problem tractabl
+  - Derive the futures hedge ratio for a cash bond position using DV01 and the conversion factor of the CTD. Set u
+  - Define implied repo rate for a bond future. Compute it for a bond with dirty price 100.00, invoice price at de
+  - Define gross basis and net basis for a bond future. Why is the CTD the bond with the lowest net basis, and wha
+  - List the delivery options embedded in a US Treasury bond future and explain who holds them, and how each affec
+  - Describe the cash-futures basis trade. What is the P&L and what risk would cause the position to unwind, using
+  - Compare the UK Long Gilt, Euro-Bund and US 10-year futures in terms of notional, notional coupon and deliverab
+  - In the Bund future, the notional is {{c1::€100,000}} with a {{c2::6%}} notional coupon and a deliverable range
+  - A bond is trading special in repo, at 3.20% against 4.00% general collateral. Explain specialness, who pays it
+  - Explain how a repo transaction affects a dealer's leverage ratio and risk-weighted assets, and why a repo-heav
+  - Quarter-end: GC gilt repo rises 25bp for one day and dealers cut balance-sheet repo. A desk holds a £2bn long-
+  - Compare a DMO gilt auction with a syndication for issuing a new long gilt. What trade-offs drive the choice, a
+  - Gilt-edged market makers (GEMMs) have {{c1::obligations}} to bid in DMO auctions and to make {{c2::two-way pri
+  - Explain how central-bank asset purchases (QE) affect the gilt curve through the term premium and through scarc
+  - Scenario: the central bank moves from passive run-off to active sales of long gilts while the DMO increases lo
+  - Construct a DV01-neutral 2s10s steepener with approximate DV01s per 100 face at a 4% par yield: 2y DV01 about 
+  - Explain why a 50:50 notional 5s30s trade is not curve-neutral, using approximate DV01s at a 4% par yield: 5y D
+  - Why can a DV01-neutral 2s5s10s fly still carry a common-factor bet when the yield betas to the 5y are 0.8 for 
+  - Construct a DV01-neutral 2s5s10s butterfly with a 5y belly. Using approximate DV01s at 4%: 2y 0.0190, 5y 0.044
+  - A DV01-neutral 2s10s steepener, long £43m of 2y and short £10m of 10y (DV01s £8,170 and £8,180 per bp), earns 
+  - Explain the mechanics of the UK liability-driven investment (LDI) pooled fund structure before September 2022.
+  - Scenario: in late September 2022, long gilt yields rose sharply after the mini-budget. Describe the Bank of En
+  - In the UK LDI episode of 2022, leveraged pooled funds used {{c1::repo}} and {{c2::interest-rate swaps}} to gea
+  - Decompose a long-end gilt yield into expectations and term premium. Why do term-premium models matter for a de
+  - A fiscal announcement lifts the 30y nominal gilt yield by 50bp while the 2y is unchanged and the 30y breakeven
+  - Central-bank asset purchases tend to {{c1::compress}} the term premium, while heavier issuance and active bala
+== 01_govies_deep.json 30
+  - [Chain: CTD_SWITCH 1/3] Context: a bond future at F = 110.00, repo 4.00%, delivery in 0.25 years. Bond X: clea
+  - [Chain: CTD_SWITCH 2/3] Context: the same bonds X and Y, repo 4.00%, carries as in card 1 (X net carry -0.045,
+  - [Chain: CTD_SWITCH 3/3] Context: with F = 110.00, X is the CTD. The futures price implied by delivering X alon
+  - [Chain: LDI_SPIRAL 1/3] Context: a pension LDI fund with NAV £100m, gilt exposure £300m (leverage 3.0x), effec
+  - [Chain: LDI_SPIRAL 2/3] Context: after the 100bp shock (card 1), the fund sells £90m of 30y gilts to get back 
+  - [Chain: LDI_SPIRAL 3/3] Context: the same stress forces the LDI funds to sell 30y gilts and to unwind receive-
+  - [Chain: AUCTION_CONC 1/3] Context: a new 10y gilt clears at 4.33%, the pre-auction secondary yield is 4.30%, a
+  - [Chain: AUCTION_CONC 2/3] Context: the dealer buys £100m at the auction (concession 3bp, DV01 £80k per bp) and
+  - [Chain: AUCTION_CONC 3/3] Context: the dealer expects to sell the £100m allocation at 4.30% and faces £30k of 
+  - Derivation: convexity of a bond. Derive \(C = \frac{1}{P}\frac{d^2P}{dy^2}\) for \(P(y)=\sum_t CF_t(1+y)^{-t}\
+  - Derivation: the conversion factor in closed form. A bond future's conversion factor is the clean price per uni
+  - Derivation: roll-down from the zero curve. Derive \(\partial y/\partial T\) for a zero-coupon yield from the f
+  - Derivation: DV01 from the dirty-price sensitivity. Derive \(\text{DV01} = -\frac{\partial P_{dirty}}{\partial 
+  - Derivation: key-rate durations by piecewise-linear shocks. Key-rate shocks are piecewise linear hats: a shock 
+  - Derivation: PCA-neutral butterfly weights. Let the belly (5y) be short 0.0449 DV01 per 100 face, and the wings
+  - Derivation: forward rates and the implied repo from discount factors. Given continuously compounded zeros \(z(
+  - Derivation: Macaulay duration as a PV-weighted average. Derive \(D_{mac}=\frac{1}{P}\sum_t t\,PV_t\) and show 
+  - Derivation: break-even yield for a carry-plus-roll cushion. Over a horizon, a 10y 4% semi-annual par bond at 1
+  - Case study: cash-futures basis trade P&amp;L with repo. Buy £100m nominal of bond X (clean 104.50, CF 0.9500, 
+  - Case study: hedging a £50m 30y gilt position with Long Gilt futures. The position has duration 17.0 at price 1
+  - Case study: beta-neutral 2s5s10s butterfly. The 5y belly is short £100m nominal (DV01 £44.9k per bp). Yield be
+  - Case study: auction concession with unhedged sell-down. Pre-auction secondary 4.30%, clearing 4.33%. The deale
+  - Case study: LDI leverage stress with iterated forced sales. A fund holds £300m of 30y gilts (duration 15) with
+  - Case study: convexity P&amp;L on a £50m 30y gilt position. The position is a 30y 4% semi-annual par gilt at 10
+  - Case study: carry and roll on a 5y gilt over six months. The 5y gilt yields 4.00%, the 5y forward is 4.20%, re
+  - Case study: quarter-end repo spike on a £2bn long-basis position. A desk holds £2bn of cash bond against short
+  - SONIA compounded-in-arrears coupons use a lookback of {{c1::five}} London business days (the Bank of England W
+  - The OLS yield beta of tenor j on tenor i is {{c1::Cov(Δy_j, Δy_i)/Var(Δy_i)}}, the slope from regressing Δy_j 
+  - On a government-bond yield-change covariance matrix, PC1 (level) typically explains {{c1::roughly 90% or more}
+  - A key-rate shock at the first key tenor is {{c1::flat}} for every maturity shorter than it, so the key-rate du
+== 02_swaps_curves.json 55
+  - Write the compounded-in-arrears SOFR rate for an interest period with \(n\) daily observations \(r_i\), accrua
+  - Mental math: a flat 5.00% overnight SOFR fixing for 30 calendar days, Act/360. What is the compounded rate on 
+  - Write the compounded RFR coupon under (a) a lookback of \(d\) business days and (b) an observation shift of \(
+  - What is a lockout in a compounded RFR coupon? Write the coupon with an \(L\)-day lockout and explain why its P
+  - SONIA accrues on {{c1::Act/365F}}; SOFR and €STR accrue on {{c2::Act/360}}. A 5.00% Act/360 rate is about {{c3
+  - The ISDA IBOR Fallbacks Protocol (October 2020) sets the fallback spread as the {{c1::historical median}} of t
+  - Why is a fixed fallback spread added when a legacy term IBOR swap moves to compounded RFR? What economic probl
+  - USD LIBOR 1M, 3M, 6M and 12M ceased publication after {{c1::30 June 2023}}. Legacy contracts without usable fa
+  - Why did single-curve bootstrapping break down after 2008? Give the structural reason and the multi-curve fix.
+  - For a 3M EURIBOR-indexed receiver swap with accrual factors \(\tau_i\), spread \(s\) on the float leg and fixe
+  - Why is a collateralised derivative discounted at the collateral rate rather than a risk-free rate? Give the re
+  - A CSA lets the poster deliver any of several eligible currencies as cash collateral, each paying a different r
+  - For a daily-margined USD CSA paying SOFR on cash collateral, the discount curve is {{c1::SOFR OIS}}. For a EUR
+  - Derive the bootstrap recursion for OIS discount factors from par swap rates, with annual fixed payments and si
+  - Set out the instrument set and order for bootstrapping a USD SOFR OIS curve from overnight rates, short deposi
+  - A 1-month deposit spans 31 December, and its 7 straddling days carry a 10bp year-end funding premium. By how m
+  - Derive the convexity adjustment between a futures-implied forward rate and the true forward rate under a Gauss
+  - For rate futures, the futures rate is {{c1::above}} the forward rate by approximately {{c2::½σ²t₁t₂}}, because
+  - Compare linear interpolation of zero rates with log-linear interpolation of discount factors between pillars. 
+  - What does monotone-convex interpolation (Hagan–West) guarantee that linear-on-zeros or a cubic spline on log D
+  - A curve trader asks whether a smoother forward curve is always better. Give the trade-off between forward smoo
+  - With linear-on-zeros interpolation and a bootstrap, the 5y par quote rises by 10bp and all other quotes are un
+  - Define the curve Jacobian \(J=\partial q/\partial z\) for a bootstrapped curve, with \(q\) the market quotes a
+  - Given node-space sensitivities \(\partial V/\partial z\) for a portfolio, derive the quote-space bucketed delt
+  - A trader is long a 10y receiver swap and wants bucketed DV01. Compare par-bucketed and zero-bucketed risk: wha
+  - The sum of par-bucketed sensitivities equals the sensitivity to a {{c1::parallel shift of all par quotes}}. Th
+  - Derive the par swap rate for an annual-pay fixed leg from discount factors. Then check it on a flat continuous
+  - Derive the value of a payer swap with notional \(N\), fixed rate \(K\), par rate \(S\) and annuity \(A\), on a
+  - Mental math: a 5y payer swap with fixed rate 3.00% and par rate 3.20%, notional 100m, annuity 4.60. What is th
+  - For a 10y swap with annuity about {{c1::8.0}}, the PV01 on 100m notional is about {{c2::80,000}} per basis poi
+  - Write the forward par swap rate for a swap starting at \(T_0\) and ending at \(T_n\). With \(DF(T_0)=0.960\), 
+  - Why is the forward swap rate a martingale under the annuity measure? State the numeraire and what this implies
+  - Mental math: value a 1y×5y at-the-money payer swaption with normal volatility 100bp p.a., annuity 4.50 and not
+  - ATM normal-vol payer swaption premium \(\approx\) {{c1::0.4}} × \(\sigma_N\) × \(\sqrt{T}\) × {{c2::annuity}} 
+  - Why does a CMS rate exceed the forward swap rate when payment is later than fixing? Explain the mechanism and 
+  - In a mark-to-market cross-currency basis swap, why is the PV of the principal re-exchanges zero at each reset 
+  - State covered interest parity for EURUSD (USD per EUR) and show how a cross-currency basis enters the USD rate
+  - Mental math: spot EURUSD is 1.1000 (USD per EUR). USD 1y rate is 4.00% and EUR 1y rate is 2.00%. Ignoring day-
+  - Decompose an FX swap into its legs and explain what the forward points tell you under covered parity and under
+  - What is tenor basis, and how does it show up in a 3M-vs-6M basis swap quote? Why does a curve builder need sep
+  - Define the 10y SOFR swap spread and list two structural drivers that have pushed it negative. How would a trad
+  - Why are cleared swaps discounted at the CCP's collateral rate, and what is price alignment interest (PAI)?
+  - LCH SwapClear moved USD discounting from {{c1::effective fed funds}} to {{c2::SOFR}} in {{c3::16 October 2020}
+  - A cleared 5y receiver's MTM rises by 1.0m when the CCP changes its USD discounting curve. Explain the cash flo
+  - Compare initial margin (IM) and variation margin (VM) for cleared swaps. Which curve or rate funds each, and w
+  - Give a first-order formula for FVA on an uncollateralised derivative with expected exposure \(EE(t)\), funding
+  - An uncleared bilateral trade requires 10m of initial margin (IM) held flat for 5y, funded at 80bp over the col
+  - A dealer must decide whether to quote a 10y USD swap cleared through a CCP or bilateral under a CSA. Name the 
+  - Show how a forward rate over \([t_1,t_2]\) is obtained from discount factors. Then show that log-linear interp
+  - A swap references Term SOFR, but the curve is built from compounded-in-arrears SOFR OIS. If the term-compounde
+  - A EURIBOR 6M-vs-€STR OIS basis is quoted. Where in the bootstrap does the spread go, and which curve is affect
+  - Log-linear interpolation of discount factors produces piecewise-{{c1::constant}} forwards, while linear interp
+  - With a 2-business-day lookback, the accrual on day \(i\) uses the rate observed {{c1::two business days}} earl
+  - Mental math: compare a 2y discount factor for 4.00% annually compounded with one for 4.00% continuously compou
+  - Why does the USD cross-currency basis widen in funding stress, and why is the arbitrage hard to take? For a 25
+== 02_swaps_curves_deep.json 30
+  - [Chain: BOOT 1/4] Context: single-curve SONIA OIS, annual fixed legs (day count ignored), par quotes 1y = 4.10
+  - [Chain: BOOT 2/4] Same curve (1y 4.10%, 2y 4.20% par, annual). Interpolate the discount factor at 1.5y two way
+  - [Chain: BOOT 3/4] Same 1y/2y curve. Under linear-in-continuous-zero interpolation between 1y and 2y, the insta
+  - [Chain: BOOT 4/4] Same 1y/2y curve, log-linear DF. Quotes \(q=(S_1,S_2)\) and nodes \(z=(DF_1,DF_2)\). Derive 
+  - [Chain: CSA 1/3] A 5y receiver swap, 100m notional, fixed 3.00% annual, float leg projected on a flat 3.20% cu
+  - [Chain: CSA 2/3] Continuing the same 5y receiver after the switch to 3.10% collateral: the switch is compensat
+  - [Chain: CSA 3/3] After the switch (receiver 5y, 100m, fixed 3.00%, projection 3.20% flat, discounting now 3.10
+  - [Chain: XCCY 1/3] EURUSD spot 1.1000 (USD per EUR), 3m tenor \(\tau=0.25\), USD 3m OIS 4.00%, EUR 3m OIS 2.00%
+  - [Chain: XCCY 2/3] Same market (USD basis deviation +25bp, FX-implied USD 4.25% against USD OIS 4.00%). A bank 
+  - [Chain: XCCY 3/3] The USD basis is wider at quarter-ends and year-ends than in the middle of a quarter. A curv
+  - [Chain: CMS 1/3] A 5y swap rate fixes at \(T_f=5\) and pays at \(T_p=T_f+\tau_p\). Normal vol \(\sigma_N=1\%\)
+  - [Chain: CMS 2/3] Same 5y fixing, normal vol 1%, flat 3% curve, \(\tau_p=0.5\). The CA from the previous card i
+  - [Chain: CMS 3/3] A 10y CMS paying at a 1y lag is priced with the flat-yield linear model at 3% and normal vol 
+  - Derivation: the par swap rate as an annuity-weighted average of forwards. Single-curve, fixed annual schedule 
+  - Derivation: change of numeraire from the annuity measure \(\mathbb Q^A\) to the forward measure \(\mathbb Q^{T
+  - Derivation: futures-forward convexity adjustment under the Hull–White one-factor model. Futures rate on \([T_1
+  - Derivation: the Jacobian for a two-node bootstrap, written explicitly so that the par-to-node mapping can be c
+  - Derivation: the covered-interest-parity forward with a cross-currency basis, written so the deviation is an ex
+  - Case study: bootstrap three SONIA-style annual par OIS quotes by hand. Par quotes 1y 4.10%, 2y 4.20%, 3y 4.25%
+  - Case study: value an off-market 5y payer swap. Notional 100m, fixed rate \(K=2.50\%\) annual, 5y, single flat 
+  - Case study: bucketed DV01 and par hedge. Portfolio: (a) receive 3% fixed 10y, notional 100m; (b) pay 3% fixed 
+  - Case study: XCCY basis swap valuation with a basis spread. 5y EUR leg, notional 100m EUR, leg receives \(\text
+  - Case study: MTM of a 5y payer after a 25bp parallel move. 5y payer, fixed \(K=3.00\%\) annual, notional 100m, 
+  - Case study: futures strip convexity with Hull–White. A 3y SOFR-style 3m future prices at an implied rate of 4.
+  - The par swap rate is the annuity-weighted average of forwards, \(S=\sum_i w_iF_i\), with weights \(w_i=\){{c1:
+  - In Hull–White, the futures-forward convexity adjustment reduces to Ho–Lee's {{c1::\(\sigma^2T_1(T_2-\tfrac12T_
+  - For a flat annual-compounded curve with yield \(y\), the par swap rate equals {{c1::\(y\)}} and each discount 
+  - For a swap with float forwards flat at \(S_p\), principal on both legs, fixed rate \(K\) and discounting curve
+  - The PV01 of a spread \(b\) on a leg of notional \(N\) is approximately \(N\times\){{c1::annuity}}\(\times\){{c
+  - The CMS convexity adjustment in the normal, flat-yield model is \(\sigma_N^2T_f\,[\,-\partial_y\ln A\;\){{c1::
+== 03_rates_options.json 59
+  - Why can Black-76 not price a rates option when the forward rate is negative, and what does Bachelier change?
+  - Give the Bachelier call price for forward \(F\), strike \(K\), normal vol \(\sigma_N\) and expiry \(T\) (undis
+  - For an ATM option in the normal model, the premium per unit of \(\sigma_N\sqrt{T}\) is {{c1::0.4}} per leg (ex
+  - Convert a 20% lognormal ATM vol on a 2% forward into an approximate normal vol in bp per year.
+  - At the money, \(\sigma_N \approx \sigma_B \times\){{c1::forward rate}}. Away from the money the leading-order 
+  - A flat lognormal smile is quoted at a 2% forward. What does this imply for the normal smile, and why does it m
+  - What is the shifted-lognormal (displaced diffusion) model, and what is its main trade-off?
+  - Why is normal (bp) vol the natural quoting unit when rates are near or below zero?
+  - Give delta, gamma and vega of a normal-model call in closed form, and their ATM values.
+  - A dealer quotes flat cap vols at 1y, 2y, 3y and so on. Explain how you strip forward caplet volatilities, and 
+  - State cap-floor parity at a common strike \(K\), and explain why it needs no volatility model.
+  - Cap(K) minus Floor(K) at the same strike equals a {{c1::payer swap}} at fixed rate K. At the at-the-money stri
+  - Why do caplets on compounded overnight rates (SONIA, SOFR) not price the same way as legacy term-rate caplets?
+  - Flat 1y cap vol is 60bp normal and flat 2y cap vol is 55bp normal. Where is the forward 1y-to-2y caplet normal
+  - Write the payer swaption value using the annuity and a Black-type expression, and name the measure under which
+  - State payer-receiver parity for European swaptions, and say what it implies at the money.
+  - For an ATM European swaption in the normal model, the premium per leg is approximately {{c1::0.4}} times \(\si
+  - You buy a 1y x 5y ATM straddle, payer plus receiver. Describe its delta, gamma and vega, and when it is a clea
+  - How do you build a full swaption vol surface (expiry × tenor × strike) from market quotes, and which no-arbitr
+  - Why is bucketed-vega hedging with co-tenor swaptions only approximate, and what determines the residual? Use t
+  - A payer and a receiver with the same expiry, tenor and strike show different implied normal vols in your syste
+  - In SABR, \(\alpha\) sets the {{c1::level}} of volatility, \(\beta\) is the {{c2::CEV exponent}} (0 normal, 1 l
+  - What is the SABR backbone, and how does \(\beta\) control it?
+  - What is Hagan's SABR formula, and why is it an approximation rather than an exact price?
+  - How can Hagan-implied SABR smiles admit static arbitrage, and how do you detect it?
+  - The risk-neutral density implied by a call price curve is the discounted {{c1::second derivative of the call p
+  - Compare free-boundary SABR and ZABR as responses to the limitations of Hagan's SABR.
+  - What do \(\rho\) and \(\nu\) control in the SABR smile, and why is this separation useful in calibration?
+  - Why is \(\beta=0\) (normal SABR) the usual choice when rates are low or negative, and what does it give up?
+  - When the forward turns negative during a SABR calibration, what must change in the set-up?
+  - Two SABR calibrations fit today's smile equally well but give different deltas. Why?
+  - Distinguish sticky-strike and sticky-delta smile dynamics, and give the smile-adjusted delta formula.
+  - Derive vanna and volga for a normal-model call, and show that both vanish at the money.
+  - In the normal model with zero drift, vega equals \({{c1::\sigma_N T\,\Gamma}}\) at every strike, so theta equa
+  - Show that the normal (Bachelier) price satisfies \(\partial_t V+\tfrac12\sigma_N^2\,\partial_{FF}V=0\), and de
+  - Derive the expected delta-hedged P&amp;L of a long normal-model option, and explain why it depends on realised
+  - Explain vol-of-vol and correlation risk in a CMS spread option, and state the sign of a long spread-call posit
+  - In HJM under the risk-neutral measure, with \(df(t,T)=\alpha\,dt+\sigma(t,T)\,dW_t\), what is the forward-rate
+  - Why does Hull-White 1F sit inside HJM, and what volatility function does it imply?
+  - In Hull-White 1F, \(P(t,T)=A(t,T)\exp(-B\,r_t)\) with \(B(t,T)=\){{c1::(1-e^{-a(T-t)})/a}}. Starting from \(r_
+  - In one-factor Hull-White, what does the mean-reversion parameter \(a\) change in the swap-rate vol term struct
+  - Describe calibrating Hull-White 1F to a swaption surface, and name the main limitation.
+  - How is a Bermudan swaption priced in a one-factor Hull-White model, and what decision is made on each exercise
+  - What is the Bermudan exercise boundary, and why is a Bermudan worth at least as much as its best European comp
+  - How would you price a Bermudan when the model is multi-factor or not tree-friendly, such as an LMM?
+  - In the lognormal forward-rate model (BGM/LMM), what is the drift of \(L_i\) under the terminal measure \(\math
+  - How is an LMM calibrated to caplets and swaptions, and what does the correlation matrix do?
+  - What is rank reduction in an LMM, and why does it matter for pricing?
+  - Two LMM calibrations fit the same swaption cube but price a Bermudan very differently. What is the likely caus
+  - Why does a one-factor Gaussian model with constant \(\sigma\) miss the smile across strikes, and what does a l
+  - Why is a CMS rate not equal to the forward swap rate, and what sign does the convexity adjustment usually have
+  - Give the static replication formula for \(\mathbb{E}^{A}[g(S)]\) and explain how it prices CMS-type payoffs wi
+  - For a CMS spread call on \(S_1-S_2\), the spread variance is \(\sigma_1^2+\sigma_2^2-2\rho\sigma_1\sigma_2\). 
+  - How are CMS spread options priced with a copula, and what are the modelling assumptions?
+  - A {{c1::Gaussian}} copula has zero tail dependence. A Student-t copula with finite degrees of freedom has {{c2
+  - A range accrual pays a daily coupon when the 10y swap rate lies between 2% and 4%. The forward is 3%. Describe
+  - Describe the embedded option in a TARN (target redemption note), and say why the investor is short it without 
+  - How does a callable structure relate to a Bermudan swaption, and which party is long or short vol?
+  - Two dealers quote the same swaption smile. One fits a normal SABR with \(\beta=0\), the other a shifted lognor
+== 03_rates_options_deep.json 30
+  - [Chain: SABR_ARB 1/5] Context: a normal SABR (\(\beta=0\), \(\alpha=90\)bp, \(\nu=0.8\), \(\rho=-0.7\), \(F=3\
+  - [Chain: SABR_ARB 2/5] Context: the same fit has a butterfly of about \(-3.2\times10^{-7}\) per unit notional a
+  - [Chain: SABR_ARB 3/5] Context: the Hagan SABR fit gives a negative density in the low-strike wing of a 10y exp
+  - [Chain: SABR_ARB 4/5] Context: a non-negative density is needed in the low-strike tail of a long-expiry SABR s
+  - [Chain: SABR_ARB 5/5] Context: the desk moves from Hagan SABR to an arbitrage-free SABR that matches the same 
+  - [Chain: BERM_SW 1/5] Context: a 5y-tail payer Bermudan, exercisable annually at 1y, 2y, 3y and 4y, priced in o
+  - [Chain: BERM_SW 2/5] Context: the same Bermudan will be calibrated to the co-terminal swaptions 1y×4y, 2y×3y, 
+  - [Chain: BERM_SW 3/5] Context: the co-terminal fit is held. Mean reversion moves from \(a=0.03\) to \(a=0.10\).
+  - [Chain: BERM_SW 4/5] Context: a switch lets the holder, on each exercise date, enter either a payer 5y swap at
+  - [Chain: BERM_SW 5/5] Context: the desk values the switch as the maximum of the two alternatives' values at eac
+  - Derive the Bachelier call price from the normal SDE \(dF=\sigma_N\,dW\) under the forward measure, showing eac
+  - Derive the vega and theta relations in the normal model from \(V=(F-K)N(d)+\sigma_N\sqrt T\varphi(d)\): show \
+  - Derive payer-receiver parity for European swaptions from the annuity measure, and show it needs no model and n
+  - Derive the HJM drift condition for \(df(t,T)=\alpha(t,T)\,dt+\sigma(t,T)\,dW_t\) under the risk-neutral measur
+  - Derive the Hull-White bond formula \(P(t,T)=A(t,T)e^{-B(t,T)r_t}\) from \(dr=(\theta(t)-ar)\,dt+\sigma\,dW\), 
+  - Derive the drift of the spot-LIBOR measure in the lognormal forward model. Start from \(dL_i=\sigma_iL_i\,dW_i
+  - Derive static replication of \(\mathbb E^A[h(S)]\) for a twice-differentiable \(h\), in terms of payer and rec
+  - Derive the leading-order Hagan normal vol for \(\beta=0\) SABR: show \(\sigma_N(K)=\alpha\,\zeta/x(\zeta)\), w
+  - Derive the swap-rate vol in one-factor Hull-White: show that the normal vol of a forward swap rate is \(\sigma
+  - Case: ATM 1y×10y payer, 100bp normal vol. Forward swap rate 3.00%. Annual fixed leg, 10 payments, flat 3% curv
+  - Case: delta-hedged long 6m×5y ATM payer. Notional 100mm, annuity 4.6 (approximately, for the 5y tail at 3%). I
+  - Case: caplet stripping from two flat caps. Annual-reset caps at strike 2.50%. The 2y cap is quoted at 60bp fla
+  - Case: bounding a Bermudan payer. Strike 3.00%, exercise at 1y, 2y, 3y, 4y into a 5y tail. Co-terminal European
+  - Case: vega bucketing. A long 100mm 1y×10y payer has 80% of its vega in the 1y expiry bucket and 20% in the 2y 
+  - Case: leading-order SABR normal vol. \(\beta=0\), \(F=3.00\%\), \(\alpha=90\)bp, \(\nu=0.40\), \(\rho=-0.30\),
+  - For the \(\beta=0\) SABR at leading order, the normal vol is \(\sigma_N=\alpha\,{{c1::\zeta/x(\zeta)}}\), with
+  - Under the spot-LIBOR measure, the drift of \(L_i\) is {{c1::positive}} for \(\rho_{ik}>0\), and the sum runs o
+  - For a one-factor switch between alternatives with values \(V_A\) and \(V_B\), the switch value satisfies {{c1:
+  - In one-factor Hull-White with loading \(\sigma(t,T)=\sigma e^{-a(T-t)}\), the HJM drift is \(\alpha(t,T)={{c1:
+  - In Hull-White with \(a=0.03\), the bond loading for a 5y bond is \(B(0,5)=\){{c1::4.64}}, from \((1-e^{-0.15})
+== 04_inflation.json 42
+  - UK index-linked gilts: what does the indexation lag do to the index ratio, and why does it matter when compari
+  - Pre-2005 UK linkers use an {{c1::8-month}} indexation lag with {{c2::linear daily interpolation}} between two 
+  - Derive the index ratio on day \(d\) of a month with \(D\) days for an 8-month-lag UK gilt. The base RPI is fix
+  - Why is the index ratio of a post-2005 UK linker a step function, and what does the step imply for accrued inte
+  - Mental math: a linker pays a 1.25% real coupon semi-annually. Settlement is 60 days into a 182-day coupon peri
+  - Mental math: a nominal gilt yields 4.60% and the breakeven is 3.10%. What is the real yield, and how large is 
+  - What does a UK linker breakeven actually measure? Write the decomposition and give the sign of each term.
+  - Holding nominal yields fixed, the expected RPI-CPI wedge widens by 25bp. What happens to RPI-linked and CPI-li
+  - Explain the RPI formula effect. Why does the arithmetic-versus-geometric choice bias RPI above CPI? Use a two-
+  - The UK decided that RPI will be calculated with the CPIH methodology from {{c1::February 2030}}, which removes
+  - Suppose from 2030 RPI growth falls by a constant \(w\) per year relative to the old RPI. Derive the effect on 
+  - What is an RPI-CPI wedge swap, and what drives its fair value before and after the 2030 alignment?
+  - Compare a 5y zero-coupon inflation swap (ZCIIS) with a strip of five annual YoY swaps, both quoted at par on t
+  - Given zero-coupon breakevens \(K_1\) to \(T_1=1\)y and \(K_2\) to \(T_2=2\)y, derive the forward YoY rate for 
+  - A YoY leg fixes the index at \(T_1\) and pays at \(T_2=T_1+\tau\). Show that the market YoY forward differs fr
+  - A 10y UK RPI zero-coupon swap fixes the index at \(T-2\)m (the UK RPI swap lag) and pays at \(T\). Does its pa
+  - How do you estimate RPI seasonal factors, and what must be controlled for before using them to deseasonalise b
+  - Hypothetical: a 1y RPI ZC swap fixes in a month where the seasonal factor from the start month to the end mont
+  - Walk through bootstrapping a monthly projected RPI index from ZCIIS pillars at 1y, 2y and 5y, when the 1y pill
+  - Why is log-linear interpolation of the projected index the usual choice over linear interpolation of ZC rates?
+  - Real zero rates satisfy \((1+r_T)^T=\frac{(1+n_T)^T}{(1+K_T)^T}\) only when the index path used to price linke
+  - Why does a TIPS breakeven differ from a UK post-2005 linker breakeven even when the expected index path is the
+  - US TIPS reference CPI on a day of month \(m\) interpolates linearly between CPI for months {{c1::m-3}} and {{c
+  - TIPS principal is floored at par at maturity. Price this floor for a 10y TIPS as an option on cumulative infla
+  - Price a YoY inflation caplet on \([T_1,T_2]\) under a Bachelier model with forward \(F\) and normal vol \(\sig
+  - In a Jarrow-Yildirim setting, show that the zero-coupon forward inflation index equals \(I(0)P_r(0,T)/P_n(0,T)
+  - A desk must price a 5y YoY cap strip and hedge its breakeven and real-rate exposure with ZCIIS and nominal swa
+  - A UK defined-benefit scheme pays LPI increases capped at 5% with a 0% floor on annual RPI. Write the annual LP
+  - Scenario: pension schemes add long-dated inflation hedges during a rally in long real yields. Which way do 30y
+  - Define a UK RPI breakeven curve steepener, and list what a DV01-neutral version still leaves unhedged.
+  - Construct a long-linker, short-nominal trade with real-rate DV01 matched. What P&L remains?
+  - A linker-swap basis trade is 10bp: linker-implied 10y breakeven 10bp above the swap-implied breakeven. Split t
+  - Scenario: a downward revision to expected future RPI, such as the 2030 alignment, lowers the post-2030 index p
+  - A 10y linker on an upward-sloping real curve and an upward-sloping BEI curve: how do you compute its one-year 
+  - Mental math: a 10y zero-coupon inflation swap is quoted at 3.4%. What is the implied cumulative index change, 
+  - Show that, with nominal yields held fixed, a 1bp rise in a linker's breakeven changes its price by approximate
+  - A UK LPI(0,5%) payoff \(\min(\max(x,0),5\%)\) equals {{c1::a 0% caplet}} minus {{c2::a 5% caplet}}, so a schem
+  - A ZCIIS and a UK post-2005 linker reference the same month's print, but one is valued on a day between publica
+  - Desk A's 10y real yield is 15bp below Desk B's on the same linkers. The index projection, lag and seasonal con
+  - State put-call parity for a YoY inflation caplet and floorlet with the same strike \(K\), and use it as a sani
+  - The RPI-CPI wedge has a formula component (Carli versus Jevons) and a coverage component. CPI excludes {{c1::m
+  - Seasonal factors are normalised so that {{c1::they sum to zero in log terms over a 12-month cycle}}. The desea
+== 04_inflation_deep.json 30
+  - [Chain: RPI_REFORM 1/5] Context: from 2030 RPI uses the CPIH methodology, which removes the Carli formula effe
+  - [Chain: RPI_REFORM 2/5] Context: the instantaneous expected wedge falls from 1.0% to 0.4% pa at 2030 (hypothet
+  - [Chain: RPI_REFORM 3/5] Context: the forward RPI-CPI wedge drops by 60bp at 2030 (hypothetical). Design a DV01
+  - [Chain: RPI_REFORM 4/5] Context: after the 2030 step, RPI swaps price lower post-2030 RPI, and RPI-linked gilt
+  - [Chain: RPI_REFORM 5/5] Context: the post-2030 index path is scaled by \(e^{-w(T-t_0)}\) with a constant wedge
+  - [Chain: SEASONAL_CARRY 1/4] Context: a post-2005 linker's index ratio uses \(RPI_{m-3}\) and is flat within ea
+  - [Chain: SEASONAL_CARRY 2/4] Context: the seasonal component of a 3-month index accrual is \(s_m-s_{m-3}\). A d
+  - [Chain: SEASONAL_CARRY 3/4] Context: a 3-month breakeven trade exchanges the 3-month RPI accrual for a fixed r
+  - [Chain: SEASONAL_CARRY 4/4] Context: a 3-month breakeven trade has run through a seasonal window. How do you a
+  - Derivation: nominal value of a lagged linker coupon. A coupon paid at \(t\) is \(\frac{c}{2}N\,I(s)/I_{\text{b
+  - Derivation: Fisher relation with convexity and risk premium. For a zero-coupon index that is lognormal with co
+  - Derivation: YoY convexity with Gaussian real rates. A YoY fixing at \(T_1\) and payment at \(T_2=T_1+\tau\). W
+  - Derivation: ZC inflation swap with a lag. A 10y UK RPI ZCIIS fixes \(I(T-L)\) and pays at \(T\), with \(L=2\)m
+  - Derivation: LPI(0,5%) as a forward minus a far-OTM cap. On a YoY fixing with forward \(F\), show that the valu
+  - Derivation: hedging linker real DV01 and breakeven exposure. A linker's real and breakeven DV01 are often quot
+  - Derivation: caplet forward delta. For a Bachelier YoY caplet \(P\tau[(F-K)\Phi(d)+\sigma\sqrt{T_1}\phi(d)]\), 
+  - Derivation: linker convexity in real yield. Expand a linker's dirty price to second order in real yield, \(\De
+  - Derivation: Bachelier to Black conversion for inflation caplets. A Black (lognormal) YoY caplet with vol \(\si
+  - Under a lognormal index, \(E[I_T]=I_0\exp\bigl(E[\ln I_T]+\tfrac12\mathrm{Var}[\ln I_T]\bigr)\), so the ZC bre
+  - For a Bachelier YoY caplet, put-call parity gives \(\mathrm{Cap}(0)=\mathrm{Floor}(0)+\){{c1::\(P\tau F\)}}, s
+  - At the money, a Black inflation vol \(\sigma_B\) converts to a normal vol of about {{c1::\(F\sigma_B\)}}, and 
+  - A linker coupon paid at \(t\) on the index at \(t-L\) is worth about \(I(0)P_r(0,t-L)P_n(t-L,t)\): the real pa
+  - Case study: settlement cash price of a post-2005 linker. Real coupon 1.25% semi-annual. Settlement is 60 days 
+  - Case study: breakeven P&L from a CPI surprise. Receive 10y ZC inflation, notional £10m, par \(K=3.10\%\). Nomi
+  - Case study: real yield versus nominal, relative value. 10y nominal yield 4.60%. 10y ZC swap breakeven 3.10%. T
+  - Case study: LPI(0,5%) annual caplet value. RPI YoY forward \(F=3.00\%\), normal vol \(\sigma_N=1.00\%\), fixin
+  - Case study: seasonal-adjusted carry over 3 months. Long £10m nominal of a 3-month-lag linker. Real dirty price
+  - Case study: DV01-matched linker versus nominal. Linker dirty value £13.125m, real modified duration 8.0 (hypot
+  - Case study: lag convexity in a 10y ZCIIS. Parameters (hypothetical): \(\rho=0.3\), \(\sigma_I=1.2\%\) per root
+  - Case study: caplet delta hedge and gamma. Notional £10m, YoY caplet on 1y, strike 3.50%. \(F=3.00\%\), \(\sigm
+== 05_credit_cds.json 56
+  - Define the G-spread, I-spread and Z-spread of a fixed-coupon bond. Why can the Z-spread differ materially from
+  - The Z-spread is the constant spread added to the {{c1::zero curve}} such that the discounted cash flows equal 
+  - Derive the approximate par-par asset swap spread (ASW) of a bond priced at \(P\) (per 100 par), annual coupon 
+  - Why is the Z-spread of a callable bond larger than its OAS? What is the sign relationship for a putable bond?
+  - Define spread duration and derive the CS01 of a bond. Mental-math example: $10m face, price 98, spread duratio
+  - CS01 of a bond equals {{c1::price × spread duration × 1bp}} per unit of face; for $10m, price 98 and spread du
+  - Define DTS (duration times spread) for a credit bond. Why do portfolio managers hedge DTS rather than spread d
+  - A bond is priced at 95 (per 100 par) with a recovery assumption of 40. You are long the bond. What is its jump
+  - A protection buyer holds $10m notional of single-name CDS with recovery 40%, and the position has a mark-to-ma
+  - Write the premium leg and protection leg of a single-name CDS and derive the par spread. Assume a deterministi
+  - How are single-name CDS quoted and paid? Use a 5y IG name with par spread 80bp, standard coupon 100bp and RPV0
+  - State the credit-triangle approximation. A 5y CDS trades at 300bp and recovery is 40%. What is the implied fla
+  - Under the credit-triangle approximation the hazard rate is \(\lambda \approx\) {{c1::\(S/(1-R)\)}}; for a 5y s
+  - Derive the risky annuity RPV01 under a flat hazard rate \(\lambda\) and rate \(r\). Give a mental approximatio
+  - Describe the ISDA Standard CDS Model used to convert quoted CDS spreads into hazard rates and prices. What doe
+  - Define the CDS-bond basis. The bond ASW is 150bp and the 5y CDS is 120bp. Describe the trade and explain why i
+  - Why does the cheapest-to-deliver option in a CDS push the CDS-bond basis positive? Give the protection buyer's
+  - A corporate bond is special in repo. Explain how this affects the bond's cash spread and the CDS-bond basis.
+  - Par-par asset swap spread versus zero-volatility spread for a callable bond: what does each measure, which way
+  - List the 2014 ISDA credit events relevant to corporate and sovereign reference entities. Which apply only to s
+  - Compare the restructuring clauses XR14, CR14, MR14 and MM14 in the 2014 definitions. What is the main purpose 
+  - Under MR14, the deliverable obligations after a restructuring are limited to a residual maturity of {{c1::30 m
+  - What is governmental intervention as a 2014 credit event, and why does it matter for bank CDS?
+  - Describe the CDS credit-event auction protocol and explain how the final price sets the recovery. Why is open 
+  - What is the role of ISDA Determinations Committees and how do they treat succession events?
+  - What is the Standard Reference Obligation (SRO) introduced by the 2014 ISDA Credit Derivatives Definitions, an
+  - Standard composition and coupons of the four main CDS indices: iTraxx Main, iTraxx Crossover, CDX IG and CDX H
+  - CDS index series roll semi-annually on the IMM dates {{c1::20 March and 20 September}}; a rolled series is the
+  - A protection buyer holds 10m of the old 5y index series (4.5y remaining, market 60bp) and rolls to the new on-
+  - A 125-name equal-weight index has R = 40% and one name defaults. Compute the new index factor and the loss to 
+  - After one default in a 125-name equal-weight index the index factor becomes {{c1::124/125 ≈ 0.992}}, and the p
+  - Define index-intrinsic basis. CDX IG trades at 65bp and the constituents imply an intrinsic spread of 58bp. Wh
+  - In a stress the CDX-style index trades 8bp wide to its intrinsic spread. Which side is the basis trader on, wh
+  - Write the conditional default probability in a one-factor Gaussian copula and explain the role of the correlat
+  - What is base correlation and why is it used instead of a single implied correlation per tranche?
+  - A trader hedges a 3-7% mezzanine tranche with a single correlation number. Why is that wrong, and which base c
+  - In the one-factor Gaussian copula, a rise in correlation {{c1::lowers}} the expected loss (and the spread) of 
+  - Why is the expected loss of a 3-7% mezzanine tranche a hump in correlation, while the 0-3% equity tranche's EL
+  - Describe a knockout payer option on a CDS index and the front-end protection (FEP) feature. What happens if a 
+  - Why must the forward index spread used to price a knockout index option be adjusted for front-end protection?
+  - Build a CDS spread steepener on a single name (5y and 10y). Which protection do you buy and sell, and how do y
+  - For a one-issuer 5s10s curve trade (5y protection at 120bp, 10y at 150bp, recovery 40%), compare the carry-neu
+  - A JTD-neutral 5s10s CDS steepener (equal notionals, same recovery) carries {{c1::negative}} carry when the 10y
+  - What is a recovery lock on a CDS, and what is the payoff for the protection buyer?
+  - With a 5y CDS at 100bp, how does the implied hazard rate change if the assumed recovery moves from 40% to 39%?
+  - Construct a long dispersion trade on an equity index and state what it profits from.
+  - For N equal-weight names with equal volatility \(\sigma\) and index volatility \(\sigma_I\), the implied corre
+  - Derive the beta-adjusted index notional that hedges the market-driven spread risk of a single-name CDS positio
+  - Index notional for a single-name hedge is {{c1::\(\beta \times N_{name} \times RPV01_{name}/RPV01_{index}\)}},
+  - Sovereign CDS: what is redenomination risk, and how does a euro-area sovereign's exit from the euro interact w
+  - What is a quanto CDS and what does the quanto adjustment price?
+  - Approximate the CVA of a derivative exposure using CDS spreads. Give the formula and explain the link to the c
+  - Define debit valuation adjustment (DVA) on a bank's derivative book. Write it in terms of the bank's own survi
+  - Breakeven spread widening vs carry. A protection buyer holds a 5y CDS at 100bp with RPV01 about 4.8. What spre
+  - P&L = spread change times CS01. A protection buyer holds $25m notional of a 5y CDS with RPV01 4.8. Spreads wid
+  - At RPV01 ≈ 4.8, a $10m 5y CDS has a CS01 of about {{c1::$4,800 per bp}}, so a 15bp widening moves the protecti
+== 05_credit_cds_deep.json 31
+  - [Chain: NEG_BASIS 1/5] Context: 5y bond bought at an asset-swap spread of 150bp; 5y CDS protection bought at 1
+  - [Chain: NEG_BASIS 2/5] Context: 5y bond bought at an asset-swap spread of 150bp; 5y CDS protection bought at 1
+  - [Chain: NEG_BASIS 3/5] Context: 5y bond bought at an asset-swap spread of 150bp; 5y CDS protection bought at 1
+  - [Chain: NEG_BASIS 4/5] Context: 5y bond bought at an asset-swap spread of 150bp; 5y CDS protection bought at 1
+  - [Chain: NEG_BASIS 5/5] Context: 5y bond bought at an asset-swap spread of 150bp; 5y CDS protection bought at 1
+  - [Chain: IDX_BASIS 1/5] Context: CDX-style IG index at 65bp; intrinsic spread implied by its 125 constituents i
+  - [Chain: IDX_BASIS 2/5] Context: CDX-style IG index at 65bp; intrinsic spread implied by its 125 constituents i
+  - [Chain: IDX_BASIS 3/5] Context: CDX-style IG index at 65bp; intrinsic spread implied by its 125 constituents i
+  - [Chain: IDX_BASIS 4/5] Context: CDX-style IG index at 65bp; intrinsic spread implied by its 125 constituents i
+  - [Chain: IDX_BASIS 5/5] Context: CDX-style IG index at 65bp; intrinsic spread implied by its 125 constituents i
+  - [Chain: BASECORR 1/5] Context: one-factor Gaussian copula calibrated to a 5y CDX-style index with market quote
+  - [Chain: BASECORR 2/5] Context: one-factor Gaussian copula calibrated to a 5y CDX-style index with market quote
+  - [Chain: BASECORR 3/5] Context: one-factor Gaussian copula calibrated to a 5y CDX-style index with market quote
+  - [Chain: BASECORR 4/5] Context: one-factor Gaussian copula calibrated to a 5y CDX-style index with market quote
+  - [Chain: BASECORR 5/5] Context: one-factor Gaussian copula calibrated to a 5y CDX-style index with market quote
+  - Derivation: A 5y CDS has flat hazard \(\lambda\), flat continuously compounded rate \(r\), recovery \(R\), and
+  - Derivation: Under the ISDA standard CDS model, write the upfront of a single-name CDS with par spread \(s\) an
+  - Derivation: Derive the forward par spread of a CDS starting at \(T_1\) and maturing at \(T_2\), under flat haz
+  - Derivation: A knockout payer option on a CDS index with \(N\) equal-weight names, common hazard \(\lambda\), r
+  - Derivation: Derive the expected loss of a tranche \([A,B]\) in the large homogeneous pool limit of the one-fac
+  - Derivation: Derive the jump-to-default P&L of a single-name CDS position with notional \(N\), recovery \(R\) a
+  - Case study: A 5y CDS on a distressed name quotes 300bp running; the standard coupon is 100bp. Convert to point
+  - Case study: You buy 10m of 5y protection at 100bp (RPV01 about 4.46). After one month the 4y-11m point, linear
+  - Case study: Single name at 150bp (5y RPV01 4.3) is hedged with iTraxx Main at 70bp (RPV01 4.5). Name notional 
+  - Case study: Negative basis trade on 10m: bond bought at par with ASW 150bp; 5y CDS protection bought at 120bp;
+  - Case study: A 5s10s steepener on one issuer: 5y protection at 120bp (RPV01 4.42), 10y protection at 150bp (RPV
+  - For a flat hazard \(\lambda\) and continuous premium accrual, the par CDS spread is exactly {{c1::\(\lambda(1-
+  - Under the ISDA standard model the upfront of a CDS with par spread \(s\) and coupon \(c\) is {{c1::\((s-c)\tim
+  - For a homogeneous pool of \(N\) names with common hazard \(\lambda\), the first default has intensity {{c1::\(
+  - A protection buyer's jump-to-default P&L is {{c1::\(N(1-R) - V\)}}, where \(V\) is the {{c2::mark-to-market to
+  - In the large-pool limit of the one-factor Gaussian copula the conditional loss given market factor \(M\) is {{
+== 06_credit_models_cln.json 59
+  - In Merton (1974), write equity as a call on firm value and give the risk-neutral probability of default at mat
+  - In Merton's model, derive the link between equity volatility \(\sigma_E\) and asset volatility \(\sigma_V\). W
+  - In Merton's model, asset value falls from \(V_0=100\) to \(V_0=90\) (face \(D=80\), \(T=5\), \(\sigma_V=25\%\)
+  - Why do Merton and fixed-barrier Black–Cox models imply near-zero credit spreads at short maturities, and what 
+  - In KMV, distance to default is \(DD=\dfrac{V-DPT}{V\,\sigma_V}\), with default point {{c1::DPT approximately e
+  - For an intensity \(\lambda(t)\) (Cox/Poisson default time \(\tau\)), write the survival probability and the de
+  - Compare Jarrow–Turnbull (1995) and Duffie–Singleton (1999): what recovery convention and discount rate does ea
+  - Under recovery of market value (RMV) with constant intensity \(\lambda\) and \(L=1-R\), the continuous-time cr
+  - In a doubly stochastic (Cox) model, where does default correlation come from, and what is conditional independ
+  - What is a CIR++ intensity and why is a deterministic shift \(\varphi(t)\) added to a CIR process?
+  - For an affine jump-diffusion intensity, why does the survival probability (and often option prices) have close
+  - Why is the risk-neutral PD implied by CDS usually above the real-world PD, and why is a constant multiplier th
+  - Mental check: 5y CDS at 150bp, \(R=40\%\). Give the flat hazard and the 5y cumulative risk-neutral PD.
+  - Why does the credit-triangle approximation \(s\approx\lambda(1-R)\) fail for a name with a steep CDS term stru
+  - Write the par-spread equation for a CDS of maturity \(T_N\) (quarterly premium, accrual on default, protection
+  - Between CDS pillars, why is log-linear interpolation of survival preferred to cubic-spline interpolation of \(
+  - Log-linear interpolation of survival \(Q\) is equivalent to {{c1::piecewise-constant forward hazard}}, which i
+  - List the no-arbitrage constraints a bootstrapped survival curve must satisfy.
+  - Mental check with \(R=40\%\): 1y par spread 500bp and 5y par spread 80bp. Is there a non-negative forward haza
+  - An issuer has bonds but no liquid CDS. Outline a proxy-curve construction and the adjustments you would make.
+  - Define the CDS–bond basis, state the sign convention, and explain what a negative basis means.
+  - CDS–bond basis = {{c1::CDS spread minus bond (asset-swap) spread}}; a negative basis means the bond spread is 
+  - You have only EUR bonds for an issuer and need a USD CDS-equivalent curve. What must you adjust for beyond the
+  - Distinguish recovery of face value (RFV), recovery of market value (RMV) and recovery of treasury (RT). Which 
+  - Under recovery of treasury, the payment at default is {{c1::\(R\) times the risk-free value of the bond at \(\
+  - Name three caveats when using historical recovery data (Altman, Moody's) to set a recovery assumption for a CD
+  - Why does negative correlation between recovery and default rate matter for senior tranche pricing, even when e
+  - One-factor Gaussian copula: \(X_i=\sqrt\rho\,M+\sqrt{1-\rho}\,\varepsilon_i\), with obligor \(i\) defaulting i
+  - For a large homogeneous pool with PD \(p\) and asset correlation \(\rho\), derive the distribution of the pool
+  - Derive the Basel IRB (ASRF) capital requirement per unit exposure from the Vasicek large-pool model at the 99.
+  - Basel IRB (ASRF) uses a {{c1::99.9%}} one-factor confidence level over a {{c2::one-year}} horizon. Corporate a
+  - Why does a Gaussian copula with correlation \(\rho\) underprice joint extreme defaults relative to a Student-t
+  - Clayton copula: lower-tail dependence \(\lambda_L=\){{c1::\(2^{-1/\theta}\)}}, upper-tail dependence {{c2::\(0
+  - What is random factor loading (RFL) in a one-factor copula, and what does it do to the correlation skew?
+  - Why do desks quote CDO tranches in base correlation rather than compound correlation?
+  - For a CDO with fixed marginal PDs, use Jensen's inequality to explain why the equity-tranche spread falls and 
+  - For an equal-weight basket of identical names with fixed marginal PDs, how does the first-to-default (FTD) spr
+  - Under independence, the first-to-default intensity equals the {{c1::sum}} of the individual name intensities, 
+  - Define wrong-way risk (WWR) and distinguish general from specific WWR with one example each.
+  - Name two practical approaches to model wrong-way risk inside a CVA engine.
+  - Write the discrete unilateral CVA formula for a counterparty with recovery \(R_C\). State the assumptions behi
+  - Bilateral CVA: write BCVA in terms of CVA and DVA, and explain why DVA is contested.
+  - Mental CVA: expected exposure is roughly constant at 10m over 5 years, counterparty spread 120bp, \(R_C=40\%\)
+  - How would you hedge the spread sensitivity of a CVA with single-name CDS on the counterparty? What residual ri
+  - For an at-the-money forward with mark-to-market \(X_T\sim N(0,\sigma^2T)\) (notional units), compute \(EE(T)=E
+  - Why does the expected exposure of an at-the-money vanilla swap rise and then fall, and where is the peak for a
+  - How do the Basel III final BA-CVA and SA-CVA approaches compute the CVA capital charge, and what must a bank h
+  - Describe the cash flows of a par credit-linked note (CLN) on a single reference entity and identify the embedd
+  - Compare a funded credit-linked note with an unfunded CDS on the same reference, notional 10m, from the protect
+  - A par CLN pays RFR plus \(s\) on a reference name, with collateral earning RFR flat. Why is \(s\) approximatel
+  - Write the investor's PV of a fixed-coupon CLN (coupon \(c\), notional \(N\), recovery \(R\), survival \(Q\), r
+  - A principal-protected CLN has notional 100, maturity 3y, RFR flat at 3% (continuous), reference spread 200bp a
+  - Loan CDS (LCDS) versus bond CDS on the same name: name the key structural differences and why their spreads ca
+  - For a total return swap (TRS) on a corporate bond, describe the cash flows from the total-return receiver's si
+  - Standard single-name CDS premiums accrue on {{c1::ACT/360}}, with quarterly payments on {{c2::IMM dates (20 Ma
+  - Define the risky PV01 (RPV01) of a CDS and state the formula. Why is it smaller than the risk-free annuity?
+  - Holding a 200bp CDS spread fixed, how does the implied hazard change as recovery falls from 40% to 20%? Give t
+  - Trade-off: calibrating a CIR++ intensity versus a piecewise-constant hazard to a CDS curve. What do you gain a
+  - You own a 5y bond on a 10m notional with a CS01 of about 4,500 per bp. You hedge with a 5y CDS whose risky PV0
+== 06_credit_models_cln_deep.json 30
+  - [Chain: BOOTSTRAP 1/4] Context: quarterly CDS, \(R=40\%\), discounting at 0% for clarity, par spreads 1y 300bp
+  - [Chain: BOOTSTRAP 2/4] Context: at \(R=40\%\), 1y 300bp and 3y 90bp imply a negative forward hazard of about \
+  - [Chain: BOOTSTRAP 3/4] Context: 1y 300bp and 3y 90bp at \(R=40\%\) give \(\lambda_{(1,3]}\approx-0.29\%\). Nam
+  - [Chain: BOOTSTRAP 4/4] Context: the bootstrapped curve has \(\lambda_{(1,3]}\approx-0.29\%\), so survival rise
+  - [Chain: CLN 1/4] Context: a 3y funded CLN on reference \(R\) with SPV issuer \(I\). The investor pays par, the
+  - [Chain: CLN 2/4] Context: the investor loses on whichever of \(R\) or \(I\) defaults first, and \(\tau_R\), \(
+  - [Chain: CLN 3/4] Context: the investor is short protection on \(R\) and long the SPV's credit through collater
+  - [Chain: CLN 4/4] Context: the investor funds the note at RFR plus a funding spread \(F\), while the collateral
+  - [Chain: FTD 1/4] Context: two names, each with 5y cumulative default probability 10%, recovery 40%. FTD protec
+  - [Chain: FTD 2/4] Context: same pair, \(p=10\%\) each, Gaussian copula with correlation \(\rho\). State \(\part
+  - [Chain: FTD 3/4] Context: names with 5y PDs \(p_1=10\%\) and \(p_2=5\%\). You delta-hedge an FTD protection po
+  - [Chain: FTD 4/4] Context: the single-name delta hedge from the previous card is correct at one correlation and
+  - Derive the Merton risky-debt spread from Black–Scholes. Firm value \(V\) is lognormal with vol \(\sigma_V\) un
+  - Derive the closed form \(P(0,T)=A(T)e^{-B(T)x_0}\) for a CIR process \(dx=\kappa(\theta-x)\,dt+\sigma\sqrt{x}\
+  - Derive the credit triangle for a constant hazard \(\lambda\) with premiums paid quarterly in arrears, no accru
+  - Derive the closed-form bootstrap of the first CDS pillar: constant hazard on \((0,T_1]\), quarterly premium wi
+  - Derive the density of the pool loss fraction \(L\) in the large-pool one-factor Vasicek model with PD \(p\) an
+  - Give the algorithm to simulate correlated default times for \(n\) names under a Gaussian copula with given sur
+  - Derive the par spread of a CLN whose collateral earns RFR plus a constant spread \(b\), against a CDS par spre
+  - Derive \(\partial P(\text{FTD by }T)/\partial\rho\) for a two-name Gaussian copula with equal marginal surviva
+  - Worked case: par CDS spreads 1y 80bp, 3y 110bp, 5y 135bp, \(R=40\%\), quarterly premium with accrual on defaul
+  - Worked case: a 3y funded CLN with notional 100. The collateral is not bankruptcy-remote: if the SPV defaults, 
+  - Worked case: 5y FTD on two names, each with 5y cumulative default probability 10%, flat hazards, recovery 40%,
+  - Worked case: one-factor Vasicek with \(p=1\%\) and \(\rho=12\%\). Find the 99.9% pool loss quantile, the Basel
+  - Worked case: Merton model with \(V_0=100\), zero-coupon face \(D=80\) at \(T=5\), \(\sigma_V=25\%\), \(r=3\%\)
+  - Worked case: unilateral CVA of a 5y interest-rate swap on an annual grid. Expected positive exposure at year-e
+  - For two names with marginal survival \(S_1(T)\) and \(S_2(T)\) under a Gaussian copula, \(P(\tau_1>T,\tau_2>T)
+  - For a CIR intensity the survival is \(A(T)e^{-B(T)x_0}\), with \(A\) raised to the power {{c1::\(2\kappa\theta
+  - CDS upfront paid by the protection buyer, with standard coupon \(c\) and par spread \(S\) on the same curve: \
+  - The Basel IRB corporate asset correlation is \(R(PD)=\){{c1::\(0.12\,w+0.24\,(1-w)\)}}, with weight {{c2::\(w=
+== 07_converts_loans.json 36
+  - A convertible has face 1,000 and a conversion ratio of 12.5 shares per bond. The share price is 75 and the bon
+  - A convertible trades at 1,020 with a 2% annual coupon on 1,000 face. The conversion ratio is 12.5, the stock i
+  - Why is a convertible's price bounded below by \(\max(\text{bond floor}, \text{parity})\)? Decompose the price 
+  - A convertible on a BBB issuer is deep out of the money: bond floor 88, parity 60. Rank its sensitivities to (i
+  - Explain the Tsiveriotis-Fernandes split \(V = U + E\). State the discount rate for each component and the conv
+  - With a constant hazard rate \(\lambda\), recovery \(R\) on face \(F\), and a default that drives the stock to 
+  - The hazard rate is made a decreasing function of the stock price, \(\lambda(S)\). What changes in the PDE, and
+  - Outline backward induction for a callable convertible with coupons and a credit spread on a trinomial tree. Gi
+  - A convertible has a soft call: the issuer may call at \(K\) only if the stock has closed above 130% of the con
+  - What is a make-whole premium on a convertible, what triggers it, and how does it change the convertible's take
+  - A bank AT1 CoCo has a 7% CET1 trigger and principal write-down. Explain the mechanics. How would you value the
+  - A long convertible is delta-hedged with short stock. Show that the expected hedged P&L per unit time is approx
+  - Hedged long-convertible P&L per unit time is approximately {{c1::\(\tfrac{1}{2}\Gamma S^2(\sigma_r^2 - \sigma_
+  - A 5-year CDS hedges a convertible's credit exposure. The convertible's CS01 is 0.24 per bp per 1,000 face. The
+  - A convertible desk must short 5 shares per bond with the stock at 75. The stock is hard to borrow at a 3% fee.
+  - How do you decide whether a convertible is cheap? Why is implied vol not a complete answer?
+  - A mandatory convertible pays par in shares at maturity. The ratio is \(\text{Par}/S_U\) when \(S \ge S_U\), \(
+  - Explain why equity-credit correlation matters for valuing and hedging a convertible. Which sign do you expect,
+  - Yield-to-put is the discount rate that equates the convertible's price to the present value of coupons up to t
+  - A CLO holds loans with a 0.50% SOFR floor, and its liabilities have zero floors. Pool 400 at margin 3.50%, deb
+  - A 3-year loan is priced at 99 with a 350bp margin on quarterly SOFR resets, flat forward SOFR of 4.00%, and a 
+  - A loan trades at 101.5. It has a 101 soft call for six months and then a par call, with 7 years to maturity. W
+  - Under ISDA's IBOR fallback, the credit adjustment spread for USD 3-month LIBOR was fixed at {{c1::26.161 bp}}.
+  - Compare settlement conventions for par loan trades under LSTA (US) and LMA (Europe). What is delayed compensat
+  - What does a covenant-lite term loan remove, and how does it change expected loss for the lender? Give the mech
+  - Why does a loan CDS (LCDS) not trade one-for-one with the CDS on the same issuer's bonds? What does the LCDS-C
+  - A CLO holds 100 of par loans at SOFR + 350bp. It funds 90 of debt at SOFR + 160bp on average and pays 0.40 per
+  - A CLO has performing collateral par of 400 and senior notes of 320. The OC trigger is 120%. Compute the OC rat
+  - A CLO pool is 40% in B2 (WARF factor 2,720), 40% in Ba3 (1,766) and 20% in Caa1 (4,770), using Moody's factor 
+  - A CLO has a 400 pool at S+350 and 40 of equity (10% of capital). In one year 60 of loan repayments are reinves
+  - A CLO has a 500 pool, senior fees of 0.15% of the pool per year, and 50 of equity. Residual cash after all deb
+  - A bank pays the total return on a TLB (price change plus coupon) to a fund. The fund pays SOFR + 150bp on a 10
+  - Compare a drop-down and an uptier liability management exercise (LME). For each, what happens to a non-partici
+  - Under Chapter 11 cram-down (section 1129(b)), a plan may bind a dissenting impaired class only if it is fair a
+  - Compare a UK Part 26A restructuring plan with a Chapter 11 cram-down. How does each bind a dissenting class, a
+  - A company has an enterprise value of 450 on emergence. Claims are: DIP 100 (super-priority), first-lien term l
+== 07_converts_loans_deep.json 30
+  - [Chain: CB arb 1/4] Long 100 convertibles (face 1,000, conversion ratio 12.5, stock 80, bond at 1,060), with a
+  - [Chain: CB arb 2/4] The 100-bond book from the previous card has a position gamma of 25 shares per $1 move. Re
+  - [Chain: CB arb 3/4] The 100-bond book has a spread sensitivity of 35 (price units) per 1bp of credit spread. A
+  - [Chain: CB arb 4/4] The book is short 775 shares at 80 (notional 62,000) with a borrow fee of 0.5%. The borrow
+  - [Chain: CLO equity 1/4] Pool of 500 par at SOFR+350 (SOFR hedged). Senior notes 400 at S+150, mezzanine 50 at 
+  - [Chain: CLO equity 2/4] Same deal (senior OC 125%, trigger 120%). In one quarter, 25 par of loans default and 
+  - [Chain: CLO equity 3/4] The 25 par of defaulted loans now earn no interest, and the 4.17 diversion has been ap
+  - [Chain: CLO equity 4/4] Equity invests 50 at par, and the deal is bullet at year 4. Assume 40% recovery on the
+  - [Chain: LME uptier 1/4] A company has a 1,000 pari first-lien TLB. Lenders holding 600 (60%, enough to amend p
+  - [Chain: LME uptier 2/4] Post-deal enterprise value is 900 (800 operating value plus 100 of new cash). Without 
+  - [Chain: LME uptier 3/4] A non-participant loan has a one-year horizon. It pays a coupon of 8 only if there is 
+  - [Chain: LME uptier 4/4] The next restructuring is a second uptier that primes the non-participants further, an
+  - Derivation: Derive the share delta of a no-call convertible from the Tsiveriotis-Fernandes split \(V = U + E\)
+  - Derivation: Derive the first-order sensitivity of a bond floor to its credit spread. Floor \(P(s) = \sum_t c_t
+  - Derivation: Derive the closed-form price of a zero-coupon bond (face \(F\), maturity \(T\)) under a constant h
+  - Derivation: A floater pays index plus margin \(m\) on par, with the index forward flat at \(f\), accrual \(\ta
+  - Derivation: Derive the variance of the discretely rebalanced gamma P&L over horizon \(T\) with step \(\Delta t
+  - Derivation: Derive the CLO equity return as a function of asset yield, debt cost, fees and leverage. Assets \(
+  - Case study: A convertible desk is long 100 bonds (face 1,000, ratio 12.5, bond at 1,050, stock at 80, so parit
+  - Case study: A 3-year TLB with a 350bp margin on quarterly resets, priced at 99 (one point OID). Three-year con
+  - Case study: A CLO has performing par of 475 after 25 par of defaults (recovery not yet received). Senior notes
+  - Case study: Enterprise value at emergence is 620. Claims are: administrative and professional fees 30 (paid fi
+  - Case study: A mandatory convertible with par 100, a stock floor \(S_L = 60\) and a cap \(S_U = 75\). Give the 
+  - Case study: A CLO pool of 500 at SOFR+350 (hedged), senior 400 at S+150, mezzanine 50 at S+500, equity 50, fee
+  - Case study: A convertible bond trades at 92.00, with a 2% annual coupon on 1,000 face, a holder put at 100 in 
+  - For constant hazard \(\lambda\) and recovery \(R\), the credit spread is approximately {{c1::\(\lambda(1-R)\)}
+  - A 1bp widening of the discount spread changes a bond floor's price by approximately {{c1::\(-D_m P \times 10^{
+  - For a flat index \(f\), the exact floater identity is \(P - 100 = (m-y)\,A(y)\) with \(A(y) = \sum_i \tau\,DF_
+  - With daily rebalancing and realised equal to implied vol, the hedged P&L has mean zero and variance {{c1::\(\t
+  - After an uptier with enterprise value \(EV\), non-participant recovery is {{c1::\(\min\big(1,\ \max(EV - \text
+== 08_coding_numerics.json 44
+  - Antithetic variates for a European call under GBM. You simulate \(N\) pairs \((Z_i,-Z_i)\) and average \(\tfra
+  - Control variate for an arithmetic Asian call. Let \(X\) be the discounted arithmetic Asian payoff and \(C\) th
+  - Importance sampling for a far out-of-the-money call priced by MC. Write the change-of-measure identity, the li
+  - Scrambled Sobol QMC for a smooth integrand of effective dimension \(d\) converges at roughly {{c1::\(O\big((\l
+  - You generate a 32-step Brownian path for a path-dependent payoff and feed it Sobol points. Why does the constr
+  - Derive the delta of a European call with (i) the pathwise method and (ii) the likelihood-ratio method. Why doe
+  - A bump-and-revalue Gamma on an MC price uses central differences in \(S_0\) with step \(h\). Give the bias, th
+  - In Longstaff–Schwartz, why is the naive single-sample LSM price not a rigorous bound, and what does the indepe
+  - Describe the Andersen–Broadie dual upper bound for a Bermudan option and how it complements the LSM lower boun
+  - List the practical choices in LSM regression: which paths to regress on, which basis, and what goes wrong with
+  - The Andersen–Broadie penalty is built from the {{c1::Doob martingale of the approximate value function}}. If t
+  - Why do you apply a couple of implicit (backward Euler) steps before switching to Crank–Nicolson when pricing a
+  - For \(u_t=D\,u_{xx}\), the explicit (forward Euler) scheme is stable only if \(D\,\Delta t/\Delta x^2\le\){{c1
+  - On a finite-difference grid for a European call on \(S\in[0,S_{\max}]\), the upper boundary is set to the line
+  - Why use ADI (alternating direction implicit) for a Heston-type PDE in \((S,v)\), and how is the mixed-derivati
+  - A CRR binomial tree prices an American put. As \(N\) increases, the price oscillates between odd and even \(N\
+  - You solve for implied vol with Newton on \(f(\sigma)=BS(\sigma)-P_{\text{mkt}}\), using vega as the derivative
+  - Compare sequential and global bootstrapping of a single-curve OIS discount curve from deposits, futures and sw
+  - Contrast natural and not-a-knot end conditions for a cubic spline interpolating zero rates. Which one distorts
+  - Why does a single high-degree polynomial interpolant of \(f(x)=1/(1+25x^2)\) on \([-1,1]\) with equispaced nod
+  - Piecewise log-linear interpolation of discount factors gives piecewise {{c1::constant}} instantaneous forward 
+  - Derive the Levenberg–Marquardt step for least-squares calibration \(\min_\theta\|r(\theta)\|^2\). Explain how 
+  - A stochastic-vol calibration gives different parameters from different starting points, with near-identical fi
+  - List the main pitfalls when calibrating SABR to a swaption smile using the Hagan lognormal approximation.
+  - Explain why adjoint (reverse-mode) differentiation gives the gradient of a scalar price with respect to \(n\) 
+  - An adjoint tape for a 10-million-step simulation uses too much memory. Describe checkpointing, its memory and 
+  - A curve bootstrap needs to solve \(Jx=r\) for the pillar update, where \(J\) is the Jacobian of quotes with re
+  - You need to simulate five correlated Brownian drivers with a correlation matrix estimated from pairwise histor
+  - For symmetric positive definite \(\Sigma\), the Cholesky factor \(L\) satisfies \(LL^\top=\Sigma\), with \(L\)
+  - You run PCA on daily changes of a ten-tenor government yield curve. Describe the typical level, slope and curv
+  - Derive the half-life of an Ornstein–Uhlenbeck process \(dX_t=\kappa(\theta-X_t)\,dt+\sigma\,dW_t\), and show h
+  - Two I(1) series are cointegrated if a linear combination is I(0). In the Engle–Granger procedure, the residual
+  - A Kalman filter tracks a time-varying hedge ratio \(\beta_t\) between two assets. The state is \(x_t=\beta_t\)
+  - What is the runtime cost of a C++ virtual call inside a pricing loop, and when does it actually matter? Mentio
+  - A curve object is read by 200 pricing tasks on a thread pool and replaced on each market-data update. Compare 
+  - A pricer keeps raw pointers to path values stored in a std::vector&lt;double&gt; that grows while paths are ge
+  - Compute the sample variance of a long series of prices near 100,000 with small spread. Why does the naive form
+  - On x86 the cache line is usually {{c1::64}} bytes. Two threads writing to different variables in the same cach
+  - A pure-Python MC pricer loops over paths and takes 40 minutes. You want a large speedup in one afternoon. Comp
+  - Name three silent pandas failures in a P&amp;L or risk join and the fix for each: a merge that fans out rows o
+  - When would you choose a hash map over a balanced tree (std::unordered_map versus std::map) for a limit order b
+  - Trades are half-open intervals \([s_i,e_i)\). Find the maximum number open at any instant with a sweep. Which 
+  - A trade-dedupe step uses a Python set of prices. Explain the two floating-point cases where set membership giv
+  - Count inversions in a permutation of \(n\) values (pairs \(ia_j\)) in \(O(n\log n)\). Show that the Kendall ta
+== 08_coding_numerics_deep.json 30
+  - [Chain: Bermudan 1/5] A 10nc1 Bermudan payer swaption (annual exercise, 9-year underlying swap) is priced by L
+  - [Chain: Bermudan 2/5] Same 10nc1 LSM: the continuation regression at each date uses the short rate (or the swa
+  - [Chain: Bermudan 3/5] An LSM lower bound for the same 10nc1 uses a fixed 6-function basis on one path set. Giv
+  - [Chain: Bermudan 4/5] The LSM regression gives an approximate continuation \(\hat C_k\) for the same 10nc1. Bu
+  - [Chain: Bermudan 5/5] You want delta and vega of the LSM price of the same 10nc1 by adjoint differentiation ra
+  - [Chain: Bootstrap 1/4] Single-curve OIS, annual fixed leg and annual accrual \(\tau=1\), par rates for years 1
+  - [Chain: Bootstrap 2/4] The same curve is now solved globally. The unknowns are \(x_j=\ln P_j\) at pillars 1, 2
+  - [Chain: Bootstrap 3/4] With two quotes per pillar (deposits, futures-implied forwards and swaps) plus a smooth
+  - [Chain: Bootstrap 4/4] A PV \(V\) depends on the curve only through the pillar log-discount factors \(x\), and
+  - [Chain: IV solver 1/3] Implied normal (Bachelier) volatility from an undiscounted payer price per unit annuity
+  - [Chain: IV solver 2/3] Why does the Bachelier implied-vol solver need a bracket-expansion step, while a Black 
+  - [Chain: IV solver 3/3] A vol surface needs about \(10^5\) implied vols per revaluation. Compare Brent's method
+  - Derive the von Neumann amplification factor of the \(\theta\)-scheme for \(u_t=Du_{xx}\) on a uniform grid, wi
+  - Define the efficiency of a Monte Carlo estimator as \(1/(\mathrm{Var}\times\text{cost per path})\). Derive the
+  - Derive the likelihood-ratio (score) estimator of vega for a European call under GBM and the pathwise estimator
+  - Let \(y=f(x_1,\dots,x_n)\) be computed by a straight-line program with \(m\) elementary operations. Show that 
+  - For the correlation matrix \(\Sigma=\begin{pmatrix}1&\rho\\\rho&1\end{pmatrix}\), derive the Cholesky factor \
+  - Write the exact transition density of \(dX=\kappa(\theta-X)\,dt+\sigma\,dW\) over a step \(\Delta\). Show that
+  - A pricer is written with templated arithmetic that also accepts complex numbers. Derive the complex-step deriv
+  - For an at-the-money swaption, derive the leading relation between the Black (lognormal) vol \(\sigma_B\) and t
+  - A payer swaption is priced as \(A_0\,\mathbb E^{A}[(S_T-K)^+]\) under the annuity measure. Show why the forwar
+  - Kendall's first-order small-sample bias of the AR(1) coefficient is about {{c1::\(-(1+3\varphi)/n\)}}, so a ha
+  - A Bachelier price is {{c1::unbounded above}} in \(\sigma\), since vega \(\sqrt T\,n(d)\) is strictly positive.
+  - Complex-step differentiation gives \(f'(x)\approx\operatorname{Im}f(x+ih)/h\) with error {{c1::\(O(h^2)\)}}. I
+  - For reverse-mode AD, the gradient of a scalar function costs about {{c1::a small constant multiple}} of one fo
+  - Case study. A 1y-into-5y payer swaption with \(F=3.00\%\), \(K=3.20\%\), normal vol \(\sigma_N=90\)bp, \(T=1\)
+  - Case study. ATM 5y payer swaption, annuity 4.5, normal vol 90bp, expiry 1y (forward at strike). For 1bn notion
+  - Case study. A P&amp;L pipeline computes per-trade cash flows with a Python loop over 200,000 rows using iterro
+  - Case study. A curve cache is read by 8 threads and rebuilt when market data updates. Implement it in C++17 wit
+  - Case study. A templated Black–Scholes call with a minimal forward-mode dual number gives vega without a hand-c
+== 09_scenarios_markets_reg.json 52
+  - Mental math: approximate DV01 of a 10y par interest rate swap on \(£100\text{m}\) notional when the 10y par sw
+  - Mental math: a 5y gilt yields 4.50%, repo funding is 4.20%, modified duration is 4.5, and the curve is such th
+  - Mental math: DV01-neutral and cash-neutral 2s5s10s butterfly with a \(100\) notional 5y belly. Approximate mod
+  - Scenario/mental math: a Japanese (JPY-based) investor buys a 10y US Treasury yielding 4.20% and hedges the USD
+  - Mental math: a \(£10\text{m}\) notional 5y CDS, protection bought at a 100bp running spread, recovery 40%. App
+  - A rates normal vol of \(100\)bp per year is about {{c1::6.3bp per day}}, from \( \sigma_\text{day} = \sigma_\t
+  - Scenario/mental math: a 2s10s steepener is DV01-neutral and set up with \(£82\text{k}\) per bp of DV01 on each
+  - Mental math: a portfolio has a DV01 of \(£60{,}000\) per bp. Hedge with 10y gilt futures. The CTD has clean pr
+  - Mental math: 1-month at-the-money swaption straddle on a 1m forward rate where normal vol is 100bp/yr. Approxi
+  - Scenario: Bank Rate is 4.00% and the MPC delivers an unexpected 25bp hike with no change to forward guidance. 
+  - Scenario: US eSLR (or an equivalent leverage-ratio relief) is loosened. What happens to the 10y swap spread (S
+  - Scenario: a volatility spike hits rates markets and CCP initial margin rises sharply across the book. Explain 
+  - Scenario: describe the mechanism of the September 2022 UK LDI gilt crisis. Cover the trigger, the leverage cha
+  - Scenario: you are short 10y gilt futures and long cash gilts (a long-basis trade). Yields rally 30bp and a dif
+  - Scenario: in March 2020, Treasury cash-futures basis blew out. Describe the mechanism: who was positioned, wha
+  - Scenario: a credit index rolls to a new on-the-run series. Explain what changes in the old and new series, why
+  - Scenario: a sovereign is downgraded one notch, from A to A-, staying investment grade. Separate the effects in
+  - Scenario: a central bank accelerates quantitative tightening, running off long-dated bonds faster. Decompose t
+  - Scenario: a UK CPI print comes in 0.4pp above consensus. Walk through the effect on breakevens, nominal and re
+  - Scenario: a 10y sovereign syndication prices at a new-issue concession (NIC) to the curve. Define the NIC prec
+  - Desk strat: over one hour, three clients ask to pay fixed in 10y swaps, and the desk's hit rate on its receive
+  - Desk strat: you already hold a \(£500\text{m}\) long position in 10y swaps (DV01 about \(£410\text{k}\) per bp
+  - Desk strat: define effective spread, realised spread and markout for a dealer trade, and explain why the reali
+  - Desk strat: state the Avellaneda-Stoikov market-making model. Give the reservation price and optimal spread, a
+  - Desk strat: state the Almgren-Chriss optimal execution problem at the mechanism level. What trade-off does the
+  - Desk strat: compare RFQ with streaming for a credit or rates client. What are the trade-offs for the client an
+  - Desk strat: how would you design an auto-hedging rule for a book of rates options and swaps? Explain the trade
+  - Market structure: how do dealer-to-client (D2C) venues, all-to-all trading and dealer-to-dealer venues change 
+  - Desk strat: what is portfolio trading in credit or government bonds, how is a basket priced, and what risk doe
+  - Desk strat: a desk holds £500m of 10y gilts (DV01 £400k/bp, average half-spread 0.2bp in yield, daily volume £
+  - In Avellaneda-Stoikov, the reservation price is \( r = s - q\gamma\sigma^2(T-t) \), so a long inventory {{c1::
+  - Regulation: describe the FRTB sensitivity-based method (SBM). How are delta, vega and curvature charges built,
+  - Regulation: what is the FRTB default risk charge (DRC) for trading-book credit? Describe how jump-to-default i
+  - Under FRTB the residual risk add-on (RRAO) is {{c1::1.0%}} of notional for exotic underlyings and {{c2::0.1%}}
+  - Regulation: FRTB's internal model approach (IMA) uses expected shortfall at 97.5%, not 99% VaR. Write the liqu
+  - Regulation: what are non-modellable risk factors (NMRFs) under FRTB and how is their capital calculated? Why d
+  - Regulation: explain the FRTB P&L attribution test (PLA). What statistics are used, what are the approximate th
+  - Regulation: state the SA-CCR exposure at default formula. Define replacement cost, potential future exposure a
+  - SA-CCR multiplies replacement cost plus potential future exposure by a fixed factor of {{c1::1.4}}, and the PF
+  - Regulation/market structure: what is ISDA SIMM and why is it used for initial margin on uncleared derivatives?
+  - Under UMR, initial margin is exchanged between in-scope counterparties above an IM threshold of about {{c1::€5
+  - Regulation: describe the Basel III final CVA capital framework at the mechanism level. How do BA-CVA and SA-CV
+  - Regulation (UK): the PRA is implementing Basel 3.1 (including FRTB-equivalent market-risk rules and the 72.5% 
+  - Regulation: how does a leverage ratio constraint change the economics of repo and rates swaps? Explain why a l
+  - UK sterling interest rate swaps are predominantly cleared at {{c1::LCH SwapClear}}, and UK gilts are issued by
+  - UK market structure: what were the main legacy issues from the GBP LIBOR and USD LIBOR cessation, and how did 
+  - Regulation (UK/EU): a dealer has to hedge a £500m block of 10y swaps after a client trade. Explain how MiFIR p
+  - Regulation/market structure: the UK and EU are moving to T+1 settlement. What changes for trade matching, pre-
+  - FRTB expected shortfall is computed at {{c1::97.5%}} confidence, on a base horizon of {{c2::10 days}}, with li
+  - PLA thresholds (approx.): Spearman correlation green at or above about {{c1::0.8}}, and Kolmogorov-Smirnov gre
+  - Credit triangle: hazard rate \( \lambda \approx s/(1-R) \). A 100bp CDS spread at 40% recovery implies an annu
+  - The main CDS index roll months are {{c1::March}} and {{c2::September}}; the standard fixed coupon is {{c3::100
+== 09_scenarios_markets_reg_deep.json 30
+  - [Chain: RFQ_GILT 1/5] Context: a client sells £50m nominal of a 10y gilt (modified duration about 8.0, so cash
+  - [Chain: RFQ_GILT 2/5] Context: the dealer in step 1 is already long £60m of this gilt and buys another £50m, s
+  - [Chain: RFQ_GILT 3/5] Context: the dealer bought £50m of 10y gilts at 4.21%, adding £40k/bp of long DV01. It h
+  - [Chain: RFQ_GILT 4/5] Context: the dealer is long £50m of the traded gilt (DV01 £40k/bp) and short 471 futures
+  - [Chain: RFQ_GILT 5/5] Context: the client sold £50m at 4.21% (dealer bought, dealer edge +1bp against the 4.20
+  - [Chain: FRTB_SBM 1/4] Context: a GBP interest-rate delta bucket has two weighted sensitivities, \(WS_{2y} = +\
+  - [Chain: FRTB_SBM 2/4] Context: the same bucket as step 1 (\(WS_{2y} = +\pounds 10\text{m}\), \(WS_{10y} = -\po
+  - [Chain: FRTB_SBM 3/4] Context: the SBM has delta, vega and curvature charges. Consider a short-option position
+  - [Chain: FRTB_SBM 4/4] Context: a rates desk uses the internal model approach (IMA) for market-risk capital. It
+  - [Chain: VOL_MARGIN 1/5] Context: a rates book with DV01 of £800k/bp has CCP initial margin (IM) of £120m at a 
+  - [Chain: VOL_MARGIN 2/5] Context: the desk in step 1 faces a £53.3m increase in IM. The same day, a 25bp rally 
+  - [Chain: VOL_MARGIN 3/5] Context: several leveraged holders must raise cash at once. They sell £500m of 10y gil
+  - [Chain: VOL_MARGIN 4/5] Context: a fund finances £500m of gilts in repo. As vol rises, the haircut on the coll
+  - [Chain: VOL_MARGIN 5/5] Context: the stress scenario from the chain: IM rises £53.3m, a 25bp rally adds £20m o
+  - Derivation: Avellaneda-Stoikov reservation price. A dealer has wealth \(x\), inventory \(q\) (units), and mid 
+  - Derivation: Avellaneda-Stoikov half-spread with fill arrivals. A fill at distance \(\delta\) from the reservat
+  - Derivation: Almgren-Chriss optimal liquidation path (linear temporary impact). Sell \(X\) shares over \([0,T]\
+  - Derivation: what the square-root impact law implies for execution cost. Take as given the empirical law that t
+  - Derivation: why the FRTB SBM delta charge has the form \(\sqrt{\sum WS^2 + \sum \rho\,WS\,WS}\). Within a buck
+  - Derivation: SA-CCR exposure at default for one uncollateralised 10y receiver swap. Derive \(EAD = \alpha(RC + 
+  - Derivation: P&amp;L explain for a rates book by Taylor expansion. Let the position value be \(P(t, y_1,\dots,y
+  - Case study: daily P&amp;L attribution for a curve book. End-of-day book:
+
+Long £100m 5y gilt: modified duratio
+  - Case study: quoting a client trade against inventory. The dealer is long rates risk, with DV01 of \(+\pounds 1
+  - Case study: capital-adjusted pricing of a long-dated swap. The dealer pays fixed on a £100m 30y swap, uncollat
+  - Case study: liquidity-adjusted VaR for a gilt position. Long £400m 10y gilts, modified duration 8.0, so DV01 i
+  - With no arrivals, the Avellaneda-Stoikov indifference bid-ask width is {{c1::\(\gamma\sigma^2(T-t)\)}}, and th
+  - In Almgren-Chriss with temporary impact \(\eta\) and risk aversion \(\lambda\), the decay constant is {{c1::\(
+  - Under the square-root impact law, executing a metaorder over {{c1::\(n\)}} days instead of one reduces total i
+  - In SA-CCR, the supervisory duration for interest-rate trades is \(SD = (e^{-0.05S} - e^{-0.05E})/0.05\), so a 
+  - A bond with convexity 24 (years squared) per unit notional, moved by 3bp, has a second-order P&amp;L of about 
+== 10_xva_funding.json 45
+  - [Chain: CLOSEOUT 1/4] Bank B and counterparty C trade an uncollateralised derivative with risk-free pre-defaul
+  - [Chain: CLOSEOUT 2/4] Same bilateral set-up as the previous card. The close-out at the first default is struck
+  - [Chain: CLOSEOUT 3/4] Flat expected positive exposure \(E^+=2\)m and flat \(E^-=1\)m for 5 years, zero rates, 
+  - [Chain: CLOSEOUT 4/4] Using the CVA and DVA from the previous card: why does the independence assumption under
+  - [Chain: MPOR 1/4] A CSA with threshold \(H=1\)m and minimum transfer amount (MTA) 0.5m. Portfolio MTM \(V=3.2\
+  - [Chain: MPOR 2/4] Same CSA with margin period of risk \(\delta\) (time from last margin call to close-out). Fo
+  - [Chain: MPOR 3/4] Portfolio MTM deep in the money (\(V\gg H=0\)), absolute normal volatility 6m per \(\sqrt{\t
+  - [Chain: MPOR 4/4] The Brownian lag exposure from the previous card is a simplification. Name what it misses fo
+  - [Chain: FVA 1/4] An uncollateralised derivative: the bank funds positive MTM at spread \(s_F\) and receives a 
+  - [Chain: FVA 2/4] Same uncollateralised derivative with a symmetric funding spread \(s_F=s_B=s\). What does FVA
+  - [Chain: FVA 3/4] Uncollateralised 5-year swap: flat \(E^+=1.5\)m, flat \(E^-=0.5\)m, \(s_F=100\)bp, \(s_B=60\)
+  - [Chain: FVA 4/4] State the Hull–White (2012) objection to FVA and the Burgard–Kjaer (2011) position. Which mod
+  - [Chain: MVA 1/3] A bilateral uncleared trade requires initial margin \(IM(t)\) to be posted and funded for the
+  - [Chain: MVA 2/3] Why is \(E[IM(t)]\) not a function of today's MTM, and why does an at-the-money swap still ca
+  - [Chain: MVA 3/3] You need \(E[IM(t)]\) on Monte Carlo paths, but SIMM is a full sensitivity-based calculation.
+  - [Chain: KVA 1/3] A trade consumes regulatory capital \(K(t)\) over its life. Write KVA with discounting at the
+  - [Chain: KVA 2/3] Where does KVA overlap with FVA, and how do desks avoid counting the same economic cost twice
+  - [Chain: KVA 3/3] A 5-year trade consumes capital \(K(t)=2\)m\((1-t/5)\) (linear run-off), hurdle \(k=10\%\), r
+  - [Chain: CVA_HEDGE 1/3] An uncollateralised receiver swap has MTM \(V(r)\) with \(\partial V/\partial r<0\). Th
+  - [Chain: CVA_HEDGE 2/3] Take \(L=\text{LGD}\int_0^T E[V^+(t;r)]\,\lambda e^{-\lambda t}D(t)\,dt\) with constant
+  - [Chain: CVA_HEDGE 3/3] The counterparty has no liquid CDS. You hedge its spread CS01 with a sector index whose
+  - Derive unilateral CVA as an expected loss, starting from the default indicator and ending at the discrete sum.
+  - Sketch the Burgard–Kjaer PDE for a derivative with bilateral default and asymmetric funding. Start from a valu
+  - Let \(X\) be a Brownian motion with volatility \(\sigma\), \(X_0=x\), \(X_\Delta=y\). Derive \(P(\max_{[0,\Del
+  - Set exposure \(V=-\sigma Z\) with \(Z\) standard normal, and let default occur when \(X=\rho Z+\sqrt{1-\rho^2}
+  - Two trades have future MTMs \(V_A,V_B\) with zero mean, \(\sigma_A=\sigma_B=2\)m, \(\rho=-0.5\). Derive the Eu
+  - Explain why adjoint algorithmic differentiation (AAD) makes full XVA sensitivities affordable. Give the cost s
+  - Define expected exposure EE, expected negative exposure ENE, expected positive exposure EPE and effective EPE 
+  - Define potential future exposure (PFE) at confidence \(\alpha\). Why is PFE a quantile of \(V^+\), and why is 
+  - Regulatory margin period of risk for a daily-margined bilateral netting set is at least {{c1::10 business days
+  - A fully collateralised derivative under a CSA is discounted at the collateral rate, not at the risk-free curve
+  - A CSA that lets the poster choose among eligible collateral currencies gives the poster a {{c1::cheapest-to-de
+  - How does IFRS 13 treat own credit (DVA) and funding (FVA) in the fair value of a derivative? Give the principl
+  - Under Basel III final, what does SA-CVA take as inputs, and why is hedge recognition narrower than in a P&L he
+  - An uncollateralised cross-currency swap has an MTM with zero net FX delta in its PV, but the CVA in reporting 
+  - Outline a daily P&L explain for a CVA book. Which residual is diagnostic, and what does a large residual point
+  - Why does FBA on negative exposure partly duplicate DVA in a bilateral model, and how do desks avoid double cou
+  - KVA is \(\int_0^T D(t)\,h\,K(t)\,dt\), where \(h\) is {{c1::the hurdle rate minus the risk-free rate}}, becaus
+  - For a Brownian motion with volatility \(\sigma\), \(X_0=x\), \(X_\Delta=y\), and \(b\ge\max(x,y)\): \(P(\max_{
+  - Basel IMM effective EPE uses effective EE, which is the {{c1::running maximum of EE}}, averaged over {{c2::the
+  - CVA CS01 to the counterparty is 50k per bp. A 5-year CDS has risky PV01 (RPV01) of 4.5 per unit notional. What
+  - For pricing a new trade, which XVA charge should the desk use: standalone or marginal to the netting set? Say 
+  - With a symmetric funding spread \(s\), FVA \(=-s\int_0^T D(t)\,E[V(t)]\,dt\), so it depends only on the {{c1::
+  - Case study: A 10-year uncleared swap posts initial margin with expected profile \(E[IM(t)]=20\)m\(\,(1-t/10)\)
+  - Case study: Flat expected positive exposure 3m for a 10-year uncleared swap; counterparty spread 150bp flat; \
+== 11_repo_financing.json 45
+  - [Chain: REPO 1/4] A dealer funds a £50m gilt position through a classic repo at 4.00% for 14 days. Describe th
+  - [Chain: REPO 2/4] Same £50m repo, but the cash lender takes gilts with a 5% haircut. What collateral market va
+  - [Chain: REPO 3/4] The same gilt repo can settle bilaterally on a DVP basis, through a tri-party agent, or thro
+  - [Chain: REPO 4/4] A dealer funds £100m of gilts at a 2% haircut with £2m of equity. In a volatility spike the 
+  - [Chain: SPEC 1/4] A gilt is special in repo at 3.20% against 4.00% general collateral (GC). Who benefits from 
+  - [Chain: SPEC 2/4] A short seller fails to deliver a special bond on settlement date. What does the buyer recei
+  - [Chain: SPEC 3/4] Specialness deepens until a 1-day repo on €100m of a bond prints at -0.50% (Act/360). Show t
+  - [Chain: SPEC 4/4] The cheapest-to-deliver (CTD) bond in a government bond future trades special in repo at 3.2
+  - [Chain: SONIA 1/4] Sterling overnight money markets: how is reformed SONIA formed, published and accrued?
+  - [Chain: SONIA 2/4] Under the Bank of England's floor system, why does SONIA sit close to Bank Rate, and why ca
+  - [Chain: SONIA 3/4] Quantitative tightening drains central bank reserves. Describe the reserve demand curve and
+  - [Chain: SONIA 4/4] Why does the Bank of England maintain standing and term liquidity facilities alongside its 
+  - [Chain: SOFR 1/4] SOFR is the USD risk-free rate. What is its transaction base, and why does the market build 
+  - [Chain: SOFR 2/4] On 17 September 2019 overnight repo spiked. What was the mechanism, and what were the approx
+  - [Chain: SOFR 3/4] How do the Fed's overnight reverse repo (ON RRP) facility and its Standing Repo Facility (SR
+  - [Chain: SOFR 4/4] The SEC's 2023 rule requires central clearing of eligible US Treasury cash and repo transact
+  - Derivation: Convert a repo rate quoted on Act/360 into the equivalent Act/365 rate. Give the step-by-step and 
+  - Derivation: Two term repo rates are quoted: 4.00% for 30 days and 4.20% for 90 days, both on a simple basis. D
+  - Derivation: Buy a bond at dirty price \(P\) (per 100 face), finance it in repo at rate \(r\) for \(\tau\), and
+  - Derivation: Derive the carry of a long bond financed in repo over a period \(\tau\), assuming the clean price 
+  - Derivation: A dealer holds bond market value \(MV\) funded with haircut \(h\), with the remaining \(h\cdot MV\
+  - Derivation: Derive the compounded-in-arrears SONIA coupon over a period with daily rates \(r_i\) and day count
+  - Derivation: Derive the breakeven TRS spread over SOFR at which a total return swap (TRS) funds the bond at the
+  - Derivation: Derive the first-order sensitivity of carry to the repo rate, and express it as a repo DV01 for a 
+  - Derivation: Derive the lender's net revenue from a securities loan where cash collateral is reinvested at \(r_
+  - Case study: Special repo value to a bondholder. A £10m holding of a gilt is special at 3.20% against 4.00% GC.
+  - Case study: Basis trade financing breakeven. A fund holds £100m of the CTD, shorts the future, and finances th
+  - Case study: Year-end turn cost. A dealer funds a £1bn book in GC repo. For a 3-day year-end window, GC spikes 
+  - Case study: TRS vs repo cost comparison. Exposure of $100m of a bond for one year, SOFR at 4.00%. Repo is at S
+  - Case study: Haircut stress on ROE. A dealer holds £100m of a bond yielding 5.00%, funded at 4.00% repo, with e
+  - Case study: Repo-OIS basis cost. A dealer funds £500m overnight at GC repo of 4.10% while SONIA-based OIS is 4
+  - Case study: Negative repo cost on a special. A dealer is short €100m of a bond that trades at a -0.50% (Act/36
+  - Case study: Fails charge on a special bond. A dealer fails to deliver $100m of a bond for 2 days, with a 1.50%
+  - Case study: Securities lending revenue. A lender loans £20m of gilts for 30 days, takes cash collateral of 102
+  - Why does a dealer sometimes find that its repo-OIS spread is positive while its leverage ratio is slack, and w
+  - Explain why a leveraged basis trade is financed through repo, and name the three risks that can unwind it.
+  - Under Basel's NSFR, how is a reverse repo of Level 1 collateral against a financial counterparty with under si
+  - Secured versus unsecured funding: why is the desk's secured funding cheaper, and what drives the secured-unsec
+  - The Fed's {{c1::ON RRP}} rate sits at the {{c2::bottom}} of the target range and the Standing Repo Facility ra
+  - Under the Basel LCR, Level 1 assets carry a {{c1::0%}} haircut and Level 2A assets carry a {{c2::15%}} haircut
+  - Under SEC Rule {{c1::15c3-3}}, US broker-dealers may rehypothecate customer collateral up to {{c2::140%}} of c
+  - The UK leverage ratio minimum is {{c1::3.25%}} of exposure measure, and the US enhanced supplementary leverage
+  - Securities lending collateral is typically {{c1::102%}} of the loaned value for US domestic securities and {{c
+  - A repo rate quoted at 4.00% on Act/360 is equivalent to about {{c1::4.06%}} on an Act/365 basis, because {{c2:
+  - The reformed SONIA is a {{c1::trimmed-mean}} of {{c2::unsecured}} overnight sterling transactions, published b
+== 12_structured_exotics.json 45
+  - [Chain: CALLABLE 1/4] Context: a 10-year fixed-rate bond, annual coupon, callable at par by the issuer from ye
+  - [Chain: CALLABLE 2/4] The 10NC2 pays coupon \(c\); the issuer can redeem at par on any coupon date from year 2
+  - [Chain: CALLABLE 3/4] The issuer calls when keeping the bond costs more than refinancing, including the call p
+  - [Chain: CALLABLE 4/4] Long-dated callable issuance is large. The issuer's call is receiver-type vega, and the 
+  - [Chain: CMS SPREAD 1/3] A 10s2s steepener pays on the difference of two CMS fixings, \(\max(S_{10}-S_2-K,0)\),
+  - [Chain: CMS SPREAD 2/3] The steepener's forward spread is not simply the forward difference of the two CMS rat
+  - [Chain: CMS SPREAD 3/3] The steepener's smile-consistent price needs each leg's distribution and a joint law.W
+  - [Chain: RANGE ACCRUAL 1/3] A 1y note accrues 5% per year on each period where the 3m reference rate fixes insi
+  - [Chain: RANGE ACCRUAL 2/3] The in-range indicator is what each observation pays on.Show that it is a differenc
+  - [Chain: RANGE ACCRUAL 3/3] Each binary is priced off a smile, so its price depends on the skew at the strike.W
+  - [Chain: TARN 1/3] A 5y TARN pays a fixed 4% per year in a year when a condition holds; coupons accumulate and 
+  - [Chain: TARN 2/3] Toy model: each year the condition holds independently with probability \(p\), coupon 4% per
+  - [Chain: TARN 3/3] A TARN's knockout is automatic, while a snowball or callable TARN adds an issuer option on e
+  - [Chain: AUTOCALL 1/3] A 3y note on the 10y swap rate, observed annually. If the 10y rate is at or above a trig
+  - [Chain: AUTOCALL 2/3] The same note adds a knock-in put: if the 10y rate is ever below a lower barrier on an o
+  - [Chain: AUTOCALL 3/3] Case: 3 annual observations. Redemption at 106 in year 1, 112 in year 2, 118 at year 3 i
+  - Derive the callable coupon that makes a 10NC2 price at par on the issuer's curve. State the approximation used
+  - Derive the digital (binary) price \(P(S_T>K)\) from the call price, then show the smile correction when the im
+  - Derive the Gaussian copula price of a CMS spread call \((S_1-S_2-K)^+\) and reduce it to a Bachelier formula w
+  - Derive the Longstaff-Schwartz estimate of the continuation value at exercise date \(t_k\), and state the direc
+  - Derive the drift of a foreign-currency asset \(S\) under the domestic risk-neutral measure. Show the quanto co
+  - Derive the CPPI cushion dynamics: exposure \(E=mC\) in the risky asset, the rest in cash at zero rate, floor \
+  - Case study: A 10NC2 callable at par. Issuer's curve is flat 4.00% (continuously compounded), annual coupons. T
+  - Case study: A $1bn 10NC2 callable is sold. Use the 8y tail annuity of 6.19, an average expiry of 5y, and ATM n
+  - Case study: ATM 10s2s CMS spread call, one-year expiry, strike 0.50%. Forwards: 10y CMS 3.50%, 2y CMS 3.00%. N
+  - Case study: A 1y range accrual, notional 10m, accrues 5% per year (quarterly, \(\tau=0.25\)) when the 3m rate 
+  - Case study (toy model): A 5y TARN pays 4% per year in each year the condition holds, redeems at par when cumul
+  - Case study: 1y YoY floorlet on UK RPI, strike 2.00%, forward YoY 2.50%, normal vol 100bp, notional £10m, \(D(1
+  - Case study: CPPI with NAV 100, floor 90, multiplier \(m=4\). Cushion 10, risky exposure 40, cash 60. Give NAV 
+  - Case study: A 5y structured note issued at 100 with the investor paying 100. Issuer's funding flat 3.80% (cont
+  - Describe a power-reverse dual-currency (PRDC) note: what the investor is paid in, what drives the coupon, and 
+  - A 1y YoY inflation floorlet on UK RPI with a two-month index lag. Write the payoff, state the pricing measure 
+  - Why did CPDOs (constant proportion debt obligations) fail in 2007-08, even though their rating model implied A
+  - What is a CSO (a synthetic CDO whose collateral is CDO tranches), and why is its correlation risk more complic
+  - A structured note is issued at 100 but the dealer's model values it at 97.5 on day 1. Decompose the 2.5 gap an
+  - Level 3 and IPV: a CMS spread note's price depends on a 10y-2y correlation with no quoted market. Where does i
+  - How do you size a model reserve for an illiquid exotic such as a CMS spread book, and how does it unwind?
+  - What is 'risk recycling' on an exotic book, and what does the dealer keep after selling the residual risk to h
+  - A callable bond held by an investor equals a bullet bond minus a Bermudan {{c1::receiver}} swaption, where the
+  - CPPI exposure is {{c1::m}} times the cushion (NAV minus floor). A one-step fall of more than {{c2::1/m}} in th
+  - A YoY inflation floorlet fixes on an index {{c1::lagged}} relative to the period end, so its forward comes fro
+  - A TARN's total coupon is capped at the {{c1::target}} per 100 notional, and the investor is short the {{c2::kn
+  - Longstaff-Schwartz regresses discounted {{c1::continuation cash flows}} on basis functions of the state, using
+  - Under the domestic risk-neutral measure, a foreign asset \(S\) with FX shock correlation \(\rho\) has drift \(
+  - A zero-coupon callable (Formosa-style) has effective duration that {{c1::shortens}} as rates fall, because the
