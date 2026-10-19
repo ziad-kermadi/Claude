@@ -213,6 +213,9 @@
    "After 252 independent steps of equal size, how does the spread of the total compare with the spread of one step?",
    "Independent unit-variance shocks add in variance, so the standard deviation of the total is the square root of the variance of the sum.",
    "\\(\\operatorname{Var}\\bigl(\\sum_{i=1}^{252}X_i\\bigr)=\\sum_{i=1}^{252}\\operatorname{Var}(X_i)\\), with \\(\\operatorname{Var}(X_i)=1\\)."
+  ],
+  "figs_back": [
+   "f10_walk_sqrt_t"
   ]
  },
  {
@@ -577,6 +580,9 @@
    "market_making",
    "cards",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f10_red_card_pmf"
   ]
  },
  {
@@ -593,6 +599,9 @@
    "What happens to the variance of a count of red cards when every draw is independent of the others?",
    "Replacement makes the draws independent, so the count is binomial. Drop the correction factor that only applies without replacement.",
    "Count \\(X\\sim\\text{Bin}(n,p)\\) with \\(n=10\\). Write \\(\\operatorname{Var}(X)\\) in terms of \\(n\\) and \\(p\\)."
+  ],
+  "figs_back": [
+   "f10_red_card_pmf"
   ]
  },
  {
@@ -604,6 +613,9 @@
    "market_making",
    "coins",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f10_coin_clt"
   ]
  },
  {
@@ -639,6 +651,9 @@
    "Once you learn the sum is at least 8, which outcomes remain possible, and how likely is each relative to the rest?",
    "Condition the distribution on the surviving outcomes, renormalise by their total probability, then take the mean.",
    "\\(E[S\\mid S\\ge8]=\\dfrac{\\sum_{s\\ge8}s\\,P(S=s)}{P(S\\ge8)}\\)."
+  ],
+  "figs_back": [
+   "f10_dice_tail"
   ]
  },
  {
@@ -754,6 +769,9 @@
    "bayes_update",
    "adverse_selection",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f10_bias_update"
   ]
  },
  {
@@ -1035,6 +1053,9 @@
    "What happens to the terms of the sum once the payoff stops doubling?",
    "Split the sum: the uncapped terms each contribute a fixed amount, and the capped tail is one probability times the cap.",
    "\\(E=\\sum_{k=1}^{19}2^k\\cdot2^{-k}+2^{20}\\cdot P(k\\ge20)\\). Write \\(P(k\\ge20)\\) as a geometric tail."
+  ],
+  "figs_back": [
+   "f10_stpete_cap"
   ]
  },
  {
@@ -1103,6 +1124,9 @@
    "If the remaining deck is balanced, what does an immediate guess earn, and where does the rest of the value come from?",
    "Same recursion over \\((r,b)\\): the next draw splits the value into two possible remaining decks.",
    "\\(V(2,2)=\\tfrac12\\bigl(V(1,2)+V(2,1)\\bigr)\\). Write \\(V(1,2)\\) the same way from state \\((1,2)\\)."
+  ],
+  "figs_back": [
+   "f10_rb_lattice"
   ]
  },
  {
@@ -1192,6 +1216,9 @@
    "For a fair walk between two barriers, is the chance of hitting one barrier first a simple function of the starting point?",
    "Structural feature: a fair walk has no drift, so its position's average stays fixed. Use that fact at the moment the walk stops.",
    "Setup: let \\(h(x)\\) be the chance of hitting the upper barrier first from \\(x\\), and write its two boundary values at the barriers."
+  ],
+  "figs_back": [
+   "f10_ruin_barrier"
   ]
  },
  {

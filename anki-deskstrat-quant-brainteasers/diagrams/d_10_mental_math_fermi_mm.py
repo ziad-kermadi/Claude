@@ -466,7 +466,7 @@ def _(ax):
     ax.set_yticks([1e-16, 1e-12, 1e-8, 1e-4, 1])
     ax.set_xlabel("iteration k")
     ax.set_ylabel(r"$|x_k - 1/7|$")
-    ax.legend(frameon=False, fontsize=9, loc="center right")
+    ax.legend(frameon=False, fontsize=9, loc="center right", bbox_to_anchor=(1.0, 0.74))
     ax.set_title(r"$x_{k+1} = x_k(2-7x_k)$: error grows outside the basin", fontsize=10)
 
 
@@ -667,6 +667,8 @@ def _(ax):
     ax.text(50, pm.max() * 1.12, r"$P(45 \leq X \leq 55) = 0.729$", ha="center", va="bottom",
             color=BLUE, fontsize=10)
     ax.set_xticks([30, 40, 45, 50, 55, 60, 70])
+    ax.set_yticks([0, 0.025, 0.05, 0.075, 0.1])
+    ax.set_yticklabels(["0", "0.025", "0.05", "0.075", "0.1"])
     ax.set_xlim(29, 71)
     ax.set_ylim(0, pm.max() * 1.35)
     ax.set_xlabel("heads X in 100 fair flips")

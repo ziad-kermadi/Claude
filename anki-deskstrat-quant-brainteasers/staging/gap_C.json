@@ -1,0 +1,270 @@
+[
+ {
+  "type": "basic",
+  "front": "Arrivals at a desk form a Poisson process of rate \\(12\\) per hour. Each arrival is independently marked <i>large</i> with probability \\(1/4\\), otherwise <i>small</i>. What is the probability that exactly \\(2\\) large and \\(5\\) small arrivals occur in the first hour? Give the exact value and a decimal.",
+  "back": "<b>Answer:</b> \\(P=\\dfrac{177147}{80}e^{-12}\\approx0.013605\\)<br><b>Structure:</b> s_indicators (each arrival carries an independent mark) on a Poisson stream. Trigger: a Poisson count split by independent labels.<br><b>Key move:</b> thinning. Large and small arrivals are independent Poisson processes with rates \\(12\\cdot\\tfrac14=3\\) and \\(12\\cdot\\tfrac34=9\\) per hour.<br><b>Working:</b> \\(P=\\left(e^{-3}\\dfrac{3^2}{2!}\\right)\\left(e^{-9}\\dfrac{9^5}{5!}\\right)=e^{-12}\\cdot\\dfrac92\\cdot\\dfrac{59049}{120}=\\dfrac{177147}{80}e^{-12}\\). Cross-check: the total count is Poisson(12) and the split is Binomial(7, 1/4), which gives \\(e^{-12}\\dfrac{12^7}{7!}\\binom72\\left(\\tfrac14\\right)^2\\left(\\tfrac34\\right)^5\\), the same number.<br><b>Sanity check:</b> the means are 3 large and 9 small, so 2 and 5 is plausible but unlikely. Simulation of \\(4\\times10^5\\) hours gives \\(0.0136\\pm0.0002\\).<br><b>Transfer:</b> defects of two types on one production line; buy and browse events from one visitor stream.",
+  "tags": [
+   "s_indicators",
+   "poisson_process",
+   "thinning",
+   "fmt_solve"
+  ],
+  "dest": "05_continuous_geometric",
+  "hints": [
+   "What do the marks do to the arrival process? Does the desk see one clock, or two independent ones once the marks are applied?",
+   "Name the move: thinning. A Poisson stream split by independent marks becomes independent Poisson streams, one for each mark.",
+   "Find the rate of each stream over the one hour, then write the joint probability as a product of two Poisson probabilities."
+  ],
+  "figs_back": [
+   "fgC_thinning"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Three independent Poisson processes start at time \\(0\\), with rates \\(1\\), \\(2\\) and \\(3\\) events per hour. What is the expected time until each process has recorded at least one event? Give the exact value in hours.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_memorylessness (each first event is exponential) with s_inclusion_exclusion (the maximum of three waits).<br><b>Trigger:</b> we wait for the last of several independent clocks, so the answer is an expected maximum, not a sum of means.<br><b>Key move:</b> \\(\\mathbb E[\\max_i T_i]=\\sum_{\\emptyset\\ne S}(-1)^{|S|+1}\\big/\\sum_{i\\in S}\\lambda_i\\), since the minimum of independent exponentials is exponential with the summed rate.<br><b>Answer:</b> \\(\\tfrac{11}{6}-\\tfrac{47}{60}+\\tfrac16=\\dfrac{73}{60}\\approx1.2167\\) hours. The sum of the means, \\(\\tfrac{11}{6}\\), overstates it because the clocks overlap.",
+  "tags": [
+   "s_memorylessness",
+   "s_inclusion_exclusion",
+   "poisson_process",
+   "waiting_time",
+   "fmt_recognise"
+  ],
+  "dest": "05_continuous_geometric",
+  "figs_back": [
+   "fgC_race_all_fired"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Calls reach a help desk as a Poisson process with a constant rate. Exactly \\(3\\) calls arrive during the first \\(10\\) minutes. What is the probability that the second of them arrives between minute \\(4\\) and minute \\(6\\)?",
+  "back": "<b>Answer:</b> \\(\\dfrac{37}{125}=0.296\\).<br><b>Structure:</b> s_order_statistics. The classic is the median of three independent uniform points on \\([0,10]\\), the middle order statistic.<br><b>Mapping:</b> given \\(N(10)=3\\), the three arrival times are i.i.d. uniform on \\([0,10]\\) as an unordered set, so the rate cancels. The second arrival in time is the middle order statistic.<br><b>Key move:</b> with \\(u=x/10\\), \\(P(X_{(2)}\\le u)=3u^2-2u^3\\). Then \\(P(4\\le X_{(2)}\\le6)=F(0.6)-F(0.4)\\).<br><b>Working:</b> \\(F(0.6)=3(0.36)-2(0.216)=0.648\\), \\(F(0.4)=3(0.16)-2(0.064)=0.352\\), so the answer is \\(0.296=\\tfrac{37}{125}\\).<br><b>Sanity check:</b> the window has width \\(2\\) out of \\(10\\), so a uniform arrival would give \\(0.2\\). The middle arrival concentrates near \\(5\\), so \\(0.296>0.2\\) is the right direction. Simulating the process (rate \\(0.3\\)) conditioned on \\(N(10)=3\\), about \\(4.5\\times10^5\\) paths, gives \\(0.2954\\pm0.0007\\).<br><b>Transfer:</b> the median of three random draws from a uniform; the middle of three random cut points on a stick.",
+  "tags": [
+   "s_order_statistics",
+   "poisson_process",
+   "uniform",
+   "fmt_twin"
+  ],
+  "dest": "05_continuous_geometric",
+  "hints": [
+   "Given the number of calls, forget the rate. What do the three arrival times look like as an unordered set?",
+   "Name the move: given the count, the arrival times are independent and uniform on the window, so the second arrival is the middle of three.",
+   "Write \\(P(\\text{second arrival}\\le x)\\) as the probability that at least two of the three times are \\(\\le x\\), with \\(x\\) scaled to \\([0,1]\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Claims reach an insurer as a Poisson process with mean \\(4\\) per day. Each claim is independently of size \\(1\\), \\(2\\) or \\(5\\), with probabilities \\(\\tfrac12\\), \\(\\tfrac13\\), \\(\\tfrac16\\). Let \\(S\\) be the total claim size in one day. Find \\(\\mathbb E[S]\\) and \\(\\operatorname{Var}(S)\\). Then repeat with the number of claims replaced by a Binomial\\((8,\\tfrac12)\\) count. What are \\(\\mathbb E[S]\\) and \\(\\operatorname{Var}(S)\\) now?",
+  "back": "<b>Answer:</b> Poisson count: \\(\\mathbb E[S]=8\\), \\(\\operatorname{Var}(S)=24\\). Binomial count: \\(\\mathbb E[S]=8\\), \\(\\operatorname{Var}(S)=16\\).<br><b>Structure:</b> s_variance_decomposition with s_conditional_expectation_tower. Trigger: a random number of i.i.d. summands.<br><b>Key move:</b> \\(\\mathbb E S=\\mathbb E N\\,\\mathbb E X\\) and \\(\\operatorname{Var}S=\\mathbb E N\\,\\operatorname{Var}X+\\operatorname{Var}N\\,(\\mathbb E X)^2\\). The randomness of the count adds the second term.<br><b>Working:</b> \\(\\mathbb E X=2\\), \\(\\mathbb E X^2=\\tfrac12+\\tfrac43+\\tfrac{25}{6}=6\\), \\(\\operatorname{Var}X=2\\). Poisson: \\(\\mathbb E N=\\operatorname{Var}N=4\\), so \\(4\\cdot2+4\\cdot4=24\\). Binomial: \\(\\mathbb E N=4\\), \\(\\operatorname{Var}N=2\\), so \\(\\mathbb E S=8\\) and \\(4\\cdot2+2\\cdot4=16\\).<br><b>Sanity check:</b> for a Poisson count the compound variance is \\(\\lambda\\,\\mathbb E X^2=4\\cdot6=24\\), the same. Simulation of \\(2\\times10^5\\) days gives \\(24.08\\pm0.08\\) and \\(15.96\\pm0.05\\).<br><b>Transfer:</b> a random number of trades, each of random size; a random number of hospital admissions with random lengths of stay.",
+  "tags": [
+   "s_variance_decomposition",
+   "s_conditional_expectation_tower",
+   "compound_poisson",
+   "variance",
+   "fmt_solve"
+  ],
+  "dest": "05_continuous_geometric",
+  "hints": [
+   "Condition on the number of claims \\(N\\). What are \\(\\mathbb E[S\\mid N]\\) and \\(\\operatorname{Var}(S\\mid N)\\)?",
+   "Use the law of total variance: \\(\\operatorname{Var}(S)=\\mathbb E[\\operatorname{Var}(S\\mid N)]+\\operatorname{Var}(\\mathbb E[S\\mid N])\\).",
+   "Compute the claim-size moments \\(\\mathbb E[X]\\) and \\(\\mathbb E[X^2]\\) first. For a Poisson count, \\(\\mathbb E N=\\operatorname{Var}N=4\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Buses leave a stop as a Poisson process with rate \\(0.1\\) per minute, the process starting at time \\(0\\). You reach the stop at minute \\(5\\). Let \\(L\\) be the length of the gap between the last bus before you arrive and the first bus after you arrive, with time \\(0\\) as the left endpoint if no bus has come yet. What is \\(\\mathbb E[L]\\), in minutes?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_memorylessness (the residual wait is exponential whatever the past), inside the waiting-time paradox.<br><b>Trigger:</b> the observation time is fixed, not the gap, so the gap you land in is chosen with probability proportional to its length.<br><b>Key move:</b> \\(L=A+R\\), age plus residual. \\(\\mathbb E R=1/\\lambda\\) by memorylessness, and \\(\\mathbb E A=\\int_0^t e^{-\\lambda s}\\,ds=(1-e^{-\\lambda t})/\\lambda\\).<br><b>Answer:</b> \\(\\mathbb E L=\\dfrac{2-e^{-\\lambda t}}{\\lambda}=10\\,(2-e^{-0.5})\\approx13.93\\) minutes. A typical gap is \\(1/\\lambda=10\\), and the long-run size-biased value is \\(2/\\lambda=20\\). The figure shows one illustrative sample path, not these numbers.",
+  "tags": [
+   "s_memorylessness",
+   "s_tail_sum",
+   "poisson_process",
+   "waiting_time",
+   "fmt_recognise"
+  ],
+  "dest": "05_continuous_geometric",
+  "figs_back": [
+   "fgC_interval_containing_t"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair die is rolled repeatedly, and you stop at the first \\(6\\), which is included in the total. Let \\(T\\) be the number of rolls and \\(S\\) the sum of all rolls. Find \\(\\mathbb E[T]\\) and \\(\\mathbb E[S]\\).",
+  "back": "<b>Answer:</b> \\(\\mathbb E[T]=6\\), \\(\\mathbb E[S]=6\\cdot\\tfrac72=21\\).<br><b>Structure:</b> s_optional_stopping (Wald's identity) with s_linearity_expectation. Trigger: a sum of i.i.d. increments stopped at a random time that depends only on the past.<br><b>Key move:</b> \\(T\\) is a stopping time, since \\(\\{T=k\\}\\) depends only on rolls \\(1\\) to \\(k\\). Wald gives \\(\\mathbb E[S_T]=\\mathbb E[T]\\,\\mathbb E[X]\\), so the distribution of \\(S\\) is not needed.<br><b>Working:</b> \\(T\\sim\\text{Geometric}(1/6)\\), so \\(\\mathbb E[T]=6\\). Each roll has mean \\(\\tfrac72\\), so \\(\\mathbb E[S]=6\\cdot\\tfrac72=21\\).<br><b>Sanity check:</b> about 6 rolls averaging \\(3.5\\) gives roughly 21. Simulation of \\(2\\times10^5\\) runs gives \\(20.99\\pm0.04\\).<br><b>Transfer:</b> expected sum of card values drawn with replacement up to and including the first ace; expected total of i.i.d. daily P&amp;L up to and including the first loss-making day.",
+  "tags": [
+   "s_optional_stopping",
+   "s_linearity_expectation",
+   "dice",
+   "stopping_time",
+   "fmt_solve"
+  ],
+  "dest": "04_markov_walks_martingales",
+  "hints": [
+   "Is the decision to stop after roll \\(k\\) made using only rolls \\(1\\) to \\(k\\)?",
+   "Name the identity: Wald's identity, \\(\\mathbb E[S_T]=\\mathbb E[T]\\,\\mathbb E[X]\\), for i.i.d. summands and a stopping time with finite mean.",
+   "First find the distribution of \\(T\\). It is geometric. Then multiply its mean by the mean roll."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair die is rolled until the first \\(6\\). Let \\(N\\) be the number of rolls before the first \\(6\\), not counting the \\(6\\), and \\(S_N\\) the sum of those rolls. A candidate writes:<br><i>\"\\(N\\) is geometric with \\(\\mathbb E N=5\\). Each roll has mean \\(\\tfrac72\\). By Wald's identity, \\(\\mathbb E S_N=\\mathbb E N\\cdot\\mathbb E X=5\\cdot\\tfrac72=\\tfrac{35}{2}\\).\"</i><br><br>Find the flaw.",
+  "back": "<b>Faulty line:</b> \"By Wald's identity, \\(\\mathbb E S_N=\\mathbb E N\\cdot\\mathbb E X\\).\" Wald needs each term's inclusion to be decided without seeing that term: the event \\(\\{N\\ge i\\}\\) must be independent of \\(X_i\\). Here \\(\\{N\\ge i\\}\\) means \\(X_1,\\dots,X_i\\ne6\\), which depends on \\(X_i\\) itself. A roll is summed only if it is not a \\(6\\), so the summed rolls are not distributed like a fair die.<br><b>Correct answer:</b> \\(\\mathbb E S_N=15\\). Each summed roll has conditional mean \\(3\\), not \\(\\tfrac72\\). Equivalently, \\(\\mathbb E[X_i\\mathbf 1\\{N\\ge i\\}]=\\tfrac{15}{6}(\\tfrac56)^{i-1}\\), and summing over \\(i\\) gives \\(\\tfrac{15}{6}\\cdot6=15\\). So \\(\\mathbb E S_N=\\mathbb E N\\cdot3=15\\), with \\(\\mathbb E N=5\\) correct.<br><b>Smell:</b> if the rule that decides whether a term is included depends on that term, the unconditional \\(\\mathbb E X\\) is the wrong mean. Use the conditional mean of the included terms.<br><b>Check:</b> simulation of \\(2\\times10^5\\) runs gives \\(15.01\\pm0.04\\).",
+  "tags": [
+   "s_optional_stopping",
+   "s_linearity_expectation",
+   "dice",
+   "stopping_time",
+   "fmt_debug"
+  ],
+  "dest": "04_markov_walks_martingales"
+ },
+ {
+  "type": "basic",
+  "front": "A simple symmetric random walk \\(S_k\\) starts at \\(0\\), with \\(\\pm1\\) steps. Let \\(M=\\max_{0\\le k\\le100}S_k\\). In 30 seconds, without solving: give bounds or a ballpark for \\(\\mathbb E[M]\\), and say which limiting cases pin it down.",
+  "back": "<b>Bounds:</b> \\(\\mathbb E[M]\\le2\\sqrt{n}=20\\) for \\(n=100\\). This is Doob's \\(L^2\\) bound: \\(S_k^2\\) is a submartingale, so \\(\\mathbb E[\\max_k S_k^2]\\le4\\,\\mathbb E[S_n^2]=4n=400\\). Jensen (Cauchy-Schwarz) then gives \\(\\mathbb E[M]\\le\\sqrt{400}=20\\).<br><b>Ballpark:</b> for Brownian motion the reflection principle gives \\(\\mathbb E[\\max W]=\\sqrt{2n/\\pi}\\approx7.98\\). The discrete walk sits a little lower, so about \\(7.5\\).<br><b>Limiting cases:</b> as \\(n\\to\\infty\\), \\(\\mathbb E M\\sim\\sqrt{2n/\\pi}\\), growing like \\(\\sqrt n\\), which the Doob bound matches in order. At \\(n=0\\), \\(\\mathbb E M=0\\).<br><b>Exact comparison:</b> \\(\\mathbb E[M]=\\sum_{a\\ge1}P(M\\ge a)\\), and reflection gives \\(P(M_n\\ge a)=2P(S_n>a)+P(S_n=a)\\). Summing exactly gives \\(\\mathbb E[M]\\approx7.4987\\). The Doob bound of \\(20\\) is loose by a factor of about \\(2.7\\), and the Brownian scaling \\(7.98\\) is about 6% high.",
+  "tags": [
+   "s_martingale",
+   "s_convexity_jensen",
+   "random_walk",
+   "maximum",
+   "fmt_estimate"
+  ],
+  "dest": "04_markov_walks_martingales"
+ },
+ {
+  "type": "basic",
+  "front": "Let \\(B\\) be a Brownian bridge on \\([0,1]\\), built from a standard Brownian motion \\(W\\) as \\(B_t=W_t-tW_1\\). Find \\(\\operatorname{Cov}(B_{1/4},B_{3/4})\\), \\(\\operatorname{Var}(B_{1/4})\\), and the correlation of \\(B_{1/4}\\) and \\(B_{3/4}\\).",
+  "back": "<b>Answer:</b> \\(\\operatorname{Cov}(B_{1/4},B_{3/4})=\\tfrac1{16}\\), \\(\\operatorname{Var}(B_{1/4})=\\tfrac3{16}\\), correlation \\(\\tfrac13\\).<br><b>Structure:</b> s_linearity_expectation (covariance is bilinear, and the bridge is a linear functional of \\(W\\)). Trigger: a Gaussian process pinned at both ends.<br><b>Key move:</b> \\(\\operatorname{Cov}(B_s,B_t)=\\min(s,t)-st\\), by expanding bilinearly with \\(\\operatorname{Cov}(W_s,W_t)=\\min(s,t)\\).<br><b>Working:</b> \\(\\operatorname{Cov}(W_s-sW_1,\\,W_t-tW_1)=\\min(s,t)-ts-st+st=\\min(s,t)-st\\). With \\(s=\\tfrac14\\), \\(t=\\tfrac34\\): \\(\\tfrac14-\\tfrac3{16}=\\tfrac1{16}\\). Then \\(\\operatorname{Var}B_{1/4}=\\tfrac14-\\tfrac1{16}=\\tfrac3{16}\\), and the correlation is \\(\\tfrac{1/16}{3/16}=\\tfrac13\\).<br><b>Sanity check:</b> the covariance vanishes as \\(s\\to0\\) or \\(t\\to1\\), where the bridge is pinned. Simulation of \\(2\\times10^5\\) paths on a 400-step grid gives \\(\\operatorname{Cov}=0.0627\\pm0.0004\\) and \\(\\operatorname{Var}=0.188\\pm0.001\\).<br><b>Transfer:</b> a simple random walk conditioned to return to \\(0\\) at step \\(n\\) (the discrete bridge); Kalman smoothing of a random walk when both endpoints are observed.",
+  "tags": [
+   "s_linearity_expectation",
+   "brownian_bridge",
+   "gaussian",
+   "fmt_solve"
+  ],
+  "dest": "07_stochastic_derivatives",
+  "hints": [
+   "Which linear functional of \\(W\\) must vanish at \\(t=1\\)? Write \\(B_t\\) as \\(W_t\\) minus a multiple of \\(W_1\\).",
+   "Name the move: covariances of the bridge are bilinear in those of \\(W\\), and \\(\\operatorname{Cov}(W_s,W_t)=\\min(s,t)\\).",
+   "Expand \\(\\operatorname{Cov}(W_s-sW_1,\\,W_t-tW_1)\\) term by term, then substitute \\(s=\\tfrac14\\), \\(t=\\tfrac34\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derive B from A.</b> A: the reflection principle for standard Brownian motion, \\(P(\\max_{t\\le1}W_t\\ge a)=2P(W_1\\ge a)\\) for \\(a\\ge0\\). B: for a Brownian bridge from \\(0\\) to \\(c\\) on \\([0,1]\\) and \\(a\\ge\\max(0,c)\\), \\(P(\\max_{t\\le1}B_t\\ge a)=\\exp\\{-2a(a-c)\\}\\). Derive B from A, then evaluate it for \\(a=2\\), \\(c=1\\).",
+  "back": "<b>Answer:</b> \\(P=e^{-2a(a-c)}\\). For \\(a=2\\), \\(c=1\\): \\(P=e^{-4}\\approx0.018316\\).<br><b>Structure:</b> s_reflection with s_conditional_expectation_tower (condition on the endpoint). Trigger: a path with a fixed endpoint and a level it may cross.<br><b>Bridge:</b> (1) Joint law of \\((M_1,W_1)\\): for \\(c\\le a\\), \\(P(M_1\\ge a,\\,W_1\\in dc)=\\varphi(2a-c)\\,dc\\), by reflecting the path after its first hit of \\(a\\). The reflected end is \\(2a-c\\), as in the figure. (2) Divide by the density of \\(W_1\\) at \\(c\\): \\(P(M_1\\ge a\\mid W_1=c)=\\varphi(2a-c)/\\varphi(c)\\). (3) The bridge is \\(W\\) conditioned on \\(W_1=c\\), so this ratio is the answer.<br><b>Working:</b> \\(\\dfrac{\\varphi(2a-c)}{\\varphi(c)}=\\exp\\!\\Big\\{-\\dfrac{(2a-c)^2-c^2}{2}\\Big\\}=\\exp\\{-2a(a-c)\\}\\).<br><b>Sanity check:</b> at \\(c=a\\) the probability is \\(1\\), since the bridge ends at the level. As \\(c\\to-\\infty\\) it tends to \\(0\\). Simulation of \\(10^5\\) bridges on a 1000-step grid, with the discrete-monitoring correction \\(0.5826\\sqrt{\\Delta t}\\), gives \\(0.0187\\pm0.0004\\), consistent with \\(0.0183\\).<br><b>Transfer:</b> the chance that a Brownian path with a fixed end value crosses a level; the chance that a Gaussian random walk pinned at both ends touches a barrier.",
+  "tags": [
+   "s_reflection",
+   "s_conditional_expectation_tower",
+   "brownian_bridge",
+   "barrier",
+   "fmt_connect"
+  ],
+  "dest": "07_stochastic_derivatives",
+  "figs_back": [
+   "fgC_bridge_reflection"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Let \\(W\\) be standard Brownian motion on \\([0,1]\\), and let \\(A\\) be the fraction of \\([0,1]\\) during which \\(W>0\\). What is \\(P(A\\ge\\tfrac34)\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_symmetry through Lévy's arcsine law for occupation times.<br><b>Trigger:</b> the time a symmetric path spends on one side of zero over a fixed horizon, with a question about the fraction of time.<br><b>Key move:</b> \\(A\\) has the arcsine density \\(f(a)=\\dfrac{1}{\\pi\\sqrt{a(1-a)}}\\), so \\(P(A\\le a)=\\tfrac2\\pi\\arcsin\\sqrt a\\). The law is symmetric about \\(\\tfrac12\\) and U-shaped: the path is most likely to be almost always on one side.<br><b>Answer:</b> \\(P(A\\ge\\tfrac34)=1-\\tfrac2\\pi\\arcsin\\sqrt{3/4}=1-\\tfrac23=\\tfrac13\\). By symmetry \\(P(A\\le\\tfrac14)=\\tfrac13\\) as well, so \\(P(\\tfrac14\\le A\\le\\tfrac34)=\\tfrac13\\).",
+  "tags": [
+   "s_symmetry",
+   "brownian_motion",
+   "occupation_time",
+   "arcsine",
+   "fmt_recognise"
+  ],
+  "dest": "07_stochastic_derivatives",
+  "figs_back": [
+   "fgC_arcsine_density"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Let \\(W\\) be standard Brownian motion on \\([0,1]\\), and \\(M=\\max_{0\\le t\\le1}W_t\\). Find \\(P(M\\le m)\\), the median of \\(M\\), and \\(\\mathbb E[M]\\). Compare the median and the mean.",
+  "back": "<b>Answer:</b> \\(P(M\\le m)=2\\Phi(m)-1\\). The median is \\(\\Phi^{-1}(3/4)\\approx0.6745\\), and \\(\\mathbb E[M]=\\sqrt{2/\\pi}\\approx0.7979\\), above the median.<br><b>Structure:</b> s_reflection. Trigger: the running maximum of a Brownian path, with a question about its law.<br><b>Key move:</b> for \\(a\\ge0\\), \\(P(M\\ge a)=2P(W_1\\ge a)\\), by reflecting the path after its first hit of \\(a\\). So \\(P(M\\le m)=1-2(1-\\Phi(m))=2\\Phi(m)-1\\).<br><b>Working:</b> set \\(2\\Phi(m)-1=\\tfrac12\\), so \\(\\Phi(m)=\\tfrac34\\) and \\(m=\\Phi^{-1}(3/4)\\approx0.6745\\). For the mean, \\(\\mathbb E M=\\int_0^\\infty P(M\\ge a)\\,da=2\\int_0^\\infty(1-\\Phi(a))\\,da=2\\varphi(0)=\\sqrt{2/\\pi}\\).<br><b>Sanity check:</b> \\(M\\ge W_1\\) and \\(M\\ge0\\). The density \\(2\\varphi(m)\\) is right-skewed, so the mean is above the median. A grid simulation of \\(10^5\\) paths with 2000 steps, plus the correction \\(0.5826\\sqrt{\\Delta t}\\), gives \\(P(M\\le0.6745)=0.501\\pm0.002\\).<br><b>Transfer:</b> the largest value of a Brownian motion over a trading day; the running maximum of a Gaussian random walk at large \\(n\\).",
+  "tags": [
+   "s_reflection",
+   "brownian_motion",
+   "running_maximum",
+   "median",
+   "fmt_solve"
+  ],
+  "dest": "07_stochastic_derivatives",
+  "hints": [
+   "Which events about the maximum \\(M\\) are equivalent to events about the endpoint \\(W_1\\)?",
+   "Name the move: the reflection principle, \\(P(M\\ge a)=2P(W_1\\ge a)\\) for \\(a\\ge0\\).",
+   "Set \\(P(M\\le m)=\\tfrac12\\) and write the left side with \\(\\Phi\\)."
+  ],
+  "figs_back": [
+   "fgC_running_max_median"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X\\sim\\text{Binomial}(100,\\tfrac12)\\). Bound \\(P(X\\ge60)\\) with (a) Markov, (b) Chebyshev, (c) Chernoff, (d) Hoeffding. Then give the exact value to four significant figures, and order the four bounds against it.",
+  "back": "<b>Answer:</b> exact \\(0.02844\\). (a) Markov \\(\\tfrac56\\approx0.833\\). (b) Chebyshev \\(\\tfrac14=0.25\\). (c) Chernoff \\(e^{-100D}\\approx0.1335\\), with \\(D=0.6\\ln1.2+0.4\\ln0.8\\approx0.02014\\). (d) Hoeffding \\(e^{-2}\\approx0.1353\\). Order: exact \\(<\\) Chernoff \\(<\\) Hoeffding \\(<\\) Chebyshev \\(<\\) Markov.<br><b>Structure:</b> s_tail_sum (Markov is the tail-sum bound) with s_convexity_jensen (Chernoff applies Markov to \\(e^{\\lambda X}\\)). Trigger: a tail probability for a sum of independent pieces.<br><b>Key move:</b> each bound is the same tail seen through different information: Markov uses \\(\\mathbb E X\\), Chebyshev uses \\(\\operatorname{Var}X\\), Chernoff uses the moment generating function, and Hoeffding uses bounded summands.<br><b>Working:</b> Markov \\(\\dfrac{50}{60}\\). Chebyshev \\(P(X-50\\ge10)\\le\\dfrac{\\operatorname{Var}X}{10^2}=\\dfrac{25}{100}\\). Chernoff \\(P\\le\\min_\\lambda e^{-60\\lambda}\\big(\\tfrac{1+e^\\lambda}{2}\\big)^{100}=e^{-100D}\\). Hoeffding \\(\\exp(-2\\cdot10^2/100)=e^{-2}\\).<br><b>Sanity check:</b> the exact tail is about 4.7 times below Chernoff, the tightest of the four here. Chernoff and Hoeffding decay exponentially in \\(n\\), while Markov and Chebyshev decay only like \\(1/t\\) and \\(1/t^2\\). Simulation of \\(10^6\\) binomials gives \\(0.0287\\pm0.0002\\), within two standard errors of the exact value.<br><b>Transfer:</b> a backtest of 100 independent days with a 60% hit rate by chance; at least 60 heads in 100 fair tosses.",
+  "tags": [
+   "s_tail_sum",
+   "s_convexity_jensen",
+   "binomial",
+   "tail_bounds",
+   "fmt_solve"
+  ],
+  "dest": "08_stats_regression_ml",
+  "hints": [
+   "Each bound uses a different amount of information about \\(X\\): its mean, its variance, its whole moment generating function, or only the range of each summand. Which is which?",
+   "Name the moves: Chernoff optimises \\(e^{-60\\lambda}\\mathbb E e^{\\lambda X}\\) over \\(\\lambda\\). For a binomial, the optimum is governed by the relative entropy of \\(\\tfrac{60}{100}\\) against \\(\\tfrac12\\).",
+   "Hoeffding bounds \\(P(X-\\mathbb EX\\ge t)\\) by \\(\\exp(-2t^2/n)\\) for \\(n\\) summands in \\([0,1]\\). Set \\(t=10\\)."
+  ],
+  "figs_back": [
+   "fgC_tail_bounds"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A strategy's daily hit rate \\(p\\) is estimated by \\(\\hat p\\), the average over \\(n\\) independent days. Use Hoeffding's inequality to choose \\(n\\) so that \\(P(|\\hat p-p|\\ge0.02)\\le0.05\\). Then change one assumption: only overestimation matters, so you need \\(P(\\hat p-p\\ge0.02)\\le0.05\\). What minimal \\(n\\) does that give, and which step of the two-sided argument no longer applies?",
+  "back": "<b>Answer:</b> two-sided \\(n=4612\\), from \\(n\\ge\\ln(40)/(2\\cdot0.02^2)=4611.1\\). One-sided \\(n=3745\\), from \\(n\\ge\\ln(20)/(2\\cdot0.02^2)=3744.7\\).<br><b>Structure:</b> s_tail_sum (Hoeffding's tail bound) with s_convexity_jensen (Hoeffding's lemma). Trigger: the mean of bounded i.i.d. outcomes and a fixed error tolerance.<br><b>What breaks:</b> the factor \\(2\\) from the union bound over the two tails. With one tail, the requirement is \\(e^{-2n\\varepsilon^2}\\le\\delta\\), so \\(\\ln(1/\\delta)\\) replaces \\(\\ln(2/\\delta)\\). Nothing else changes, because each tail is a one-sided Hoeffding bound.<br><b>Working:</b> two-sided \\(2e^{-2n\\varepsilon^2}\\le\\delta\\) gives \\(n\\ge\\dfrac{\\ln(2/\\delta)}{2\\varepsilon^2}=\\dfrac{\\ln40}{0.0008}\\approx4611.1\\). One-sided \\(e^{-2n\\varepsilon^2}\\le\\delta\\) gives \\(n\\ge\\dfrac{\\ln20}{0.0008}\\approx3744.7\\).<br><b>Sanity check:</b> for \\(p=\\tfrac12\\) the CLT gives about \\(2401\\) two-sided, since \\(n\\ge(1.96/\\varepsilon)^2\\cdot\\tfrac14\\). Hoeffding is about twice that, the price of a distribution-free bound. Simulation at \\(n=4612\\) gives \\(P(|\\hat p-\\tfrac12|\\ge0.02)\\approx0.0064\\), below \\(0.05\\).<br><b>Transfer:</b> the sample size for a survey's margin of error when each response is a yes or no.",
+  "tags": [
+   "s_tail_sum",
+   "s_convexity_jensen",
+   "concentration",
+   "sample_size",
+   "fmt_perturb"
+  ],
+  "dest": "08_stats_regression_ml",
+  "hints": [
+   "Which step in the two-sided argument produces a factor that a one-sided statement does not need?",
+   "Name the move: a union bound over the two tails, each bounded by Hoeffding.",
+   "Write each one-tail bound as \\(\\exp(-2n\\varepsilon^2)\\). Two tails give \\(2\\exp(-2n\\varepsilon^2)\\le\\delta\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for Chebyshev's inequality, when is it tight, and when does it fail?",
+  "back": "<b>Triggers:</b> you know only a mean \\(\\mu\\) and a variance \\(\\sigma^2\\), and you need \\(P(|Y-\\mu|\\ge k\\sigma)\\).<br><b>Move:</b> \\(P(|Y-\\mu|\\ge k\\sigma)\\le\\dfrac1{k^2}\\), by applying Markov to \\((Y-\\mu)^2\\).<br><b>Tight case:</b> a three-point law with mass \\(\\dfrac1{2k^2}\\) at each of \\(\\mu\\pm k\\sigma\\), and the rest at \\(\\mu\\). For \\(k=2\\), \\(\\mu=0\\), \\(\\sigma=1\\): \\(P(Y=\\pm2)=\\tfrac18\\), \\(P(Y=0)=\\tfrac34\\), so \\(P(|Y|\\ge2)=\\tfrac14=\\tfrac1{k^2}\\). Check: \\(\\mathbb E Y^2=2\\cdot\\tfrac18\\cdot4=1\\).<br><b>Failure:</b> it uses only two moments, so it is loose for smooth laws. For a standard normal, \\(P(|Z|\\ge2)=0.0455\\), under a fifth of the bound \\(0.25\\). For \\(k\\le1\\) the bound is at least \\(1\\) and says nothing.",
+  "tags": [
+   "s_tail_sum",
+   "chebyshev",
+   "variance",
+   "fmt_toolkit"
+  ],
+  "dest": "08_stats_regression_ml",
+  "figs_back": [
+   "fgC_chebyshev_tight"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You need to bound the upper tail of a sum \\(X\\) of independent pieces. Which of Markov, Chebyshev, Chernoff and Hoeffding do you reach for when (a) only the mean is trusted, (b) the pieces are bounded and you need a sample size, (c) you need the exponential rate? When does each fail? Use \\(P(X\\ge60)\\) for \\(X\\sim\\text{Binomial}(100,\\tfrac12)\\) as the test case.",
+  "back": "<b>(a) Markov:</b> \\(P(X\\ge t)\\le\\mathbb E X/t\\) for \\(X\\ge0\\). Needs only the mean and decays like \\(1/t\\). Fails when the mean is not small relative to \\(t\\), and for signed quantities.<br><b>(b) Hoeffding:</b> \\(P(\\bar X-\\mu\\ge t)\\le\\exp(-2nt^2/(b-a)^2)\\) for independent summands in \\([a,b]\\). Dimension-free, and it gives sample sizes directly. Fails when the variance is much smaller than the range, as near \\(p=0\\) or \\(p=1\\), where Bernstein's bound is tighter.<br><b>(c) Chernoff:</b> \\(P(X\\ge t)\\le\\min_\\lambda e^{-\\lambda t}\\mathbb E e^{\\lambda X}\\). Exponential in \\(n\\) with the optimal rate. Needs a finite moment generating function, and fails for heavy tails or dependent summands.<br><b>Between them:</b> Chebyshev needs only the variance and decays like \\(1/t^2\\).<br><b>Test case:</b> Markov \\(0.833\\), Chebyshev \\(0.25\\), Chernoff \\(0.1335\\), Hoeffding \\(0.1353\\), exact \\(0.0284\\). Both exponential bounds are about five times the exact value at \\(t=10\\), because they drop the polynomial prefactor of the true tail.",
+  "tags": [
+   "s_tail_sum",
+   "s_convexity_jensen",
+   "concentration",
+   "tail_bounds",
+   "fmt_toolkit"
+  ],
+  "dest": "08_stats_regression_ml"
+ }
+]
