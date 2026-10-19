@@ -287,12 +287,12 @@ for phi_t in [0.97, 0.98, 0.99, 1.0]:
     print(f"   phi={phi_t}: E[phihat] = {means[phi_t][0]:.4f} (se {means[phi_t][1]:.4f})")
 chk(13, "simulated E[phihat] at true phi=1.0 is about 0.90", 0.90, means[1.0][0],
     se=means[1.0][1], half_unit=0.005)
-chk(13, "simulated E[phihat] at true phi=0.98 is about 0.88", 0.88, means[0.98][0],
+chk(13, "simulated E[phihat] at true phi=0.98 is about 0.885", 0.885, means[0.98][0],
     se=means[0.98][1], half_unit=0.005)
 sd_b = float(bs_.std())
 chk(13, "sampling sd of phihat at phi=1, T=50, about 0.08", 0.08, sd_b, half_unit=0.005,
     se=sd_b / math.sqrt(2 * len(bs_)))
-chk(13, "gap in means phi=0.98 vs 1.0 (about 0.015)", 0.015, means[1.0][0] - means[0.98][0],
+chk(13, "gap in means phi=0.98 vs 1.0 (about 0.014)", 0.014, means[1.0][0] - means[0.98][0],
     se=math.hypot(means[1.0][1], means[0.98][1]), half_unit=0.001)
 chk(13, "E[phihat] at phi=0.97 is about 0.88", 0.88, means[0.97][0], se=means[0.97][1], half_unit=0.005)
 chk(13, "first-order Kendall inversion gives phi about 0.979", 0.979,

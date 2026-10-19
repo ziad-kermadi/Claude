@@ -327,56 +327,10 @@ z
     <g id="xtick_5">
      <g id="line2d_5">
       <g>
-       <use xlink:href="#m05b77bd2c2" x="326.121844" y="147.937422" style="fill: #1b1b1b; stroke: #1b1b1b; stroke-width: 0.8"/>
-      </g>
-     </g>
-     <g id="text_5">
-      <!-- 19 -->
-      <g style="fill: #1b1b1b" transform="translate(319.123094 163.294844) scale(0.11 -0.11)">
-       <defs>
-        <path id="DejaVuSans-1c" d="M 703 97 
-L 703 672 
-Q 941 559 1184 500 
-Q 1428 441 1663 441 
-Q 2288 441 2617 861 
-Q 2947 1281 2994 2138 
-Q 2813 1869 2534 1725 
-Q 2256 1581 1919 1581 
-Q 1219 1581 811 2004 
-Q 403 2428 403 3163 
-Q 403 3881 828 4315 
-Q 1253 4750 1959 4750 
-Q 2769 4750 3195 4129 
-Q 3622 3509 3622 2328 
-Q 3622 1225 3098 567 
-Q 2575 -91 1691 -91 
-Q 1453 -91 1209 -44 
-Q 966 3 703 97 
-z
-M 1959 2075 
-Q 2384 2075 2632 2365 
-Q 2881 2656 2881 3163 
-Q 2881 3666 2632 3958 
-Q 2384 4250 1959 4250 
-Q 1534 4250 1286 3958 
-Q 1038 3666 1038 3163 
-Q 1038 2656 1286 2365 
-Q 1534 2075 1959 2075 
-z
-" transform="scale(0.015625)"/>
-       </defs>
-       <use xlink:href="#DejaVuSans-14"/>
-       <use xlink:href="#DejaVuSans-1c" transform="translate(63.625 0)"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_6">
-     <g id="line2d_6">
-      <g>
        <use xlink:href="#m05b77bd2c2" x="341.033779" y="147.937422" style="fill: #1b1b1b; stroke: #1b1b1b; stroke-width: 0.8"/>
       </g>
      </g>
-     <g id="text_6">
+     <g id="text_5">
       <!-- $\geq 20$ -->
       <g style="fill: #1b1b1b" transform="translate(327.283779 163.294844) scale(0.11 -0.11)">
        <defs>
@@ -427,7 +381,7 @@ z
       </g>
      </g>
     </g>
-    <g id="text_7">
+    <g id="text_6">
      <!-- k (payoff $2^k$ with probability $2^{-k}$, capped at $2^{20}$) -->
      <g style="fill: #1b1b1b" transform="translate(68.305396 180.387422) scale(0.11 -0.11)">
       <defs>
@@ -866,7 +820,7 @@ z
    </g>
    <g id="matplotlib.axis_2">
     <g id="ytick_1">
-     <g id="line2d_7">
+     <g id="line2d_6">
       <defs>
        <path id="m5245e844b0" d="M 0 0 
 L -3.5 0 
@@ -876,7 +830,7 @@ L -3.5 0
        <use xlink:href="#m5245e844b0" x="42.795078" y="147.937422" style="fill: #1b1b1b; stroke: #1b1b1b; stroke-width: 0.8"/>
       </g>
      </g>
-     <g id="text_8">
+     <g id="text_7">
       <!-- 0 -->
       <g style="fill: #1b1b1b" transform="translate(28.796328 152.116133) scale(0.11 -0.11)">
        <use xlink:href="#DejaVuSans-13"/>
@@ -884,12 +838,12 @@ L -3.5 0
      </g>
     </g>
     <g id="ytick_2">
-     <g id="line2d_8">
+     <g id="line2d_7">
       <g>
        <use xlink:href="#m5245e844b0" x="42.795078" y="104.844948" style="fill: #1b1b1b; stroke: #1b1b1b; stroke-width: 0.8"/>
       </g>
      </g>
-     <g id="text_9">
+     <g id="text_8">
       <!-- 1 -->
       <g style="fill: #1b1b1b" transform="translate(28.796328 109.023659) scale(0.11 -0.11)">
        <use xlink:href="#DejaVuSans-14"/>
@@ -897,12 +851,12 @@ L -3.5 0
      </g>
     </g>
     <g id="ytick_3">
-     <g id="line2d_9">
+     <g id="line2d_8">
       <g>
        <use xlink:href="#m5245e844b0" x="42.795078" y="61.752474" style="fill: #1b1b1b; stroke: #1b1b1b; stroke-width: 0.8"/>
       </g>
      </g>
-     <g id="text_10">
+     <g id="text_9">
       <!-- 2 -->
       <g style="fill: #1b1b1b" transform="translate(28.796328 65.931185) scale(0.11 -0.11)">
        <use xlink:href="#DejaVuSans-15"/>
@@ -910,12 +864,12 @@ L -3.5 0
      </g>
     </g>
     <g id="ytick_4">
-     <g id="line2d_10">
+     <g id="line2d_9">
       <g>
        <use xlink:href="#m5245e844b0" x="42.795078" y="18.66" style="fill: #1b1b1b; stroke: #1b1b1b; stroke-width: 0.8"/>
       </g>
      </g>
-     <g id="text_11">
+     <g id="text_10">
       <!-- 3 -->
       <g style="fill: #1b1b1b" transform="translate(28.796328 22.838711) scale(0.11 -0.11)">
        <defs>
@@ -956,7 +910,7 @@ z
       </g>
      </g>
     </g>
-    <g id="text_12">
+    <g id="text_11">
      <!-- contribution to E -->
      <g style="fill: #1b1b1b" transform="translate(22.15375 129.124023) rotate(-90) scale(0.11 -0.11)">
       <defs>
@@ -1047,13 +1001,13 @@ L 42.795078 18.66
 L 355.945714 147.937422 
 " style="fill: none; stroke: #1b1b1b; stroke-width: 0.9; stroke-linejoin: miter; stroke-linecap: square"/>
    </g>
-   <g id="text_13">
+   <g id="text_12">
     <!-- 2 -->
     <g style="fill: #c05a00" transform="translate(337.852529 55.902732) scale(0.1 -0.1)">
      <use xlink:href="#DejaVuSans-15"/>
     </g>
    </g>
-   <g id="text_14">
+   <g id="text_13">
     <!-- total $= 19 + 2 = 21$ -->
     <g style="fill: #1b1b1b" transform="translate(137.108461 42.805065) scale(0.1 -0.1)">
      <defs>
@@ -1068,6 +1022,36 @@ L 4684 1631
 L 4684 1100 
 L 678 1100 
 L 678 1631 
+z
+" transform="scale(0.015625)"/>
+      <path id="DejaVuSans-1c" d="M 703 97 
+L 703 672 
+Q 941 559 1184 500 
+Q 1428 441 1663 441 
+Q 2288 441 2617 861 
+Q 2947 1281 2994 2138 
+Q 2813 1869 2534 1725 
+Q 2256 1581 1919 1581 
+Q 1219 1581 811 2004 
+Q 403 2428 403 3163 
+Q 403 3881 828 4315 
+Q 1253 4750 1959 4750 
+Q 2769 4750 3195 4129 
+Q 3622 3509 3622 2328 
+Q 3622 1225 3098 567 
+Q 2575 -91 1691 -91 
+Q 1453 -91 1209 -44 
+Q 966 3 703 97 
+z
+M 1959 2075 
+Q 2384 2075 2632 2365 
+Q 2881 2656 2881 3163 
+Q 2881 3666 2632 3958 
+Q 2384 4250 1959 4250 
+Q 1534 4250 1286 3958 
+Q 1038 3666 1038 3163 
+Q 1038 2656 1286 2365 
+Q 1534 2075 1959 2075 
 z
 " transform="scale(0.015625)"/>
       <path id="DejaVuSans-e" d="M 2944 4013 
@@ -1102,7 +1086,7 @@ z
      <use xlink:href="#DejaVuSans-14" transform="translate(883.203125 0.015625)"/>
     </g>
    </g>
-   <g id="text_15">
+   <g id="text_14">
     <!-- each term $2^k\cdot 2^{-k} = 1$; the capped tail adds $2^{20}\cdot 2^{-19} = 2$ -->
     <g style="fill: #1b1b1b" transform="translate(65.230396 12.66) scale(0.095 -0.095)">
      <defs>

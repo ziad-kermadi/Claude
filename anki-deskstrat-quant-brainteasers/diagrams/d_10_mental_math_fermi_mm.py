@@ -670,5 +670,5 @@ def _(ax):
     ax.set_xlim(29, 71)
     ax.set_ylim(0, pm.max() * 1.35)
     ax.set_xlabel("heads X in 100 fair flips")
-    ax.set_ylabel("probability")
+    ax.set_ylabel(r"$P(X = k)$")
     ax.set_title(r"$\mu = 50$, $\sigma = \sqrt{np(1-p)} = 5$; blue = within $\pm 1\sigma$", fontsize=10)
