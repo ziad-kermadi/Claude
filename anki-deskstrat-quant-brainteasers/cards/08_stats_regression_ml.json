@@ -11,6 +11,11 @@
    "mle",
    "unbiasedness",
    "fmt_solve"
+  ],
+  "hints": [
+   "Where does the largest of the five draws sit relative to \\(\\theta\\), and what does its cumulative distribution look like?",
+   "Find the CDF of \\(M\\) from the event that every draw is below \\(m\\), differentiate it, then compute the mean and rescale to remove the bias.",
+   "\\(P(M\\le m)=P(X_i\\le m\\ \\forall i)\\); write this as a power of \\(m/\\theta\\) and differentiate to get the density of \\(M\\)."
   ]
  },
  {
@@ -23,6 +28,11 @@
    "uniform",
    "mle",
    "fmt_chain"
+  ],
+  "hints": [
+   "Once you know the distribution of the maximum from the previous card, which moments do you need, and can both come from one density?",
+   "Compute \\(E[M^k]\\) directly from the density of \\(M\\) for \\(k=1\\) and \\(k=2\\), then combine them as \\(E[M^2]-E[M]^2\\).",
+   "\\(E[M^k]=\\int_0^\\theta m^k f_M(m)\\,dm\\) with \\(f_M\\) the density of the maximum; set up the integrals for \\(k=1,2\\)."
   ]
  },
  {
@@ -35,6 +45,11 @@
    "umvue",
    "method_of_moments",
    "fmt_chain"
+  ],
+  "hints": [
+   "Which statistic of the sample carries all the information about \\(\\theta\\), and can a rescaled version of it beat a simple moment-based estimator?",
+   "Rescale \\(M\\) by a constant chosen so the expectation equals \\(\\theta\\), then compare its variance with that of \\(2\\bar X\\) using the variance of one draw.",
+   "Require \\(E[cM]=\\theta\\) and solve for \\(c\\) using your \\(E[M]\\) from the earlier card; for the comparison, \\(\\mathrm{Var}(2\\bar X)=4\\,\\mathrm{Var}(X)/n\\)."
   ]
  },
  {
@@ -46,6 +61,11 @@
    "uniform",
    "range_estimator",
    "fmt_chain"
+  ],
+  "hints": [
+   "With two unknown endpoints, which pair of order statistics would you expect to pin down both, and how far does each extreme sit from its endpoint on average?",
+   "Each extreme is offset from its endpoint by a fraction of the total width; use the range to estimate that width, then solve the resulting pair of expectation equations.",
+   "Write \\(E[m]\\) and \\(E[M]\\) in terms of \\(a\\), \\(b\\) and \\(n\\), and \\(E[R]\\) in terms of \\(a\\), \\(b\\) and \\(n\\)."
   ]
  },
  {
@@ -58,6 +78,11 @@
    "bias_variance",
    "mle",
    "fmt_chain"
+  ],
+  "hints": [
+   "When the sample has only one point, what does the sample maximum reduce to, and does the bias correction from the general case still make sense?",
+   "Compare the two MSEs as variance plus squared bias, each a function of \\(\\theta\\) alone; the general formulas should specialise correctly at \\(n=1\\).",
+   "\\(\\mathrm{MSE}(T)=\\mathrm{Var}(T)+(E[T]-\\theta)^2\\); write this for \\(T=X\\) and for \\(T=2X\\) with \\(X\\sim\\mathrm{Uniform}(0,\\theta)\\)."
   ]
  },
  {
@@ -71,6 +96,11 @@
    "location_family",
    "unbiasedness",
    "fmt_perturb"
+  ],
+  "hints": [
+   "The support now slides with \\(\\theta\\) instead of stretching from zero; what happens to the sample's lower and upper ends, and does the scaling trick still work?",
+   "Use both extremes: find how each one's expectation depends on \\(\\theta\\) through a fixed offset, then combine them so the offsets cancel.",
+   "Write \\(E[m]=\\theta+c_1\\) and \\(E[M]=\\theta+c_2\\) for constants \\(c_1,c_2\\) depending on \\(n\\), then look for \\(\\alpha m+\\beta M+\\gamma\\) with expectation \\(\\theta\\)."
   ]
  },
  {
@@ -83,6 +113,11 @@
    "uniform",
    "german_tank",
    "fmt_twin"
+  ],
+  "hints": [
+   "This is a continuous version of a well-known estimation problem for an unknown upper limit; which single statistic of the sample should the estimate be built on?",
+   "Scale the observed maximum by a factor that removes its expected downward bias for a sample of this size.",
+   "Write \\(E[M]\\) for four i.i.d. draws on \\((0,T]\\) as a function of \\(T\\), and find the multiple of \\(M\\) whose expectation is \\(T\\)."
   ]
  },
  {
@@ -107,6 +142,11 @@
    "german_tank",
    "discrete_uniform",
    "fmt_solve"
+  ],
+  "hints": [
+   "The unknown is an upper limit on numbered objects, and the sample is drawn without replacement; what is the probability that the largest drawn number is at most \\(j\\)?",
+   "For a positive integer variable, the expectation can be written as a sum of tail probabilities; count the subsets of size \\(k\\) that lie entirely below \\(j\\).",
+   "\\(P(M<j)=\\binom{j-1}{k}\\big/\\binom{N}{k}\\), and \\(E[M]=\\sum_{j\\ge1}P(M\\ge j)\\)."
   ]
  },
  {
@@ -119,6 +159,11 @@
    "bias_variance",
    "mse",
    "fmt_solve"
+  ],
+  "hints": [
+   "Here the estimator is a scaled-down sample mean; what two competing quantities make up its mean squared error as the scale changes?",
+   "Write the MSE as squared bias plus variance, both as functions of the scale \\(c\\), then set the derivative with respect to \\(c\\) to zero.",
+   "\\(\\mathrm{MSE}(c)=(c-1)^2\\theta^2+c^2s^2\\); differentiate with respect to \\(c\\)."
   ]
  },
  {
@@ -142,6 +187,11 @@
    "variance_estimation",
    "bias_variance",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Does the divisor that removes bias also minimise mean squared error, and what distribution does the scaled sum of squares follow?",
+   "Let \\(Q=\\sum(X_i-\\bar X)^2/\\sigma^2\\), which is chi-squared with \\(n-1\\) degrees of freedom; write the MSE of \\(\\sigma^2 Q/c\\) as squared bias plus variance using the mean and variance of that distribution.",
+   "\\(\\mathrm{MSE}=\\mathrm{Bias}^2+\\mathrm{Var}\\) with \\(E[Q]=n-1\\) and \\(\\mathrm{Var}(Q)=2(n-1)\\); express both in terms of \\(c\\) and minimise over \\(c\\)."
   ]
  },
  {
@@ -153,6 +203,11 @@
    "shrinkage",
    "bayes_prior",
    "fmt_twin"
+  ],
+  "hints": [
+   "A noisy measurement of a quantity drawn from a population with some spread: how should the observation be pulled toward the population centre when the two variances are comparable?",
+   "Use the normal-normal conjugate result: the best estimate is a weight times the observation, with the weight given by the prior's share of the total variance.",
+   "\\(\\hat\\mu=w\\,m\\) with \\(w=\\tau^2/(\\tau^2+s^2)\\); identify \\(\\tau^2\\) and \\(s^2\\) from the prompt."
   ]
  },
  {
@@ -175,6 +230,11 @@
    "variance_estimation",
    "unbiasedness",
    "fmt_solve"
+  ],
+  "hints": [
+   "Expand the sum of squared deviations in a form that uses only the raw squares and the sample mean; which expectations then need to be computed?",
+   "Use \\(\\sum(X_i-\\bar X)^2=\\sum X_i^2-n\\bar X^2\\), then take expectations of each part using the variance of \\(\\bar X\\).",
+   "Write \\(E[X_i^2]\\) in terms of \\(\\mu\\) and \\(\\sigma^2\\), and \\(E[\\bar X^2]\\) in terms of \\(\\mathrm{Var}(\\bar X)\\) and \\(\\mu\\)."
   ]
  },
  {
@@ -197,6 +257,11 @@
    "variance_estimation",
    "unbiasedness",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Unbiasedness of the variance does not automatically carry over to its square root; what property of the square root controls the direction of the bias?",
+   "Apply Jensen's inequality to the square root, then find the exact constant for \\(n=2\\) by computing the expected absolute difference of the two observations.",
+   "For \\(n=2\\), write \\(S\\) as \\(|X_1-X_2|/\\sqrt2\\) and find the distribution of \\(X_1-X_2\\)."
   ]
  },
  {
@@ -220,6 +285,11 @@
    "cauchy",
    "heavy_tails",
    "fmt_solve"
+  ],
+  "hints": [
+   "Would the usual averaging argument work for this distribution, and what transform of the distribution would tell you the law of the average?",
+   "Use the characteristic function: the average's characteristic function is the single-draw one evaluated at \\(t/n\\), raised to the power \\(n\\).",
+   "\\(\\varphi_{\\bar X}(t)=\\big[\\varphi_X(t/n)\\big]^n\\), with \\(\\varphi_X(t)=E[e^{itX}]\\) for the standard Cauchy law."
   ]
  },
  {
@@ -231,6 +301,11 @@
    "cauchy",
    "ratio_of_normals",
    "fmt_twin"
+  ],
+  "hints": [
+   "Each \\(R_i\\) is a ratio of two independent standard normals; which known distribution does this ratio belong to, and does a related card already cover averages of it?",
+   "Identify the law of a single ratio, then apply the characteristic-function argument used for averages of that law.",
+   "Write \\(P(R_i\\le r)=P(Z_{1}\\le rZ_{2})\\) and condition on \\(Z_2\\)."
   ]
  },
  {
@@ -265,6 +340,11 @@
    "binomial",
    "coverage",
    "fmt_solve"
+  ],
+  "hints": [
+   "Coverage is a probability over the random count; for which outcomes of the count does the interval actually contain the true value?",
+   "Treat coverage as the expectation of an indicator over the binomial outcome, and list the counts \\(k\\) whose interval contains \\(p\\).",
+   "\\(\\text{Coverage}=\\sum_k \\mathbf 1\\{p\\in\\mathrm{CI}(k)\\}\\binom{10}{k}p^k(1-p)^{10-k}\\)."
   ]
  },
  {
@@ -277,6 +357,11 @@
    "binomial",
    "beta_prior",
    "fmt_perturb"
+  ],
+  "hints": [
+   "With zero successes the normal approximation breaks down; which conjugate family turns this prior into a posterior you can read off in closed form?",
+   "Use the conjugate update: add the successes to one prior parameter and the failures to the other, then invert the posterior CDF at the two tail levels.",
+   "Write the posterior as \\(\\mathrm{Beta}(a+x,\\,b+n-x)\\) and identify \\(a\\) and \\(b\\) from the prior in the prompt."
   ]
  },
  {
@@ -299,6 +384,11 @@
    "p_values",
    "base_rate",
    "fmt_solve"
+  ],
+  "hints": [
+   "Condition on the event that the test came out significant; how does that event split between the two states of the world?",
+   "Apply Bayes' rule: the posterior probability of no edge is the joint probability of no edge and significance, divided by the total probability of significance.",
+   "\\(P(H_0\\mid S)=\\dfrac{P(S\\mid H_0)P(H_0)}{P(S)}\\), with \\(P(S)=P(S\\mid H_0)P(H_0)+P(S\\mid H_1)P(H_1)\\)."
   ]
  },
  {
@@ -310,6 +400,11 @@
    "p_values",
    "peeking",
    "fmt_solve"
+  ],
+  "hints": [
+   "Are the five looks fresh tests, or do they share data? What does the running cumulative sum look like across the five sample sizes?",
+   "Model the standardised statistics at the five looks as a random walk; the question is the chance that this walk ever crosses the boundary at one of the looks.",
+   "Let \\(S_k\\) be the running sum and \\(z_k=S_k/\\sqrt k\\); the target is \\(P\\big(\\max_{k\\le5}|z_k|>1.96\\big)\\)."
   ]
  },
  {
@@ -321,6 +416,11 @@
    "p_values",
    "discrete_tests",
    "fmt_perturb"
+  ],
+  "hints": [
+   "The test statistic takes only a few values; which cut-offs are available, and can a rule that rejects only part of the time hit the target level exactly?",
+   "Compute the exact binomial tail probabilities for each cut-off, then consider a randomised rule that rejects the boundary value with some probability.",
+   "Size \\(=P(X\\ge 9)+\\gamma\\,P(X=8)\\) under \\(H_0\\); set this equal to \\(\\alpha\\) and solve for \\(\\gamma\\)."
   ]
  },
  {
@@ -344,6 +444,11 @@
    "fwer",
    "bonferroni",
    "fmt_solve"
+  ],
+  "hints": [
+   "What is the chance that at least one of many independent tests gives a false alarm, and what simple bound on a union of events could replace the exact calculation?",
+   "Use the complement for the exact probability under independence, and the union bound to choose a per-test threshold that caps the family error rate.",
+   "\\(P(\\text{at least one false positive})=1-(1-\\alpha_{\\text{per}})^{m}\\); for Bonferroni, set \\(\\alpha_{\\text{per}}=\\alpha/m\\)."
   ]
  },
  {
@@ -355,6 +460,11 @@
    "multiple_testing",
    "dependence",
    "fmt_perturb"
+  ],
+  "hints": [
+   "If the tests are not separate experiments but the same statistic repeated, does the earlier product formula still describe the chance of a false alarm?",
+   "When all the statistics are identical, the twenty events coincide; reduce the union to a single event and compare with the assumption behind the bound.",
+   "If every test rejects on the same event \\(A\\), write the union of the twenty events in terms of \\(A\\) alone."
   ]
  },
  {
@@ -367,6 +477,11 @@
    "fdr",
    "benjamini_hochberg",
    "fmt_solve"
+  ],
+  "hints": [
+   "Plot the sorted p-values against a rising line; how many points must lie below the line, and which is the last one that does?",
+   "Bonferroni uses one flat threshold; the BH rule compares the \\(k\\)-th smallest p-value with a threshold that grows linearly in rank. Find the largest rank that passes.",
+   "Find the largest \\(k\\) with \\(p_{(k)}\\le \\dfrac{k}{m}\\,q\\), where \\(m=10\\) and \\(q=0.05\\)."
   ]
  },
  {
@@ -390,6 +505,11 @@
    "sharpe_ratio",
    "backtest_overfitting",
    "fmt_solve"
+  ],
+  "hints": [
+   "Among a hundred strategies with zero true edge, the best estimate is a maximum of many draws; what is the expected maximum of a hundred standard normals, and how does the standard error scale the answer?",
+   "Write the expected maximum as an integral against the density of the largest of 100 i.i.d. normals, then multiply by the standard error of each Sharpe estimate.",
+   "\\(E[\\max]=\\int x\\,\\dfrac{d}{dx}\\Phi(x)^{100}\\,dx\\) for standard normals; the answer then scales by the standard error."
   ]
  },
  {
@@ -402,6 +522,11 @@
    "selection_bias",
    "sharpe_ratio",
    "fmt_twin"
+  ],
+  "hints": [
+   "The top score of a hundred pure-chance children is the maximum of many standard normals; how does the chance that the maximum exceeds a level relate to each individual exceeding it?",
+   "Use the complement: the maximum stays below a level only if every individual does, so the tail of the maximum is one minus a power of the single-draw CDF.",
+   "\\(P(\\text{top}>c)=1-\\Phi(c)^{100}\\); the typical top score is the expected maximum of 100 standard normals."
   ]
  },
  {
@@ -425,6 +550,11 @@
    "sharpe_ratio",
    "standard_error",
    "fmt_solve"
+  ],
+  "hints": [
+   "Which tool gives the standard error of a ratio of a sample mean to a sample standard deviation for large samples, and how does the number of observations per year enter?",
+   "Use the delta method on the per-period Sharpe ratio, then convert from daily to annual units by the number of periods per year.",
+   "Per-period \\(\\mathrm{SE}\\approx\\sqrt{(1+\\mathrm{SR}_d^2/2)/T}\\); multiply by \\(\\sqrt{252}\\) to annualise."
   ]
  },
  {
@@ -437,6 +567,11 @@
    "skewness",
    "kurtosis",
    "fmt_perturb"
+  ],
+  "hints": [
+   "The normal-data formula assumes a particular shape for the return distribution; which higher moments could change the variance of a Sharpe estimate, and in which direction?",
+   "Use the delta-method variance that includes the third and fourth moments of returns, not only the mean and variance.",
+   "\\(\\mathrm{Var}(\\widehat{\\mathrm{SR}})\\approx\\dfrac1T\\big(1-\\gamma_3\\,\\mathrm{SR}+\\dfrac{\\gamma_4-1}{4}\\mathrm{SR}^2\\big)\\); identify \\(\\gamma_3\\), \\(\\gamma_4\\) and SR from the prompt."
   ]
  },
  {
@@ -448,6 +583,11 @@
    "ols",
    "derivation",
    "fmt_solve"
+  ],
+  "hints": [
+   "At the minimum of the sum of squared residuals, what must hold for the residuals with respect to each coefficient?",
+   "Set the partial derivatives of the sum of squares with respect to the intercept and the slope to zero, and solve the intercept equation first.",
+   "\\(\\partial_a:\\ \\sum_i(y_i-a-bx_i)=0\\) and \\(\\partial_b:\\ \\sum_i x_i(y_i-a-bx_i)=0\\)."
   ]
  },
  {
@@ -484,6 +624,11 @@
    "heteroskedasticity",
    "wls",
    "fmt_perturb"
+  ],
+  "hints": [
+   "The noise now scales with the regressor; does the usual OLS variance formula still apply, and what transformation would make the noise uniform again?",
+   "Compute the OLS slope variance directly from the error variance at each point, then divide each observation by the scale of its noise to get a constant-variance problem.",
+   "\\(\\mathrm{Var}(\\hat\\beta_{OLS})=\\dfrac{\\sum_i x_i^2\\,\\mathrm{Var}(\\varepsilon_i)}{(\\sum_i x_i^2)^2}\\); then regress \\(y_i/x_i\\) on a constant."
   ]
  },
  {
@@ -496,6 +641,11 @@
    "autocorrelation",
    "newey_west",
    "fmt_solve"
+  ],
+  "hints": [
+   "Are successive observations uncorrelated here, and what happens to the variance of a sum when its terms are correlated?",
+   "The variance of the sample mean is the sum of all autocovariances, not only the lag-zero term; write it as a series in the autocorrelation.",
+   "\\(T\\,\\mathrm{Var}(\\bar x)\\to\\sum_{k\\in\\mathbb Z}\\gamma_k\\), with \\(\\gamma_k=\\sigma_x^2\\rho^{|k|}\\) for an AR(1) with \\(\\rho=0.5\\)."
   ]
  },
  {
@@ -508,6 +658,11 @@
    "r_squared",
    "regression_symmetry",
    "fmt_solve"
+  ],
+  "hints": [
+   "Swap the roles of the two variables; how do the two regression slopes relate to each other and to the correlation between \\(x\\) and \\(y\\)?",
+   "Write each slope as a covariance divided by a variance, multiply the two, and see what remains.",
+   "\\(\\hat\\beta_{yx}=S_{xy}/S_{xx}\\) and \\(\\hat\\beta_{xy}=S_{xy}/S_{yy}\\); compute \\(S_{xx}\\), \\(S_{yy}\\) and \\(S_{xy}\\) from the data."
   ]
  },
  {
@@ -531,6 +686,11 @@
    "ols",
    "omitted_variable_bias",
    "fmt_solve"
+  ],
+  "hints": [
+   "The short regression leaves out a variable related to the included one; which way does its coefficient get pushed, and what auxiliary regression sets the size of the push?",
+   "Regress the omitted variable on the included one, then substitute that auxiliary slope into the expected coefficient of the short regression.",
+   "\\(E[\\hat b_{\\text{short}}]=\\beta_1+\\beta_2\\,\\delta\\), where \\(\\delta\\) is the slope from regressing \\(x_2\\) on \\(x_1\\)."
   ]
  },
  {
@@ -567,6 +727,11 @@
    "multicollinearity",
    "vif",
    "fmt_solve"
+  ],
+  "hints": [
+   "How much of one standardised regressor is explained by the other, and how does that fraction feed into the variance of its coefficient?",
+   "Use the auxiliary R-squared from regressing one regressor on the other; the coefficient variance is divided by one minus that R-squared.",
+   "\\(\\mathrm{VIF}_1=\\dfrac{1}{1-R_1^2}\\), where \\(R_1^2\\) comes from regressing \\(x_1\\) on \\(x_2\\)."
   ]
  },
  {
@@ -578,6 +743,11 @@
    "regression_to_mean",
    "reliability",
    "fmt_solve"
+  ],
+  "hints": [
+   "The best guess of an unobserved quantity from a noisy score is a regression of the quantity on the score; what share of the score's variance comes from the true quantity?",
+   "Use the linear conditional expectation: the mean plus the covariance-to-variance ratio times the deviation of the observed score from its mean.",
+   "\\(E[T\\mid X]=\\mu+\\dfrac{\\mathrm{Cov}(T,X)}{\\mathrm{Var}(X)}(X-\\mu)\\); fill in \\(\\mathrm{Var}(X)=\\mathrm{Var}(T)+\\mathrm{Var}(e)\\)."
   ]
  },
  {
@@ -614,6 +784,11 @@
    "map",
    "shrinkage",
    "fmt_solve"
+  ],
+  "hints": [
+   "The penalty adds a term that acts like extra curvature in the objective; what normal equation replaces the OLS one, and which Gaussian prior makes the penalty appear in a posterior?",
+   "Differentiate the penalised objective to get a modified normal equation, then match the penalty weight to the ratio of noise variance to prior variance.",
+   "\\((\\sum x^2+\\lambda)\\beta=\\sum xy\\), and for a Gaussian prior \\(\\lambda=\\sigma^2/\\tau^2\\)."
   ]
  },
  {
@@ -626,6 +801,11 @@
    "soft_thresholding",
    "sparsity",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Which penalty has a corner at zero, and what does a corner do to the solution when the signal is weaker than the penalty?",
+   "Check the subgradient optimality condition at \\(\\beta=0\\) first, then solve in the region where \\(\\beta\\neq 0\\).",
+   "Write the first-order condition \\(\\beta-z+\\lambda s=0\\) with \\(s\\in\\partial|\\beta|\\), and ask whether \\(\\beta=0\\) can satisfy it for some \\(s\\in[-1,1]\\)."
   ]
  },
  {
@@ -649,6 +829,11 @@
    "pca",
    "covariance",
    "fmt_solve"
+  ],
+  "hints": [
+   "This is a symmetric matrix with equal diagonal entries; what do the eigenvectors look like when the two variables are treated symmetrically?",
+   "For a symmetric matrix with equal diagonal entries, try vectors whose two components have equal magnitude, then solve the characteristic equation.",
+   "\\(\\det(\\Sigma-\\lambda I)=(1-\\lambda)^2-0.8^2=0\\)."
   ]
  },
  {
@@ -661,6 +846,11 @@
    "correlation_matrix",
    "scaling",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Does the first principal component change when one variable is rescaled? Which version of the matrix is invariant to units?",
+   "Compare the covariance matrix with the correlation matrix, and consider standardising each variable before decomposing.",
+   "Find the eigenvalues of the covariance matrix from \\(\\det(C-\\lambda I)=0\\), then do the same after standardising."
   ]
  },
  {
@@ -673,6 +863,11 @@
    "portfolio_variance",
    "equicorrelation",
    "fmt_twin"
+  ],
+  "hints": [
+   "All pairs share the same correlation, so the covariance matrix has a special structure; what is the variance of an equal-weight portfolio in terms of that common correlation?",
+   "Write the covariance matrix as a diagonal term plus a rank-one term built from the all-ones vector, then evaluate the quadratic form with equal weights.",
+   "\\(\\Sigma=(1-\\rho)I+\\rho\\,\\mathbf 1\\mathbf 1^\\top\\); compute \\(w^\\top\\Sigma w\\) for \\(w=\\mathbf 1/n\\)."
   ]
  },
  {
@@ -696,6 +891,11 @@
    "correlation_bounds",
    "psd",
    "fmt_solve"
+  ],
+  "hints": [
+   "Three variables with given pairwise correlations: which property of the full 3-by-3 correlation matrix restricts the third correlation, and what must be nonnegative?",
+   "Require the determinant of the 3-by-3 correlation matrix to be nonnegative, and solve the resulting quadratic in the unknown correlation.",
+   "\\(\\det\\begin{pmatrix}1&0.9&r\\\\0.9&1&0.9\\\\r&0.9&1\\end{pmatrix}\\ge 0\\); expand it in \\(r\\)."
   ]
  },
  {
@@ -707,6 +907,11 @@
    "correlation_bounds",
    "psd",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Can three pairwise correlations be chosen freely? Check a property of the whole matrix rather than the individual entries.",
+   "Compute the determinant and the smallest eigenvalue; a valid correlation matrix must have all eigenvalues nonnegative.",
+   "\\(\\det R=1+2\\rho_{12}\\rho_{23}\\rho_{13}-\\rho_{12}^2-\\rho_{23}^2-\\rho_{13}^2\\); substitute the entries from the prompt."
   ]
  },
  {
@@ -730,6 +935,11 @@
    "measurement_error",
    "attenuation",
    "fmt_solve"
+  ],
+  "hints": [
+   "Measurement noise changes the variance of each observed variable; how does the observed correlation relate to the true one when each variable has a reliability share?",
+   "Write the observed covariance in terms of the true covariance, and the observed variances as true variance divided by reliability.",
+   "\\(r_{\\text{obs}}=\\rho\\sqrt{R_X R_Y}\\); invert this to solve for \\(\\rho\\)."
   ]
  },
  {
@@ -743,6 +953,11 @@
    "fisher_z",
    "confidence_intervals",
    "fmt_solve"
+  ],
+  "hints": [
+   "The sampling distribution of a correlation is skewed near the ends of its range; which transform makes the variance roughly constant, and what is that variance?",
+   "Transform \\(r\\) with the inverse hyperbolic tangent, build a normal interval on that scale, then transform the endpoints back.",
+   "\\(z=\\operatorname{atanh}(r)\\) with \\(\\mathrm{SE}(z)=1/\\sqrt{n-3}\\); the interval is \\(\\tanh(z\\pm1.96\\,\\mathrm{SE})\\)."
   ]
  },
  {
@@ -754,6 +969,11 @@
    "correlation_bounds",
    "geometry",
    "fmt_twin"
+  ],
+  "hints": [
+   "Treat each standardised variable as a unit vector; which geometric inequality constrains the angle between the outer two, given the other two angles?",
+   "Use the triangle inequality for angles: the angle between the outer two is at most the sum of the other two, then convert back to correlation with a cosine.",
+   "Let \\(\\theta_1=\\arccos(0.9)\\) be the angle Paris to Berlin and \\(\\theta_2\\) the angle Berlin to Rome; bound the Paris-to-Rome angle using \\(\\theta_1\\) and \\(\\theta_2\\)."
   ]
  },
  {
@@ -765,6 +985,11 @@
    "s_complement",
    "bootstrap",
    "fmt_twin"
+  ],
+  "hints": [
+   "Each draw independently misses a particular item with the same probability; what is the chance that every draw misses it, and how does that behave as the number of draws grows?",
+   "Treat each person's pick as independent with one fixed chance of missing seat 1; raise that chance to the number of people, then take the large-number limit.",
+   "\\(P(\\text{seat 1 never picked})=\\left(1-\\tfrac{1}{N}\\right)^{N}\\) with \\(N=100\\); compare with the standard exponential limit."
   ]
  },
  {
