@@ -838,9 +838,9 @@
    "fmt_twin"
   ],
   "hints": [
-   "A triangle inscribed in a circle misses the centre exactly when all three vertices lie on one side of it. What does that imply about a half-circle?",
-   "The hub is inside iff the three points are not all in one semicircle, so compute the complement with the reference-point count.",
-   "\\(P(\\text{hub inside})=1-P(\\text{all in one semicircle})\\), and \\(P(\\text{all in one semicircle})=n\\,(1/2)^{n-1}\\) with \\(n=3\\) points; write this subtraction."
+   "Where does the centre sit relative to the three vertices? When does the triangle fail to contain it?",
+   "Structural feature: which side of the centre each point falls on decides whether the centre is inside. Count the configurations where all points fall on one side, using a reference point among them.",
+   "Setup: write \\(P(\\text{hub inside})=1-P(\\text{all on one side})\\), and express \\(P(\\text{all on one side})\\) as a sum over which point serves as the reference, using the chance that each other point falls on its side."
   ]
  },
  {
@@ -855,8 +855,8 @@
   ],
   "hints": [
    "Two firing times are uniform on an interval. Draw them as a point in a square; which points count as a trip?",
-   "A trip is a diagonal band \\(|X-Y|\\le w\\). Find its area by subtracting the two corner triangles outside it.",
-   "\\(P=1-(\\text{area of the two corner triangles})\\), each with legs \\(1-w\\), where \\(w\\) is the coincidence window given in the statement."
+   "Structural feature: the trip condition constrains only the difference of the two times. Ask which parts of the square have a difference larger than the window, and how their total area compares with the square.",
+   "Setup: write \\(P=1-\\) (area of the region where the difference exceeds \\(w\\)), and compute that area as a double integral over \\(x\\) of the admissible \\(y\\)."
   ]
  },
  {
@@ -870,8 +870,8 @@
    "fmt_twin"
   ],
   "hints": [
-   "Normalising the three lengths by their total maps them to a familiar set. What does 'can form a triangle' require of each normalised length?",
-   "Normalise by the sum: the normalised lengths are uniform on a simplex, which is the stick-breaking structure. A triangle needs each piece below half the total.",
+   "The triangle test only compares the lengths with each other. Does the answer change if all three lengths are multiplied by the same constant?",
+   "Structural feature: the triangle condition is scale-free and symmetric in the three lengths, so it depends only on their proportions. Find the joint law of the proportions, then ask when none of them can reach one half.",
    "Let \\(S=L_1+L_2+L_3\\) and \\(p_i=L_i/S\\); a triangle exists iff every \\(p_i<\\tfrac12\\), so write \\(P\\) as the probability of that event on the simplex."
   ]
  },
@@ -888,8 +888,8 @@
   ],
   "hints": [
    "Split the time until the last bulb burns out into stages, one per burnout. How long is each stage, given how many bulbs are still burning?",
-   "Use the spacings decomposition of the maximum: the first burnout, then the wait for the second, then for the third. Each stage is exponential with rate equal to the number still burning.",
-   "\\(E[\\max]=E[X_{(1)}]+E[X_{(2)}-X_{(1)}]+E[X_{(3)}-X_{(2)}]\\), with each term \\(=1/(j\\lambda)\\) for the number \\(j\\) still burning; write the three terms."
+   "Structural feature: the bulbs are independent and memoryless, so after each burnout the survivors look like fresh bulbs. Find the rate of each stage from the number of survivors.",
+   "Setup: the wait for the last burnout is a sum of stage waits. Write the expected total as a sum over the number of bulbs still burning at each stage, and evaluate the rates for three bulbs."
   ]
  },
  {
@@ -905,8 +905,8 @@
   ],
   "hints": [
    "Split the path at time 1. Given the value at time 2, what is the value at time 1, and how is the increment from 1 to 2 related to it?",
-   "Write \\(W_1\\) and \\(W_2-W_1\\) as independent normals. Conditioning on their sum is a linear regression, so use the regression formulas.",
-   "Set \\(X=W_1\\), \\(Y=W_2-W_1\\), \\(S=X+Y=W_2\\); then \\(E[X\\mid S=1]=\\tfrac{\\text{Cov}(X,S)}{\\text{Var}(S)}\\cdot 1\\) and \\(\\text{Var}(X\\mid S)=\\text{Var}(X)-\\tfrac{\\text{Cov}(X,S)^2}{\\text{Var}(S)}\\). Evaluate the covariances."
+   "Structural feature: the value at time 2 is a sum of two independent pieces. Ask how a fixed total is divided between the two pieces when each piece has the same variance.",
+   "Setup: let \\(X\\) be the value at time 1 and \\(S\\) the value at time 2. Write \\(E[X\\mid S=1]\\) as \\(\\tfrac{\\text{Cov}(X,S)}{\\text{Var}(S)}\\cdot 1\\), and evaluate \\(\\text{Cov}(X,S)\\) and \\(\\text{Var}(S)\\) from the increments."
   ]
  },
  {
@@ -921,8 +921,8 @@
    "fmt_twin"
   ],
   "hints": [
-   "Exponential service times have a memoryless property. What is the distribution of the first customer's share of the total service time?",
-   "For two iid exponentials the share is uniform, the same law as breaking a stick at a uniform point. Use that to read off the probability.",
+   "Two independent service times add to a total. Does the share held by customer A depend on the exact distribution of the service times, or only on the symmetry between the two customers?",
+   "Structural feature: the two times have the same law, so the share has the same law seen from either customer, and the two shares add to one. Find the law of the share from that symmetry together with the memoryless property.",
    "\\(P\\!\\left(\\tfrac{A}{A+B}\\le t\\right)=P\\!\\left(A\\le \\tfrac{t}{1-t}B\\right)\\); condition on \\(B\\) and integrate the exponential tail of \\(A\\) against the density of \\(B\\)."
   ]
  },
@@ -938,8 +938,8 @@
   ],
   "hints": [
    "The seams are parallel lines and the stick is the same length as the spacing. Does the crossing chance depend on where the stick lands, or only on its angle?",
-   "Use Buffon's needle formula: for a stick no longer than the spacing, the crossing probability depends only on the ratio of length to spacing, with a factor \\(1/\\pi\\).",
-   "\\(P(\\text{cross})=\\dfrac{2\\ell}{\\pi d}\\) for \\(\\ell\\le d\\); identify the stick length \\(\\ell\\) and the seam spacing \\(d\\) in terms of \\(w\\)."
+   "Structural feature: a crossing depends only on how far the stick's centre is from the nearest seam and on its tilt, so average over those two quantities.",
+   "Setup: let \\(h\\) be the distance from the centre to the nearest seam and \\(\\theta\\) the angle to the seams. Write the crossing event as an inequality between \\(h\\) and a function of \\(\\theta\\), then average over both uniform variables."
   ]
  },
  {
@@ -954,8 +954,8 @@
   ],
   "hints": [
    "Four independent uniform times in an interval. For four such points, where does the third-earliest one tend to land?",
-   "Use the order-statistic mean: the \\(k\\)-th smallest of \\(n\\) uniforms on an interval sits at expected fraction \\(k/(n+1)\\) of the way along.",
-   "\\(E[\\text{third arrival}]=\\dfrac{k}{n+1}\\times(\\text{interval length})\\) with \\(k=3\\), \\(n=4\\), and an interval of one hour; convert the result to minutes."
+   "Structural feature: the points are exchangeable and spread evenly over the interval, so their expected positions when sorted are equally spaced. Ask where the third of the four lands among five equal gaps.",
+   "Setup: the expected position of the third point is a fraction of the hour determined by how many points lie on each side of it. Write that fraction and convert the result to minutes."
   ]
  },
  {
