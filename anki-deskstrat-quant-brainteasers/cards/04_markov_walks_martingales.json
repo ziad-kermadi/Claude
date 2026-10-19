@@ -455,7 +455,7 @@
  {
   "type": "basic",
   "front": "A fair die is rolled. What is the expected number of rolls until a face repeats an earlier face?",
-  "back": "<b>Answer:</b> \\(\\dfrac{1223}{324}\\approx3.7747\\)<br><b>Structure:</b> s_tail_sum (first repeat among i.i.d. draws from a finite set)<br><b>Key move:</b> \\(E[N]=\\sum_{k\\ge0}P(\\text{no repeat in first }k)\\)<br><b>Working:</b> \\(P(\\text{no repeat in first }k)=\\prod_{j<k}\\frac{6-j}{6}\\). Summing over \\(k=0,\\dots,6\\): \\(1+1+\\tfrac56+\\tfrac59+\\tfrac5{18}+\\tfrac5{54}+\\tfrac5{324}=\\tfrac{1223}{324}\\). Monte Carlo \\(3.770\\).<br><b>Sanity check:</b> a 2-faced die gives \\(2.5\\): roll 1, then a repeat with probability \\(\\tfrac12\\), and a sure repeat by roll 3<br><b>Transfer:</b> the general \\(n\\)-face formula is \\(\\sum_{k=0}^{n}\\frac{n!}{(n-k)!\\,n^k}\\)",
+  "back": "<b>Answer:</b> \\(\\dfrac{1223}{324}\\approx3.7747\\)<br><b>Structure:</b> s_tail_sum (first repeat among i.i.d. draws from a finite set)<br><b>Key move:</b> \\(E[N]=\\sum_{k\\ge0}P(\\text{no repeat in first }k)\\)<br><b>Working:</b> \\(P(\\text{no repeat in first }k)=\\prod_{j\\lt k}\\frac{6-j}{6}\\). Summing over \\(k=0,\\dots,6\\): \\(1+1+\\tfrac56+\\tfrac59+\\tfrac5{18}+\\tfrac5{54}+\\tfrac5{324}=\\tfrac{1223}{324}\\). Monte Carlo \\(3.770\\).<br><b>Sanity check:</b> a 2-faced die gives \\(2.5\\): roll 1, then a repeat with probability \\(\\tfrac12\\), and a sure repeat by roll 3<br><b>Transfer:</b> the general \\(n\\)-face formula is \\(\\sum_{k=0}^{n}\\frac{n!}{(n-k)!\\,n^k}\\)",
   "tags": [
    "s_tail_sum",
    "dice",
@@ -711,7 +711,7 @@
  },
  {
   "type": "basic",
-  "front": "Which martingale do I use for a random walk problem?",
+  "front": "When should you reach for a martingale in a random walk problem, and when does it fail?",
   "back": "<b>Triggers:</b> a walk with steps \\(\\pm1\\).<br><b>Move:</b> \\(S_n\\) (mean zero) for endpoint expectations; \\(S_n^2-n\\) for expected exit times of a symmetric walk; \\((q/p)^{S_n}\\) for biased walks and hitting probabilities.<br><b>Canonical example:</b> \\(i(N-i)\\) from \\(S_n^2-n\\); \\(\\tfrac{1-r^i}{1-r^N}\\) from \\((q/p)^{S_n}\\).<br><b>Failure:</b> a martingale is useful only if the stopped process is bounded or uniformly integrable.",
   "tags": [
    "s_martingale",
