@@ -789,7 +789,7 @@
  {
   "type": "basic",
   "front": "Biased-drift version of a barrier race: \\(X_t=W_t+0.5\\,t\\) (drift \\(\\mu=0.5\\)) starts at 0. What is \\(P(X\\text{ hits }+1\\text{ before }-2)\\)?",
-  "back": "<b>What breaks:</b> Optional stopping on \\(X\\) fails, because \\(X\\) is not a martingale: \\(E[X_\\tau]\\neq 0\\). The argument that gave \\(2/3\\) assumed zero drift.<br><b>Fix:</b> Use the scale function \\(s(x)=e^{-2\\mu x}\\), which makes \\(s(X_t)\\) a martingale.<br><b>New answer:</b> \\(P=\\dfrac{e^{2\\mu b}-1}{e^{2\\mu b}-e^{-2\\mu a}}\\) with \\(a=1,b=2,\\mu=0.5\\): \\(\\approx 0.9100\\) (up from \\(0.6667\\)).",
+  "back": "<b>What breaks:</b> Optional stopping on \\(X\\) fails, because \\(X\\) is not a martingale: \\(E[X_\\tau]\\neq 0\\). The argument that gave \\(2/3\\) assumed zero drift.<br><b>Fix:</b> Use the scale function \\(s(x)=e^{-2\\mu x}\\), which makes \\(s(X_t)\\) a martingale.<br><b>New answer:</b> Here \\(a=1\\) is the distance up to the upper barrier \\(+1\\), and \\(b=2\\) is the distance down to the lower barrier \\(-2\\). Then \\(P=\\dfrac{e^{2\\mu b}-1}{e^{2\\mu b}-e^{-2\\mu a}}=\\dfrac{e^{2}-1}{e^{2}-e^{-1}}\\approx 0.9100\\) (up from \\(0.6667\\)).",
   "tags": [
    "s_martingale",
    "s_change_of_measure",
@@ -1370,7 +1370,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: Variance swap 2/3]</b> Same swap, but the smile is skewed: market OTM put vols are 25% and OTM call vols 18%. The strip \\(K_{var}=\\frac{2e^{rT}}{T}\\Big[\\int_0^F\\frac{P(K)}{K^2}dK+\\int_F^\\infty\\frac{C(K)}{K^2}dK\\Big]\\) is priced from these quotes. Which strikes dominate, and is the fair variance above or below \\(0.04\\)?",
-  "back": "<b>Answer:</b> Above \\(0.04\\). Low strikes dominate because their weight is \\(1/K^2\\) and they carry high put-wing variance.<br><b>Structure:</b> Fair variance is a weighted average of option prices with weights \\(\\propto 1/K^2\\), which reads as an average of the implied variances across strikes.<br><b>Key move:</b> Weights \\(2e^{rT}/(TK^2)\\) on OTM options. The weight per unit price is largest for low \\(K\\), so the 25% put wing pushes the strike above the ATM 20% level.<br><b>Working:</b> Flat smile at 20% gives exactly \\(0.04\\) by numerical integration (checked to \\(10^{-10}\\)). Interpolating vol linearly in strike from 20% at \\(K=100\\) to 25% at \\(K=60\\) (puts) and 18% at \\(K=140\\) (calls) gives \\(\\approx 0.0418\\), above \\(0.04\\).<br><b>Sanity check:</b> Model-free: the strip gives the expectation under \\(Q\\) for any smile, as long as quotes exist for all strikes.<br><b>Transfer:</b> Skew in the wings is priced by the strip; the ATM vol alone does not determine the fair variance.",
+  "back": "<b>Answer:</b> Above \\(0.04\\). Low strikes dominate because their weight is \\(1/K^2\\) and they carry high put-wing variance.<br><b>Structure:</b> Fair variance is a weighted average of option prices with weights \\(\\propto 1/K^2\\), which reads as an average of the implied variances across strikes.<br><b>Key move:</b> Weights \\(2e^{rT}/(TK^2)\\) on OTM options. The weight per unit price is largest for low \\(K\\), so the 25% put wing pushes the strike above the ATM 20% level.<br><b>Working (assumptions):</b> \\(S=100\\), \\(r=5\\%\\), \\(T=1\\), so the forward is \\(F=100e^{0.05}\\approx 105.13\\). Vol is 25% at \\(K=60\\), 20% at \\(K=100\\) and 18% at \\(K=140\\), linear in \\(K\\) between those points and flat outside them. Integrating the strip numerically: a flat 20% smile gives exactly \\(0.0400\\), and this smile gives \\(0.0417\\), above \\(0.04\\).<br><b>Sanity check:</b> Model-free: the strip gives the expectation under \\(Q\\) for any smile, as long as quotes exist for all strikes.<br><b>Transfer:</b> Skew in the wings is priced by the strip; the ATM vol alone does not determine the fair variance.",
   "tags": [
    "s_replication",
    "variance_swap",
@@ -1386,7 +1386,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: Variance swap 3/3]</b> Same swap, but the stock can drop 20% in one jump at an unknown time. Is the strip price still the fair strike, and what does a static strip not cover?",
-  "back": "<b>Answer:</b> Only approximately. The strip gives the \\(Q\\)-expectation of \\(-2\\ln(S_T/F)\\), which differs from the swap's realised variance by the jump term \\(\\ln(1+J)^2+2(\\ln(1+J)-J)\\approx -J^3/3\\), about 0.0035 (variance units) for a 20% drop. What is not covered is the dynamic hedge: the delta leg has gap risk.<br><b>Structure:</b> Static replication with a log contract is model-free for continuous paths; with jumps the realised variance includes the squared jump, which the strip prices only to third order.<br><b>Key move:</b> Price: the strip with jump-inclusive option prices gives \\(E^Q[-2\\ln(S_T/F)]\\), a close approximation to the fair strike. Hedge: the \\(\\int dS/S\\) leg is not self-financing across a gap.<br><b>Working:</b> A 20% drop is a log-return of \\(\\ln 0.8=-0.2231\\), squared \\(0.0498\\); this adds \\(0.0498/T\\) to realised variance over one year; the strip recovers only \\(-2(\\ln 0.8+0.2)\\approx 0.0463\\) of it.<br><b>Sanity check:</b> Gap risk is of order \\(\\tfrac12\\Gamma S^2(0.2)^2\\) per jump for the dynamic leg; the static strip price itself does not change form.<br><b>Transfer:</b> Crash-risk premium shows up as a steeper put wing in the strip, which raises the fair strike.",
+  "back": "<b>Answer:</b> Only approximately. The strip gives the \\(Q\\)-expectation of \\(-2\\ln(S_T/F)\\), which differs from the swap's realised variance by the jump term \\(\\ln(1+J)^2+2(\\ln(1+J)-J)\\). To leading order this term is \\(-J^3/3\\), which gives 0.0027 for a 20% drop (\\(J=-0.2\\)). The exact value of the term is 0.0035 (variance units). What is not covered is the dynamic hedge: the delta leg has gap risk.<br><b>Structure:</b> Static replication with a log contract is model-free for continuous paths; with jumps the realised variance includes the squared jump, which the strip prices only to third order.<br><b>Key move:</b> Price: the strip with jump-inclusive option prices gives \\(E^Q[-2\\ln(S_T/F)]\\), a close approximation to the fair strike. Hedge: the \\(\\int dS/S\\) leg is not self-financing across a gap.<br><b>Working:</b> A 20% drop is a log-return of \\(\\ln 0.8=-0.2231\\), squared \\(0.0498\\); this adds \\(0.0498/T\\) to realised variance over one year; the strip recovers only \\(-2(\\ln 0.8+0.2)\\approx 0.0463\\) of it.<br><b>Sanity check:</b> Gap risk is of order \\(\\tfrac12\\Gamma S^2(0.2)^2\\) per jump for the dynamic leg; the static strip price itself does not change form.<br><b>Transfer:</b> Crash-risk premium shows up as a steeper put wing in the strip, which raises the fair strike.",
   "tags": [
    "s_replication",
    "variance_swap",
@@ -1397,6 +1397,345 @@
    "How large is a 20% drop in log terms, and how does a jump make the log-contract differ from realised variance?",
    "The strip prices \\(E^Q[-2\\ln(S_T/F)]\\), which is not the same object as the realised variance on a path with a jump.",
    "Write the jump in log terms as \\(\\ln(1+J)\\) and compare the two quantities term by term, keeping only the leading correction in \\(J\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Let \\(B\\) be a Brownian bridge on \\([0,1]\\), built from a standard Brownian motion \\(W\\) as \\(B_t=W_t-tW_1\\). Find \\(\\operatorname{Cov}(B_{1/4},B_{3/4})\\), \\(\\operatorname{Var}(B_{1/4})\\), and the correlation of \\(B_{1/4}\\) and \\(B_{3/4}\\).",
+  "back": "<b>Answer:</b> \\(\\operatorname{Cov}(B_{1/4},B_{3/4})=\\tfrac1{16}\\), \\(\\operatorname{Var}(B_{1/4})=\\tfrac3{16}\\), correlation \\(\\tfrac13\\).<br><b>Structure:</b> s_linearity_expectation (covariance is bilinear, and the bridge is a linear functional of \\(W\\)). Trigger: a Gaussian process pinned at both ends.<br><b>Key move:</b> \\(\\operatorname{Cov}(B_s,B_t)=\\min(s,t)-st\\), by expanding bilinearly with \\(\\operatorname{Cov}(W_s,W_t)=\\min(s,t)\\).<br><b>Working:</b> \\(\\operatorname{Cov}(W_s-sW_1,\\,W_t-tW_1)=\\min(s,t)-ts-st+st=\\min(s,t)-st\\). With \\(s=\\tfrac14\\), \\(t=\\tfrac34\\): \\(\\tfrac14-\\tfrac3{16}=\\tfrac1{16}\\). Then \\(\\operatorname{Var}B_{1/4}=\\tfrac14-\\tfrac1{16}=\\tfrac3{16}\\), and the correlation is \\(\\tfrac{1/16}{3/16}=\\tfrac13\\).<br><b>Sanity check:</b> the covariance vanishes as \\(s\\to0\\) or \\(t\\to1\\), where the bridge is pinned. Simulation of \\(2\\times10^5\\) paths on a 400-step grid gives \\(\\operatorname{Cov}=0.0627\\pm0.0004\\) and \\(\\operatorname{Var}=0.188\\pm0.001\\).<br><b>Transfer:</b> a simple random walk conditioned to return to \\(0\\) at step \\(n\\) (the discrete bridge); Kalman smoothing of a random walk when both endpoints are observed.",
+  "tags": [
+   "s_linearity_expectation",
+   "brownian_bridge",
+   "gaussian",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Which linear functional of \\(W\\) must vanish at \\(t=1\\)? Write \\(B_t\\) as \\(W_t\\) minus a multiple of \\(W_1\\).",
+   "Name the move: covariances of the bridge are bilinear in those of \\(W\\), and \\(\\operatorname{Cov}(W_s,W_t)=\\min(s,t)\\).",
+   "Expand \\(\\operatorname{Cov}(W_s-sW_1,\\,W_t-tW_1)\\) term by term, then substitute \\(s=\\tfrac14\\), \\(t=\\tfrac34\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derive B from A.</b> A: the reflection principle for standard Brownian motion, \\(P(\\max_{t\\le1}W_t\\ge a)=2P(W_1\\ge a)\\) for \\(a\\ge0\\). B: for a Brownian bridge from \\(0\\) to \\(c\\) on \\([0,1]\\) and \\(a\\ge\\max(0,c)\\), \\(P(\\max_{t\\le1}B_t\\ge a)=\\exp\\{-2a(a-c)\\}\\). Derive B from A, then evaluate it for \\(a=2\\), \\(c=1\\).",
+  "back": "<b>Answer:</b> \\(P=e^{-2a(a-c)}\\). For \\(a=2\\), \\(c=1\\): \\(P=e^{-4}\\approx0.018316\\).<br><b>Structure:</b> s_reflection with s_conditional_expectation_tower (condition on the endpoint). Trigger: a path with a fixed endpoint and a level it may cross.<br><b>Bridge:</b> (1) Joint law of \\((M_1,W_1)\\): for \\(c\\le a\\), \\(P(M_1\\ge a,\\,W_1\\in dc)=\\varphi(2a-c)\\,dc\\), by reflecting the path after its first hit of \\(a\\). The reflected end is \\(2a-c\\), as in the figure. (2) Divide by the density of \\(W_1\\) at \\(c\\): \\(P(M_1\\ge a\\mid W_1=c)=\\varphi(2a-c)/\\varphi(c)\\). (3) The bridge is \\(W\\) conditioned on \\(W_1=c\\), so this ratio is the answer.<br><b>Working:</b> \\(\\dfrac{\\varphi(2a-c)}{\\varphi(c)}=\\exp\\!\\Big\\{-\\dfrac{(2a-c)^2-c^2}{2}\\Big\\}=\\exp\\{-2a(a-c)\\}\\).<br><b>Sanity check:</b> at \\(c=a\\) the probability is \\(1\\), since the bridge ends at the level. As \\(c\\to-\\infty\\) it tends to \\(0\\). Simulation of \\(10^5\\) bridges on a 1000-step grid, with the discrete-monitoring correction \\(0.5826\\sqrt{\\Delta t}\\), gives \\(0.0187\\pm0.0004\\), consistent with \\(0.0183\\).<br><b>Transfer:</b> the chance that a Brownian path with a fixed end value crosses a level; the chance that a Gaussian random walk pinned at both ends touches a barrier.",
+  "tags": [
+   "s_reflection",
+   "s_conditional_expectation_tower",
+   "brownian_bridge",
+   "barrier_options",
+   "fmt_connect"
+  ],
+  "figs_back": [
+   "fgC_bridge_reflection"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Let \\(W\\) be standard Brownian motion on \\([0,1]\\), and let \\(A\\) be the fraction of \\([0,1]\\) during which \\(W>0\\). What is \\(P(A\\ge\\tfrac34)\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_symmetry through Lévy's arcsine law for occupation times.<br><b>Trigger:</b> the time a symmetric path spends on one side of zero over a fixed horizon, with a question about the fraction of time.<br><b>Key move:</b> \\(A\\) has the arcsine density \\(f(a)=\\dfrac{1}{\\pi\\sqrt{a(1-a)}}\\), so \\(P(A\\le a)=\\tfrac2\\pi\\arcsin\\sqrt a\\). The law is symmetric about \\(\\tfrac12\\) and U-shaped: the path is most likely to be almost always on one side.<br><b>Answer:</b> \\(P(A\\ge\\tfrac34)=1-\\tfrac2\\pi\\arcsin\\sqrt{3/4}=1-\\tfrac23=\\tfrac13\\). By symmetry \\(P(A\\le\\tfrac14)=\\tfrac13\\) as well, so \\(P(\\tfrac14\\le A\\le\\tfrac34)=\\tfrac13\\).",
+  "tags": [
+   "s_symmetry",
+   "brownian_motion",
+   "occupation_time",
+   "arcsine",
+   "fmt_recognise"
+  ],
+  "figs_back": [
+   "fgC_arcsine_density"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Let \\(W\\) be standard Brownian motion on \\([0,1]\\), and \\(M=\\max_{0\\le t\\le1}W_t\\). Find \\(P(M\\le m)\\), the median of \\(M\\), and \\(\\mathbb E[M]\\). Compare the median and the mean.",
+  "back": "<b>Answer:</b> \\(P(M\\le m)=2\\Phi(m)-1\\). The median is \\(\\Phi^{-1}(3/4)\\approx0.6745\\), and \\(\\mathbb E[M]=\\sqrt{2/\\pi}\\approx0.7979\\), above the median.<br><b>Structure:</b> s_reflection. Trigger: the running maximum of a Brownian path, with a question about its law.<br><b>Key move:</b> for \\(a\\ge0\\), \\(P(M\\ge a)=2P(W_1\\ge a)\\), by reflecting the path after its first hit of \\(a\\). So \\(P(M\\le m)=1-2(1-\\Phi(m))=2\\Phi(m)-1\\).<br><b>Working:</b> set \\(2\\Phi(m)-1=\\tfrac12\\), so \\(\\Phi(m)=\\tfrac34\\) and \\(m=\\Phi^{-1}(3/4)\\approx0.6745\\). For the mean, \\(\\mathbb E M=\\int_0^\\infty P(M\\ge a)\\,da=2\\int_0^\\infty(1-\\Phi(a))\\,da=2\\varphi(0)=\\sqrt{2/\\pi}\\).<br><b>Sanity check:</b> \\(M\\ge W_1\\) and \\(M\\ge0\\). The density \\(2\\varphi(m)\\) is right-skewed, so the mean is above the median. A grid simulation of \\(10^5\\) paths with 2000 steps, plus the correction \\(0.5826\\sqrt{\\Delta t}\\), gives \\(P(M\\le0.6745)=0.501\\pm0.002\\).<br><b>Transfer:</b> the largest value of a Brownian motion over a trading day; the running maximum of a Gaussian random walk at large \\(n\\).",
+  "tags": [
+   "s_reflection",
+   "brownian_motion",
+   "running_maximum",
+   "median",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Which events about the maximum \\(M\\) are equivalent to events about the endpoint \\(W_1\\)?",
+   "Name the move: the reflection principle, \\(P(M\\ge a)=2P(W_1\\ge a)\\) for \\(a\\ge0\\).",
+   "Set \\(P(M\\le m)=\\tfrac12\\) and write the left side with \\(\\Phi\\)."
+  ],
+  "figs_back": [
+   "fgC_running_max_median"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A forward rate is \\(F=2.00\\%\\) with normal (Bachelier) volatility \\(\\sigma_N=0.80\\%\\) per year, expiry \\(T=1\\). Price the ATM call \\((K=F)\\) per unit of annuity, undiscounted. Then find the lognormal (Black) volatility that gives the same ATM price.",
+  "back": "<b>Answer:</b> \\(C=\\sigma_N\\sqrt T\\,\\varphi(0)=\\frac{0.80\\%}{\\sqrt{2\\pi}}\\approx0.319\\%\\) (31.9 bp). The equivalent Black vol is \\(\\approx40.3\\%\\).<br><b>Structure:</b> s_symmetry: the ATM payoff is a half-normal, so its price is one standard deviation times the density at zero.<br><b>Key move:</b> with \\(X\\sim N(F,\\sigma_N^2T)\\) and \\(K=F\\), \\(E[(X-F)^+]=\\sigma_N\\sqrt T\\,\\varphi(0)\\), where \\(\\varphi(0)=1/\\sqrt{2\\pi}\\approx0.3989\\).<br><b>Working:</b> \\(0.0080\\times0.3989=0.003192\\). Black's ATM price is \\(F\\,(2N(\\sigma_L\\sqrt T/2)-1)\\). Matching gives \\(\\sigma_L\\approx\\sigma_N/F=40\\%\\) to first order, and solving exactly gives \\(40.3\\%\\).<br><b>Sanity check:</b> \\(2N(x)-1\\le 2x\\varphi(0)\\), so the exact Black vol must sit just above \\(\\sigma_N/F\\). It does.<br><b>Transfer:</b> the same rule prices a 1y ATM straddle (twice the call) and converts a normal-vol quote to a lognormal vol when the forward is well away from zero.",
+  "tags": [
+   "s_symmetry",
+   "rates",
+   "bachelier",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Under the normal model, what is the law of the forward at expiry, and where does the strike sit relative to its mean?",
+   "The ATM payoff is a half-normal. Its expectation is one standard deviation times a single density value.",
+   "Write the Black ATM price as \\(F(2N(x)-1)\\) with \\(x=\\sigma_L\\sqrt T/2\\), and expand for small \\(x\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for normal (Bachelier) volatility on a rate option, and when does the lognormal model fail?",
+  "back": "<b>Triggers:</b> the forward is near zero or negative, the quote is in basis points, or the strikes span a wide range around ATM. A normal vol is in rate units, so the ATM premium is roughly linear in \\(\\sigma_N\\) and does not depend on the level \\(F\\).<br><b>Move:</b> model \\(dF=\\sigma_N\\,dW\\) and price \\(C=(F-K)N(d)+\\sigma_N\\sqrt T\\,\\varphi(d)\\), with \\(d=(F-K)/(\\sigma_N\\sqrt T)\\).<br><b>Canonical example:</b> an 80bp normal vol on \\(F=2\\%\\) is a 40% lognormal vol. On \\(F=0.5\\%\\) the same 80bp becomes a 160% lognormal vol. That is an artefact of dividing by a small forward, not a market fact.<br><b>Failure:</b> Black is undefined for \\(F\\le0\\). Bachelier allows negative rates, but a flat normal vol cannot price a fat upside tail or a strong skew. Then use a smile or a shifted lognormal model.",
+  "tags": [
+   "s_dimensional_analysis",
+   "rates",
+   "bachelier",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Known problem:</b> an ATM rate option on forward \\(F=1\\%\\), priced with Black at 25% lognormal vol. The equivalent normal vol is \\(\\sigma_N\\approx0.249\\%\\). <b>Perturb:</b> the forward falls to \\(F=-0.20\\%\\) and the normal vol is unchanged. A 0%-strike caplet on \\(F\\) now needs a price. What breaks in the Black argument, and what is the Bachelier value of the caplet?",
+  "back": "<b>What breaks:</b> Black assumes \\(F_T\\) is lognormal, so \\(F_T>0\\) with probability one and \\(\\ln(F/K)\\) must exist. At \\(F=-0.20\\%\\) both fail and the Black formula returns nothing. Bachelier assumes \\(dF=\\sigma_N\\,dW\\), which allows negative \\(F\\), so the same formula still holds with \\(d=(F-K)/(\\sigma_N\\sqrt T)\\).<br><b>Working:</b> \\(\\sigma_N\\sqrt T=0.249\\%\\), so \\(d=-0.20/0.249=-0.802\\). \\(N(d)=0.2113\\) and \\(\\varphi(d)=0.2892\\). \\(C=(-0.20\\%)(0.2113)+(0.249\\%)(0.2892)=-0.0423\\%+0.0721\\%=0.0299\\%\\).<br><b>Answer:</b> about 2.99 bp per unit annuity. The caplet is worth more than zero even though \\(F<0\\), because it finishes in the money with probability \\(P(F_T>0)=N(-0.802)\\approx21\\%\\).<br><b>Sanity check:</b> the price is positive and below the normal ATM scale \\(0.4\\sigma_N\\sqrt T\\approx0.10\\%\\).<br><b>Transfer:</b> a floor on a rate that can go negative, or an option on a spread that can change sign: the same Bachelier formula with a normal vol.",
+  "tags": [
+   "s_symmetry",
+   "rates",
+   "bachelier",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "Which Black assumption requires the forward to stay positive, and where does \\(\\ln F\\) appear?",
+   "Under the normal model, what is \\(P(F_T>0)\\) when the forward is \\(-0.20\\%\\) and the standard deviation is \\(0.249\\%\\)?",
+   "The price has an intrinsic-type term times a probability plus a time-value term times a density. Set \\(d=(F-K)/(\\sigma_N\\sqrt T)\\) and write both terms."
+  ],
+  "figs_back": [
+   "fgD_bachelier_negative_forward"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derive B from A.</b> <b>A:</b> under \\(Q\\), \\(dS=rS\\,dt+\\sigma(S,t)S\\,dW\\), so the risk-neutral density \\(f(K,T)\\) of \\(S_T\\) obeys the forward (Fokker-Planck) equation. <b>B:</b> with \\(C(K,T)=e^{-rT}\\int_K^\\infty (x-K)f(x,T)\\,dx\\), derive Dupire's forward equation for call prices in strike and maturity.",
+  "back": "<ol><li><b>Density form of the price.</b> \\(e^{-rT}f(K,T)=\\partial_K^2C\\), and \\(e^{-rT}\\int_K^\\infty f\\,dx=-\\partial_KC\\). The price is an integral of the density against \\((x-K)\\).</li><li><b>Differentiate in maturity.</b> \\(\\partial_TC=-rC+e^{-rT}\\int_K^\\infty (x-K)\\,\\partial_Tf\\,dx\\).</li><li><b>Insert the forward equation.</b> The diffusion term \\(\\tfrac12\\partial_x^2(\\sigma^2x^2f)\\), integrated against \\((x-K)\\) on \\((K,\\infty)\\), leaves only its value at \\(K\\) after two integrations by parts: \\(e^{-rT}\\cdot\\tfrac12\\sigma^2K^2f\\).</li><li><b>The drift term.</b> \\(-r\\int_K^\\infty (x-K)\\,\\partial_x(xf)\\,dx=r\\int_K^\\infty xf\\,dx\\), and \\(e^{-rT}\\int_K^\\infty xf\\,dx=C-K\\,\\partial_KC\\).</li><li><b>Combine.</b> \\(\\partial_TC=-rC+\\tfrac12\\sigma^2K^2\\partial_K^2C+r(C-K\\partial_KC)=\\tfrac12\\sigma^2K^2\\partial_K^2C-rK\\,\\partial_KC\\). Solving for \\(\\sigma\\) gives the local vol \\(\\sigma^2=\\dfrac{2(\\partial_TC+rK\\partial_KC)}{K^2\\partial_K^2C}\\).</li></ol><b>If you get stuck:</b> which operator in the forward equation becomes a boundary term at \\(K\\) after you multiply by \\((x-K)\\) and integrate?<br><b>Minimal memory:</b> integrate the forward equation against the call payoff \\((x-K)^+\\). Two integrations by parts turn the density into \\(\\partial_K^2C\\), and the drift becomes \\(\\partial_KC\\).",
+  "tags": [
+   "s_linearity_expectation",
+   "local_vol",
+   "dupire",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Short-dated implied vol is linear in log-strike near the money: \\(\\sigma_{imp}(y)=0.20-y\\), with \\(y=\\ln(K/F)\\). That is, vol falls 1 vol point per 1% of log-strike. Zero rates, \\(F=100\\), \\(T\\to0\\). Find the local vol at \\(K=100\\,e^{0.02}\\approx102.02\\), and the ratio of the local-vol skew to the implied skew at the money.",
+  "back": "<b>Answer:</b> \\(\\sigma_{loc}=0.162\\) (16.2%). The local-vol skew \\(\\partial_y\\sigma_{loc}\\) at the money is \\(-2\\), twice the implied skew of \\(-1\\).<br><b>Structure:</b> s_taylor: a short-maturity expansion of Dupire's formula written in implied-vol form.<br><b>Key move:</b> with \\(w=\\sigma_{imp}^2T\\) and \\(T\\to0\\), the \\(T\\)-derivative terms in Dupire's implied-vol form drop out and \\(\\sigma_{loc}=\\dfrac{\\sigma}{1-y\\,\\partial_y\\sigma/\\sigma}=\\dfrac{\\sigma^2}{\\sigma-y\\,\\partial_y\\sigma}\\).<br><b>Working:</b> \\(\\sigma-y\\,\\partial_y\\sigma=(0.20-y)+y=0.20\\), so \\(\\sigma_{loc}(y)=(0.20-y)^2/0.20\\). At \\(y=0.02\\): \\(0.18^2/0.20=0.162\\). Differentiating at \\(y=0\\): \\(2(0.20)(-1)/0.20=-2\\).<br><b>Sanity check:</b> the naive linear rule \\(\\sigma_{imp}-2y=0.16\\) agrees to first order, but the exact short-dated value is 0.162. A flat smile gives \\(\\sigma_{loc}=\\sigma_{imp}\\), as it must.<br><b>Transfer:</b> any one-month digital priced in a local-vol model depends on this local skew, which is twice the implied skew.",
+  "tags": [
+   "s_taylor",
+   "local_vol",
+   "volatility_skew",
+   "fmt_solve"
+  ],
+  "hints": [
+   "As \\(T\\to0\\), which terms of the implied-variance form of Dupire's formula survive, and which vanish?",
+   "Write \\(w=\\sigma^2T\\). In the denominator, the surviving order-\\(T^0\\) terms involve only \\(y\\,\\partial_y\\sigma/\\sigma\\).",
+   "Compute \\(\\sigma-y\\,\\partial_y\\sigma\\) for this smile before doing anything else."
+  ],
+  "figs_back": [
+   "fgD_skew_rule_two"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Known problem:</b> a flat smile at 20% for all strikes and maturities. Dupire gives local vol 20% everywhere. <b>Perturb:</b> the implied vol now rises with maturity but is still flat in strike, \\(\\sigma_{imp}(T)=0.20+0.05T\\). What is the ATM local vol at \\(T=1\\), and which part of the Dupire argument changes?",
+  "back": "<b>What breaks:</b> the flat-smile answer uses \\(\\sigma_{loc}=\\sigma_{imp}\\), which holds only when implied vol is constant in \\(T\\). Dupire's maturity derivative acts on total variance \\(w=\\sigma_{imp}^2T\\), not on \\(\\sigma_{imp}\\). With no strike dependence the strike-derivative terms vanish, and the formula reduces to \\(\\sigma_{loc}^2=\\partial_Tw\\).<br><b>Working:</b> \\(w(T)=(0.20+0.05T)^2T\\), so \\(\\partial_Tw=(0.20+0.05T)^2+0.10\\,T\\,(0.20+0.05T)\\). At \\(T=1\\): \\(0.0625+0.025=0.0875\\), and \\(\\sqrt{0.0875}=0.2958\\).<br><b>Answer:</b> 29.6%, against an implied 1y vol of 25%. The local vol is the instantaneous forward vol at \\(T=1\\).<br><b>Sanity check:</b> a constant term structure gives \\(\\partial_Tw=\\sigma^2\\), so local equals implied, as the flat-smile case requires. A rising term structure gives a forward vol above the average to date, because an average of an increasing function sits below its last value.<br><b>Transfer:</b> a forward-starting variance or the forward strip of a variance swap: the forward vol is the derivative of total variance, not the level.",
+  "tags": [
+   "s_taylor",
+   "local_vol",
+   "term_structure",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "With no strike dependence, which Dupire terms survive: the maturity derivative or the strike derivatives?",
+   "Is the maturity derivative taken of \\(\\sigma\\), or of total variance \\(\\sigma^2T\\)?",
+   "Set \\(w(T)=\\sigma(T)^2T\\), differentiate at \\(T=1\\), and take the square root."
+  ],
+  "figs_back": [
+   "fgD_forward_vol"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ho-Lee: \\(dr_t=\\theta(t)\\,dt+\\sigma\\,dW_t^Q\\) with \\(\\sigma=1\\%\\) per year, calibrated to today's curve. A futures contract settles at \\(T_1=5\\) on the instantaneous rate \\(r_{T_1}\\). Find the futures rate minus the forward rate \\(f(0,5)\\), in basis points, and say where the gap comes from.",
+  "back": "<b>Answer:</b> \\(E^Q[r_5]-f(0,5)=\\tfrac12\\sigma^2T_1^2=12.5\\) bp. The futures rate sits above the forward.<br><b>Structure:</b> s_convexity_jensen with s_change_of_measure: a futures pays a risk-neutral expectation, while the forward is read off the bond curve.<br><b>Key move:</b> the bond is \\(P(0,T)=E^Q[e^{-\\int_0^Tr}]\\), so \\(f(0,T)=E^Q[r_T]-\\operatorname{Cov}^Q\\!\\big(r_T,\\int_0^Tr_s\\,ds\\big)\\). The covariance is the convexity term.<br><b>Working:</b> calibration gives \\(r_t=f(0,t)+\\tfrac12\\sigma^2t^2+\\sigma W_t\\). Then \\(\\operatorname{Cov}\\big(\\sigma W_T,\\ \\sigma\\int_0^TW_s\\,ds\\big)=\\sigma^2\\int_0^Ts\\,ds=\\tfrac12\\sigma^2T^2\\). With \\(\\sigma=0.01\\) and \\(T=5\\): \\(\\tfrac12\\cdot10^{-4}\\cdot25=12.5\\) bp.<br><b>Sanity check:</b> the gap is zero at \\(T=0\\) and grows with \\(T^2\\): 0.5 bp at one year, 50 bp at ten. Convexity is negligible for near futures and large for long ones.<br><b>Transfer:</b> the identity \\(f=E^Q[r_T]-\\operatorname{Cov}\\) prices any payment whose amount is set before its payment date (see the payment-timing card).",
+  "tags": [
+   "s_convexity_jensen",
+   "s_change_of_measure",
+   "rates",
+   "convexity",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Two prices of the same rate differ: one is a risk-neutral expectation with no discounting, the other is read off the zero-coupon curve. Which quantity links them?",
+   "Write the zero-coupon bond as \\(E^Q[e^{-\\int_0^Tr}]\\). Which covariance does its price pick up?",
+   "Under Ho-Lee, \\(r_T-E^Q r_T=\\sigma W_T\\), and the discount exponent contains \\(\\sigma\\int_0^TW_s\\,ds\\). Compute their covariance."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Known problem:</b> Ho-Lee with \\(\\sigma=1\\%\\). A futures on the instantaneous rate at \\(T=5\\) carries \\(\\tfrac12\\sigma^2T^2=12.5\\) bp of convexity. <b>Perturb:</b> the short rate now mean-reverts, \\(dr=\\kappa(\\theta(t)-r)\\,dt+\\sigma\\,dW^Q\\), with \\(\\kappa=0.1\\) and \\(\\theta(t)\\) calibrated to the same curve. What is the convexity at \\(T=5\\), and which step of the Ho-Lee argument fails?",
+  "back": "<b>What breaks:</b> the Ho-Lee covariance \\(\\operatorname{Cov}(r_T,\\int_0^Tr)=\\tfrac12\\sigma^2T^2\\) assumes the shock to \\(r\\) never decays. The variance of \\(r\\) then grows linearly in \\(t\\), and its covariance with the integrated rate grows like \\(T^2\\). Under mean reversion the shock decays at rate \\(\\kappa\\), so the covariance saturates. Only the random part \\(x\\) of \\(r=\\varphi(t)+x_t\\) contributes.<br><b>Working:</b> \\(\\operatorname{Var}(x_s)=\\sigma^2(1-e^{-2\\kappa s})/(2\\kappa)\\) and \\(\\operatorname{Cov}(x_T,x_s)=e^{-\\kappa(T-s)}\\operatorname{Var}(x_s)\\) for \\(s\\le T\\). Integrating over \\(s\\) gives \\(\\operatorname{Cov}\\big(x_T,\\int_0^Tx_s\\,ds\\big)=\\frac{\\sigma^2}{2\\kappa^2}(1-e^{-\\kappa T})^2\\). With \\(\\kappa=0.1\\), \\(T=5\\): \\(\\frac{10^{-4}}{0.02}(1-e^{-0.5})^2=0.005\\times0.1548=7.74\\times10^{-4}\\), i.e. 7.74 bp.<br><b>Answer:</b> 7.74 bp, about 62% of the Ho-Lee figure.<br><b>Sanity check:</b> as \\(\\kappa\\to0\\), \\((1-e^{-\\kappa T})^2/\\kappa^2\\to T^2\\), which recovers Ho-Lee. For large \\(T\\) the convexity tends to the constant \\(\\sigma^2/(2\\kappa^2)\\): it stops growing with maturity.<br><b>Transfer:</b> the same factor \\((1-e^{-\\kappa T})/\\kappa\\) is the Vasicek bond sensitivity, which saturates at \\(1/\\kappa\\).",
+  "tags": [
+   "s_convexity_jensen",
+   "s_change_of_measure",
+   "rates",
+   "mean_reversion",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "Which quantity in the Ho-Lee argument grows linearly in \\(T\\), and what replaces it when the shock decays?",
+   "Take \\(x\\) to be an OU process. What is \\(\\operatorname{Cov}(x_T,x_s)\\) for \\(s\\le T\\)?",
+   "Integrate \\(e^{-\\kappa(T-s)}\\operatorname{Var}(x_s)\\) over \\(s\\in[0,T]\\). Use \\(\\int_0^Te^{-\\kappa(T-s)}ds=(1-e^{-\\kappa T})/\\kappa\\)."
+  ],
+  "figs_back": [
+   "fgD_convexity_kappa"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When does a rate fixed at one date and paid at a later date need a convexity adjustment, and when does it not?",
+  "back": "<b>Triggers:</b> an amount is set on one date and paid on another, a futures contract settles daily, or a rate is fixed at the end of its period (in arrears). The test: is the amount a martingale under the measure of its payment date?<br><b>Move:</b> value the payment under the \\(T_2\\)-forward measure, where a payment of \\(X\\) at \\(T_2\\) is worth \\(P(0,T_2)E^{T_2}[X]\\). For a simple rate \\(L(T_1)=\\tfrac1\\tau\\big(P(T_1,T_2)^{-1}-1\\big)\\) over its own period \\([T_1,T_2]\\), \\(P(T_1,T_2)^{-1}\\) is a ratio of traded assets, so \\(E^{T_2}[L(T_1)]=L(0)\\). No adjustment: the payment is worth \\(P(0,T_1)-P(0,T_2)\\), exactly what the rate is worth paid on time.<br><b>Where it appears:</b> when the amount is not the period's own forward. Examples are a swap rate over a longer period (CMS), a rate fixed in arrears, or a futures contract settled through margin. The payoff is then a nonlinear function of a rate with a different martingale measure, and the difference is a covariance with the discount factor, as in the Ho-Lee calculation. Convexity grows with the variance of the rate and with the lag between fixing and payment.<br><b>Canonical example:</b> the Ho-Lee futures on the instantaneous rate. The amount is set and settled at \\(T_1\\), but the futures price is a \\(Q\\)-expectation rather than the forward, and the gap is \\(\\tfrac12\\sigma^2T_1^2\\).<br><b>Sanity check:</b> with no lag between fixing and payment the adjustment vanishes, and it grows with the lag.",
+  "tags": [
+   "s_change_of_measure",
+   "s_martingale",
+   "rates",
+   "convexity",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A foreign stock \\(S\\) is quoted in a foreign currency. \\(X\\) is domestic currency per unit of foreign, with \\(\\sigma_X=10\\%\\), \\(\\sigma_S=25\\%\\), and \\(\\operatorname{corr}(\\ln S,\\ln X)=+0.5\\). Rates: domestic \\(r_d=5\\%\\), foreign \\(r_f=2\\%\\), no dividends. \\(S_0=100\\), \\(T=2\\). A contract pays \\(S_T\\) in domestic currency at the fixed rate \\(X_0\\). Find the forward \\(E^{Q_d}[S_T]\\) under the domestic risk-neutral measure.",
+  "back": "<b>Answer:</b> \\(E^{Q_d}[S_T]=S_0e^{(r_f-\\rho\\sigma_S\\sigma_X)T}=100\\,e^{0.015}\\approx101.51\\). With no correlation the forward would be \\(S_0e^{r_fT}=104.08\\).<br><b>Structure:</b> s_change_of_measure: the payoff is in domestic currency, so the expectation is under \\(Q_d\\), where the foreign stock's drift is fixed by no-arbitrage on \\(XS\\).<br><b>Key move:</b> \\(XS\\) is a traded domestic asset, so under \\(Q_d\\) it drifts at \\(r_d\\). \\(X\\) drifts at \\(r_d-r_f\\). The product rule adds the covariance: \\(\\mu_S+(r_d-r_f)+\\rho\\sigma_S\\sigma_X=r_d\\), so \\(\\mu_S=r_f-\\rho\\sigma_S\\sigma_X\\).<br><b>Working:</b> \\(\\rho\\sigma_S\\sigma_X=0.5\\times0.25\\times0.10=0.0125\\). Drift \\(\\mu_S=0.02-0.0125=0.0075\\). Then \\(E^{Q_d}[S_T]=100\\,e^{0.0075\\times2}=101.51\\).<br><b>Sanity check:</b> with \\(\\rho=0\\) the drift is \\(r_f\\) and the answer is 104.08, the foreign forward. Positive correlation pulls the forward down: the stock is high when the foreign currency is strong, and a fixed-rate payment does not share in that gain.<br><b>Transfer:</b> a fixed-FX commodity or index forward paid in another currency. The same drift shift applies to the next card's option.",
+  "tags": [
+   "s_change_of_measure",
+   "s_martingale",
+   "fx",
+   "quanto",
+   "fmt_solve"
+  ],
+  "hints": [
+   "The payment is in domestic currency at a fixed rate. Under which measure must the expectation be taken?",
+   "Is the domestic-currency value of the foreign stock, \\(XS\\), a traded asset? What must its drift be under \\(Q_d\\)?",
+   "Apply Ito's product rule to \\(XS\\): its drift is \\(\\mu_S+\\mu_X+\\rho\\sigma_S\\sigma_X\\). Set this to \\(r_d\\) and solve for \\(\\mu_S\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A UK investor buys a one-year European call on a US stock: stock \\(100\\) USD, strike \\(100\\) USD, stock vol \\(25\\%\\). The payoff \\(\\max(S_T-100,0)\\) is paid in pounds at a fixed conversion rate equal to today's spot, so the investor takes no currency risk. Sterling rate \\(5\\%\\), dollar rate \\(2\\%\\), GBP/USD vol \\(10\\%\\), and the log-correlation between the stock and the pound-per-dollar rate is \\(+0.5\\). Price the contract in units of today's conversion rate, so the answer is a number, not pounds.",
+  "back": "<b>Classic:</b> a quanto call. It is a Black call on a modified forward: the stock drifts under the pound measure at \\(r_f-\\rho\\sigma_S\\sigma_X\\), and the payoff is discounted at the pound rate.<br><b>Mapping:</b> the fixed conversion turns the payoff into a pound payoff, so the expectation is under \\(Q_d\\). Only the stock's drift changes, from \\(r_f\\) to \\(r_f-\\rho\\sigma_S\\sigma_X\\). The volatility stays \\(\\sigma_S\\), and the discount is at \\(r_d\\).<br><b>Answer:</b> forward \\(F_Q=100\\,e^{(0.02-0.0125)\\cdot1}=100.75\\). Black-76 with \\(\\sigma=25\\%\\), \\(T=1\\), discounted at \\(5\\%\\), gives \\(\\approx9.86\\) per unit of today's rate.<br><b>Sanity check:</b> with \\(\\rho=0\\) the same call is worth \\(10.55\\). A correlation of \\(+0.5\\) lowers the price by about 0.69, through the lower forward.<br><b>Transfer:</b> a foreign-currency index or commodity option paid in domestic currency at a fixed rate. Any such payoff is a Black call with a correlation-adjusted forward.",
+  "tags": [
+   "s_change_of_measure",
+   "s_martingale",
+   "fx",
+   "option_pricing",
+   "fmt_twin"
+  ],
+  "hints": [
+   "Put the payoff in the pound measure. Which rate sets the drift of the US stock under that measure?",
+   "The pound value of the US stock, \\(XS\\), is a traded asset. Relate its drift to the stock's drift and to the covariance of \\(\\ln X\\) and \\(\\ln S\\).",
+   "Once you have the drift \\(\\mu\\), the price is a Black call on the forward \\(S_0e^{\\mu T}\\), discounted at the pound rate."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Vasicek short rate: \\(dr_t=\\kappa(\\theta-r_t)\\,dt+\\sigma\\,dW_t\\), with \\(\\kappa=0.5\\), \\(\\theta=3\\%\\), \\(\\sigma=1\\%\\), \\(r_0=5\\%\\). Find \\(E[r_2]\\), \\(\\operatorname{sd}(r_2)\\), the long-run standard deviation, and the half-life of the mean reversion.",
+  "back": "<b>Answer:</b> \\(E[r_2]=\\theta+(r_0-\\theta)e^{-2\\kappa}=3.736\\%\\). \\(\\operatorname{sd}(r_2)=\\sigma\\sqrt{(1-e^{-4\\kappa})/(2\\kappa)}=0.930\\%\\). Long-run sd \\(\\sigma/\\sqrt{2\\kappa}=1.00\\%\\). Half-life \\(\\ln 2/\\kappa\\approx1.39\\) years.<br><b>Structure:</b> s_eigen: a linear SDE solved with an integrating factor. The drift is a mode with eigenvalue \\(-\\kappa\\).<br><b>Key move:</b> Ito on \\(e^{\\kappa t}r_t\\): \\(d(e^{\\kappa t}r_t)=\\kappa\\theta e^{\\kappa t}dt+\\sigma e^{\\kappa t}dW_t\\). Integrating, \\(r_t=\\theta+(r_0-\\theta)e^{-\\kappa t}+\\sigma\\int_0^te^{-\\kappa(t-s)}dW_s\\).<br><b>Working:</b> the noise is an Ito integral with mean 0 and variance \\(\\sigma^2\\int_0^te^{-2\\kappa(t-s)}ds=\\sigma^2(1-e^{-2\\kappa t})/(2\\kappa)\\). At \\(t=2\\), \\(\\kappa=0.5\\): \\(10^{-4}(1-e^{-2})\\), so sd \\(0.930\\%\\). As \\(t\\to\\infty\\) the variance tends to \\(\\sigma^2/(2\\kappa)\\). Half-life: \\(e^{-\\kappa t}=\\tfrac12\\) gives \\(t=\\ln 2/\\kappa\\).<br><b>Sanity check:</b> as \\(\\kappa\\to0\\) the variance tends to \\(\\sigma^2t\\), the driftless Brownian answer. The band in the figure closes at \\(\\pm2\\) sd, which is \\(\\pm2\\%\\).<br><b>Transfer:</b> the mean-reverting band of a daily-observed spread or a credit spread, with the same mean and stationary sd formulas.",
+  "tags": [
+   "s_eigen",
+   "vasicek",
+   "mean_reversion",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Multiply by an integrating factor that makes the drift deterministic.",
+   "After that step the random part is an Ito integral. Its variance follows from the Ito isometry.",
+   "Compute \\(\\int_0^2e^{-2\\kappa(2-s)}ds\\) with \\(\\kappa=0.5\\)."
+  ],
+  "figs_back": [
+   "fgD_ou_fan"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the Vasicek SDE \\(dr=\\kappa(\\theta-r)\\,dt+\\sigma\\,dW^Q\\) and the statement that a zero-coupon bond earns the short rate, rebuild \\(B(\\tau)\\) in \\(P(t,T)=\\exp\\big(A(\\tau)-B(\\tau)r_t\\big)\\), \\(\\tau=T-t\\).",
+  "back": "<ol><li><b>Affine ansatz.</b> Take \\(P(t,T)=\\exp(A(\\tau)-B(\\tau)r_t)\\), with \\(A(0)=B(0)=0\\).</li><li><b>Ito on \\(\\ln P\\).</b> \\(\\partial_t\\ln P=-A'+B'r\\), and \\(d\\ln P\\) picks up \\(-B\\,dr=-B\\kappa(\\theta-r)\\,dt-B\\sigma\\,dW\\). Adding the Ito term \\(\\tfrac12B^2\\sigma^2\\) gives the drift of \\(dP/P\\).</li><li><b>Earn the short rate.</b> Under \\(Q\\) a bond earns \\(r\\,dt\\), so the coefficient of \\(r\\) in the drift of \\(dP/P\\) must be 1: \\(B'+\\kappa B=1\\).</li><li><b>Solve the linear ODE</b> with \\(B(0)=0\\): \\(B(\\tau)=\\dfrac{1-e^{-\\kappa\\tau}}{\\kappa}\\). The constant part gives \\(A'=\\tfrac12\\sigma^2B^2-\\kappa\\theta B\\), which is not needed here.</li></ol><b>If you get stuck:</b> what must the coefficient of \\(r\\) in the drift of \\(dP/P\\) equal, if the bond earns the short rate?<br><b>Minimal memory:</b> a bond earns the short rate, so the \\(r\\)-coefficient of its drift is 1. That single ODE, \\(B'+\\kappa B=1\\), is the whole of \\(B\\).",
+  "tags": [
+   "s_eigen",
+   "s_replication",
+   "vasicek",
+   "bond_pricing",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A zero-coupon bond pays 1 in 5 years under a Vasicek short rate with \\(\\kappa=0.5\\) per year. Its price is \\(P=\\exp(A-Br)\\). What is the rate sensitivity \\(-\\partial\\ln P/\\partial r\\), and how does it compare with the 5-year maturity?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> affine term structure. The bond price is exponential-affine in \\(r\\), and the sensitivity \\(B\\) solves a linear ODE.<br><b>Trigger:</b> a mean-reverting Gaussian short rate with a bond payoff \\(\\exp(-\\int r)\\). The sensitivity to \\(r\\) is the coefficient \\(B\\).<br><b>Key move:</b> \\(B(\\tau)=\\frac{1-e^{-\\kappa\\tau}}{\\kappa}\\), which solves \\(B'+\\kappa B=1\\), \\(B(0)=0\\).<br><b>Answer:</b> \\(B(5)=\\frac{1-e^{-2.5}}{0.5}=1.836\\) years, not 5. A 1 percentage-point rise in \\(r\\) lowers the bond price by about 1.8%.<br><b>Sanity check:</b> \\(B(\\tau)\\le\\tau\\) always, and \\(B\\to1/\\kappa=2\\) as \\(\\tau\\to\\infty\\). For \\(\\kappa\\to0\\), \\(B\\to\\tau\\): with no reversion the rate shock is permanent and the sensitivity equals the maturity.<br><b>Transfer:</b> a 30-year bond with \\(\\kappa=0.1\\) has \\(B(30)=9.50\\) years. Under mean reversion long-dated rate sensitivity is capped near \\(1/\\kappa\\), not at maturity.",
+  "tags": [
+   "s_eigen",
+   "vasicek",
+   "rates",
+   "fmt_recognise"
+  ],
+  "figs_back": [
+   "fgD_duration_saturation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "One-factor Gaussian credit model: obligor \\(i\\) defaults if \\(V_i<c\\), where \\(V_i=\\sqrt\\rho\\,M+\\sqrt{1-\\rho}\\,Z_i\\), with \\(M,Z_1,Z_2\\) i.i.d. standard normal, \\(\\rho=0.3\\), and marginal default probability \\(p=2\\%\\). Find \\(P(D_1\\cap D_2)\\) and the default correlation of the two default indicators.",
+  "back": "<b>Answer:</b> \\(c=\\Phi^{-1}(0.02)=-2.054\\). \\(P(D_1\\cap D_2)=\\Phi_2(c,c;0.3)=0.1664\\%\\). Default correlation \\(\\approx6.5\\%\\), far below the asset correlation of 30%.<br><b>Structure:</b> s_indicators with s_conditional_expectation_tower: default is an indicator of a latent threshold event, and the joint probability is a bivariate normal orthant.<br><b>Key move:</b> for indicators \\(\\operatorname{Cov}=P(D_1D_2)-p^2\\) and \\(\\operatorname{Var}=p(1-p)\\), so \\(\\rho_D=\\dfrac{P(D_1D_2)-p^2}{p(1-p)}\\).<br><b>Working:</b> \\(P(D_1D_2)=\\Phi_2(-2.054,-2.054;0.3)=0.001664\\). Then \\(\\rho_D=\\dfrac{0.001664-0.0004}{0.02\\times0.98}=\\dfrac{0.001264}{0.0196}=0.0645\\).<br><b>Sanity check:</b> at \\(\\rho=0\\) the joint is \\(p^2=0.04\\%\\) and \\(\\rho_D=0\\). As \\(\\rho\\to1\\) the joint tends to \\(p\\) and \\(\\rho_D\\to1\\). With rare defaults the indicator correlation is much smaller than the asset correlation.<br><b>Transfer:</b> a first-to-default basket, or any two-name joint loss on a loan book: the same orthant calculation with a different threshold.",
+  "tags": [
+   "s_indicators",
+   "s_conditional_expectation_tower",
+   "copula",
+   "credit",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Default is a threshold on a latent variable. Which two-dimensional probability does \\(P(D_1\\cap D_2)\\) equal?",
+   "For two indicators, the covariance is \\(P(D_1D_2)-p^2\\), and the variance is \\(p(1-p)\\).",
+   "Write \\(P(D_1\\cap D_2)=\\Phi_2(c,c;\\rho)\\) with \\(c=\\Phi^{-1}(p)\\) before evaluating anything."
+  ],
+  "figs_back": [
+   "fgD_default_region"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two obligors have the same default probabilities and latent correlation \\(\\rho=0.3\\). One pair is coupled by a Gaussian copula, the other by a \\(t_4\\) copula. As \\(q\\to0\\), what is \\(\\lim P(U_2<q\\mid U_1<q)\\) under each copula?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> tail dependence, \\(\\lambda=\\lim_{q\\to0}P(U_2<q\\mid U_1<q)\\).<br><b>Trigger:</b> the question is about joint extremes as \\(q\\to0\\), not about the correlation itself. Two copulas with the same \\(\\rho\\) can differ sharply in \\(\\lambda\\).<br><b>Key move:</b> the Gaussian copula has \\(\\lambda=0\\) for every \\(|\\rho|<1\\). The \\(t_\\nu\\) copula has \\(\\lambda=2\\,t_{\\nu+1}\\!\\big(-\\sqrt{(\\nu+1)(1-\\rho)/(1+\\rho)}\\big)\\).<br><b>Answer:</b> Gaussian \\(\\to0\\). For \\(t_4\\), \\(\\lambda=2\\,t_5(-1.641)\\approx0.162\\). At \\(q=0.1\\%\\) the Gaussian conditional probability is 1.5% and the \\(t_4\\) value is 17%, which then tends to 16.2%.<br><b>Sanity check:</b> \\(\\lambda\\le1\\), and \\(\\lambda\\to1\\) as \\(\\rho\\to1\\). The Gaussian answer is 0 even though the same \\(\\rho\\) gives a sizeable \\(t_4\\) joint tail. A Gaussian copula therefore underprices joint crashes.<br><b>Transfer:</b> the senior tranche of a CDO priced with a Gaussian versus a Student-t factor: the same tail-dependence question.",
+  "tags": [
+   "s_extremal",
+   "s_indicators",
+   "copula",
+   "tail_dependence",
+   "fmt_recognise"
+  ],
+  "figs_back": [
+   "fgD_gauss_t_tail"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A candidate models a large homogeneous pool with default probability \\(p\\) and asset correlation \\(\\rho\\) in the one-factor model. Their loss CDF is \\(P(L\\le x)=\\Phi\\!\\Big(\\frac{\\Phi^{-1}(x)-\\Phi^{-1}(p)}{\\sqrt\\rho}\\Big)\\). Find the flaw.",
+  "back": "<b>The faulty line:</b> \\(\\Phi\\big((\\Phi^{-1}(x)-\\Phi^{-1}(p))/\\sqrt\\rho\\big)\\). It drops the idiosyncratic loading \\(\\sqrt{1-\\rho}\\) that must multiply \\(\\Phi^{-1}(x)\\). The loss side is missing the \\(Z_i\\) term.<br><b>Why it fails:</b> the conditional default probability given the factor is \\(p(M)=\\Phi\\big((c-\\sqrt\\rho\\,M)/\\sqrt{1-\\rho}\\big)\\), with \\(c=\\Phi^{-1}(p)\\), and \\(L\\le x\\) if and only if \\(p(M)\\le x\\). Solving for \\(M\\) gives \\(M\\ge\\big(c-\\sqrt{1-\\rho}\\,\\Phi^{-1}(x)\\big)/\\sqrt\\rho\\).<br><b>Correct:</b> \\(P(L\\le x)=\\Phi\\!\\Big(\\frac{\\sqrt{1-\\rho}\\,\\Phi^{-1}(x)-\\Phi^{-1}(p)}{\\sqrt\\rho}\\Big)\\). For \\(p=2\\%\\) and \\(\\rho=0.2\\), \\(P(L\\le2\\%)=0.686\\), not 0.5.<br><b>Smell:</b> a loss CDF that gives exactly \\(\\tfrac12\\) at \\(x=E[L]=p\\) for every \\(\\rho\\). The loss is right-skewed, so for \\(\\rho>0\\) its median sits below its mean and \\(P(L\\le p)>\\tfrac12\\).",
+  "tags": [
+   "s_conditional_expectation_tower",
+   "s_indicators",
+   "copula",
+   "credit",
+   "fmt_debug"
+  ],
+  "figs_back": [
+   "fgD_vasicek_loss_cdf"
   ]
  }
 ]

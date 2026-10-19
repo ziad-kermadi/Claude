@@ -7,7 +7,7 @@
    "s_martingale",
    "s_optional_stopping",
    "random_walk",
-   "coin",
+   "coins",
    "fmt_recognise"
   ],
   "figs_back": [
@@ -20,7 +20,7 @@
   "back": "<b>Structure:</b> s_markov_chain (run-length states: no head yet, one head)<br><b>Trigger:</b> the target pattern overlaps itself (HH), so the wait depends on the current run<br><b>Key move:</b> \\(E_0=1+\\tfrac12E_0+\\tfrac12E_1\\), \\(E_1=1+\\tfrac12E_0\\)<br><b>Answer:</b> \\(6\\)",
   "tags": [
    "s_markov_chain",
-   "coin",
+   "coins",
    "fmt_recognise"
   ],
   "figs_back": [
@@ -34,7 +34,7 @@
   "tags": [
    "s_markov_chain",
    "random_walk",
-   "cycle",
+   "cycles",
    "fmt_recognise"
   ],
   "figs_back": [
@@ -86,7 +86,7 @@
   "tags": [
    "s_game_theory_equilibrium",
    "penney",
-   "coin",
+   "coins",
    "fmt_recognise"
   ]
  },
@@ -147,7 +147,7 @@
   "tags": [
    "s_optional_stopping",
    "betting",
-   "coin",
+   "coins",
    "fmt_recognise"
   ],
   "figs_back": [
@@ -162,7 +162,7 @@
    "s_markov_chain",
    "s_game_theory_equilibrium",
    "penney",
-   "coin",
+   "coins",
    "fmt_recognise"
   ],
   "figs_back": [
@@ -242,7 +242,7 @@
   "back": "<b>Structure:</b> s_bayes (uniform prior, Beta posterior; the same rule as the Polya urn)<br><b>Trigger:</b> an unknown probability with a uniform prior and sequential data<br><b>Key move:</b> posterior is \\(\\mathrm{Beta}(4,1)\\) with mean \\(4/5\\) (Laplace's rule of succession)<br><b>Answer:</b> \\(\\dfrac45\\)",
   "tags": [
    "s_bayes",
-   "coin",
+   "coins",
    "fmt_recognise"
   ]
  },
@@ -254,7 +254,7 @@
    "s_martingale",
    "s_optional_stopping",
    "random_walk",
-   "coin",
+   "coins",
    "fmt_solve"
   ],
   "hints": [
@@ -273,7 +273,7 @@
   "tags": [
    "s_optional_stopping",
    "betting",
-   "coin",
+   "coins",
    "fmt_solve"
   ],
   "hints": [
@@ -303,7 +303,7 @@
   "back": "<b>Answer:</b> HT: \\(4\\). HH: \\(6\\).<br><b>Structure:</b> s_markov_chain (Conway leading numbers; patterns with different self-overlap)<br><b>Key move:</b> \\(E[\\text{pattern}]=\\sum2^k\\) over lengths \\(k\\) where the length-\\(k\\) prefix equals the length-\\(k\\) suffix<br><b>Working:</b> HT has no proper overlap, so only the full length \\(k=2\\): \\(2^2=4\\). HH overlaps at \\(k=1\\) and \\(k=2\\): \\(2+4=6\\).<br><b>Sanity check:</b> a tail after a head ends HT at once, while HH must restart after a tail; the first-step equations give \\(6\\) for HH<br><b>Transfer:</b> the same rule gives HHH \\(=14\\)",
   "tags": [
    "s_markov_chain",
-   "coin",
+   "coins",
    "fmt_solve"
   ],
   "hints": [
@@ -318,7 +318,7 @@
   "back": "<b>Answer:</b> HTH: \\(10\\). HHT: \\(8\\). HTH is slower by \\(2\\).<br><b>Structure:</b> s_markov_chain (Conway's leading-number rule; self-overlap of the target)<br><b>Key move:</b> \\(E=\\sum_{k\\in O}2^k\\), with \\(O\\) the set of lengths where prefix equals suffix<br><b>Working:</b> HTH overlaps at \\(k=1\\) (H) and \\(k=3\\) (full): \\(2+8=10\\). HHT overlaps only at full length: \\(8\\).<br><b>Sanity check:</b> a pattern with a self-overlap is slower, and HTH has one<br><b>Transfer:</b> the same rule gives ABRACADABRA on the next card with \\(26\\) letters",
   "tags": [
    "s_markov_chain",
-   "coin",
+   "coins",
    "fmt_solve"
   ],
   "hints": [
@@ -336,7 +336,7 @@
   "back": "<b>Answer:</b> \\(14\\)<br><b>Structure:</b> s_markov_chain (Conway leading numbers; maximal self-overlap)<br><b>Key move:</b> the pattern overlaps at every length \\(k=1,2,3\\), so \\(E=2+4+8\\)<br><b>Working:</b> \\(2+4+8=14\\), confirmed by the exact first-step solve.<br><b>Sanity check:</b> one more head in a row adds \\(8=2^3\\) to the expected wait of HH (\\(6\\))<br><b>Transfer:</b> the expected wait for \\(n\\) heads in a row is \\(2^{n+1}-2\\)",
   "tags": [
    "s_markov_chain",
-   "coin",
+   "coins",
    "fmt_solve"
   ],
   "hints": [
@@ -368,7 +368,7 @@
   "tags": [
    "s_game_theory_equilibrium",
    "penney",
-   "coin",
+   "coins",
    "fmt_solve"
   ],
   "hints": [
@@ -384,7 +384,7 @@
   "tags": [
    "s_game_theory_equilibrium",
    "penney",
-   "coin",
+   "coins",
    "fmt_solve"
   ],
   "hints": [
@@ -400,7 +400,7 @@
   "tags": [
    "s_markov_chain",
    "random_walk",
-   "cycle",
+   "cycles",
    "fmt_solve"
   ],
   "hints": [
@@ -585,7 +585,7 @@
   "back": "<b>Answer:</b> \\(20\\)<br><b>Structure:</b> s_markov_chain (Conway leading numbers; two self-overlaps)<br><b>Key move:</b> overlaps at lengths \\(2\\) (HT) and \\(4\\) (full): \\(E=2^2+2^4\\)<br><b>Working:</b> \\(4+16=20\\), confirmed by the exact first-step solve.<br><b>Sanity check:</b> HTHT is longer than HTH (\\(10\\)) because its overlaps are longer<br><b>Transfer:</b> the same rule gives ABAB \\(=90\\) over three letters",
   "tags": [
    "s_markov_chain",
-   "coin",
+   "coins",
    "fmt_solve"
   ],
   "hints": [
@@ -701,7 +701,7 @@
   "back": "<b>What breaks:</b> The fair-coin weights \\(2^k\\) assume each toss has probability \\(1/2\\). With bias, each self-overlap of length \\(k\\) contributes \\(1/P(\\text{prefix of length }k)\\), not \\(2^k\\).<br><b>Fix:</b> \\(E=\\sum_{k\\in O}1/P(\\text{prefix of length }k)\\), with \\(O\\) the self-overlap lengths of HH.<br><b>New answer:</b> \\(\\dfrac1{0.6}+\\dfrac1{0.36}=\\dfrac{40}{9}\\approx4.444\\). Monte Carlo \\(4.44\\).",
   "tags": [
    "s_markov_chain",
-   "coin",
+   "coins",
    "biased_coin",
    "fmt_perturb"
   ],
@@ -857,7 +857,7 @@
   "tags": [
    "s_markov_chain",
    "random_walk",
-   "cycle",
+   "cycles",
    "fmt_perturb"
   ],
   "hints": [
@@ -928,7 +928,7 @@
    "s_bayes",
    "s_martingale",
    "urn",
-   "coin",
+   "coins",
    "fmt_twin"
   ],
   "hints": [
@@ -1173,7 +1173,7 @@
   "tags": [
    "s_game_theory_equilibrium",
    "penney",
-   "coin",
+   "coins",
    "fmt_chain"
   ],
   "hints": [
@@ -1189,7 +1189,7 @@
   "tags": [
    "s_game_theory_equilibrium",
    "penney",
-   "coin",
+   "coins",
    "fmt_chain"
   ],
   "hints": [
@@ -1208,7 +1208,7 @@
   "tags": [
    "s_game_theory_equilibrium",
    "penney",
-   "coin",
+   "coins",
    "fmt_chain"
   ],
   "hints": [
@@ -1218,6 +1218,117 @@
   ],
   "figs_back": [
    "f04_penney_cycle"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Each individual in a population has \\(0\\), \\(1\\) or \\(2\\) children, each with probability \\(\\tfrac13\\), independently of everyone else. Start from one ancestor. Find the probability that the line eventually dies out, and the probability that generation 2 is empty.",
+  "back": "<b>Answer:</b> The line dies out with probability \\(q=1\\). \\(P(Z_2=0)=\\frac{13}{27}\\approx 0.481\\).<br><b>Structure:</b> s_generating_function with s_recursion (a Galton-Watson process). Trigger: each individual's children start independent copies of the same process, so the generation PGFs are iterates of one offspring PGF.<br><b>Key move:</b> With offspring count \\(X\\), let \\(f(s)=E[s^X]=\\frac{1+s+s^2}{3}\\). The extinction probability \\(q\\) is the smallest root of \\(f(s)=s\\) in \\([0,1]\\).<br><b>Working:</b> \\(f(s)-s=\\frac{(s-1)^2}{3}\\), so \\(s=1\\) is the only root in \\([0,1]\\), and it is a double root. The mean is \\(f'(1)=1\\), the critical case. Also \\(P(Z_1=0)=f(0)=\\frac13\\) and \\(P(Z_2=0)=f(f(0))=f(\\tfrac13)=\\frac{13}{27}\\). The iterates \\(f_n(0)\\) increase to 1, slowly: \\(\\frac{1}{1-f(s)}\\approx\\frac{1}{1-s}+\\frac13\\), so \\(\\frac{1}{1-f_n(0)}\\) grows by about \\(\\frac13\\) per generation.<br><b>Sanity check:</b> \\(f_2(0)\\approx 0.481\\) and \\(f_{1000}(0)\\approx 0.997\\). The mean offspring count is exactly 1, so the population has no drift to grow.<br><b>Transfer:</b> Any offspring law gives \\(q\\) as the smallest fixed point of \\(f\\) in \\([0,1]\\). Raising the mean above 1 pushes the double root apart, and the smallest root then lies below 1.",
+  "tags": [
+   "s_generating_function",
+   "s_recursion",
+   "branching_process",
+   "extinction",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Condition on how many children the ancestor has. What equation must the extinction probability \\(q\\) satisfy?",
+   "Name the move: a fixed point of the offspring generating function. Write \\(q=f(q)\\) and say why \\(q\\) is the smallest root in \\([0,1]\\).",
+   "Compute \\(f(s)-s\\) for \\(f(s)=\\frac{1+s+s^2}{3}\\) and factor it. How many roots lie in \\([0,1]\\)?"
+  ],
+  "figs_back": [
+   "fgB_branch_fixed"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two walkers live on the cube \\(\\{0,1\\}^{10}\\). One starts at \\(0000000000\\) and the other at \\(1111111111\\). Each step, a coordinate \\(c\\) is chosen uniformly from the ten coordinates. Both walkers then have their bit \\(c\\) replaced by the same fresh fair bit. Each walker on its own moves as the lazy random walk on the cube. Find the expected number of steps until the two walkers occupy the same vertex.",
+  "back": "<b>Answer:</b> \\(E[T]=10H_{10}=\\frac{7381}{252}\\approx 29.29\\).<br><b>Structure:</b> s_coupling with s_linearity_expectation. Trigger: the two copies are driven by shared randomness, and once a coordinate matches it stays matched, so the meeting time is a coupon-collector time. This is the twin of the coupon collector.<br><b>Key move:</b> Under this coupling a coordinate, once chosen, agrees between the two walkers forever. The walkers meet exactly when all ten coordinates have been chosen at least once.<br><b>Working:</b> Let \\(\\tau_k\\) be the first time \\(k\\) distinct coordinates have been chosen. The wait \\(\\tau_k-\\tau_{k-1}\\) is geometric with success probability \\(\\frac{11-k}{10}\\), so its mean is \\(\\frac{10}{11-k}\\). Summing, \\(E[T]=\\sum_{k=1}^{10}\\frac{10}{11-k}=10H_{10}=\\frac{7381}{252}\\). A simulation of \\(10^5\\) runs gives a mean of \\(29.37\\), within \\(0.1\\) of \\(7381/252\\).<br><b>Sanity check:</b> \\(10(\\ln 10+\\gamma)\\approx 28.8\\), close to \\(29.3\\), using \\(H_n\\approx\\ln n+\\gamma\\).<br><b>What breaks:</b> If the two walkers use independent fresh bits, a coordinate can disagree again after it has matched, so the meeting time is no longer a coupon-collector time. From antipodal starts the first meeting time is \\(\\frac{149504}{63}\\approx 2373\\), about 81 times larger. The coupling, not the walk, is what makes the answer small.<br><b>Transfer:</b> A coupling time \\(T\\) bounds total variation: \\(\\|P^t(x,\\cdot)-\\pi\\|_{TV}\\le P(T>t)\\). With the coupon-collector tail, this bounds how fast the lazy walk on the cube mixes.",
+  "tags": [
+   "s_coupling",
+   "s_linearity_expectation",
+   "hypercube",
+   "fmt_twin"
+  ],
+  "hints": [
+   "Look at one coordinate. After it has been chosen once, what is the relation between the two walkers' bits in that coordinate?",
+   "Name the move: a shared-randomness coupling. The question becomes when every coordinate has been touched at least once.",
+   "Let \\(\\tau_k\\) be the first time \\(k\\) distinct coordinates have been chosen. Find the success probability of the step from \\(k-1\\) to \\(k\\) distinct coordinates."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for coupling from the past (CFTP), and when does it fail? Test it on the walk on \\(\\{0,1,2,3\\}\\) that moves up with probability \\(\\tfrac12\\) and down with probability \\(\\tfrac12\\), and stays put at an end when it would leave the interval.",
+  "back": "<b>Triggers:</b> you need an exact draw from the stationary law of a finite Markov chain, and you can drive all start states with the same random inputs (a monotone update, or a coupling of all states).<br><b>Move:</b> Start every state at time \\(-T\\), drive them with the same uniforms \\(U_{-T},\\dots,U_{-1}\\), and check whether they have merged by time 0. If they have, the common value is an exact draw from the stationary law. If not, double \\(T\\) and reuse the old uniforms. Never redraw them.<br><b>Fails when:</b> the uniforms are redrawn at each restart, which biases the output toward the last restart; or the update is not monotone, so merging of the extreme states does not imply merging of all states. A non-monotone chain needs a different coupling or a sandwich argument.<br><b>Test case:</b> Here the update \\(x\\mapsto\\min(x+1,3)\\) or \\(x\\mapsto\\max(x-1,0)\\) is monotone, so the extreme states 0 and 3 merging implies that all states merge. The stationary law is uniform, so each state has probability \\(\\tfrac14\\). A simulation of \\(10^5\\) CFTP draws gives state frequencies within two standard errors (about \\(0.0014\\)) of \\(0.25\\).<br><b>Transfer:</b> Any monotone chain on a finite state space admits this exact sampler, for example the ferromagnetic Ising model with a monotone heat-bath update.",
+  "tags": [
+   "s_coupling",
+   "s_markov_chain",
+   "stationary",
+   "coupling_from_the_past",
+   "fmt_toolkit"
+  ],
+  "figs_back": [
+   "fgB_cftp_paths"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You are selling a house. Offers arrive one per day, independently, uniform on \\([0,1]\\) (in millions). You may accept the current offer or reject it, and a rejected offer cannot be recalled. Each extra day you keep looking costs \\(c=0.02\\), and the first offer is free. Find the reservation price and the expected net value of the optimal policy.",
+  "back": "<b>Answer:</b> Reservation price \\(w=1-\\sqrt{2c}=0.80\\). Expected net value \\(V=w+c=0.82\\).<br><b>Structure:</b> s_optimal_stopping with s_dynamic_programming. Trigger: i.i.d. offers, a cost per look, and no recall, so the only state that matters is the value of continuing.<br><b>Key move:</b> Let \\(V\\) be the value of a fresh offer whose first look is free. Rejecting costs \\(c\\) and leaves you with a fresh offer, so the value of continuing is \\(V-c\\). Then \\(V=E[\\max(X,V-c)]\\), and the reservation price is \\(w=V-c\\).<br><b>Working:</b> \\(E[\\max(X,w)]=w+E[(X-w)^+]=w+\\frac{(1-w)^2}{2}\\). Setting this equal to \\(V=w+c\\) gives \\((1-w)^2=2c\\), so \\(w=1-\\sqrt{2c}=0.8\\) and \\(V=0.82\\).<br><b>Sanity check:</b> Accepting an offer above \\(w\\) is worth it exactly when the gain \\(\\frac{(1-w)^2}{2}\\) from one more offer equals \\(c\\). At \\(c=0\\) the reservation price tends to 1, and as \\(c\\to\\frac12\\) it tends to 0. A simulation of \\(10^5\\) runs gives \\(0.82\\) within one standard error.<br><b>Transfer:</b> Any i.i.d. offer law gives the reservation price by the same fixed point, with \\(E[(X-w)^+]\\) in place of \\(\\frac{(1-w)^2}{2}\\).",
+  "tags": [
+   "s_optimal_stopping",
+   "s_dynamic_programming",
+   "house_selling",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Once you have rejected an offer, what matters for the future? Is there anything to remember besides the value of continuing?",
+   "Name the move: a one-dimensional dynamic programme. Let \\(V\\) be the value of a fresh offer, and write the equation it satisfies.",
+   "Write \\(w=V-c\\), compute \\(E[(X-w)^+]\\) for \\(X\\sim U(0,1)\\), and set \\(w+E[(X-w)^+]=w+c\\)."
+  ],
+  "figs_back": [
+   "fgB_house_gain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair die is rolled repeatedly, and you stop at the first \\(6\\), which is included in the total. Let \\(T\\) be the number of rolls and \\(S\\) the sum of all rolls. Find \\(\\mathbb E[T]\\) and \\(\\mathbb E[S]\\).",
+  "back": "<b>Answer:</b> \\(\\mathbb E[T]=6\\), \\(\\mathbb E[S]=6\\cdot\\tfrac72=21\\).<br><b>Structure:</b> s_optional_stopping (Wald's identity) with s_linearity_expectation. Trigger: a sum of i.i.d. increments stopped at a random time that depends only on the past.<br><b>Key move:</b> \\(T\\) is a stopping time, since \\(\\{T=k\\}\\) depends only on rolls \\(1\\) to \\(k\\). Wald gives \\(\\mathbb E[S_T]=\\mathbb E[T]\\,\\mathbb E[X]\\), so the distribution of \\(S\\) is not needed.<br><b>Working:</b> \\(T\\sim\\text{Geometric}(1/6)\\), so \\(\\mathbb E[T]=6\\). Each roll has mean \\(\\tfrac72\\), so \\(\\mathbb E[S]=6\\cdot\\tfrac72=21\\).<br><b>Sanity check:</b> about 6 rolls averaging \\(3.5\\) gives roughly 21. Simulation of \\(2\\times10^5\\) runs gives \\(20.99\\pm0.04\\).<br><b>Transfer:</b> expected sum of card values drawn with replacement up to and including the first ace; expected total of i.i.d. daily P&amp;L up to and including the first loss-making day.",
+  "tags": [
+   "s_optional_stopping",
+   "s_linearity_expectation",
+   "dice",
+   "stopping_time",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Is the decision to stop after roll \\(k\\) made using only rolls \\(1\\) to \\(k\\)?",
+   "Name the identity: Wald's identity, \\(\\mathbb E[S_T]=\\mathbb E[T]\\,\\mathbb E[X]\\), for i.i.d. summands and a stopping time with finite mean.",
+   "First find the distribution of \\(T\\). It is geometric. Then multiply its mean by the mean roll."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair die is rolled until the first \\(6\\). Let \\(N\\) be the number of rolls before the first \\(6\\), not counting the \\(6\\), and \\(S_N\\) the sum of those rolls. A candidate writes:<br><i>\"\\(N\\) is geometric with \\(\\mathbb E N=5\\). Each roll has mean \\(\\tfrac72\\). By Wald's identity, \\(\\mathbb E S_N=\\mathbb E N\\cdot\\mathbb E X=5\\cdot\\tfrac72=\\tfrac{35}{2}\\).\"</i><br><br>Find the flaw.",
+  "back": "<b>Faulty line:</b> \"By Wald's identity, \\(\\mathbb E S_N=\\mathbb E N\\cdot\\mathbb E X\\).\" Wald needs each term's inclusion to be decided without seeing that term: the event \\(\\{N\\ge i\\}\\) must be independent of \\(X_i\\). Here \\(\\{N\\ge i\\}\\) means \\(X_1,\\dots,X_i\\ne6\\), which depends on \\(X_i\\) itself. A roll is summed only if it is not a \\(6\\), so the summed rolls are not distributed like a fair die.<br><b>Correct answer:</b> \\(\\mathbb E S_N=15\\). Each summed roll has conditional mean \\(3\\), not \\(\\tfrac72\\). Equivalently, \\(\\mathbb E[X_i\\mathbf 1\\{N\\ge i\\}]=\\tfrac{15}{6}(\\tfrac56)^{i-1}\\), and summing over \\(i\\) gives \\(\\tfrac{15}{6}\\cdot6=15\\). So \\(\\mathbb E S_N=\\mathbb E N\\cdot3=15\\), with \\(\\mathbb E N=5\\) correct.<br><b>Smell:</b> if the rule that decides whether a term is included depends on that term, the unconditional \\(\\mathbb E X\\) is the wrong mean. Use the conditional mean of the included terms.<br><b>Check:</b> simulation of \\(2\\times10^5\\) runs gives \\(15.01\\pm0.04\\).",
+  "tags": [
+   "s_optional_stopping",
+   "s_linearity_expectation",
+   "dice",
+   "stopping_time",
+   "fmt_debug"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A simple symmetric random walk \\(S_k\\) starts at \\(0\\), with \\(\\pm1\\) steps. Let \\(M=\\max_{0\\le k\\le100}S_k\\). In 30 seconds, without solving: give bounds or a ballpark for \\(\\mathbb E[M]\\), and say which limiting cases pin it down.",
+  "back": "<b>Bounds:</b> \\(\\mathbb E[M]\\le2\\sqrt{n}=20\\) for \\(n=100\\). This is Doob's \\(L^2\\) bound: \\(S_k^2\\) is a submartingale, so \\(\\mathbb E[\\max_k S_k^2]\\le4\\,\\mathbb E[S_n^2]=4n=400\\). Jensen (Cauchy-Schwarz) then gives \\(\\mathbb E[M]\\le\\sqrt{400}=20\\).<br><b>Ballpark:</b> for Brownian motion the reflection principle gives \\(\\mathbb E[\\max W]=\\sqrt{2n/\\pi}\\approx7.98\\). The discrete walk sits a little lower, so about \\(7.5\\).<br><b>Limiting cases:</b> as \\(n\\to\\infty\\), \\(\\mathbb E M\\sim\\sqrt{2n/\\pi}\\), growing like \\(\\sqrt n\\), which the Doob bound matches in order. At \\(n=0\\), \\(\\mathbb E M=0\\).<br><b>Exact comparison:</b> \\(\\mathbb E[M]=\\sum_{a\\ge1}P(M\\ge a)\\), and reflection gives \\(P(M_n\\ge a)=2P(S_n>a)+P(S_n=a)\\). Summing exactly gives \\(\\mathbb E[M]\\approx7.4987\\). The Doob bound of \\(20\\) is loose by a factor of about \\(2.7\\), and the Brownian scaling \\(7.98\\) is about 6% high.",
+  "tags": [
+   "s_martingale",
+   "s_convexity_jensen",
+   "random_walk",
+   "maximum",
+   "fmt_estimate"
   ]
  }
 ]

@@ -1,6 +1,6 @@
 # Session state (auto-saved — last known reality)
 
-_Updated: 2026-10-19 19:55:51_  ·  branch: `claude/quant-deck-cpp-training-0rix4z`
+_Updated: 2026-10-19 20:30:12_  ·  branch: `claude/youthful-wright-kt2gjp`
 
 ## Uncommitted changes
 ```
@@ -9,20 +9,20 @@ _Updated: 2026-10-19 19:55:51_  ·  branch: `claude/quant-deck-cpp-training-0rix
 
 Diff stat:
 ```
- .anchor/session-state.md | 25 +------------------------
- 1 file changed, 1 insertion(+), 24 deletions(-)
+ .anchor/session-state.md | 21 +--------------------
+ 1 file changed, 1 insertion(+), 20 deletions(-)
 ```
 
 ## Recent commits
 ```
-c51760a Final v3 build: layered explanations, 331 diagrams, README
-3af5240 WIP: layering pass
-4e8986b WIP: layering pass
-0c37cae WIP: layering pass
-0d80f48 WIP: layering pass
-e351bef Layering desk 7; record token-minimisation rule
-9a2455b WIP: layering pass in progress
-7edf87d Layered explanations: desk practice 1
+349e512 Fix flagged card text, document diagrams and gap cards, rebuild deck
+f8aeaab Progress: card text fixes in flight
+3159a65 Merge 91 verified gap cards into subdecks; normalise tags; add s_optimal_stopping
+aefe2a1 Merge pull request #4 from ziad-kermadi/claude/youthful-wright-kt2gjp
+fa16478 Rebuild .apkg with all diagrams
+1bb8959 Merge main into branch (resolve .anchor/session-state.md)
+5436b93 Progress: gap batch B staging
+fda133b Stage gap batch D (17 cards)
 ```
 
 ## Resume

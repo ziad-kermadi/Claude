@@ -74,7 +74,7 @@
   "back": "<ol><li><b>Definition, one order.</b> \\(P(A\\cap B)=P(A\\mid B)P(B)\\).</li><li><b>Definition, other order.</b> \\(P(A\\cap B)=P(B\\mid A)P(A)\\).</li><li><b>Equate the two products.</b> \\(P(A\\mid B)P(B)=P(B\\mid A)P(A)\\).</li><li><b>Divide by \\(P(B)\\).</b> Valid when \\(P(B)>0\\). Expand \\(P(B)\\) over the partition \\(\\{A,A^c\\}\\) for the denominator.</li><li><b>Example.</b> Prior \\(1/100\\), sensitivity \\(0.99\\), false positive \\(0.05\\): \\(P(A\\mid B)=\\frac{0.99\\cdot0.01}{0.99\\cdot0.01+0.05\\cdot0.99}=1/6\\).</li></ol><b>If you get stuck:</b> Which product of two probabilities equals \\(P(A\\cap B)\\) in two different ways?<br><b>Minimal memory:</b> \\(P(A\\cap B)\\) computed in two orders; the rest is the partition for the denominator.",
   "tags": [
    "s_bayes",
-   "bayes_update",
+   "bayesian_updating",
    "conditional",
    "fmt_rebuild"
   ]
@@ -482,7 +482,7 @@
    "s_memorylessness",
    "s_geometric_probability",
    "s_order_statistics",
-   "exponential_distribution",
+   "exponential",
    "fmt_rebuild"
   ],
   "figs_back": [
@@ -937,7 +937,7 @@
   "back": "<ol><li><b>Insert a mode.</b> Set \\(u_j^n=g^ne^{ikj\\Delta x}\\).</li><li><b>Second difference.</b> \\(e^{ik\\Delta x}-2+e^{-ik\\Delta x}=2\\cos(k\\Delta x)-2=-4\\sin^2(k\\Delta x/2)\\).</li><li><b>Amplification.</b> \\(g=1-4r\\sin^2(k\\Delta x/2)\\), with \\(r=D\\Delta t/\\Delta x^2\\).</li><li><b>Stability.</b> Need \\(|g|\\le1\\) for all \\(k\\). The worst mode has \\(\\sin^2=1\\): \\(g\\ge-1\\) iff \\(1-4r\\ge-1\\), i.e. \\(r\\le\\tfrac12\\).</li><li><b>Check.</b> \\(r=0.5\\) is marginal, \\(r=0.6\\) gives \\(g=-1.4\\), which is unstable.</li></ol><b>If you get stuck:</b> Which wavenumber is the worst case, and what is \\(g\\) there?<br><b>Minimal memory:</b> The highest-frequency mode decides stability: \\(1-4r\\ge-1\\) gives \\(r\\le\\tfrac12\\).",
   "tags": [
    "s_eigen",
-   "fdm",
+   "finite_difference",
    "heat_equation",
    "stability",
    "fmt_rebuild"
@@ -1027,7 +1027,7 @@
   "tags": [
    "s_memorylessness",
    "s_poisson_approx",
-   "exponential_distribution",
+   "exponential",
    "poisson",
    "fmt_rebuild"
   ]
@@ -1433,7 +1433,7 @@
   "tags": [
    "s_markov_chain",
    "s_martingale",
-   "fdm",
+   "finite_difference",
    "heat_equation",
    "stability",
    "fmt_connect"
@@ -1488,7 +1488,7 @@
    "s_order_statistics",
    "s_taylor",
    "order_statistics",
-   "beta_distribution",
+   "beta",
    "fmt_connect"
   ],
   "figs_back": [

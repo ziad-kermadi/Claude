@@ -6,7 +6,6 @@
   "tags": [
    "s_symmetry",
    "combinatorics",
-   "probability",
    "fmt_toolkit"
   ]
  },
@@ -27,7 +26,6 @@
   "back": "<b>Triggers:</b> A count of \"how many distinct / how many pairs / how many hits\"; a quantity you can write as a sum of 0/1 events.<br><b>Move:</b> Define one indicator per candidate event, compute each probability (often by symmetry), then sum. Use pairwise indicators only when you need a variance.<br><b>Example:</b> Six rolls of a fair die, expected number of distinct faces: \\(I_f=1\\) if face f appears; \\(P=1-(5/6)^6\\); total \\(6(1-(5/6)^6)=\\tfrac{31031}{7776}\\approx 3.99\\).<br><b>Fails when:</b> When you need the distribution or variance of the count, not its mean. Then you must compute \\(P(I_i=I_j=1)\\) and the covariances.",
   "tags": [
    "s_indicators",
-   "probability",
    "dice",
    "fmt_toolkit"
   ]
@@ -38,7 +36,6 @@
   "back": "<b>Triggers:</b> A process moves between states, has absorbing outcomes, and asks for a probability of hitting one outcome before another, or an expected time to absorption.<br><b>Move:</b> Condition on the first move. Write one equation per state, each expressing the value as an average of the values one step later, then solve the linear system.<br><b>Example:</b> Fair walk on {0,...,4} from 1: \\(h_1=\\tfrac12(h_0+h_2)\\), \\(h_2=\\tfrac12(h_1+h_3)\\), \\(h_3=\\tfrac12(h_2+h_4)\\), with \\(h_0=0,h_4=1\\). Solution \\(h_1=\\tfrac14\\).<br><b>Fails when:</b> When the state does not capture what matters. \"Two heads in a row\" needs a state for 'last flip was H'; a state of only the head count gives wrong equations.",
   "tags": [
    "s_first_step_conditioning",
-   "probability",
    "random_walk",
    "fmt_toolkit"
   ],
@@ -62,7 +59,7 @@
   "back": "<b>Triggers:</b> The future depends only on the current state; long-run fractions of time; stationary distribution; a process with a finite set of states such as weather, queues or inventory.<br><b>Move:</b> Write the transition matrix P, solve \\(\\pi P=\\pi\\) with \\(\\sum\\pi_i=1\\). For expected hitting times, use first-step conditioning.<br><b>Example:</b> Two states: \\(0\\to1\\) with probability 0.3 and \\(1\\to0\\) with probability 0.1. Balance gives \\(\\pi_0\\cdot0.3=\\pi_1\\cdot0.1\\), so \\(\\pi_0=\\tfrac14\\).<br><b>Fails when:</b> When the history matters and you have not enlarged the state. Reducible chains can have many stationary distributions. Periodic chains still have a unique stationary distribution when irreducible, but \\(P^n\\) does not converge, so the long-run time-average is the right object.",
   "tags": [
    "s_markov_chain",
-   "markov",
+   "markov_chain",
    "random_walk",
    "fmt_toolkit"
   ],
@@ -77,7 +74,6 @@
   "tags": [
    "s_complement",
    "combinatorics",
-   "probability",
    "fmt_toolkit"
   ]
  },
@@ -111,7 +107,6 @@
   "tags": [
    "s_inclusion_exclusion",
    "combinatorics",
-   "probability",
    "fmt_toolkit"
   ],
   "figs_back": [
@@ -124,7 +119,6 @@
   "back": "<b>Triggers:</b> \"Given that we observed\"; base rates; test accuracy; reversing a conditional; prior versus likelihood.<br><b>Move:</b> Write the posterior with the likelihood times prior over total probability. Expand the denominator over H and not-H.<br><b>Example:</b> Prevalence 1%, sensitivity 95%, false-positive 5%: \\(P(\\text{disease}\\mid +)=\\frac{0.0095}{0.0095+0.0495}=\\tfrac{19}{118}\\approx0.161\\).<br><b>Fails when:</b> When the likelihoods are not what the model says (selection, host behaviour in Monty Hall unspecified), or when the prior is unknown and you silently assume it.",
   "tags": [
    "s_bayes",
-   "probability",
    "stats",
    "fmt_toolkit"
   ],
@@ -238,7 +232,6 @@
   "tags": [
    "s_geometric_probability",
    "geometry",
-   "probability",
    "fmt_toolkit"
   ],
   "figs_back": [
@@ -251,7 +244,6 @@
   "back": "<b>Triggers:</b> The maximum, minimum or k-th smallest of iid samples; ranks; expected range.<br><b>Move:</b> For iid U(0,1), the k-th smallest of n has mean \\(k/(n+1)\\) and law Beta(k, n+1−k). For other laws, transform by F first.<br><b>Example:</b> Median of 5 iid uniforms has mean \\(3/6=\\tfrac12\\); expected maximum of 4 is \\(4/5\\).<br><b>Fails when:</b> Samples that are not iid (ties, dependence, different laws). The formula is for uniforms after transformation only.",
   "tags": [
    "s_order_statistics",
-   "probability",
    "stats",
    "fmt_toolkit"
   ]
@@ -262,7 +254,6 @@
   "back": "<b>Triggers:</b> Exponential or geometric waiting times; \"given nothing has happened yet\"; races between independent clocks.<br><b>Move:</b> Residual wait has the law of a fresh wait. For a race, \\(P(i\\text{ first})=\\lambda_i/\\sum\\lambda_j\\), and the first arrival time is exponential with rate \\(\\sum\\lambda_j\\).<br><b>Example:</b> Independent exponential clocks at rates 2 and 3: the rate-2 clock rings first with probability \\(\\tfrac25\\), and the expected first arrival is \\(\\tfrac15\\).<br><b>Fails when:</b> Non-memoryless waits (uniform, deterministic, Gamma with shape above 1); length-biased sampling, such as the bus you happen to arrive at.",
   "tags": [
    "s_memorylessness",
-   "probability",
    "distributions",
    "fmt_toolkit"
   ]
@@ -287,7 +278,6 @@
   "back": "<b>Triggers:</b> Comparing two distributions or processes; \"show probability at least/at most\"; monotone or stochastic dominance.<br><b>Move:</b> Build X and Y on one probability space so that \\(X\\le Y\\) pointwise. Then \\(P(X\\ge k)\\le P(Y\\ge k)\\) for every k.<br><b>Example:</b> \\(X\\sim\\mathrm{Bin}(10,0.3)\\), \\(Y\\sim\\mathrm{Bin}(10,0.5)\\): use common uniforms \\(U_i\\), set \\(X=\\#\\{U_i<0.3\\}\\), \\(Y=\\#\\{U_i<0.5\\}\\). Then \\(P(X\\ge5)\\approx0.150\\le P(Y\\ge5)\\approx0.623\\).<br><b>Fails when:</b> A coupling that does not preserve each marginal law proves nothing. Couplings give inequalities, rarely exact values.",
   "tags": [
    "s_coupling",
-   "probability",
    "stats",
    "fmt_toolkit"
   ]
@@ -312,7 +302,6 @@
   "back": "<b>Triggers:</b> Estimating a rare event; \"conditioned on the walk reaching a level\"; importance sampling; likelihood ratios; Girsanov drift.<br><b>Move:</b> \\(E_P[f]=E_Q[f\\,dP/dQ]\\). Pick Q under which the event is typical, then correct with the likelihood ratio.<br><b>Example:</b> \\(P(Z>5)\\) for \\(Z\\sim N(0,1)\\): under \\(Q=N(5,1)\\) the event has probability 1/2, and \\(P(Z>5)=E_Q[\\mathbf 1\\{Z>5\\}e^{-5Z+12.5}]\\approx2.87\\times10^{-7}\\).<br><b>Fails when:</b> P must be absolutely continuous with respect to Q (Q must cover P's support). Poor choices of Q give weights with huge variance.",
   "tags": [
    "s_change_of_measure",
-   "probability",
    "stochastic_calculus",
    "fmt_toolkit"
   ],
@@ -432,7 +421,6 @@
   "back": "<b>Triggers:</b> Nested randomness: a random number of trials; \"a random N, then ...\"; a sum with a random number of terms.<br><b>Move:</b> \\(E[X]=E[E[X\\mid N]]\\). Condition on the variable that makes the inner expectation easy, then average over it.<br><b>Example:</b> N uniform on {1,...,6}, then N fair coins: \\(E[\\text{heads}]=E[N/2]=\\tfrac74\\).<br><b>Fails when:</b> Conditioning on something that depends on the outcome you are computing. If N depends on the coin flips, \\(E[X\\mid N]\\) is no longer \\(N/2\\).",
   "tags": [
    "s_conditional_expectation_tower",
-   "probability",
    "expectation",
    "fmt_toolkit"
   ],
@@ -447,7 +435,6 @@
   "tags": [
    "s_clt_normal_approx",
    "stats",
-   "probability",
    "fmt_toolkit"
   ],
   "figs_back": [
@@ -461,7 +448,6 @@
   "tags": [
    "s_poisson_approx",
    "stats",
-   "probability",
    "fmt_toolkit"
   ]
  },
@@ -472,7 +458,6 @@
   "tags": [
    "s_variance_decomposition",
    "stats",
-   "probability",
    "fmt_toolkit"
   ],
   "figs_back": [
@@ -552,7 +537,6 @@
    "s_first_step_conditioning",
    "s_martingale",
    "random_walk",
-   "probability",
    "fmt_recognise"
   ],
   "figs_back": [
@@ -582,7 +566,7 @@
    "s_markov_chain",
    "s_first_step_conditioning",
    "coins",
-   "markov",
+   "markov_chain",
    "fmt_recognise"
   ]
  },
@@ -593,7 +577,6 @@
   "tags": [
    "s_complement",
    "combinatorics",
-   "probability",
    "fmt_recognise"
   ]
  },
@@ -656,7 +639,6 @@
   "tags": [
    "s_geometric_probability",
    "geometry",
-   "probability",
    "fmt_recognise"
   ],
   "figs_back": [
@@ -669,7 +651,6 @@
   "back": "<b>Structure:</b> Order statistics<br><b>Trigger:</b> A maximum of iid samples. Linearity does not apply to a max.<br><b>Key move:</b> Max of n iid U(0,1) has mean \\(n/(n+1)\\).<br><b>Answer:</b> \\(\\tfrac45\\)<br><b>Contrast:</b> The expected sum is \\(2\\); the expected maximum is not a sum of expected values.",
   "tags": [
    "s_order_statistics",
-   "probability",
    "stats",
    "fmt_recognise"
   ],
@@ -695,7 +676,6 @@
   "tags": [
    "s_symmetry",
    "s_memorylessness",
-   "probability",
    "distributions",
    "fmt_recognise"
   ]
@@ -706,7 +686,6 @@
   "back": "<b>Structure:</b> Memorylessness (race of exponentials)<br><b>Trigger:</b> Independent exponential waits in a race.<br><b>Key move:</b> \\(P(i\\text{ first})=\\lambda_i/\\sum_j\\lambda_j=1/6\\).<br><b>Answer:</b> \\(\\tfrac16\\)<br><b>Contrast:</b> Same race as the equal-rates drill, with unequal rates: symmetry is no longer available.",
   "tags": [
    "s_memorylessness",
-   "probability",
    "distributions",
    "fmt_recognise"
   ],
@@ -820,7 +799,6 @@
   "back": "<b>Structure:</b> Tower property<br><b>Trigger:</b> A random number of trials followed by a sum.<br><b>Key move:</b> \\(E[X]=E[E[X\\mid N]]=E[N/2]\\).<br><b>Answer:</b> \\(\\tfrac74\\)<br><b>Contrast:</b> Same experiment as the variance drill, asked for the mean.",
   "tags": [
    "s_conditional_expectation_tower",
-   "probability",
    "expectation",
    "fmt_recognise"
   ],
@@ -834,7 +812,6 @@
   "back": "<b>Structure:</b> Variance decomposition<br><b>Trigger:</b> Variance of a mixture: within-N variance plus the variance of the conditional mean.<br><b>Key move:</b> \\(E[N]/4+\\operatorname{Var}(N)/4=\\tfrac78+\\tfrac{35}{48}\\).<br><b>Answer:</b> \\(\\tfrac{77}{48}\\approx1.604\\)<br><b>Contrast:</b> Look-alike: the mean is \\(\\tfrac74\\) (previous drill); the variance needs both terms.",
   "tags": [
    "s_variance_decomposition",
-   "probability",
    "stats",
    "fmt_recognise"
   ],
@@ -849,7 +826,6 @@
   "tags": [
    "s_clt_normal_approx",
    "stats",
-   "probability",
    "fmt_recognise"
   ],
   "figs_back": [
@@ -863,7 +839,6 @@
   "tags": [
    "s_poisson_approx",
    "stats",
-   "probability",
    "fmt_recognise"
   ]
  },
@@ -873,7 +848,6 @@
   "back": "<b>Structure:</b> Bayes' rule<br><b>Trigger:</b> A conditional probability asked in the reverse direction, with base rates.<br><b>Key move:</b> \\(\\dfrac{0.0095}{0.0095+0.0495}\\).<br><b>Answer:</b> \\(\\tfrac{19}{118}\\approx0.161\\)<br><b>Contrast:</b> Reporting 95% is the base-rate error.",
   "tags": [
    "s_bayes",
-   "probability",
    "stats",
    "fmt_recognise"
   ],
@@ -926,7 +900,6 @@
    "s_complement",
    "s_pigeonhole",
    "combinatorics",
-   "probability",
    "fmt_toolkit",
    "process"
   ]
@@ -951,7 +924,7 @@
    "s_markov_chain",
    "s_first_step_conditioning",
    "coins",
-   "markov",
+   "markov_chain",
    "fmt_toolkit",
    "process"
   ]
@@ -979,7 +952,6 @@
    "s_symmetry",
    "s_indicators",
    "combinatorics",
-   "probability",
    "fmt_toolkit",
    "process"
   ]
@@ -991,7 +963,6 @@
   "tags": [
    "s_geometric_probability",
    "geometry",
-   "probability",
    "fmt_toolkit",
    "process"
   ],
@@ -1006,7 +977,6 @@
   "tags": [
    "s_complement",
    "dice",
-   "probability",
    "fmt_toolkit",
    "process"
   ]

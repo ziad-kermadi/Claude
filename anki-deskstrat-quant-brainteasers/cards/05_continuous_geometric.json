@@ -266,7 +266,7 @@
   "tags": [
    "s_geometric_probability",
    "s_complement",
-   "stick",
+   "broken_stick",
    "uniform",
    "fmt_solve"
   ],
@@ -630,7 +630,7 @@
   "back": "<b>Answer:</b> \\(\\tfrac13\\)<br><b>Structure:</b> \\(s\\_symmetry\\): exchangeable spacings.<br><b>Key move:</b> The three spacings are exchangeable, and ties have probability zero.<br><b>Working:</b> Each piece is equally likely to be the longest, so \\(P=1/3\\).<br><b>Sanity check:</b> Monte Carlo \\(0.3330\\).<br><b>Transfer:</b> Iid Exp(1) spacings normalise to the same law; only the position of the longest piece matters.",
   "tags": [
    "s_symmetry",
-   "stick",
+   "broken_stick",
    "uniform",
    "fmt_solve"
   ],
@@ -646,7 +646,7 @@
   "back": "<b>Answer:</b> \\(\\tfrac{11}{18} \\approx 0.6111\\)<br><b>Structure:</b> \\(s\\_order\\_statistics\\): maximum of exchangeable spacings.<br><b>Key move:</b> Use \\(P(\\max>t)\\) by inclusion-exclusion over the three spacings, then integrate.<br><b>Working:</b> \\(P(\\max>t)=3(1-t)^2-3(1-2t)_+^2+(1-3t)_+^2\\). Integrate over \\([0,1]\\): \\(1-\\tfrac12+\\tfrac19=\\tfrac{11}{18}\\).<br><b>Sanity check:</b> Monte Carlo \\(0.6110\\). Uniform spacing average would be \\(1/3\\), so a maximum above \\(1/2\\) is plausible.<br><b>Transfer:</b> General: \\(E[\\text{max of } n+1 \\text{ spacings}] = \\tfrac{1}{n+1}\\sum_{k=1}^{n+1}\\tfrac1k\\) (chain card).",
   "tags": [
    "s_order_statistics",
-   "stick",
+   "broken_stick",
    "uniform",
    "fmt_solve"
   ],
@@ -715,8 +715,7 @@
   "back": "<b>What breaks:</b> The argument 'at most one piece is \\(\\ge 1/2\\)' still holds, but the cut points are no longer both uniform, so the simple complement \\(1-3/4\\) is invalid.<br><b>Fix:</b> Condition on the uniform cut \\(y\\). Pieces are \\(1/3\\), \\(|y-1/3|\\), \\(1-\\max(1/3,y)\\). Need \\(y\\in(1/2,5/6)\\).<br><b>New answer:</b> \\(1/3\\) (versus \\(1/4\\) for two uniform cuts). Monte Carlo \\(0.3336\\).",
   "tags": [
    "s_geometric_probability",
-   "stick",
-   "perturbation",
+   "broken_stick",
    "fmt_perturb"
   ],
   "hints": [
@@ -731,7 +730,6 @@
   "back": "<b>What breaks:</b> The formula \\(E[U_{(1)}]=1/(n+1)\\) assumes \\(F(x)=x\\). Here \\(F(x)=x^2\\), so the uniform formula (\\(1/3\\)) is wrong.<br><b>Fix:</b> Use the survival function: \\(P(\\min>t)=(1-F(t))^2=(1-t^2)^2\\), so \\(E[\\min]=\\int_0^1(1-t^2)^2dt\\).<br><b>New answer:</b> \\(\\int_0^1 (1-2t^2+t^4)dt = 1-\\tfrac23+\\tfrac15 = \\tfrac{8}{15}\\approx 0.5333\\).",
   "tags": [
    "s_order_statistics",
-   "perturbation",
    "fmt_perturb"
   ],
   "hints": [
@@ -750,7 +748,6 @@
   "tags": [
    "s_geometric_probability",
    "meeting",
-   "perturbation",
    "fmt_perturb"
   ],
   "hints": [
@@ -769,7 +766,6 @@
   "tags": [
    "s_geometric_probability",
    "circle",
-   "perturbation",
    "fmt_perturb"
   ],
   "hints": [
@@ -789,7 +785,6 @@
    "s_memorylessness",
    "poisson",
    "inspection_paradox",
-   "perturbation",
    "fmt_perturb"
   ],
   "hints": [
@@ -805,7 +800,6 @@
   "tags": [
    "s_memorylessness",
    "uniform",
-   "perturbation",
    "fmt_perturb"
   ],
   "hints": [
@@ -824,7 +818,6 @@
   "tags": [
    "s_tail_sum",
    "uniform",
-   "perturbation",
    "fmt_perturb"
   ],
   "hints": [
@@ -841,7 +834,6 @@
    "s_generating_function",
    "convolution",
    "exponential",
-   "perturbation",
    "fmt_perturb"
   ],
   "hints": [
@@ -857,7 +849,6 @@
   "tags": [
    "s_change_of_measure",
    "exponential",
-   "perturbation",
    "fmt_perturb"
   ],
   "hints": [
@@ -874,7 +865,6 @@
    "s_geometric_probability",
    "cauchy",
    "normal",
-   "perturbation",
    "fmt_perturb"
   ],
   "hints": [
@@ -891,7 +881,6 @@
    "s_clt_normal_approx",
    "normal",
    "max",
-   "perturbation",
    "fmt_perturb"
   ],
   "hints": [
@@ -907,7 +896,6 @@
   "tags": [
    "s_geometric_probability",
    "irwin_hall",
-   "perturbation",
    "fmt_perturb"
   ],
   "hints": [
@@ -924,7 +912,6 @@
    "s_geometric_probability",
    "s_complement",
    "circle",
-   "twin",
    "fmt_twin"
   ],
   "hints": [
@@ -943,7 +930,6 @@
   "tags": [
    "s_geometric_probability",
    "meeting",
-   "twin",
    "fmt_twin"
   ],
   "hints": [
@@ -961,8 +947,7 @@
   "back": "<b>Classic:</b> The broken-stick triangle problem with two uniform cuts (answer \\(1/4\\)).<br><b>Mapping:</b> Normalising iid Exp(1) gives a uniform point on the simplex, the same law as stick spacings from two uniform cuts. The triangle test is scale-free.<br><b>Answer:</b> \\(1/4\\). Monte Carlo \\(0.2501\\). Note iid uniform lengths give \\(1/2\\) instead, so the classic mapping needs exponential, not uniform, lengths.",
   "tags": [
    "s_geometric_probability",
-   "stick",
-   "twin",
+   "broken_stick",
    "fmt_twin"
   ],
   "hints": [
@@ -979,7 +964,6 @@
    "s_memorylessness",
    "s_order_statistics",
    "exponential",
-   "twin",
    "fmt_twin"
   ],
   "hints": [
@@ -998,8 +982,7 @@
   "tags": [
    "s_clt_normal_approx",
    "normal",
-   "twin",
-   "brownian",
+   "brownian_motion",
    "fmt_twin"
   ],
   "hints": [
@@ -1019,7 +1002,6 @@
    "s_change_of_measure",
    "exponential",
    "uniform",
-   "twin",
    "fmt_twin"
   ],
   "hints": [
@@ -1038,7 +1020,6 @@
   "tags": [
    "s_geometric_probability",
    "buffon",
-   "twin",
    "fmt_twin"
   ],
   "hints": [
@@ -1054,7 +1035,6 @@
   "tags": [
    "s_order_statistics",
    "uniform",
-   "twin",
    "fmt_twin"
   ],
   "hints": [
@@ -1070,7 +1050,6 @@
   "tags": [
    "s_order_statistics",
    "uniform",
-   "toolkit",
    "fmt_toolkit"
   ]
  },
@@ -1081,7 +1060,6 @@
   "tags": [
    "s_memorylessness",
    "exponential",
-   "toolkit",
    "fmt_toolkit"
   ],
   "figs_back": [
@@ -1095,7 +1073,6 @@
   "tags": [
    "s_memorylessness",
    "poisson",
-   "toolkit",
    "fmt_toolkit"
   ]
  },
@@ -1106,7 +1083,6 @@
   "tags": [
    "s_geometric_probability",
    "irwin_hall",
-   "toolkit",
    "fmt_toolkit"
   ]
  },
@@ -1117,7 +1093,6 @@
   "tags": [
    "s_clt_normal_approx",
    "gaussian_integral",
-   "toolkit",
    "fmt_toolkit"
   ]
  },
@@ -1129,7 +1104,6 @@
    "s_indicators",
    "s_geometric_probability",
    "buffon",
-   "toolkit",
    "fmt_toolkit"
   ]
  },
@@ -1140,7 +1114,6 @@
   "tags": [
    "s_change_of_measure",
    "jacobian",
-   "toolkit",
    "fmt_toolkit"
   ]
  },
@@ -1152,7 +1125,6 @@
    "s_clt_normal_approx",
    "normal",
    "conditioning",
-   "toolkit",
    "fmt_toolkit"
   ]
  },
@@ -1262,6 +1234,88 @@
    "Generalise the reference argument to any number of points. Why are the events for different reference points disjoint?",
    "Write the probability as a count of reference choices times the chance that all remaining points fall in one half-circle from that reference. Then evaluate at the requested \\(n\\).",
    "\\(P(n)=n\\,(1/2)^{\\,n-1}\\) for general \\(n\\); substitute the requested value of \\(n\\) and simplify."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Arrivals at a desk form a Poisson process of rate \\(12\\) per hour. Each arrival is independently marked <i>large</i> with probability \\(1/4\\), otherwise <i>small</i>. What is the probability that exactly \\(2\\) large and \\(5\\) small arrivals occur in the first hour? Give the exact value and a decimal.",
+  "back": "<b>Answer:</b> \\(P=\\dfrac{177147}{80}e^{-12}\\approx0.013605\\)<br><b>Structure:</b> s_indicators (each arrival carries an independent mark) on a Poisson stream. Trigger: a Poisson count split by independent labels.<br><b>Key move:</b> thinning. Large and small arrivals are independent Poisson processes with rates \\(12\\cdot\\tfrac14=3\\) and \\(12\\cdot\\tfrac34=9\\) per hour.<br><b>Working:</b> \\(P=\\left(e^{-3}\\dfrac{3^2}{2!}\\right)\\left(e^{-9}\\dfrac{9^5}{5!}\\right)=e^{-12}\\cdot\\dfrac92\\cdot\\dfrac{59049}{120}=\\dfrac{177147}{80}e^{-12}\\). Cross-check: the total count is Poisson(12) and the split is Binomial(7, 1/4), which gives \\(e^{-12}\\dfrac{12^7}{7!}\\binom72\\left(\\tfrac14\\right)^2\\left(\\tfrac34\\right)^5\\), the same number.<br><b>Sanity check:</b> the means are 3 large and 9 small, so 2 and 5 is plausible but unlikely. Simulation of \\(4\\times10^5\\) hours gives \\(0.0136\\pm0.0002\\).<br><b>Transfer:</b> defects of two types on one production line; buy and browse events from one visitor stream.",
+  "tags": [
+   "s_indicators",
+   "poisson_process",
+   "thinning",
+   "fmt_solve"
+  ],
+  "hints": [
+   "What do the marks do to the arrival process? Does the desk see one clock, or two independent ones once the marks are applied?",
+   "Name the move: thinning. A Poisson stream split by independent marks becomes independent Poisson streams, one for each mark.",
+   "Find the rate of each stream over the one hour, then write the joint probability as a product of two Poisson probabilities."
+  ],
+  "figs_back": [
+   "fgC_thinning"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Three independent Poisson processes start at time \\(0\\), with rates \\(1\\), \\(2\\) and \\(3\\) events per hour. What is the expected time until each process has recorded at least one event? Give the exact value in hours.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_memorylessness (each first event is exponential) with s_inclusion_exclusion (the maximum of three waits).<br><b>Trigger:</b> we wait for the last of several independent clocks, so the answer is an expected maximum, not a sum of means.<br><b>Key move:</b> \\(\\mathbb E[\\max_i T_i]=\\sum_{\\emptyset\\ne S}(-1)^{|S|+1}\\big/\\sum_{i\\in S}\\lambda_i\\), since the minimum of independent exponentials is exponential with the summed rate.<br><b>Answer:</b> \\(\\tfrac{11}{6}-\\tfrac{47}{60}+\\tfrac16=\\dfrac{73}{60}\\approx1.2167\\) hours. The sum of the means, \\(\\tfrac{11}{6}\\), overstates it because the clocks overlap.",
+  "tags": [
+   "s_memorylessness",
+   "s_inclusion_exclusion",
+   "poisson_process",
+   "waiting_time",
+   "fmt_recognise"
+  ],
+  "figs_back": [
+   "fgC_race_all_fired"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Calls reach a help desk as a Poisson process with a constant rate. Exactly \\(3\\) calls arrive during the first \\(10\\) minutes. What is the probability that the second of them arrives between minute \\(4\\) and minute \\(6\\)?",
+  "back": "<b>Answer:</b> \\(\\dfrac{37}{125}=0.296\\).<br><b>Structure:</b> s_order_statistics. The classic is the median of three independent uniform points on \\([0,10]\\), the middle order statistic.<br><b>Mapping:</b> given \\(N(10)=3\\), the three arrival times are i.i.d. uniform on \\([0,10]\\) as an unordered set, so the rate cancels. The second arrival in time is the middle order statistic.<br><b>Key move:</b> with \\(u=x/10\\), \\(P(X_{(2)}\\le u)=3u^2-2u^3\\). Then \\(P(4\\le X_{(2)}\\le6)=F(0.6)-F(0.4)\\).<br><b>Working:</b> \\(F(0.6)=3(0.36)-2(0.216)=0.648\\), \\(F(0.4)=3(0.16)-2(0.064)=0.352\\), so the answer is \\(0.296=\\tfrac{37}{125}\\).<br><b>Sanity check:</b> the window has width \\(2\\) out of \\(10\\), so a uniform arrival would give \\(0.2\\). The middle arrival concentrates near \\(5\\), so \\(0.296>0.2\\) is the right direction. Simulating the process (rate \\(0.3\\)) conditioned on \\(N(10)=3\\), about \\(4.5\\times10^5\\) paths, gives \\(0.2954\\pm0.0007\\).<br><b>Transfer:</b> the median of three random draws from a uniform; the middle of three random cut points on a stick.",
+  "tags": [
+   "s_order_statistics",
+   "poisson_process",
+   "uniform",
+   "fmt_twin"
+  ],
+  "hints": [
+   "Given the number of calls, forget the rate. What do the three arrival times look like as an unordered set?",
+   "Name the move: given the count, the arrival times are independent and uniform on the window, so the second arrival is the middle of three.",
+   "Write \\(P(\\text{second arrival}\\le x)\\) as the probability that at least two of the three times are \\(\\le x\\), with \\(x\\) scaled to \\([0,1]\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Claims reach an insurer as a Poisson process with mean \\(4\\) per day. Each claim is independently of size \\(1\\), \\(2\\) or \\(5\\), with probabilities \\(\\tfrac12\\), \\(\\tfrac13\\), \\(\\tfrac16\\). Let \\(S\\) be the total claim size in one day. Find \\(\\mathbb E[S]\\) and \\(\\operatorname{Var}(S)\\). Then repeat with the number of claims replaced by a Binomial\\((8,\\tfrac12)\\) count. What are \\(\\mathbb E[S]\\) and \\(\\operatorname{Var}(S)\\) now?",
+  "back": "<b>Answer:</b> Poisson count: \\(\\mathbb E[S]=8\\), \\(\\operatorname{Var}(S)=24\\). Binomial count: \\(\\mathbb E[S]=8\\), \\(\\operatorname{Var}(S)=16\\).<br><b>Structure:</b> s_variance_decomposition with s_conditional_expectation_tower. Trigger: a random number of i.i.d. summands.<br><b>Key move:</b> \\(\\mathbb E S=\\mathbb E N\\,\\mathbb E X\\) and \\(\\operatorname{Var}S=\\mathbb E N\\,\\operatorname{Var}X+\\operatorname{Var}N\\,(\\mathbb E X)^2\\). The randomness of the count adds the second term.<br><b>Working:</b> \\(\\mathbb E X=2\\), \\(\\mathbb E X^2=\\tfrac12+\\tfrac43+\\tfrac{25}{6}=6\\), \\(\\operatorname{Var}X=2\\). Poisson: \\(\\mathbb E N=\\operatorname{Var}N=4\\), so \\(4\\cdot2+4\\cdot4=24\\). Binomial: \\(\\mathbb E N=4\\), \\(\\operatorname{Var}N=2\\), so \\(\\mathbb E S=8\\) and \\(4\\cdot2+2\\cdot4=16\\).<br><b>Sanity check:</b> for a Poisson count the compound variance is \\(\\lambda\\,\\mathbb E X^2=4\\cdot6=24\\), the same. Simulation of \\(2\\times10^5\\) days gives \\(24.08\\pm0.08\\) and \\(15.96\\pm0.05\\).<br><b>Transfer:</b> a random number of trades, each of random size; a random number of hospital admissions with random lengths of stay.",
+  "tags": [
+   "s_variance_decomposition",
+   "s_conditional_expectation_tower",
+   "compound_poisson",
+   "variance",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Condition on the number of claims \\(N\\). What are \\(\\mathbb E[S\\mid N]\\) and \\(\\operatorname{Var}(S\\mid N)\\)?",
+   "Use the law of total variance: \\(\\operatorname{Var}(S)=\\mathbb E[\\operatorname{Var}(S\\mid N)]+\\operatorname{Var}(\\mathbb E[S\\mid N])\\).",
+   "Compute the claim-size moments \\(\\mathbb E[X]\\) and \\(\\mathbb E[X^2]\\) first. For a Poisson count, \\(\\mathbb E N=\\operatorname{Var}N=4\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Buses leave a stop as a Poisson process with rate \\(0.1\\) per minute, the process starting at time \\(0\\). You reach the stop at minute \\(5\\). Let \\(L\\) be the length of the gap between the last bus before you arrive and the first bus after you arrive, with time \\(0\\) as the left endpoint if no bus has come yet. What is \\(\\mathbb E[L]\\), in minutes?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_memorylessness (the residual wait is exponential whatever the past), inside the waiting-time paradox.<br><b>Trigger:</b> the observation time is fixed, not the gap, so the gap you land in is chosen with probability proportional to its length.<br><b>Key move:</b> \\(L=A+R\\), age plus residual. \\(\\mathbb E R=1/\\lambda\\) by memorylessness, and \\(\\mathbb E A=\\int_0^t e^{-\\lambda s}\\,ds=(1-e^{-\\lambda t})/\\lambda\\).<br><b>Answer:</b> \\(\\mathbb E L=\\dfrac{2-e^{-\\lambda t}}{\\lambda}=10\\,(2-e^{-0.5})\\approx13.93\\) minutes. A typical gap is \\(1/\\lambda=10\\), and the long-run size-biased value is \\(2/\\lambda=20\\). The figure shows one illustrative sample path, not these numbers.",
+  "tags": [
+   "s_memorylessness",
+   "s_tail_sum",
+   "poisson_process",
+   "waiting_time",
+   "fmt_recognise"
+  ],
+  "figs_back": [
+   "fgC_interval_containing_t"
   ]
  }
 ]

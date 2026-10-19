@@ -607,7 +607,7 @@
  {
   "type": "basic",
   "front": "A market on the number of heads in 100 fair coin flips. How wide should you quote for 1 sigma?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
-  "back": "<b>Structure:</b> s_clt_normal_approx: binomial approximated by a normal.<br><b>Trigger:</b> A count of many independent fair trials.<br><b>Key move:</b> Mean \\(np=50\\). Sd \\(\\sqrt{np(1-p)}=5\\). Width is proportional to the sd, not to the range.<br><b>Answer:</b> Mid 50, 1-sigma width ±5. Two sigma (about 95%) is ±10, i.e. 40 to 60.",
+  "back": "<b>Structure:</b> s_clt_normal_approx: binomial approximated by a normal.<br><b>Trigger:</b> A count of many independent fair trials.<br><b>Key move:</b> Mean \\(np=50\\). Sd \\(\\sqrt{np(1-p)}=5\\). Width is proportional to the sd, not to the range.<br><b>Answer:</b> Mid 50, 1-sigma width ±5. Two sigma is ±10, i.e. 40 to 60 inclusive. The normal rule says about 95%, and the exact binomial probability of \\(40\\le X\\le 60\\) is 96.5%.",
   "tags": [
    "s_clt_normal_approx",
    "market_making",
@@ -766,7 +766,7 @@
   "tags": [
    "s_bayes",
    "market_making",
-   "bayes_update",
+   "bayesian_updating",
    "adverse_selection",
    "fmt_recognise"
   ],
@@ -780,7 +780,6 @@
   "back": "<b>Answer:</b> +1 edge, short 1 at 8.<br><b>Structure:</b> s_game_theory_equilibrium<br><b>Key move:</b> An uninformed fill earns half the spread against fair value.<br><b>Working:</b> Edge = ask minus fair = \\(8-7=1\\). Position short 1.<br><b>Sanity check:</b> Mark at 7 gives \\(+1\\). The full round trip is 2, as in the next card of this chain.<br><b>Transfer:</b> A spread of 2 is worth 1 per side against uninformed flow.",
   "tags": [
    "s_game_theory_equilibrium",
-   "market_making",
    "market_making",
    "dice",
    "fmt_chain"
@@ -800,7 +799,6 @@
   "back": "<b>Answer:</b> Flat, locked +2.<br><b>Structure:</b> s_game_theory_equilibrium<br><b>Key move:</b> A round trip at bid and ask earns the full spread.<br><b>Working:</b> Short 1 at 8, long 1 at 6: net position 0, cash \\(8-6=2\\).<br><b>Sanity check:</b> Locked P&amp;L is \\(+2\\). Against fair 7 this is \\(+1\\) per side.<br><b>Transfer:</b> A round trip of two uninformed fills earns the full quoted spread.",
   "tags": [
    "s_game_theory_equilibrium",
-   "market_making",
    "market_making",
    "dice",
    "fmt_chain"
@@ -822,7 +820,6 @@
    "s_conditional_expectation_tower",
    "s_information_design",
    "market_making",
-   "market_making",
    "adverse_selection",
    "dice",
    "fmt_chain"
@@ -842,7 +839,6 @@
   "back": "<b>Answer:</b> Mid 9.5, quote 8.5 bid / 10.5 ask (the same ±1 width, re-centred). The 8 ask was filled by a buyer whose information cost you 1.5 per unit.<br><b>Structure:</b> s_information_design<br><b>Key move:</b> Re-centre on the new conditional fair value. Keep each quote on the correct side of it: an ask below 9.5 gives an informed buyer a sure profit.<br><b>Working:</b> New mid \\(9.5\\). Width of ±1 gives 8.5 to 10.5. A buyer with the same information will not lift 10.5, since that is above their fair value of 9.5. An ask at 8 would cost 1.5 per unit against that buyer.<br><b>Sanity check:</b> If informed flow dominates, widen further or stop quoting. Quoting at 8 again would lose 1.5 per fill.<br><b>Transfer:</b> Recentre on conditional mean after each informed fill, and never quote a side at a price below the new fair.",
   "tags": [
    "s_information_design",
-   "market_making",
    "market_making",
    "adverse_selection",
    "fmt_chain"
@@ -1301,7 +1297,6 @@
   "tags": [
    "s_linearity_expectation",
    "market_making",
-   "market_making",
    "dice",
    "fmt_recognise"
   ],
@@ -1319,6 +1314,232 @@
    "market_making",
    "dice",
    "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A single insider knows an asset value \\(v\\sim N(0,\\sigma_v^2)\\), with \\(\\sigma_v=2\\). Noise traders send an independent order \\(u\\sim N(0,\\sigma_u^2)\\), with \\(\\sigma_u=1\\). The insider chooses an order \\(x\\) to maximise \\(E[(v-p)\\,x]\\). A market maker sees only the total order flow \\(y=x+u\\) and sets the price \\(p=E[v\\mid y]\\). Look for a linear equilibrium \\(p=\\lambda y\\), \\(x=\\beta v\\). Find \\(\\lambda\\), \\(\\beta\\), the insider's expected profit, and \\(\\operatorname{Var}(p)\\).",
+  "back": "<b>Answer:</b> \\(\\lambda=\\dfrac{\\sigma_v}{2\\sigma_u}=1\\), \\(\\beta=\\dfrac{\\sigma_u}{\\sigma_v}=\\dfrac12\\), insider profit \\(\\dfrac{\\sigma_u\\sigma_v}{2}=1\\), and \\(\\operatorname{Var}(p)=\\dfrac{\\sigma_v^2}{2}=2\\).<br><b>Structure:</b> s_game_theory_equilibrium (Kyle 1985 linear equilibrium), with s_conditional_expectation_tower for the market maker's rule. Trigger: a strategic insider whose demand must be optimal against a price that responds to the same order flow.<br><b>Key move:</b> Given \\(p=\\lambda y\\), the insider maximises \\(xv-\\lambda x^2\\) (because \\(E[u]=0\\) and \\(u\\) is independent of \\(x\\)), so \\(x=v/(2\\lambda)\\), i.e. \\(\\beta=1/(2\\lambda)\\). The market maker's slope is \\(\\lambda=\\operatorname{Cov}(v,y)/\\operatorname{Var}(y)\\).<br><b>Working:</b> \\(\\operatorname{Cov}(v,y)=\\beta\\sigma_v^2\\) and \\(\\operatorname{Var}(y)=\\beta^2\\sigma_v^2+\\sigma_u^2\\). Setting the slope equal to \\(\\lambda\\) and using \\(\\beta=1/(2\\lambda)\\) gives \\(\\lambda^2=\\sigma_v^2/(4\\sigma_u^2)\\), so \\(\\lambda=\\sigma_v/(2\\sigma_u)\\) and \\(\\beta=\\sigma_u/\\sigma_v\\). Profit \\(=E[x(v-p)]=\\beta\\sigma_v^2-\\lambda\\beta^2\\sigma_v^2=\\beta\\sigma_v^2/2=\\sigma_u\\sigma_v/2\\). With the numbers, \\(\\operatorname{Var}(y)=\\tfrac14\\cdot4+1=2\\) and \\(\\operatorname{Cov}(v,y)=2\\), so \\(\\lambda=1\\).<br><b>Sanity check:</b> Only half of the value's variance enters the price: \\(\\operatorname{Cov}(v,p)/\\operatorname{Var}(v)=\\lambda\\beta=\\tfrac12\\), whatever \\(\\sigma_u\\) is. A simulation of \\(10^6\\) draws gives \\(\\lambda\\approx1.00\\) and profit \\(\\approx1.00\\).<br><b>Transfer:</b> The same algebra prices a dealer who sees only net client flow when one informed client trades against Gaussian noise.",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "s_conditional_expectation_tower",
+   "kyle_model",
+   "price_impact",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Given a linear price \\(p=\\lambda y\\), what is the insider's best response? Write the expected profit as a function of \\(x\\) and drop the terms with zero expectation.",
+   "The insider's order is linear in the mispricing, \\(x=\\beta v\\). The market maker's price is the regression of \\(v\\) on \\(y\\), with slope \\(\\operatorname{Cov}(v,y)/\\operatorname{Var}(y)\\).",
+   "Equate the two descriptions. Use \\(\\beta=1/(2\\lambda)\\) in the market maker's slope, and solve the resulting equation for \\(\\lambda\\) in terms of \\(\\sigma_v\\) and \\(\\sigma_u\\)."
+  ],
+  "figs_back": [
+   "fgF_kyle_regression"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A market maker sets the price of an asset from total net order flow. That flow is the order of one informed trader, who knows the asset's value, plus independent Gaussian noise trading. The price equals the market maker's expected value given the flow. Name the structure and what triggers it, then state the form of the price rule.<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_game_theory_equilibrium: the Kyle (1985) linear equilibrium, with s_information_design, since the price reveals part of the insider's information.<br><b>Trigger:</b> The insider is strategic, so his order must be optimal against a price that depends on the same flow. Gaussian noise makes the market maker's rule linear.<br><b>Key move:</b> Guess a linear price \\(p=\\lambda y\\) and a linear demand \\(x=\\beta v\\). Check that each is a best response to the other. Both sides are linear, so the fixed point is a pair of coefficients.<br><b>Answer:</b> \\(p=\\lambda y\\) with \\(\\lambda=\\sigma_v/(2\\sigma_u)\\), and the insider trades \\((\\sigma_u/\\sigma_v)\\,v\\). More noise trading means a smaller \\(\\lambda\\).<br><b>Sanity check:</b> As \\(\\sigma_u\\to\\infty\\), \\(\\lambda\\to0\\): flow says little about \\(v\\), so the price barely reacts. As \\(\\sigma_u\\to0\\), \\(\\lambda\\to\\infty\\): any flow reveals the insider.<br><b>Transfer:</b> A dealer who prices from net client flow when one informed client trades against a dealer who cannot separate informed from noise orders.",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "s_information_design",
+   "kyle_model",
+   "price_impact",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Known problem:</b> in the Kyle model with \\(\\sigma_v=2\\) and \\(\\sigma_u=1\\), the insider trades \\(\\beta=\\sigma_u/\\sigma_v=\\tfrac12\\) times the mispricing, the price is \\(p=\\lambda y\\) with \\(\\lambda=1\\), and the insider earns \\(\\sigma_u\\sigma_v/2=1\\). <b>Perturb:</b> double the noise-trader volatility to \\(\\sigma_u=2\\), keeping everything else fixed. What changes, what does not, and what are the new insider profit and information share?",
+  "back": "<b>Which part breaks:</b> nothing in the structure. The insider's first-order condition and the market maker's regression still hold. What changes is scale: more noise lets the insider trade more, and the price responds less to each unit of flow.<br><b>New answers:</b> \\(\\lambda=\\sigma_v/(2\\sigma_u)=\\tfrac12\\). \\(\\beta=\\sigma_u/\\sigma_v=1\\). Insider profit \\(\\sigma_u\\sigma_v/2=2\\), twice as large. Noise-trader expected loss \\(\\lambda\\sigma_u^2=\\tfrac12\\cdot4=2\\), which equals the insider's profit because the market maker earns zero in expectation.<br><b>What does not change:</b> \\(\\operatorname{Var}(p)=\\sigma_v^2/2=2\\) and \\(\\operatorname{Cov}(v,p)/\\operatorname{Var}(v)=\\tfrac12\\). Doubling the noise does not change how much information enters the price.<br><b>Sanity check:</b> Noise traders lose \\(\\lambda\\sigma_u^2\\). That was \\(1\\) with \\(\\sigma_u=1\\) and is \\(2\\) with \\(\\sigma_u=2\\). A simulation of \\(10^6\\) draws gives profit \\(2.00\\) and noise loss \\(2.00\\).<br><b>Transfer:</b> The invariance holds for any number of noise traders with total variance \\(\\sigma_u^2\\). Only that total matters.",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "s_variance_decomposition",
+   "kyle_model",
+   "price_impact",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "Which quantities in the insider's best response depend on \\(\\sigma_u\\) through \\(\\lambda\\), and which depend only on the ratio of the covariances?",
+   "Redo the regression with \\(\\sigma_u=2\\). Recompute \\(\\operatorname{Var}(y)\\) and \\(\\operatorname{Cov}(v,y)\\) for the new \\(\\beta\\).",
+   "Compare \\(\\operatorname{Cov}(v,p)=\\lambda\\beta\\sigma_v^2\\) before and after the change. Work out which factor moves and which does not."
+  ],
+  "figs_back": [
+   "fgF_kyle_sigma_u"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A liquid stock trades 2 million shares a day (ADV) at £50, with daily volatility 2%. You must buy 10% of ADV in one day, executed at a constant rate. Use the square-root law: after a cumulative fraction \\(x\\) of ADV has traded, the price has moved \\(\\sigma\\sqrt{x}\\), as a fraction of price, with \\(Y=1\\). Estimate the total execution cost in pounds, and say whether the end-point or the average move is the right cost measure.",
+  "back": "<b>Answer:</b> About £42k on £10m of notional. The end-point move is 63 bp, and the average execution cost is about 42 bp.<br><b>Structure:</b> s_fermi with s_sqrt_time_scaling. Trigger: impact that depends on a fraction of daily volume, with exponent one half.<br><b>Key move:</b> Impact is a fraction of price, so it must scale with \\(\\sigma\\), and the only dimensionless size is participation \\(Q/V\\). The end-point impact is \\(\\sigma\\sqrt{Q/V}\\). At a constant rate, fills see \\(\\sigma\\sqrt{x}\\) for \\(x\\) uniform on \\([0,Q/V]\\). The average of \\(\\sqrt{x}\\) over that range is \\(\\tfrac23\\) of its end value, so the average cost is \\(\\tfrac23\\) of the end-point move.<br><b>Working:</b> \\(Q/V=0.1\\), so \\(\\sigma\\sqrt{0.1}=0.02\\times0.316=0.0063\\) (63 bp). Average \\(=\\tfrac23\\times63\\approx42\\) bp. Notional \\(=0.1\\times2\\times10^6\\times£50=£10^7\\). Cost \\(\\approx0.00422\\times10^7\\approx£42\\,000\\).<br><b>Sanity check:</b> At 1% of ADV the average cost is \\(\\tfrac23\\cdot0.02\\cdot\\sqrt{0.01}=13\\) bp. Ten times the size costs \\(\\sqrt{10}\\approx3.2\\) times more per share, which is the square-root law at work.<br><b>Transfer:</b> Selling 5% of ADV in a stock with 3% daily volatility: \\(\\tfrac23\\cdot0.03\\cdot\\sqrt{0.05}\\approx45\\) bp on average.",
+  "tags": [
+   "s_fermi",
+   "s_sqrt_time_scaling",
+   "square_root_law",
+   "market_impact",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Which combination of trade size and daily volume is dimensionless, and how must the impact scale with volatility?",
+   "Apply the square-root law at each fill: after a cumulative fraction \\(x\\) the price has moved \\(\\sigma\\sqrt{x}\\). The order executes at a constant rate, so average over the fills.",
+   "Average \\(\\sqrt{x}\\) over \\(x\\in[0,Q/V]\\), then multiply the average move by the notional \\(Q\\times\\text{price}\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Your order grows from 1% to 4% of ADV, in the same stock with the same volatility. Under the square-root law, by what factor does the per-share impact rise, and by what factor does the total cost rise?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_sqrt_time_scaling with s_dimensional_analysis. Trigger: impact is a price move, and the only dimensionless measure of size is participation \\(Q/V\\).<br><b>Key move:</b> Per-share impact \\(\\propto\\sigma\\sqrt{Q/V}\\). Quadrupling \\(Q\\) doubles the impact. Total cost is impact times shares, so it scales as \\(Q^{3/2}\\).<br><b>Answer:</b> Per-share impact \\(\\times2\\). Total cost \\(\\times4\\cdot2=8\\). A linear law would give \\(\\times4\\) per share and \\(\\times16\\) in total.<br><b>Sanity check:</b> \\(4^{3/2}=8\\), and \\(4^2=16\\) for the linear comparison.<br><b>Transfer:</b> Cutting an order from 4% to 1% of ADV halves the per-share impact, not a reduction by three quarters.",
+  "tags": [
+   "s_sqrt_time_scaling",
+   "s_dimensional_analysis",
+   "square_root_law",
+   "market_impact",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Square-root law: a trade of \\(q\\) shares moves the price by a fraction \\(\\sigma\\sqrt{q/V}\\), with \\(V\\) the daily volume and \\(\\sigma\\) the daily volatility. The cost of a trade is its shares times that move. A metaorder of \\(Q\\) is split into four equal child orders, each executed separately so that each one's impact is measured on its own.<br><br><b>Proposed solution:</b><br><b>L1.</b> Impact is linear in size: a trade of \\(q\\) moves the price by \\(kq\\).<br><b>L2.</b> The whole order moves the price by \\(kQ\\), so its cost is \\(kQ^2\\).<br><b>L3.</b> Four children of size \\(Q/4\\) cost \\(4\\cdot k(Q/4)^2=kQ^2/4\\).<br><b>L4.</b> Splitting into four cuts the cost by 75%.<br><br><i>Find the flaw. Which line, why, and what is the right saving?</i>",
+  "back": "<b>Faulty line:</b> L1. The stated law is square-root, so the per-share move is not proportional to size.<br><b>Why it fails:</b> A child of size \\(Q/4\\) moves the price by half the whole order's per-share move, \\(\\sqrt{1/4}=\\tfrac12\\), not a quarter. Cost is size times per-share move, so a child costs \\((Q/4)^{3/2}\\) in these units, not \\((Q/4)^2\\).<br><b>Correct answer:</b> Let the whole cost be \\(C=\\sigma Q\\sqrt{Q/V}\\). Each child costs \\(\\tfrac Q4\\cdot\\sigma\\sqrt{(Q/4)/V}=\\tfrac C8\\). Four children cost \\(\\tfrac C2\\), so the saving is 50%, not 75%. In general, \\(n\\) equal children cost \\(n^{-1/2}C\\). The saving is smaller still if each child's impact persists and adds to the next child's price.<br><b>Smell:</b> Before claiming a saving from splitting, find the exponent \\(\\delta\\) in impact \\(\\propto\\) size\\(^{\\delta}\\). The total cost of \\(n\\) equal pieces is then \\(n^{-\\delta}\\) times the whole. Linear impact (\\(\\delta=1\\)) gives \\(1/n\\). Square-root impact gives \\(n^{-1/2}\\).",
+  "tags": [
+   "s_sqrt_time_scaling",
+   "s_dimensional_analysis",
+   "square_root_law",
+   "metaorder",
+   "err_linear_impact",
+   "fmt_debug"
+  ],
+  "figs_back": [
+   "fgF_split_cost"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You must sell \\(X\\) shares over \\([0,T]\\). Selling at rate \\(v=-\\dot x\\) costs \\(\\eta v\\) per share (temporary impact), so the cost of selling at rate \\(v\\) over \\(dt\\) is \\(\\eta v^2\\,dt\\). Holding \\(x\\) shares while the price moves adds variance \\(\\sigma^2x^2\\,dt\\). Minimise \\(\\int_0^T(\\eta\\dot x^2+\\lambda\\sigma^2x^2)\\,dt\\) with \\(x(0)=X\\) and \\(x(T)=0\\). Let \\(\\kappa=\\sqrt{\\lambda\\sigma^2/\\eta}\\), with \\(\\kappa T=2\\). What fraction of the position is left at \\(t=T/2\\), and how fast do you sell at \\(t=0\\) relative to TWAP, \\(X/T\\)?",
+  "back": "<b>Answer:</b> \\(x(T/2)/X=\\dfrac{1}{2\\cosh 1}\\approx0.324\\), against 0.5 for TWAP. The initial selling rate is \\(\\kappa X\\coth(\\kappa T)=2.07\\,X/T\\), about twice TWAP.<br><b>Structure:</b> s_dynamic_programming (quadratic optimal control: the Almgren–Chriss schedule). Trigger: a quadratic penalty on the trading rate and on the inventory, with fixed endpoints.<br><b>Key move:</b> The Euler–Lagrange equation for \\(\\eta\\dot x^2+\\lambda\\sigma^2x^2\\) is \\(\\ddot x=\\kappa^2x\\). With both endpoints fixed, the solution is \\(x(t)=X\\sinh(\\kappa(T-t))/\\sinh(\\kappa T)\\).<br><b>Working:</b> At \\(t=T/2\\), \\(\\sinh(\\kappa T/2)/\\sinh(\\kappa T)=1/(2\\cosh(\\kappa T/2))=1/(2\\cosh 1)=0.3240\\). The selling rate is \\(-\\dot x(0)=X\\kappa\\coth(\\kappa T)=X\\cdot\\tfrac2T\\cdot\\coth 2=2.075\\,X/T\\).<br><b>Sanity check:</b> As \\(\\kappa\\to0\\) (risk-neutral, \\(\\lambda=0\\)), \\(\\sinh(\\kappa(T-t))/\\sinh(\\kappa T)\\to(T-t)/T\\), the TWAP schedule with midpoint 0.5. Large \\(\\kappa\\) means an almost immediate sale. A discrete optimisation with 1000 steps reproduces 0.324 and 2.07.<br><b>Transfer:</b> The same ODE with \\(\\eta\\) halved (a venue with half the temporary impact) gives \\(\\kappa\\) larger by \\(\\sqrt2\\), so the schedule is more front-loaded.",
+  "tags": [
+   "s_dynamic_programming",
+   "almgren_chriss",
+   "optimal_execution",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Write the trading cost and the holding risk as one integral over time. Which function minimises it when the two endpoints are fixed?",
+   "Derive the Euler–Lagrange equation for \\(\\eta\\dot x^2+\\lambda\\sigma^2x^2\\). It is a linear second-order ODE with constant coefficients.",
+   "Solve \\(\\ddot x=\\kappa^2x\\) with \\(x(0)=X\\) and \\(x(T)=0\\) using \\(\\sinh\\), then evaluate at \\(t=T/2\\) with \\(\\kappa T=2\\)."
+  ],
+  "figs_back": [
+   "fgF_ac_sinh"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You must sell one million shares of a stock within one day. Selling faster costs more in temporary impact, and holding inventory costs you variance. Both costs are quadratic. Before solving: which structure, and what in the statement triggers it? Is the optimal schedule linear in time?",
+  "back": "<b>Structure:</b> s_dynamic_programming: Almgren–Chriss mean-variance liquidation, a quadratic optimal-control problem on a fixed horizon.<br><b>Trigger:</b> A quadratic penalty on the trading rate, a quadratic penalty on remaining inventory, and fixed endpoints. Together these make the problem linear-quadratic.<br><b>Key move:</b> Write the cost as an integral of \\(\\eta\\dot x^2+\\lambda\\sigma^2x^2\\). Euler–Lagrange gives \\(\\ddot x=\\kappa^2x\\) with \\(\\kappa=\\sqrt{\\lambda\\sigma^2/\\eta}\\), so the schedule is exponential-type, not linear.<br><b>Answer:</b> No, not in general. \\(x(t)=X\\sinh(\\kappa(T-t))/\\sinh(\\kappa T)\\). It is linear only in the risk-neutral limit \\(\\lambda=0\\), which is TWAP.<br><b>Sanity check:</b> More risk aversion means a larger \\(\\kappa\\) and faster early selling: \\(\\sinh(\\kappa(T-t))/\\sinh(\\kappa T)\\to e^{-\\kappa t}\\) as \\(\\kappa\\) grows.<br><b>Transfer:</b> Unwinding a hedge over a fixed window when both the unwind rate and the residual exposure carry a quadratic cost.",
+  "tags": [
+   "s_dynamic_programming",
+   "almgren_chriss",
+   "optimal_execution",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A taut string of tension \\(\\tau\\) runs from \\(x=0\\) to \\(x=L\\). Its height is fixed at \\(u(0)=1\\) and \\(u(L)=0\\). It rests on springs of stiffness \\(k\\) per unit length, so its energy is \\(\\int_0^L(\\tau\\,u'^2+k\\,u^2)\\,dx\\). Let \\(\\kappa=\\sqrt{k/\\tau}\\), with \\(\\kappa L=2\\). The shape minimises the energy. What is the height at \\(x=L/4\\)?",
+  "back": "<b>Answer:</b> \\(u(L/4)=\\dfrac{\\sinh(3\\kappa L/4)}{\\sinh(\\kappa L)}=\\dfrac{\\sinh 1.5}{\\sinh 2}\\approx0.587\\).<br><b>Structure:</b> s_dynamic_programming. Classic: the Almgren–Chriss optimal liquidation schedule. Mapping: \\(u\\leftrightarrow x\\) (shares held), \\(L-x\\leftrightarrow T-t\\) (time left), \\(\\tau\\leftrightarrow\\eta\\) (cost of trading rate), \\(k\\leftrightarrow\\lambda\\sigma^2\\) (cost of holding). Both problems minimise a quadratic cost in a rate and a level, with fixed ends.<br><b>Key move:</b> Euler–Lagrange gives \\(u''=\\kappa^2u\\). The solution is a combination of \\(\\sinh\\) and \\(\\cosh\\), fixed by the two ends.<br><b>Working:</b> \\(\\sinh(\\tfrac34\\kappa L)=\\sinh 1.5=2.1293\\) and \\(\\sinh(\\kappa L)=\\sinh2=3.6269\\). The ratio is \\(0.5871\\).<br><b>Sanity check:</b> \\(u\\) is convex and decreasing, so it falls faster near \\(x=0\\): the drop is 0.413 over the first quarter and 0.263 over the second. The discrete minimiser agrees.<br><b>Transfer:</b> The same model at \\(x=L/2\\) gives \\(\\sinh1/\\sinh2=0.324\\).",
+  "tags": [
+   "s_dynamic_programming",
+   "elastic_string",
+   "calculus_of_variations",
+   "fmt_twin"
+  ],
+  "hints": [
+   "What is the shape of the minimiser? Write the Euler–Lagrange equation for the energy density \\(\\tau u'^2+k u^2\\).",
+   "The equation is linear with constant coefficients: \\(u''=\\kappa^2u\\). Which combinations of \\(\\sinh\\) and \\(\\cosh\\) match the two boundary values?",
+   "Use the form \\(u(x)=\\sinh(\\kappa(L-x))/\\sinh(\\kappa L)\\) and evaluate it at \\(x=L/4\\) with \\(\\kappa L=2\\)."
+  ],
+  "figs_back": [
+   "fgF_ac_sinh"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A market maker with CARA utility, risk aversion \\(\\gamma=0.1\\), quotes around mid \\(s=100\\). The volatility is \\(\\sigma=0.5\\) per square-root time unit. She holds \\(q=+3\\) units, and the time to the horizon is \\(T-t=2\\). Fills arrive at intensity \\(\\Lambda(\\delta)=Ae^{-k\\delta}\\), with \\(k=1.5\\), where \\(\\delta\\) is the quote distance from mid. Using the Avellaneda–Stoikov closed form, give the reservation price and the bid and ask.",
+  "back": "<b>Answer:</b> Reservation price \\(r=99.85\\). Spread \\(\\approx1.341\\), so bid \\(\\approx99.180\\) and ask \\(\\approx100.520\\).<br><b>Structure:</b> s_dynamic_programming (exponential-utility market making, Avellaneda–Stoikov). Trigger: a dealer penalised for inventory, whose fill rate falls with distance from mid.<br><b>Key move:</b> Reservation price \\(r=s-q\\gamma\\sigma^2(T-t)\\): the reference price shifts against inventory. Spread \\(=\\gamma\\sigma^2(T-t)+\\tfrac2\\gamma\\ln(1+\\gamma/k)\\). Quote symmetrically around \\(r\\).<br><b>Working:</b> \\(\\gamma\\sigma^2(T-t)=0.1\\times0.25\\times2=0.05\\). Skew \\(=q\\times0.05=0.15\\), so \\(r=99.85\\). \\(\\tfrac2\\gamma\\ln(1+\\gamma/k)=20\\ln(1.0667)=1.2908\\). Spread \\(=0.05+1.2908=1.3408\\), half-spread \\(=0.6704\\). Bid \\(=99.85-0.6704=99.180\\). Ask \\(=100.520\\).<br><b>Sanity check:</b> The ask is 0.52 above mid and the bid 0.82 below it, so the quotes lean towards selling the long position. The spread is slightly wider than the risk-neutral limit \\(2/k=1.333\\), because of the variance term \\(\\gamma\\sigma^2(T-t)\\).<br><b>Transfer:</b> Short 3 units: \\(r=100.15\\) and the whole ladder moves up by 0.15, with the same width.",
+  "tags": [
+   "s_dynamic_programming",
+   "market_making",
+   "inventory",
+   "avellaneda_stoikov",
+   "fmt_solve"
+  ],
+  "hints": [
+   "How does a long position change the price at which you are willing to trade, given that you want to reduce it?",
+   "The reservation price depends on \\(q\\), \\(\\gamma\\), \\(\\sigma^2\\) and \\(T-t\\). The spread is the sum of an inventory term and a fill-intensity term.",
+   "Compute \\(r\\) first. Then compute the spread from \\(\\gamma\\sigma^2(T-t)+\\tfrac2\\gamma\\ln(1+\\gamma/k)\\) and quote symmetrically around \\(r\\)."
+  ],
+  "figs_back": [
+   "fgF_as_ladder"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Known problem:</b> the Avellaneda–Stoikov market maker (\\(\\gamma=0.1\\), \\(\\sigma=0.5\\), \\(k=1.5\\), \\(q=+3\\), \\(T-t=2\\)) has reservation price \\(s-q\\gamma\\sigma^2(T-t)\\) and spread \\(\\gamma\\sigma^2(T-t)+\\tfrac2\\gamma\\ln(1+\\gamma/k)\\). <b>Perturb:</b> let risk aversion \\(\\gamma\\to0\\), so the market maker is risk-neutral. What happens to the reservation price, the spread and the inventory?",
+  "back": "<b>Which part breaks:</b> the inventory penalty. As \\(\\gamma\\to0\\) the skew \\(q\\gamma\\sigma^2(T-t)\\) goes to zero, so quotes ignore the position, and nothing pulls inventory back to zero.<br><b>New answers:</b> \\(r\\to s=100\\). The spread tends to \\(2/k=1.333\\): \\(\\tfrac2\\gamma\\ln(1+\\gamma/k)\\to2/k\\). That is the risk-neutral optimum, since each side maximises \\(\\delta Ae^{-k\\delta}\\), giving \\(\\delta=1/k\\).<br><b>Inventory:</b> with \\(A=1\\), each side fills as a Poisson process with rate \\(e^{-1}\\). Over the remaining time 2, \\(\\operatorname{Var}(N_{\\text{buy}}-N_{\\text{sell}})=2\\cdot2e^{-1}=4/e\\approx1.47\\), and nothing bounds it.<br><b>Sanity check:</b> At \\(\\gamma=10^{-6}\\) the spread formula gives \\(1.333333\\). A simulation of \\(10^5\\) paths gives inventory variance \\(1.49\\pm0.01\\).<br><b>Transfer:</b> A dealer with no position limit and no risk charge quotes with zero skew and carries an unbounded random-walk position.",
+  "tags": [
+   "s_dynamic_programming",
+   "s_variance_decomposition",
+   "market_making",
+   "inventory",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "Which term in the reservation price depends on \\(\\gamma\\)? What happens to it as \\(\\gamma\\to0\\)?",
+   "For the spread, expand \\(\\ln(1+\\gamma/k)\\) for small \\(\\gamma\\). What is the spread when each side is chosen to maximise \\(\\delta Ae^{-k\\delta}\\)?",
+   "Model fills on each side as a Poisson process with intensity \\(Ae^{-k\\delta}\\) at the quote distance \\(\\delta\\). Inventory is the difference of two independent counts."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you skew your quotes against inventory, by shifting the mid by \\(-q\\gamma\\sigma^2(T-t)\\), and when does the skew fail?",
+  "back": "<b>Triggers:</b> You hold inventory you cannot hedge cheaply, you care about the risk of holding it (\\(\\gamma>0\\)), and the horizon \\(T-t\\) is long enough for the position to matter.<br><b>Move:</b> Shift both quotes by \\(-q\\gamma\\sigma^2(T-t)\\). A long dealer lowers both quotes: the ask becomes easier for clients to buy at, and the bid becomes less attractive for them to sell to.<br><b>Canonical example:</b> Long 3 units with \\(\\gamma\\sigma^2(T-t)=0.05\\): both quotes move down by 0.15.<br><b>Failure modes:</b> (i) A large informed trade reveals new information. The skew does not price that adverse selection; a wider spread does. (ii) As \\(T-t\\to0\\) the skew vanishes, so inventory must be cleared another way. (iii) If the position is cheap to hedge in a liquid instrument, hedge it rather than skew the quotes. (iv) If fills do not arrive at the assumed intensity, the skew is set against the wrong flow.",
+  "tags": [
+   "s_dynamic_programming",
+   "market_making",
+   "inventory",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "An asset is worth \\(V_H=110\\) or \\(V_L=90\\), each with probability \\(\\tfrac12\\). Each order is informed with probability \\(\\mu=\\tfrac14\\). An informed trader knows \\(V\\) and buys if \\(V\\) is high and sells if it is low. An uninformed trader buys or sells with probability \\(\\tfrac12\\) each, regardless of \\(V\\). A market maker sets the ask at \\(E[V\\mid\\text{buy}]\\) and the bid at \\(E[V\\mid\\text{sell}]\\). Find both quotes and the spread.",
+  "back": "<b>Answer:</b> Ask \\(102.5\\), bid \\(97.5\\), spread \\(5=\\mu(V_H-V_L)\\).<br><b>Structure:</b> s_conditional_expectation_tower, with s_game_theory_equilibrium (Glosten–Milgrom zero-profit quotes). Trigger: the quote is the conditional expectation given the sign of the order.<br><b>Key move:</b> Given a buy, \\(P(\\text{buy}\\mid V_H)=\\mu+\\tfrac12(1-\\mu)\\) and \\(P(\\text{buy}\\mid V_L)=\\tfrac12(1-\\mu)\\). Bayes gives the posterior, and the ask is its mean.<br><b>Working:</b> \\(P(\\text{buy}\\mid V_H)=\\tfrac58\\), \\(P(\\text{buy}\\mid V_L)=\\tfrac38\\), and \\(P(\\text{buy})=\\tfrac12\\). So \\(E[V\\mid\\text{buy}]=110\\cdot\\tfrac58+90\\cdot\\tfrac38=\\tfrac{550+270}{8}=102.5\\). By symmetry, \\(E[V\\mid\\text{sell}]=110\\cdot\\tfrac38+90\\cdot\\tfrac58=97.5\\).<br><b>Sanity check:</b> \\(\\mu=0\\) gives ask = bid = 100, the prior mean, with no spread. \\(\\mu=1\\) gives 110 and 90, full revelation. A simulation of \\(10^6\\) orders gives 102.50 and 97.52.<br><b>Transfer:</b> The same two-point setup with \\(V_H=120\\), \\(V_L=80\\) and \\(\\mu=\\tfrac12\\) gives ask 110 and bid 90.",
+  "tags": [
+   "s_conditional_expectation_tower",
+   "s_game_theory_equilibrium",
+   "glosten_milgrom",
+   "adverse_selection",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Given a buy, what is the probability of a buy when the value is high, and when it is low? Count the informed and the uninformed contributions separately.",
+   "The ask is a conditional expectation. Compute \\(P(\\text{buy}\\mid V)\\) for each value, then apply Bayes' rule with the prior \\(\\tfrac12\\) on each value.",
+   "Write \\(E[V\\mid\\text{buy}]=\\dfrac{\\sum_v V\\,P(v)\\,P(\\text{buy}\\mid v)}{P(\\text{buy})}\\) and evaluate it with \\(\\mu=\\tfrac14\\)."
+  ],
+  "figs_back": [
+   "fgF_gm_tree"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From Bayes' rule and the definition of a conditional expectation only, rebuild the market maker's ask for a two-point asset, with values \\(V_H\\) and \\(V_L\\) each of prior probability \\(\\tfrac12\\), when a fraction \\(\\mu\\) of orders is informed.",
+  "back": "<ol><li><b>Write the two types of buy.</b> An informed trader buys exactly when \\(V\\) is high. An uninformed trader buys with probability \\(\\tfrac12\\), whatever \\(V\\) is.</li><li><b>Condition on value.</b> \\(P(\\text{buy}\\mid V_H)=\\mu+\\tfrac12(1-\\mu)\\) and \\(P(\\text{buy}\\mid V_L)=\\tfrac12(1-\\mu)\\).</li><li><b>Apply Bayes.</b> \\(E[V\\mid\\text{buy}]=\\sum_v V\\,P(v)\\,P(\\text{buy}\\mid v)/P(\\text{buy})\\), with \\(P(v)=\\tfrac12\\).</li><li><b>Simplify.</b> \\(P(\\text{buy})=\\tfrac12\\), so the ask is \\(\\tfrac{1+\\mu}{2}V_H+\\tfrac{1-\\mu}{2}V_L\\).</li><li><b>Read off the result.</b> The ask equals the mid plus \\(\\mu(V_H-V_L)/2\\). By symmetry the bid is the mid minus the same amount.</li></ol><b>If you get stuck:</b> If a buy were equally likely for both values, what would the ask be? What does an informed buy add to that?<br><b>Minimal memory:</b> The ask is the posterior mean given a buy. Uninformed flow dilutes the signal by one half, so the ask sits at the mid plus \\(\\mu\\) times half the range.",
+  "tags": [
+   "s_conditional_expectation_tower",
+   "s_bayes",
+   "glosten_milgrom",
+   "adverse_selection",
+   "fmt_rebuild"
   ]
  }
 ]
