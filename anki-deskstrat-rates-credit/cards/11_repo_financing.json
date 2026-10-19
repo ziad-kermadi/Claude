@@ -1,0 +1,516 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: REPO 1/4]</b> A dealer funds a £50m gilt position through a classic repo at 4.00% for 14 days. Describe the cash flows of the repo and compute the interest.",
+  "back": "Headline: a repo is a sale of securities for cash with an agreed repurchase at a later date at a higher price. The cash borrower is the collateral seller; the cash lender is the collateral buyer (reverse-repo side).<br>\nRepurchase price: \\(P_{rep}=P_0\\left(1+r\\,\\dfrac{d}{B}\\right)\\), with \\(B=365\\) for GBP and \\(B=360\\) for USD and EUR.<br>\nInterest: \\(50{,}000{,}000\\times 0.04\\times \\dfrac{14}{365}=£76{,}712\\), so the repurchase price is £50,076,712.<br>\nCoupons on the collateral during the term flow to the economic owner (the cash borrower) under GMRA or GMSLA conventions, so the repo rate is purely a financing rate and is separate from the collateral's yield.<br>\n<i>Interviewer follow-up:</i> why does the lender not earn the bond coupon? Because the lender holds title only as security; coupons are passed back to the seller, so the lender's P&amp;L is the repo interest plus any haircut or margin.",
+  "tags": [
+   "repo",
+   "financing",
+   "chain_repo_mech",
+   "mechanics"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: REPO 2/4]</b> Same £50m repo, but the cash lender takes gilts with a 5% haircut. What collateral market value is needed, and what risk does the haircut cover?",
+  "back": "Headline: market value of collateral \\(=50/(1-0.05)=£52.63\\text{m}\\). Cash lent = MV \\(\\times(1-h)\\).<br>\nThe haircut protects the lender against a fall in collateral value between the last margin call and the completed liquidation (the margin period of risk, typically a few days for gilts). A rough sizing is \\(h \\approx \\sigma\\sqrt{\\tau_{liq}}\\times z\\) plus liquidity and concentration add-ons; the number is an approximation, not a derivation.<br>\nHaircuts are lower for short-dated, liquid government collateral and higher for long-dated bonds, equities and credit.<br>\n<i>Interviewer follow-up:</i> why are haircuts procyclical? Haircut models are volatility-based, so they rise after a volatility spike, which cuts cash available against the same bonds at the moment funding is scarcest (see the stress case in this set).",
+  "tags": [
+   "repo",
+   "haircut",
+   "chain_repo_mech",
+   "risk"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: REPO 3/4]</b> The same gilt repo can settle bilaterally on a DVP basis, through a tri-party agent, or through a CCP. What differs in collateral control, intraday risk and netting?",
+  "back": "Tri-party: a clearing bank (tri-party agent) holds the collateral, runs allocation, substitution and daily margin, and typically extends intraday credit to the cash borrower before end-of-day unwind.<br>\nBilateral DVP: each leg settles against payment through a settlement system, with gross settlement and no tri-party intraday credit, but no multilateral netting.<br>\nCCP-cleared repo (e.g. LCH RepoClear in Europe, FICC in the US, approx.): the CCP novates both sides and nets positions multilaterally, which reduces gross exposure and the number of settlements.<br>\n<i>Interviewer follow-up:</i> why does a dealer still hold gross repo on balance sheet even if it nets at a CCP? Accounting netting is narrower than economic netting (see the netting card in the balance-sheet chain).",
+  "tags": [
+   "repo",
+   "tri_party",
+   "ccp",
+   "chain_repo_mech",
+   "market_structure"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: REPO 4/4]</b> A dealer funds £100m of gilts at a 2% haircut with £2m of equity. In a volatility spike the haircut is raised to 10% and equity is fixed at £2m. What is the funding consequence and why is it procyclical?",
+  "back": "Headline: at 10% the maximum position supportable by £2m of equity is \\(2/0.10=£20\\text{m}\\), so the desk must sell about £80m of gilts.<br>\nAt 2%: cash \\(=98\\), equity \\(=2\\), position \\(=100\\). At 10%: cash \\(=90\\), so to keep £100m of bonds the desk needs £10m of equity, an £8m shortfall.<br>\nProcyclicality: the haircut rises when volatility rises, forced sales push prices down and volatility up, and the loop repeats. This is the same mechanism that drove the 2022 UK LDI episode (spread pressure on leveraged funds with collateral calls).<br>\n<i>Interviewer follow-up:</i> what can a dealer do to limit the loop? Pre-fund margin, hold a liquidity buffer of unencumbered HQLA, term out funding and negotiate haircut floors.",
+  "tags": [
+   "repo",
+   "haircut",
+   "procyclicality",
+   "chain_repo_mech",
+   "scenario"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SPEC 1/4]</b> A gilt is special in repo at 3.20% against 4.00% general collateral (GC). Who benefits from specialness, and what does the short seller give up?",
+  "back": "Headline: specialness is the spread GC minus special rate = 80bp. Value goes to whoever needs the specific bond.<br>\nThe holder who repos the bond out (cash borrower) pays 3.20% instead of 4.00%, so the bond holder gets cheaper funding.<br>\nThe short seller borrows the bond by lending cash through reverse repo at 3.20%, forgoing 80bp on the cash.<br>\nValue of specialness to the holder: £10m for 30 days gives \\(10{,}000{,}000\\times 0.008\\times 30/365=£6{,}575\\).<br>\n<i>Interviewer follow-up:</i> why does a dealer accept the cost? It is cheaper than a fail, which carries a penalty and a failure to hedge, and is cheaper than paying the market for a bond it cannot source.",
+  "tags": [
+   "specialness",
+   "repo",
+   "chain_specialness",
+   "mechanics"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SPEC 2/4]</b> A short seller fails to deliver a special bond on settlement date. What does the buyer receive, and how is the fails charge set?",
+  "back": "Headline: the buyer keeps its cash and receives a fails charge that compensates it for the lost use of cash.<br>\nMarket practice (US TMPG-style, approx.): fails charge rate \\(=\\max(0,\\ r_{ref}-3\\%)\\) per annum, where \\(r_{ref}\\) is a reference policy or repo rate. The charge is paid by the failing seller for each day of fail.<br>\nExample: a $100m fail for 2 days at a 4.50% reference rate gives a 1.50% charge, so \\(100\\text{m}\\times 0.015\\times 2/360=\\$8{,}333\\).<br>\nWhere it breaks: when \\(r_{ref}\\) is near zero the floor binds, the charge is zero and fails carry no penalty. This is why fails tend to cluster in low-rate regimes, and why the rule of thumb is approximate and jurisdiction-specific.<br>\n<i>Interviewer follow-up:</i> why would a desk prefer to fail rather than borrow? When the fails charge is zero and the bond is special, failing costs nothing directly, so the cheap option is to fail.",
+  "tags": [
+   "fails",
+   "specialness",
+   "repo",
+   "chain_specialness",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SPEC 3/4]</b> Specialness deepens until a 1-day repo on €100m of a bond prints at -0.50% (Act/360). Show the repurchase price and explain why the cash lender accepts paying.",
+  "back": "Headline: the cash lender pays rather than earns. Repurchase price \\(=100\\text{m}\\left(1-\\dfrac{0.005}{360}\\right)=€99{,}998{,}611\\), so the lender pays €1,389 for one day, or €13,889 for 10 days.<br>\nThe lender accepts because it needs the specific bond (to deliver, hedge, or avoid a fail). Its alternative is depositing cash with the central bank.<br>\nNegative repo is bounded below by the deposit alternative: if the central bank deposit rate is itself negative (euro area 2015 to 2022 and similar regimes, approx.), negative GC and special rates can extend below zero, but the depth is limited by the cost of cash deposits and by whether the deposit rate is tiered.<br>\n<i>Interviewer follow-up:</i> does a negative repo rate give a bond holder a free lunch? Yes, a negative special lets the holder be paid to lend cash to it, which is why negative specials persist only while the bond is scarce.",
+  "tags": [
+   "negative_rates",
+   "specialness",
+   "repo",
+   "chain_specialness",
+   "mechanics"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SPEC 4/4]</b> The cheapest-to-deliver (CTD) bond in a government bond future trades special in repo at 3.20% while the market prices the futures off an implied repo of 4.30%. What is the excess carry and how does specialness feed into the cash-futures basis?",
+  "back": "Headline: the excess carry for a long CTD position financed at 3.20% against an implied repo of 4.30% is 110bp per annum. Per 100 of dirty price over 90 days: \\(100\\times 0.011\\times 90/360=0.275\\).<br>\nMechanism: the implied repo is the rate at which buy-the-bond-and-deliver is riskless. If the CTD's actual financing is special, the realized carry of holding it exceeds the implied-repo benchmark. A basis trader buys the CTD, shorts the future and collects the difference.<br>\nWhere it breaks: CTD specialness is transient and the CTD can switch when relative specialness changes (the switch option), so the basis trade carries the risk that the CTD changes or that specialness disappears.<br>\n<i>Interviewer follow-up:</i> how does this link to the specialness of the CTD being priced into the futures? Specialness lowers the effective cost of carrying the CTD, which is why the futures price and the CTD's net basis move together.",
+  "tags": [
+   "ctd",
+   "specialness",
+   "basis_trade",
+   "chain_specialness",
+   "futures"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SONIA 1/4]</b> Sterling overnight money markets: how is reformed SONIA formed, published and accrued?",
+  "back": "Headline: SONIA is the Bank of England's published overnight rate for unsecured sterling wholesale deposits, based on transaction data for the previous business day.<br>\nReformed SONIA (since April 2018, approx.) is a volume-weighted trimmed mean of the transaction rates in the middle of the volume distribution (roughly interquartile, approx.), which reduces the influence of outliers and thin trades.<br>\nAccrual is Act/365 Fixed, compounded in arrears for loans and swaps (daily compounding over the period, with a lookback or observation shift depending on the product).<br>\nWhere it breaks: the rate rests on a transaction base that can thin out in stress, so the unsecured series can diverge from the secured repo rate (the SONIA-repo basis).<br>\n<i>Interviewer follow-up:</i> why is SONIA unsecured while the desk's funding is secured? Because the reference rate is for wholesale unsecured cash; secured funding is priced off repo, and the difference is the secured-unsecured basis.",
+  "tags": [
+   "sonia",
+   "risk_free_rates",
+   "chain_boe_sonia",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SONIA 2/4]</b> Under the Bank of England's floor system, why does SONIA sit close to Bank Rate, and why can it trade a few basis points below it?",
+  "back": "Headline: in a floor system the central bank pays Bank Rate on reserves, so a bank with reserves will not lend overnight in the interbank market below Bank Rate. Market rates are therefore anchored near Bank Rate.<br>\nSONIA can print below Bank Rate because non-bank lenders such as money market funds have no access to reserve remuneration and will accept less than Bank Rate from banks, which are able to earn Bank Rate on their reserves. The gap is a few basis points (approx.) and reflects who can access the facility.<br>\nWhere it breaks: the anchor is the rate paid on reserves, not Bank Rate per se. If the reserve remuneration rate is set below Bank Rate (a technical rate), the floor moves.<br>\n<i>Interviewer follow-up:</i> what happens to SONIA when reserves fall? It moves up toward the reserve-scarcity region, as the next card covers.",
+  "tags": [
+   "sonia",
+   "floor_system",
+   "reserves",
+   "chain_boe_sonia",
+   "central_bank"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SONIA 3/4]</b> Quantitative tightening drains central bank reserves. Describe the reserve demand curve and why repo and SONIA can jump above Bank Rate before reserves are fully exhausted.",
+  "back": "Headline: the demand for reserves is flat at high reserve levels (any surplus is remunerated at the floor), then steepens sharply as reserves approach the level banks need for intraday payments, liquidity rules and internal limits. The curve is convex.<br>\nSo a moderate QT drain from ample reserves costs almost nothing, but a drain near the kink produces a spike in overnight repo and SONIA above Bank Rate.<br>\nWhy the spike comes earlier than aggregate scarcity: reserves are unevenly distributed. A few large banks can be short even when the aggregate is adequate, and tax dates or large Treasury or gilt settlements can drain the marginal bank at a point in time.<br>\n<i>Interviewer follow-up:</i> how would you measure distance to the kink? Use the spread of overnight repo or SONIA over Bank Rate, intraday reserve usage and the distribution of reserves across banks, not the aggregate level alone.",
+  "tags": [
+   "reserves",
+   "qt",
+   "reserve_demand",
+   "chain_boe_sonia",
+   "central_bank"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SONIA 4/4]</b> Why does the Bank of England maintain standing and term liquidity facilities alongside its reserve regime? Give the function of the standing facility, the indexed term repo, and the contingent term repo facility.",
+  "back": "Headline: the framework separates the policy rate from the liquidity tools that stop repo and SONIA from spiking.<br>\nStanding facility: overnight lending against eligible collateral at a penal rate set above Bank Rate, which caps the marginal cost of overnight liquidity for banks that have collateral.<br>\nIndexed Long-Term Repo (ILTR): term funding against a broad collateral set, priced to be neutral to the policy stance, to reduce banks' dependence on overnight liquidity in stress.<br>\nContingent Term Repo Facility (CTRF): a facility that stands ready for stress and can be activated when market functioning is impaired, rather than running in normal times.<br>\nCaveat: the specific rates, eligible collateral and launch details have changed over time. Verify the current BoE framework before quoting numbers.<br>\n<i>Interviewer follow-up:</i> how does a standing facility interact with a floor system? A penal standing rate sits above Bank Rate, so the facility limits upward spikes while the reserve remuneration rate sets the floor.",
+  "tags": [
+   "boe_facilities",
+   "smf",
+   "iltr",
+   "ctrf",
+   "chain_boe_sonia",
+   "central_bank"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SOFR 1/4]</b> SOFR is the USD risk-free rate. What is its transaction base, and why does the market build term SOFR separately?",
+  "back": "Headline: SOFR is a volume-weighted median of overnight Treasury repo transactions, drawn from tri-party repo, General Collateral Finance (GCF) and bilateral DVP. The New York Fed publishes it the morning after.<br>\nBecause it is secured and overnight it has no term or bank-credit component, so it is not a term rate. Term SOFR is derived from futures and swap markets rather than from transactions, and most swaps and loans compound overnight SOFR in arrears instead.<br>\nWhere it breaks: when repo volume is concentrated in a few trades or specific collateral, the median can move on thin flows, so the fixing reflects the repo market's structure, not its average.<br>\n<i>Interviewer follow-up:</i> why could SOFR print above the interest on reserves rate? Because reserve scarcity pushes the marginal repo borrower to pay above the reserve remuneration rate, which is the same mechanism as the SONIA reserve-demand kink.",
+  "tags": [
+   "sofr",
+   "risk_free_rates",
+   "chain_us_repo",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SOFR 2/4]</b> On 17 September 2019 overnight repo spiked. What was the mechanism, and what were the approximate sizes of the move?",
+  "back": "Headline: SOFR printed about 5.25% that day, with intraday trades reportedly near 10% (approx. figures; verify before quoting), from a level in the low 2% range the prior week.<br>\nMechanism: reserves had been drained by a combination of a corporate tax date, Treasury settlements and a fall in aggregate reserves. The marginal bank with a reserve shortfall was forced to borrow in repo, and balance-sheet and regulatory constraints limited intermediation, so the spike was not arbitraged away.<br>\nResponse: the Fed injected overnight repo liquidity and later built standing facilities to stop a repeat.<br>\n<i>Interviewer follow-up:</i> what is the lesson for scenario analysis? Aggregate reserves are not sufficient. Model the distribution of reserves, the calendar of tax and settlement flows, and the constraints that stop intermediaries from using their balance sheet.",
+  "tags": [
+   "sofr",
+   "repo_spike",
+   "reserves",
+   "chain_us_repo",
+   "scenario"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SOFR 3/4]</b> How do the Fed's overnight reverse repo (ON RRP) facility and its Standing Repo Facility (SRF) bound SOFR, and where do they sit in the target range?",
+  "back": "Headline: the ON RRP rate sits at the bottom of the target range and gives eligible money-market funds a floor for lending cash. The SRF rate sits at the top of the range and gives dealers with eligible Treasury collateral a ceiling for borrowing cash.<br>\nThe interest on reserves rate sits inside the range. In the ample-reserve regime SOFR tends to trade near the RRP floor; as reserves become scarce, it moves up toward IORB and, in stress, toward the SRF rate.<br>\nThe SRF was announced in 2019 and became operational in 2021 (approx.; verify).<br>\n<i>Interviewer follow-up:</i> why would a dealer ever pay the SRF rate when it can borrow in the market? Only when the market rate is above the SRF rate, which is the stress condition the facility exists to cap.",
+  "tags": [
+   "sofr",
+   "rrp",
+   "srf",
+   "corridor",
+   "chain_us_repo",
+   "central_bank"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SOFR 4/4]</b> The SEC's 2023 rule requires central clearing of eligible US Treasury cash and repo transactions. What is the rationale, what are the approximate compliance dates, and what role does sponsored repo play?",
+  "back": "Headline: the rule aims to reduce counterparty risk and improve resilience by pushing eligible Treasury trades through a covered clearing agency, principally FICC.<br>\nCompliance dates (approximate; verify the current SEC position): the original timeline was December 2025 for cash and June 2026 for repo. In early 2025 the SEC extended both by one year, to December 2026 for cash and June 2027 for repo.<br>\nSponsored repo: a sponsoring member submits client trades to FICC, so non-dealer clients such as funds can access FICC netting. The sponsor takes on the client's clearing exposure and the associated balance-sheet and margin cost.<br>\nWhere it breaks: sponsored clients get netting only through the sponsor's membership, so access and concentration of sponsors become the key operational risks.<br>\n<i>Interviewer follow-up:</i> why does clearing change balance-sheet cost? Netting at a CCP reduces gross exposure and can lower leverage-based charges, which is why dealers' funding economics shift after the mandate.",
+  "tags": [
+   "clearing_mandate",
+   "sponsored_repo",
+   "sec",
+   "chain_us_repo",
+   "regulation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> Convert a repo rate quoted on Act/360 into the equivalent Act/365 rate. Give the step-by-step and the numerical result for 4.00% Act/360.",
+  "back": "Step 1: the interest on principal \\(P\\) for \\(d\\) days is \\(I=P\\,r_{360}\\,d/360\\) under Act/360 and \\(I=P\\,r_{365}\\,d/365\\) under Act/365.<br>\nStep 2: equate the two to get the same money: \\(r_{360}/360 = r_{365}/365\\), so \\(r_{365}=r_{360}\\cdot 365/360\\).<br>\nStep 3: plug in 4.00%: \\(r_{365}=4.00\\%\\times 365/360=4.056\\%\\), about 4.06%.<br>\nWhere it breaks: the relation holds only for simple interest over one period. For compounded rates the basis change is applied to the periodic rate, and mixed-basis curves need the conversion applied consistently to both legs of a basis swap.",
+  "tags": [
+   "derivation",
+   "repo",
+   "day_count",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> Two term repo rates are quoted: 4.00% for 30 days and 4.20% for 90 days, both on a simple basis. Derive the forward repo rate for days 30 to 90, and compute it.",
+  "back": "Step 1: no-arbitrage requires that lending for 90 days equals lending for 30 days then rolling at the forward rate \\(f\\) for 60 days.<br>\nStep 2: \\((1+r_2 t_2)=(1+r_1 t_1)\\,(1+f\\,(t_2-t_1))\\), with \\(t_1=30/365\\), \\(t_2=90/365\\).<br>\nStep 3: solve \\(f=\\dfrac{1}{t_2-t_1}\\left[\\dfrac{1+r_2t_2}{1+r_1t_1}-1\\right]\\).<br>\nStep 4: \\(r_1 t_1=0.3288\\%\\), \\(r_2 t_2=1.0356\\%\\). Ratio \\(=1.010356/1.003288=1.007046\\). Dividing \\(0.7046\\%\\) by \\(60/365=0.16438\\) gives \\(f\\approx 4.29\\%\\).<br>\nInterpretation: the forward sits above the 90-day rate because the upward slope of the term curve is embedded in the spot-to-forward roll.<br>\nWhere it breaks: this ignores the term premium and the bid-offer in term repo, and it assumes the same collateral basket is available in both legs.",
+  "tags": [
+   "derivation",
+   "term_repo",
+   "forward_rate",
+   "repo_curve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> Buy a bond at dirty price \\(P\\) (per 100 face), finance it in repo at rate \\(r\\) for \\(\\tau\\), and receive one coupon \\(C\\) at time \\(t_c\\) within the period. Derive the forward dirty price \\(F\\) and evaluate for \\(P=100.50\\), \\(r=4\\%\\), \\(\\tau=0.50\\), \\(C=2.00\\) at \\(t_c=0.25\\).",
+  "back": "Step 1: the cost of carrying the bond is the repo interest on the dirty price, \\(P\\,r\\,\\tau\\), so the bond must be sold at \\(P(1+r\\tau)\\) to break even.<br>\nStep 2: the coupon received at \\(t_c\\) is reinvested at the repo rate to the forward date \\(T\\), so its future value is \\(C\\,(1+r(T-t_c))\\). Subtract it from the required sale price.<br>\nStep 3: \\(F = P(1+r\\tau)-C\\,(1+r(T-t_c))\\).<br>\nStep 4: numerically \\(F=100.50\\times 1.02-2.00\\times 1.01=102.51-2.02=100.49\\).<br>\nClean forward price is \\(F\\) minus accrued interest at \\(T\\). Note that the forward is on dirty price, which is what the repo sees.<br>\nWhere it breaks: the coupon reinvestment rate should be the rate actually earned on cash, not necessarily the repo rate; under specialness the financing rate on the bond differs from the reinvestment rate.",
+  "tags": [
+   "derivation",
+   "forward_price",
+   "repo",
+   "carry"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> Derive the carry of a long bond financed in repo over a period \\(\\tau\\), assuming the clean price is unchanged. Use position \\(N\\), coupon \\(c\\), dirty price \\(P_d\\) (per 100 face) and repo rate \\(r\\). Evaluate for \\(N=£100\\text{m}\\), \\(c=4.00\\%\\), \\(P_d=100\\), \\(r=3.50\\%\\), \\(\\tau=0.25\\).",
+  "back": "Step 1: coupon accrual over \\(\\tau\\) is \\(N\\,c\\,\\tau\\), since accrued interest rises linearly with time.<br>\nStep 2: with clean price constant, the dirty price rises only through accrued interest, so there is no capital gain other than accrual.<br>\nStep 3: repo cost is \\(r\\,\\tau\\) times the cash borrowed, which is \\(N\\,P_d/100\\).<br>\nStep 4: carry \\(=N\\,\\tau\\left(c-r\\,\\dfrac{P_d}{100}\\right)\\). For the numbers: \\(100\\text{m}\\times0.25\\times(0.04-0.035\\times1.00)=£125{,}000\\).<br>\nWhere it breaks: (a) a special bond's financing rate is below the GC rate, so the carry is larger than this formula gives; (b) day-count mismatch between semi-annual Act/Act coupons and Act/365 repo; (c) on the coupon date the clean price drops, so carry must be computed on dirty prices across the coupon.",
+  "tags": [
+   "derivation",
+   "carry",
+   "repo",
+   "accrual"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> A dealer holds bond market value \\(MV\\) funded with haircut \\(h\\), with the remaining \\(h\\cdot MV\\) funded by equity at cost \\(r_e\\). Derive the effective financing rate per unit of MV and the return on equity. Evaluate for yield \\(y=5\\%\\), repo \\(R=4\\%\\), \\(h=2\\%\\), \\(r_e=5.5\\%\\).",
+  "back": "Step 1: cash borrowed in repo is \\((1-h)\\,MV\\), at rate \\(R\\).<br>\nStep 2: equity funds \\(h\\,MV\\), at cost \\(r_e\\).<br>\nStep 3: effective financing cost per unit MV is \\(R_{eff}=(1-h)R+h\\,r_e\\).<br>\nStep 4: net carry per unit MV \\(=y-R_{eff}\\). ROE on equity \\(=\\dfrac{y-(1-h)R-h\\,r_e}{h}\\).<br>\nNumbers: \\(R_{eff}=0.98\\times4\\%+0.02\\times5.5\\%=3.92\\%+0.11\\%=4.03\\%\\). Net carry \\(=0.97\\%\\). ROE \\(=0.97\\%/2\\%=48.5\\%\\).<br>\nWithout an equity cost (\\(r_e=0\\)), ROE is 54%, so ignoring equity funding overstates ROE by about 5.5 points here.<br>\nWhere it breaks: ROE is very sensitive to \\(h\\) because it divides by \\(h\\). Halving the haircut doubles the leverage and roughly doubles the spread's contribution, which is why haircut moves drive desk limits.",
+  "tags": [
+   "derivation",
+   "haircut",
+   "roe",
+   "leverage",
+   "financing"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> Derive the compounded-in-arrears SONIA coupon over a period with daily rates \\(r_i\\) and day counts \\(d_i\\) (Act/365). Evaluate for 4.00% over 3 days (Friday to Monday), 4.00% for 1 day, and 4.10% for 3 days.",
+  "back": "Step 1: a unit of cash grows by \\(\\prod_i (1+r_i d_i/365)\\) over the period.<br>\nStep 2: the period's annualised compounded rate is \\(R = \\dfrac{365}{D}\\left[\\prod_i (1+r_i d_i/365)-1\\right]\\), where \\(D=\\sum d_i\\).<br>\nStep 3: here \\(D=7\\). The rates are 4.00% for 3 days, 4.00% for 1 day and 4.10% for 3 days, so the product is \\((1+0.04\\cdot3/365)(1+0.04/365)(1+0.041\\cdot3/365)\\), which gives \\(\\approx 1.0004044\\) over the period, and the annualised compounded rate is \\(\\approx 4.044\\%\\).<br>\nStep 4: the day-weighted simple average is \\((4.00\\cdot3+4.00\\cdot1+4.10\\cdot3)/7=4.043\\%\\). The compounded figure sits marginally above it because the higher rate is applied to a grown balance.<br>\nWhere it breaks: the observation shift or lookback changes which \\(r_i\\) are used, and the rate for the last days is not known until the period ends, so pricing uses a projected curve for those days.",
+  "tags": [
+   "derivation",
+   "sonia",
+   "compounding",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> Derive the breakeven TRS spread over SOFR at which a total return swap (TRS) funds the bond at the same all-in cost as repo with haircut \\(h\\), repo spread \\(b\\) over SOFR, and equity cost \\(r_e\\). Evaluate for \\(h=2\\%\\), \\(b=15\\)bp, \\(r_e=5.5\\%\\), SOFR \\(=4.00\\%\\).",
+  "back": "Step 1: repo effective financing per unit exposure is \\((1-h)(S+b)+h\\,r_e\\), where \\(S\\) is SOFR.<br>\nStep 2: the TRS funding leg pays SOFR plus spread \\(s\\) on the full notional. There is no cash borrowed and no haircut, so no equity term appears on the TRS side.<br>\nStep 3: equate the two: \\(S+s=(1-h)(S+b)+h\\,r_e\\), giving \\(s^*=(1-h)\\,b+h\\,(r_e-S)\\).<br>\nStep 4: \\(s^*=0.98\\times15+0.02\\times(5.5\\%-4.0\\%)=14.7+3.0=17.7\\)bp.<br>\nWhere it breaks: this excludes capital and leverage charges on the swap versus repo, counterparty margin on the TRS, and the fact that a TRS can give off-balance-sheet exposure that the leverage ratio treats differently.",
+  "tags": [
+   "derivation",
+   "trs",
+   "repo",
+   "financing",
+   "breakeven"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> Derive the first-order sensitivity of carry to the repo rate, and express it as a repo DV01 for a £100m position held for one year.",
+  "back": "Step 1: carry \\(=N\\,\\tau\\,(c-r\\,P_d/100)\\) from the previous derivation. Differentiate with respect to \\(r\\): \\(\\partial\\text{carry}/\\partial r=-N\\,\\tau\\,P_d/100\\).<br>\nStep 2: for \\(P_d=100\\) and \\(\\tau=1\\) year, a 1bp move in \\(r\\) changes carry by \\(100\\text{m}\\times0.0001\\times1=£10{,}000\\) per year.<br>\nStep 3: this is the repo DV01 of the funding leg. It is linear in \\(N\\) and in \\(\\tau\\), and it does not depend on the coupon.<br>\nWhere it breaks: the sensitivity is to the marginal repo rate paid, not to the GC rate. A special bond's sensitivity is to its special rate, and a haircut change moves the cash borrowed, so it adds a second sensitivity of \\(\\partial\\text{cash}/\\partial h=-N\\).",
+  "tags": [
+   "derivation",
+   "repo",
+   "dv01",
+   "funding_risk"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> Derive the lender's net revenue from a securities loan where cash collateral is reinvested at \\(r_{reinv}\\) and the borrower earns rebate \\(r_{reb}\\). Use securities value \\(V\\), 102% collateral, and evaluate for \\(V=£20\\text{m}\\), \\(r_{reinv}=4.00\\%\\), \\(r_{reb}=3.25\\%\\) for 30 days.",
+  "back": "Step 1: cash collateral \\(=1.02\\,V\\).<br>\nStep 2: the lender reinvests the cash at \\(r_{reinv}\\) and pays the borrower the rebate \\(r_{reb}\\) on the same cash.<br>\nStep 3: spread revenue \\(=1.02\\,V\\,(r_{reinv}-r_{reb})\\,\\tau\\), plus any separately negotiated lending fee.<br>\nStep 4: \\(20.4\\text{m}\\times0.0075\\times30/365=£12{,}575\\).<br>\nWhere it breaks: the spread term is positive only while the rebate is below the reinvestment rate. In a special security the rebate is low and the lender earns more; in a general security the rebate sits close to reinvestment and the lender relies on the lending fee.",
+  "tags": [
+   "derivation",
+   "securities_lending",
+   "rebate",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study:</b> Special repo value to a bondholder. A £10m holding of a gilt is special at 3.20% against 4.00% GC. Compute the value of specialness over 30 days and state the annualised equivalent.",
+  "back": "Step 1: specialness \\(=4.00\\%-3.20\\%=0.80\\%\\), annualised.<br>\nStep 2: value over 30 days \\(=10{,}000{,}000\\times0.0080\\times30/365=£6{,}575\\).<br>\nStep 3: annualised equivalent is 80bp on £10m, or £80,000 per year if the bond stays special.<br>\nSanity check: 30 days is about a twelfth of a year, so \\(80{,}000/12\\approx6{,}667\\), close to \\(6{,}575\\) once Act/365 is applied to a 30-day period.<br>\nInterviewer follow-up: why is this not the whole value? The holder also earns the lending fee in some structures and can cover a short without selling, so the true value includes the availability option.",
+  "tags": [
+   "case_study",
+   "specialness",
+   "repo",
+   "numbers"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study:</b> Basis trade financing breakeven. A fund holds £100m of the CTD, shorts the future, and finances the cash bond at 4.00% repo with a 2% haircut. The implied repo from the futures is 4.30%. Over 90 days, compute the excess carry, the return on the fund's equity, and the repo rate at which the trade breaks even.",
+  "back": "Step 1: excess carry \\(=£100\\text{m}\\times(4.30\\%-4.00\\%)\\times90/360=£75{,}000\\).<br>\nStep 2: equity \\(=2\\%\\times£100\\text{m}=£2\\text{m}\\). Return on equity over 90 days \\(=75{,}000/2{,}000{,}000=3.75\\%\\), which annualises to about \\(3.75\\%\\times365/90\\approx15.2\\%\\).<br>\nStep 3: breakeven repo rate is the implied repo of 4.30%, since at that rate excess carry is zero. A 30bp rise in repo eliminates the carry.<br>\nStep 4: a 2% haircut magnifies this: the same 30bp of spread is a 15% return on equity, which is why haircut levels and funding stability matter as much as the basis itself.<br>\nInterviewer follow-up: what does this sum ignore? Equity cost, margin for variation on the futures, and the change in the CTD's implied repo as the basis moves.",
+  "tags": [
+   "case_study",
+   "basis_trade",
+   "repo",
+   "haircut",
+   "numbers"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study:</b> Year-end turn cost. A dealer funds a £1bn book in GC repo. For a 3-day year-end window, GC spikes by 250bp to 6.50%, against a normal 4.00%. Compute the extra financing cost, then compare it with the book's daily carry if the bonds yield 4.50% against 4.00% funding.",
+  "back": "Step 1: extra cost \\(=£1\\text{bn}\\times2.50\\%\\times3/365=£205{,}479\\).<br>\nStep 2: book carry per day at a 50bp positive spread \\(=£1\\text{bn}\\times0.005/365=£13{,}699\\).<br>\nStep 3: the turn cost equals about \\(205{,}479/13{,}699\\approx15\\) days of normal carry.<br>\nStep 4: the spike comes from window dressing, since banks shrink gross repo on reporting dates to reduce leverage-ratio exposure. It is a funding cost that an unhedged overnight book pays, and a term repo or a term-out across the reporting date removes it.<br>\nSanity check: the turn cost is about 4.1% of the annual carry on the £5m-per-year book, so it is material but not decisive. It is worth paying for a term-out only if the spike is larger or the book is larger.<br>\nInterviewer follow-up: how would you hedge the turn? Term out the book across the reporting date with a term repo or an interest-rate swap on funding, and accept the term premium.",
+  "tags": [
+   "case_study",
+   "year_end",
+   "window_dressing",
+   "repo",
+   "numbers"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study:</b> TRS vs repo cost comparison. Exposure of $100m of a bond for one year, SOFR at 4.00%. Repo is at SOFR + 15bp with a 2% haircut and equity costs 5.5%. The TRS is at SOFR + 75bp with no haircut. Compare all-in annual costs and find the breakeven TRS spread.",
+  "back": "Step 1: repo effective rate per unit exposure \\(=(1-h)(S+b)+h\\,r_e=0.98\\times4.15\\%+0.02\\times5.5\\%=4.177\\%\\).<br>\nStep 2: repo cost on $100m for one year \\(=\\$4.177\\text{m}\\).<br>\nStep 3: TRS cost \\(=100\\text{m}\\times(4.00\\%+0.75\\%)=\\$4.75\\text{m}\\).<br>\nStep 4: the TRS costs \\(\\$0.573\\)m more per year, i.e. about 57bp of exposure. Breakeven TRS spread is \\(17.7\\)bp over SOFR, from the derivation.<br>\nSanity check: the difference is almost entirely the 60bp spread gap, since the equity term is only \\(0.02\\times1.5\\%\\approx3\\)bp.<br>\nInterviewer follow-up: when would a rational desk still pay the TRS? When it saves balance-sheet or leverage charges, when the repo cannot be executed for the collateral, or when the TRS avoids the regulatory cost of gross repo exposure that the leverage ratio counts.",
+  "tags": [
+   "case_study",
+   "trs",
+   "repo",
+   "financing",
+   "numbers"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study:</b> Haircut stress on ROE. A dealer holds £100m of a bond yielding 5.00%, funded at 4.00% repo, with equity fixed at £2m and no outside capital. Haircut rises from 2% to 10%. Compute the position the desk can hold, the forced sale, and the ROE before and after.",
+  "back": "Step 1: at 2%, equity \\(=2\\) supports \\(2/0.02=£100\\text{m}\\). Carry \\(=100\\times(5.00\\%-0.98\\times4.00\\%)=£1.08\\)m per year, ROE \\(=54\\%\\) on £2m.<br>\nStep 2: at 10%, equity \\(=2\\) supports \\(2/0.10=£20\\text{m}\\). The desk must sell \\(£80\\text{m}\\) to meet the haircut.<br>\nStep 3: if the desk instead keeps £100m, it needs £10m equity, an £8m shortfall.<br>\nStep 4: ROE if it shrinks to £20m (same funding structure): carry \\(=20\\times(5.00\\%-0.90\\times4.00\\%)=£0.28\\)m on £2m, ROE \\(=14\\%\\). The ROE falls by 40 points, and the desk is also forced into a sale at the stressed price.<br>\nInterviewer follow-up: how would you pre-empt this? Hold an extra equity buffer proportional to the stressed haircut, and limit the position to what survives a 10% haircut shock.",
+  "tags": [
+   "case_study",
+   "haircut",
+   "procyclicality",
+   "roe",
+   "numbers"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study:</b> Repo-OIS basis cost. A dealer funds £500m overnight at GC repo of 4.10% while SONIA-based OIS is 4.00%. Compute the annual cost of the 10bp basis and the cost over 30 days.",
+  "back": "Step 1: basis \\(=4.10\\%-4.00\\%=10\\)bp per year.<br>\nStep 2: annual cost \\(=£500\\text{m}\\times0.0010=£500{,}000\\).<br>\nStep 3: 30-day cost \\(=500\\text{m}\\times0.0010\\times30/365=£41{,}096\\).<br>\nStep 4: sanity check against a 10bp per year move: the basis cost per bp of £500m for a year is £50,000, so 10bp is £500,000.<br>\nInterviewer follow-up: is a positive repo-OIS basis a cost for a dealer or a signal? Both. It is a cost to funding the book and a signal of collateral scarcity or balance-sheet constraint, and the desk should separate the two using the term structure of the basis.",
+  "tags": [
+   "case_study",
+   "repo_ois",
+   "basis",
+   "numbers"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study:</b> Negative repo cost on a special. A dealer is short €100m of a bond that trades at a -0.50% (Act/360) overnight special repo rate. It borrows the bond by lending cash through reverse repo and keeps the position open for 14 calendar days. Compute the amount the dealer pays.",
+  "back": "Step 1: with a negative rate, the repurchase price is below the purchase price, so the cash lender (here the dealer) pays the other side.<br>\nStep 2: the dealer's cash lent is the reverse-repo leg. Interest \\(=\\text{Notional}\\times r\\times d/360=100\\text{m}\\times(-0.005)\\times14/360=-€19{,}444\\), so the dealer pays about €19.4k over 14 days.<br>\nStep 3: the per-day cost is about €1,389, which matches the one-day repurchase arithmetic in the specialness chain.<br>\nStep 4: the position is only worth holding if the short is needed to hedge or deliver; the negative special is the price of that flexibility.<br>\nStep 4: the price of owning this collateral is the negative repo rate, so the desk should only accept it when the position is needed for a hedge or a delivery.<br>\nInterviewer follow-up: why does the desk not just deposit cash at the central bank? If the deposit rate is also negative, the comparison is the depth of the deposit rate versus the special rate, which is the constraint that limits how negative specials can go.",
+  "tags": [
+   "case_study",
+   "negative_rates",
+   "specialness",
+   "numbers"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study:</b> Fails charge on a special bond. A dealer fails to deliver $100m of a bond for 2 days, with a 4.50% reference rate and a fails charge set at max(0, reference less 3%) (TMPG-style, approx.). Compute the charge paid, and the reference rate at which the charge is zero.",
+  "back": "Step 1: charge rate \\(=\\max(0,\\,4.50\\%-3\\%)=1.50\\%\\) per annum.<br>\nStep 2: charge \\(=100\\text{m}\\times0.015\\times2/360=\\$8{,}333\\).<br>\nStep 3: the charge is zero at a reference rate of 3% or below. A desk failing when the reference is 2% pays nothing, so the fail is costless.<br>\nStep 4: the sanity check is the fails cost in bp per day: 1.50% over 2 days on 100m is about 0.8bp of notional.<br>\nInterviewer follow-up: why do fails persist when charges are zero? The buyer also loses its hedge and carry, so the total cost of a fail is not the fails charge alone.",
+  "tags": [
+   "case_study",
+   "fails",
+   "convention",
+   "numbers"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study:</b> Securities lending revenue. A lender loans £20m of gilts for 30 days, takes cash collateral of 102%, reinvests at 4.00% and pays a 3.25% rebate. Compute the spread revenue and say how it changes if the bond goes special.",
+  "back": "Step 1: cash collateral \\(=20\\text{m}\\times1.02=£20.4\\text{m}\\).<br>\nStep 2: spread \\(=4.00\\%-3.25\\%=0.75\\%\\).<br>\nStep 3: revenue \\(=20.4\\text{m}\\times0.0075\\times30/365=£12{,}575\\).<br>\nStep 4: if the bond goes special, the rebate falls (the borrower pays less to borrow cash), so the spread rises and the lender earns more. If it becomes general collateral, the rebate rises toward reinvestment and the spread compresses.<br>\nInterviewer follow-up: what is the lender's main risk? Reinvestment risk on the cash and a run if the collateral is sold, which is why cash collateral reinvestment is a credit exposure.",
+  "tags": [
+   "case_study",
+   "securities_lending",
+   "rebate",
+   "numbers"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why does a dealer sometimes find that its repo-OIS spread is positive while its leverage ratio is slack, and what does that tell you about the source of the basis?",
+  "back": "Headline: a positive repo-OIS spread with slack leverage means the cost is set by collateral scarcity or intermediation capacity, not by balance-sheet cost on gross exposures.<br>\nIf leverage is slack, the marginal constraint is elsewhere, such as the LCR (which rewards holding HQLA) or the balance-sheet cost of unsecured funding. A positive basis then reflects demand for specific collateral.<br>\nInterviewer follow-up: how would you tell collateral scarcity from balance-sheet cost? Scarcity shows up in specials and in the term structure of the basis, while balance-sheet cost shows up in quarter-end and year-end spikes that reverse.",
+  "tags": [
+   "repo_ois",
+   "balance_sheet",
+   "scarcity",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Explain why a leveraged basis trade is financed through repo, and name the three risks that can unwind it.",
+  "back": "Headline: the cash bond is financed in repo, which is cheap and secured, and the futures leg needs no funding. The trade earns the excess of implied repo over actual financing.<br>\nThe three unwind risks: (1) haircut increases, which force a sale of bonds (see the stress case); (2) the repo rate rises or the CTD switches, which compresses the basis; (3) margin calls on the futures leg, which require liquid cash at the worst time.<br>\nInterviewer follow-up: which is most dangerous? Haircut and margin calls together, because they are procyclical and hit at the same time as the basis widens.",
+  "tags": [
+   "basis_trade",
+   "haircut",
+   "risk",
+   "financing"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Under Basel's NSFR, how is a reverse repo of Level 1 collateral against a financial counterparty with under six months to maturity treated, and why does that matter for a dealer's funding plan?",
+  "back": "Headline: under the Basel NSFR the required stable funding factor for this type of secured lending is low (approximately 0% for Level 1 collateral with financial counterparties and short maturity; verify against the relevant national implementation).<br>\nWhy it matters: a dealer that lends cash against Level 1 collateral does not need stable funding for it, while lending unsecured or against lower-quality assets carries a higher factor. Repo therefore improves the NSFR when it is secured by high-quality assets.<br>\nInterviewer follow-up: what is the trade-off? Short-maturity secured lending helps the ratio but increases roll-over and rate risk, which the NSFR does not capture.",
+  "tags": [
+   "nsfr",
+   "reverse_repo",
+   "basel",
+   "regulation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Secured versus unsecured funding: why is the desk's secured funding cheaper, and what drives the secured-unsecured basis?",
+  "back": "Headline: secured funding is cheaper because the lender holds collateral and has priority in default, so it accepts a lower rate. The desk pays for the difference through its haircut and collateral cost.<br>\nThe secured-unsecured basis is the spread between unsecured term funding and secured repo, and it widens when collateral is scarce, when unsecured credit is priced higher, or when secured funding is concentrated in a few counterparties.<br>\nInterviewer follow-up: how does FTP reflect this? The funds transfer price charges each business line the marginal secured cost for assets that can be pledged, and the unsecured term spread for the rest.",
+  "tags": [
+   "secured_funding",
+   "unsecured_funding",
+   "ftp",
+   "funding_curve"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The Fed's {{c1::ON RRP}} rate sits at the {{c2::bottom}} of the target range and the Standing Repo Facility rate sits at the {{c3::top}}, forming a corridor for SOFR.",
+  "back": "Interest on reserves sits inside the range. The corridor bounds repo rates in both ample and scarce reserve regimes.",
+  "tags": [
+   "rrp",
+   "srf",
+   "corridor",
+   "sofr",
+   "convention"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Under the Basel LCR, Level 1 assets carry a {{c1::0%}} haircut and Level 2A assets carry a {{c2::15%}} haircut, approximately.",
+  "back": "These are the standard LCR haircut levels for liquid assets when counted as HQLA; the calibration is an approximation, not a derivation.",
+  "tags": [
+   "lcr",
+   "hqla",
+   "haircut",
+   "regulation",
+   "convention"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Under SEC Rule {{c1::15c3-3}}, US broker-dealers may rehypothecate customer collateral up to {{c2::140%}} of customer debit balances.",
+  "back": "The cap is the reason prime brokerage funding is limited by client debit balances, and it is a US rule that does not apply directly in the UK.",
+  "tags": [
+   "rehypothecation",
+   "prime_brokerage",
+   "regulation",
+   "convention"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The UK leverage ratio minimum is {{c1::3.25%}} of exposure measure, and the US supplementary leverage ratio for G-SIB holding companies is {{c2::5%}} plus a buffer (approximately).",
+  "back": "Repo and reverse repo count toward exposure at gross value in the leverage ratio, which is why a leverage-constrained dealer shrinks gross repo rather than net.",
+  "tags": [
+   "leverage_ratio",
+   "balance_sheet",
+   "regulation",
+   "convention"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Securities lending collateral is typically {{c1::102%}} of the loaned value for US domestic securities and {{c2::105%}} for international securities, which is a market convention (approximately).",
+  "back": "The margin above 100% protects the lender against a move in the loaned security's value between margin calls.",
+  "tags": [
+   "securities_lending",
+   "collateral",
+   "convention"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A repo rate quoted at 4.00% on Act/360 is equivalent to about {{c1::4.06%}} on an Act/365 basis, because {{c2::365/360}} scales the periodic rate.",
+  "back": "Same money, different denominator. Mixing bases on two legs of a swap or basis trade creates a spurious spread.",
+  "tags": [
+   "day_count",
+   "derivation",
+   "convention",
+   "repo"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The reformed SONIA is a {{c1::trimmed-mean}} of {{c2::unsecured}} overnight sterling transactions, published by the {{c3::Bank of England}}.",
+  "back": "The reformed SONIA replaced the earlier, thinner survey-based series; the transaction base is the reason it is more robust.",
+  "tags": [
+   "sonia",
+   "risk_free_rates",
+   "convention"
+  ]
+ }
+]
