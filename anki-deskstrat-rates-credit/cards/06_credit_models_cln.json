@@ -22,12 +22,13 @@
   },
   {
     "type": "basic",
-    "front": "Why does a fall in firm value raise both the Merton credit spread and equity volatility? Give the sign of \\(\\partial s/\\partial V\\) and the mechanism for \\(\\partial\\sigma_E/\\partial V\\).",
-    "back": "Spreads are decreasing in \\(V\\): a lower \\(V\\) moves \\(d_2\\) towards zero and raises \\(N(-d_2)\\), so spreads widen as \\(V\\) falls.<br>\nEquity vol rises because the gearing \\(\\Omega=VN(d_1)/E\\) increases as equity is a smaller slice of a fixed-volatility asset. Equity price and equity vol move negatively (the leverage effect). Spreads move opposite to equity price, so they move in the same direction as equity vol.<br>\n<b>Interviewer follow-up:</b> Why is the empirical equity-vol to CDS link weaker than Merton implies? Because asset vol is not constant, debt is not a single zero-coupon bond, and the premium and liquidity components are unmodelled.",
+    "front": "In Merton's model, asset value falls from \\(V_0=100\\) to \\(V_0=90\\) (face \\(D=80\\), \\(T=5\\), \\(\\sigma_V=25\\%\\), \\(r=3\\%\\)). State the signs of the change in the risky-debt spread and in equity volatility, and give the mechanism.",
+    "back": "<b>Spread widens.</b> \\(s=-\\tfrac1T\\ln\\big(B_0/De^{-rT}\\big)\\) with \\(B_0=V_0-E_0\\). The spread moves from about 210bp to about 274bp, and the risk-neutral PD \\(N(-d_2)\\) from 34.9% to 42.1%. The move is non-linear: \\(d_2\\) falls by \\(\\ln(0.9)/(\\sigma\\sqrt T)\\approx0.19\\), which shifts the probability by about 7 points.<br>\n<b>Equity vol rises.</b> \\(\\sigma_E=\\Omega\\sigma_V\\) with \\(\\Omega=\\frac{V_0N(d_1)}{E_0}\\). Gearing rises from about 2.18 to about 2.33, so \\(\\sigma_E\\) moves from 54.5% to 58.3% at fixed \\(\\sigma_V\\).<br>\n<b>Mechanism:</b> a fall in \\(V\\) lowers equity, the residual claim, while debt takes a larger share of a fixed-vol asset. The equity elasticity and the default probability both increase. This is the leverage effect in the structural model.<br>\n<b>Interviewer follow-up:</b> Why does the empirical equity-vol to CDS link fall short of this? Asset vol is not constant, debt is not one zero-coupon bond, and CDS carries premium and liquidity components that the model omits.",
     "tags": [
       "structural",
-      "equity_credit",
-      "leverage"
+      "merton",
+      "derivation",
+      "equity_credit"
     ]
   },
   {
@@ -42,8 +43,8 @@
   },
   {
     "type": "cloze",
-    "front": "KMV distance-to-default in one-period form is \\(DD=\\frac{V-DPT}{V\\,\\sigma_V}\\), where the default point (DPT) is {{c1::approximately short-term debt + ½ long-term debt}}, and DD is mapped to a default frequency {{c2::empirically, from default history}}, not from the normal CDF.",
-    "back": "The DD-to-EDF mapping is calibrated on historical default data because the normal CDF understates tail default rates. DD is a real-world measure: the real asset drift \\(\\mu\\) enters, not the risk-free rate.",
+    "front": "In KMV, distance to default is \\(DD=\\dfrac{V-DPT}{V\\,\\sigma_V}\\), with default point {{c1::DPT approximately equal to short-term debt plus half of long-term debt}}. The map from DD to default frequency is {{c2::empirical, calibrated on default history}}, not the normal CDF.",
+    "back": "The normal tail \\(N(-DD)\\) substantially understates default frequencies at moderate DD, so the mapping is calibrated. DD is a real-world measure: the asset drift \\(\\mu\\) enters and the risk-neutral \\(r\\) does not.<br><b>Interviewer follow-up:</b> Which input dominates DD in practice? The asset value and its volatility, both backed out jointly from equity value and equity vol.",
     "tags": [
       "structural",
       "kmv",
@@ -451,22 +452,24 @@
   },
   {
     "type": "basic",
-    "front": "Why does the expected exposure profile of a vanilla at-the-money interest-rate swap rise and then fall? Where does the peak sit?",
-    "back": "Early on the exposure is small because the rate has had little time to diffuse. Later the remaining cash flows are fewer, so the variance of the remaining swap value shrinks and the exposure runs off to zero at maturity.<br>\nThe peak is a function of the curve and tenor rather than a fixed fraction of life; for typical curves it falls in the earlier part of the life.<br>\n<b>Interviewer follow-up:</b> What changes the shape? Amortisation, forward starts and off-market coupons shift or reshape the hump, and collateral (margin period of risk) truncates it.",
+    "front": "Why does the expected exposure of an at-the-money vanilla swap rise and then fall, and where is the peak for a flat curve in a normal-vol model?",
+    "back": "The MTM at \\(t\\) is \\(V_t=A(t)(S_t-K)\\), with \\(A(t)\\) the remaining annuity and \\(S_t\\) the forward swap rate. In the normal model \\(S_t-K\\) has standard deviation \\(\\sigma_N\\sqrt t\\) and zero mean at the money, so<br>\n\\(EE(t)=E[A(t)(S_t-K)^+]=A(t)\\,\\sigma_N\\sqrt t\\,\\varphi(0)\\approx0.40\\,\\sigma_N\\sqrt t\\,A(t)\\).<br>\nTwo factors: \\(\\sqrt t\\) (diffusion accumulates) and \\(A(t)\\) (cash flows run off). For a flat curve with equal annual payments \\(A(t)\\propto(T-t)\\), so \\(EE\\propto(T-t)\\sqrt t\\). Setting the derivative to zero gives \\(-\\sqrt t+\\frac{T-t}{2\\sqrt t}=0\\), i.e. \\(t^*=T/3\\). Discounting and exact annuity weights shift this, so quote it as about one-third of the life.<br>\n<b>Interviewer follow-up:</b> Does the peak move with the quantile? Not in this model. PFE at 97.5% is roughly \\(1.96\\sigma_N\\sqrt t\\,A(t)\\), so only the scale changes, not the shape.",
     "tags": [
       "exposure",
       "swaps",
+      "derivation",
       "scenario"
     ]
   },
   {
     "type": "basic",
-    "front": "Conceptually, how do the Basel III final BA-CVA and SA-CVA approaches differ?",
-    "back": "<b>BA-CVA (basic):</b> a closed-form, model-free formula. It uses counterparty exposure measures based on SA-CCR, supervisory risk weights by counterparty rating and sector, a supervisory correlation between systematic and idiosyncratic parts, and limited recognition of single-name and index CDS hedges. No simulation.<br>\n<b>SA-CVA (standardised):</b> sensitivity-based. The bank computes its CVA sensitivities to regulatory market-risk factors and applies prescribed risk weights and correlations. It recognises hedges within limits, but its availability depends on supervisory approval of the sensitivity calculations, so check the current rules.<br>\n<b>Interviewer follow-up:</b> Why would a bank accept BA-CVA? It is simpler and avoids building a sensitivity system, at the cost of less hedge recognition.",
+    "front": "How do the Basel III final BA-CVA and SA-CVA approaches compute the CVA capital charge, and what must a bank have in place to use SA-CVA?",
+    "back": "<b>BA-CVA (basic):</b> closed form, no simulation. Each counterparty gets a standalone CVA term from an exposure measure based on SA-CCR, a supervisory risk weight by rating and sector, and a maturity. Counterparties are aggregated with a two-part formula: a systematic term (the weighted sum squared, scaled by a supervisory correlation \\(\\rho\\)) and an idiosyncratic term (\\(1-\\rho^2\\) times the sum of squares). Single-name and index CDS hedges get limited recognition. Check \\(\\rho\\) and the risk weights against the current text before quoting them.<br>\n<b>SA-CVA (standardised):</b> sensitivity based. The bank computes its CVA sensitivities to prescribed market factors (credit spreads, rates, FX) and applies regulatory risk weights and correlations. It recognises eligible hedges within limits, and it needs supervisory approval for the sensitivity system.<br>\n<b>Trade-off:</b> BA-CVA is cheap to run but gives limited hedge credit. SA-CVA can reflect a real hedge programme but needs the sensitivities pipeline and approval.<br>\n<b>Interviewer follow-up:</b> When does SA-CVA pay for its build cost? When the BA-CVA charge on the hedged book is large relative to the hedge credit BA-CVA allows. The decision is quantitative, not a default choice.",
     "tags": [
       "cva",
       "regulatory",
-      "convention"
+      "convention",
+      "trade_off"
     ]
   },
   {
@@ -481,12 +484,13 @@
   },
   {
     "type": "basic",
-    "front": "Compare funded and unfunded credit-linked exposure from the protection seller's side. Where does counterparty risk sit in each?",
-    "back": "<b>Funded:</b> the protection seller pays cash up front (buys the note). The cash is held as collateral by the SPV, so the seller's loss is capped at the funded amount, and counterparty exposure is to the SPV, the collateral and the reference.<br>\n<b>Unfunded:</b> a swap-like CDS with no upfront cash. The seller owes contingent payments and carries credit exposure to the buyer, which creates CVA and collateral needs.<br>\n<b>Interviewer follow-up:</b> Which is more capital-efficient for the buyer? Funded, because the buyer holds collateral against its exposure to the seller.",
+    "front": "Compare a funded credit-linked note with an unfunded CDS on the same reference, notional 10m, from the protection buyer's side. Where is counterparty exposure in each, and what is the buyer's exposure at a 1m positive mark-to-market?",
+    "back": "<b>Unfunded CDS:</b> no cash changes hands at inception. If the seller defaults while the buyer has a 1m positive MTM, the buyer loses about \\((1-R_S)\\times1\\text{m}=0.6\\)m. The exposure is the MTM, managed through a CSA and CVA.<br>\n<b>Funded CLN (buyer = SPV):</b> the investor has paid 10m, which the SPV holds as collateral. The buyer's exposure is to that collateral, not to the investor, so the investor's default does not cause a counterparty loss. The residual risks are collateral management and the collateral's own credit.<br>\n<b>Trade-off:</b> the funded structure moves counterparty risk onto the collateral and the SPV, and ties up the investor's cash. The unfunded CDS keeps the risk as CVA and collateral calls, and ties up no cash.<br>\n<b>Interviewer follow-up:</b> What changes if the collateral is held in the seller's own bonds? The buyer again carries wrong-way risk, so the funded structure is no longer risk-free for the buyer.",
     "tags": [
       "cln",
       "funded",
-      "counterparty_risk"
+      "counterparty_risk",
+      "wrong_way_risk"
     ]
   },
   {
@@ -501,22 +505,24 @@
   },
   {
     "type": "basic",
-    "front": "Write the PV of an investor's position in a fixed-coupon CLN with coupon \\(c\\), notional \\(N\\), recovery \\(R\\), survival \\(Q\\), risk-free discount \\(D\\), and \\(F=1-Q\\). How do you solve for the par spread?",
-    "back": "Investor cash flows: coupons while alive, principal at \\(T\\) if no default, and recovery \\(RN\\) at default:<br>\n\\(PV=c\\sum_i\\Delta_i D(t_i)Q(t_i)+N\\,D(T)\\,Q(T)+RN\\int_0^T D(t)\\,dF(t)\\).<br>\nEquivalently PV = PV(coupons) + PV(principal) − PV(protection) in the decomposition where the principal is treated as riskless and the protection leg is \\(N(1-R)\\int_0^T D\\,dF\\) (up to the coupon-after-default and discounting terms).<br>\nSet \\(PV=N\\) and solve for \\(c\\) to get the par CLN spread. When the riskless leg is discounted on the same curve, \\(c\\) approaches the CDS par spread.<br>\n<b>Interviewer follow-up:</b> Why is the coupon-after-default term small? It is a half-period of coupon weighted by the default probability in that period, similar to the accrual-on-default term in CDS.",
+    "front": "Write the investor's PV of a fixed-coupon CLN (coupon \\(c\\), notional \\(N\\), recovery \\(R\\), survival \\(Q\\), riskless discount \\(D\\), \\(F=1-Q\\)), and derive the par coupon condition. Explain the coupon-after-default term.",
+    "back": "Cash flows: coupon \\(cN\\Delta_i\\) while alive, principal \\(N\\) at \\(T\\) if alive, recovery \\(RN\\) at default. Discretely,<br>\n\\(PV=cN\\sum_i\\Delta_iD(t_i)\\dfrac{Q(t_{i-1})+Q(t_i)}{2}+N\\,D(T)Q(T)+RN\\int_0^T D\\,dF\\).<br>\nThe averaged survival in the first term is the coupon-after-default term: the coupon accrued in a period in which default occurs is paid about half-way, so that period is weighted by average survival.<br>\nPar: set \\(PV=N\\). Integration by parts gives \\(\\int_0^T D\\,dF=1-D(T)Q(T)-r\\int_0^T QD\\,dt\\) for flat rate \\(r\\), so \\(N-ND(T)Q(T)=N\\big[\\int D\\,dF+r\\,\\mathrm{RPV01}\\big]\\). Hence \\(c-r=(1-R)\\int D\\,dF/\\mathrm{RPV01}\\). The right-hand side is the CDS par spread on the same curve, so the par CLN spread over RFR equals the CDS spread.<br>\n<b>Where it breaks:</b> a collateral that is not riskless (issuer term), and the discrete accrual approximation.",
     "tags": [
       "cln",
       "pricing",
-      "derivation"
+      "derivation",
+      "accrual_on_default"
     ]
   },
   {
     "type": "basic",
-    "front": "Describe a principal-protected CLN and explain why its coupon is lower than an otherwise identical unprotected note.",
-    "back": "The investor's cash \\(N\\) is split: \\(N\\,D(T)\\) buys a zero-coupon bond paying par at \\(T\\), which guarantees principal even on default. The remainder \\(N(1-D(T))\\) is the credit-linked notional.<br>\nCoupons are paid on that smaller notional, so the coupon is about \\(s\\times(1-D(T))\\) times the unprotected coupon base, which is why it is lower. The cost of protection is the forgone carry of the zero-coupon bond.<br>\n<b>Interviewer follow-up:</b> What is the risk left for the investor? The zero-coupon bond is risk-free only to the extent its issuer and collateral hold; the credit-linked part still loses \\(N(1-D(T))(1-R)\\) on default.",
+    "front": "A principal-protected CLN has notional 100, maturity 3y, RFR flat at 3% (continuous), reference spread 200bp and recovery 40%. Split the notional into a zero-coupon bond and a credit-linked piece. What is the coupon on 100, and what does the investor still lose on reference default?",
+    "back": "A zero-coupon bond paying 100 at 3y costs \\(100e^{-0.09}\\approx91.39\\). The remaining \\(\\approx8.61\\) is the credit-linked notional.<br>\nThe CLN piece pays \\((\\text{RFR}+s)\\) on 8.61. At a 200bp reference spread, the spread income on 100 is \\(0.0861\\times200\\approx17\\)bp, against 200bp for an unprotected note. The spread forgone on the 91.39 is the cost of protection.<br>\nOn reference default the CLN piece loses \\(8.61\\times(1-0.4)\\approx5.2\\) of the 100 notional. The protection is against the reference only: the zero still pays 100 at maturity only if its own issuer survives.<br>\n<b>Interviewer follow-up:</b> What is the investor's residual exposure? The zero's own issuer risk. If that issuer defaults, the protected principal is impaired too, so the protection is only as good as that issuer.",
     "tags": [
       "cln",
       "principal_protection",
-      "structure"
+      "structure",
+      "pricing"
     ]
   },
   {
@@ -581,12 +587,13 @@
   },
   {
     "type": "basic",
-    "front": "Trade-off: hedging a bond position with a CDS on the issuer versus shorting the bond itself. What risk remains in each?",
-    "back": "<b>CDS:</b> no repo or borrow needed, liquid for standard names, and the default payout is standardised. Remaining risks: CDS-bond basis moves, deliverable-pool and auction effects, maturity and currency mismatch, and counterparty and collateral exposure.<br>\n<b>Short bond:</b> direct price hedge, but it needs borrow or repo, pays specialness, and the funding cost sits inside the bond's asset-swap spread.<br>\nThe residual is the basis between the two hedges, which is the basis-trade risk.<br>\n<b>Interviewer follow-up:</b> Which hedge has the worse jump-to-default profile? The CDS, because its auction price can differ from the bond's own post-default price.",
+    "front": "You own a 5y bond on a 10m notional with a CS01 of about 4,500 per bp. You hedge with a 5y CDS whose risky PV01 is 4.6 per 10,000 notional. Size the CDS notional, then say what a negative bond-CDS basis does to the hedge.",
+    "back": "<b>Notional:</b> \\(N_{CDS}=\\dfrac{\\mathrm{CS01}_{bond}}{\\mathrm{RPV01}\\times10^{-4}}=\\dfrac{4{,}500}{0.00046}\\approx9.8\\)m, about 98% of the bond notional.<br>\n<b>Basis:</b> with the bond at a 150bp asset-swap spread and the 5y CDS at 130bp, the basis is \\(-20\\)bp (CDS tighter than bond). Long bond plus long protection earns about 20bp of carry: \\(150-130\\). That is the source of the basis trade. A 10bp adverse move in the basis, which the CDS leg does not capture, moves P&L by about \\(10\\times4{,}500\\approx45\\)k.<br>\n<b>Interviewer follow-up:</b> Why does a CDS hedge leave basis risk even when the CS01s match? The hedge matches sensitivity to a CDS spread, not to the bond's own asset-swap spread, so their difference is unhedged. That residual is the main risk of the trade.",
     "tags": [
       "trade_off",
       "basis",
-      "hedging"
+      "hedging",
+      "cds"
     ]
   }
 ]

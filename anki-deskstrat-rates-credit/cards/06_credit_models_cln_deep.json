@@ -1,0 +1,329 @@
+[
+  {
+    "type": "basic",
+    "front": "<b>[Chain: BOOTSTRAP 1/4]</b> Context: quarterly CDS, \\(R=40\\%\\), discounting at 0% for clarity, par spreads 1y 300bp and 3y 90bp. Bootstrap the piecewise-constant hazards on \\((0,1]\\) and \\((1,3]\\) and state the forward hazard on \\((1,3]\\).",
+    "back": "<b>Step 1 (first pillar, closed form):</b> \\(\\lambda_{(0,1]}=\\frac{2}{\\Delta}\\operatorname{artanh}\\!\\big(\\frac{S\\Delta}{2L}\\big)\\) with \\(\\Delta=0.25\\), \\(L=0.6\\), giving \\(\\lambda_{(0,1]}\\approx5.00\\%\\) and \\(\\Lambda(1)\\approx5.00\\%\\).<br>\n<b>Step 2 (3y pillar):</b> solve the 3y par equation for a constant \\(\\lambda_{(1,3]}\\). Numerically \\(\\lambda_{(1,3]}\\approx-0.29\\%\\) p.a.<br>\nThe cumulative hazard therefore falls: \\(\\Lambda(3)\\approx5.00\\%+2\\times(-0.29\\%)\\approx4.42\\%<\\Lambda(1)\\). The forward hazard is negative and \\(Q(3)>Q(1)\\).<br>\n<b>Sanity check:</b> the flat approximation \\(\\Lambda(3)\\approx3\\times0.9\\%/0.6=4.5\\%\\) agrees with 4.42%.<br>\n<b>Interviewer follow-up:</b> Is the solver at fault? No. The quotes are inconsistent with any non-negative hazard: \\(\\Lambda(3)\\ge\\Lambda(1)\\) needs \\(S_{3y}\\gtrsim S_{1y}/3\\), i.e. about 100bp here (about 101.7bp with this exact convention).",
+    "tags": [
+      "bootstrap",
+      "chain_bootstrap",
+      "negative_hazard",
+      "mental_math"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "<b>[Chain: BOOTSTRAP 2/4]</b> Context: at \\(R=40\\%\\), 1y 300bp and 3y 90bp imply a negative forward hazard of about \\(-0.29\\%\\) on \\((1,3]\\). Rank the causes, most likely first, and say how you would tell them apart.",
+    "back": "<ol>\n<li><b>Non-simultaneous quotes.</b> The 1y and 3y were not struck at the same time. A 3y quote that is stale against a 1y that moved after news produces exactly this shape. Test: re-pull both pillars with timestamps and check the 3y spread history.</li>\n<li><b>Convention mismatch.</b> The pillars are on different restructuring clauses or coupons, or an upfront was converted to par with the wrong RPV01. Test: confirm the clause and convert every pillar with the same engine.</li>\n<li><b>Recovery mismatch.</b> The 1y was bootstrapped with a distressed recovery and the 3y with 40%. Test: rebootstrap both at one recovery.</li>\n<li><b>Genuine signal.</b> A near-term spike is possible for a distressed name, but a hazard model cannot represent it with a 3y spread below about one-third of the 1y spread. A 90bp 3y against a 300bp 1y therefore points to a data or convention problem, not a real market signal.</li>\n</ol>\n<b>Interviewer follow-up:</b> What is the decisive test? Recompute the 3y par spread on the 1y's clause and recovery. If the inversion disappears, it was convention; if it persists, the quote is stale.",
+    "tags": [
+      "bootstrap",
+      "chain_bootstrap",
+      "negative_hazard",
+      "data_quality"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "<b>[Chain: BOOTSTRAP 3/4]</b> Context: 1y 300bp and 3y 90bp at \\(R=40\\%\\) give \\(\\lambda_{(1,3]}\\approx-0.29\\%\\). Name the fixes, and say which one a risk report and a trade should each use.",
+    "back": "<ul>\n<li><b>Fix the data first:</b> re-pull, align timestamps, align clause and recovery, and convert upfronts consistently.</li>\n<li><b>Constrained fit:</b> minimise weighted squared spread error subject to \\(\\lambda_k\\ge0\\). The 3y pillar is then fitted at about 102bp, where \\(\\lambda\\) on \\((1,3]\\) is zero, and the residual is shown.</li>\n<li><b>Drop or down-weight the offending pillar</b> and flag it.</li>\n<li><b>Monotone interpolation of \\(\\Lambda(t)\\):</b> a monotone spline keeps hazards non-negative and smooth, at the cost of non-local hedges.</li>\n</ul>\n<b>Use:</b> for the risk report, use the constrained fit so that PV and bucketed CS01s are monotone and hedges are stable. For a trade on the 3y pillar, reprice that instrument exactly to its own quote and hedge the 3y with the same CDS, so the trade is not driven by the curve inconsistency.<br>\n<b>Interviewer follow-up:</b> Why keep piecewise-constant hazards at all? Local support: one quote moves only its own interval, so bucket hedges are interpretable.",
+    "tags": [
+      "bootstrap",
+      "chain_bootstrap",
+      "curve_construction",
+      "trade_off"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "<b>[Chain: BOOTSTRAP 4/4]</b> Context: the bootstrapped curve has \\(\\lambda_{(1,3]}\\approx-0.29\\%\\), so survival rises between 1y and 3y. What does this do to forward-starting protection, CVA and CS01 bucketing?",
+    "back": "<ol>\n<li><b>Forward protection:</b> the protection leg on \\((1,3]\\) is \\(L\\sum_i D(t_i)[Q(t_{i-1})-Q(t_i)]\\). With \\(Q\\) rising there, that bucket contributes a negative amount, so forward-starting protection on the window has negative model value. A protection contract cannot have that value, so the model is inconsistent.</li>\n<li><b>CVA:</b> the default increment \\(Q(1)-Q(3)\\approx e^{-5.00\\%}-e^{-4.42\\%}=-0.0055\\) is negative. The contribution is about \\(0.6\\times DF\\times EE\\times(-0.0055)\\approx-0.0033\\times EE\\). A counterparty whose exposure peaks in years 1 to 3 gets a reduced CVA, which can turn negative in that bucket.</li>\n<li><b>CS01 bucketing:</b> bumping the 3y pillar moves \\(\\lambda_{(1,3]}\\) by a large amount relative to its level, and the 1y and 5y bucket sensitivities take offsetting signs. Hedge notionals are unstable: small quote moves flip the sign of the 3y bucket hedge.</li>\n</ol>\n<b>Interviewer follow-up:</b> What would you check in a book? Whether any forward-start or CVA line reads negative, and whether the bucketed CS01s sum to the parallel CS01 with stable signs.",
+    "tags": [
+      "bootstrap",
+      "chain_bootstrap",
+      "cva",
+      "risk_effects"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "<b>[Chain: CLN 1/4]</b> Context: a 3y funded CLN on reference \\(R\\) with SPV issuer \\(I\\). The investor pays par, the collateral is held by the SPV and earns RFR flat. Where does issuer risk sit in the investor's cash flows, and why does it add to the spread?",
+    "back": "The investor is short protection on \\(R\\) and also holds a claim on the SPV through the collateral. The first default ends the note. If \\(R\\) defaults first, the investor loses \\((1-R_R)N\\). If \\(I\\) defaults first, the collateral is impaired and the investor recovers \\(R_I N\\), so it loses \\((1-R_I)N\\).<br>\nBecause the first default ends the note, the two losses are mutually exclusive. Under independence and flat intensities they add: \\(s=L_R\\lambda_R+L_I\\lambda_I\\).<br>\nThe issuer term vanishes when the collateral is bankruptcy-remote and not impaired by \\(I\\)'s default (\\(L_I=0\\)).<br>\n<b>Interviewer follow-up:</b> What is the issuer term when collateral is only partly exposed? Replace \\(L_I\\) by \\((1-R_I)\\) times the exposed fraction of collateral. The term scales with how much collateral the SPV's default can reach.",
+    "tags": [
+      "cln",
+      "chain_cln_dual_default",
+      "dual_default",
+      "pricing"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "<b>[Chain: CLN 2/4]</b> Context: the investor loses on whichever of \\(R\\) or \\(I\\) defaults first, and \\(\\tau_R\\), \\(\\tau_I\\) are dependent. Write the par-spread condition for a general joint law and state what positive dependence does to it.",
+    "back": "Let \\(Q_J(t)=P(\\tau_R>t,\\tau_I>t)\\), \\(f_R(t)\\,dt=P(\\tau_R\\in dt,\\ \\tau_I>t)\\) and \\(f_I(t)\\,dt=P(\\tau_I\\in dt,\\ \\tau_R>t)\\). With recovery paid at default and accrual ignored:<br>\n\\(s\\int_0^T D(t)\\,Q_J(t)\\,dt=L_R\\int_0^T D(t)f_R(t)\\,dt+L_I\\int_0^T D(t)f_I(t)\\,dt\\).<br>\nUnder independence \\(f_R=\\lambda_RQ_J\\) and \\(f_I=\\lambda_IQ_J\\), the \\(Q_J\\) integrals cancel and the additive result follows. In general the spread is the ratio of the two first-default loss integrals to the joint-survival annuity.<br>\nWith positive dependence and fixed marginals, \\(P(\\text{both survive})\\ge Q_RQ_I\\), so \\(Q_J\\) rises and the probability that either name defaults first, \\(1-Q_J\\), falls. The expected loss, and so the spread, falls. This is the first-to-default mechanism again.<br>\n<b>Interviewer follow-up:</b> Is the additive formula ever exact under dependence? Only if the first-default densities happen to equal \\(\\lambda_iQ_J\\). That is not generic, so use the ratio.",
+    "tags": [
+      "cln",
+      "chain_cln_dual_default",
+      "correlation",
+      "joint_law"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "<b>[Chain: CLN 3/4]</b> Context: the investor is short protection on \\(R\\) and long the SPV's credit through collateral. Suppose part of the collateral is invested in bonds of \\(R\\)'s group. Define the wrong-way exposure and say which of the investor's losses it affects.",
+    "back": "Wrong-way risk: the investor's loss is largest in the states where its other exposure is already impaired. The protection leg loses when \\(R\\) defaults. The collateral leg loses when \\(I\\) defaults or when the collateral's own value falls. If the collateral holds \\(R\\)-group paper, it is impaired in the same states that trigger the protection payout, so the two losses coincide and do not diversify.<br>\nPractical treatment: link collateral value to \\(R\\)'s default factor (joint simulation, or a haircut that depends on the copula state) rather than netting it as riskless. The single-name CDS on \\(R\\) hedges the first leg only. The joint term needs a basket or index correlation hedge.<br>\n<b>Interviewer follow-up:</b> Is the effect a spread add-on or a PV loss? For a note bought at par it is a spread add-on, because the note must pay for the joint loss. For a note already held it is a mark-to-market loss.",
+    "tags": [
+      "cln",
+      "chain_cln_dual_default",
+      "wrong_way_risk",
+      "collateral"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "<b>[Chain: CLN 4/4]</b> Context: the investor funds the note at RFR plus a funding spread \\(F\\), while the collateral earns RFR flat. Give the break-even coupon spread over RFR on a risk-only basis plus funding, and state the size of the approximation.",
+    "back": "Net carry on the funded position is the coupon spread \\(s\\) minus the funding spread \\(F\\), accrued on the notional that is alive. The funding leg is paid on surviving notional with the same survival weighting as the coupon, so the break-even is \\(s^{*}\\approx s_{\\text{risk}}+F\\), with \\(s_{\\text{risk}}=L_R\\lambda_R+L_I\\lambda_I\\) from the previous card.<br>\nThe approximation ignores timing. Funding stops at default, while the loss is paid at default, so the error is second order: of order \\(F\\) times the loss-timing difference.<br>\n<b>Interviewer follow-up:</b> Why does this matter for pricing? A note can look cheap on a risk-only basis and still be fair for a buyer whose funding is cheaper than \\(F\\). Compare the quoted spread with the buyer's own funding curve, not with CDS alone.",
+    "tags": [
+      "cln",
+      "chain_cln_dual_default",
+      "funding",
+      "pricing"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "<b>[Chain: FTD 1/4]</b> Context: two names, each with 5y cumulative default probability 10%, recovery 40%. FTD protection pays on the first default. Write \\(P(\\text{first default by }T)\\) in terms of joint survival, and give the bounds that hold for any copula.",
+    "back": "\\(P(\\text{FTD by }T)=1-Q_J(T)\\), with \\(Q_J(T)=P(\\tau_1>T,\\tau_2>T)\\).<br>\nIndependence: \\(Q_J=0.9\\times0.9=0.81\\), so \\(P=0.19=p_1+p_2-p_1p_2\\).<br>\nComonotone (\\(U_1=U_2\\)): \\(Q_J=\\min(Q_1,Q_2)=0.90\\), so \\(P=0.10=\\max(p_1,p_2)\\).<br>\nFréchet bounds for any copula: \\(\\max(p_1,p_2)\\le P\\le\\min(1,p_1+p_2)\\). The FTD probability, and so its spread, lies between the riskier single name and the sum of the names.<br>\n<b>Interviewer follow-up:</b> Why is the FTD spread not just the probability times the single-name annuity? The FTD premium stops at the first default, so its annuity is on \\(Q_J\\), not on \\(Q_i\\). A shorter annuity raises the spread for a given loss probability.",
+    "tags": [
+      "nth_to_default",
+      "chain_ftd_basket",
+      "bounds",
+      "correlation"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "<b>[Chain: FTD 2/4]</b> Context: same pair, \\(p=10\\%\\) each, Gaussian copula with correlation \\(\\rho\\). State \\(\\partial P(\\text{FTD})/\\partial\\rho\\) and say where in \\(\\rho\\) it is largest.",
+    "back": "With \\(a=\\Phi^{-1}(0.9)=1.2816\\), \\(P=1-\\Phi_2(a,a;\\rho)\\), so by the Plackett identity \\(\\partial P/\\partial\\rho=-\\varphi_2(a,a;\\rho)\\le0\\). Values: \\(-0.031\\) at \\(\\rho=0\\), \\(-0.061\\) at \\(\\rho=0.5\\), \\(-0.154\\) at \\(\\rho=0.9\\), \\(-0.494\\) at \\(\\rho=0.99\\).<br>\nSensitivity is largest near \\(\\rho=1\\): \\(\\varphi_2(a,a;\\rho)\\) diverges like \\((1-\\rho)^{-1/2}\\), so \\(P\\) approaches its comonotone value \\(0.10\\) with a square-root cusp. Numerically \\(P=0.1099\\) at \\(\\rho=0.99\\), \\(0.1031\\) at \\(\\rho=0.999\\) and \\(0.10\\) at \\(\\rho=1\\), which fits \\(P-0.10\\approx0.1\\sqrt{1-\\rho}\\).<br>\n<b>Interviewer follow-up:</b> What does the cusp imply? A correlation error near the top of the range moves the FTD value far more than the same error in the middle, so calibration error matters most when the market prices high correlation.",
+    "tags": [
+      "nth_to_default",
+      "chain_ftd_basket",
+      "correlation",
+      "copula"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "<b>[Chain: FTD 3/4]</b> Context: names with 5y PDs \\(p_1=10\\%\\) and \\(p_2=5\\%\\). You delta-hedge an FTD protection position with 5y single-name CDS. Give the hedge composition \\(\\partial P/\\partial p_1:\\partial P/\\partial p_2\\) at \\(\\rho=0\\), \\(0.5\\) and \\(1\\).",
+    "back": "Finite-difference derivatives from the Gaussian copula:<br>\n<table><tr><th>\\(\\rho\\)</th><th>\\(P\\)</th><th>\\(\\partial P/\\partial p_1\\)</th><th>\\(\\partial P/\\partial p_2\\)</th></tr>\n<tr><td>0</td><td>0.145</td><td>0.95</td><td>0.90</td></tr>\n<tr><td>0.5</td><td>0.131</td><td>0.88</td><td>0.70</td></tr>\n<tr><td>1</td><td>0.100</td><td>1.00</td><td>0.00</td></tr></table>\nAt \\(\\rho=0\\) the two names are hedged nearly one-for-one. At \\(\\rho=1\\) the FTD equals \\(\\max(p_1,p_2)\\). Name 1 is always the first to default, so name 2 can never trigger first, and its single-name hedge is pure carry cost. The hedge split is a function of correlation.<br>\n<b>Interviewer follow-up:</b> What is the P&L of a hedge set at \\(\\rho=0\\) if the market moves to \\(\\rho=1\\)? The name-2 protection is now over-hedged and costs carry, and the name-1 hedge is short of what the position needs.",
+    "tags": [
+      "nth_to_default",
+      "chain_ftd_basket",
+      "hedging",
+      "correlation"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "<b>[Chain: FTD 4/4]</b> Context: the single-name delta hedge from the previous card is correct at one correlation and wrong at others. Which exposure remains after delta hedging, what is its sign, and which instrument hedges it?",
+    "back": "The residual is correlation exposure (\\(\\partial P/\\partial\\rho\\)), which single-name CDS cannot hedge. The FTD protection seller has \\(\\partial P/\\partial\\rho<0\\): its expected loss falls as correlation rises, so the seller is long correlation.<br>\nTo neutralise it, take a short-correlation position: buy protection on an equity tranche (the equity buyer is short correlation, because the equity seller's expected loss falls with \\(\\rho\\)), or sell protection on a senior tranche (the senior seller is short correlation). Size it by matching the book's \\(\\partial P/\\partial\\rho\\), not by notional.<br>\nWhat remains is copula and base-correlation skew risk, plus cross-gamma when defaults cluster, which a tranche hedge carries and the single-name delta hedge does not.<br>\n<b>Interviewer follow-up:</b> Why not hedge with an nth-to-default? It has the right sign of correlation exposure, but the market is less liquid and carries its own correlation and skew exposure.",
+    "tags": [
+      "nth_to_default",
+      "chain_ftd_basket",
+      "correlation_hedging",
+      "tranches"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Derive the Merton risky-debt spread from Black–Scholes. Firm value \\(V\\) is lognormal with vol \\(\\sigma_V\\) under \\(\\mathbb Q\\), risk-free rate \\(r\\), and debt is a zero-coupon bond with face \\(D\\) at \\(T\\). Express the continuously compounded spread over the risk-free zero.",
+    "back": "1. At \\(T\\) the debt pays \\(\\min(V_T,D)=V_T-\\max(V_T-D,0)\\). Today's debt value is \\(B_0=V_0-E_0\\), where \\(E_0=V_0N(d_1)-De^{-rT}N(d_2)\\) is the call on \\(V\\) struck at \\(D\\).<br>\n2. So \\(B_0=V_0N(-d_1)+De^{-rT}N(d_2)\\).<br>\n3. Yield: \\(B_0=De^{-yT}\\) gives \\(y=-\\tfrac1T\\ln(B_0/D)\\).<br>\n4. Spread over the risk-free zero: \\(s=y-r=-\\tfrac1T\\ln\\!\\Big(\\dfrac{B_0}{De^{-rT}}\\Big)=-\\tfrac1T\\ln\\!\\Big(N(d_2)+\\dfrac{V_0N(-d_1)}{De^{-rT}}\\Big)\\).<br>\n5. Limit: as \\(V_0\\to\\infty\\), \\(N(-d_1)\\to0\\) and \\(N(d_2)\\to1\\), so \\(s\\to0\\).<br>\nNumbers: \\(V_0=100\\), \\(D=80\\), \\(T=5\\), \\(\\sigma_V=25\\%\\), \\(r=3\\%\\): \\(d_1=0.947\\), \\(d_2=0.388\\), \\(B_0=62.01\\), \\(s\\approx209.6\\)bp.<br>\n<b>Where it breaks:</b> single zero-coupon debt with default only at \\(T\\), so short-dated spreads tend to zero; constant \\(\\sigma_V\\) and \\(r\\). Recovery is implicit (\\(V_T/D\\)), about 72% conditional on default in this example, so the spread is not comparable with a CDS at 40% recovery.",
+    "tags": [
+      "structural",
+      "merton",
+      "derivation",
+      "credit_spread"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Derive the closed form \\(P(0,T)=A(T)e^{-B(T)x_0}\\) for a CIR process \\(dx=\\kappa(\\theta-x)\\,dt+\\sigma\\sqrt{x}\\,dW\\) discounted by \\(\\exp(-\\int_0^T x\\,dt)\\), using an affine ansatz. Give \\(A\\) and \\(B\\) with \\(\\gamma=\\sqrt{\\kappa^2+2\\sigma^2}\\).",
+    "back": "1. Feynman–Kac: \\(P(t,x)\\) solves \\(P_t+\\kappa(\\theta-x)P_x+\\tfrac12\\sigma^2xP_{xx}-xP=0\\) with \\(P(T,x)=1\\).<br>\n2. Ansatz \\(P=\\exp(A(\\tau)-B(\\tau)x)\\), \\(\\tau=T-t\\). Matching coefficients in \\(x\\): \\(B'=1-\\kappa B-\\tfrac12\\sigma^2B^2\\) and \\(A'=-\\kappa\\theta B\\), with \\(A(0)=B(0)=0\\).<br>\n3. Solve the Riccati equation: \\(B(\\tau)=\\dfrac{2(e^{\\gamma\\tau}-1)}{(\\gamma+\\kappa)(e^{\\gamma\\tau}-1)+2\\gamma}\\), \\(A(\\tau)=\\Big(\\dfrac{2\\gamma\\,e^{(\\gamma+\\kappa)\\tau/2}}{(\\gamma+\\kappa)(e^{\\gamma\\tau}-1)+2\\gamma}\\Big)^{2\\kappa\\theta/\\sigma^2}\\).<br>\n4. Check: as \\(\\sigma\\to0\\), \\(\\gamma\\to\\kappa\\) and \\(B\\to(1-e^{-\\kappa\\tau})/\\kappa\\), the deterministic Vasicek limit.<br>\nNumbers: \\(\\kappa=0.5\\), \\(\\theta=3\\%\\), \\(\\sigma=10\\%\\), \\(x_0=2\\%\\), \\(T=5\\): \\(\\gamma=0.5196\\), \\(B=1.813\\), \\(A=0.9101\\), \\(P=0.87766\\). A 500-step full-truncation Monte Carlo gives 0.87767.<br>\n<b>Where it breaks:</b> the same formula gives the survival of a CIR intensity. The Feller condition \\(2\\kappa\\theta\\ge\\sigma^2\\) keeps \\(x\\) strictly positive; if it fails the process touches zero but the closed form is unchanged. A CIR++ shift multiplies this by the shift term, and the parameters under \\(\\mathbb P\\) differ from those under \\(\\mathbb Q\\).",
+    "tags": [
+      "reduced_form",
+      "cir",
+      "derivation",
+      "affine"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Derive the credit triangle for a constant hazard \\(\\lambda\\) with premiums paid quarterly in arrears, no accrual on default, and protection paid at quarter ends. Show \\(\\lambda=\\tfrac1\\Delta\\ln\\!\\big(1+\\tfrac{S\\Delta}{L}\\big)\\) with \\(L=1-R\\), and compare with \\(S/L\\) for 150bp at 40% recovery.",
+    "back": "Let \\(y=e^{-\\lambda\\Delta}\\), \\(d=e^{-r\\Delta}\\), so \\(Q(t_i)=y^i\\) and \\(D(t_i)=d^i\\). Let \\(G=\\sum_{i=1}^n(dy)^i\\).<br>\nPremium leg: \\(S\\Delta\\sum_i d^iy^i=S\\Delta\\,G\\).<br>\nProtection leg: \\(L\\sum_i d^i(y^{i-1}-y^i)=L(1-y)\\sum_i d^iy^{i-1}=\\dfrac{L(1-y)}{y}\\,G\\), using \\(d^iy^{i-1}=(dy)^i/y\\).<br>\nEquate. The common factor \\(G\\) cancels, so the rate drops out: \\(S\\Delta\\,y=L(1-y)\\), giving \\(y=\\dfrac{L}{L+S\\Delta}\\), and \\(\\lambda=-\\tfrac1\\Delta\\ln y=\\tfrac1\\Delta\\ln\\!\\big(1+\\tfrac{S\\Delta}{L}\\big)\\).<br>\nNumbers: \\(S=150\\)bp, \\(L=0.6\\), \\(\\Delta=0.25\\): \\(S\\Delta/L=0.00625\\), so \\(\\lambda=4\\ln(1.00625)=2.492\\%\\), against \\(S/L=2.500\\%\\). The relative error is \\(S\\Delta/(2L)\\approx0.3\\%\\).<br>\n<b>Where it breaks:</b> the rate cancellation needs both legs on the same discount grid. With accrual on default, or protection at mid-period, the exact constant changes and the error is of order \\(\\lambda\\Delta\\). With a term structure of hazards the triangle fails (see the steep-curve card). As \\(\\Delta\\to0\\) it returns \\(s=\\lambda L\\).",
+    "tags": [
+      "cds",
+      "credit_triangle",
+      "derivation",
+      "discrete_premium"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Derive the closed-form bootstrap of the first CDS pillar: constant hazard on \\((0,T_1]\\), quarterly premium with accrual on default approximated by the average of survival at the two ends of each period, protection paid at quarter ends. Show \\(\\lambda_1=\\tfrac{2}{\\Delta}\\operatorname{artanh}\\!\\big(\\tfrac{S_1\\Delta}{2L}\\big)\\) and say whether the discount curve matters.",
+    "back": "Let \\(y=e^{-\\lambda_1\\Delta}\\), \\(d=e^{-r\\Delta}\\), \\(Q(t_i)=y^i\\), \\(D(t_i)=d^i\\), and \\(H=\\sum_{i=1}^n d^iy^{i-1}\\).<br>\nPremium: \\(S\\Delta\\sum_i d^i\\frac{Q_{i-1}+Q_i}{2}=S\\Delta\\frac{1+y}{2}H\\), since \\(Q_{i-1}+Q_i=y^{i-1}(1+y)\\).<br>\nProtection: \\(L\\sum_i d^i(Q_{i-1}-Q_i)=L(1-y)H\\).<br>\nEquate: \\(\\frac{S\\Delta(1+y)}{2}=L(1-y)\\), so \\(\\frac{1-y}{1+y}=a:=\\frac{S\\Delta}{2L}\\) and \\(y=\\frac{1-a}{1+a}\\).<br>\nHence \\(\\lambda_1=-\\tfrac1\\Delta\\ln y=\\tfrac1\\Delta\\ln\\frac{1+a}{1-a}=\\tfrac2\\Delta\\operatorname{artanh}(a)\\).<br>\nDiscount curve: \\(H\\) is common to both legs, so \\(\\lambda_1\\) does not depend on \\(r\\). This holds only for the first pillar. For later pillars the earlier legs add constants and \\(H\\) depends on the unknown \\(y\\), so root-finding is needed.<br>\nNumbers: \\(S_1=80\\)bp gives \\(a=0.001667\\) and \\(\\lambda_1=1.333\\%\\). \\(S_1=300\\)bp gives \\(\\lambda_1=5.000\\%\\).<br>\n<b>Where it breaks:</b> the average-survival accrual is an approximation (exact accrual integrates within the period); a non-quarterly stub; a non-flat hazard inside the first period. The \\(\\operatorname{artanh}\\) curvature is of order \\(a^3/3\\), negligible at these spreads.",
+    "tags": [
+      "bootstrap",
+      "cds",
+      "derivation",
+      "discount_independence"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Derive the density of the pool loss fraction \\(L\\) in the large-pool one-factor Vasicek model with PD \\(p\\) and asset correlation \\(\\rho\\), and show \\(E[L]=p\\) using that density.",
+    "back": "The CDF of \\(L\\) is \\(F(l)=\\Phi\\!\\big(\\frac{\\sqrt{1-\\rho}\\,\\Phi^{-1}(l)-\\Phi^{-1}(p)}{\\sqrt\\rho}\\big)\\).<br>\nLet \\(x=\\Phi^{-1}(l)\\) and \\(z=\\frac{\\sqrt{1-\\rho}\\,x-\\Phi^{-1}(p)}{\\sqrt\\rho}\\). Then \\(dx/dl=1/\\varphi(x)\\) and \\(dz/dl=\\dfrac{\\sqrt{1-\\rho}}{\\sqrt\\rho\\,\\varphi(x)}\\). Differentiating,<br>\n\\(f(l)=\\varphi(z)\\,\\dfrac{\\sqrt{1-\\rho}}{\\sqrt\\rho\\,\\varphi(x)}=\\sqrt{\\tfrac{1-\\rho}{\\rho}}\\;\\exp\\!\\big(\\tfrac12x^2-\\tfrac12z^2\\big)\\).<br>\nMean: \\(E[L]=\\int_0^1 l\\,f(l)\\,dl=E[p(M)]\\), where \\(p(m)=\\Phi\\big(\\frac{\\Phi^{-1}(p)-\\sqrt\\rho\\,m}{\\sqrt{1-\\rho}}\\big)\\) is the conditional PD. By the law of total probability \\(E[p(M)]=p\\). Numerically for \\(p=1\\%\\), \\(\\rho=12\\%\\): total mass 1.000 and mean 0.0100.<br>\n<b>Where it breaks:</b> the density is for an infinite homogeneous pool with one Gaussian factor. A finite pool is discrete and lattice-valued; heterogeneous PDs or LGDs need a convolution; as \\(\\rho\\to0\\) the density collapses to a spike at \\(p\\).",
+    "tags": [
+      "copula",
+      "vasicek",
+      "derivation",
+      "portfolio_credit"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Give the algorithm to simulate correlated default times for \\(n\\) names under a Gaussian copula with given survival curves \\(Q_i(t)\\), and show the marginals are correct.",
+    "back": "1. Draw \\(\\mathbf Z\\sim N(0,I_n)\\) and set \\(\\mathbf X=C\\mathbf Z\\), where \\(C\\) is the Cholesky factor of the correlation matrix (one-factor: \\(X_i=\\sqrt\\rho M+\\sqrt{1-\\rho}\\,\\varepsilon_i\\)). Each \\(X_i\\sim N(0,1)\\).<br>\n2. Map to uniforms: \\(U_i=\\Phi(X_i)\\sim\\mathrm{Unif}(0,1)\\). The joint law of \\((U_i)\\) is the Gaussian copula.<br>\n3. Invert each marginal: \\(\\tau_i=\\inf\\{t:\\,Q_i(t)\\le U_i\\}\\). Then \\(P(\\tau_i>t)=P(U_i<Q_i(t))=Q_i(t)\\).<br>\n4. Piecewise-constant hazards: on the active piece \\((T_{k-1},T_k]\\), \\(\\tau_i=T_{k-1}+\\dfrac{\\ln(Q_i(T_{k-1})/U_i)}{\\lambda_{i,k}}\\) when \\(Q_i(T_k)\\le U_i<Q_i(T_{k-1})\\).<br>\n5. Joint probabilities: average indicators over \\(M\\) paths; the standard error is \\(\\sqrt{p(1-p)/M}\\).<br>\nCorrectness: \\(P(\\tau_i>t)\\) depends only on the law of \\(U_i\\), which is uniform for any copula. Dependence enters only through the copula, so the marginals are exact.<br>\n<b>Where it breaks:</b> the Gaussian copula has zero tail dependence, so joint extremes are understated against a t copula at the same correlation. Flat pieces of \\(Q\\) need the \\(\\inf\\) convention. On a schedule grid, default times are rounded, and that discretisation bias must be controlled.",
+    "tags": [
+      "copula",
+      "simulation",
+      "derivation",
+      "wrong_way_risk"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Derive the par spread of a CLN whose collateral earns RFR plus a constant spread \\(b\\), against a CDS par spread \\(S\\) on the same reference, maturity and notional, assuming bankruptcy-remote collateral. Show \\(s=S-b\\,A/\\mathrm{RPV01}\\), where \\(A\\) is the riskless annuity, and evaluate the ratio for a 5y name with 2% hazard and zero rates.",
+    "back": "Investor PV per unit notional: the riskless floater at RFR is worth 1 (par). The collateral pays an extra \\(b\\) on the riskless annuity \\(A\\), since the collateral is not impaired by the reference's default. The coupon \\(s\\) is paid only while alive, so it is weighted by the survival annuity \\(\\mathrm{RPV01}\\). The protection leg is \\(S\\cdot\\mathrm{RPV01}\\) at par.<br>\nSetting PV \\(=1\\): \\(s\\cdot\\mathrm{RPV01}+b\\,A=S\\cdot\\mathrm{RPV01}\\), so \\(s=S-b\\,\\dfrac{A}{\\mathrm{RPV01}}\\).<br>\nRatio: with zero rates, \\(A=5\\) and \\(\\mathrm{RPV01}=\\int_0^5 e^{-0.02t}dt=4.754\\), so \\(A/\\mathrm{RPV01}=1.051\\). A collateral spread of 25bp reduces the note spread by about 26bp, not 25bp.<br>\n<b>Where it breaks:</b> collateral that is itself risky (an issuer term), a currency basis on the collateral, a time-varying \\(b\\), and any collateral return that is lost when the reference defaults.",
+    "tags": [
+      "cln",
+      "collateral_basis",
+      "derivation",
+      "pricing"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Derive \\(\\partial P(\\text{FTD by }T)/\\partial\\rho\\) for a two-name Gaussian copula with equal marginal survival \\(S=1-p\\), using the Plackett identity, and show the sign.",
+    "back": "Let \\(a=\\Phi^{-1}(S)\\). Default occurs when \\(X<\\Phi^{-1}(p)=-a\\), so survival is \\(X>-a\\). By symmetry, \\(P(\\text{both survive})=\\Phi_2(a,a;\\rho)\\).<br>\nPlackett identity: \\(\\dfrac{\\partial\\Phi_2(a,b;\\rho)}{\\partial\\rho}=\\varphi_2(a,b;\\rho)=\\dfrac{1}{2\\pi\\sqrt{1-\\rho^2}}\\exp\\!\\Big(-\\dfrac{a^2-2\\rho ab+b^2}{2(1-\\rho^2)}\\Big)>0\\). It follows from the bivariate heat equation \\(\\partial_\\rho\\varphi_2=\\partial_a\\partial_b\\varphi_2\\), integrated over \\((-\\infty,a]\\times(-\\infty,b]\\).<br>\nSo \\(\\partial Q_J/\\partial\\rho=\\varphi_2(a,a;\\rho)>0\\) and \\(\\partial P/\\partial\\rho=-\\varphi_2(a,a;\\rho)\\le0\\). At \\(\\rho=0\\), \\(\\varphi_2=\\varphi(a)^2=0.031\\) for \\(a=1.2816\\), which matches the finite difference.<br>\n<b>Where it breaks:</b> the identity is specific to the bivariate normal. At \\(\\rho=\\pm1\\) the density is singular and the derivative is one-sided, giving the square-root cusp in the basket cards.",
+    "tags": [
+      "copula",
+      "derivation",
+      "nth_to_default",
+      "correlation"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Worked case: par CDS spreads 1y 80bp, 3y 110bp, 5y 135bp, \\(R=40\\%\\), quarterly premium with accrual on default, protection at quarter ends. Bootstrap piecewise-constant hazards on \\((0,1]\\), \\((1,3]\\), \\((3,5]\\) with discounting at 0%, then at a flat 3%. Are the forward hazards non-negative?",
+    "back": "<b>Step 1:</b> \\(a=S\\Delta/(2L)=0.08\\times0.25/1.2=0.001667\\), so \\(\\lambda_{(0,1]}=8\\,\\mathrm{artanh}(a)=1.333\\%\\). This does not depend on \\(r\\). \\(\\Lambda(1)=1.333\\%\\).<br>\n<b>Step 2:</b> solve the 3y par equation for \\(\\lambda_{(1,3]}\\): \\(2.09\\%\\) at 0% and \\(2.10\\%\\) at 3%.<br>\n<b>Step 3:</b> solve the 5y equation for \\(\\lambda_{(3,5]}\\): \\(2.91\\%\\) at 0% and \\(2.97\\%\\) at 3%.<br>\nAt 0%: \\(\\Lambda(3)=1.33+2\\times2.09=5.51\\%\\), \\(\\Lambda(5)=5.51+2\\times2.91=11.34\\%\\). Survival \\(Q(1)=0.9868\\), \\(Q(3)=0.9464\\), \\(Q(5)=0.8928\\), so the 5y cumulative PD is about 10.7%.<br>\n<b>Result:</b> all forward hazards are positive, so the curve is arbitrage-free in this sense. Discounting at 3% moves the 3y and 5y hazards by about 1bp and 5bp.<br>\n<b>Sanity check:</b> the flat-approximation increments \\((T_ks_k-T_{k-1}s_{k-1})/L\\) give \\((3\\times1.10\\%-0.80\\%)/0.6=4.17\\%\\) over 2 years, i.e. \\(2.08\\%\\) p.a., matching 2.09%. For 3y to 5y, \\((5\\times1.35\\%-3\\times1.10\\%)/0.6=5.75\\%\\) over 2 years, i.e. \\(2.88\\%\\) p.a., close to 2.91%.",
+    "tags": [
+      "bootstrap",
+      "case_study",
+      "hazard",
+      "cds"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Worked case: a 3y funded CLN with notional 100. The collateral is not bankruptcy-remote: if the SPV defaults, the collateral recovers 40%. It earns RFR flat at 3%. Reference 3y CDS is 200bp, SPV 3y spread 80bp, recovery 40% on both, flat hazards, independence, continuous discounting at 3%. Find the par spread over RFR and split its PV between the two default legs.",
+    "back": "Intensities from the triangle: \\(\\lambda_R=200/0.6=3.333\\%\\), \\(\\lambda_I=80/0.6=1.333\\%\\), joint hazard \\(\\mu=4.667\\%\\).<br>\nPar condition: \\(s=L_R\\lambda_R+L_I\\lambda_I=0.6\\times3.333\\%+0.6\\times1.333\\%=2.00\\%+0.80\\%=280\\)bp over RFR.<br>\nPV check: with \\(A=\\int_0^3e^{-(r+\\mu)t}dt=2.680\\), the spread leg is \\(sA=0.028\\times2.680=0.0750\\) per unit notional, i.e. 7.50 points. It splits into 5.36 from reference default and 2.14 from issuer default. A numerical integration of the full PV at 280bp returns par.<br>\n<b>Sanity check:</b> with bankruptcy-remote collateral (\\(L_I=0\\)) the same note is priced at 200bp, the CDS spread. The 80bp issuer term is the whole difference.<br>\n<b>Interviewer follow-up:</b> With funding at RFR plus 50bp, the break-even is approximately 330bp (\\(s^*\\approx s_{\\text{risk}}+F\\)).",
+    "tags": [
+      "cln",
+      "case_study",
+      "dual_default",
+      "pricing"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Worked case: 5y FTD on two names, each with 5y cumulative default probability 10%, flat hazards, recovery 40%, zero discounting. FTD protection pays on the first default. Under a Gaussian copula, compute \\(P(\\text{FTD by }5y)\\) at \\(\\rho=0\\) and \\(\\rho=1\\), and the FTD par spread from \\(s=L\\,P/\\int_0^5 Q_J\\,dt\\).",
+    "back": "\\(a=\\Phi^{-1}(0.9)=1.2816\\). Single-name hazard \\(\\lambda=-\\ln0.9/5=2.107\\%\\).<br>\n<b>\\(\\rho=0\\):</b> \\(Q_J=0.81\\) at 5y, so \\(P=0.19\\). \\(\\int_0^5 Q_J\\,dt=\\int_0^5 e^{-2\\lambda t}dt=4.508\\). \\(s=0.6\\times0.19/4.508=2.53\\%\\), about 253bp.<br>\n<b>\\(\\rho=1\\):</b> \\(Q_J=\\min(Q_1,Q_2)=Q_1\\), so \\(P=0.10\\). \\(\\int_0^5 e^{-\\lambda t}dt=4.746\\). \\(s=0.6\\times0.10/4.746=1.26\\%\\), about 126bp, equal to the single-name spread.<br>\n<b>Sanity check:</b> at \\(\\rho=0\\), \\(19\\%=10\\%+10\\%-1\\%\\), the joint term \\(p_1p_2\\). At \\(\\rho=1\\) the FTD is the single name, as the Fréchet bound predicts. At \\(\\rho=0.5\\), \\(P=16.8\\%\\) and the spread is about 220bp.<br>\n<b>Interviewer follow-up:</b> The \\(\\rho=0\\) spread is almost exactly twice the single-name spread. Why? The probability is 5% lower (0.19 against 0.20), and the joint annuity is 5% shorter (4.51 against 4.75), so the two effects cancel. That is a coincidence of these inputs, not a rule.",
+    "tags": [
+      "nth_to_default",
+      "case_study",
+      "correlation",
+      "copula"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Worked case: one-factor Vasicek with \\(p=1\\%\\) and \\(\\rho=12\\%\\). Find the 99.9% pool loss quantile, the Basel-style unexpected loss \\(K\\) with LGD 45% and \\(M=2.5\\), and the 99.9% quantile if the Basel supervisory correlation at this PD is used instead.",
+    "back": "<b>Quantile:</b> \\(q=\\Phi\\!\\Big(\\dfrac{\\Phi^{-1}(0.01)+\\sqrt{0.12}\\,\\Phi^{-1}(0.999)}{\\sqrt{0.88}}\\Big)=\\Phi\\Big(\\dfrac{-2.3263+0.3464\\times3.0902}{0.9381}\\Big)=\\Phi(-1.339)=9.03\\%\\).<br>\n<b>Unexpected loss:</b> \\(q-p=8.03\\%\\). Maturity adjustment at \\(M=2.5\\) with \\(b=(0.11852-0.05478\\ln0.01)^2=0.1375\\) gives \\(MA=\\dfrac{1}{1-1.5b}=1.260\\). Then \\(K=0.45\\times8.03\\%\\times1.260=4.55\\%\\) of exposure, before regulatory scalars.<br>\n<b>Basel correlation trap:</b> the corporate formula is \\(R(PD)=0.12\\,w+0.24(1-w)\\) with \\(w=\\frac{1-e^{-50PD}}{1-e^{-50}}\\). At PD 1%, \\(w=0.393\\) and \\(R=19.3\\%\\), not 12%. With 19.3%, \\(q=14.0\\%\\), five points higher.<br>\n<b>Sanity check:</b> \\(q\\) must lie between \\(p\\) and 1, and it equals \\(p\\) at \\(\\rho=0\\) and rises with \\(\\rho\\).<br>\n<b>Interviewer follow-up:</b> Why is 12% wrong here? It is the supervisory value at high PD, so it understates the tail at low PD.",
+    "tags": [
+      "vasicek",
+      "case_study",
+      "irb",
+      "portfolio_credit"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Worked case: Merton model with \\(V_0=100\\), zero-coupon face \\(D=80\\) at \\(T=5\\), \\(\\sigma_V=25\\%\\), \\(r=3\\%\\) continuous. Compute the equity value, risk-neutral PD, risky-debt spread over the risk-free zero, equity volatility and the implied recovery.",
+    "back": "\\(d_1=0.947\\), \\(d_2=0.388\\). Equity \\(E_0=V_0N(d_1)-De^{-rT}N(d_2)=37.99\\); debt \\(B_0=62.01\\); \\(E_0+B_0=V_0\\).<br>\nRisk-neutral PD \\(=N(-d_2)=34.9\\%\\). Spread \\(s=-\\tfrac15\\ln\\!\\big(62.01/(80e^{-0.15})\\big)=209.6\\)bp.<br>\nGearing \\(\\Omega=V_0N(d_1)/E_0=2.18\\), so \\(\\sigma_E=2.18\\times25\\%=54.5\\%\\).<br>\nImplied recovery: \\(E^{\\mathbb Q}[V_T\\mathbf 1_{V_T<D}]=V_0e^{rT}N(-d_1)=19.96\\), and \\(D\\cdot N(-d_2)=80\\times0.349=27.9\\). The ratio is \\(71.5\\%\\) recovery given default.<br>\n<b>Sanity check:</b> the implied recovery of 72% is far from the 40% used in CDS. A CDS-style \\(\\lambda=s/L\\) with 40% recovery is therefore not a valid reading of the Merton spread, which is a different object.<br>\n<b>Interviewer follow-up:</b> Which parameter drives the recovery? The ratio of the \\(V_T\\)-moments to \\(D\\): raising \\(\\sigma_V\\) lowers implied recovery because more of the default mass sits deep below \\(D\\).",
+    "tags": [
+      "structural",
+      "case_study",
+      "merton",
+      "recovery"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Worked case: unilateral CVA of a 5y interest-rate swap on an annual grid. Expected positive exposure at year-ends 1 to 5 (€m): 2.0, 3.5, 3.0, 1.8, 0.5. Counterparty flat hazard 2% (about 120bp at 40% recovery), discounting at 3%, exposure independent of default. Compute the CVA and reconcile with the flat approximation.",
+    "back": "CVA \\(=(1-R_C)\\sum_i DF(t_i)\\,EE(t_i)\\,[Q(t_{i-1})-Q(t_i)]\\), with \\(Q(t)=e^{-0.02t}\\).<br>\nSurvival increments for years 1 to 5: 0.01980, 0.01941, 0.01902, 0.01865, 0.01828. Discount factors: 0.9704, 0.9418, 0.9139, 0.8869, 0.8607.<br>\nSum of \\(DF\\times EE\\) terms: 0.6 times \\(\\sum_i DF_iEE_i\\,\\Delta Q_i\\) gives <b>CVA \\(\\approx\\) €0.115m</b>.<br>\n<b>Sanity check:</b> the flat approximation \\(L\\lambda\\sum_i DF_iEE_i=0.6\\times0.02\\times10.01=0.120\\)m is about 4% higher. The gap is survival weighting: the grid increments use \\(Q(t_{i-1})\\), which averages about 0.96 here, not 1.<br>\n<b>Interviewer follow-up:</b> If the hazard is linked to exposure, so \\(\\lambda\\) is higher in year 2 when EE peaks, how does CVA change? It rises, and the flat calibration hides that increase.",
+    "tags": [
+      "cva",
+      "case_study",
+      "exposure",
+      "discounting"
+    ]
+  },
+  {
+    "type": "cloze",
+    "front": "For two names with marginal survival \\(S_1(T)\\) and \\(S_2(T)\\) under a Gaussian copula, \\(P(\\tau_1>T,\\tau_2>T)=\\){{c1::\\(\\Phi_2\\big(\\Phi^{-1}(S_1(T)),\\Phi^{-1}(S_2(T));\\rho\\big)\\)}}, the bivariate normal CDF evaluated at {{c2::the normal quantiles of the marginal survival probabilities}}.",
+    "back": "At \\(\\rho=0\\) this factorises to \\(S_1S_2\\). At \\(\\rho=1\\) it equals \\(\\min(S_1,S_2)\\), the comonotone case.",
+    "tags": [
+      "copula",
+      "joint_survival",
+      "formula"
+    ]
+  },
+  {
+    "type": "cloze",
+    "front": "For a CIR intensity the survival is \\(A(T)e^{-B(T)x_0}\\), with \\(A\\) raised to the power {{c1::\\(2\\kappa\\theta/\\sigma^2\\)}}. The Feller condition {{c2::\\(2\\kappa\\theta\\ge\\sigma^2\\)}} keeps \\(x\\) strictly positive when \\(x_0>0\\).",
+    "back": "The exponent comes from integrating \\(A'=-\\kappa\\theta B\\). If the Feller condition fails, \\(x\\) touches zero, but the closed form is unchanged.",
+    "tags": [
+      "reduced_form",
+      "cir",
+      "formula"
+    ]
+  },
+  {
+    "type": "cloze",
+    "front": "CDS upfront paid by the protection buyer, with standard coupon \\(c\\) and par spread \\(S\\) on the same curve: \\(U=\\){{c1::\\((S-c)\\times\\mathrm{RPV01}\\)}}, which is positive when {{c2::\\(S>c\\)}}.",
+    "back": "The protection leg equals \\(S\\cdot\\mathrm{RPV01}\\) at par, so \\(U=\\mathrm{Prot}-c\\cdot\\mathrm{RPV01}=(S-c)\\,\\mathrm{RPV01}\\). The buyer pays upfront when the market spread exceeds the coupon.",
+    "tags": [
+      "cds",
+      "upfront",
+      "formula"
+    ]
+  },
+  {
+    "type": "cloze",
+    "front": "The Basel IRB corporate asset correlation is \\(R(PD)=\\){{c1::\\(0.12\\,w+0.24\\,(1-w)\\)}}, with weight {{c2::\\(w=\\frac{1-e^{-50\\,PD}}{1-e^{-50}}\\)}}. So \\(R\\) is about {{c3::\\(19\\%\\)}} at \\(PD=1\\%\\).",
+    "back": "\\(w\\) rises from 0 at low PD to 1 at high PD, so \\(R\\) falls from 24% to 12%. At PD 1%, \\(w=0.393\\) and \\(R=19.3\\%\\). This is a supervisory calibration, not a model estimate.",
+    "tags": [
+      "irb",
+      "portfolio_credit",
+      "convention",
+      "formula"
+    ]
+  }
+]
