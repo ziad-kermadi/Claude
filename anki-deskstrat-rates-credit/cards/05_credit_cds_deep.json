@@ -7,7 +7,8 @@
    "credit_basis",
    "neg_basis",
    "chain_neg_basis",
-   "trade"
+   "trade",
+   "lvl_vp_core"
   ]
  },
  {
@@ -19,7 +20,8 @@
    "neg_basis",
    "chain_neg_basis",
    "funding",
-   "repo"
+   "repo",
+   "lvl_vp_core"
   ]
  },
  {
@@ -31,7 +33,8 @@
    "neg_basis",
    "chain_neg_basis",
    "ctd",
-   "credit_events"
+   "credit_events",
+   "lvl_stretch"
   ]
  },
  {
@@ -43,7 +46,8 @@
    "neg_basis",
    "chain_neg_basis",
    "stress",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -55,7 +59,8 @@
    "neg_basis",
    "chain_neg_basis",
    "risk",
-   "stress"
+   "stress",
+   "lvl_vp_core"
   ]
  },
  {
@@ -67,7 +72,8 @@
    "idx_basis",
    "chain_idx_basis",
    "trade",
-   "indices"
+   "indices",
+   "lvl_vp_core"
   ]
  },
  {
@@ -79,7 +85,8 @@
    "idx_basis",
    "chain_idx_basis",
    "defaults",
-   "jtd"
+   "jtd",
+   "lvl_stretch"
   ]
  },
  {
@@ -91,7 +98,8 @@
    "idx_basis",
    "chain_idx_basis",
    "trade_costs",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -103,7 +111,8 @@
    "idx_basis",
    "chain_idx_basis",
    "stress",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -115,7 +124,8 @@
    "idx_basis",
    "chain_idx_basis",
    "roll",
-   "hedging"
+   "hedging",
+   "lvl_stretch"
   ]
  },
  {
@@ -127,7 +137,8 @@
    "base_corr",
    "chain_base_corr",
    "tranches",
-   "copula"
+   "copula",
+   "lvl_vp_core"
   ]
  },
  {
@@ -139,7 +150,8 @@
    "base_corr",
    "chain_base_corr",
    "skew",
-   "arbitrage"
+   "arbitrage",
+   "lvl_vp_core"
   ]
  },
  {
@@ -151,7 +163,8 @@
    "base_corr",
    "chain_base_corr",
    "delta",
-   "hedging"
+   "hedging",
+   "lvl_vp_core"
   ]
  },
  {
@@ -163,7 +176,8 @@
    "base_corr",
    "chain_base_corr",
    "correlation",
-   "hedging"
+   "hedging",
+   "lvl_vp_core"
   ]
  },
  {
@@ -175,7 +189,8 @@
    "base_corr",
    "chain_base_corr",
    "jtd",
-   "tranches"
+   "tranches",
+   "lvl_stretch"
   ]
  },
  {
@@ -186,7 +201,8 @@
    "cds",
    "derivation",
    "pricing",
-   "accrued_on_default"
+   "accrued_on_default",
+   "lvl_stretch"
   ]
  },
  {
@@ -198,7 +214,8 @@
    "derivation",
    "pricing",
    "convention",
-   "isda"
+   "isda",
+   "lvl_vp_core"
   ]
  },
  {
@@ -209,7 +226,8 @@
    "cds",
    "derivation",
    "forward",
-   "term_structure"
+   "term_structure",
+   "lvl_stretch"
   ]
  },
  {
@@ -220,7 +238,8 @@
    "index_options",
    "fep",
    "derivation",
-   "knockout"
+   "knockout",
+   "lvl_stretch"
   ]
  },
  {
@@ -231,7 +250,8 @@
    "tranches",
    "derivation",
    "copula",
-   "lhp"
+   "lhp",
+   "lvl_stretch"
   ]
  },
  {
@@ -242,7 +262,8 @@
    "cds",
    "derivation",
    "jtd",
-   "curve_trades"
+   "curve_trades",
+   "lvl_vp_core"
   ]
  },
  {
@@ -254,7 +275,8 @@
    "case_study",
    "upfront",
    "convention",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -266,7 +288,8 @@
    "case_study",
    "carry",
    "roll",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -278,7 +301,8 @@
    "case_study",
    "beta",
    "hedging",
-   "index"
+   "index",
+   "lvl_vp_core"
   ]
  },
  {
@@ -290,7 +314,8 @@
    "case_study",
    "basis",
    "recovery",
-   "default"
+   "default",
+   "lvl_vp_core"
   ]
  },
  {
@@ -302,7 +327,8 @@
    "case_study",
    "jtd",
    "carry",
-   "cs01"
+   "cs01",
+   "lvl_vp_core"
   ]
  },
  {
@@ -312,7 +338,8 @@
   "tags": [
    "cds",
    "derivation",
-   "credit_triangle"
+   "credit_triangle",
+   "lvl_foundation"
   ]
  },
  {
@@ -323,7 +350,8 @@
    "cds",
    "upfront",
    "convention",
-   "isda"
+   "isda",
+   "lvl_vp_core"
   ]
  },
  {
@@ -333,7 +361,8 @@
   "tags": [
    "index_options",
    "fep",
-   "knockout"
+   "knockout",
+   "lvl_stretch"
   ]
  },
  {
@@ -343,7 +372,8 @@
   "tags": [
    "cds",
    "jtd",
-   "risk"
+   "risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -353,7 +383,8 @@
   "tags": [
    "tranches",
    "copula",
-   "lhp"
+   "lhp",
+   "lvl_vp_core"
   ]
  }
 ]

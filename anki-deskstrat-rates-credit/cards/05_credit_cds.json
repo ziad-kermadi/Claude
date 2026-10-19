@@ -6,7 +6,8 @@
   "tags": [
    "bond_spreads",
    "convention",
-   "curves"
+   "curves",
+   "lvl_foundation"
   ]
  },
  {
@@ -15,7 +16,8 @@
   "back": "For an option-free bond the Z-spread is the spread the investor earns over the risk-free zero curve, cash flow by cash flow. For a callable or putable bond the Z-spread mixes credit spread with option value (see the OAS card).",
   "tags": [
    "bond_spreads",
-   "convention"
+   "convention",
+   "lvl_foundation"
   ]
  },
  {
@@ -25,7 +27,8 @@
   "tags": [
    "bond_spreads",
    "derivation",
-   "swaps"
+   "swaps",
+   "lvl_vp_core"
   ]
  },
  {
@@ -35,7 +38,8 @@
   "tags": [
    "bond_spreads",
    "options",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -45,7 +49,8 @@
   "tags": [
    "bond_spreads",
    "risk",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -55,7 +60,8 @@
   "tags": [
    "bond_spreads",
    "mental_math",
-   "risk"
+   "risk",
+   "lvl_foundation"
   ]
  },
  {
@@ -65,7 +71,8 @@
   "tags": [
    "bond_spreads",
    "risk",
-   "portfolio"
+   "portfolio",
+   "lvl_vp_core"
   ]
  },
  {
@@ -75,7 +82,8 @@
   "tags": [
    "bond_spreads",
    "jtd",
-   "risk"
+   "risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -85,7 +93,8 @@
   "tags": [
    "cds",
    "jtd",
-   "risk"
+   "risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -95,7 +104,8 @@
   "tags": [
    "cds",
    "derivation",
-   "pricing"
+   "pricing",
+   "lvl_vp_core"
   ]
  },
  {
@@ -105,7 +115,8 @@
   "tags": [
    "cds",
    "convention",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -115,7 +126,8 @@
   "tags": [
    "cds",
    "credit_triangle",
-   "mental_math"
+   "mental_math",
+   "lvl_foundation"
   ]
  },
  {
@@ -125,7 +137,8 @@
   "tags": [
    "cds",
    "credit_triangle",
-   "mental_math"
+   "mental_math",
+   "lvl_foundation"
   ]
  },
  {
@@ -135,7 +148,8 @@
   "tags": [
    "cds",
    "risky_annuity",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -145,7 +159,8 @@
   "tags": [
    "cds",
    "pricing",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -155,7 +170,8 @@
   "tags": [
    "basis",
    "cds_bond",
-   "funding"
+   "funding",
+   "lvl_vp_core"
   ]
  },
  {
@@ -166,7 +182,8 @@
    "basis",
    "cds_bond",
    "options",
-   "ctd"
+   "ctd",
+   "lvl_vp_core"
   ]
  },
  {
@@ -176,7 +193,8 @@
   "tags": [
    "basis",
    "repo",
-   "funding"
+   "funding",
+   "lvl_vp_core"
   ]
  },
  {
@@ -187,7 +205,8 @@
    "basis",
    "convention",
    "spreads",
-   "options"
+   "options",
+   "lvl_vp_core"
   ]
  },
  {
@@ -197,7 +216,8 @@
   "tags": [
    "credit_events",
    "isda_2014",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -207,7 +227,8 @@
   "tags": [
    "credit_events",
    "isda_2014",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -217,7 +238,8 @@
   "tags": [
    "credit_events",
    "isda_2014",
-   "options"
+   "options",
+   "lvl_vp_core"
   ]
  },
  {
@@ -227,7 +249,8 @@
   "tags": [
    "credit_events",
    "isda_2014",
-   "banks"
+   "banks",
+   "lvl_vp_core"
   ]
  },
  {
@@ -237,7 +260,8 @@
   "tags": [
    "credit_events",
    "auctions",
-   "settlement"
+   "settlement",
+   "lvl_vp_core"
   ]
  },
  {
@@ -247,7 +271,8 @@
   "tags": [
    "credit_events",
    "dc",
-   "succession"
+   "succession",
+   "lvl_vp_core"
   ]
  },
  {
@@ -256,7 +281,8 @@
    "isda_2014",
    "reference_obligation",
    "convention",
-   "succession"
+   "succession",
+   "lvl_vp_core"
   ],
   "front": "What is the <b>Standard Reference Obligation (SRO)</b> introduced by the 2014 ISDA Credit Derivatives Definitions, and what problem does it solve?",
   "back": "<b>Headline:</b> ISDA (via the Determinations Committee) publishes an SRO list giving one designated reference obligation per entity and seniority level. Contracts electing \"Standard Reference Obligation\" automatically reference it, and it is replaced if it is redeemed or no longer eligible.<br><b>Problem solved:</b> under 2003 Definitions each trade carried its own reference obligation. When that bond matured, was repaid, or became the obligation of another entity after a succession, trades on the same name could end up with different (or no) reference obligations. That fragmented liquidity and created basis between economically identical trades. A single, centrally maintained SRO keeps the seniority level and fungibility consistent across the market.<br><b>Related 2014 changes:</b> no more Orphaned Reference Entity problem when the RO is repaid; succession now traces Relevant Obligations (bonds and loans) with a look-back period of 90 days for succession events; asset package delivery for financials and sovereigns.<br><b>Interviewer follow-up:</b> Why does the RO matter if all deliverable obligations rank pari passu? It sets the seniority level (senior vs subordinated) of the contract, and that decides which obligations are deliverable and which auction applies."
@@ -268,7 +294,8 @@
   "tags": [
    "indices",
    "convention",
-   "coupons"
+   "coupons",
+   "lvl_foundation"
   ]
  },
  {
@@ -278,7 +305,8 @@
   "tags": [
    "indices",
    "roll",
-   "convention"
+   "convention",
+   "lvl_foundation"
   ]
  },
  {
@@ -289,7 +317,8 @@
    "indices",
    "roll",
    "convention",
-   "trades"
+   "trades",
+   "lvl_vp_core"
   ]
  },
  {
@@ -299,7 +328,8 @@
   "tags": [
    "indices",
    "defaults",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -309,7 +339,8 @@
   "tags": [
    "indices",
    "defaults",
-   "mental_math"
+   "mental_math",
+   "lvl_foundation"
   ]
  },
  {
@@ -319,7 +350,8 @@
   "tags": [
    "indices",
    "basis",
-   "trades"
+   "trades",
+   "lvl_vp_core"
   ]
  },
  {
@@ -330,7 +362,8 @@
    "indices",
    "basis",
    "stress",
-   "trades"
+   "trades",
+   "lvl_vp_core"
   ]
  },
  {
@@ -340,7 +373,8 @@
   "tags": [
    "tranches",
    "copula",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -350,7 +384,8 @@
   "tags": [
    "tranches",
    "base_correlation",
-   "copula"
+   "copula",
+   "lvl_vp_core"
   ]
  },
  {
@@ -361,7 +396,8 @@
    "tranches",
    "base_correlation",
    "hedging",
-   "correlation"
+   "correlation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -371,7 +407,8 @@
   "tags": [
    "tranches",
    "correlation",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -382,7 +419,8 @@
    "tranches",
    "correlation",
    "hedging",
-   "copula"
+   "copula",
+   "lvl_stretch"
   ]
  },
  {
@@ -392,7 +430,8 @@
   "tags": [
    "index_options",
    "fep",
-   "knockout"
+   "knockout",
+   "lvl_stretch"
   ]
  },
  {
@@ -402,7 +441,8 @@
   "tags": [
    "index_options",
    "fep",
-   "forward"
+   "forward",
+   "lvl_stretch"
   ]
  },
  {
@@ -412,7 +452,8 @@
   "tags": [
    "curve_trades",
    "steepener",
-   "carry"
+   "carry",
+   "lvl_vp_core"
   ]
  },
  {
@@ -423,7 +464,8 @@
    "curve_trades",
    "carry",
    "jtd",
-   "steepener"
+   "steepener",
+   "lvl_vp_core"
   ]
  },
  {
@@ -433,7 +475,8 @@
   "tags": [
    "curve_trades",
    "carry",
-   "jtd"
+   "jtd",
+   "lvl_vp_core"
   ]
  },
  {
@@ -443,7 +486,8 @@
   "tags": [
    "recovery",
    "recovery_lock",
-   "payoff"
+   "payoff",
+   "lvl_vp_core"
   ]
  },
  {
@@ -453,7 +497,8 @@
   "tags": [
    "recovery",
    "credit_triangle",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -463,7 +508,8 @@
   "tags": [
    "correlation",
    "dispersion",
-   "trades"
+   "trades",
+   "lvl_vp_core"
   ]
  },
  {
@@ -473,7 +519,8 @@
   "tags": [
    "correlation",
    "dispersion",
-   "formula"
+   "formula",
+   "lvl_stretch"
   ]
  },
  {
@@ -483,7 +530,8 @@
   "tags": [
    "hedging",
    "beta",
-   "cds"
+   "cds",
+   "lvl_vp_core"
   ]
  },
  {
@@ -493,7 +541,8 @@
   "tags": [
    "hedging",
    "beta",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -503,7 +552,8 @@
   "tags": [
    "sovereign",
    "quanto",
-   "redenomination"
+   "redenomination",
+   "lvl_vp_core"
   ]
  },
  {
@@ -513,7 +563,8 @@
   "tags": [
    "sovereign",
    "quanto",
-   "fx"
+   "fx",
+   "lvl_stretch"
   ]
  },
  {
@@ -523,7 +574,8 @@
   "tags": [
    "cva",
    "cds",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -534,7 +586,8 @@
    "dva",
    "cva",
    "banks",
-   "valuation"
+   "valuation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -544,7 +597,8 @@
   "tags": [
    "mental_math",
    "carry",
-   "cds"
+   "cds",
+   "lvl_vp_core"
   ]
  },
  {
@@ -554,7 +608,8 @@
   "tags": [
    "mental_math",
    "pnl",
-   "cds"
+   "cds",
+   "lvl_foundation"
   ]
  },
  {
@@ -564,7 +619,8 @@
   "tags": [
    "mental_math",
    "pnl",
-   "cds"
+   "cds",
+   "lvl_foundation"
   ]
  }
 ]
