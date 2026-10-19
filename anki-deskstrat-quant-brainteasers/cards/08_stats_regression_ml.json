@@ -2,7 +2,7 @@
  {
   "type": "basic",
   "front": "\\(X_1,\\dots,X_5\\) are i.i.d. \\(\\mathrm{Uniform}(0,\\theta)\\), \\(\\theta\\) unknown. Let \\(M=\\max_i X_i\\) (the MLE). (a) Find \\(E[M]\\) and the bias of \\(M\\). (b) Build the unbiased estimator from \\(M\\). (c) Compare the MSEs in units of \\(\\theta^2\\).",
-  "back": "<b>Answer:</b> \\(E[M]=\\tfrac56\\theta\\), bias \\(-\\tfrac{\\theta}{6}\\). Unbiased: \\(\\hat\\theta=\\tfrac65M\\). \\(\\mathrm{MSE}(M)=\\tfrac{\\theta^2}{21}\\approx0.0476\\theta^2\\); \\(\\mathrm{MSE}(\\hat\\theta)=\\tfrac{\\theta^2}{35}\\approx0.0286\\theta^2\\).<br>\n<b>Structure:</b> s_extremal and s_order_statistics. Trigger: the parameter is the endpoint of the support and the estimator is the sample maximum.<br>\n<b>Key move:</b> \\(P(M\\le m)=(m/\\theta)^n\\), so \\(M\\) has density \\(n m^{n-1}/\\theta^n\\) on \\((0,\\theta)\\).<br>\n<b>Working:</b> \\(E[M]=\\tfrac{n}{n+1}\\theta\\), bias \\(=-\\tfrac{\\theta}{n+1}\\). \\(\\mathrm{Var}(M)=\\tfrac{n\\theta^2}{(n+1)^2(n+2)}\\), so \\(\\mathrm{MSE}(M)=\\mathrm{Var}+\\mathrm{bias}^2=\\tfrac{2\\theta^2}{(n+1)(n+2)}\\). Scaling by \\(\\tfrac{n+1}{n}\\) removes the bias and gives \\(\\mathrm{MSE}=\\tfrac{\\theta^2}{n(n+2)}\\). At \\(n=5\\): \\(\\tfrac{2}{42}=\\tfrac1{21}\\) and \\(\\tfrac1{35}\\).<br>\n<b>Sanity check:</b> the MSE falls like \\(1/n^2\\), not \\(1/n\\). A \\(10^6\\)-draw simulation gives 0.0477 and 0.0286.<br>\n<b>Transfer:</b> the discrete version (A9); any \"largest of n draws\" estimate of a range limit.",
+  "back": "<b>Answer:</b> \\(E[M]=\\tfrac56\\theta\\), bias \\(-\\tfrac{\\theta}{6}\\). Unbiased: \\(\\hat\\theta=\\tfrac65M\\). \\(\\mathrm{MSE}(M)=\\tfrac{\\theta^2}{21}\\approx0.0476\\theta^2\\); \\(\\mathrm{MSE}(\\hat\\theta)=\\tfrac{\\theta^2}{35}\\approx0.0286\\theta^2\\).<br><b>Structure:</b> s_extremal and s_order_statistics. Trigger: the parameter is the endpoint of the support and the estimator is the sample maximum.<br><b>Key move:</b> \\(P(M\\le m)=(m/\\theta)^n\\), so \\(M\\) has density \\(n m^{n-1}/\\theta^n\\) on \\((0,\\theta)\\).<br><b>Working:</b> \\(E[M]=\\tfrac{n}{n+1}\\theta\\), bias \\(=-\\tfrac{\\theta}{n+1}\\). \\(\\mathrm{Var}(M)=\\tfrac{n\\theta^2}{(n+1)^2(n+2)}\\), so \\(\\mathrm{MSE}(M)=\\mathrm{Var}+\\mathrm{bias}^2=\\tfrac{2\\theta^2}{(n+1)(n+2)}\\). Scaling by \\(\\tfrac{n+1}{n}\\) removes the bias and gives \\(\\mathrm{MSE}=\\tfrac{\\theta^2}{n(n+2)}\\). At \\(n=5\\): \\(\\tfrac{2}{42}=\\tfrac1{21}\\) and \\(\\tfrac1{35}\\).<br><b>Sanity check:</b> the MSE falls like \\(1/n^2\\), not \\(1/n\\). A \\(10^6\\)-draw simulation gives 0.0477 and 0.0286.<br><b>Transfer:</b> the discrete version (A9); any \"largest of n draws\" estimate of a range limit.",
   "tags": [
    "s_extremal",
    "s_order_statistics",
@@ -16,7 +16,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: UNIF 1/4]</b> Same setup: \\(X_1,\\dots,X_5\\) i.i.d. \\(\\mathrm{Uniform}(0,\\theta)\\), \\(M=\\max_i X_i\\). Base: find \\(E[M]\\) and \\(\\mathrm{Var}(M)\\).",
-  "back": "<b>Answer:</b> \\(E[M]=\\tfrac56\\theta\\), \\(\\mathrm{Var}(M)=\\tfrac{5}{252}\\theta^2\\approx0.0198\\theta^2\\).<br>\n<b>Structure:</b> s_extremal, s_order_statistics. Trigger: \\(P(M\\le m)=(m/\\theta)^n\\), a power law.<br>\n<b>Key move:</b> compute \\(E[M]\\) and \\(E[M^2]\\) from the density \\(n m^{n-1}/\\theta^n\\).<br>\n<b>Working:</b> \\(E[M]=\\tfrac{n}{n+1}\\theta\\), \\(E[M^2]=\\tfrac{n}{n+2}\\theta^2\\). \\(\\mathrm{Var}=\\tfrac{n}{n+2}-\\tfrac{n^2}{(n+1)^2}\\) times \\(\\theta^2\\) \\(=\\tfrac{n\\theta^2}{(n+1)^2(n+2)}\\). At \\(n=5\\): \\(\\tfrac57-\\tfrac{25}{36}=\\tfrac{5}{252}\\).<br>\n<b>Sanity check:</b> \\(\\mathrm{Var}\\sim\\theta^2/n^2\\), so the standard deviation of the max shrinks like \\(1/n\\).<br>\n<b>Transfer:</b> the next two chain cards use this distribution for unbiased rescaling.",
+  "back": "<b>Answer:</b> \\(E[M]=\\tfrac56\\theta\\), \\(\\mathrm{Var}(M)=\\tfrac{5}{252}\\theta^2\\approx0.0198\\theta^2\\).<br><b>Structure:</b> s_extremal, s_order_statistics. Trigger: \\(P(M\\le m)=(m/\\theta)^n\\), a power law.<br><b>Key move:</b> compute \\(E[M]\\) and \\(E[M^2]\\) from the density \\(n m^{n-1}/\\theta^n\\).<br><b>Working:</b> \\(E[M]=\\tfrac{n}{n+1}\\theta\\), \\(E[M^2]=\\tfrac{n}{n+2}\\theta^2\\). \\(\\mathrm{Var}=\\tfrac{n}{n+2}-\\tfrac{n^2}{(n+1)^2}\\) times \\(\\theta^2\\) \\(=\\tfrac{n\\theta^2}{(n+1)^2(n+2)}\\). At \\(n=5\\): \\(\\tfrac57-\\tfrac{25}{36}=\\tfrac{5}{252}\\).<br><b>Sanity check:</b> \\(\\mathrm{Var}\\sim\\theta^2/n^2\\), so the standard deviation of the max shrinks like \\(1/n\\).<br><b>Transfer:</b> the next two chain cards use this distribution for unbiased rescaling.",
   "tags": [
    "s_extremal",
    "s_order_statistics",
@@ -28,7 +28,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: UNIF 2/4]</b> Same sample, \\(n=5\\). Base: \\(M\\) is biased low by \\(\\theta/6\\). (a) Give the unbiased estimator built from \\(M\\) and its variance. (b) Compare with the method-of-moments estimate \\(2\\bar X\\).",
-  "back": "<b>Answer:</b> (a) \\(\\tfrac65M\\), variance \\(\\tfrac{\\theta^2}{35}\\approx0.0286\\theta^2\\). (b) \\(2\\bar X\\) is also unbiased, with variance \\(\\tfrac{\\theta^2}{15}\\approx0.0667\\theta^2\\). The max-based estimator is about 2.3 times more precise.<br>\n<b>Structure:</b> s_extremal. Trigger: the maximum is a complete sufficient statistic; the method of moments ignores that.<br>\n<b>Key move:</b> any unbiased function of a complete sufficient statistic is the UMVUE (Lehmann–Scheffé).<br>\n<b>Working:</b> \\(\\mathrm{Var}(\\tfrac65M)=\\tfrac{36}{25}\\cdot\\tfrac{5}{252}\\theta^2=\\tfrac{\\theta^2}{35}\\). MoM: \\(\\mathrm{Var}(\\bar X)=\\tfrac{\\theta^2}{12\\cdot5}\\), so \\(\\mathrm{Var}(2\\bar X)=\\tfrac{4\\theta^2}{60}=\\tfrac{\\theta^2}{15}\\).<br>\n<b>Sanity check:</b> the max-based error shrinks like \\(1/n\\), the MoM error like \\(1/\\sqrt n\\). Simulation: 0.0286 vs 0.0667.<br>\n<b>Transfer:</b> the same UMVUE argument for the endpoint of any power-law support.",
+  "back": "<b>Answer:</b> (a) \\(\\tfrac65M\\), variance \\(\\tfrac{\\theta^2}{35}\\approx0.0286\\theta^2\\). (b) \\(2\\bar X\\) is also unbiased, with variance \\(\\tfrac{\\theta^2}{15}\\approx0.0667\\theta^2\\). The max-based estimator is about 2.3 times more precise.<br><b>Structure:</b> s_extremal. Trigger: the maximum is a complete sufficient statistic; the method of moments ignores that.<br><b>Key move:</b> any unbiased function of a complete sufficient statistic is the UMVUE (Lehmann–Scheffé).<br><b>Working:</b> \\(\\mathrm{Var}(\\tfrac65M)=\\tfrac{36}{25}\\cdot\\tfrac{5}{252}\\theta^2=\\tfrac{\\theta^2}{35}\\). MoM: \\(\\mathrm{Var}(\\bar X)=\\tfrac{\\theta^2}{12\\cdot5}\\), so \\(\\mathrm{Var}(2\\bar X)=\\tfrac{4\\theta^2}{60}=\\tfrac{\\theta^2}{15}\\).<br><b>Sanity check:</b> the max-based error shrinks like \\(1/n\\), the MoM error like \\(1/\\sqrt n\\). Simulation: 0.0286 vs 0.0667.<br><b>Transfer:</b> the same UMVUE argument for the endpoint of any power-law support.",
   "tags": [
    "s_extremal",
    "uniform",
@@ -40,7 +40,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: UNIF 3/4]</b> Now \\(X_i\\) i.i.d. \\(\\mathrm{Uniform}(a,b)\\) with both endpoints unknown. Sample minimum \\(m\\), maximum \\(M\\), range \\(R=M-m\\). Find unbiased estimators of \\(b\\) and \\(a\\) using only \\(M\\), \\(m\\) and \\(R\\).",
-  "back": "<b>Answer:</b> \\(\\hat b=M+\\tfrac{R}{n-1}\\), \\(\\hat a=m-\\tfrac{R}{n-1}\\).<br>\n<b>Structure:</b> s_order_statistics (range statistic). Trigger: two unknown endpoints, so one extremal statistic cannot identify both.<br>\n<b>Key move:</b> \\(E[m]=a+\\tfrac{b-a}{n+1}\\), \\(E[M]=b-\\tfrac{b-a}{n+1}\\), \\(E[R]=\\tfrac{(n-1)(b-a)}{n+1}\\).<br>\n<b>Working:</b> \\(E[R/(n-1)]=\\tfrac{b-a}{n+1}\\), so \\(E[M+R/(n-1)]=b-\\tfrac{b-a}{n+1}+\\tfrac{b-a}{n+1}=b\\). Symmetric for \\(a\\).<br>\n<b>Sanity check:</b> \\(n=5\\), \\((a,b)=(2,7)\\): simulation gives \\(E[\\hat b]=7.004\\) and \\(E[\\hat a]=1.999\\).<br>\n<b>Transfer:</b> bounding a process's window from its first and last event times.",
+  "back": "<b>Answer:</b> \\(\\hat b=M+\\tfrac{R}{n-1}\\), \\(\\hat a=m-\\tfrac{R}{n-1}\\).<br><b>Structure:</b> s_order_statistics (range statistic). Trigger: two unknown endpoints, so one extremal statistic cannot identify both.<br><b>Key move:</b> \\(E[m]=a+\\tfrac{b-a}{n+1}\\), \\(E[M]=b-\\tfrac{b-a}{n+1}\\), \\(E[R]=\\tfrac{(n-1)(b-a)}{n+1}\\).<br><b>Working:</b> \\(E[R/(n-1)]=\\tfrac{b-a}{n+1}\\), so \\(E[M+R/(n-1)]=b-\\tfrac{b-a}{n+1}+\\tfrac{b-a}{n+1}=b\\). Symmetric for \\(a\\).<br><b>Sanity check:</b> \\(n=5\\), \\((a,b)=(2,7)\\): simulation gives \\(E[\\hat b]=7.004\\) and \\(E[\\hat a]=1.999\\).<br><b>Transfer:</b> bounding a process's window from its first and last event times.",
   "tags": [
    "s_order_statistics",
    "uniform",
@@ -51,7 +51,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: UNIF 4/4]</b> Edge case: \\(X\\sim\\mathrm{Uniform}(0,\\theta)\\), a single observation (\\(n=1\\)). The MLE is \\(X\\); \\(2X\\) is unbiased (it is also the method-of-moments estimate). Which has smaller MSE?",
-  "back": "<b>Answer:</b> a tie. Both have MSE \\(\\theta^2/3\\).<br>\n<b>Structure:</b> s_extremal (the \\(n=1\\) case of the power law). Trigger: a single draw is both the MLE and the sample maximum.<br>\n<b>Key move:</b> plug \\(n=1\\) into the general formulas: \\(\\tfrac{2}{(n+1)(n+2)}=\\tfrac13\\) and \\(\\tfrac{1}{n(n+2)}=\\tfrac13\\).<br>\n<b>Working:</b> \\(\\mathrm{MSE}(X)=\\tfrac{\\theta^2}{12}+\\tfrac{\\theta^2}{4}=\\tfrac{\\theta^2}{3}\\). \\(\\mathrm{MSE}(2X)=4\\cdot\\tfrac{\\theta^2}{12}=\\tfrac{\\theta^2}{3}\\).<br>\n<b>Sanity check:</b> simulation: 0.3337 and 0.3341.<br>\n<b>Transfer:</b> unbiasedness is not the same as minimum error. The bias-variance trade-off also appears in B1.",
+  "back": "<b>Answer:</b> a tie. Both have MSE \\(\\theta^2/3\\).<br><b>Structure:</b> s_extremal (the \\(n=1\\) case of the power law). Trigger: a single draw is both the MLE and the sample maximum.<br><b>Key move:</b> plug \\(n=1\\) into the general formulas: \\(\\tfrac{2}{(n+1)(n+2)}=\\tfrac13\\) and \\(\\tfrac{1}{n(n+2)}=\\tfrac13\\).<br><b>Working:</b> \\(\\mathrm{MSE}(X)=\\tfrac{\\theta^2}{12}+\\tfrac{\\theta^2}{4}=\\tfrac{\\theta^2}{3}\\). \\(\\mathrm{MSE}(2X)=4\\cdot\\tfrac{\\theta^2}{12}=\\tfrac{\\theta^2}{3}\\).<br><b>Sanity check:</b> simulation: 0.3337 and 0.3341.<br><b>Transfer:</b> unbiasedness is not the same as minimum error. The bias-variance trade-off also appears in B1.",
   "tags": [
    "s_extremal",
    "uniform",
@@ -63,7 +63,7 @@
  {
   "type": "basic",
   "front": "Known problem: \\(X_i\\) i.i.d. \\(\\mathrm{Uniform}(0,\\theta)\\), and \\((n+1)\\max/n\\) is unbiased for \\(\\theta\\). <b>Perturb:</b> \\(X_i\\) i.i.d. \\(\\mathrm{Uniform}(\\theta,\\theta+1)\\): the location is unknown and the width is now 1. Find an unbiased estimator of \\(\\theta\\).",
-  "back": "<b>What breaks:</b> the sample maximum now estimates \\(\\theta+1\\), not \\(\\theta\\), so the one-sided rescaling fails. The likelihood is flat: every \\(\\theta\\in[M-1,\\,m]\\) is an MLE, so the MLE is not a single extremal value.<br>\n<b>Fix:</b> use both endpoints. \\(E[m]=\\theta+\\tfrac{1}{n+1}\\), \\(E[M]=\\theta+\\tfrac{n}{n+1}\\), so \\(E[m+M-1]=2\\theta\\).<br>\n<b>New answer:</b> \\(\\hat\\theta=\\tfrac{m+M-1}{2}\\), exactly unbiased. Simulation with \\(\\theta=3\\), \\(n=5\\): mean 2.9999.<br>\n<b>Structure of the fix:</b> s_order_statistics (two extremes together).",
+  "back": "<b>What breaks:</b> the sample maximum now estimates \\(\\theta+1\\), not \\(\\theta\\), so the one-sided rescaling fails. The likelihood is flat: every \\(\\theta\\in[M-1,\\,m]\\) is an MLE, so the MLE is not a single extremal value.<br><b>Fix:</b> use both endpoints. \\(E[m]=\\theta+\\tfrac{1}{n+1}\\), \\(E[M]=\\theta+\\tfrac{n}{n+1}\\), so \\(E[m+M-1]=2\\theta\\).<br><b>New answer:</b> \\(\\hat\\theta=\\tfrac{m+M-1}{2}\\), exactly unbiased. Simulation with \\(\\theta=3\\), \\(n=5\\): mean 2.9999.<br><b>Structure of the fix:</b> s_order_statistics (two extremes together).",
   "tags": [
    "s_order_statistics",
    "s_extremal",
@@ -76,7 +76,7 @@
  {
   "type": "basic",
   "front": "A courier's delivery times are independent and uniform on \\((0,T]\\) minutes, \\(T\\) unknown. Four deliveries are observed; the slowest took 60 minutes. Give the unbiased estimate of \\(T\\).",
-  "back": "<b>Classic:</b> the unbiased estimator of the upper endpoint of a uniform law from the sample maximum (the German tank problem in continuous form).<br>\n<b>Mapping:</b> \\(T\\leftrightarrow\\theta\\); the four deliveries are the sample; the slowest time is \\(M\\). The unbiased correction is \\((n+1)/n\\), the continuous analogue of the discrete \\(M(k+1)/k-1\\).<br>\n<b>Answer:</b> \\(\\hat T=\\tfrac54\\cdot60=75\\) minutes. The naive estimate 60 is biased low by 15 minutes on average.",
+  "back": "<b>Classic:</b> the unbiased estimator of the upper endpoint of a uniform law from the sample maximum (the German tank problem in continuous form).<br><b>Mapping:</b> \\(T\\leftrightarrow\\theta\\); the four deliveries are the sample; the slowest time is \\(M\\). The unbiased correction is \\((n+1)/n\\), the continuous analogue of the discrete \\(M(k+1)/k-1\\).<br><b>Answer:</b> \\(\\hat T=\\tfrac54\\cdot60=75\\) minutes. The naive estimate 60 is biased low by 15 minutes on average.",
   "tags": [
    "s_extremal",
    "s_order_statistics",
@@ -100,7 +100,7 @@
  {
   "type": "basic",
   "front": "Serial numbers of \\(k\\) tanks are drawn without replacement from \\(\\{1,\\dots,N\\}\\), \\(N\\) unknown, and \\(M\\) is the sample maximum. Show that the MLE of \\(N\\) is \\(M\\), derive the unbiased estimator, and evaluate it for \\(k=4\\), \\(M=60\\).",
-  "back": "<b>Answer:</b> MLE \\(\\hat N=M\\) (biased low). Unbiased: \\(\\hat N=\\tfrac{(k+1)M}{k}-1\\); for \\(M=60\\), \\(k=4\\): \\(74\\).<br>\n<b>Structure:</b> s_order_statistics, s_extremal. Trigger: discrete uniform sample maximum.<br>\n<b>Key move:</b> tail sum \\(E[M]=\\sum_{j=1}^{N}P(M\\ge j)\\), with \\(P(M<j)=\\binom{j-1}{k}\\big/\\binom Nk\\).<br>\n<b>Working:</b> \\(E[M]=N-\\dfrac{\\binom{N}{k+1}}{\\binom Nk}=N-\\dfrac{N-k}{k+1}=\\dfrac{k(N+1)}{k+1}\\) (hockey-stick identity). Invert: \\(\\hat N=\\tfrac{(k+1)M}{k}-1\\). MLE: the likelihood is \\(1/\\binom Nk\\) for \\(N\\ge M\\), decreasing in \\(N\\), so it is maximised at \\(N=M\\).<br>\n<b>Sanity check:</b> \\(N=100\\), \\(k=4\\): \\(E[M]=80.8\\); simulation gives \\(E[\\hat N]=99.96\\).<br>\n<b>Transfer:</b> the continuous version (A1, factor \\((n+1)/n\\)).",
+  "back": "<b>Answer:</b> MLE \\(\\hat N=M\\) (biased low). Unbiased: \\(\\hat N=\\tfrac{(k+1)M}{k}-1\\); for \\(M=60\\), \\(k=4\\): \\(74\\).<br><b>Structure:</b> s_order_statistics, s_extremal. Trigger: discrete uniform sample maximum.<br><b>Key move:</b> tail sum \\(E[M]=\\sum_{j=1}^{N}P(M\\ge j)\\), with \\(P(M\\lt j)=\\binom{j-1}{k}\\big/\\binom Nk\\).<br><b>Working:</b> \\(E[M]=N-\\dfrac{\\binom{N}{k+1}}{\\binom Nk}=N-\\dfrac{N-k}{k+1}=\\dfrac{k(N+1)}{k+1}\\) (hockey-stick identity). Invert: \\(\\hat N=\\tfrac{(k+1)M}{k}-1\\). MLE: the likelihood is \\(1/\\binom Nk\\) for \\(N\\ge M\\), decreasing in \\(N\\), so it is maximised at \\(N=M\\).<br><b>Sanity check:</b> \\(N=100\\), \\(k=4\\): \\(E[M]=80.8\\); simulation gives \\(E[\\hat N]=99.96\\).<br><b>Transfer:</b> the continuous version (A1, factor \\((n+1)/n\\)).",
   "tags": [
    "s_order_statistics",
    "s_extremal",
@@ -112,7 +112,7 @@
  {
   "type": "basic",
   "front": "\\(\\bar X\\sim N(\\theta,s^2)\\) with \\(s^2=\\sigma^2/n=1\\) (e.g. \\(\\sigma=2,n=4\\)), \\(\\theta=1\\). Consider shrinkage estimators \\(c\\bar X\\). Find the MSE-optimal \\(c\\) as a function of \\(\\theta\\) and \\(s^2\\), then evaluate the MSE at the optimum and at \\(c=1\\).",
-  "back": "<b>Answer:</b> \\(c^*=\\tfrac{\\theta^2}{\\theta^2+s^2}\\). At \\(\\theta=1\\), \\(s^2=1\\): \\(c^*=\\tfrac12\\), MSE \\(=\\tfrac12\\), versus \\(1\\) for \\(c=1\\).<br>\n<b>Structure:</b> s_variance_decomposition. Trigger: MSE = bias² + variance, and \\(c\\) trades one for the other.<br>\n<b>Key move:</b> \\(\\mathrm{MSE}(c)=(c-1)^2\\theta^2+c^2s^2\\); minimise over \\(c\\).<br>\n<b>Working:</b> \\(2(c-1)\\theta^2+2cs^2=0\\) gives \\(c^*\\); then \\(\\mathrm{MSE}^*=\\tfrac{\\theta^2s^2}{\\theta^2+s^2}\\).<br>\n<b>Sanity check:</b> \\(\\theta\\to\\infty\\) gives \\(c^*\\to1\\) (bias small relative to noise, no shrinkage); \\(\\theta\\to0\\) gives \\(c^*\\to0\\). Simulation of \\(10^6\\) draws: 0.500 vs 0.999.<br>\n<b>Transfer:</b> shrinking a noisy mean toward zero (B4 gives the Bayesian reading). \\(c^*\\) depends on the unknown \\(\\theta\\), so it is not directly feasible; James–Stein estimates it.",
+  "back": "<b>Answer:</b> \\(c^*=\\tfrac{\\theta^2}{\\theta^2+s^2}\\). At \\(\\theta=1\\), \\(s^2=1\\): \\(c^*=\\tfrac12\\), MSE \\(=\\tfrac12\\), versus \\(1\\) for \\(c=1\\).<br><b>Structure:</b> s_variance_decomposition. Trigger: MSE = bias² + variance, and \\(c\\) trades one for the other.<br><b>Key move:</b> \\(\\mathrm{MSE}(c)=(c-1)^2\\theta^2+c^2s^2\\); minimise over \\(c\\).<br><b>Working:</b> \\(2(c-1)\\theta^2+2cs^2=0\\) gives \\(c^*\\); then \\(\\mathrm{MSE}^*=\\tfrac{\\theta^2s^2}{\\theta^2+s^2}\\).<br><b>Sanity check:</b> \\(\\theta\\to\\infty\\) gives \\(c^*\\to1\\) (bias small relative to noise, no shrinkage); \\(\\theta\\to0\\) gives \\(c^*\\to0\\). Simulation of \\(10^6\\) draws: 0.500 vs 0.999.<br><b>Transfer:</b> shrinking a noisy mean toward zero (B4 gives the Bayesian reading). \\(c^*\\) depends on the unknown \\(\\theta\\), so it is not directly feasible; James–Stein estimates it.",
   "tags": [
    "s_variance_decomposition",
    "shrinkage",
@@ -136,7 +136,7 @@
  {
   "type": "basic",
   "front": "Known problem: for normal data, \\(\\sum(X_i-\\bar X)^2/(n-1)\\) is unbiased for \\(\\sigma^2\\). <b>Perturb:</b> you choose the divisor to minimise MSE rather than bias. For \\(\\sum(X_i-\\bar X)^2/c\\), which divisor \\(c\\) minimises the MSE, and what is the minimum MSE in units of \\(\\sigma^4\\) for \\(n=10\\)?",
-  "back": "<b>What breaks:</b> unbiasedness is not the criterion. MSE trades bias for variance, so the optimum is not \\(n-1\\).<br>\n<b>Fix:</b> with \\(Q=\\sum(X_i-\\bar X)^2/\\sigma^2\\sim\\chi^2_{n-1}\\), \\(\\mathrm{MSE}\\big(\\tfrac{\\sigma^2 Q}{c}\\big)=\\sigma^4\\big[(\\tfrac{n-1}{c}-1)^2+\\tfrac{2(n-1)}{c^2}\\big]\\). Minimised at \\(c=n+1\\), giving \\(\\tfrac{2\\sigma^4}{n+1}\\).<br>\n<b>New answer:</b> \\(c=n+1=11\\); minimum MSE \\(\\tfrac{2}{11}\\sigma^4\\approx0.182\\sigma^4\\), versus \\(0.222\\sigma^4\\) for divisor 9 and \\(0.190\\sigma^4\\) for divisor 10. Simulation: 0.2225, 0.1901, 0.1818.",
+  "back": "<b>What breaks:</b> unbiasedness is not the criterion. MSE trades bias for variance, so the optimum is not \\(n-1\\).<br><b>Fix:</b> with \\(Q=\\sum(X_i-\\bar X)^2/\\sigma^2\\sim\\chi^2_{n-1}\\), \\(\\mathrm{MSE}\\big(\\tfrac{\\sigma^2 Q}{c}\\big)=\\sigma^4\\big[(\\tfrac{n-1}{c}-1)^2+\\tfrac{2(n-1)}{c^2}\\big]\\). Minimised at \\(c=n+1\\), giving \\(\\tfrac{2\\sigma^4}{n+1}\\).<br><b>New answer:</b> \\(c=n+1=11\\); minimum MSE \\(\\tfrac{2}{11}\\sigma^4\\approx0.182\\sigma^4\\), versus \\(0.222\\sigma^4\\) for divisor 9 and \\(0.190\\sigma^4\\) for divisor 10. Simulation: 0.2225, 0.1901, 0.1818.",
   "tags": [
    "s_variance_decomposition",
    "variance_estimation",
@@ -147,7 +147,7 @@
  {
   "type": "basic",
   "front": "A strategy's true daily edge \\(\\mu\\) is drawn across strategies from \\(N(0,4)\\). One backtest reports \\(m=\\mu+e\\), with \\(e\\sim N(0,4)\\) independent of \\(\\mu\\). Given \\(m=3\\), what is the best estimate of \\(\\mu\\) under squared loss?",
-  "back": "<b>Classic:</b> Gaussian conjugate shrinkage (the posterior mean under a normal prior), equivalently ridge regression or James–Stein shrinkage.<br>\n<b>Mapping:</b> \\(\\mu\\) is the parameter with prior variance \\(\\tau^2=4\\); \\(m\\) is the noisy estimate with noise variance \\(s^2=4\\). Estimate \\(=\\tfrac{\\tau^2}{\\tau^2+s^2}\\,m\\).<br>\n<b>Answer:</b> \\(\\tfrac{4}{8}\\cdot3=1.5\\). The estimate is halved toward the prior mean 0.",
+  "back": "<b>Classic:</b> Gaussian conjugate shrinkage (the posterior mean under a normal prior), equivalently ridge regression or James–Stein shrinkage.<br><b>Mapping:</b> \\(\\mu\\) is the parameter with prior variance \\(\\tau^2=4\\); \\(m\\) is the noisy estimate with noise variance \\(s^2=4\\). Estimate \\(=\\tfrac{\\tau^2}{\\tau^2+s^2}\\,m\\).<br><b>Answer:</b> \\(\\tfrac{4}{8}\\cdot3=1.5\\). The estimate is halved toward the prior mean 0.",
   "tags": [
    "s_variance_decomposition",
    "shrinkage",
@@ -169,7 +169,7 @@
  {
   "type": "basic",
   "front": "\\(X_1,\\dots,X_n\\) are i.i.d. with mean \\(\\mu\\) and variance \\(\\sigma^2\\). Show that \\(E\\big[\\sum_i(X_i-\\bar X)^2\\big]=(n-1)\\sigma^2\\), and deduce the unbiased estimator of \\(\\sigma^2\\).",
-  "back": "<b>Answer:</b> \\(E[\\sum(X_i-\\bar X)^2]=(n-1)\\sigma^2\\), so \\(S^2=\\tfrac{1}{n-1}\\sum(X_i-\\bar X)^2\\) is unbiased.<br>\n<b>Structure:</b> s_linearity_expectation.<br>\n<b>Key move:</b> \\(\\sum(X_i-\\bar X)^2=\\sum X_i^2-n\\bar X^2\\), then linearity of expectation.<br>\n<b>Working:</b> \\(E[\\sum X_i^2]=n(\\sigma^2+\\mu^2)\\); \\(E[\\bar X^2]=\\sigma^2/n+\\mu^2\\). Difference: \\(n\\sigma^2+n\\mu^2-\\sigma^2-n\\mu^2=(n-1)\\sigma^2\\).<br>\n<b>Sanity check:</b> \\(n=1\\) gives 0: one observation carries no information about the spread. The result does not depend on \\(\\mu\\).<br>\n<b>Transfer:</b> residual variance in regression divides by \\(n-p\\), the same lost-degrees-of-freedom argument.",
+  "back": "<b>Answer:</b> \\(E[\\sum(X_i-\\bar X)^2]=(n-1)\\sigma^2\\), so \\(S^2=\\tfrac{1}{n-1}\\sum(X_i-\\bar X)^2\\) is unbiased.<br><b>Structure:</b> s_linearity_expectation.<br><b>Key move:</b> \\(\\sum(X_i-\\bar X)^2=\\sum X_i^2-n\\bar X^2\\), then linearity of expectation.<br><b>Working:</b> \\(E[\\sum X_i^2]=n(\\sigma^2+\\mu^2)\\); \\(E[\\bar X^2]=\\sigma^2/n+\\mu^2\\). Difference: \\(n\\sigma^2+n\\mu^2-\\sigma^2-n\\mu^2=(n-1)\\sigma^2\\).<br><b>Sanity check:</b> \\(n=1\\) gives 0: one observation carries no information about the spread. The result does not depend on \\(\\mu\\).<br><b>Transfer:</b> residual variance in regression divides by \\(n-p\\), the same lost-degrees-of-freedom argument.",
   "tags": [
    "s_linearity_expectation",
    "variance_estimation",
@@ -191,7 +191,7 @@
  {
   "type": "basic",
   "front": "Known problem: \\(S^2=\\sum(X_i-\\bar X)^2/(n-1)\\) is unbiased for \\(\\sigma^2\\). <b>Perturb:</b> you report \\(S\\) (the sample SD) as an unbiased estimate of \\(\\sigma\\). For \\(n=2\\) normal observations, what is \\(E[S]\\)?",
-  "back": "<b>What breaks:</b> the square root is concave, so Jensen gives \\(E[S]<\\sqrt{E[S^2]}=\\sigma\\). Unbiasedness does not survive a nonlinear transform.<br>\n<b>Fix:</b> for \\(n=2\\), \\(S=|X_1-X_2|/\\sqrt2\\) and \\(X_1-X_2\\sim N(0,2\\sigma^2)\\), so \\(E|X_1-X_2|=2\\sigma/\\sqrt\\pi\\). In general \\(E[S]=c_4(n)\\sigma\\) with \\(c_4(2)=\\sqrt{2/\\pi}\\); divide \\(S\\) by \\(c_4(n)\\).<br>\n<b>New answer:</b> \\(E[S]=\\sqrt{2/\\pi}\\,\\sigma\\approx0.798\\sigma\\), so the unbiased SD estimate is \\(\\sqrt{\\pi/2}\\,S\\approx1.253\\,S\\). Simulation: 0.7978.<br>\n<b>Structure of the fix:</b> s_convexity_jensen.",
+  "back": "<b>What breaks:</b> the square root is concave, so Jensen gives \\(E[S]\\lt \\sqrt{E[S^2]}=\\sigma\\). Unbiasedness does not survive a nonlinear transform.<br><b>Fix:</b> for \\(n=2\\), \\(S=|X_1-X_2|/\\sqrt2\\) and \\(X_1-X_2\\sim N(0,2\\sigma^2)\\), so \\(E|X_1-X_2|=2\\sigma/\\sqrt\\pi\\). In general \\(E[S]=c_4(n)\\sigma\\) with \\(c_4(2)=\\sqrt{2/\\pi}\\); divide \\(S\\) by \\(c_4(n)\\).<br><b>New answer:</b> \\(E[S]=\\sqrt{2/\\pi}\\,\\sigma\\approx0.798\\sigma\\), so the unbiased SD estimate is \\(\\sqrt{\\pi/2}\\,S\\approx1.253\\,S\\). Simulation: 0.7978.<br><b>Structure of the fix:</b> s_convexity_jensen.",
   "tags": [
    "s_convexity_jensen",
    "variance_estimation",
@@ -213,7 +213,7 @@
  {
   "type": "basic",
   "front": "\\(X_1,\\dots,X_n\\) i.i.d. standard Cauchy, density \\(\\frac{1}{\\pi(1+x^2)}\\). Find the law of \\(\\bar X\\) and compute \\(P(|\\bar X|>1)\\) for \\(n=100\\).",
-  "back": "<b>Answer:</b> \\(\\bar X\\) is standard Cauchy for every \\(n\\); \\(P(|\\bar X|>1)=\\tfrac12\\).<br>\n<b>Structure:</b> s_generating_function (characteristic function); s_clt_normal_approx fails.<br>\n<b>Key move:</b> \\(\\varphi_X(t)=e^{-|t|}\\), and independence multiplies characteristic functions.<br>\n<b>Working:</b> \\(\\varphi_{\\bar X}(t)=\\varphi_X(t/n)^n=e^{-|t|}\\). \\(P(|X|>1)=1-\\tfrac2\\pi\\arctan1=\\tfrac12\\).<br>\n<b>Sanity check:</b> simulation at \\(n=100\\): 0.496 (\\(10^6\\) draws).<br>\n<b>Transfer:</b> averaging more measurements of a Cauchy-distributed quantity never sharpens the estimate of its centre.",
+  "back": "<b>Answer:</b> \\(\\bar X\\) is standard Cauchy for every \\(n\\); \\(P(|\\bar X|>1)=\\tfrac12\\).<br><b>Structure:</b> s_generating_function (characteristic function); s_clt_normal_approx fails.<br><b>Key move:</b> \\(\\varphi_X(t)=e^{-|t|}\\), and independence multiplies characteristic functions.<br><b>Working:</b> \\(\\varphi_{\\bar X}(t)=\\varphi_X(t/n)^n=e^{-|t|}\\). \\(P(|X|>1)=1-\\tfrac2\\pi\\arctan1=\\tfrac12\\).<br><b>Sanity check:</b> simulation at \\(n=100\\): 0.496 (\\(10^6\\) draws).<br><b>Transfer:</b> averaging more measurements of a Cauchy-distributed quantity never sharpens the estimate of its centre.",
   "tags": [
    "s_generating_function",
    "s_clt_normal_approx",
@@ -225,7 +225,7 @@
  {
   "type": "basic",
   "front": "\\(Z_1\\) and \\(Z_2\\) are independent \\(N(0,1)\\). Let \\(R_i=Z_{1,i}/Z_{2,i}\\) for \\(i=1,\\dots,n\\), with all pairs independent. Describe the distribution of \\(\\bar R\\) and give \\(P(|\\bar R|>1)\\).",
-  "back": "<b>Classic:</b> the ratio of two independent standard normals is standard Cauchy, so this is the Cauchy average (D2).<br>\n<b>Mapping:</b> \\(R_i\\) has no finite mean, because the denominator puts mass near zero. \\(\\bar R\\) inherits D2's law.<br>\n<b>Answer:</b> \\(\\bar R\\) is standard Cauchy for every \\(n\\); \\(P(|\\bar R|>1)=\\tfrac12\\). Simulation: 0.51.",
+  "back": "<b>Classic:</b> the ratio of two independent standard normals is standard Cauchy, so this is the Cauchy average (D2).<br><b>Mapping:</b> \\(R_i\\) has no finite mean, because the denominator puts mass near zero. \\(\\bar R\\) inherits D2's law.<br><b>Answer:</b> \\(\\bar R\\) is standard Cauchy for every \\(n\\); \\(P(|\\bar R|>1)=\\tfrac12\\). Simulation: 0.51.",
   "tags": [
    "s_clt_normal_approx",
    "cauchy",
@@ -247,7 +247,7 @@
  {
   "type": "basic",
   "front": "When can you say \"the parameter has a 95% probability of lying in this interval\", given a 95% confidence interval \\([1.2,3.4]\\)? How does a credible interval differ?",
-  "back": "<b>Trigger:</b> you want a probability statement about the parameter itself. <b>Answer:</b> no; a 95% CI is random, and the procedure covers the fixed \\(\\theta\\) in 95% of repeated samples. The computed \\([1.2,3.4]\\) either covers \\(\\theta\\) or does not. A Bayesian credible interval \\([a,b]\\) satisfies \\(P(\\theta\\in[a,b]\\mid\\text{data})=0.95\\), but only under the stated prior.<br>\n<b>Move:</b> state which of the two you are asked for, and whether the prior is part of the answer. <b>Canonical:</b> the Beta(1,1) credible interval (E3) versus the Wald CI (E2).<br>\n<b>Failure mode:</b> credible intervals inherit the prior; Wald CIs have poor coverage near boundaries (E2).",
+  "back": "<b>Trigger:</b> you want a probability statement about the parameter itself. <b>Answer:</b> no; a 95% CI is random, and the procedure covers the fixed \\(\\theta\\) in 95% of repeated samples. The computed \\([1.2,3.4]\\) either covers \\(\\theta\\) or does not. A Bayesian credible interval \\([a,b]\\) satisfies \\(P(\\theta\\in[a,b]\\mid\\text{data})=0.95\\), but only under the stated prior.<br><b>Move:</b> state which of the two you are asked for, and whether the prior is part of the answer. <b>Canonical:</b> the Beta(1,1) credible interval (E3) versus the Wald CI (E2).<br><b>Failure mode:</b> credible intervals inherit the prior; Wald CIs have poor coverage near boundaries (E2).",
   "tags": [
    "s_bayes",
    "confidence_intervals",
@@ -258,7 +258,7 @@
  {
   "type": "basic",
   "front": "\\(X\\sim\\mathrm{Binomial}(10,p)\\) with \\(p=0.1\\). The nominal 95% Wald interval is \\(\\hat p\\pm1.96\\sqrt{\\hat p(1-\\hat p)/10}\\). Compute its exact coverage \\(P(p\\in\\mathrm{CI})\\). Treat \\(\\hat p=0\\) as the degenerate interval \\(\\{0\\}\\).",
-  "back": "<b>Answer:</b> exact coverage \\(\\approx0.650\\), not 0.95.<br>\n<b>Structure:</b> s_indicators: coverage is the expectation of the indicator \\(\\mathbf 1\\{p\\in\\mathrm{CI}\\}\\).<br>\n<b>Key move:</b> list which \\(k\\) give intervals containing 0.1, then sum the binomial probabilities.<br>\n<b>Working:</b> \\(k=0\\): \\(\\{0\\}\\), misses. \\(k=1,2,3,4\\): the interval contains 0.1 (for \\(k=4\\): \\(|0.4-0.1|=0.3\\le1.96\\sqrt{0.24/10}=0.304\\)). \\(k\\ge5\\): misses. Coverage \\(=P(X\\in\\{1,2,3,4\\})=0.38742+0.19371+0.05740+0.01116=0.64969\\).<br>\n<b>Sanity check:</b> the Wald SE is too small when \\(\\hat p\\) is near 0 and \\(n\\) is small, so coverage collapses. Exact (Clopper–Pearson) or Wilson intervals restore coverage near 95%.<br>\n<b>Transfer:</b> any small-sample rate estimate, such as default rates on 10 loans.",
+  "back": "<b>Answer:</b> exact coverage \\(\\approx0.650\\), not 0.95.<br><b>Structure:</b> s_indicators: coverage is the expectation of the indicator \\(\\mathbf 1\\{p\\in\\mathrm{CI}\\}\\).<br><b>Key move:</b> list which \\(k\\) give intervals containing 0.1, then sum the binomial probabilities.<br><b>Working:</b> \\(k=0\\): \\(\\{0\\}\\), misses. \\(k=1,2,3,4\\): the interval contains 0.1 (for \\(k=4\\): \\(|0.4-0.1|=0.3\\le1.96\\sqrt{0.24/10}=0.304\\)). \\(k\\ge5\\): misses. Coverage \\(=P(X\\in\\{1,2,3,4\\})=0.38742+0.19371+0.05740+0.01116=0.64969\\).<br><b>Sanity check:</b> the Wald SE is too small when \\(\\hat p\\) is near 0 and \\(n\\) is small, so coverage collapses. Exact (Clopper–Pearson) or Wilson intervals restore coverage near 95%.<br><b>Transfer:</b> any small-sample rate estimate, such as default rates on 10 loans.",
   "tags": [
    "s_indicators",
    "confidence_intervals",
@@ -270,7 +270,7 @@
  {
   "type": "basic",
   "front": "Known problem: 10 trials, 0 successes. The nominal 95% Wald interval for \\(p\\) is \\([0,0]\\). <b>Perturb:</b> adopt a \\(\\mathrm{Beta}(1,1)\\) prior and report the equal-tailed 95% credible interval. What is the upper limit?",
-  "back": "<b>What breaks:</b> the Wald SE is \\(\\sqrt{\\hat p(1-\\hat p)/n}=0\\) at \\(\\hat p=0\\), giving a zero-width interval that excludes every \\(p>0\\). The normal approximation fails at the boundary.<br>\n<b>Fix:</b> conjugate posterior \\(\\mathrm{Beta}(1+0,\\,1+10)=\\mathrm{Beta}(1,11)\\), with CDF \\(1-(1-u)^{11}\\).<br>\n<b>New answer:</b> the upper limit solves \\(1-(1-u)^{11}=0.975\\), so \\(u=1-0.025^{1/11}\\approx0.285\\). Interval \\([0,\\,0.285]\\); posterior mean \\(1/12\\approx0.083\\).<br>\n<b>Structure of the fix:</b> s_bayes (conjugate update).",
+  "back": "<b>What breaks:</b> the Wald SE is \\(\\sqrt{\\hat p(1-\\hat p)/n}=0\\) at \\(\\hat p=0\\), giving a zero-width interval that excludes every \\(p>0\\). The normal approximation fails at the boundary.<br><b>Fix:</b> conjugate posterior \\(\\mathrm{Beta}(1+0,\\,1+10)=\\mathrm{Beta}(1,11)\\), with CDF \\(1-(1-u)^{11}\\).<br><b>New answer:</b> the upper limit solves \\(1-(1-u)^{11}=0.975\\), so \\(u=1-0.025^{1/11}\\approx0.285\\). Interval \\([0,\\,0.285]\\); posterior mean \\(1/12\\approx0.083\\).<br><b>Structure of the fix:</b> s_bayes (conjugate update).",
   "tags": [
    "s_bayes",
    "confidence_intervals",
@@ -292,8 +292,8 @@
  },
  {
   "type": "basic",
-  "front": "A strategy's prior probability of a real edge is 10%. Each test has \\(\\alpha=0.05\\) and power 0.80. A strategy shows \\(p<0.05\\). What is \\(P(\\text{no real edge}\\mid p<0.05)\\)?",
-  "back": "<b>Answer:</b> \\(\\tfrac{9}{25}=0.36\\).<br>\n<b>Structure:</b> s_bayes. <b>Key move:</b> condition on the event \"significant\" and split it by hypothesis.<br>\n<b>Working:</b> \\(P(\\text{sig},H_0)=0.9\\times0.05=0.045\\); \\(P(\\text{sig},H_1)=0.1\\times0.80=0.08\\). \\(P(H_0\\mid\\text{sig})=\\tfrac{0.045}{0.125}=\\tfrac{9}{25}\\).<br>\n<b>Sanity check:</b> with a 50/50 prior the same test gives \\(0.025/0.425\\approx0.06\\); the base rate drives the answer.<br>\n<b>Transfer:</b> a positive screening test for a rare condition.",
+  "front": "A strategy's prior probability of a real edge is 10%. Each test has \\(\\alpha=0.05\\) and power 0.80. A strategy shows \\(p\\lt 0.05\\). What is \\(P(\\text{no real edge}\\mid p\\lt 0.05)\\)?",
+  "back": "<b>Answer:</b> \\(\\tfrac{9}{25}=0.36\\).<br><b>Structure:</b> s_bayes. <b>Key move:</b> condition on the event \"significant\" and split it by hypothesis.<br><b>Working:</b> \\(P(\\text{sig},H_0)=0.9\\times0.05=0.045\\); \\(P(\\text{sig},H_1)=0.1\\times0.80=0.08\\). \\(P(H_0\\mid\\text{sig})=\\tfrac{0.045}{0.125}=\\tfrac{9}{25}\\).<br><b>Sanity check:</b> with a 50/50 prior the same test gives \\(0.025/0.425\\approx0.06\\); the base rate drives the answer.<br><b>Transfer:</b> a positive screening test for a rare condition.",
   "tags": [
    "s_bayes",
    "p_values",
@@ -304,7 +304,7 @@
  {
   "type": "basic",
   "front": "H0: \\(\\mu=0\\), known \\(\\sigma=1\\). You look at the running \\(z\\)-statistic at five equally spaced sample sizes and stop at the first look with \\(|z|>1.96\\). Under H0, what is the probability of ever stopping with a significant result? Compare with the naive \\(1-0.95^5\\).",
-  "back": "<b>Answer:</b> \\(\\approx0.142\\), not 0.226.<br>\n<b>Structure:</b> s_optional_stopping. The looks form a Gaussian random walk, so the looks are correlated, not independent tests.<br>\n<b>Key move:</b> the events \"significant at look \\(k\\)\" overlap heavily, so you cannot multiply five 5% chances.<br>\n<b>Working:</b> \\(z_k=S_k/\\sqrt k\\) with \\(S_k\\) a random walk. \\(P(\\max_k|z_k|>1.96)\\) is a boundary-crossing probability; the standard group-sequential value for five equally spaced looks is 0.142. Independence would give \\(1-0.95^5=0.226\\), which overstates it.<br>\n<b>Sanity check:</b> the answer lies between 0.05 (one look) and 0.226 (independent looks). Simulation of \\(10^6\\) paths: 0.1417.<br>\n<b>Transfer:</b> \"keep backtesting until the Sharpe clears the bar\" is the same optional-stopping problem.",
+  "back": "<b>Answer:</b> \\(\\approx0.142\\), not 0.226.<br><b>Structure:</b> s_optional_stopping. The looks form a Gaussian random walk, so the looks are correlated, not independent tests.<br><b>Key move:</b> the events \"significant at look \\(k\\)\" overlap heavily, so you cannot multiply five 5% chances.<br><b>Working:</b> \\(z_k=S_k/\\sqrt k\\) with \\(S_k\\) a random walk. \\(P(\\max_k|z_k|>1.96)\\) is a boundary-crossing probability; the standard group-sequential value for five equally spaced looks is 0.142. Independence would give \\(1-0.95^5=0.226\\), which overstates it.<br><b>Sanity check:</b> the answer lies between 0.05 (one look) and 0.226 (independent looks). Simulation of \\(10^6\\) paths: 0.1417.<br><b>Transfer:</b> \"keep backtesting until the Sharpe clears the bar\" is the same optional-stopping problem.",
   "tags": [
    "s_optional_stopping",
    "p_values",
@@ -315,7 +315,7 @@
  {
   "type": "basic",
   "front": "Known problem: under \\(H_0\\) a continuous statistic has \\(p\\)-values \\(\\sim U(0,1)\\), so \"reject if \\(p\\le0.05\\)\" has size exactly 0.05. <b>Perturb:</b> \\(X\\sim\\mathrm{Binomial}(10,\\tfrac12)\\) under \\(H_0\\), one-sided. Reject for \\(X\\ge9\\), or for \\(X\\ge8\\). What are the sizes, and can any cut-off give exactly 0.05?",
-  "back": "<b>What breaks:</b> the statistic is discrete, so \\(P(p\\le\\alpha)\\le\\alpha\\). Size of \\(X\\ge9\\): \\(11/1024\\approx0.0107\\), far too conservative. Size of \\(X\\ge8\\): \\(56/1024=7/128\\approx0.0547\\), too big. No cut-off gives 0.05.<br>\n<b>Fix:</b> a randomised test: always reject for \\(X\\ge9\\), and reject \\(X=8\\) with probability \\(\\gamma\\). Size \\(0.05\\) needs \\(\\tfrac{11}{1024}+\\gamma\\tfrac{45}{1024}=0.05\\).<br>\n<b>New answer:</b> \\(\\gamma=\\tfrac{67}{75}\\approx0.893\\); exact size \\(0.05\\).<br>\n<b>Structure of the fix:</b> s_indicators (randomised indicator).",
+  "back": "<b>What breaks:</b> the statistic is discrete, so \\(P(p\\le\\alpha)\\le\\alpha\\). Size of \\(X\\ge9\\): \\(11/1024\\approx0.0107\\), far too conservative. Size of \\(X\\ge8\\): \\(56/1024=7/128\\approx0.0547\\), too big. No cut-off gives 0.05.<br><b>Fix:</b> a randomised test: always reject for \\(X\\ge9\\), and reject \\(X=8\\) with probability \\(\\gamma\\). Size \\(0.05\\) needs \\(\\tfrac{11}{1024}+\\gamma\\tfrac{45}{1024}=0.05\\).<br><b>New answer:</b> \\(\\gamma=\\tfrac{67}{75}\\approx0.893\\); exact size \\(0.05\\).<br><b>Structure of the fix:</b> s_indicators (randomised indicator).",
   "tags": [
    "s_indicators",
    "p_values",
@@ -337,7 +337,7 @@
  {
   "type": "basic",
   "front": "20 independent tests, each at \\(\\alpha=0.05\\), all nulls true. (a) Probability of at least one false positive. (b) The Bonferroni per-test threshold for family-wise error 5%, and the exact FWER it delivers.",
-  "back": "<b>Answer:</b> (a) \\(1-0.95^{20}\\approx0.6415\\). (b) threshold \\(0.05/20=0.0025\\); FWER \\(=1-(0.9975)^{20}\\approx0.0488\\le0.05\\).<br>\n<b>Structure:</b> s_complement. Bonferroni is the union bound.<br>\n<b>Key move:</b> under independence \\(P(\\text{no FP})=\\prod(1-\\alpha)\\); Bonferroni gives \\(P(\\cup A_i)\\le\\sum P(A_i)\\).<br>\n<b>Working:</b> \\(0.95^{20}=0.3585\\). Union bound: \\(20\\times0.0025=0.05\\).<br>\n<b>Sanity check:</b> the union bound is nearly exact here because each event is rare.<br>\n<b>Transfer:</b> 100 strategies: per-test threshold 0.0005.",
+  "back": "<b>Answer:</b> (a) \\(1-0.95^{20}\\approx0.6415\\). (b) threshold \\(0.05/20=0.0025\\); FWER \\(=1-(0.9975)^{20}\\approx0.0488\\le0.05\\).<br><b>Structure:</b> s_complement. Bonferroni is the union bound.<br><b>Key move:</b> under independence \\(P(\\text{no FP})=\\prod(1-\\alpha)\\); Bonferroni gives \\(P(\\cup A_i)\\le\\sum P(A_i)\\).<br><b>Working:</b> \\(0.95^{20}=0.3585\\). Union bound: \\(20\\times0.0025=0.05\\).<br><b>Sanity check:</b> the union bound is nearly exact here because each event is rare.<br><b>Transfer:</b> 100 strategies: per-test threshold 0.0005.",
   "tags": [
    "s_complement",
    "multiple_testing",
@@ -349,7 +349,7 @@
  {
   "type": "basic",
   "front": "Known problem: 20 independent tests at \\(\\alpha=0.05\\) give FWER \\(0.64\\). <b>Perturb:</b> the 20 test statistics are identical (perfectly correlated). What is the FWER of the naive rule \\(p\\le0.05\\), and is Bonferroni still needed?",
-  "back": "<b>What breaks:</b> the product \\(1-(1-\\alpha)^m\\) and the union bound both assume distinct events. With identical statistics all 20 tests reject together, so the naive rule has FWER \\(=\\alpha=0.05\\). Bonferroni (threshold 0.0025, FWER 0.0025) is far too conservative here.<br>\n<b>Fix:</b> a dependence-aware method, such as Westfall–Young max-T permutation, which controls FWER using the actual correlation.<br>\n<b>New answer:</b> FWER \\(=0.05\\) for the naive rule on this family; Bonferroni is not needed.<br>\n<b>Structure of the fix:</b> s_complement.",
+  "back": "<b>What breaks:</b> the product \\(1-(1-\\alpha)^m\\) and the union bound both assume distinct events. With identical statistics all 20 tests reject together, so the naive rule has FWER \\(=\\alpha=0.05\\). Bonferroni (threshold 0.0025, FWER 0.0025) is far too conservative here.<br><b>Fix:</b> a dependence-aware method, such as Westfall–Young max-T permutation, which controls FWER using the actual correlation.<br><b>New answer:</b> FWER \\(=0.05\\) for the naive rule on this family; Bonferroni is not needed.<br><b>Structure of the fix:</b> s_complement.",
   "tags": [
    "s_complement",
    "multiple_testing",
@@ -360,7 +360,7 @@
  {
   "type": "basic",
   "front": "Ten p-values sorted ascending: 0.001, 0.008, 0.039, 0.041, 0.042, 0.060, 0.074, 0.205, 0.212, 0.500. Apply Bonferroni (FWER 5%) and Benjamini–Hochberg (FDR 5%). How many hypotheses does each reject?",
-  "back": "<b>Answer:</b> Bonferroni rejects 1; BH rejects 2.<br>\n<b>Structure:</b> s_order_statistics (ranked p-values against a line).<br>\n<b>Key move:</b> BH step-up: find the largest \\(k\\) with \\(p_{(k)}\\le kq/m\\), then reject the first \\(k\\).<br>\n<b>Working:</b> \\(m=10\\), \\(q=0.05\\), thresholds \\(0.005k\\). \\(p_{(1)}=0.001\\le0.005\\) and \\(p_{(2)}=0.008\\le0.010\\) pass; \\(p_{(3)}=0.039>0.015\\), and every later \\(p_{(k)}\\) also exceeds \\(0.005k\\). Bonferroni threshold 0.005 passes only \\(0.001\\).<br>\n<b>Sanity check:</b> BH is never more conservative than Bonferroni, and under independence its false discovery proportion is at most 5% in expectation.<br>\n<b>Transfer:</b> genome-wide scans, large factor screens.",
+  "back": "<b>Answer:</b> Bonferroni rejects 1; BH rejects 2.<br><b>Structure:</b> s_order_statistics (ranked p-values against a line).<br><b>Key move:</b> BH step-up: find the largest \\(k\\) with \\(p_{(k)}\\le kq/m\\), then reject the first \\(k\\).<br><b>Working:</b> \\(m=10\\), \\(q=0.05\\), thresholds \\(0.005k\\). \\(p_{(1)}=0.001\\le0.005\\) and \\(p_{(2)}=0.008\\le0.010\\) pass; \\(p_{(3)}=0.039>0.015\\), and every later \\(p_{(k)}\\) also exceeds \\(0.005k\\). Bonferroni threshold 0.005 passes only \\(0.001\\).<br><b>Sanity check:</b> BH is never more conservative than Bonferroni, and under independence its false discovery proportion is at most 5% in expectation.<br><b>Transfer:</b> genome-wide scans, large factor screens.",
   "tags": [
    "s_order_statistics",
    "multiple_testing",
@@ -372,7 +372,7 @@
  {
   "type": "basic",
   "front": "When should you control the family-wise error rate (FWER) rather than the false discovery rate (FDR), and where does each fail?",
-  "back": "<b>Trigger:</b> FWER when one false positive is costly (a confirmatory test, a go/no-go decision); FDR when screening many candidates and accepting a fraction of false leads.<br>\n<b>Move:</b> Bonferroni or Holm for FWER (union bound); Benjamini–Hochberg step-up for FDR, valid under independence or positive dependence.<br>\n<b>Canonical:</b> a screen of 500 signals followed by further tests of the survivors (FDR), versus one final validation (FWER).<br>\n<b>Failure modes:</b> Bonferroni is very conservative under dependence (G2); BH can be invalid under arbitrary dependence (use BY). Neither corrects for undisclosed trials, which is the real backtest problem (P1, G7).",
+  "back": "<b>Trigger:</b> FWER when one false positive is costly (a confirmatory test, a go/no-go decision); FDR when screening many candidates and accepting a fraction of false leads.<br><b>Move:</b> Bonferroni or Holm for FWER (union bound); Benjamini–Hochberg step-up for FDR, valid under independence or positive dependence.<br><b>Canonical:</b> a screen of 500 signals followed by further tests of the survivors (FDR), versus one final validation (FWER).<br><b>Failure modes:</b> Bonferroni is very conservative under dependence (G2); BH can be invalid under arbitrary dependence (use BY). Neither corrects for undisclosed trials, which is the real backtest problem (P1, G7).",
   "tags": [
    "s_complement",
    "multiple_testing",
@@ -383,7 +383,7 @@
  {
   "type": "basic",
   "front": "100 strategies have true Sharpe 0. Each annualised Sharpe estimate over \\(T=4\\) years has standard error 0.5 (normal, independent across strategies). You report the best one. Estimate its expected value.",
-  "back": "<b>Answer:</b> about \\(1.25\\) (\\(0.5\\times2.508\\)).<br>\n<b>Structure:</b> s_extremal (expected maximum of i.i.d. normals).<br>\n<b>Key move:</b> \\(E[\\max]=\\int x\\,d\\big(\\Phi(x)^{100}\\big)=\\int 100\\,x\\,\\phi(x)\\Phi(x)^{99}\\,dx\\approx2.508\\) for standard normals; scale by 0.5.<br>\n<b>Working:</b> numerical integration gives 2.5076; \\(0.5\\times2.5076=1.254\\).<br>\n<b>Sanity check:</b> the simulation of \\(10^6\\) draws of 100 gives 2.514, or about 1.26 annualised. The asymptotic \\(\\sqrt{2\\ln100}=3.03\\) is too large at this N.<br>\n<b>Transfer:</b> a naive backtester's best Sharpe is biased upward by about 1.25 before any real skill.",
+  "back": "<b>Answer:</b> about \\(1.25\\) (\\(0.5\\times2.508\\)).<br><b>Structure:</b> s_extremal (expected maximum of i.i.d. normals).<br><b>Key move:</b> \\(E[\\max]=\\int x\\,d\\big(\\Phi(x)^{100}\\big)=\\int 100\\,x\\,\\phi(x)\\Phi(x)^{99}\\,dx\\approx2.508\\) for standard normals; scale by 0.5.<br><b>Working:</b> numerical integration gives 2.5076; \\(0.5\\times2.5076=1.254\\).<br><b>Sanity check:</b> the simulation of \\(10^6\\) draws of 100 gives 2.514, or about 1.26 annualised. The asymptotic \\(\\sqrt{2\\ln100}=3.03\\) is too large at this N.<br><b>Transfer:</b> a naive backtester's best Sharpe is biased upward by about 1.25 before any real skill.",
   "tags": [
    "s_extremal",
    "multiple_testing",
@@ -395,7 +395,7 @@
  {
   "type": "basic",
   "front": "A school gives 100 children a purely random quiz. Each score is converted to a z-score (mean 0, SD 1), and the top z-score is published. Roughly what is the top z-score, is it evidence of ability, and what is \\(P(\\text{top}>2.5)\\)?",
-  "back": "<b>Classic:</b> the expected maximum of \\(N\\) i.i.d. standard normals, the best of many zero-skill strategies (the deflated Sharpe logic).<br>\n<b>Mapping:</b> each child is a strategy with zero true edge; the z-score is its t-statistic; the published maximum is the best Sharpe in standard-error units.<br>\n<b>Answer:</b> top z \\(\\approx2.5\\), not evidence of ability. \\(P(\\text{top}>2.5)=1-\\Phi(2.5)^{100}=1-0.5364=0.464\\): nearly half of random cohorts show a top z above 2.5.",
+  "back": "<b>Classic:</b> the expected maximum of \\(N\\) i.i.d. standard normals, the best of many zero-skill strategies (the deflated Sharpe logic).<br><b>Mapping:</b> each child is a strategy with zero true edge; the z-score is its t-statistic; the published maximum is the best Sharpe in standard-error units.<br><b>Answer:</b> top z \\(\\approx2.5\\), not evidence of ability. \\(P(\\text{top}>2.5)=1-\\Phi(2.5)^{100}=1-0.5364=0.464\\): nearly half of random cohorts show a top z above 2.5.",
   "tags": [
    "s_extremal",
    "s_order_statistics",
@@ -418,7 +418,7 @@
  {
   "type": "basic",
   "front": "Daily returns for 4 years (\\(T=1008\\) days, 252 per year), normal. The annualised Sharpe estimate is 1.0. Give the standard error of the annualised Sharpe and the 95% interval.",
-  "back": "<b>Answer:</b> SE \\(\\approx0.50\\); 95% interval \\([0.02,\\,1.98]\\).<br>\n<b>Structure:</b> s_taylor (delta method) with s_clt_normal_approx.<br>\n<b>Key move:</b> per-period SE \\(\\approx\\sqrt{(1+\\mathrm{SR}_d^2/2)/T}\\); annualise by \\(\\sqrt{252}\\).<br>\n<b>Working:</b> \\(\\mathrm{SE}=\\sqrt{252}\\sqrt{\\tfrac{1}{1008}}\\sqrt{1+\\tfrac{1}{2\\cdot252}}\\approx\\sqrt{\\tfrac14}\\times1.001=0.5005\\). Interval \\(1.0\\pm1.96(0.50)=[0.02,\\,1.98]\\).<br>\n<b>Sanity check:</b> \\(\\mathrm{SE}\\approx1/\\sqrt{\\text{years}}\\). After one year the SE is 1.0, so a Sharpe of 1 is indistinguishable from zero.<br>\n<b>Transfer:</b> the t-statistic is about \\(\\mathrm{SR}\\sqrt{\\text{years}}\\), so the same approximation sets how long a backtest must run.",
+  "back": "<b>Answer:</b> SE \\(\\approx0.50\\); 95% interval \\([0.02,\\,1.98]\\).<br><b>Structure:</b> s_taylor (delta method) with s_clt_normal_approx.<br><b>Key move:</b> per-period SE \\(\\approx\\sqrt{(1+\\mathrm{SR}_d^2/2)/T}\\); annualise by \\(\\sqrt{252}\\).<br><b>Working:</b> \\(\\mathrm{SE}=\\sqrt{252}\\sqrt{\\tfrac{1}{1008}}\\sqrt{1+\\tfrac{1}{2\\cdot252}}\\approx\\sqrt{\\tfrac14}\\times1.001=0.5005\\). Interval \\(1.0\\pm1.96(0.50)=[0.02,\\,1.98]\\).<br><b>Sanity check:</b> \\(\\mathrm{SE}\\approx1/\\sqrt{\\text{years}}\\). After one year the SE is 1.0, so a Sharpe of 1 is indistinguishable from zero.<br><b>Transfer:</b> the t-statistic is about \\(\\mathrm{SR}\\sqrt{\\text{years}}\\), so the same approximation sets how long a backtest must run.",
   "tags": [
    "s_taylor",
    "s_clt_normal_approx",
@@ -430,7 +430,7 @@
  {
   "type": "basic",
   "front": "Known problem: with normal returns the per-period Sharpe ratio has \\(\\mathrm{SE}=\\sqrt{1/T}\\) for small SR. <b>Perturb:</b> daily returns are \\(r=0.1-(E-1)\\) with \\(E\\sim\\mathrm{Exp}(1)\\): mean 0.1, SD 1, skewness \\(-2\\), kurtosis 9 (a short-volatility style). With \\(T=250\\), what is the asymptotic SE of the per-period Sharpe?",
-  "back": "<b>What breaks:</b> the normal formula ignores that the SE depends on skewness and kurtosis, through the covariance of the sample mean with the sample variance and the variance of the sample variance.<br>\n<b>Fix:</b> delta method (Mertens): \\(\\mathrm{Var}(\\widehat{\\mathrm{SR}})\\approx\\tfrac1T\\big(1-\\gamma_3\\,\\mathrm{SR}+\\tfrac{\\gamma_4-1}{4}\\mathrm{SR}^2\\big)\\), with \\(\\gamma_3\\) the skewness and \\(\\gamma_4\\) the (non-excess) kurtosis.<br>\n<b>New answer:</b> \\(\\gamma_3=-2\\), \\(\\gamma_4=9\\), SR \\(=0.1\\): \\(1+0.2+0.02=1.22\\). \\(\\mathrm{SE}=\\sqrt{1.22/250}\\approx0.070\\), versus 0.063 under normality. Simulation: coefficient 1.224 at \\(T=2500\\) (finite-sample inflation to 1.27 at \\(T=250\\)).<br>\n<b>Structure of the fix:</b> s_taylor.",
+  "back": "<b>What breaks:</b> the normal formula ignores that the SE depends on skewness and kurtosis, through the covariance of the sample mean with the sample variance and the variance of the sample variance.<br><b>Fix:</b> delta method (Mertens): \\(\\mathrm{Var}(\\widehat{\\mathrm{SR}})\\approx\\tfrac1T\\big(1-\\gamma_3\\,\\mathrm{SR}+\\tfrac{\\gamma_4-1}{4}\\mathrm{SR}^2\\big)\\), with \\(\\gamma_3\\) the skewness and \\(\\gamma_4\\) the (non-excess) kurtosis.<br><b>New answer:</b> \\(\\gamma_3=-2\\), \\(\\gamma_4=9\\), SR \\(=0.1\\): \\(1+0.2+0.02=1.22\\). \\(\\mathrm{SE}=\\sqrt{1.22/250}\\approx0.070\\), versus 0.063 under normality. Simulation: coefficient 1.224 at \\(T=2500\\) (finite-sample inflation to 1.27 at \\(T=250\\)).<br><b>Structure of the fix:</b> s_taylor.",
   "tags": [
    "s_taylor",
    "sharpe_ratio",
@@ -442,7 +442,7 @@
  {
   "type": "basic",
   "front": "Derive the OLS slope for \\(y_i=a+bx_i+e_i\\) by minimising \\(\\sum(y_i-a-bx_i)^2\\). Show \\(\\hat b=\\mathrm{Cov}(x,y)/\\mathrm{Var}(x)\\), give the matrix form, and evaluate for \\(x=(1,2,3,4,5)\\), \\(y=(2,3,5,4,9)\\).",
-  "back": "<b>Answer:</b> \\(\\hat b=S_{xy}/S_{xx}=1.5\\), \\(\\hat a=\\bar y-\\hat b\\bar x=0.1\\). Matrix form \\(\\hat\\beta=(X^\\top X)^{-1}X^\\top y\\).<br>\n<b>Structure:</b> s_conditional_expectation_tower (least squares projects \\(y\\) onto the column space of \\(X\\)).<br>\n<b>Key move:</b> \\(\\partial/\\partial a=0\\) gives \\(a=\\bar y-b\\bar x\\); then \\(\\partial/\\partial b=0\\) gives \\(\\sum x_i(y_i-a-bx_i)=0\\).<br>\n<b>Working:</b> \\(\\bar x=3\\), \\(\\bar y=4.6\\), \\(S_{xx}=10\\), \\(S_{xy}=15\\). So \\(\\hat b=1.5\\), \\(\\hat a=4.6-4.5=0.1\\). Residuals \\(0.4,-0.1,0.4,-2.1,1.4\\): they sum to zero and \\(\\sum x_ie_i=0\\).<br>\n<b>Sanity check:</b> the two orthogonality conditions above hold exactly.<br>\n<b>Transfer:</b> weighted least squares uses the same algebra with \\(X^\\top WX\\).",
+  "back": "<b>Answer:</b> \\(\\hat b=S_{xy}/S_{xx}=1.5\\), \\(\\hat a=\\bar y-\\hat b\\bar x=0.1\\). Matrix form \\(\\hat\\beta=(X^\\top X)^{-1}X^\\top y\\).<br><b>Structure:</b> s_conditional_expectation_tower (least squares projects \\(y\\) onto the column space of \\(X\\)).<br><b>Key move:</b> \\(\\partial/\\partial a=0\\) gives \\(a=\\bar y-b\\bar x\\); then \\(\\partial/\\partial b=0\\) gives \\(\\sum x_i(y_i-a-bx_i)=0\\).<br><b>Working:</b> \\(\\bar x=3\\), \\(\\bar y=4.6\\), \\(S_{xx}=10\\), \\(S_{xy}=15\\). So \\(\\hat b=1.5\\), \\(\\hat a=4.6-4.5=0.1\\). Residuals \\(0.4,-0.1,0.4,-2.1,1.4\\): they sum to zero and \\(\\sum x_ie_i=0\\).<br><b>Sanity check:</b> the two orthogonality conditions above hold exactly.<br><b>Transfer:</b> weighted least squares uses the same algebra with \\(X^\\top WX\\).",
   "tags": [
    "s_conditional_expectation_tower",
    "ols",
@@ -465,7 +465,7 @@
  {
   "type": "basic",
   "front": "For each OLS violation (heteroskedasticity, autocorrelation, endogeneity, multicollinearity), what breaks and what is the fix?",
-  "back": "<b>Trigger:</b> diagnosing a regression. <b>Move:</b> ask which assumption fails, then pick the fix that matches it.<br>\n<table><tr><td><b>Violation</b></td><td><b>What breaks</b></td><td><b>Fix</b></td></tr>\n<tr><td>Heteroskedasticity</td><td>Coefficients unbiased; SEs wrong</td><td>HC (White) robust SE; WLS if variance is known</td></tr>\n<tr><td>Autocorrelation</td><td>Coefficients unbiased if exogenous; SEs wrong (usually too small when \\(\\rho>0\\))</td><td>Newey–West HAC SE; Cochrane–Orcutt or GLS; model the dynamics</td></tr>\n<tr><td>Endogeneity, \\(\\mathrm{Cov}(x,e)\\ne0\\)</td><td>Biased and inconsistent</td><td>Instrumental variables; control for the omitted variable; fixed effects</td></tr>\n<tr><td>Multicollinearity</td><td>Unbiased, but variance inflated by \\(1/(1-R_j^2)\\)</td><td>More data; drop or combine regressors; ridge</td></tr></table>\n<b>Failure modes:</b> robust SEs do not fix bias; Newey–West needs a lag choice; IV needs valid instruments (relevance and exclusion).",
+  "back": "<b>Trigger:</b> diagnosing a regression. <b>Move:</b> ask which assumption fails, then pick the fix that matches it.<br><table><tr><td><b>Violation</b></td><td><b>What breaks</b></td><td><b>Fix</b></td></tr><tr><td>Heteroskedasticity</td><td>Coefficients unbiased; SEs wrong</td><td>HC (White) robust SE; WLS if variance is known</td></tr><tr><td>Autocorrelation</td><td>Coefficients unbiased if exogenous; SEs wrong (usually too small when \\(\\rho>0\\))</td><td>Newey–West HAC SE; Cochrane–Orcutt or GLS; model the dynamics</td></tr><tr><td>Endogeneity, \\(\\mathrm{Cov}(x,e)\\ne0\\)</td><td>Biased and inconsistent</td><td>Instrumental variables; control for the omitted variable; fixed effects</td></tr><tr><td>Multicollinearity</td><td>Unbiased, but variance inflated by \\(1/(1-R_j^2)\\)</td><td>More data; drop or combine regressors; ridge</td></tr></table><b>Failure modes:</b> robust SEs do not fix bias; Newey–West needs a lag choice; IV needs valid instruments (relevance and exclusion).",
   "tags": [
    "s_conditional_expectation_tower",
    "ols",
@@ -477,7 +477,7 @@
  {
   "type": "basic",
   "front": "Known problem: \\(y_i=\\beta x_i+\\varepsilon_i\\) with homoskedastic errors; OLS through the origin. <b>Perturb:</b> \\(\\mathrm{Var}(\\varepsilon_i\\mid x_i)=\\sigma^2x_i^2\\), with \\(x\\in\\{1,2,3\\}\\). Compare the variance of the OLS slope with the variance of the best linear estimator (WLS), in units of \\(\\sigma^2\\).",
-  "back": "<b>What breaks:</b> \\(\\mathrm{Var}(\\hat\\beta)=\\sigma^2(X^\\top X)^{-1}\\) assumes constant variance. Here \\(\\mathrm{Var}(\\hat\\beta_{OLS})=\\dfrac{\\sum x_i^2\\cdot\\sigma^2x_i^2}{(\\sum x_i^2)^2}=\\dfrac{98}{196}\\sigma^2=\\tfrac12\\sigma^2\\).<br>\n<b>Fix:</b> WLS with weights \\(1/x_i^2\\): \\(y_i/x_i=\\beta+\\varepsilon_i/x_i\\) is homoskedastic, so the best estimator is the mean of \\(y_i/x_i\\), with variance \\(\\sigma^2/3\\).<br>\n<b>New answer:</b> \\(\\mathrm{Var}_{OLS}=\\tfrac12\\sigma^2\\) versus \\(\\mathrm{Var}_{WLS}=\\tfrac13\\sigma^2\\); the OLS SE is \\(\\sqrt{1.5}\\approx1.22\\times\\) larger. Simulation: 0.499 vs 0.5.<br>\n<b>Structure of the fix:</b> s_variance_decomposition (weights from the variance function).",
+  "back": "<b>What breaks:</b> \\(\\mathrm{Var}(\\hat\\beta)=\\sigma^2(X^\\top X)^{-1}\\) assumes constant variance. Here \\(\\mathrm{Var}(\\hat\\beta_{OLS})=\\dfrac{\\sum x_i^2\\cdot\\sigma^2x_i^2}{(\\sum x_i^2)^2}=\\dfrac{98}{196}\\sigma^2=\\tfrac12\\sigma^2\\).<br><b>Fix:</b> WLS with weights \\(1/x_i^2\\): \\(y_i/x_i=\\beta+\\varepsilon_i/x_i\\) is homoskedastic, so the best estimator is the mean of \\(y_i/x_i\\), with variance \\(\\sigma^2/3\\).<br><b>New answer:</b> \\(\\mathrm{Var}_{OLS}=\\tfrac12\\sigma^2\\) versus \\(\\mathrm{Var}_{WLS}=\\tfrac13\\sigma^2\\); the OLS SE is \\(\\sqrt{1.5}\\approx1.22\\times\\) larger. Simulation: 0.499 vs 0.5.<br><b>Structure of the fix:</b> s_variance_decomposition (weights from the variance function).",
   "tags": [
    "s_variance_decomposition",
    "ols",
@@ -489,7 +489,7 @@
  {
   "type": "basic",
   "front": "\\(x_t\\) is a stationary AR(1), \\(x_t=0.5x_{t-1}+\\varepsilon_t\\), with marginal variance \\(\\sigma_x^2\\). The naive standard error of the sample mean over \\(T=1000\\) observations uses \\(\\sigma_x^2/T\\). What is the true asymptotic variance of the sample mean, and by what factor is the naive SE understated?",
-  "back": "<b>Answer:</b> \\(\\mathrm{Var}(\\bar x)\\approx3\\sigma_x^2/T\\); the naive SE is understated by \\(\\sqrt3\\approx1.73\\).<br>\n<b>Structure:</b> s_markov_chain (positive serial correlation accumulates in sums).<br>\n<b>Key move:</b> long-run variance \\(=\\sum_{k}\\mathrm{Cov}(x_t,x_{t+k})=\\sigma_x^2\\sum_{k\\in\\mathbb Z}\\rho^{|k|}=\\sigma_x^2\\tfrac{1+\\rho}{1-\\rho}\\).<br>\n<b>Working:</b> \\(\\tfrac{1.5}{0.5}=3\\).<br>\n<b>Sanity check:</b> simulation with \\(T=2000\\): ratio 2.94 (\\(\\approx3\\)).<br>\n<b>Fix:</b> Newey–West HAC SE with Bartlett weights and a lag chosen by a rule such as Newey–West's.",
+  "back": "<b>Answer:</b> \\(\\mathrm{Var}(\\bar x)\\approx3\\sigma_x^2/T\\); the naive SE is understated by \\(\\sqrt3\\approx1.73\\).<br><b>Structure:</b> s_markov_chain (positive serial correlation accumulates in sums).<br><b>Key move:</b> long-run variance \\(=\\sum_{k}\\mathrm{Cov}(x_t,x_{t+k})=\\sigma_x^2\\sum_{k\\in\\mathbb Z}\\rho^{|k|}=\\sigma_x^2\\tfrac{1+\\rho}{1-\\rho}\\).<br><b>Working:</b> \\(\\tfrac{1.5}{0.5}=3\\).<br><b>Sanity check:</b> simulation with \\(T=2000\\): ratio 2.94 (\\(\\approx3\\)).<br><b>Fix:</b> Newey–West HAC SE with Bartlett weights and a lag chosen by a rule such as Newey–West's.<br><b>Transfer:</b> overlapping 5-day returns induce the same serial correlation, so naive SEs are too small there too.",
   "tags": [
    "s_markov_chain",
    "ols",
@@ -501,7 +501,7 @@
  {
   "type": "basic",
   "front": "Data: \\(x=(1,2,3,4,5)\\), \\(y=(2,3,5,4,9)\\). Compute the slope of \\(y\\) on \\(x\\), the slope of \\(x\\) on \\(y\\), and show their product equals \\(R^2\\).",
-  "back": "<b>Answer:</b> \\(\\hat\\beta_{y\\text{ on }x}=\\tfrac32\\), \\(\\hat\\beta_{x\\text{ on }y}=\\tfrac{75}{146}\\approx0.5137\\); product \\(=\\tfrac{225}{292}\\approx0.7705=R^2\\).<br>\n<b>Structure:</b> s_variance_decomposition (\\(r^2\\) splits into two slopes).<br>\n<b>Key move:</b> \\(\\hat\\beta_{yx}\\hat\\beta_{xy}=\\dfrac{S_{xy}}{S_{xx}}\\cdot\\dfrac{S_{xy}}{S_{yy}}=\\dfrac{S_{xy}^2}{S_{xx}S_{yy}}=r^2\\).<br>\n<b>Working:</b> \\(S_{xx}=10\\), \\(S_{yy}=29.2\\), \\(S_{xy}=15\\). In simple regression \\(R^2=r^2\\).<br>\n<b>Sanity check:</b> the slope of \\(y\\) on \\(x\\) is \\(r\\sigma_y/\\sigma_x\\), which is larger than \\(r\\) here because \\(y\\) is more dispersed than \\(x\\) in this sample; the reverse slope is the mirror image.<br>\n<b>Transfer:</b> regression to the mean (J1): the slope is \\(r\\) times a ratio of SDs.",
+  "back": "<b>Answer:</b> \\(\\hat\\beta_{y\\text{ on }x}=\\tfrac32\\), \\(\\hat\\beta_{x\\text{ on }y}=\\tfrac{75}{146}\\approx0.5137\\); product \\(=\\tfrac{225}{292}\\approx0.7705=R^2\\).<br><b>Structure:</b> s_variance_decomposition (\\(r^2\\) splits into two slopes).<br><b>Key move:</b> \\(\\hat\\beta_{yx}\\hat\\beta_{xy}=\\dfrac{S_{xy}}{S_{xx}}\\cdot\\dfrac{S_{xy}}{S_{yy}}=\\dfrac{S_{xy}^2}{S_{xx}S_{yy}}=r^2\\).<br><b>Working:</b> \\(S_{xx}=10\\), \\(S_{yy}=29.2\\), \\(S_{xy}=15\\). In simple regression \\(R^2=r^2\\).<br><b>Sanity check:</b> the slope of \\(y\\) on \\(x\\) is \\(r\\sigma_y/\\sigma_x\\), which is larger than \\(r\\) here because \\(y\\) is more dispersed than \\(x\\) in this sample; the reverse slope is the mirror image.<br><b>Transfer:</b> regression to the mean (J1): the slope is \\(r\\) times a ratio of SDs.",
   "tags": [
    "s_variance_decomposition",
    "ols",
@@ -525,7 +525,7 @@
  {
   "type": "basic",
   "front": "True model: \\(y=2x_1+3x_2+\\varepsilon\\), with \\(x_2=0.5x_1+u\\), \\(u\\) independent of \\(x_1\\) and \\(\\varepsilon\\). You regress \\(y\\) on \\(x_1\\) alone. What is the expected slope? Give the omitted variable bias formula.",
-  "back": "<b>Answer:</b> \\(E[\\hat b]=2+3\\times0.5=3.5\\). OVB: \\(E[\\hat\\beta_1]=\\beta_1+\\beta_2\\delta\\), with \\(\\delta=\\mathrm{Cov}(x_1,x_2)/\\mathrm{Var}(x_1)\\).<br>\n<b>Structure:</b> s_conditional_expectation_tower (the auxiliary regression of \\(x_2\\) on \\(x_1\\) gives \\(\\delta\\)).<br>\n<b>Key move:</b> in every sample, \\(\\hat b_{\\text{short}}=\\hat\\beta_1+\\hat\\beta_2\\hat\\delta\\); then take expectations.<br>\n<b>Working:</b> \\(\\mathrm{Cov}(x_1,x_2)=0.5\\,\\mathrm{Var}(x_1)\\), so \\(\\delta=0.5\\); \\(E[\\hat b]=2+1.5=3.5\\).<br>\n<b>Sanity check:</b> the bias vanishes if \\(\\delta=0\\) or \\(\\beta_2=0\\); its sign is \\(\\mathrm{sign}(\\beta_2)\\,\\mathrm{sign}(\\delta)\\). Simulation of \\(10^6\\) draws: 3.504.<br>\n<b>Transfer:</b> a confounder left out of a pricing regression; the opposite trap is controlling for a mediator (I9).",
+  "back": "<b>Answer:</b> \\(E[\\hat b]=2+3\\times0.5=3.5\\). OVB: \\(E[\\hat\\beta_1]=\\beta_1+\\beta_2\\delta\\), with \\(\\delta=\\mathrm{Cov}(x_1,x_2)/\\mathrm{Var}(x_1)\\).<br><b>Structure:</b> s_conditional_expectation_tower (the auxiliary regression of \\(x_2\\) on \\(x_1\\) gives \\(\\delta\\)).<br><b>Key move:</b> in every sample, \\(\\hat b_{\\text{short}}=\\hat\\beta_1+\\hat\\beta_2\\hat\\delta\\); then take expectations.<br><b>Working:</b> \\(\\mathrm{Cov}(x_1,x_2)=0.5\\,\\mathrm{Var}(x_1)\\), so \\(\\delta=0.5\\); \\(E[\\hat b]=2+1.5=3.5\\).<br><b>Sanity check:</b> the bias vanishes if \\(\\delta=0\\) or \\(\\beta_2=0\\); its sign is \\(\\mathrm{sign}(\\beta_2)\\,\\mathrm{sign}(\\delta)\\). Simulation of \\(10^6\\) draws: 3.504.<br><b>Transfer:</b> a confounder left out of a pricing regression; the opposite trap is controlling for a mediator (I9).",
   "tags": [
    "s_conditional_expectation_tower",
    "ols",
@@ -560,7 +560,7 @@
  {
   "type": "basic",
   "front": "Two regressors with correlation \\(\\rho=0.99\\), both standardised. What is the variance inflation factor for \\(\\hat\\beta_1\\), and by how much does its standard error grow relative to uncorrelated regressors?",
-  "back": "<b>Answer:</b> VIF \\(=1/(1-\\rho^2)=1/0.0199\\approx50.25\\); SE grows by \\(\\sqrt{50.25}\\approx7.09\\times\\).<br>\n<b>Structure:</b> s_variance_decomposition (\\(R_1^2\\) from regressing \\(x_1\\) on \\(x_2\\) equals \\(\\rho^2\\)).<br>\n<b>Key move:</b> \\(\\mathrm{Var}(\\hat\\beta_1)=\\dfrac{\\sigma^2}{\\sum(x_{1i}-\\bar x_1)^2\\,(1-R_1^2)}\\).<br>\n<b>Working:</b> \\(R_1^2=0.9801\\), \\(1-R_1^2=0.0199\\), so the factor is \\(50.25\\).<br>\n<b>Sanity check:</b> at \\(\\rho=0.9\\) the VIF is 5.26; it explodes as \\(\\rho\\to1\\). Data cannot separate two near-identical regressors without many more observations.<br>\n<b>Transfer:</b> market and sector factors with similar exposures over a short sample.",
+  "back": "<b>Answer:</b> VIF \\(=1/(1-\\rho^2)=1/0.0199\\approx50.25\\); SE grows by \\(\\sqrt{50.25}\\approx7.09\\times\\).<br><b>Structure:</b> s_variance_decomposition (\\(R_1^2\\) from regressing \\(x_1\\) on \\(x_2\\) equals \\(\\rho^2\\)).<br><b>Key move:</b> \\(\\mathrm{Var}(\\hat\\beta_1)=\\dfrac{\\sigma^2}{\\sum(x_{1i}-\\bar x_1)^2\\,(1-R_1^2)}\\).<br><b>Working:</b> \\(R_1^2=0.9801\\), \\(1-R_1^2=0.0199\\), so the factor is \\(50.25\\).<br><b>Sanity check:</b> at \\(\\rho=0.9\\) the VIF is 5.26; it explodes as \\(\\rho\\to1\\). Data cannot separate two near-identical regressors without many more observations.<br><b>Transfer:</b> market and sector factors with similar exposures over a short sample.",
   "tags": [
    "s_variance_decomposition",
    "ols",
@@ -572,7 +572,7 @@
  {
   "type": "basic",
   "front": "A test score is \\(X=T+e\\), with \\(\\mathrm{Var}(T)=100\\), \\(\\mathrm{Var}(e)=300\\), population mean 50. A student scores 90. What is the best estimate of the true score \\(T\\) under squared loss?",
-  "back": "<b>Answer:</b> \\(E[T\\mid X=90]=60\\).<br>\n<b>Structure:</b> s_conditional_expectation_tower (linear projection).<br>\n<b>Key move:</b> \\(E[T\\mid X]=\\mu+\\dfrac{\\mathrm{Cov}(T,X)}{\\mathrm{Var}(X)}(X-\\mu)\\), with \\(\\mathrm{Cov}(T,X)=\\mathrm{Var}(T)\\).<br>\n<b>Working:</b> reliability \\(\\rho=100/400=0.25\\); \\(50+0.25\\times40=60\\).<br>\n<b>Sanity check:</b> the prediction lies between the mean and the observation; with no noise (\\(\\rho=1\\)) it would be 90. Simulation: 59.98 among draws with a score near 90.<br>\n<b>Transfer:</b> the best forecast of a rookie's next season from one standout year.",
+  "back": "<b>Answer:</b> \\(E[T\\mid X=90]=60\\).<br><b>Structure:</b> s_conditional_expectation_tower (linear projection).<br><b>Key move:</b> \\(E[T\\mid X]=\\mu+\\dfrac{\\mathrm{Cov}(T,X)}{\\mathrm{Var}(X)}(X-\\mu)\\), with \\(\\mathrm{Cov}(T,X)=\\mathrm{Var}(T)\\).<br><b>Working:</b> reliability \\(\\rho=100/400=0.25\\); \\(50+0.25\\times40=60\\).<br><b>Sanity check:</b> the prediction lies between the mean and the observation; with no noise (\\(\\rho=1\\)) it would be 90. Simulation: 59.98 among draws with a score near 90.<br><b>Transfer:</b> the best forecast of a rookie's next season from one standout year.",
   "tags": [
    "s_conditional_expectation_tower",
    "regression_to_mean",
@@ -583,7 +583,7 @@
  {
   "type": "basic",
   "front": "Students in the top 1% on test 1 score lower on average on test 2. A teacher concludes that the top students should get less credit.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
-  "back": "<b>Structure:</b> s_conditional_expectation_tower with reliability below 1.<br><b>Trigger:</b> selection on an extreme of a noisy measurement; the retest is a fresh, unselected noisy draw.<br><b>Key move:</b> \\(E[T\\mid X]=\\mu+\\rho(X-\\mu)\\) with \\(\\rho<1\\), so the expected retest moves toward the mean with no intervention at all.<br><b>Answer:</b> the drop is expected from noise alone. It does not show the credit was unfair or that the top students declined. Compare with a control group.",
+  "back": "<b>Structure:</b> s_conditional_expectation_tower with reliability below 1.<br><b>Trigger:</b> selection on an extreme of a noisy measurement; the retest is a fresh, unselected noisy draw.<br><b>Key move:</b> \\(E[T\\mid X]=\\mu+\\rho(X-\\mu)\\) with \\(\\rho\\lt 1\\), so the expected retest moves toward the mean with no intervention at all.<br><b>Answer:</b> the drop is expected from noise alone. It does not show the credit was unfair or that the top students declined. Compare with a control group.",
   "tags": [
    "s_conditional_expectation_tower",
    "regression_to_mean",
@@ -607,7 +607,7 @@
  {
   "type": "basic",
   "front": "One regressor, \\(\\sum x^2=10\\), \\(\\sum xy=20\\), so the OLS slope is 2. Ridge objective \\(\\sum(y-\\beta x)^2+5\\beta^2\\). Find the ridge estimate, and the Gaussian prior variance \\(\\tau^2\\) for which it is the MAP estimate with \\(\\sigma^2=1\\).",
-  "back": "<b>Answer:</b> \\(\\hat\\beta_R=\\tfrac{20}{15}=\\tfrac43\\approx1.333\\); \\(\\tau^2=\\sigma^2/\\lambda=0.2\\).<br>\n<b>Structure:</b> s_eigen (shrinkage along the regressor direction, factor \\(\\tfrac{\\sum x^2}{\\sum x^2+\\lambda}\\)).<br>\n<b>Key move:</b> normal equations \\((\\sum x^2+\\lambda)\\beta=\\sum xy\\). MAP: the posterior is proportional to \\(\\exp\\{-\\tfrac{1}{2\\sigma^2}\\sum(y-\\beta x)^2-\\tfrac{\\beta^2}{2\\tau^2}\\}\\), so \\(\\lambda=\\sigma^2/\\tau^2\\).<br>\n<b>Working:</b> \\((10+5)\\beta=20\\). With \\(\\sigma^2=1\\): \\(5=1/\\tau^2\\), so \\(\\tau^2=0.2\\).<br>\n<b>Sanity check:</b> \\(\\lambda\\to0\\) recovers OLS (2); \\(\\lambda\\to\\infty\\) gives 0. The shrink factor here is \\(10/15\\).<br>\n<b>Transfer:</b> a tighter prior variance means more shrinkage.",
+  "back": "<b>Answer:</b> \\(\\hat\\beta_R=\\tfrac{20}{15}=\\tfrac43\\approx1.333\\); \\(\\tau^2=\\sigma^2/\\lambda=0.2\\).<br><b>Structure:</b> s_eigen (shrinkage along the regressor direction, factor \\(\\tfrac{\\sum x^2}{\\sum x^2+\\lambda}\\)).<br><b>Key move:</b> normal equations \\((\\sum x^2+\\lambda)\\beta=\\sum xy\\). MAP: the posterior is proportional to \\(\\exp\\{-\\tfrac{1}{2\\sigma^2}\\sum(y-\\beta x)^2-\\tfrac{\\beta^2}{2\\tau^2}\\}\\), so \\(\\lambda=\\sigma^2/\\tau^2\\).<br><b>Working:</b> \\((10+5)\\beta=20\\). With \\(\\sigma^2=1\\): \\(5=1/\\tau^2\\), so \\(\\tau^2=0.2\\).<br><b>Sanity check:</b> \\(\\lambda\\to0\\) recovers OLS (2); \\(\\lambda\\to\\infty\\) gives 0. The shrink factor here is \\(10/15\\).<br><b>Transfer:</b> a tighter prior variance means more shrinkage.",
   "tags": [
    "s_eigen",
    "ridge",
@@ -619,7 +619,7 @@
  {
   "type": "basic",
   "front": "Known problem: with an orthonormal design, ridge shrinks a coefficient \\(z\\) by \\(1/(1+\\lambda)\\) (objective \\(\\tfrac12(z-\\beta)^2+\\tfrac12\\lambda\\beta^2\\)). <b>Perturb:</b> replace the penalty by L1, objective \\(\\tfrac12(z-\\beta)^2+\\lambda|\\beta|\\). For \\(z=0.4\\), \\(\\lambda=0.5\\), compare the two estimates.",
-  "back": "<b>What breaks:</b> the L2 penalty is smooth at zero, so the estimate is only scaled down. The L1 penalty has a kink at zero: the optimality condition holds at \\(\\beta=0\\) whenever \\(|z|\\le\\lambda\\), so the estimate is exactly zero.<br>\n<b>Fix:</b> soft-thresholding, \\(\\hat\\beta=\\mathrm{sign}(z)\\max(|z|-\\lambda,0)\\).<br>\n<b>New answer:</b> lasso \\(=0\\); ridge \\(=0.4/1.5\\approx0.267\\).<br>\n<b>Structure of the fix:</b> s_eigen (orthonormal design diagonalises the problem).",
+  "back": "<b>What breaks:</b> the L2 penalty is smooth at zero, so the estimate is only scaled down. The L1 penalty has a kink at zero: the optimality condition holds at \\(\\beta=0\\) whenever \\(|z|\\le\\lambda\\), so the estimate is exactly zero.<br><b>Fix:</b> soft-thresholding, \\(\\hat\\beta=\\mathrm{sign}(z)\\max(|z|-\\lambda,0)\\).<br><b>New answer:</b> lasso \\(=0\\); ridge \\(=0.4/1.5\\approx0.267\\).<br><b>Structure of the fix:</b> s_eigen (orthonormal design diagonalises the problem).",
   "tags": [
    "s_eigen",
    "lasso",
@@ -643,7 +643,7 @@
  {
   "type": "basic",
   "front": "Two standardised factors with correlation 0.8: \\(\\Sigma=\\begin{pmatrix}1&0.8\\\\0.8&1\\end{pmatrix}\\). Find both eigenvalues, the first principal component direction, and the share of variance PC1 explains.",
-  "back": "<b>Answer:</b> \\(\\lambda_1=1.8\\) with \\(v_1=(1,1)/\\sqrt2\\); \\(\\lambda_2=0.2\\) with \\((1,-1)/\\sqrt2\\); PC1 share \\(90\\%\\).<br>\n<b>Structure:</b> s_eigen.<br>\n<b>Key move:</b> for \\(\\begin{pmatrix}a&c\\\\c&a\\end{pmatrix}\\), eigenvalues are \\(a\\pm c\\), with eigenvectors \\((1,\\pm1)\\).<br>\n<b>Working:</b> \\(\\det(\\Sigma-\\lambda I)=(1-\\lambda)^2-0.64=0\\), so \\(\\lambda=0.2,\\,1.8\\). Trace \\(=2\\).<br>\n<b>Sanity check:</b> the eigenvalues sum to the trace, 2; PC1 share \\(1.8/2=90\\%\\).<br>\n<b>Transfer:</b> two correlated tenors: PC1 is the common move.",
+  "back": "<b>Answer:</b> \\(\\lambda_1=1.8\\) with \\(v_1=(1,1)/\\sqrt2\\); \\(\\lambda_2=0.2\\) with \\((1,-1)/\\sqrt2\\); PC1 share \\(90\\%\\).<br><b>Structure:</b> s_eigen.<br><b>Key move:</b> for \\(\\begin{pmatrix}a&c\\\\c&a\\end{pmatrix}\\), eigenvalues are \\(a\\pm c\\), with eigenvectors \\((1,\\pm1)\\).<br><b>Working:</b> \\(\\det(\\Sigma-\\lambda I)=(1-\\lambda)^2-0.64=0\\), so \\(\\lambda=0.2,\\,1.8\\). Trace \\(=2\\).<br><b>Sanity check:</b> the eigenvalues sum to the trace, 2; PC1 share \\(1.8/2=90\\%\\).<br><b>Transfer:</b> two correlated tenors: PC1 is the common move.",
   "tags": [
    "s_eigen",
    "pca",
@@ -654,7 +654,7 @@
  {
   "type": "basic",
   "front": "Known problem: two standardised variables with correlation 0.5 give a PC1 share of 75%. <b>Perturb:</b> the same two series in different units: \\(\\mathrm{Var}(x)=10000\\) (basis points squared), \\(\\mathrm{Var}(y)=1\\), \\(\\mathrm{Cov}=50\\). Run PCA on the covariance matrix. What share does PC1 explain?",
-  "back": "<b>What breaks:</b> PCA on the covariance matrix depends on units. The large-variance variable dominates the decomposition, so PC1 points almost entirely at \\(x\\).<br>\n<b>Fix:</b> standardise (PCA on the correlation matrix), which is scale-free.<br>\n<b>New answer:</b> covariance eigenvalues \\(10000.25\\) and \\(0.75\\): PC1 share \\(\\approx99.99\\%\\), an artefact of units. Correlation-matrix eigenvalues \\(1.5\\) and \\(0.5\\): PC1 share \\(75\\%\\), the meaningful answer.<br>\n<b>Structure of the fix:</b> s_eigen.",
+  "back": "<b>What breaks:</b> PCA on the covariance matrix depends on units. The large-variance variable dominates the decomposition, so PC1 points almost entirely at \\(x\\).<br><b>Fix:</b> standardise (PCA on the correlation matrix), which is scale-free.<br><b>New answer:</b> covariance eigenvalues \\(10000.25\\) and \\(0.75\\): PC1 share \\(\\approx99.99\\%\\), an artefact of units. Correlation-matrix eigenvalues \\(1.5\\) and \\(0.5\\): PC1 share \\(75\\%\\), the meaningful answer.<br><b>Structure of the fix:</b> s_eigen.",
   "tags": [
    "s_eigen",
    "pca",
@@ -666,7 +666,7 @@
  {
   "type": "basic",
   "front": "A fund-of-funds holds 10 managers in equal weight. Each manager has annual volatility 1, and every pair has correlation 0.2. What is the fund's annual volatility?",
-  "back": "<b>Classic:</b> an equicorrelated (compound-symmetry) covariance matrix. The equal-weight vector is its top eigenvector, with eigenvalue \\(1+(n-1)\\rho\\) (the eigenstructure of an equicorrelation matrix).<br>\n<b>Mapping:</b> \\(\\Sigma=(1-\\rho)I+\\rho\\mathbf 1\\mathbf 1^\\top\\). Portfolio variance is \\(w^\\top\\Sigma w\\) with \\(w=\\tfrac1n\\mathbf 1\\), which equals \\(\\tfrac{1}{n}\\big(1+(n-1)\\rho\\big)\\).<br>\n<b>Answer:</b> \\(\\mathrm{Var}=\\tfrac{1+9(0.2)}{10}=0.28\\), so volatility \\(\\approx0.53\\). As \\(n\\to\\infty\\) it tends to \\(\\sqrt\\rho\\approx0.447\\), not zero, because the common component cannot be diversified away.",
+  "back": "<b>Classic:</b> an equicorrelated (compound-symmetry) covariance matrix. The equal-weight vector is its top eigenvector, with eigenvalue \\(1+(n-1)\\rho\\) (the eigenstructure of an equicorrelation matrix).<br><b>Mapping:</b> \\(\\Sigma=(1-\\rho)I+\\rho\\mathbf 1\\mathbf 1^\\top\\). Portfolio variance is \\(w^\\top\\Sigma w\\) with \\(w=\\tfrac1n\\mathbf 1\\), which equals \\(\\tfrac{1}{n}\\big(1+(n-1)\\rho\\big)\\).<br><b>Answer:</b> \\(\\mathrm{Var}=\\tfrac{1+9(0.2)}{10}=0.28\\), so volatility \\(\\approx0.53\\). As \\(n\\to\\infty\\) it tends to \\(\\sqrt\\rho\\approx0.447\\), not zero, because the common component cannot be diversified away.",
   "tags": [
    "s_eigen",
    "s_variance_decomposition",
@@ -690,7 +690,7 @@
  {
   "type": "basic",
   "front": "\\(\\mathrm{corr}(X,Y)=0.9\\) and \\(\\mathrm{corr}(Y,Z)=0.9\\). What is the range of possible values for \\(\\mathrm{corr}(X,Z)\\)?",
-  "back": "<b>Answer:</b> \\([0.62,\\,1]\\).<br>\n<b>Structure:</b> s_eigen (positive semi-definiteness of the correlation matrix).<br>\n<b>Key move:</b> a \\(3\\times3\\) correlation matrix is PSD iff its determinant is non-negative (with \\(|r|\\le1\\)). \\(\\det=1-\\rho_{12}^2-\\rho_{23}^2-\\rho_{13}^2+2\\rho_{12}\\rho_{23}\\rho_{13}\\).<br>\n<b>Working:</b> with \\(r=\\rho_{13}\\): \\(\\det=-r^2+1.62r-0.62=-(r-1)(r-0.62)\\ge0\\), so \\(r\\in[0.62,1]\\). General form: \\(\\rho_1\\rho_2\\pm\\sqrt{(1-\\rho_1^2)(1-\\rho_2^2)}=0.81\\pm0.19\\).<br>\n<b>Sanity check:</b> angle view: \\(\\arccos0.9\\approx25.84^\\circ\\), so \\(\\angle XZ\\le2\\times25.84^\\circ\\) and \\(\\cos(51.7^\\circ)=0.62\\). \\(\\mathrm{corr}=1\\) is \\(X=Z\\).<br>\n<b>Transfer:</b> M6 (three cities).",
+  "back": "<b>Answer:</b> \\([0.62,\\,1]\\).<br><b>Structure:</b> s_eigen (positive semi-definiteness of the correlation matrix).<br><b>Key move:</b> a \\(3\\times3\\) correlation matrix is PSD iff its determinant is non-negative (with \\(|r|\\le1\\)). \\(\\det=1-\\rho_{12}^2-\\rho_{23}^2-\\rho_{13}^2+2\\rho_{12}\\rho_{23}\\rho_{13}\\).<br><b>Working:</b> with \\(r=\\rho_{13}\\): \\(\\det=-r^2+1.62r-0.62=-(r-1)(r-0.62)\\ge0\\), so \\(r\\in[0.62,1]\\). General form: \\(\\rho_1\\rho_2\\pm\\sqrt{(1-\\rho_1^2)(1-\\rho_2^2)}=0.81\\pm0.19\\).<br><b>Sanity check:</b> angle view: \\(\\arccos0.9\\approx25.84^\\circ\\), so \\(\\angle XZ\\le2\\times25.84^\\circ\\) and \\(\\cos(51.7^\\circ)=0.62\\). \\(\\mathrm{corr}=1\\) is \\(X=Z\\).<br><b>Transfer:</b> M6 (three cities).",
   "tags": [
    "s_eigen",
    "correlation_bounds",
@@ -701,7 +701,7 @@
  {
   "type": "basic",
   "front": "Known problem: \\(\\mathrm{corr}(X,Y)=\\mathrm{corr}(Y,Z)=0.9\\) forces \\(\\mathrm{corr}(X,Z)\\in[0.62,1]\\). <b>Perturb:</b> someone sets \\(\\mathrm{corr}(X,Z)=0.5\\). Is \\(\\begin{pmatrix}1&0.9&0.5\\\\0.9&1&0.9\\\\0.5&0.9&1\\end{pmatrix}\\) a valid correlation matrix? Give the determinant and the smallest eigenvalue.",
-  "back": "<b>What breaks:</b> the lower bound 0.62 on \\(\\mathrm{corr}(X,Z)\\) is violated. Determinant \\(=-0.06<0\\); smallest eigenvalue \\(\\approx-0.047\\). The matrix is not PSD, so no random vector can have these correlations.<br>\n<b>Fix:</b> raise \\(\\mathrm{corr}(X,Z)\\) to at least the bound implied by the other two, or change the other two correlations.<br>\n<b>New answer:</b> invalid. Given the other two, the smallest feasible \\(\\mathrm{corr}(X,Z)\\) is 0.62.<br>\n<b>Structure of the fix:</b> s_eigen.",
+  "back": "<b>What breaks:</b> the lower bound 0.62 on \\(\\mathrm{corr}(X,Z)\\) is violated. Determinant \\(=-0.06\\lt 0\\); smallest eigenvalue \\(\\approx-0.047\\). The matrix is not PSD, so no random vector can have these correlations.<br><b>Fix:</b> raise \\(\\mathrm{corr}(X,Z)\\) to at least the bound implied by the other two, or change the other two correlations.<br><b>New answer:</b> invalid. Given the other two, the smallest feasible \\(\\mathrm{corr}(X,Z)\\) is 0.62.<br><b>Structure of the fix:</b> s_eigen.",
   "tags": [
    "s_eigen",
    "correlation_bounds",
@@ -723,7 +723,7 @@
  {
   "type": "basic",
   "front": "The true correlation between two quantities is 0.6. Measurement reliabilities (signal share of variance) are 0.8 for \\(X\\) and 0.5 for \\(Y\\). (a) What correlation do you observe? (b) Given an observed correlation of 0.3, what is the disattenuated estimate of the true correlation?",
-  "back": "<b>Answer:</b> (a) \\(0.6\\sqrt{0.8\\times0.5}\\approx0.379\\). (b) \\(0.3/\\sqrt{0.4}\\approx0.474\\).<br>\n<b>Structure:</b> s_variance_decomposition (measurement noise inflates each variable's variance in the denominator).<br>\n<b>Key move:</b> \\(r_{\\text{obs}}=\\rho\\sqrt{R_XR_Y}\\), so \\(\\rho=r_{\\text{obs}}/\\sqrt{R_XR_Y}\\).<br>\n<b>Working:</b> \\(\\sqrt{0.4}=0.6325\\); \\(0.6\\times0.6325=0.3795\\); \\(0.3/0.6325=0.474\\).<br>\n<b>Sanity check:</b> the observed correlation is biased toward zero. A disattenuated value above 1 in a finite sample signals sampling error rather than a model failure.",
+  "back": "<b>Answer:</b> (a) \\(0.6\\sqrt{0.8\\times0.5}\\approx0.379\\). (b) \\(0.3/\\sqrt{0.4}\\approx0.474\\).<br><b>Structure:</b> s_variance_decomposition (measurement noise inflates each variable's variance in the denominator).<br><b>Key move:</b> \\(r_{\\text{obs}}=\\rho\\sqrt{R_XR_Y}\\), so \\(\\rho=r_{\\text{obs}}/\\sqrt{R_XR_Y}\\).<br><b>Working:</b> \\(\\sqrt{0.4}=0.6325\\); \\(0.6\\times0.6325=0.3795\\); \\(0.3/0.6325=0.474\\).<br><b>Sanity check:</b> the observed correlation is biased toward zero. A disattenuated value above 1 in a finite sample signals sampling error rather than a model failure.<br><b>Transfer:</b> the same logic explains why a noisy regressor attenuates the OLS slope by its reliability.",
   "tags": [
    "s_variance_decomposition",
    "correlation",
@@ -735,7 +735,7 @@
  {
   "type": "basic",
   "front": "A sample correlation of \\(r=0.2\\) from \\(n=250\\) bivariate normal pairs. Give a 95% confidence interval for the true correlation via Fisher's \\(z\\)-transform.",
-  "back": "<b>Answer:</b> \\(\\approx[0.078,\\,0.316]\\).<br>\n<b>Structure:</b> s_taylor (delta method on \\(\\operatorname{atanh}\\)) with s_clt_normal_approx.<br>\n<b>Key move:</b> \\(z=\\operatorname{atanh}(r)\\) is approximately \\(N(\\operatorname{atanh}\\rho,\\,1/(n-3))\\).<br>\n<b>Working:</b> \\(z=0.2027\\); \\(\\mathrm{SE}=1/\\sqrt{247}=0.0636\\); \\(z\\pm1.96\\,\\mathrm{SE}=[0.0779,\\,0.3274]\\); transform back with tanh to get \\([0.078,\\,0.316]\\).<br>\n<b>Sanity check:</b> the interval is asymmetric about 0.2 because tanh is nonlinear, and it excludes 0. It is an asymptotic approximation, so treat the edges as approximate.",
+  "back": "<b>Answer:</b> \\(\\approx[0.078,\\,0.316]\\).<br><b>Structure:</b> s_taylor (delta method on \\(\\operatorname{atanh}\\)) with s_clt_normal_approx.<br><b>Key move:</b> \\(z=\\operatorname{atanh}(r)\\) is approximately \\(N(\\operatorname{atanh}\\rho,\\,1/(n-3))\\).<br><b>Working:</b> \\(z=0.2027\\); \\(\\mathrm{SE}=1/\\sqrt{247}=0.0636\\); \\(z\\pm1.96\\,\\mathrm{SE}=[0.0779,\\,0.3274]\\); transform back with tanh to get \\([0.078,\\,0.316]\\).<br><b>Sanity check:</b> the interval is asymmetric about 0.2 because tanh is nonlinear, and it excludes 0. It is an asymptotic approximation, so treat the edges as approximate.<br><b>Transfer:</b> the same z-transform tests whether two sample correlations differ.",
   "tags": [
    "s_taylor",
    "s_clt_normal_approx",
@@ -748,7 +748,7 @@
  {
   "type": "basic",
   "front": "Three cities' daily temperature anomalies: Paris and Berlin have correlation 0.9, and Berlin and Rome have correlation 0.9. What is the smallest possible correlation between Paris and Rome?",
-  "back": "<b>Classic:</b> the bound on a third correlation implied by two others. Equivalently, the triangle inequality for angles between unit vectors (the M1 bounds).<br>\n<b>Mapping:</b> standardised, centred variables are unit vectors whose inner product is the correlation. The angle between them is \\(\\arccos(\\text{corr})\\), and angles satisfy the triangle inequality.<br>\n<b>Answer:</b> \\(\\cos(2\\arccos0.9)=2(0.81)-1=0.62\\). The minimum is 0.62 and the maximum is 1.",
+  "back": "<b>Classic:</b> the bound on a third correlation implied by two others. Equivalently, the triangle inequality for angles between unit vectors (the M1 bounds).<br><b>Mapping:</b> standardised, centred variables are unit vectors whose inner product is the correlation. The angle between them is \\(\\arccos(\\text{corr})\\), and angles satisfy the triangle inequality.<br><b>Answer:</b> \\(\\cos(2\\arccos0.9)=2(0.81)-1=0.62\\). The minimum is 0.62 and the maximum is 1.",
   "tags": [
    "s_eigen",
    "correlation_bounds",
@@ -759,7 +759,7 @@
  {
   "type": "basic",
   "front": "100 people each pick one seat independently and uniformly at random from 100 seats, with repetition allowed. What is the probability that seat 1 is never picked, and what is it as the number of seats grows?",
-  "back": "<b>Classic:</b> the bootstrap probability that a given original observation is absent from a resample. Resampling a sample of size \\(n\\) with replacement is this occupancy problem.<br>\n<b>Mapping:</b> seats are the original data points; people are the bootstrap draws; \"seat 1 never picked\" means the observation is missing from the resample.<br>\n<b>Answer:</b> \\((1-1/100)^{100}\\approx0.366\\), with limit \\(1/e\\approx0.368\\). So the original maximum appears in only about 63% of bootstrap resamples. Simulation: 0.365. The bootstrap therefore cannot reproduce extremes well.",
+  "back": "<b>Classic:</b> the bootstrap probability that a given original observation is absent from a resample. Resampling a sample of size \\(n\\) with replacement is this occupancy problem.<br><b>Mapping:</b> seats are the original data points; people are the bootstrap draws; \"seat 1 never picked\" means the observation is missing from the resample.<br><b>Answer:</b> \\((1-1/100)^{100}\\approx0.366\\), with limit \\(1/e\\approx0.368\\). So the original maximum appears in only about 63% of bootstrap resamples. Simulation: 0.365. The bootstrap therefore cannot reproduce extremes well.",
   "tags": [
    "s_indicators",
    "s_complement",
