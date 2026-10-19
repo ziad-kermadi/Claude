@@ -141,7 +141,7 @@
   ]
  },
  {
-  "type": "basic",
+  "type": "cloze",
   "front": "Under EMIR and MiFIR-style transaction reporting, each report carries three identifiers: the LEI identifies the {{c1::legal entity}}, the UTI identifies the {{c2::trade}}, and the UPI identifies the {{c3::product}}.",
   "back": "A UTI must be the same in both counterparties' reports, otherwise the trade repository cannot pair the two sides. A mismatched UTI is a pairing break and a common regulatory data-quality finding.",
   "tags": [
@@ -152,7 +152,7 @@
   ]
  },
  {
-  "type": "basic",
+  "type": "cloze",
   "front": "Under a CSA, a variation margin call is made only when the exposure above the threshold is at least the {{c1::minimum transfer amount (MTA)}}, and the threshold and MTA are set for each counterparty in the {{c2::credit support annex}}.",
   "back": "Worked check: exposure 3.2m, threshold 1m, so 2.2m above the threshold, which is at least an MTA of 0.5m, so a call is made. Exposure 1.3m gives 0.3m above the threshold, which is below the 0.5m MTA, so no transfer is made.",
   "tags": [
@@ -163,7 +163,7 @@
   ]
  },
  {
-  "type": "basic",
+  "type": "cloze",
   "front": "Spot-start convention for a new OIS: a USD or EUR OIS usually starts {{c1::two}} business days after trade date (T+2), while a sterling SONIA OIS is commonly traded for a start on the {{c2::trade date}} (T+0). Check the product convention before you assume either.",
   "back": "A start date that is one day wrong changes the first accrual period, the annuity, and the DV01 bucket. Confirm the convention in the market data and the confirmation, not from memory.",
   "tags": [
@@ -325,7 +325,7 @@
   ]
  },
  {
-  "type": "basic",
+  "type": "cloze",
   "front": "The lifecycle of a cleared swap runs from execution to {{c1::affirmation or confirmation}}, then give-up or submission to the {{c2::CCP}}, then {{c3::acceptance or rejection}}, after which the trade is novated and the risk moves to the CCP.",
   "back": "Each stage has a status and an age. A trade stuck before acceptance is an open exposure to the executing counterparty, so every stage needs an owner and an ageing report.",
   "tags": [
@@ -336,7 +336,7 @@
   ]
  },
  {
-  "type": "basic",
+  "type": "cloze",
   "front": "Variation margin is {{c1::the daily change in mark-to-market}} settled in {{c2::cash}}, and interest on cash variation margin accrues at the {{c3::CCP's cash rate}} for that CCP.",
   "back": "Cash VM and IM are different. VM is a settlement of past MTM change; IM is a cover for future close-out risk. A booking error that changes the PV shows up in the next VM call, which is why the wrong direction can also appear as a cash surprise.",
   "tags": [

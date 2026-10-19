@@ -1,0 +1,362 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: WHALE_VAR 1/3]</b> Context: JPM's Chief Investment Office ran a synthetic credit book (CDX IG 9 in 2012) and changed its VaR model on 30 January 2012. Reported VaR fell sharply on the change. What was the change, why is it a governance failure if it is not validated, and what happened next?",
+  "back": "<b>Answer:</b> A new VaR model went live that roughly halved reported VaR, although the position had not been reduced. The change was not properly validated. A task force found spreadsheet errors that muted volatility by about a factor of two. In Q2 the CIO reverted to the old model and reported VaR almost doubled, to about $129m (IFR).<br><b>Desk point:</b> a risk number that falls when the book has not changed is a model event. Every model change needs a parallel run on the same positions and a P&amp;L-style attribution of the VaR move into 'model' and 'position' effects.<br><b>Interviewer follow-up:</b> how do you tell a genuine risk reduction from a model change? Answer: freeze the positions, run old and new models on the same date, and attribute the difference line by line.",
+  "tags": [
+   "london_whale",
+   "model_risk",
+   "chain_whale_var",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: WHALE_VAR 2/3]</b> Context: a VaR-change metric is intended to be (new - old) / average(new, old), but the spreadsheet divides by (new + old). Take new = 5% and old = 2%. Compute both values and explain the size of the error for any inputs.",
+  "back": "<b>Intended:</b> \\((0.05-0.02)/((0.05+0.02)/2)=0.03/0.035=0.857\\).<br><b>Computed:</b> \\((0.05-0.02)/(0.05+0.02)=0.03/0.07=0.429\\).<br><b>Derivation:</b> the denominator used is \\(a+b = 2\\cdot\\text{avg}(a,b)\\), so the computed value is exactly \\(\\tfrac12\\) the intended value for every pair of inputs. Every normalised change is halved, and the reported measure is systematically muted by a factor of two. This matches the reported 'factor of two' effect.<br><b>Where it breaks:</b> the error is invisible if the output is only sanity-checked against a single expected number that was itself produced by the same spreadsheet. Test with hand-computed fixtures, including a case where the answer is known in closed form.<br><b>Interviewer follow-up:</b> why does a 'reasonable-looking' number survive review? Answer: the reviewer checks direction and order of magnitude, not the formula.",
+  "tags": [
+   "london_whale",
+   "model_risk",
+   "chain_whale_var",
+   "case_study",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: WHALE_VAR 3/3]</b> Context: after the 2012 losses, a new CIO synthetic-credit VaR model is proposed. A risk manager asks what controls would have stopped a concentrated index position from building up even with a correct VaR number. Give the controls in order of priority.",
+  "back": "<b>Answer, in order:</b> (1) independent model validation and sign-off before go-live, with a documented change log; (2) an attribution report that splits every VaR change into model and position effects; (3) notional and DV01/CS01 limits per index series, since a single series can be a large share of a credit book while VaR still looks small; (4) jump-to-default or stress limits on the largest names and on the series themselves; (5) escalation when a limit is changed or a metric moves more than a set threshold without a position change.<br><b>Interviewer follow-up:</b> which single limit would have caught the build-up? Answer: a notional or CS01 limit on the series, because VaR is sensitive to the model and to the volatility regime, and notional limits are not.",
+  "tags": [
+   "london_whale",
+   "risk_limits",
+   "chain_whale_var",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BASIS_UNWIND 1/3]</b> Context: in February 2020 leveraged funds were long cash Treasuries financed in repo and short Treasury futures. Estimates cited in the literature put the net futures shorts near $900bn and repo funding near $1.4trn. Which price moves against the trade in March 2020, and why?",
+  "back": "<b>Answer:</b> the cash-futures basis widened. The position earns the basis (futures are cheap to cash) and is financed through repo, so it is a short-volatility position on liquidity. In March 2020 the basis moved from a typical level of about 5bp to above 70bp (one source). Cash Treasuries cheapened as holders sold for cash and futures sales continued.<br><b>Desk point:</b> the P&amp;L of a basis trade is a carry and convergence trade with a liquidity put written to the market. The first risk to check is not the basis level but the margin on the futures leg and the haircut on the repo.<br><b>Interviewer follow-up:</b> what is the risk model for this position? Answer: a stressed margin scenario with the futures initial margin rising, not a carry-only breakeven.",
+  "tags": [
+   "treasury_basis",
+   "march_2020",
+   "chain_basis_unwind",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BASIS_UNWIND 2/3]</b> Context: in March 2020 initial margin on some Treasury futures more than doubled. A fund posts $1.0bn of initial margin and the exchange doubles the requirement. Its only liquid assets are cash Treasuries. Walk through the forced-selling loop and explain why the basis widens further.",
+  "back": "<b>Mechanics:</b> the fund needs $1.0bn of extra cash. It sells cash Treasuries, which cheapens them against futures, widening the basis. The mark-to-market on its short futures moves against it, which can require variation margin on top. Repo haircuts on the cash bonds may also rise in the same week.<br><b>Loop:</b> forced sale of cash, lower cash price, wider basis, larger mark-to-market loss on the futures leg, more margin.<br><b>Numbers:</b> the $1.0bn extra margin, if met entirely by sales of cash bonds at a 1% concession, costs about $10m, and it pushes the basis wider for every other holder of the same bond.<br><b>Where it breaks:</b> a fund with cash on hand, or an unlevered holder, has no loop. The amplification depends on the leverage and the share of the cash market held by levered funds.<br><b>Interviewer follow-up:</b> what would you check first on the desk? Answer: the cash and futures initial margin requirements by maturity and the repo haircuts, not the carry.",
+  "tags": [
+   "treasury_basis",
+   "march_2020",
+   "chain_basis_unwind",
+   "case_study",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: BASIS_UNWIND 3/3]</b> Context: in March 2020 the Fed bought Treasuries at scale and offered unlimited repo and reverse repo on Treasury collateral. Why did this restore the cash price but not the basis trader's risk, and what does a desk take from it?",
+  "back": "<b>Answer:</b> central bank buying lifts the cash price and closes the basis. A fund that has already been forced to sell at the wide basis has realised its loss, so the intervention repairs the market and not the trader's P&amp;L. Repo access removes the funding leg as a constraint.<br><b>Desk lesson:</b> a liquidity-driven loss is not reversed by a later price recovery. Model the position with a stressed haircut and margin path, and check which funding lines are contingent on the central bank.<br><b>Caveat:</b> the literature disputes the causal role of the basis unwind. One line of work (OFR) doubts that the trades amplified Treasury illiquidity, while a CFTC paper treats basis sales as an amplifier of the broad 'dash for cash'. Say so in an interview.",
+  "tags": [
+   "treasury_basis",
+   "march_2020",
+   "chain_basis_unwind",
+   "desk_practice",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: ARCHEGOS 1/3]</b> Context: in March 2021 the family office Archegos built concentrated single-stock exposure through total return swaps (TRS) at several prime brokers. Why did regulators and the market not see the position through 13F or 5% ownership filings, and what collateral did the banks hold?",
+  "back": "<b>Answer:</b> with a TRS the bank holds the stock as a hedge and the client has the economic exposure. Archegos was not the legal owner, so no 13F or 5% beneficial-ownership filing was triggered. The bank's exposure is the mark-to-market of the swap less the initial margin it holds.<br><b>Numbers:</b> an independent report summarised by Risk.net said the gross swap value rose from about $7bn in September 2020 to about $21bn at the collapse, and Credit Suisse held a margin of only 9.4% against its swaps two days before the default.<br><b>Desk point:</b> the margin is set by the bank's view of how many days it takes to exit, not by the notional. Concentration is the risk.<br><b>Interviewer follow-up:</b> what does a 9.4% margin imply about the stress the bank accepts? Answer: a gap of about 9% in the underlying, before any loss, and the move can exceed that in a few sessions in small or mid-cap names.",
+  "tags": [
+   "archegos",
+   "counterparty_risk",
+   "chain_archegos",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: ARCHEGOS 2/3]</b> Context: gross swap notional is about $21bn with a margin of 9.4% held by one bank. The underlying stocks fall 30% in the days before the bank can sell. Compute the bank's loss before costs and explain the assumption.",
+  "back": "<b>Derivation:</b> collateral \\(C=0.094\\times 21\\text{bn}=1.97\\text{bn}\\). Loss at a 30% gap, if the bank exits at the fall: \\(L=0.30\\times 21\\text{bn}-1.97\\text{bn}=6.30-1.97=4.33\\text{bn}\\). At a 20% gap the loss is \\(4.20-1.97\\approx 2.23\\text{bn}\\).<br><b>Assumptions:</b> the bank holds no other collateral, the exit is at the post-fall price, and funding and fees are ignored. This is illustrative and is not a reconstruction of any bank's actual loss.<br><b>Where it breaks:</b> the bank can hedge by selling short, but the shorts are in the same names, so the hedge is illiquid in the same scenario. Also the bank may have netted exposures across several swaps.<br><b>Interviewer follow-up:</b> what margin would you require? Answer: a margin that covers the expected move over the days-to-liquidate horizon (see the next card), not a fixed percentage.",
+  "tags": [
+   "archegos",
+   "counterparty_risk",
+   "chain_archegos",
+   "case_study",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: ARCHEGOS 3/3]</b> Context: a counterparty risk desk must set a margin add-on for a single-name equity TRS. The position is $5bn in one stock with average daily volume of $0.4bn, and the desk will sell at most 20% of daily volume. Give the time to exit and state what the margin should cover.",
+  "back": "<b>Derivation:</b> days to liquidate \\(=Q/(p\\cdot\\text{ADV})=5\\text{bn}/(0.20\\times 0.4\\text{bn})=62.5\\) trading days.<br><b>Margin rule:</b> the margin should cover the price move over the liquidation horizon at the stressed volatility, for the whole period, plus the price impact of selling. A position that takes about 60 days to exit cannot be margined at a 10% haircut that assumes a one-day close-out.<br><b>Where it breaks:</b> ADV falls in stress, so the true horizon is longer than the calm-market estimate. Use stressed volume, and cap the concentration rather than only raising the margin.<br><b>Interviewer follow-up:</b> is a concentration limit or a higher margin the better control? Answer: both, but the limit is what stops the position from getting this large.",
+  "tags": [
+   "archegos",
+   "counterparty_risk",
+   "chain_archegos",
+   "derivation",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Lehman Brothers' CDS credit-event auction in October 2008 set the final price at {{c1::8.625%}} of par. The settlement for protection sellers was therefore about {{c2::91.375%}} of notional.",
+  "back": "Protection buyers receive \\(1-\\text{final price}\\). The auction price is a result of bidding on bonds in the physical auction, so the price is a market price for recovery and not a model output.",
+  "tags": [
+   "lehman",
+   "cds_auction",
+   "credit_events",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Explain how a credit-event auction sets cash settlement on a CDS, and why the gross CDS notional on a name can be far larger than the bonds outstanding. Use Lehman in 2008 to illustrate.",
+  "back": "<b>Mechanism:</b> the auction collects bids and offers on the reference bonds, participants submit physical-settlement requests for the net open interest, and the final price fixes cash settlement at \\(N\\times(1-P_{final})\\) for protection sellers. The bond price feeds recovery directly.<br><b>Why gross exceeds bonds:</b> CDS notional is created by trading, not by issuance. Offsetting positions net to zero in the auction, but the remaining net open interest must be delivered, so the net is the number to track.<br><b>Lehman:</b> the initial open interest to sell was about $4.92bn net, with the midpoint of the initial market at 9.75, and the final price came in at 8.625. Press estimates of gross exposure were around $400bn.<br><b>Interviewer follow-up:</b> why do protection sellers prefer a high final price? Answer: a high final price means a low payout, so the seller who wrote protection pays less.",
+  "tags": [
+   "lehman",
+   "cds_auction",
+   "credit_events",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study:</b> you hold £10m notional of protection on Lehman bonds bought before the auction, and the final price is 8.625%. Compute the cash you receive from the auction, and state the sanity check you would do before booking it.",
+  "back": "<b>Calculation:</b> \\(10{,}000{,}000\\times(1-0.08625)=9{,}137{,}500\\), so the cash received is about £9.14m (the notional is in the same currency as the protection, so the result is £9,137,500).<br><b>Sanity check:</b> the loss of 8.625% of notional should be close to the mark on the position the day before the auction. Check that the net of the bond delivered (if any) and the accrued coupon are in the cash flows, and check the trade's recovery and payment dates against the protocol.<br><b>Where it breaks:</b> a protection buyer who is not in the physical-settlement set may have to rely on the cash settlement, and the net cash depends on whether the position is delivered physically or netted.<br><b>Interviewer follow-up:</b> what is the desk's exposure after the auction? Answer: the residual basis between the CDS and bond positions, and any open coupon or delivery mismatch.",
+  "tags": [
+   "lehman",
+   "cds_auction",
+   "case_study",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Scenario: it is 07:15 on a Tuesday in late September 2022. Overnight, a UK LDI pension fund's collateral was called after the gilt sell-off that followed the 23 September mini-budget. Your desk is the fund's repo and swap counterparty. Which checks do you run in the first 30 minutes, and what do you tell the risk team?",
+  "back": "<b>Checks, in order:</b> (1) the fund's collateral buffer and the size of the call in bp of rate move, using its DV01 and its leverage; (2) which assets the fund can deliver (cash, gilts, index-linked) and their haircuts today, since haircuts widened in the week; (3) whether the call is variation margin on swaps, repo margin, or both, and whether any call is unmet; (4) the fund's sell-down plan, and whether the sales would be in the long end where the market is thinnest; (5) which of your positions are in the same stress direction, such as the bank's own receiver positions held against the fund.<br><b>To risk:</b> state the stress in bp of 30y and 10y moves since the close, the collateral shortfall in £ and the number of days of forced sales the fund's assets imply, plus the current gilt market depth.<br><b>Illustrative sizing:</b> with an assumed DV01 of £3m per bp and a 50bp move, the variation margin is £150m. Use the real book figures in practice.<br><b>Interviewer follow-up:</b> what would you have needed to know a week earlier? Answer: the fund's leverage and its hedge ratio by maturity, which set how much collateral each bp of move costs.",
+  "tags": [
+   "ldi_2022",
+   "gilt_market",
+   "collateral",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "The Bank of England's temporary gilt purchases ran from 28 September to 14 October 2022, and the BoE described them as a temporary backstop. A risk manager asks how to model that policy support in a desk's gilt-curve scenarios. What is the correct treatment, and what happens when it ends?",
+  "back": "<b>Answer:</b> treat the facility as a put on long-end gilt prices with a fixed expiry date, not as a permanent floor. The purchases ended on 14 October as announced, and the BoE said they were intended to give LDI funds time to fix their resilience rather than to set a price. Its own analysis says the purchases were fully unwound by January 2023.<br><b>Desk point:</b> a position that is only viable while the backstop lasts is a short-volatility position on policy. Size it so that it survives the post-expiry state, and do not use the intervention-period prices as the mark.<br><b>Interviewer follow-up:</b> what changed in the curve when the facility closed? Answer: the premium from the intervention was removed, and the long end had to clear without the BoE bid, which is a liquidity question for the auction, not a rates-level question.",
+  "tags": [
+   "ldi_2022",
+   "gilt_market",
+   "policy_backstop",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Scenario: it is 07:15 on Tuesday 17 September 2019. Overnight repo has printed well above 5%, against about 2.4% the day before. Your book finances £2bn of cash bonds overnight. Give the first three actions and the one-day cost of the move, using a 3pp spike.",
+  "back": "<b>Actions:</b> (1) check your funding by counterparty and by tri-party versus bilateral, since the spike is in the segment you borrow in; (2) check the NY Fed's repo operation for the morning and whether dealers are taking it up (on the day the Fed offered $75bn and dealers took $53bn); (3) check your collateral: whether you can re-pledge, and what haircut the cash bonds now carry.<br><b>Cost:</b> \\(2\\text{bn}\\times 3\\%/360 \\approx \\$166{,}667\\) for one day on an Act/360 basis, before any change in haircut. The relevant comparison is the spike against your hedge carry, not the headline.<br><b>Context:</b> quarterly corporate tax payments on 16 September drained deposits. The OFR's analysis puts aggregate reserves at a multi-year low of below $1.4trn by mid-September.<br><b>Interviewer follow-up:</b> is this a funding or a price problem? Answer: funding, because it is the repo rate that moves while the bond price barely does. Re-price the bond book only if the bond itself becomes special.",
+  "tags": [
+   "repo_2019",
+   "funding",
+   "sofr",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In the September 2019 repo spike, overnight repo reached about {{c1::5.25%}} on 17 September from about {{c2::2.43%}} the day before, and aggregate reserves fell below {{c3::$1.4trn}}, a multi-year low.",
+  "back": "The spike is a reserves and funding event. The Fed's standing repo offer was the response; intraday prints went higher than the reported close.",
+  "tags": [
+   "repo_2019",
+   "funding",
+   "sofr",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Scenario: it is 16:15 on Wednesday 8 March 2023. A mid-size bank has announced it sold about $21bn of its liquid securities at a loss of about 9%, and its held-to-maturity portfolio is large. Its deposit base is concentrated in one sector. Walk through the desk's view of the bank's rate and liquidity exposure, and which numbers you need.",
+  "back": "<b>Key point:</b> the held-to-maturity (HTM) book is carried at amortised cost, so the rate loss stays off the income statement and off regulatory capital until the bank sells. The realised loss is the economic loss, and the sale crystallises it.<br><b>What to compute:</b> (1) the duration of the HTM and AFS books and the unrealised loss for a given move in rates, \\(\\text{loss}\\approx D\\times\\Delta y\\times\\text{book}\\); (2) the share of deposits that is uninsured and how fast it can leave; (3) the realised loss if the bank must sell a fraction of the book; (4) whether the interest-rate swaps used to hedge the balance sheet are accounted as hedges and whether the hedge is effective.<br><b>Interviewer follow-up:</b> why is the risk here a deposit run and not just rates? Answer: the bank's liability is a short-dated, uninsured, rate-insensitive deposit that behaves like a put, and the bond losses only become a solvency problem when the put is exercised.",
+  "tags": [
+   "svb",
+   "alm",
+   "htm_accounting",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Design a simple rates risk measure for a bank that holds a long-duration HTM book funded by short, uninsured deposits. Explain why the economic duration of the liabilities matters and how it changes the hedge.",
+  "back": "<b>Answer:</b> measure the economic position, not the accounting one. Put the asset duration (HTM plus AFS) against the liability duration, where the deposits are modelled with a deposit beta and a run scenario. The uninsured share sets the run speed, and the run converts the bank's illusory duration gap into a realised loss.<br><b>Hedge:</b> a pay-fixed swap or swaption position reduces the asset duration exposure, but the hedge has to be sized on the stressed run path, which is not the base case. A hedge sized to the base-case deposit beta is short when the deposits leave.<br><b>Where it breaks:</b> the model of the deposit beta is an estimate from a period of low rates, and it may not hold when rates move fast.<br><b>Interviewer follow-up:</b> what is the first limit to set? Answer: a sensitivity limit on the economic gap under a run-plus-rates stress, not on the HTM book's accounting value.",
+  "tags": [
+   "svb",
+   "alm",
+   "htm_accounting",
+   "deposit_beta",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why could Credit Suisse AT1 holders be written down to zero in March 2023 while the shareholders received UBS shares? Explain the contract, the trigger and the legal point that has been disputed since.",
+  "back": "<b>Answer:</b> the AT1 instruments had a contractual write-down trigger tied to a point of non-viability (PONV) determination. FINMA used its powers to order a full write-down of the nominal value of about CHF 16bn of AT1 instruments as part of the government-supported takeover. Shareholders still received value, with an exchange of 1 UBS share for every 22.48 Credit Suisse shares (about CHF 3bn in total).<br><b>Desk point:</b> the coupon and the write-down are the contract. The hierarchy of loss in the contract did not match the outcome, so the AT1 spread reflected the legal risk of the write-down clause and not only the default probability.<br><b>Post-event:</b> a Swiss court ruling reported in October 2025 found the write-off unlawful and partly revoked the order. The appeal status should be checked before quoting it.<br><b>Interviewer follow-up:</b> how do you price an AT1 with a PONV trigger? Answer: a trigger model with a legal-discretion haircut, and a separate recovery assumption for the discretionary case.",
+  "tags": [
+   "at1",
+   "coco",
+   "credit_suisse",
+   "legal_risk",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "FINMA ordered a full write-down of about {{c1::CHF 16 billion}} of Credit Suisse AT1 instruments in March 2023. Under the UBS rescue, UBS took {{c2::CHF 9 billion}} of protection on non-core assets for losses beyond the first {{c3::CHF 5 billion}}.",
+  "back": "The AT1 write-down and the equity exchange both happened in the same weekend. The cloze figures are the reported amounts at the time and differ slightly across sources.",
+  "tags": [
+   "at1",
+   "coco",
+   "credit_suisse",
+   "legal_risk",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Scenario: it is 09:00 on Thursday 15 January 2015. You are long €10m EUR/CHF at 1.20 with a stop at 1.19, and the SNB has just removed the 1.20 floor. Price the expected loss on the stop plan and the actual loss, and state what it reveals about gap risk.",
+  "back": "<b>Planned loss:</b> the stop at 1.19 costs \\(10{,}000{,}000\\times 0.01=\\text{CHF }100{,}000\\).<br><b>Actual:</b> the market traded through the stop, with EUR/CHF near 0.965 in the disruption. The loss is about \\(10{,}000{,}000\\times(1.20-0.965)=\\text{CHF }2.35\\text{m}\\), about 23.5 times the plan.<br><b>Lesson:</b> a stop is a conditional order, not a guaranteed exit. In a liquidity gap the fill is at the next available price, and the broker may not honour it. FXCM reported negative equity of about $225m and needed $300m of new capital, and several smaller brokers were left with negative client balances.<br><b>Desk design:</b> model the position with a gap scenario sized to the peg, and cap the position so that the gap loss is within the risk appetite. Options or a capped-loss structure are the real hedge.<br><b>Interviewer follow-up:</b> what is the risk to your book as a counterparty to a broker? Answer: a broker's negative balances become a credit exposure, so check the negative-balance protection and the margin model on the broker side.",
+  "tags": [
+   "snb_2015",
+   "gap_risk",
+   "stop_loss",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "On 15 January 2015 the Swiss National Bank removed the EUR/CHF minimum exchange rate set at {{c1::1.20}}, which had been in place since {{c2::September 2011}}. Intraday, EUR/CHF fell to about {{c3::0.965}}, roughly 20% below the old floor.",
+  "back": "The gap was a policy-driven discontinuity, not a volatility regime change. The 2011 start of the floor is a widely cited date; the intraday move is a press figure that varies by source.",
+  "tags": [
+   "snb_2015",
+   "gap_risk",
+   "fx",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Scenario: it is 07:15 on Tuesday 19 March 2024. The Bank of Japan has ended negative policy rates and abandoned yield curve control (YCC). The JGB curve is repricing. What does a rates desk reprice first, and what are the two biggest risks in the first week?",
+  "back": "<b>Reprice first:</b> the short-end and the policy path (the overnight target moves from about -0.1% to a range around zero), then the 10y JGB and the swaption surface, since the YCC cap and the upper bound on yields were a short-volatility feature that has been removed.<br><b>Risks:</b> (1) a sharp re-pricing of long-end volatility as the bank's buying program changes (the BoJ kept buying government bonds but stopped buying ETFs and REITs); (2) cross-currency: the yen slid more than 0.5% against the dollar after the decision, and the carry trade and the hedge ratios on Japanese investors' foreign bonds depend on the policy path.<br><b>Interviewer follow-up:</b> what does the removal of YCC do to options on the 10y JGB yield? Answer: YCC capped the 10y yield, which suppressed the payoff of yield-upside options. Removing the cap raises the forward volatility and the value of those options, and it changes the skew of the curve.",
+  "tags": [
+   "boj_2024",
+   "ycc",
+   "jgb",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The ECB deposit facility rate was {{c1::-0.50%}} until the July 2022 hike took effect on {{c2::27 July 2022}}, when it moved to {{c3::0%}}. Euro-area rates had been negative since {{c4::2014}}.",
+  "back": "Desk consequence: collateral discounting at a negative rate, the floor in cash-collateral agreements, and the negative-rate option models that were needed for the Bachelier and shifted-lognormal pricing.",
+  "tags": [
+   "ecb",
+   "negative_rates",
+   "discounting",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Scenario: it is May 2005. Your credit book is long the equity tranche and short the mezzanine tranche of the iTraxx/CDX index, delta hedged. GM and Ford are downgraded to speculative grade. Describe the P&amp;L, the cause and the lesson for the risk model.",
+  "back": "<b>P&amp;L:</b> the long-equity leg lost as the downgrades moved the index tranches, and the observed correlation in the 0-3% tranche dropped sharply, which the trade had not hedged. The short-mezzanine leg outperformed the hedge, leaving the book with a mark-to-market loss. A press estimate put the losses for some funds at 15-30%.<br><b>Cause:</b> a single-correlation, delta-hedged view assumed that spreads would move together. Two large names with concentrated exposure broke that assumption.<br><b>Lesson:</b> a tranche hedge must be built on a base-correlation curve and must stress jump-to-default of the largest index constituents, not just the index delta. Compound correlation is not stable across the capital structure.<br><b>Interviewer follow-up:</b> why does the equity tranche lose when names default? Answer: the equity tranche absorbs the first losses, so a default of a large name moves the tranche's expected loss up by far more than the index spread implies.",
+  "tags": [
+   "gm_ford_2005",
+   "correlation_trade",
+   "tranche",
+   "desk_practice",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> the theoretical futures price for a cash-futures basis trade over a quarter. Cash dirty price \\(P_0=102.00\\), repo \\(r=4.00\\%\\), period \\(t=0.25\\), coupon over the period \\(c=1.00\\) per 100, conversion factor \\(CF=0.95\\). Derive \\(F\\), and the futures move for a 5bp repo change. State where the derivation breaks.",
+  "back": "<b>Step 1 (cost of carry):</b> financing cost on the dirty price is \\(P_0\\,r\\,t\\). Total cost at delivery is \\(P_0(1+rt)\\).<br><b>Step 2 (coupon income):</b> the coupon received offsets the cost, so the net is \\(P_0(1+rt)-c\\).<br><b>Step 3 (conversion):</b> the bond is delivered against the future at \\(CF\\cdot F\\), so \\(CF\\cdot F=P_0(1+rt)-c\\), giving \\(F=(P_0(1+rt)-c)/CF\\).<br><b>Numbers:</b> \\(F=(102.00\\times 1.01-1.00)/0.95=102.02/0.95=107.39\\).<br><b>Repo sensitivity:</b> \\(\\partial F/\\partial r = P_0\\,t/CF\\). For +5bp, \\(\\Delta F = 102\\times 0.25\\times 0.0005/0.95=0.0134\\) futures points, about 0.0027 futures points per bp of repo per 100 of cash.<br><b>Where it breaks:</b> the delivery option (the trader can choose the cheapest-to-deliver bond and the delivery date), accrued interest and coupon timing, and the repo specialness of the cash bond. Each one moves the implied repo away from the simple formula.",
+  "tags": [
+   "cash_futures_basis",
+   "derivation",
+   "repo",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study:</b> a bank holds a $10bn HTM portfolio with modified duration 6. Rates rise 100bp. The bank must sell $2bn of the book at the new price to meet withdrawals. Compute (a) the unrealised loss on the whole book, (b) the realised loss on the forced sale, and (c) the share of the unrealised loss that becomes a realised loss.",
+  "back": "<b>(a)</b> unrealised loss \\(\\approx 6\\times 0.01\\times 10\\text{bn}=\\$600\\text{m}\\), off the income statement under HTM accounting.<br><b>(b)</b> the sold $2bn loses \\(6\\times 0.01=6\\%\\), so the realised loss is \\(0.06\\times 2\\text{bn}=\\$120\\text{m}\\).<br><b>(c)</b> the realised share is \\(120/600=20\\%\\), matching the 20% of the book sold. The remaining $480m stays unrealised, but it becomes a question of whether the rest of the HTM book is still held-to-maturity and whether the bank can keep the carrying value.<br><b>Sanity check:</b> the realised loss equals the fraction sold times the total unrealised loss, which is the linear answer. A convexity correction is small for a 100bp move at this duration.<br><b>Interviewer follow-up:</b> why does a sale of a small fraction matter so much? Answer: it changes the accounting classification of the rest of the book, so a small sale can have a large effect on the market's view of capital.",
+  "tags": [
+   "svb",
+   "htm_accounting",
+   "case_study",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Scenario: it is 16:15 on a day in a rates book. The P&amp;L explain shows £180k unexplained on a 10y gilt box (long cash gilts, short gilt futures, funded in repo). Walk through how you find the break, in order.",
+  "back": "<b>Steps:</b> (1) confirm the risk and P&amp;L snapshots use the same curve and the same time stamp, since a 15:30 curve against a 16:00 valuation creates an apparent break; (2) decompose the unexplained into a yield move residual, a carry (theta) residual and a funding residual, each with its own sensitivity; (3) check the repo rate used for the cash leg against the rate your funding desk actually paid; (4) check the futures leg: the conversion factor, the contract's delivery basket and the cheapest-to-deliver bond used in the model; (5) check late trades and the booking of any corrected trade; (6) check the bond's coupon or accrual date in the static data.<br><b>Numbers:</b> a 1bp funding error on £100m is \\(£100\\text{m}\\times 0.0001/365\\approx £27\\) per day, small on one day but it compounds over a box held for a month.<br><b>Interviewer follow-up:</b> which residual do you expect to be largest in a box? Answer: the funding residual when the position is financed at a rate that is not the desk's marked repo curve.",
+  "tags": [
+   "pnl_explain",
+   "gilt_box",
+   "control",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Desk practice: your LIBOR-legacy USD swap book was moved to SOFR after the USD LIBOR tenors ceased on 30 June 2023. A risk manager asks why the DV01 on the converted book does not match the old one, and what you do about it.",
+  "back": "<b>Answer:</b> the fallback changes the curve the swap is priced and risked on. A legacy LIBOR-linked trade is converted to compounded SOFR with a fixed credit adjustment spread, so the cash flows and the fixing schedule change. The rate-sensitivity moves because the projection curve moves from LIBOR to SOFR, and the basis between the two curves has its own risk.<br><b>What to do:</b> (1) rebuild the DV01 bucket by bucket on the new curve and show the change as a P&amp;L explain item; (2) hedge the residual with SOFR instruments on the same schedule; (3) check the spread used in the conversion is the one the contract and the protocol specify, not a desk estimate; (4) track the remaining legacy trades by counterparty, since the conversion is not all done on the same date.<br><b>Interviewer follow-up:</b> is the DV01 mismatch a risk or a P&amp;L problem? Answer: both. The DV01 difference is a hedge gap, and the conversion's spread is a P&amp;L item that needs to be booked once.",
+  "tags": [
+   "libor_cessation",
+   "convention",
+   "hedging",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Scenario: it is 27 June 2016, the morning after the EU referendum. The pound has fallen about 10% against the dollar overnight to near $1.31, and the 10y gilt yield has fallen to a record low of about 0.93%. Your book is a sterling-based global bond portfolio, hedged back to sterling. Which legs of the book moved in the same direction, and what does that do to the hedge?",
+  "back": "<b>What moved:</b> gilt yields and sterling fell together. The market priced an easing by the Bank of England, and sterling weakened on the same news. A rates position that is long gilts and a currency position that is short sterling both gained on the same macro view, so they were positively correlated in direction.<br><b>Hedge effect:</b> a sterling-based investor holding US bonds with a currency hedge sees the hedge work to lock in the sterling value. If the hedge is rolled or resized on a fixed schedule, the mismatch between the hedge notional and the realised exposure shows up as P&amp;L.<br><b>Desk lesson:</b> do not assume the usual sign of the rates-FX correlation in a referendum or a policy shock. Check the historical correlation in the stressed window before relying on a diversifying pair.<br><b>Interviewer follow-up:</b> which number is the proper stress input? Answer: the one-day move on the same day in the stressed regime, not the calm-period correlation.",
+  "tags": [
+   "brexit_2016",
+   "correlation",
+   "fx_hedge",
+   "desk_practice",
+   "lvl_vp_core"
+  ]
+ }
+]
