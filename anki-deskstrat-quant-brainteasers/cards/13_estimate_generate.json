@@ -1,0 +1,920 @@
+[
+ {
+  "type": "basic",
+  "front": "23 people, birthdays independent and uniform over 365 days. Probability that at least two share a birthday?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Lower: \\(P(\\text{no match})=\\prod_{k=0}^{22}(1-\\tfrac{k}{365})\\le e^{-\\sum k/365}=e^{-253/365}\\), so \\(P\\ge 1-e^{-253/365}\\approx 0.500\\). Upper: union bound over \\(\\binom{23}{2}=253\\) pairs gives \\(P\\le 253/365\\approx 0.69\\).<br><b>Ballpark:</b> About one half. Poisson with \\(\\lambda=253/365\\): \\(1-e^{-\\lambda}\\approx 0.50\\).<br><b>Exact:</b> \\(1-\\prod_{k=0}^{22}\\frac{365-k}{365}\\approx 0.5073\\).<br><b>Gap lesson:</b> The lower bound is already within 0.01. The union bound overshoots by 0.19 because overlapping pairs are counted more than once. The 23 cutoff is where the pair count passes about 1/2 of 365.",
+  "tags": [
+   "s_complement",
+   "s_poisson_approx",
+   "combinatorics",
+   "birthday",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Expected number of cycles in a uniform random permutation of 100 elements.<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Element \\(k\\) is the smallest element of its cycle with probability \\(1/k\\). Linearity over these indicators gives \\(E=\\sum_k 1/k\\), with no independence needed. Then \\(\\ln(n+1)\\le H_n\\le 1+\\ln n\\), i.e. \\(4.62\\le E\\le 5.61\\).<br><b>Ballpark:</b> \\(\\ln n+\\gamma\\approx 5.18\\), with \\(\\gamma\\approx 0.577\\).<br><b>Exact:</b> \\(E=H_{100}=\\sum_{k=1}^{100}\\frac1k\\approx 5.1874\\). Simulation over \\(2\\times10^5\\) permutations gives 5.189.<br><b>Gap lesson:</b> The \\(\\ln n+\\gamma\\) estimate is within 0.01, because the correction is \\(1/(2n)\\). Harmonic sums are the standard 'records and cycles' result: a record or cycle leader at position \\(k\\) costs \\(1/k\\).",
+  "tags": [
+   "s_linearity_expectation",
+   "s_indicators",
+   "permutations",
+   "expectation",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Expected maximum of 100 independent standard normal variables.<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Jensen on \\(e^{\\lambda M}\\): \\(E M\\le \\frac1\\lambda\\ln(n\\,e^{\\lambda^2/2})=\\frac{\\ln n}{\\lambda}+\\frac{\\lambda}{2}\\). Optimising \\(\\lambda=\\sqrt{2\\ln n}\\) gives the upper bound \\(E M\\le\\sqrt{2\\ln n}\\approx 3.03\\). Also \\(E M\\ge 0\\).<br><b>Ballpark:</b> About 2.5. The asymptote \\(\\sqrt{2\\ln n}\\) is an upper bound, and the correction \\(-\\frac{\\ln\\ln n+\\ln 4\\pi}{2\\sqrt{2\\ln n}}\\) pulls it down to about 2.37.<br><b>Exact:</b> \\(E M=\\int x\\cdot 100\\,\\varphi(x)\\Phi(x)^{99}\\,dx\\approx 2.5076\\) (numerical integration; \\(10^5\\) MC samples agree).<br><b>Gap lesson:</b> The naive \\(\\sqrt{2\\ln n}\\) overshoots by 0.5 at \\(n=100\\). Extreme-value asymptotics converge slowly, so for a desk-sized \\(n\\) use the correction term, not the leading term. Jensen gives the clean upper bound.",
+  "tags": [
+   "s_convexity_jensen",
+   "s_extremal",
+   "normal",
+   "order_statistics",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "ATM European call: \\(S=100\\), \\(K=100\\), \\(r=0\\), \\(\\sigma=20\\%\\), \\(T=1\\) year, Black-Scholes. Price of the call?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> No-arbitrage: \\(0\\le C\\le S=100\\). Intrinsic value is 0, so \\(C\\ge 0\\). Call and put coincide at \\(r=0\\), ATM.<br><b>Ballpark:</b> The ATM rule of thumb: \\(C\\approx 0.4\\,S\\,\\sigma\\sqrt T=0.4\\cdot 100\\cdot 0.2\\cdot 1=8\\).<br><b>Exact:</b> \\(C=S\\,(2\\Phi(\\sigma\\sqrt T/2)-1)=100\\,(2\\Phi(0.1)-1)\\approx 7.97\\), since \\(d_1=\\sigma\\sqrt T/2=0.1\\) for ATM with \\(r=0\\).<br><b>Gap lesson:</b> The rule is \\(2\\varphi(0)\\cdot\\tfrac{\\sigma\\sqrt T}{2}\\approx 0.399\\,S\\sigma\\sqrt T\\), so the 0.4 factor is accurate to 0.3%. It breaks down for deep ITM or OTM strikes and for large \\(\\sigma\\sqrt T\\), where the cubic term matters.",
+  "tags": [
+   "s_taylor",
+   "options",
+   "black_scholes",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "ATM straddle (call plus put) on \\(S=100\\), \\(K=100\\), \\(r=0\\), \\(\\sigma=20\\%\\), expiry 3 months. Price of the straddle, and the breakeven move?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> At \\(r=0\\) the straddle equals \\(E|S_T-K|\\) under the risk-neutral measure, so it is at least \\(E[S_T-K]=0\\) and at most \\(E|S_T-S_0|\\le \\sqrt{\\mathrm{Var}}=S\\sigma\\sqrt T=10\\).<br><b>Ballpark:</b> \\(0.8\\,S\\,\\sigma\\sqrt T=0.8\\cdot 100\\cdot 0.2\\cdot 0.5=8\\). Breakeven: about \\(\\pm 8\\%\\) of spot.<br><b>Exact:</b> \\(2\\cdot 100\\,(2\\Phi(0.05)-1)\\approx 7.98\\). Put equals call at ATM with \\(r=0\\).<br><b>Gap lesson:</b> The straddle is the expected absolute move. The ballpark \\(0.8\\,S\\sigma\\sqrt T\\) comes from \\(2\\cdot 0.4\\). The Cauchy-Schwarz bound overshoots by 25%, because \\(E|X|\\) is \\(\\sqrt{2/\\pi}\\) of the RMS.",
+  "tags": [
+   "s_convexity_jensen",
+   "s_sqrt_time_scaling",
+   "options",
+   "straddle",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Collect all 10 distinct coupons, each draw uniform and independent with replacement. Expected number of draws?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> \\(n\\ln(n+1)\\le E\\le n(1+\\ln n)\\), i.e. \\(24.0\\le E\\le 33.0\\), from \\(\\ln(n+1)\\le H_n\\le 1+\\ln n\\).<br><b>Ballpark:</b> \\(n\\ln n+\\gamma n\\approx 28.8\\).<br><b>Exact:</b> \\(E=nH_n=10H_{10}\\approx 29.29\\). With \\(k\\) distinct coupons held, the wait is geometric with mean \\(n/(n-k)\\); sum over \\(k\\).<br><b>Gap lesson:</b> The asymptotic form misses by \\(n/(2n)=0.5\\), the \\(1/(2n)\\) term in \\(H_n\\). The estimate is good to 2%.",
+  "tags": [
+   "s_recursion",
+   "s_linearity_expectation",
+   "coupon_collector",
+   "expectation",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "10 balls dropped independently and uniformly into 10 boxes. Expected number of empty boxes?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Each box is empty with probability \\((0.9)^{10}\\approx 0.349\\). Hence \\(0\\le E\\le 10\\).<br><b>Ballpark:</b> Poisson: \\(n e^{-m/n}=10e^{-1}\\approx 3.68\\).<br><b>Exact:</b> \\(E=10\\cdot 0.9^{10}\\approx 3.487\\). Monte Carlo agrees.<br><b>Gap lesson:</b> Poisson overshoots by 0.19. \\((1-\\tfrac1n)^m\\approx e^{-m/n-m/(2n^2)}\\), and the extra \\(m/(2n^2)=0.05\\) gives the factor \\(e^{-0.05}\\approx 0.95\\), which accounts for the gap.",
+  "tags": [
+   "s_poisson_approx",
+   "s_linearity_expectation",
+   "occupancy",
+   "combinatorics",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Roll a fair die 10 times. Expected number of distinct faces seen?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Each face is missing with probability \\((5/6)^{10}\\approx 0.16\\), so \\(E=6-6(5/6)^{10}\\). Trivially \\(1\\le E\\le 6\\).<br><b>Ballpark:</b> About 5. Ten rolls cover roughly five faces.<br><b>Exact:</b> \\(E=6\\bigl(1-(5/6)^{10}\\bigr)\\approx 5.031\\).<br><b>Gap lesson:</b> Linearity over faces: each face is seen with probability \\(1-(5/6)^{10}\\). The naive 'rolls over faces' count of 10/2 gives 5, which is close by accident.",
+  "tags": [
+   "s_linearity_expectation",
+   "s_indicators",
+   "dice",
+   "expectation",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Simple symmetric random walk: 100 steps of \\(\\pm1\\) from 0. Expected maximum of the walk over the 100 steps?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> \\(M\\ge 0\\) and \\(M\\le 100\\). Lévy-style reflection: the continuous analogue \\(E\\max\\approx E|S_n|\\approx\\sqrt{2n/\\pi}\\approx 7.98\\).<br><b>Ballpark:</b> About 7.5 to 8. Use \\(\\sqrt{2n/\\pi}\\) and then subtract about 0.5.<br><b>Exact:</b> For the lattice walk, \\(P(M_n\\ge a)=P(S_n\\ge a)+P(S_n>a)\\), so \\(E M_n=2E[S_n^+]-P(S_n\\ge1)=E|S_n|-P(S_n\\ge 1)\\approx 7.958-0.460=7.499\\).<br><b>Gap lesson:</b> The continuous reflection overshoots by about 0.5, the lattice effect: the walk only sits on integers, so the maximum is an integer and the boundary sits half a step lower on average.",
+  "tags": [
+   "s_reflection",
+   "s_tail_sum",
+   "random_walk",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Simple symmetric walk starts at 0 and stops on first reaching \\(+10\\) or \\(-10\\). Expected number of steps?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> \\(E\\tau\\) is finite, and \\(E\\tau=E[S_\\tau^2]\\le 100\\) since \\(S_k^2-k\\) is a martingale and \\(|S_\\tau|=10\\).<br><b>Ballpark:</b> \\(N^2=100\\). Doubling the barrier quadruples the time.<br><b>Exact:</b> \\(E\\tau=N^2=100\\), from \\(S_k^2-k\\) being a martingale and optional stopping. Simulation over \\(10^5\\) walks gives 99.7.<br><b>Gap lesson:</b> No gap: this is exact. The scaling argument (time \\(\\propto\\) distance squared, the square-root law in reverse) gives the answer without solving. A 10% barrier change gives a 21% change in time.",
+  "tags": [
+   "s_martingale",
+   "s_optional_stopping",
+   "random_walk",
+   "dimensional_analysis",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Standard Brownian motion on \\([0,1]\\). Expected value of its maximum over \\([0,1]\\)?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Lower: \\(M\\ge W_1\\), so \\(EM\\ge EW_1=0\\). Upper, Jensen: \\(EM\\le\\sqrt{E M^2}=1\\), since \\(E M^2=1\\) by reflection.<br><b>Ballpark:</b> About 0.8, the same as \\(E|W_1|\\), because \\(M\\) and \\(|W_1|\\) have the same law.<br><b>Exact:</b> \\(P(M\\ge m)=2P(W_1\\ge m)\\), so \\(EM=2E[W_1^+]=2\\varphi(0)=\\sqrt{2/\\pi}\\approx 0.7979\\). Discrete simulation with bias correction agrees.<br><b>Gap lesson:</b> Jensen's upper bound 1 is 25% above the truth. The reflection identity \\(M\\overset{d}{=}|W_1|\\) gives the exact value at once.",
+  "tags": [
+   "s_reflection",
+   "s_convexity_jensen",
+   "brownian_motion",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Uniform random permutation of 10 items. Probability that no item lands in its own slot?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Inclusion-exclusion partial sums alternate, so after three terms \\(1-1+\\tfrac12-\\tfrac16=\\tfrac13\\) is a lower bound and after two terms \\(\\tfrac12\\) is an upper bound: \\(\\tfrac13\\le P\\le\\tfrac12\\).<br><b>Ballpark:</b> \\(1/e\\approx 0.368\\).<br><b>Exact:</b> \\(P=\\sum_{k=0}^{10}\\frac{(-1)^k}{k!}=D_{10}/10!\\approx 0.36788\\).<br><b>Gap lesson:</b> The series converges very fast, so \\(1/e\\) is accurate to about \\(10^{-7}\\) at \\(n=10\\). The limit is a Poisson fact: fixed points are approximately Poisson(1).",
+  "tags": [
+   "s_inclusion_exclusion",
+   "s_poisson_approx",
+   "permutations",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair coin is tossed until the first head, on toss \\(J\\). You receive \\(\\min(2^J, 2^{20})\\) dollars. Expected payout?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Lower: \\(E\\ge 2\\cdot P(J=1)=1\\). Upper: the cap \\(2^{20}\\) bounds the payout, so \\(E\\le 2^{20}\\). The uncapped expectation is infinite.<br><b>Ballpark:</b> Each doubling of the cap adds about 1 dollar, so about \\(\\log_2(\\text{cap})+1=21\\).<br><b>Exact:</b> \\(E=\\sum_{j=1}^{19}2^j\\cdot 2^{-j}+2^{20}\\cdot P(J\\ge 20)=19+2=21\\).<br><b>Gap lesson:</b> The estimate is exact here, because each level contributes exactly 1. The gap lesson is the tail: the cap, not the distribution, makes the answer finite.",
+  "tags": [
+   "s_tail_sum",
+   "s_convexity_jensen",
+   "st_petersburg",
+   "expectation",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ten independent \\(U(0,1)\\) draws. Expected value of the largest?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> \\(E\\max\\ge E U=\\tfrac12\\) and \\(\\max\\le 1\\).<br><b>Ballpark:</b> \\(1-\\tfrac{1}{n+1}\\approx 0.91\\): the largest point sits near the \\(n/(n+1)\\) quantile.<br><b>Exact:</b> \\(P(\\max\\le x)=x^{10}\\), so \\(E=\\int_0^1(1-x^{10})\\,dx=\\tfrac{10}{11}\\approx 0.909\\).<br><b>Gap lesson:</b> The mean \\(10/11\\) is not the median of the max: the median solves \\(x^{10}=\\tfrac12\\), giving about 0.933. Quote the mean and the median separately.",
+  "tags": [
+   "s_order_statistics",
+   "s_extremal",
+   "uniform",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Z standard normal. Expected absolute value \\(E|Z|\\)?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Jensen: \\(E|Z|\\le\\sqrt{EZ^2}=1\\). Trivially \\(E|Z|\\ge 0\\).<br><b>Ballpark:</b> About 0.8: the mean absolute deviation is about 0.8 of the standard deviation for a normal.<br><b>Exact:</b> \\(E|Z|=2\\int_0^\\infty z\\varphi(z)dz=2\\varphi(0)=\\sqrt{2/\\pi}\\approx 0.7979\\).<br><b>Gap lesson:</b> Jensen's bound is 25% too high. The ratio of mean absolute to RMS deviation, \\(\\sqrt{2/\\pi}\\), is the number to remember.",
+  "tags": [
+   "s_convexity_jensen",
+   "s_dimensional_analysis",
+   "normal",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A stick of length 1 is broken at a uniform random point. A second uniform point is then placed on the stick. Expected length of the piece containing the second point?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Lower: the piece hit is size-biased, so it is at least the mean piece length \\(\\tfrac12\\). Upper: \\(\\le 1\\).<br><b>Ballpark:</b> About \\(\\tfrac23\\). Size-biased sampling pulls the answer toward the longer piece.<br><b>Exact:</b> Given cut \\(L\\), the containing piece has expected length \\(L^2+(1-L)^2\\). Then \\(E[L^2+(1-L)^2]=\\tfrac23\\).<br><b>Gap lesson:</b> The naive answer \\(\\tfrac12\\) ignores the inspection paradox: you are more likely to land in the longer piece. Monte Carlo confirms 0.667.",
+  "tags": [
+   "s_geometric_probability",
+   "s_order_statistics",
+   "geometric_probability",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X,Y\\) independent standard normals. Expected value of \\(\\max(X,Y)\\)?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Identity: \\(\\max(X,Y)=\\tfrac{X+Y}{2}+\\tfrac{|X-Y|}{2}\\), so \\(E\\max=\\tfrac12E|X-Y|\\). Upper bound by Jensen: \\(E|X-Y|\\le\\sqrt{2}\\), so \\(E\\max\\le 0.707\\).<br><b>Ballpark:</b> About \\(\\tfrac12\\cdot 1.13\\approx 0.56\\).<br><b>Exact:</b> \\(X-Y\\sim N(0,2)\\), so \\(E|X-Y|=\\sqrt2\\sqrt{2/\\pi}=2/\\sqrt\\pi\\), giving \\(E\\max=1/\\sqrt\\pi\\approx 0.5642\\).<br><b>Gap lesson:</b> The gap is the sign-indifference of \\(X-Y\\). The identity uses linearity for the mean part and an absolute value for the spread.",
+  "tags": [
+   "s_linearity_expectation",
+   "s_convexity_jensen",
+   "normal",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Four rolls of a fair die. Probability of at least one 6?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Union bound: \\(P\\le 4/6\\approx 0.667\\). Bonferroni: \\(P\\ge \\tfrac46-\\binom42\\tfrac1{36}=0.5\\).<br><b>Ballpark:</b> Just over one half. Poisson with mean \\(4/6\\): \\(1-e^{-2/3}\\approx 0.49\\).<br><b>Exact:</b> \\(1-(5/6)^4\\approx 0.5177\\).<br><b>Gap lesson:</b> Poisson is not accurate here because \\(p=1/6\\) is not small. Keep the exact complement form, which is quick to evaluate in your head.",
+  "tags": [
+   "s_complement",
+   "s_inclusion_exclusion",
+   "dice",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Fair coin tossed 100 times. Probability that the number of heads differs from 50 by at least 10: \\(P(|H-50|\\ge 10)\\)?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Chebyshev: \\(\\mathrm{Var}(H)=25\\), so \\(P\\le 25/100=0.25\\).<br><b>Ballpark:</b> Normal with continuity correction: \\(2\\Phi(-9.5/5)=2\\Phi(-1.9)\\approx 0.057\\).<br><b>Exact:</b> \\(P\\approx 0.0569\\) (exact binomial sum).<br><b>Gap lesson:</b> The continuity correction matters: without it \\(2\\Phi(-2)=0.046\\) is 20% low. Chebyshev is valid but loose by a factor of about 4.",
+  "tags": [
+   "s_clt_normal_approx",
+   "s_tail_sum",
+   "binomial",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Gaussian daily P&L with zero mean and standard deviation 1. Probability of a move of at least 3 standard deviations in absolute value, \\(P(|X|\\ge 3)\\)?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Chebyshev: \\(P(|X|\\ge3)\\le 1/9\\approx 0.111\\). Cantelli gives \\(P(X\\ge 3)\\le 0.1\\) one-sided.<br><b>Ballpark:</b> About \\(2\\times 0.00135\\approx 0.0027\\).<br><b>Exact:</b> \\(2(1-\\Phi(3))\\approx 0.0027\\).<br><b>Gap lesson:</b> Chebyshev is distribution-free, so it overshoots by a factor of about 40 for a normal. Use the normal table for a normal P&L and Chebyshev only when the shape is unknown.",
+  "tags": [
+   "s_clt_normal_approx",
+   "s_convexity_jensen",
+   "tail_bounds",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "ATM European call: \\(S=100\\), \\(K=100\\), \\(r=0\\), \\(\\sigma=20\\%\\), \\(T=1\\). Gamma of the call (change in delta per unit move in \\(S\\))?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Gamma is nonnegative. For a call, gamma is largest at the money, so a bound is \\(\\Gamma\\le \\varphi(0)/(S\\sigma\\sqrt T)=0.02\\).<br><b>Ballpark:</b> \\(\\Gamma\\approx 0.4/(S\\sigma\\sqrt T)=0.4/20=0.02\\).<br><b>Exact:</b> \\(\\Gamma=\\varphi(d_1)/(S\\sigma\\sqrt T)\\), with \\(d_1=0.1\\) and \\(\\varphi(0.1)\\approx 0.3970\\), giving \\(\\approx 0.01985\\).<br><b>Gap lesson:</b> The peak-gamma bound is attained at the money and is off by only 1%. Gamma scales as \\(1/(S\\sigma\\sqrt T)\\), so halving the vol doubles it.",
+  "tags": [
+   "s_taylor",
+   "options",
+   "greeks",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Same ATM call: \\(S=100\\), \\(K=100\\), \\(r=0\\), \\(\\sigma=20\\%\\), \\(T=1\\). Vega (change in call value per 1.00 change in \\(\\sigma\\))?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Vega \\(=S\\varphi(d_1)\\sqrt T\\le S\\varphi(0)\\sqrt T=100\\cdot 0.3989=39.89\\), an upper bound since \\(\\varphi\\) peaks at 0.<br><b>Ballpark:</b> \\(0.4\\,S\\sqrt T=40\\).<br><b>Exact:</b> \\(\\mathcal V=S\\varphi(d_1)\\sqrt T=100\\cdot 0.3970\\approx 39.70\\). Per 1 vol point (0.01): about 0.40.<br><b>Gap lesson:</b> The 0.4 factor is \\(1/\\sqrt{2\\pi}\\) rounded up, and \\(d_1=0.1\\) moves \\(\\varphi\\) by 0.5%. Vega is largest at the money, which is why ATM vega is the vol-desk benchmark.",
+  "tags": [
+   "s_taylor",
+   "options",
+   "greeks",
+   "volatility",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Brownian motion \\(X\\) with \\(X_0=0\\), \\(\\mathrm{Var}(X_1)=1\\), zero drift. Probability that its running maximum over \\([0,1]\\) reaches \\(+1\\)?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Lower: \\(P(M\\ge1)\\ge P(X_1\\ge1)=0.159\\). Upper: \\(\\le 2\\cdot 0.159\\) by reflection.<br><b>Ballpark:</b> About one third: \\(2\\cdot 0.16\\approx 0.32\\).<br><b>Exact:</b> Reflection: \\(P(M\\ge b)=2P(X_1\\ge b)=2(1-\\Phi(1))\\approx 0.3173\\).<br><b>Gap lesson:</b> The naive \\(P(X_1\\ge 1)=0.16\\) is half the answer. Hitting a level is a path event, and reflection doubles the endpoint probability.",
+  "tags": [
+   "s_reflection",
+   "s_geometric_probability",
+   "fx_barrier",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Stock at \\(S=100\\), \\(r=0\\). A put with strike 90 and the same expiry costs 2.50. Price of the 90-strike call?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Lower: \\(C\\ge (S-K)^+=10\\) (no-arbitrage). Upper: \\(C\\le S=100\\).<br><b>Ballpark:</b> About \\(10\\) plus the put premium: roughly 12 to 13.<br><b>Exact:</b> Put-call parity: \\(C-P=S-Ke^{-rT}=10\\), so \\(C=12.5\\).<br><b>Gap lesson:</b> Parity is exact, so the only uncertainty is the put premium. The bound 10 is the intrinsic value; the time value is the put's 2.50.",
+  "tags": [
+   "s_replication",
+   "options",
+   "put_call_parity",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Even-money bet, win probability 0.55, you stake 10% of bankroll each round. Expected log-growth per round?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Jensen: \\(E\\log(1+fX)\\le \\log(1+fEX)=\\log(1.01)\\approx 0.00995\\).<br><b>Ballpark:</b> Quadratic: \\(\\mu^2/(2\\sigma^2)=0.1^2/2=0.005\\), with \\(\\mu=0.1\\) and \\(\\sigma^2\\approx 1\\).<br><b>Exact:</b> \\(g=0.55\\ln 1.1+0.45\\ln 0.9\\approx 0.00501\\).<br><b>Gap lesson:</b> The second-order rule is accurate to 0.2% here. Jensen's bound is 2x the truth, because the spread of the bet is the whole story for log wealth.",
+  "tags": [
+   "s_kelly_log_utility",
+   "s_taylor",
+   "betting",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ten coin flips with exactly 6 heads and 4 tails, all orderings equally likely. Probability that heads is strictly ahead after every flip?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> The first flip must be a head, so \\(P\\le 6/10=0.6\\).<br><b>Ballpark:</b> \\((a-b)/(a+b)=2/10=0.2\\) from the ballot form.<br><b>Exact:</b> Ballot theorem: \\(P=\\frac{a-b}{a+b}=\\frac{6-4}{6+4}=0.2\\). Brute-force enumeration of the 210 orderings also gives 42/210.<br><b>Gap lesson:</b> The first-flip bound overshoots by a factor of 3. Ballot counting is the right tool here.",
+  "tags": [
+   "s_bijection",
+   "s_reflection",
+   "ballot",
+   "combinatorics",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Disease prevalence 1%. Test sensitivity 99%, false-positive rate 5%. Probability of disease given a positive test?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> \\(P(D\\mid +)\\le 1\\) trivially. The base rate gives the scale: \\(P(D\\mid +)\\approx \\frac{\\text{prevalence}}{\\text{prevalence}+\\text{FPR}}\\).<br><b>Ballpark:</b> \\(0.01/(0.01+0.05)=1/6\\approx 0.17\\).<br><b>Exact:</b> \\(\\frac{0.01\\cdot 0.99}{0.01\\cdot 0.99+0.99\\cdot 0.05}=\\frac16\\approx 0.1667\\).<br><b>Gap lesson:</b> The 99% sensitivity cancels exactly here, leaving prevalence over prevalence-plus-FPR. The lesson is base-rate neglect: most positives are false because the false-positive rate dwarfs the prevalence.",
+  "tags": [
+   "s_bayes",
+   "bayes",
+   "conditional_probability",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "50 people, birthdays independent and uniform over 365 days. Probability that at least two share a birthday?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Lower: \\(P\\ge 1-e^{-\\binom{50}{2}/365}=1-e^{-3.356}\\approx 0.965\\), from \\(\\prod(1-k/365)\\le e^{-\\sum k/365}\\). Upper \\(1\\).<br><b>Ballpark:</b> About 0.97.<br><b>Exact:</b> \\(1-\\prod_{k=0}^{49}\\frac{365-k}{365}\\approx 0.9704\\).<br><b>Gap lesson:</b> The Poisson-type lower bound is tight to 0.5%. Compare with 23 people: the jump from 0.5 to 0.97 is the birthday curve's steep middle.",
+  "tags": [
+   "s_complement",
+   "s_poisson_approx",
+   "birthday",
+   "combinatorics",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Matrix \\(A=\\begin{pmatrix}4&1&0\\\\1&3&1\\\\0&1&2\\end{pmatrix}\\). Where do its eigenvalues lie, and roughly what is the largest?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Gershgorin discs: centre \\(a_{ii}\\), radius the off-diagonal row sum. Discs are \\([3,5]\\), \\([1,5]\\), \\([1,3]\\). Union: all eigenvalues lie in \\([1,5]\\).<br><b>Ballpark:</b> Largest \\(\\approx 4.7\\): the top disc, near its right edge.<br><b>Exact:</b> Characteristic polynomial \\(-\\lambda^3+9\\lambda^2-24\\lambda+18=0\\), with \\(\\lambda=3\\) and \\(\\lambda^2-6\\lambda+6=0\\). Eigenvalues \\(3-\\sqrt3\\approx 1.27\\), \\(3\\), \\(3+\\sqrt3\\approx 4.73\\).<br><b>Gap lesson:</b> Gershgorin puts the largest eigenvalue within 0.27 of the true value 4.73. The slack comes from the top disc's radius, which counts the whole off-diagonal row.",
+  "tags": [
+   "s_eigen",
+   "linear_algebra",
+   "gershgorin",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Maximum determinant of a \\(3\\times 3\\) matrix with entries \\(\\pm1\\). Give the Hadamard bound and the true maximum.<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Hadamard: \\(|\\det A|\\le\\prod_i\\|a_i\\|=(\\sqrt3)^3\\approx 5.20\\), since each row has norm \\(\\sqrt3\\).<br><b>Ballpark:</b> About 4 to 5.<br><b>Exact:</b> Brute force over all \\(2^9=512\\) matrices: maximum \\(|\\det|=4\\).<br><b>Gap lesson:</b> Equality in Hadamard needs a Hadamard matrix, which exists only for orders 1, 2 and multiples of 4. Order 3 is not one of these, so the true maximum falls below the bound. Check the order before assuming equality.",
+  "tags": [
+   "s_dimensional_analysis",
+   "linear_algebra",
+   "determinants",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Estimate \\(1.02^{50}\\) without a calculator, to about 1%.<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Bernoulli: \\(1.02^{50}\\ge 1+50(0.02)=2\\). Upper: \\(1+x\\le e^x\\) gives \\(1.02^{50}\\le e^{1}\\approx 2.718\\).<br><b>Ballpark:</b> \\(e^{50\\ln 1.02}\\approx e^{0.99}\\approx 2.69\\), using \\(\\ln 1.02\\approx 0.0198\\).<br><b>Exact:</b> \\(1.02^{50}\\approx 2.6916\\).<br><b>Gap lesson:</b> \\(e^{nx}\\) with \\(x=0.02\\) overshoots by 1%. The second-order term \\(-x^2/2\\) per factor is what matters at this scale.",
+  "tags": [
+   "s_taylor",
+   "mental_math",
+   "compound_growth",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(W\\) standard Brownian motion on \\([0,1]\\). Estimate \\(E[e^{W_1}]\\).<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Jensen: \\(E e^{W_1}\\ge e^{E W_1}=1\\).<br><b>Ballpark:</b> \\(e^{\\mathrm{Var}/2}=e^{1/2}\\approx 1.65\\).<br><b>Exact:</b> \\(E e^{\\sigma Z}=e^{\\sigma^2/2}\\) with \\(\\sigma=1\\), so \\(e^{1/2}\\approx 1.6487\\). Monte Carlo agrees.<br><b>Gap lesson:</b> Jensen gives 1 and misses the convexity term. The exact answer is \\(e^{\\text{variance}/2}\\), which is the standard lognormal mean.",
+  "tags": [
+   "s_convexity_jensen",
+   "s_change_of_measure",
+   "brownian_motion",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Fair coin tossed until two heads in a row (HH) appear. Expected number of tosses?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Lower: at least 2. Upper: not needed for the estimate.<br><b>Ballpark:</b> \\(2^{k+1}-2\\) for \\(k\\) heads in a row gives \\(6\\) for \\(k=2\\).<br><b>Exact:</b> First-step: \\(a=1+\\tfrac12 a+\\tfrac12 b\\) and \\(b=1+\\tfrac12 a\\), so \\(a=6\\).<br><b>Gap lesson:</b> HT takes 4 and HH takes 6. The self-overlap of HH makes its wait longer. Non-overlapping patterns wait exactly \\(2^k\\).",
+  "tags": [
+   "s_first_step_conditioning",
+   "s_markov_chain",
+   "coin_patterns",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Three points uniform and independent on a circle. Probability the triangle they form is acute?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Acute iff the centre lies inside the triangle, iff no arc between consecutive points exceeds half the circle. The three arcs are exchangeable and at most one can exceed \\(\\pi\\), so \\(P(\\text{obtuse})=3P(\\text{arc}_1>\\pi)\\le 1\\).<br><b>Ballpark:</b> About \\(\\tfrac14\\): the arcs are Dirichlet(1,1,1) spacings and one of them over half the circle has probability \\(\\tfrac34\\).<br><b>Exact:</b> \\(P(\\text{obtuse})=3\\cdot(\\tfrac12)^2=\\tfrac34\\), so \\(P(\\text{acute})=\\tfrac14\\). Monte Carlo gives 0.250.<br><b>Gap lesson:</b> Triangles are obtuse most of the time. The question reduces to arc spacings, which is exactly what the Dirichlet structure gives.",
+  "tags": [
+   "s_geometric_probability",
+   "s_order_statistics",
+   "geometric_probability",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "10-year bond, 5% annual coupon, par 100, priced at yield 5%. Estimate the price at yield 6% using modified duration, then state the convexity correction.<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Duration gives the linear estimate. Convexity is positive, so the true price is above the linear estimate.<br><b>Ballpark:</b> Modified duration \\(\\approx 7.72\\), so \\(100-7.72\\cdot 1=92.28\\).<br><b>Exact:</b> Price at 6%: \\(\\sum_{t=1}^{10}\\frac{5}{1.06^t}+\\frac{100}{1.06^{10}}\\approx 92.64\\).<br><b>Gap lesson:</b> The linear estimate is 0.36 low. That 0.36 is the convexity term \\(\\tfrac12 C(\\Delta y)^2 P\\), so duration alone underprices a bond when yields rise.",
+  "tags": [
+   "s_taylor",
+   "fixed_income",
+   "duration",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Random permutation of 10 distinct numbers. Expected number of inversions (pairs \\(i<j\\) with \\(a_i>a_j\\))?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> \\(0\\le I\\le\\binom{10}{2}=45\\). Symmetry: every pair is equally likely to be ordered either way, so \\(E=45/2\\) exactly.<br><b>Ballpark:</b> \\(n^2/4=25\\), but the correct count uses \\(\\binom n2\\).<br><b>Exact:</b> \\(E=\\binom{10}{2}\\cdot\\tfrac12=22.5\\). Monte Carlo agrees.<br><b>Gap lesson:</b> The naive \\(n^2/4\\) counts \\(n^2\\) pairs instead of \\(\\binom n2\\). Symmetry gives the answer without any combinatorics.",
+  "tags": [
+   "s_symmetry",
+   "s_linearity_expectation",
+   "permutations",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ten fair coin flips. Expected number of adjacent pairs (positions \\(i,i+1\\)) that are both heads?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> \\(0\\le X\\le 9\\). By linearity over the 9 adjacent pairs, \\(E\\le 9\\cdot\\tfrac14\\).<br><b>Ballpark:</b> \\((n-1)/4=2.25\\).<br><b>Exact:</b> \\(E=\\sum_{i=1}^{9}P(\\text{heads at }i,i+1)=9/4\\). Adjacent indicators overlap, and linearity does not care.<br><b>Gap lesson:</b> No gap: the overlap of neighbouring pairs makes the indicators dependent, but for the mean that is irrelevant. The dependence matters only for the variance.",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "coin_patterns",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ten i.i.d. continuous draws. Expected number of records (running maxima, including the first)?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> \\(1\\le E\\le 10\\), since the first draw is always a record.<br><b>Ballpark:</b> \\(\\ln n+\\gamma\\approx 2.88\\).<br><b>Exact:</b> Position \\(k\\) is a record with probability \\(1/k\\), so \\(E=H_{10}\\approx 2.929\\).<br><b>Gap lesson:</b> The ballpark misses by \\(1/(2n)=0.05\\), the same correction as the cycle count. Records and cycles share one harmonic structure.",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "records",
+   "permutations",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Five i.i.d. \\(\\mathrm{Exp}(1)\\) variables. Expected maximum?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> \\(\\max\\ge\\) any single value, so \\(E\\max\\ge 1\\). Also \\(\\max\\le\\) sum, so \\(E\\max\\le 5\\).<br><b>Ballpark:</b> \\(\\ln 5+\\gamma\\approx 2.19\\).<br><b>Exact:</b> The max of exponentials has spacings with rates \\(5,4,3,2,1\\), so \\(E\\max=\\sum_{k=1}^5\\frac1k=H_5\\approx 2.283\\).<br><b>Gap lesson:</b> \\(\\ln n+\\gamma\\) misses by \\(1/(2n)=0.1\\). The exact result comes from memorylessness, not from the approximation.",
+  "tags": [
+   "s_memorylessness",
+   "s_order_statistics",
+   "exponential",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Five cards from a well-shuffled 52-card deck. Probability the hand contains at least two cards of the same rank?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Union bound over \\(\\binom52=10\\) pairs, each pair sharing a rank with probability \\(3/51\\): \\(P\\le 10\\cdot\\tfrac{3}{51}\\approx 0.59\\).<br><b>Ballpark:</b> About one half.<br><b>Exact:</b> \\(P=1-\\frac{\\binom{13}{5}4^5}{\\binom{52}{5}}\\approx 0.4929\\).<br><b>Gap lesson:</b> The union bound double counts hands with two pairs, which is why it overshoots by about 0.1. Count the complement (all distinct ranks) directly.",
+  "tags": [
+   "s_complement",
+   "s_inclusion_exclusion",
+   "cards",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Simple symmetric random walk from 0. Probability it is at 0 after exactly 100 steps?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> \\(0\\le P\\le 1\\). Local CLT: \\(P(S_{2n}=0)\\approx 1/\\sqrt{\\pi n}\\).<br><b>Ballpark:</b> \\(1/\\sqrt{50\\pi}\\approx 0.0798\\).<br><b>Exact:</b> \\(P(S_{100}=0)=\\binom{100}{50}/2^{100}\\approx 0.07959\\). Identically, this is also the probability of no return to 0 in 100 steps.<br><b>Gap lesson:</b> Local CLT is accurate to 0.25% here. The identity with no return is a useful sanity check on any 'never returns' question.",
+  "tags": [
+   "s_reflection",
+   "s_tail_sum",
+   "random_walk",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two fair dice. Expected value of the larger face?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> \\(E\\ge 3.5\\) (the larger face is at least the mean of one die). \\(E\\le 6\\).<br><b>Ballpark:</b> About 4.5.<br><b>Exact:</b> \\(P(\\max\\le k)=(k/6)^2\\), so \\(E=\\sum_{k=0}^{5}(1-(k/6)^2)=6-\\tfrac{55}{36}=\\tfrac{161}{36}\\approx 4.472\\).<br><b>Gap lesson:</b> The naive 3.5 comes from the mean of one die and ignores the max. Tail-sum gives the answer directly.",
+  "tags": [
+   "s_tail_sum",
+   "dice",
+   "order_statistics",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X\\sim\\mathrm{Exp}(1)\\). Median of \\(X\\), and is it above or below the mean?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> The mean is 1. For right-skewed laws the median lies below the mean. Also \\(|\\text{mean}-\\text{median}|\\le\\sigma=1\\).<br><b>Ballpark:</b> About 0.7, below the mean.<br><b>Exact:</b> \\(P(X\\le m)=1-e^{-m}=\\tfrac12\\), so \\(m=\\ln 2\\approx 0.693\\).<br><b>Gap lesson:</b> The median is 0.31 below the mean, within the bound of one standard deviation. Skew always pushes the median toward the mode.",
+  "tags": [
+   "s_convexity_jensen",
+   "exponential",
+   "medians",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(N\\sim\\mathrm{Poisson}(1)\\). Probability that \\(N\\ge 2\\)?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Markov: \\(P(N\\ge2)\\le E[N]/2=0.5\\).<br><b>Ballpark:</b> About 0.26: \\(P(0)\\approx P(1)\\approx 0.37\\), so \\(P(N\\ge 2)\\approx 1-0.74=0.26\\).<br><b>Exact:</b> \\(1-2/e\\approx 0.2642\\).<br><b>Gap lesson:</b> Markov overshoots by a factor of 2. The workhorse for Poisson tails is \\(P(0)+P(1)\\).",
+  "tags": [
+   "s_poisson_approx",
+   "s_tail_sum",
+   "poisson",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Start with 3 units. Each round you win 1 unit with probability 0.52 and lose 1 with probability 0.48. Probability of reaching 10 before 0?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> At \\(p=\\tfrac12\\) the answer is \\(3/10=0.30\\) (martingale). For \\(p>\\tfrac12\\) the probability is increasing in \\(p\\), so \\(P\\ge 0.30\\).<br><b>Ballpark:</b> About 0.39: the 2-point edge raises the fair answer by about 0.09.<br><b>Exact:</b> \\(P=\\frac{1-r^3}{1-r^{10}}\\) with \\(r=0.48/0.52\\), giving \\(\\approx 0.3875\\).<br><b>Gap lesson:</b> A small edge changes the answer a lot. The fair formula \\(k/N\\) underestimates by 25%: the drift matters.",
+  "tags": [
+   "s_first_step_conditioning",
+   "s_martingale",
+   "gamblers_ruin",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Roll a fair die until all six faces have appeared. Expected number of rolls?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> \\(E\\ge 6\\), since at least six rolls are needed.<br><b>Ballpark:</b> \\(n\\ln n+\\gamma n\\approx 14.2\\).<br><b>Exact:</b> \\(E=6H_6=14.7\\), by the same coupon-collector argument as before.<br><b>Gap lesson:</b> The asymptotic form misses by about 0.5, the \\(1/(2n)\\) term times \\(n\\). Same lesson as the 10-coupon case.",
+  "tags": [
+   "s_recursion",
+   "s_linearity_expectation",
+   "coupon_collector",
+   "dice",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "10 balls dropped independently and uniformly into 10 boxes. Expected number of boxes with exactly one ball?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> \\(0\\le E\\le 10\\).<br><b>Ballpark:</b> Poisson(1): each box has exactly one ball with probability \\(e^{-1}\\approx 0.368\\), so \\(\\approx 3.68\\).<br><b>Exact:</b> Each box has exactly one ball with probability \\(10\\cdot\\tfrac1{10}\\cdot(\\tfrac9{10})^9=0.9^9\\approx 0.387\\). Expected count \\(10\\cdot 0.387=3.87\\).<br><b>Gap lesson:</b> Poisson underestimates here. \\((1-\\tfrac1n)^{n-1}\\) exceeds \\(e^{-1}\\) for finite \\(n\\), so the Poisson limit is biased low at this size.",
+  "tags": [
+   "s_poisson_approx",
+   "s_linearity_expectation",
+   "occupancy",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Fair coin tossed until the first head. Probability the first head comes on an odd-numbered toss?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Lower: \\(P\\ge P(\\text{first toss is H})=\\tfrac12\\).<br><b>Ballpark:</b> About \\(\\tfrac23\\): pairs of tosses, each pair gives a head with probability \\(\\tfrac34\\), and the first head lands in an odd position with probability \\(\\tfrac{2}{3}\\).<br><b>Exact:</b> \\(\\sum_{k\\ge0}2^{-(2k+1)}=\\frac{1/2}{1-1/4}=\\tfrac23\\).<br><b>Gap lesson:</b> The first toss alone gives \\(\\tfrac12\\). The tail terms contribute \\(\\tfrac18+\\tfrac1{32}+\\dots=\\tfrac16\\), a geometric series in four.",
+  "tags": [
+   "s_geometric_probability",
+   "s_recursion",
+   "geometric",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Five cards from a 52-card deck. Probability all five share a suit?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Upper: the first card fixes the suit, and each of the next four must match: \\(\\tfrac{12}{51}\\cdot\\tfrac{11}{50}\\cdot\\tfrac{10}{49}\\cdot\\tfrac{9}{48}\\approx 0.00198\\).<br><b>Ballpark:</b> About \\(1/500\\).<br><b>Exact:</b> \\(4\\binom{13}{5}/\\binom{52}{5}=5148/2598960\\approx 0.001981\\), about 1 in 505.<br><b>Gap lesson:</b> The answer is small enough to read off from the first-card-fixes-suit product. The factor 4 for suits is the one that people forget.",
+  "tags": [
+   "s_complement",
+   "s_bijection",
+   "cards",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Fair coin tossed until 10 heads in a row appear. Expected number of tosses?<br><i>In 30 seconds, without solving: give bounds or a ballpark, and say which limiting cases pin it down.</i>",
+  "back": "<b>Bounds:</b> Lower: at least 10. Upper: none needed.<br><b>Ballpark:</b> \\(2^{11}-2=2046\\).<br><b>Exact:</b> Let \\(E_k\\) be the expected tosses to get \\(k\\) heads in a row: \\(E_k=2E_{k-1}+2\\), with \\(E_0=0\\), so \\(E_{10}=2^{11}-2=2046\\). Simulation over \\(10^5\\) runs gives 2040 \\(\\pm 6\\).<br><b>Gap lesson:</b> Naive estimate \\(2^{10}=1024\\) misses by a factor of 2. The self-overlap of the run doubles the wait relative to a non-overlapping pattern.",
+  "tags": [
+   "s_recursion",
+   "s_first_step_conditioning",
+   "coin_patterns",
+   "fmt_estimate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_reflection<br><b>Constraint:</b> set in an FX barrier context<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> A EUR/USD log-rate \\(X\\) follows a driftless Brownian motion with \\(X_0=0\\) and volatility 10% per \\(\\sqrt{\\text{year}}\\). A knock-out option dies if \\(X\\) touches \\(+0.05\\) during the next quarter. What is the probability it is knocked out?<br><b>Solution:</b> Let \\(T=0.25\\), so \\(X_T\\sim N(0,0.05^2)\\). Reflection at \\(b=0.05\\): \\(P(\\max_{t\\le T}X_t\\ge b)=2P(X_T\\ge b)=2(1-\\Phi(1))\\). Note \\(b=\\sigma\\sqrt T\\).<br><b>Answer:</b> \\(2(1-\\Phi(1))\\approx 0.317\\). A discrete simulation with 2000 steps and bias correction gives 0.318.<br><b>What forces the structure:</b> (1) The event is about the path maximum, not the endpoint, so the naive \\(P(X_T\\ge b)=0.16\\) undercounts. (2) The increments are symmetric with zero drift, so each path that reaches \\(b\\) has a mirror path of equal probability ending above \\(b\\). (3) There is one barrier at a fixed level. Drift breaks the symmetry, and a moving or two-sided barrier needs a series, not one reflection.<br><b>Check your own:</b><ol><li>The process must have symmetric increments with no drift, or the reflected path is not equally likely.</li><li>The answer must be about the running maximum, and it should be roughly twice the naive endpoint probability. If it is not, the barrier is not being reached.</li><li>Use a single fixed barrier and continuous monitoring. Discrete monitoring needs a correction, and a window needs a different method.</li></ol>",
+  "tags": [
+   "s_reflection",
+   "fx",
+   "barrier_options",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_linearity_expectation, s_indicators<br><b>Constraint:</b> uses linearity where the indicators are dependent<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> Ten people, five couples, sit uniformly at random around a round table of 10 seats. Expected number of couples seated next to each other?<br><b>Solution:</b> Indicator \\(I_k\\) for couple \\(k\\) being adjacent. Fix one partner: the other is equally likely in any of the 9 remaining seats, and 2 of those are adjacent. So \\(P(I_k=1)=2/9\\). Then \\(E=\\sum_k E I_k=5\\cdot\\tfrac29=\\tfrac{10}{9}\\). The \\(I_k\\) are dependent, which linearity ignores.<br><b>Answer:</b> \\(\\tfrac{10}{9}\\approx 1.111\\). Simulation with \\(2\\times10^5\\) seatings gives 1.111.<br><b>What forces the structure:</b> (1) The quantity is a count, so it is a sum of indicators. (2) Each marginal \\(P(I_k=1)\\) is easy. (3) The joint law is messy because the couples compete for seats. Linearity needs only the marginals, and that is why the decomposition is the right move.<br><b>Check your own:</b><ol><li>You can write the count as a sum of indicators, and each marginal is computable.</li><li>You do not need any pair of indicators jointly. If the question asks for a variance, the covariances matter and linearity alone is no longer enough.</li><li>The answer should be checkable by symmetry of the marginal: the partner is uniform over the other seats.</li></ol>",
+  "tags": [
+   "s_linearity_expectation",
+   "s_indicators",
+   "seating",
+   "combinatorics",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_bayes<br><b>Constraint:</b> a Bayes problem where the information process changes the answer<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> A coin is fair or has \\(P(H)=0.8\\), each with prior \\(1/2\\). You flip until the first tail, then stop. You observe exactly 3 heads before that tail. What is the probability the coin is biased?<br><b>Solution:</b> Likelihood of the full observed sequence HHHT: fair gives \\((1/2)^4=1/16\\), biased gives \\(0.8^3\\cdot0.2=0.1024\\). Posterior \\(=\\frac{0.1024}{0.1024+0.0625}\\).<br><b>Answer:</b> \\(\\approx 0.621\\). Simulation gives 0.619.<br><b>What forces the structure:</b> (1) The stopping rule is data-dependent: the stop at the first tail is part of the observed event, so the likelihood must include the final tail. (2) Biased coins produce longer heads runs, so the length of the run carries information. (3) The posterior uses the full sequence, not the head count alone. Dropping the stop gives \\(P(3H)=\\tfrac18\\) vs \\(0.512\\) and the wrong answer 0.80.<br><b>Check your own:</b><ol><li>Write the likelihood of the complete observed event, including what stopped the process.</li><li>Compare with the naive model where only the count is recorded; the two answers must differ, or the stop carries no information.</li><li>The posterior must lie between the prior 1/2 and 1, and move toward 'biased' with more heads.</li></ol>",
+  "tags": [
+   "s_bayes",
+   "bayes",
+   "stopping_rules",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_invariant, s_parity<br><b>Constraint:</b> an invariant puzzle on a grid<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> A \\(5\\times5\\) board with the centre cell and the four corner cells removed. Can it be tiled exactly by 1\\(\\times\\)2 dominoes?<br><b>Solution:</b> Colour the board like a chessboard, with black where \\(r+c\\) is even. The full board has 13 black and 12 white cells. Removing the centre and four corners (all black) leaves 8 black and 12 white. Each domino covers one black and one white cell, so a tiling needs equal counts. It is impossible.<br><b>Answer:</b> No. Confirmed by exhaustive search over tilings.<br><b>What forces the structure:</b> (1) Every domino covers exactly one cell of each colour, so the difference black minus white is invariant under placement. (2) The target has difference 4 but a tiling needs 0. (3) The colouring argument covers every piece, not just the removed cells.<br><b>Check your own:</b><ol><li>The invariant must be preserved by every legal move, here by every domino.</li><li>The invariant must differ between start and target. Here it is -4 versus 0.</li><li>Check the colouring on the removed cells, not only the board. The shape counts matter, not just the total cell count.</li></ol>",
+  "tags": [
+   "s_invariant",
+   "s_parity",
+   "tiling",
+   "grids",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_optional_stopping, s_martingale<br><b>Constraint:</b> set in a stock-price exit with a stop and a target<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> A stock trades at 100 on a tick grid. Each tick it moves \\(+1\\) or \\(-1\\) with probability \\(\\tfrac12\\) each, independently. You hold until it reaches 103 (take profit) or 99 (stop). Probability you exit at 103, and expected number of ticks until exit?<br><b>Solution:</b> \\(X_n=S_n-100\\) is a martingale and the stopped process is bounded between \\(-1\\) and \\(3\\). So \\(0=E X_\\tau=3p-(1-p)\\), giving \\(p=\\tfrac14\\). For the time: \\(S_n^2-n\\) is a martingale, so \\(E\\tau=E[X_\\tau^2]=\\tfrac14\\cdot 9+\\tfrac34\\cdot 1=3\\).<br><b>Answer:</b> \\(P(\\text{exit at }103)=\\tfrac14\\), \\(E\\tau=3\\). Simulation gives 0.249 and 2.985.<br><b>What forces the structure:</b> The stopped martingale is bounded, so optional stopping applies to the first moment. The second moment needs \\(S_n^2-n\\), which gives the time. (A stop at +3 with no lower stop would be invalid: the time is not controlled.)<br><b>Check your own:</b><ol><li>Check the stopped process is bounded, or uniformly integrable, before applying optional stopping.</li><li>Pick the martingale to match the question: \\(S_n\\) for the probability, \\(S_n^2-n\\) for the expected time.</li><li>The answer must be a product of the two distances to the barriers for the expected time in a symmetric walk: here \\(1\\times 3=3\\).</li></ol>",
+  "tags": [
+   "s_optional_stopping",
+   "s_martingale",
+   "random_walk",
+   "stock_price",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_first_step_conditioning, s_markov_chain<br><b>Constraint:</b> a Markov problem on a game board<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> A token starts on square 2 of a track numbered 0 to 5. Each turn it moves up one with probability \\(\\tfrac23\\) and down one with probability \\(\\tfrac13\\). Squares 0 and 5 are absorbing. Probability it reaches 5 before 0?<br><b>Solution:</b> First-step: \\(h(k)=\\tfrac23h(k+1)+\\tfrac13h(k-1)\\), with \\(h(0)=0\\) and \\(h(5)=1\\). With \\(r=q/p=\\tfrac12\\), the solution is \\(h(k)=\\frac{1-r^k}{1-r^5}\\). So \\(h(2)=\\frac{1-1/4}{1-1/32}=\\tfrac{24}{31}\\).<br><b>Answer:</b> \\(\\tfrac{24}{31}\\approx 0.774\\). Simulation gives 0.774.<br><b>What forces the structure:</b> The chain is Markov with two absorbing states, so first-step conditioning gives a linear recurrence. Its characteristic roots are 1 and \\(r\\), and the boundary values fix the constants.<br><b>Check your own:</b><ol><li>There must be exactly two absorbing states and a biased step, or the answer is \\(k/N\\).</li><li>Check the solution at the boundaries: \\(h(0)=0\\) and \\(h(5)=1\\).</li><li>A sanity check: with \\(p>\\tfrac12\\) the answer must be above \\(k/N=0.4\\), and it is.</li></ol>",
+  "tags": [
+   "s_first_step_conditioning",
+   "s_markov_chain",
+   "gamblers_ruin",
+   "game_board",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_stars_bars<br><b>Constraint:</b> a counting problem on a rota schedule<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> Ten identical shifts are assigned to four traders, and each trader must get at least one. How many rotas are possible?<br><b>Solution:</b> Give each trader one shift first, leaving 6 identical shifts to distribute freely among 4 traders. Stars and bars: \\(\\binom{6+3}{3}=\\binom93=84\\).<br><b>Answer:</b> 84. Brute-force enumeration confirms 84.<br><b>What forces the structure:</b> (1) The shifts are identical and the traders are distinct. (2) The lower bound of 1 becomes a non-negativity constraint after subtracting 1 from each. (3) Stars and bars then counts non-negative solutions directly.<br><b>Check your own:</b><ol><li>Check whether the items are identical and the recipients are distinct; if both were distinct, the count changes.</li><li>Convert every lower bound to a non-negative bound before applying the formula.</li><li>If there were upper bounds (at most 3 each), stars and bars would need inclusion-exclusion instead.</li></ol>",
+  "tags": [
+   "s_stars_bars",
+   "combinatorics",
+   "counting",
+   "rota",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_inclusion_exclusion<br><b>Constraint:</b> a probability over an 'all covered' event with four bins<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> Seven people each choose one of four desks uniformly and independently. Probability that every desk is used at least once?<br><b>Solution:</b> Let \\(A_j\\) be the event that desk \\(j\\) is empty. Then \\(P(\\text{all used})=\\sum_{k=0}^{4}(-1)^k\\binom4k\\left(\\frac{4-k}{4}\\right)^7\\). The sum is \\(\\frac{4^7-4\\cdot3^7+6\\cdot2^7-4\\cdot1^7}{4^7}=\\frac{8400}{16384}\\).<br><b>Answer:</b> \\(\\frac{8400}{16384}=\\frac{525}{1024}\\approx 0.5127\\). Simulation gives 0.512.<br><b>What forces the structure:</b> (1) The target is an intersection of 'not empty' events, so take complements. (2) The intersections of 'empty' events depend only on how many desks are removed, so the terms are symmetric. (3) With four desks there are only five terms.<br><b>Check your own:</b><ol><li>The event must be an intersection of many 'not' events, and each intersection must be easy to count.</li><li>The sum must have few terms, or be symmetric in the index.</li><li>Check the total: the surjection count \\(8400\\) should be \\(4!\\,S(7,4)=24\\cdot350\\).</li></ol>",
+  "tags": [
+   "s_inclusion_exclusion",
+   "s_complement",
+   "occupancy",
+   "combinatorics",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_pigeonhole, s_extremal<br><b>Constraint:</b> a geometric bound on a unit square with ten points<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> Ten points are placed anywhere in a unit square. Show that two are within distance \\(d\\), and find the best \\(d\\) your argument gives.<br><b>Solution:</b> Split the square into \\(3\\times 3=9\\) subsquares of side \\(1/3\\). Ten points and nine cells: two points share a cell. Two points in a cell of side \\(1/3\\) are within the cell diagonal \\(\\sqrt2/3\\).<br><b>Answer:</b> \\(d=\\sqrt2/3\\approx 0.471\\). Random placements have a typical minimum distance near 0.08, so the bound is not tight.<br><b>What forces the structure:</b> (1) Fewer cells than points forces a shared cell. (2) The cell diameter converts the shared cell into a distance bound. (3) The pigeonhole count is the only step; the geometry sets the constant.<br><b>Check your own:</b><ol><li>The number of cells must be strictly less than the number of points.</li><li>The distance comes from the cell diameter, so use the diagonal, not the side.</li><li>Points on shared cell boundaries must be assigned to one cell, or the argument needs a closed-cell convention.</li></ol>",
+  "tags": [
+   "s_pigeonhole",
+   "s_extremal",
+   "geometry",
+   "grids",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_geometric_probability<br><b>Constraint:</b> a random chord of a circle, with the endpoints chosen uniformly on the circle<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> Two independent uniform points on a unit circle are joined by a chord. Probability the chord is longer than the side of the inscribed equilateral triangle?<br><b>Solution:</b> Fix the first point by rotational symmetry. The chord length is \\(2\\sin(\\theta/2)\\), where \\(\\theta\\) is the arc angle, uniform on \\([0,2\\pi]\\). Side length \\(\\sqrt3\\) requires \\(\\sin(\\theta/2)>\\tfrac{\\sqrt3}{2}\\), so \\(\\theta\\in(\\tfrac{2\\pi}{3},\\tfrac{4\\pi}{3})\\). Probability \\(\\tfrac{2\\pi/3}{2\\pi}=\\tfrac13\\).<br><b>Answer:</b> \\(\\tfrac13\\). Simulation gives 0.333.<br><b>What forces the structure:</b> (1) The event depends only on arc angle, which is rotation-invariant, so fixing one endpoint is allowed. (2) 'Uniform' here means uniform in angle. (3) If you instead choose the chord by a uniform midpoint, you get \\(\\tfrac14\\) (the Bertrand paradox): the answer depends on the sampling measure.<br><b>Check your own:</b><ol><li>Say what 'uniform' means: uniform endpoints, uniform midpoint and uniform radius give three different answers.</li><li>The condition must depend only on the invariant of the configuration (here, arc angle).</li><li>A sanity check: the answer should be between 0 and 1, and it changes with the measure, not with the parametrisation.</li></ol>",
+  "tags": [
+   "s_geometric_probability",
+   "bertrand_paradox",
+   "circle",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_order_statistics<br><b>Constraint:</b> exponential arrivals with a 'third-fastest' finish<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> Five independent \\(\\mathrm{Exp}(1)\\) service times run in parallel. Expected time of the third finish?<br><b>Solution:</b> Exponential order statistics have independent spacings. The \\(k\\)-th smallest satisfies \\(E X_{(k)}=\\sum_{j=1}^{k}\\frac1{n-j+1}\\). For \\(n=5,k=3\\): \\(\\tfrac15+\\tfrac14+\\tfrac13=\\tfrac{47}{60}\\).<br><b>Answer:</b> \\(\\tfrac{47}{60}\\approx 0.783\\). Simulation gives 0.783.<br><b>What forces the structure:</b> (1) The times are i.i.d. and continuous, so there are no ties. (2) The exponential law makes the spacings independent, with rates \\(n, n-1, \\dots\\). (3) For uniform draws the analogous answer uses Beta, not this formula.<br><b>Check your own:</b><ol><li>Check the distribution: the spacing formula is specific to the exponential.</li><li>Check the index: 'third-fastest' of five is the third order statistic, with spacings \\(\\tfrac15,\\tfrac14,\\tfrac13\\).</li><li>The answer should be between \\(E X_{(1)}=\\tfrac15\\) and \\(E X_{(5)}=H_5\\).</li></ol>",
+  "tags": [
+   "s_order_statistics",
+   "s_memorylessness",
+   "exponential",
+   "queueing",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_memorylessness<br><b>Constraint:</b> a race between three parallel jobs with different rates<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> Three independent jobs run in parallel with exponential durations of rates \\(1,2,3\\) per hour. Probability the rate-1 job finishes last?<br><b>Solution:</b> Memorylessness: when one job finishes, the others restart fresh. So the next finisher is chosen with probability proportional to its rate. Sequences ending in job 1: (2 first, then 3, then 1): \\(\\tfrac{2}{6}\\cdot\\tfrac34=\\tfrac14\\). (3 first, then 2, then 1): \\(\\tfrac36\\cdot\\tfrac23=\\tfrac13\\). Sum \\(=\\tfrac7{12}\\).<br><b>Answer:</b> \\(\\tfrac{7}{12}\\approx 0.583\\). Simulation gives 0.584.<br><b>What forces the structure:</b> Memorylessness lets each stage use fresh exponentials, so the finish order is a Markov race with probabilities \\(\\lambda_i/\\sum\\lambda\\). Without memorylessness (for example uniform durations) the next finisher depends on elapsed time and the chain breaks.<br><b>Check your own:</b><ol><li>Check the law: exponential durations only, since memorylessness is needed at each finish.</li><li>Each stage's probabilities must be the rates over the sum of the remaining rates.</li><li>Check that the probabilities of all six finish orders sum to 1.</li></ol>",
+  "tags": [
+   "s_memorylessness",
+   "s_markov_chain",
+   "exponential",
+   "queueing",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_dynamic_programming<br><b>Constraint:</b> a trading decision on an asset with a forced sale deadline<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> You must sell one unit of an asset by the third day. Each day an offer is uniform on \\(\\{1,\\dots,10\\}\\), independent across days. You may accept an offer or wait; you cannot recall an offer. The day-3 offer must be accepted. What is the optimal expected sale price?<br><b>Solution:</b> Let \\(W_k\\) be the value with \\(k\\) days left. \\(W_1=E[X]=5.5\\). \\(W_2=E[\\max(X,W_1)]=\\tfrac{27}{4}=6.75\\). \\(W_3=E[\\max(X,W_2)]=\\tfrac{149}{20}=7.45\\). Strategy: on day 1 accept if the offer is at least 7, on day 2 accept if at least 6, otherwise take day 3.<br><b>Answer:</b> \\(\\tfrac{149}{20}=7.45\\). Simulation of the policy gives 7.45.<br><b>What forces the structure:</b> (1) The offers are independent, so the state is only the number of days left. (2) No recall means the value is an expectation of a max over the next state. (3) The finite horizon makes backward induction exact: compute \\(W_1\\) first.<br><b>Check your own:</b><ol><li>The offers must be independent of past offers; otherwise the state needs more history.</li><li>The problem must have a finite horizon with a known last step, which starts the recursion.</li><li>The threshold must fall as the deadline approaches: 7 on day 1, 6 on day 2, and forced on day 3.</li></ol>",
+  "tags": [
+   "s_dynamic_programming",
+   "s_backward_induction",
+   "optimal_stopping",
+   "trading",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_backward_induction<br><b>Constraint:</b> a two-player alternating game on a pile<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> A pile of 10 sticks. Players alternately take 1, 2 or 3 sticks, and whoever takes the last stick wins. With optimal play, who wins, and what is the first move?<br><b>Solution:</b> Label positions by the number of sticks left. A position is losing iff it is a multiple of 4: \\(0\\) is losing, \\(1,2,3\\) winning (take all), \\(4\\) losing, \\(5,6,7\\) winning, \\(8\\) losing, \\(9,10,11\\) winning. So 10 is winning: take 2 to leave 8.<br><b>Answer:</b> The first player wins by taking 2 sticks, leaving 8. Brute force over positions confirms the only winning first move is 2.<br><b>What forces the structure:</b> (1) The game is finite, perfect-information and alternating. (2) Position values are determined from the end backwards. (3) The modulus 4 comes from the move set \\(\\{1,2,3\\}\\): the losing positions are the multiples of \\(1+3\\).<br><b>Check your own:</b><ol><li>Check that the last mover wins under normal play; under misère play the pattern changes.</li><li>Changing the move set to \\(\\{1,2,4\\}\\) changes the modulus, so re-derive the losing positions rather than reuse 4.</li><li>Sanity check: the set of losing positions must be closed under the move set, here 0, 4, 8.</li></ol>",
+  "tags": [
+   "s_backward_induction",
+   "s_game_theory_equilibrium",
+   "combinatorial_games",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_game_theory_equilibrium<br><b>Constraint:</b> a two-dealer quote game with no pure equilibrium<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> Two dealers each pick a quote, Top or Bottom for dealer A and Left or Right for dealer B. Payoffs: A gets \\(3,0;1,2\\) and B gets \\(1,3;2,0\\) (rows: Top, Bottom; columns: Left, Right). Find the mixed equilibrium and the game value for each dealer.<br><b>Solution:</b> No pure equilibrium exists. Let A play Top with probability \\(p\\). B's indifference: \\(p\\cdot1+(1-p)\\cdot2=p\\cdot3\\), so \\(p=\\tfrac12\\). Let B play Left with probability \\(q\\). A's indifference: \\(3q=q+2(1-q)\\), so \\(q=\\tfrac12\\). Both players get payoff \\(\\tfrac32\\).<br><b>Answer:</b> Mixed equilibrium: A plays Top with probability \\(\\tfrac12\\), B plays Left with probability \\(\\tfrac12\\). Value \\(\\tfrac32\\) for each player.<br><b>What forces the structure:</b> (1) Check no pure equilibrium exists by testing the four cells. (2) Each player randomises so the other is indifferent. (3) The indifference conditions are linear in the probabilities, so the solution is a 2x2 linear system.<br><b>Check your own:</b><ol><li>Test all four pure profiles for a profitable deviation before assuming a mixed answer.</li><li>Each player's mixing probability is set by the other player's indifference, not by its own payoffs.</li><li>Check that both expected payoffs equal the value for each mixed strategy against the other's pure responses.</li></ol>",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "s_linearity_expectation",
+   "game_theory",
+   "market_making",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_kelly_log_utility<br><b>Constraint:</b> repeated bets with a 3-to-1 payout on a 30% event<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> A bet pays 3 units per unit staked if it wins (probability 0.3) and loses the stake otherwise. Kelly fraction of bankroll to stake, and expected log-growth per bet at that fraction?<br><b>Solution:</b> Growth \\(g(f)=0.3\\ln(1+3f)+0.7\\ln(1-f)\\). Setting \\(g'(f)=0\\): \\(\\frac{0.9}{1+3f}=\\frac{0.7}{1-f}\\), giving \\(f^*=\\frac{bp-q}{b}=\\frac{0.9-0.7}{3}=\\tfrac1{15}\\). Then \\(g(f^*)=0.3\\ln1.2+0.7\\ln\\tfrac{14}{15}\\approx 0.00640\\).<br><b>Answer:</b> \\(f^*=1/15\\approx 0.067\\), \\(g\\approx 0.0064\\) per bet. Simulation gives 0.00635.<br><b>What forces the structure:</b> Log utility makes growth additive over repeated bets, so maximising the expected log maximises long-run growth. Concavity sets the stake to the edge over the odds.<br><b>Check your own:</b><ol><li>Check the bet is repeated and independent. The log objective is for compounding; a single bet with a different objective gives another answer.</li><li>Check \\(f<1\\) so the log is defined, and that \\(bp>q\\) so the fraction is positive.</li><li>Fractional Kelly (for example half) lowers the variance at the cost of growth. Say which one the question asks for.</li></ol>",
+  "tags": [
+   "s_kelly_log_utility",
+   "s_convexity_jensen",
+   "betting",
+   "position_sizing",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_eigen, s_markov_chain<br><b>Constraint:</b> a regime chain for volatility states<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> A market is Calm or Stressed each day. From Calm it stays Calm with probability 0.9; from Stressed it returns to Calm with probability 0.4. Long-run fraction of days Stressed, and the expected number of days between Stressed episodes?<br><b>Solution:</b> Transition matrix \\(P=\\begin{pmatrix}0.9&0.1\\\\0.4&0.6\\end{pmatrix}\\). Stationary \\(\\pi P=\\pi\\): \\(\\pi_S=\\frac{0.1}{0.1+0.4}=0.2\\). Eigenvalues are \\(1\\) and \\(0.5\\). Kac's formula: expected return time to Stressed is \\(1/\\pi_S=5\\) days.<br><b>Answer:</b> Stressed fraction \\(0.2\\); expected return time 5 days. Simulation of the chain gives 5.00.<br><b>What forces the structure:</b> The chain is finite, irreducible and aperiodic, so the stationary distribution is the left eigenvector for eigenvalue 1. The second eigenvalue \\(0.5\\) sets how fast it mixes.<br><b>Check your own:</b><ol><li>Check the chain is irreducible and aperiodic before using the stationary law.</li><li>Check the rows sum to 1 and the stationary vector satisfies \\(\\pi P=\\pi\\).</li><li>Kac's return-time formula gives the revisit time directly from \\(\\pi\\), with no need for first-passage equations.</li></ol>",
+  "tags": [
+   "s_eigen",
+   "s_markov_chain",
+   "regime",
+   "volatility",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_lagrange<br><b>Constraint:</b> a two-asset minimum-variance portfolio<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> Two assets have volatilities 20% and 30% and correlation 0.2. Find the weights of the fully invested minimum-variance portfolio and its volatility.<br><b>Solution:</b> Minimise \\(w^\\top\\Sigma w\\) subject to \\(\\mathbf 1^\\top w=1\\). Lagrange gives \\(\\Sigma w=\\lambda\\mathbf 1\\), so \\(w\\propto\\Sigma^{-1}\\mathbf 1\\). Here \\(w_1=\\frac{0.09-0.012}{0.13-0.024}=\\frac{0.078}{0.106}\\approx 0.736\\) and \\(w_2\\approx 0.264\\). Minimum variance \\(=\\frac{1}{\\mathbf 1^\\top\\Sigma^{-1}\\mathbf 1}\\approx 0.0326\\), volatility about 18.1%.<br><b>Answer:</b> \\(w\\approx(0.736,0.264)\\), volatility \\(\\approx 18.1\\%\\). Matches the direct computation.<br><b>What forces the structure:</b> Quadratic objective with one linear constraint: the first-order conditions form a linear system, and the minimum-variance formula follows from it. Positive definiteness holds because \\(|\\rho|<1\\).<br><b>Check your own:</b><ol><li>Check the constraint is linear and the matrix is positive definite (here \\(\\rho<1\\)).</li><li>If shorting is not allowed, the non-negativity constraints can bind and the Lagrange answer is not valid; use KKT.</li><li>Sanity check: the minimum-variance volatility must be below the smaller of the two single-asset volatilities.</li></ol>",
+  "tags": [
+   "s_lagrange",
+   "s_eigen",
+   "portfolio",
+   "optimisation",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_taylor<br><b>Constraint:</b> a delta-gamma approximation of option P&L<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> An at-the-money call with \\(S=100\\), \\(K=100\\), \\(r=0\\), \\(\\sigma=20\\%\\), \\(T=1\\) is worth about 7.97. The stock rises by 1. Estimate the change in value with delta and gamma, and compare with the exact change.<br><b>Solution:</b> \\(\\Delta V\\approx \\Delta\\cdot h+\\tfrac12\\Gamma h^2\\) with \\(h=1\\), \\(\\Delta=N(d_1)=N(0.1)\\approx 0.5398\\), \\(\\Gamma\\approx 0.01985\\). So \\(\\Delta V\\approx 0.5398+0.0099=0.5497\\).<br><b>Answer:</b> \\(\\Delta V\\approx 0.5497\\). Full Black-Scholes revaluation gives 0.54970.<br><b>What forces the structure:</b> Smooth function, small move: Taylor to second order is accurate. The second term is \\(\\tfrac12\\Gamma h^2\\), which is the convexity correction. Delta alone gives 0.540, off by 1.8%.<br><b>Check your own:</b><ol><li>Check the move is small relative to the scale on which gamma changes, here a few points of \\(S\\).</li><li>The third-order term is of order \\(h^3\\), and its size should be checked before trusting the answer.</li><li>Near expiry or at a strike, gamma spikes and the second-order estimate fails.</li></ol>",
+  "tags": [
+   "s_taylor",
+   "options",
+   "greeks",
+   "delta_gamma",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_convexity_jensen<br><b>Constraint:</b> a claim paying the reciprocal of a random price<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> A claim pays \\(1/S\\) where \\(S\\) is uniform on \\(\\{50,150\\}\\). Compare \\(E[1/S]\\) with \\(1/E[S]\\).<br><b>Solution:</b> \\(1/x\\) is convex on \\((0,\\infty)\\), so Jensen gives \\(E[1/S]\\ge 1/E[S]\\). Exactly: \\(E[1/S]=\\tfrac12(\\tfrac1{50}+\\tfrac1{150})=\\tfrac{2}{150}\\approx 0.01333\\), and \\(1/E[S]=1/100=0.01\\).<br><b>Answer:</b> \\(E[1/S]\\approx 0.01333\\) versus \\(1/E[S]=0.01\\). The gap is 0.0033.<br><b>What forces the structure:</b> (1) The function is convex on the support of \\(S\\), so Jensen applies in the stated direction. (2) The gap is the convexity term, which grows with the spread of \\(S\\). (3) The direction flips for concave functions such as \\(\\log\\).<br><b>Check your own:</b><ol><li>State the convexity of the function on the support before applying Jensen.</li><li>The gap should grow with the spread of \\(S\\); test with a narrower distribution and check it shrinks.</li><li>For a concave function (for example \\(\\log\\)) the inequality reverses, so write down the sign first.</li></ol>",
+  "tags": [
+   "s_convexity_jensen",
+   "pricing",
+   "convexity",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_variance_decomposition<br><b>Constraint:</b> a daily P&L from a Poisson number of trades<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> The number of trades in a day is \\(N\\sim\\mathrm{Poisson}(4)\\). Each trade pays \\(+2\\) with probability 0.6 and \\(-1\\) with probability 0.4, independently. Variance of the daily P&L?<br><b>Solution:</b> Total \\(=\\sum_{i=1}^N X_i\\). \\(\\mathrm{Var}=E[N]\\mathrm{Var}(X)+\\mathrm{Var}(N)E[X]^2\\). Here \\(E[X]=0.8\\), \\(\\mathrm{Var}(X)=2.8-0.64=2.16\\), \\(E[N]=\\mathrm{Var}(N)=4\\). So \\(4\\cdot 2.16+4\\cdot0.64=11.2\\).<br><b>Answer:</b> \\(\\mathrm{Var}=11.2\\). Simulation gives 11.17.<br><b>What forces the structure:</b> A random number of i.i.d. summands: the decomposition has two sources of variance, the trade-size spread and the trade-count spread. The count term is multiplied by \\(E[X]^2\\), which is zero only when the mean trade is zero.<br><b>Check your own:</b><ol><li>Check whether the number of trades is random; if it is fixed, only the first term remains.</li><li>Check whether \\(E[X]\\) is zero; if it is, the count variance drops out.</li><li>For a Poisson count, \\(\\mathrm{Var}(N)=E[N]\\), so the count term is \\(\\lambda E[X]^2\\).</li></ol>",
+  "tags": [
+   "s_variance_decomposition",
+   "s_conditional_expectation_tower",
+   "compound_distribution",
+   "trading",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_clt_normal_approx<br><b>Constraint:</b> a call-centre-style count of 200 independent customers<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> 200 independent customers each buy with probability \\(\\tfrac12\\). Probability that at least 110 buy?<br><b>Solution:</b> Mean 100, variance 50. Normal approximation with continuity correction: \\(P(\\ge 110)\\approx P(Z\\ge \\tfrac{109.5-100}{\\sqrt{50}})=1-\\Phi(1.343)\\approx 0.0896\\).<br><b>Answer:</b> \\(\\approx 0.0896\\), exact binomial \\(0.0895\\).<br><b>What forces the structure:</b> (1) The customers are independent and identically distributed with finite variance, so CLT applies. (2) The count is discrete, so the continuity correction uses 109.5, not 110. (3) With \\(np=100\\) and \\(n(1-p)=100\\), the approximation is accurate.<br><b>Check your own:</b><ol><li>Check independence and that \\(np\\) and \\(n(1-p)\\) are both large (here 100).</li><li>Apply the continuity correction to a discrete count: 110 becomes 109.5.</li><li>Compare with the Chebyshev bound \\(25/10^2=0.25\\), which is much looser.</li></ol>",
+  "tags": [
+   "s_clt_normal_approx",
+   "binomial",
+   "call_centre",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_poisson_approx<br><b>Constraint:</b> a desk with rare trade-booking errors<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> A desk processes 1000 trades. Each trade has an independent error probability 0.002. Probability of at least two errors?<br><b>Solution:</b> Binomial \\(n=1000\\), \\(p=0.002\\), \\(\\lambda=np=2\\). Poisson: \\(P(\\ge 2)=1-e^{-2}-2e^{-2}=1-3e^{-2}\\approx 0.5940\\). Exact binomial gives 0.5943.<br><b>Answer:</b> \\(1-3e^{-2}\\approx 0.594\\).<br><b>What forces the structure:</b> (1) Many trials with small \\(p\\) gives the Poisson limit with mean \\(np\\). (2) Independence of errors is needed. (3) The approximation error is of order \\(p\\), here 0.2%.<br><b>Check your own:</b><ol><li>Check \\(n\\) is large and \\(p\\) small, so \\(\\lambda=np\\) is moderate.</li><li>Check independence: clustered errors (one bad batch) break Poisson, and the variance grows.</li><li>Use the exact binomial when the tail matters more than the first decimal.</li></ol>",
+  "tags": [
+   "s_poisson_approx",
+   "s_complement",
+   "operational_risk",
+   "binomial",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_sqrt_time_scaling<br><b>Constraint:</b> a 10-day value-at-risk from a 1-day standard deviation<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> Daily P&L of a position is independent and normal with zero mean and daily standard deviation 1.2%. What is the 10-day standard deviation, and the 99% 10-day VaR as a percentage of the position?<br><b>Solution:</b> Independent increments: variance adds over days, so \\(\\sigma_{10}=\\sqrt{10}\\cdot 1.2\\%\\approx 3.79\\%\\). 99% normal quantile \\(2.326\\), so VaR \\(\\approx 2.326\\cdot 3.79\\%\\approx 8.8\\%\\).<br><b>Answer:</b> \\(\\sigma_{10}\\approx 3.79\\%\\), 99% 10-day VaR \\(\\approx 8.8\\%\\). Simulation gives 3.79%.<br><b>What forces the structure:</b> Independence makes variance linear in time, so the standard deviation scales with \\(\\sqrt t\\). Zero mean is needed; otherwise the drift scales linearly and the VaR is not \\(\\sqrt{10}\\) times the one-day VaR.<br><b>Check your own:</b><ol><li>Check the days are independent. Autocorrelated returns break the \\(\\sqrt t\\) rule.</li><li>Check the distribution is close to normal; fat tails break the normal quantile.</li><li>Check the mean: with a non-zero daily mean, the drift adds linearly, so the rule is only for the variance.</li></ol>",
+  "tags": [
+   "s_sqrt_time_scaling",
+   "s_clt_normal_approx",
+   "risk",
+   "var",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_change_of_measure<br><b>Constraint:</b> a digital option under a drift-changed measure<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> Under a probability \\(P\\), \\(W_1\\sim N(0,1)\\). Define \\(Q\\) by the density \\(e^{\\theta W_1-\\theta^2/2}\\) with \\(\\theta=\\tfrac12\\). Probability \\(W_1>1\\) under \\(Q\\)?<br><b>Solution:</b> Under \\(Q\\), \\(W_1\\sim N(\\theta,1)\\) by Girsanov. So \\(Q(W_1>1)=1-\\Phi(1-\\tfrac12)=1-\\Phi(0.5)\\approx 0.3085\\). Equivalently \\(E^P[\\mathbf 1\\{W_1>1\\}e^{\\theta W_1-\\theta^2/2}]=0.3085\\).<br><b>Answer:</b> \\(\\approx 0.3085\\). Simulation of the \\(P\\)-expectation with density weights gives 0.309.<br><b>What forces the structure:</b> A change of measure with exponential density tilts the drift. Under \\(Q\\) the event probability is an ordinary normal tail with the shifted mean. The weighting by the density reproduces it under \\(P\\).<br><b>Check your own:</b><ol><li>Check the density has expectation 1 under \\(P\\) (the exponential martingale), or the measure is not valid.</li><li>The drift in \\(Q\\) equals the coefficient \\(\\theta\\) in the exponent.</li><li>A change of measure changes the law, not the path: the same event is evaluated on the same Brownian paths.</li></ol>",
+  "tags": [
+   "s_change_of_measure",
+   "s_replication",
+   "girsanov",
+   "digital_option",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_replication<br><b>Constraint:</b> a one-period binary option hedged with stock and bond<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> Stock \\(S_0=100\\), up to 120 or down to 90, with \\(r=2\\%\\) per period. A claim pays 1 if the stock goes up and 0 if down. Find the replicating portfolio and the price.<br><b>Solution:</b> Solve \\(\\Delta\\cdot120+B\\cdot1.02=1\\) and \\(\\Delta\\cdot90+B\\cdot1.02=0\\). So \\(\\Delta=\\tfrac1{30}\\) and \\(B=-\\tfrac{3}{1.02}\\approx-2.941\\). Price \\(=100\\Delta+B=\\tfrac{3.333}{1}-2.941\\approx 0.392\\). Risk-neutral check: \\(q=\\frac{102-90}{30}=0.4\\), price \\(=q/1.02\\approx0.392\\).<br><b>Answer:</b> Price \\(\\approx 0.392\\), \\(\\Delta=1/30\\).<br><b>What forces the structure:</b> Two states and two traded assets make the market complete, so the claim is replicable and the price is unique. The risk-neutral probability gives the same answer, which is the check.<br><b>Check your own:</b><ol><li>Check the market is complete: as many traded assets as states.</li><li>Check the price equals the discounted risk-neutral expectation under \\(q\\); a mismatch means an arithmetic error.</li><li>With a third state and only two assets, the claim is no longer replicable in general.</li></ol>",
+  "tags": [
+   "s_replication",
+   "s_martingale",
+   "binomial_model",
+   "arbitrage",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_bijection<br><b>Constraint:</b> a lattice-path count for a buy-sell sequence<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> A trader makes 5 buys and 5 sells, one per step, and the cumulative buys never fall below the cumulative sells. How many sequences are possible?<br><b>Solution:</b> Each sequence is a lattice path from \\((0,0)\\) to \\((5,5)\\) that never goes below the diagonal. Bijection with Dyck paths: count is the Catalan number \\(C_5=\\tfrac1{6}\\binom{10}{5}=42\\). Reflection check: \\(\\binom{10}{5}-\\binom{10}{4}=252-210=42\\).<br><b>Answer:</b> \\(C_5=42\\). Brute-force enumeration confirms 42.<br><b>What forces the structure:</b> (1) The constraint is a prefix condition, which is what the bijection and the reflection both need. (2) The reflection swaps paths that touch the forbidden boundary, so the count is a difference of two binomials. (3) Catalan numbers count all such constraints of this form.<br><b>Check your own:</b><ol><li>Check the constraint is on every prefix of the sequence, not just the total.</li><li>Check the endpoints: a path from \\((0,0)\\) to \\((n,n)\\) gives \\(C_n\\), and a different endpoint changes the count.</li><li>The reflection count \\(\\binom{2n}{n}-\\binom{2n}{n-1}\\) must equal the Catalan number, which is a quick check.</li></ol>",
+  "tags": [
+   "s_bijection",
+   "s_recursion",
+   "ballot",
+   "catalan",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_recursion<br><b>Constraint:</b> an order-book queue of fills of size 1, 2 or 3<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> An order must fill exactly 10 units. Each fill is 1, 2 or 3 units, and the sequence of fills matters. How many distinct fill sequences are there?<br><b>Solution:</b> Let \\(f(n)\\) be the number of ordered sequences summing to \\(n\\). Condition on the last fill: \\(f(n)=f(n-1)+f(n-2)+f(n-3)\\), with \\(f(0)=1\\). So \\(f(1)=1\\), \\(f(2)=2\\), \\(f(3)=4\\), \\(f(4)=7\\), \\(f(5)=13\\), \\(f(6)=24\\), \\(f(7)=44\\), \\(f(8)=81\\), \\(f(9)=149\\), \\(f(10)=274\\).<br><b>Answer:</b> 274. Direct enumeration of compositions of 10 into parts 1, 2, 3 agrees.<br><b>What forces the structure:</b> Last-step decomposition gives a linear recurrence. Ordering matters, so compositions are the right object; partitions (unordered) would give a different count.<br><b>Check your own:</b><ol><li>Check the order matters. If fills were unordered, the count would be partitions, not compositions.</li><li>Check the parts are bounded. Unbounded parts give \\(2^{n-1}\\) instead.</li><li>Check the recursion from the first few values by hand (here 1, 1, 2, 4).</li></ol>",
+  "tags": [
+   "s_recursion",
+   "s_generating_function",
+   "order_book",
+   "combinatorics",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_tail_sum<br><b>Constraint:</b> a payoff with a cap, for expected value<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> A payoff \\(X\\sim\\mathrm{Exp}(1)\\) is capped at 2, so you receive \\(\\min(X,2)\\). Expected payoff?<br><b>Solution:</b> Tail-sum formula for nonnegative \\(Y\\): \\(EY=\\int_0^\\infty P(Y>t)\\,dt\\). With \\(Y=\\min(X,2)\\), \\(P(Y>t)=e^{-t}\\) for \\(t<2\\) and 0 after. So \\(EY=\\int_0^2 e^{-t}dt=1-e^{-2}\\).<br><b>Answer:</b> \\(1-e^{-2}\\approx 0.8647\\). Simulation gives 0.864.<br><b>What forces the structure:</b> A nonnegative payoff with a cap: the tail-sum formula turns the expectation into an integral of the survival function, truncated at the cap. Without the cap the integral is still finite here, but for a heavier tail it would diverge.<br><b>Check your own:</b><ol><li>Check the payoff is nonnegative; the tail-sum formula needs that.</li><li>Check the truncation: the survival function is zero above the cap.</li><li>Check against the uncapped mean 1: the capped mean must be smaller, and it is 0.865.</li></ol>",
+  "tags": [
+   "s_tail_sum",
+   "s_convexity_jensen",
+   "expectation",
+   "payoff_cap",
+   "fmt_generate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Structure:</b> s_generating_function<br><b>Constraint:</b> a dice game with a payout on a total<br><i>Invent one problem that needs this structure and meets the constraint. Solve it in full, then say what forces the structure.</i>",
+  "back": "<b>Model problem:</b> A game rolls three fair dice and pays on their total. Probability the total is exactly 7?<br><b>Solution:</b> Generating function of one die: \\(g(x)=x+x^2+\\dots+x^6\\). Three dice: \\(g(x)^3\\). The coefficient of \\(x^7\\) counts favourable outcomes. Direct count: the ordered triples summing to 7 number \\(15\\). So \\(P=15/216=5/72\\approx 0.0694\\).<br><b>Answer:</b> \\(15/216\\approx 0.0694\\). Enumeration of all 216 outcomes confirms 15.<br><b>What forces the structure:</b> Independent identical summands turn into a product of generating functions, so counts multiply by convolution. The coefficient extraction is then mechanical.<br><b>Check your own:</b><ol><li>Check the dice are independent, so the generating functions multiply.</li><li>Check the total sum is over the right exponent range: each die contributes \\(x^1\\) to \\(x^6\\).</li><li>Check the total probability by summing all coefficients: \\(g(1)^3=6^3=216\\).</li></ol>",
+  "tags": [
+   "s_generating_function",
+   "s_stars_bars",
+   "dice",
+   "counting",
+   "fmt_generate"
+  ]
+ }
+]
