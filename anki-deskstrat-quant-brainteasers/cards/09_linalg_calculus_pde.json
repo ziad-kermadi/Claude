@@ -299,7 +299,7 @@
  {
   "type": "basic",
   "front": "When should you reach for integration by parts, and when does it fail to simplify?",
-  "back": "<b>Triggers:</b> the integrand is a product of two different function types. Use ILATE to choose \\(u\\): log, inverse trig, algebraic, trig, exponential. Differentiate \\(u\\), integrate \\(dv\\).<br><b>Move:</b> \\(\\int u\\,dv=uv-\\int v\\,du\\).<br><b>Canonical example:</b> \\(\\int xe^x\\,dx=(x-1)e^x+C\\); \\(\\int_0^1xe^x\\,dx=1\\).<br><b>Failure mode:</b> each step returns a same-type integral, e.g. \\(\\int e^x\\sin x\\,dx\\) cycles back to itself. Apply parts twice and solve the resulting linear equation for the unknown integral.",
+  "back": "<b>Triggers:</b> the integrand is a product of two different function types. Use LIATE to choose \\(u\\): log, inverse trig, algebraic, trig, exponential. Differentiate \\(u\\), integrate \\(dv\\).<br><b>Move:</b> \\(\\int u\\,dv=uv-\\int v\\,du\\).<br><b>Canonical example:</b> \\(\\int xe^x\\,dx=(x-1)e^x+C\\); \\(\\int_0^1xe^x\\,dx=1\\).<br><b>Failure mode:</b> each step returns a same-type integral, e.g. \\(\\int e^x\\sin x\\,dx\\) cycles back to itself. Apply parts twice and solve the resulting linear equation for the unknown integral.",
   "tags": [
    "s_recursion",
    "integration_by_parts",
@@ -409,7 +409,7 @@
  {
   "type": "basic",
   "front": "Estimate \\(e^{0.1}\\) to within \\(10^{-5}\\) by Taylor's theorem. How many terms are needed?",
-  "back": "<b>Answer:</b> 4 terms (through \\(x^3/6\\)): \\(e^{0.1}\\approx1.105167\\).<br><b>Structure:</b> s_taylor.<br><b>Key move:</b> the remainder after degree \\(n\\) is \\(\\dfrac{|x|^{n+1}}{(n+1)!}e^{\\xi}\\), with \\(\\xi\\) between 0 and \\(x\\).<br><b>Working:</b> with \\(x=0.1\\), \\(n=3\\): \\(\\dfrac{10^{-4}}{24}e^{0.1}\\approx4.6\\times10^{-6}<10^{-5}\\). Exact \\(e^{0.1}=1.1051709\\); the partial sum \\(1.1051667\\) is off by \\(4\\times10^{-6}\\).<br><b>Sanity check:</b> each term shrinks by about \\(x/(n+1)\\approx0.03\\), so each extra term adds about 1.5 digits.<br><b>Transfer:</b> \\(e^{x}\\) for \\(|x|\\le0.2\\) with 3 terms.",
+  "back": "<b>Answer:</b> 4 terms (through \\(x^3/6\\)): \\(e^{0.1}\\approx1.105167\\).<br><b>Structure:</b> s_taylor.<br><b>Key move:</b> the remainder after degree \\(n\\) is \\(\\dfrac{|x|^{n+1}}{(n+1)!}e^{\\xi}\\), with \\(\\xi\\) between 0 and \\(x\\).<br><b>Working:</b> with \\(x=0.1\\), \\(n=3\\): \\(\\dfrac{10^{-4}}{24}e^{0.1}\\approx4.6\\times10^{-6}<10^{-5}\\). Exact \\(e^{0.1}=1.1051709\\); the partial sum \\(1.1051667\\) is off by \\(4\\times10^{-6}\\).<br><b>Sanity check:</b> each term shrinks by about \\(x/(n+1)\\approx0.03\\), so each extra term adds about 1.5 digits.<br><b>Transfer:</b> \\(e^{x}\\) for \\(|x|\\le0.2\\) to \\(10^{-4}\\) needs 4 terms: remainder \\(\\le\\frac{0.2^4}{24}e^{0.2}\\approx8\\times10^{-5}\\). Three terms leave about \\(1.6\\times10^{-3}\\).",
   "tags": [
    "s_taylor",
    "exponential",
@@ -677,7 +677,7 @@
  {
   "type": "basic",
   "front": "Estimate \\(E[e^U]\\), \\(U\\sim\\text{Unif}(0,1)\\), using the control \\(U\\) with known mean \\(\\tfrac12\\). Give the optimal coefficient \\(c^*\\) and the variance reduction factor.",
-  "back": "<b>Answer:</b> \\(c^*=-\\operatorname{Cov}(e^U,U)/\\operatorname{Var}U\\approx-1.690\\); residual variance factor \\(1-\\rho^2\\approx0.0163\\), about \\(61\\times\\) reduction.<br><b>Structure:</b> s_variance_decomposition (residual variance after regressing on a correlated control).<br><b>Key move:</b> \\(\\hat\\mu=\\overline{e^U}+c(\\overline U-\\tfrac12)\\).<br><b>Working:</b> \\(\\operatorname{Cov}(e^U,U)=\\int_0^1ue^udu-\\tfrac{e-1}2=1-\\tfrac{e-1}2\\approx0.1409\\); \\(\\operatorname{Var}U=\\tfrac1{12}\\); \\(c^*=-12\\cdot0.1409\\).<br><b>Sanity check:</b> \\(\\rho^2\\approx0.984\\) because \\(e^u\\) is nearly linear on \\([0,1]\\). Simulation of \\(10^5\\) draws gives the same factor.",
+  "back": "<b>Answer:</b> \\(c^*=-\\operatorname{Cov}(e^U,U)/\\operatorname{Var}U\\approx-1.690\\); residual variance factor \\(1-\\rho^2\\approx0.0163\\), about \\(61\\times\\) reduction.<br><b>Structure:</b> s_variance_decomposition (residual variance after regressing on a correlated control).<br><b>Key move:</b> \\(\\hat\\mu=\\overline{e^U}+c(\\overline U-\\tfrac12)\\).<br><b>Working:</b> \\(\\operatorname{Cov}(e^U,U)=\\int_0^1ue^udu-\\tfrac{e-1}2=1-\\tfrac{e-1}2\\approx0.1409\\); \\(\\operatorname{Var}U=\\tfrac1{12}\\); \\(c^*=-12\\cdot0.1409\\).<br><b>Sanity check:</b> \\(\\rho^2\\approx0.984\\) because \\(e^u\\) is nearly linear on \\([0,1]\\). Simulation of \\(10^5\\) draws gives the same factor.<br><b>Transfer:</b> any Monte Carlo average with a correlated control of known mean, e.g. the discounted underlying in an option price (known mean \\(S_0\\)).",
   "tags": [
    "s_variance_decomposition",
    "monte_carlo",
