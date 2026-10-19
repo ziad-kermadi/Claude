@@ -101,12 +101,13 @@
  },
  {
   "type": "cloze",
-  "front": "The Andersen–Broadie dual gives an {{c1::upper}} bound on a Bermudan price using martingale penalties, while LSM evaluated on independent paths gives a {{c2::lower}} bound. The gap between them is a diagnostic of the {{c3::exercise policy and martingale quality}}.",
-  "back": "Both bounds are valid in expectation, so the true price lies between them. A wide gap is a signal to improve the basis or the number of paths, not a sign of a bug.",
+  "front": "The Andersen–Broadie penalty is built from the {{c1::Doob martingale of the approximate value function}}. If that value function were exact, the penalised payoff \\(\\tilde h_k-M_k\\) would equal \\(V_0\\) on the optimal exercise date and be at most \\(V_0\\) elsewhere, so the upper bound {{c2::collapses to \\(V_0\\)}}. A gap between upper and lower bound that does not close as the basis grows points to {{c3::an inaccurate continuation approximation or inner-simulation noise}}.",
+  "back": "The lower bound uses independent paths for the exercise policy, and the upper bound uses the penalty with nested inner simulation. Widening the basis should shrink the gap. If it does not, check the inner-sample size before the basis.",
   "tags": [
    "american_mc",
+   "andersen_broadie",
    "bounds",
-   "convention"
+   "diagnostics"
   ]
  },
  {
@@ -131,12 +132,13 @@
  },
  {
   "type": "basic",
-  "front": "Set up boundary conditions for a European call on a finite-difference grid \\(S\\in[0,S_{\\max}]\\), \\(t\\in[0,T]\\). Give the terminal condition and both spatial boundaries, and name the main truncation error.",
-  "back": "Terminal: \\(V(S,T)=\\max(S-K,0)\\).<br>\nAt \\(S=0\\): \\(V(0,t)=0\\) (a call is worthless when the stock is zero).<br>\nAt \\(S=S_{\\max}\\): deep in the money, \\(V\\approx S_{\\max}-Ke^{-r(T-t)}\\), i.e. the option is effectively linear in \\(S\\) and the gamma is negligible. A zero-second-derivative condition is an alternative.<br>\nFor a put: \\(V(0,t)=Ke^{-r(T-t)}\\) and \\(V(S_{\\max},t)=0\\).<br>\nTruncation error: \\(S_{\\max}\\) must be far enough that the boundary does not influence the strike region, typically several standard deviations of \\(\\ln S_T\\) out. A log grid \\(x=\\ln S\\) makes the mesh more even.\n<br><br><b>Interviewer follow-up:</b> why is the log grid natural for GBM? Answer: the diffusion coefficient becomes constant in \\(x\\), so the scheme has constant coefficients and a clean tridiagonal structure.",
+  "front": "On a finite-difference grid for a European call on \\(S\\in[0,S_{\\max}]\\), the upper boundary is set to the linear asymptote \\(V(S_{\\max},t)=S_{\\max}-Ke^{-r(T-t)}\\). Derive the price error this introduces, and state how large \\(S_{\\max}\\) must be for \\(K=100\\), \\(r=0\\), \\(\\sigma=20\\%\\), \\(T=1\\) to keep the error near \\(10^{-6}\\).",
+  "back": "Error relative to the asymptote: \\(C-(S-Ke^{-r\\tau})=-S\\,N(-d_1)+Ke^{-r\\tau}N(-d_2)\\). For large \\(S\\), this is dominated by \\(Ke^{-r\\tau}N(-d_2)\\), which decays like \\(\\exp(-d_2^2/2)\\).<br>\nNumbers for \\(K=100\\), \\(r=0\\), \\(\\sigma=20\\%\\), \\(T=1\\), with \\(S\\) the spot at the boundary:<br>\n<ul><li>\\(S_{\\max}=250\\): error about \\(1.5\\times10^{-5}\\), so \\(\\ln(250/100)/0.2\\approx4.6\\) standard deviations of \\(\\ln S_T\\) past the strike.</li>\n<li>\\(S_{\\max}=300\\): error about \\(1.2\\times10^{-7}\\), about 5.5 standard deviations.</li></ul>\nSo about 5 to 6 standard deviations of \\(\\ln S_T\\) past the strike is enough here. A log grid \\(x=\\ln S\\) spreads points evenly and gives the same number of standard deviations at every strike.<br>\n<b>Interviewer follow-up:</b> why not impose \\(\\partial^2V/\\partial S^2=0\\) at \\(S_{\\max}\\)? Answer: that condition is exact for the linear asymptote too, and it is a usable alternative when the grid is short; the error is of the same order.",
   "tags": [
    "pde",
    "boundary_conditions",
-   "finite_difference"
+   "finite_difference",
+   "error_analysis"
   ]
  },
  {
@@ -341,21 +343,23 @@
  },
  {
   "type": "basic",
-  "front": "Compare std::unique_ptr, std::shared_ptr and raw owning pointers for a market-data object used by several pricers. Which should own it, what does shared_ptr cost, and what is the reference-cycle hazard?",
-  "back": "<ul><li>unique_ptr: single owner, move-only, no overhead beyond a raw pointer. The default choice.</li>\n<li>shared_ptr: shared ownership with an atomically updated reference count in a control block. Copies cost atomic increments, which contend across threads. std::make_shared allocates the object and control block together.</li>\n<li>Raw pointers: no ownership semantics. Use them only as non-owning observers.</li></ul>\nReference cycle: two objects holding shared_ptrs to each other never reach a zero count and leak. Break the cycle with a std::weak_ptr on one side.<br>\nFor market data shared by pricers: if the owner outlives its users, pass const references. Use shared_ptr<const T> only when the lifetime is genuinely shared.\n<br><br><b>Interviewer follow-up:</b> why not use shared_ptr everywhere? Answer: atomic reference counting in hot paths costs time, and it hides who owns the object.",
+  "front": "A curve object is read by 200 pricing tasks on a thread pool and replaced on each market-data update. Compare passing a const reference, copying a <code>std::shared_ptr&lt;const Curve&gt;</code> into each task, and holding a raw observer pointer. For each, state the cost, what can dangle, and which you would use.",
+  "back": "<ul><li><b>const&amp;:</b> no runtime cost. Valid only while the owner lives, so scope the tasks inside the owner's lifetime, for example a batch that holds a snapshot.</li>\n<li><b>shared_ptr copy:</b> one atomic increment and decrement per copy. 200 tasks copying from one control block contend on the same cache line, so copies in a hot loop are slow. The object survives replacement of the cache entry.</li>\n<li><b>Raw observer:</b> no cost, and it dangles as soon as the cache replaces the curve and the owner is destroyed.</li></ul>\nChoice: take one <code>shared_ptr</code> per batch snapshot (one copy per batch, not per task), pass <code>const&amp;</code> inside the tasks, and use <code>weak_ptr</code> in the cache when an entry may be dropped without being kept alive.<br>\n<b>Interviewer follow-up:</b> why not <code>shared_ptr</code> everywhere? Answer: atomic reference counting costs in hot paths, and shared ownership hides which component is responsible for the object's lifetime.",
   "tags": [
    "cpp",
    "smart_pointers",
-   "ownership"
+   "ownership",
+   "concurrency"
   ]
  },
  {
   "type": "basic",
-  "front": "For a Monte Carlo path cache of 10 million doubles, why is traversing a std::vector<double> much faster than a std::list<double>, even though both traversals are O(n)?",
-  "back": "Both are O(n), but vector elements are contiguous. The hardware prefetcher works, each 64-byte cache line brings in 8 useful doubles, and SIMD and auto-vectorisation apply.<br>\nList nodes are allocated separately and linked by pointers. Each step is a dependent load (pointer chasing), usually a cache miss, with no vectorisation. Each node also carries two pointers of overhead.<br>\nInsertion: a list gives O(1) insertion given an iterator. A vector insertion is O(n) but moves memory with memmove, which is fast; for moderate n the vector usually wins even for middle insertions.<br>\nDefault to vector. Use list when you need stable iterators while splicing elements frequently.\n<br><br><b>Interviewer follow-up:</b> what about std::deque? Answer: contiguous blocks give O(1) push at both ends with good locality, but it is not contiguous overall, so SIMD over the whole sequence is weaker.",
+  "front": "A pricer keeps raw pointers to path values stored in a <code>std::vector&lt;double&gt;</code> that grows while paths are generated. What goes wrong on the next <code>push_back</code>? Give three designs that avoid it and say which keep the contiguous, cache-friendly traversal.",
+  "back": "<code>push_back</code> beyond capacity reallocates and moves every element, so all pointers, references and iterators into the vector are invalidated.<br>\n<ul><li><b>Reserve the final size</b> (paths times steps) before generation. No reallocation happens, and the cache stays contiguous. Store indices rather than pointers, so the design stays valid if the layout ever changes.</li>\n<li><b>Chunked storage:</b> a vector of fixed-size blocks (for example 4096 doubles each). Addresses are stable, each block is contiguous, so SIMD and prefetching still work inside a block.</li>\n<li><b>std::deque:</b> <code>push_back</code> does not invalidate references to existing elements (iterators are invalidated), but elements are not contiguous across blocks, so whole-sequence SIMD is weaker.</li></ul>\nMemory: \\(10^7\\) doubles occupy 80 MB contiguously. A <code>std::list</code> node adds two pointers and an allocator header, so its footprint is roughly two to three times larger (approximate). A list's advantages, stable iterators and O(1) splicing, are rarely needed for a path cache.",
   "tags": [
    "cpp",
    "containers",
+   "memory",
    "cache"
   ]
  },
@@ -391,12 +395,13 @@
  },
  {
   "type": "basic",
-  "front": "Name four pandas pitfalls that silently produce wrong results or slow code in a risk or P&amp;L pipeline, and the fix for each.",
-  "back": "<ol><li>Index alignment: arithmetic between Series aligns on labels, so mismatched or duplicated labels give NaN or unexpected products. Fix: reindex explicitly and assert index equality before arithmetic.</li>\n<li>Chained assignment: <code>df[df.a&gt;0]['b']=1</code> may write to a temporary copy. Fix: <code>df.loc[mask,'b']=1</code>.</li>\n<li>iterrows or row-wise apply: a Python loop per row, far slower than column operations or <code>np.where</code>. Fix: vectorise on columns.</li>\n<li>Dtypes and missing data: integer columns become float when NaN appears, and <code>sum()</code> skips NaN by default, hiding missing trades. Fix: cast explicitly, validate nulls, and use <code>min_count</code> where missing data should raise an error.</li></ol>\n<br><b>Interviewer follow-up:</b> <code>groupby().apply</code> or <code>groupby().transform</code> for a group-level normalisation? Answer: transform returns a like-indexed result and is usually faster; apply can be slow and can reshape the output.",
+  "front": "Name three silent pandas failures in a P&amp;L or risk join and the fix for each: a merge that fans out rows on a duplicated key, a <code>groupby</code> that drops rows with NaN keys, and a <code>sum</code> over a column with missing values. Give the argument that makes each one fail loudly.",
+  "back": "<ol><li><b>Fan-out on merge:</b> two trades with <code>id=1</code> and <code>id=2</code>, notionals 10 and 20, joined to a table with two rows for <code>id=1</code>, give 3 rows and a notional sum of 40 instead of 30. Fix: <code>pd.merge(..., validate=\"many_to_one\")</code> raises when the right-hand key is not unique. Add <code>indicator=True</code> to catch unmatched rows.</li>\n<li><b>Dropped NaN keys in groupby:</b> the default <code>dropna=True</code> silently removes a group whose key is missing, so a counterparty with a null ID vanishes from the totals. Fix: <code>groupby(..., dropna=False)</code>, and assert that the grouped total equals the column total.</li>\n<li><b>Sum skips NaN:</b> <code>Series.sum()</code> treats missing values as zero. Fix: <code>sum(skipna=False)</code> returns NaN when any value is missing, or assert <code>notna().all()</code> before aggregating.</li></ol>\n<b>Interviewer follow-up:</b> <code>groupby().transform</code> or <code>groupby().apply</code> for a group-level normalisation? Answer: transform returns a like-indexed result and is usually faster; apply can reshape the output and is slower.",
   "tags": [
    "python",
    "pandas",
-   "data_quality"
+   "data_quality",
+   "pitfalls"
   ]
  },
  {
@@ -411,32 +416,35 @@
  },
  {
   "type": "basic",
-  "front": "Given \\(n\\) trade intervals \\([s_i,e_i]\\), find the maximum number of intervals open at the same time. Give the algorithm, its complexity, and when it can be made linear.",
-  "back": "Sweep line: create events (\\(s_i,+1\\)) and (\\(e_i,-1\\)). Sort by time, with a stated tie rule (for half-open intervals, process ends before starts at the same time). Scan with a running count; the maximum is the answer.<br>\nComplexity: \\(O(n\\log n)\\), dominated by the sort, and \\(O(n)\\) for the scan.<br>\nIf the times are small bounded integers, a difference array or counting sort removes the sort and gives \\(O(n+T)\\), with \\(T\\) the time range.\n<br><br><b>Interviewer follow-up:</b> how does it change for a live stream of arrivals and departures? Answer: keep a running count with an ordered structure (a Fenwick tree over discretised times gives \\(O(\\log n)\\) per update and an \\(O(\\log n)\\) query of the maximum over a range).",
+  "front": "Trades are half-open intervals \\([s_i,e_i)\\). Find the maximum number open at any instant with a sweep. Which tie rule is correct when one trade ends and another starts at the same timestamp, and what is the answer for the three intervals \\([0,1)\\), \\([1,2)\\), \\([1,3)\\)?",
+  "back": "Events are \\((s_i,+1)\\) and \\((e_i,-1)\\). At equal times, process ends (\\(-1\\)) before starts (\\(+1\\)), because \\([0,1)\\) and \\([1,2)\\) do not overlap. Starts-first gives 3 at \\(t=1\\), which is wrong.<br>\nFor the example, the answer is 2: at \\(t=1.5\\) the intervals \\([1,2)\\) and \\([1,3)\\) are open.<br>\nComplexity: \\(O(n\\log n)\\) for the sort and \\(O(n)\\) for the scan. The maximum only needs checking at start times.<br>\n<b>Interviewer follow-up:</b> what changes for closed intervals \\([s_i,e_i]\\)? Answer: at equal times starts must be processed first, because the two intervals share the instant.",
   "tags": [
    "algorithms",
    "complexity",
-   "sweep_line"
+   "sweep_line",
+   "edge_cases"
   ]
  },
  {
   "type": "basic",
-  "front": "What is the time complexity in \\(n\\) (length of xs) of this function, and what is the one-line fix?\n<pre><code>def dedupe(xs):\n    seen = []\n    out = []\n    for x in xs:\n        if x not in seen:\n            seen.append(x)\n            out.append(x)\n    return out</code></pre>",
-  "back": "\\(O(n^2)\\) in the worst case. The test <code>x not in seen</code> scans a list linearly, so when all elements are distinct the total is \\(\\sum_k O(k)=O(n^2)\\).<br>\nFix: use a set for membership, <code>seen = set()</code>, giving average \\(O(n)\\) overall, and keep <code>out</code> as a list to preserve order. The average O(1) assumes a good hash; unhashable elements raise an error.\n<br><br><b>Interviewer follow-up:</b> what if you sort first? Answer: \\(O(n\\log n)\\) to sort and then a linear pass. That also dedupes, but it loses the original order unless you carry indices.",
+  "front": "A trade-dedupe step uses a Python <code>set</code> of prices. Explain the two floating-point cases where set membership gives a surprising answer: NaN and signed zero. What does <code>float('nan') in {nan}</code> return for a separately created NaN, and what does <code>{0.0, -0.0}</code> contain?",
+  "back": "Set membership checks identity first, then equality. NaN is not equal to itself, so a separately created NaN is not found even though the same object is found. Two NaN values from separate parse steps therefore both survive deduplication. <code>float('nan') in {nan}</code> returns False, while <code>nan in {nan}</code> returns True.<br>\n<code>0.0</code> and <code>-0.0</code> compare equal and hash equal, so <code>{0.0, -0.0}</code> has one element. If the sign of a zero matters, normalise before insertion.<br>\nFixes: canonicalise NaN explicitly (drop it with <code>math.isnan</code>, or map it to a sentinel), normalise signed zero with <code>x + 0.0</code>, and quantise prices to the tick size first, because values differing by \\(10^{-12}\\) do not collapse under equality either.<br>\nKeep order with <code>dict.fromkeys</code>, which preserves first occurrence.",
   "tags": [
-   "complexity",
    "python",
-   "data_structures"
+   "floating_point",
+   "data_structures",
+   "edge_cases"
   ]
  },
  {
   "type": "basic",
-  "front": "Count inversions in an array of \\(n\\) integers (pairs \\(i<j\\) with \\(a_i>a_j\\)) in \\(O(n\\log n)\\). Outline the algorithm and why a naive double loop is too slow for \\(n=10^6\\).",
-  "back": "Naive double loop: \\(O(n^2)\\), about \\(5\\times10^{11}\\) comparisons for \\(n=10^6\\), which is too slow in practice.<br>\nMerge-sort-based counting: recursively split the array, count inversions within each half, then during the merge, when an element from the right half is placed before remaining left elements, add the number of remaining left elements. Recurrence \\(T(n)=2T(n/2)+O(n)\\) gives \\(O(n\\log n)\\).<br>\nAlternative: a Fenwick tree over compressed values, scanning left to right, adding the count of previously seen values greater than the current one, also \\(O(n\\log n)\\).\n<br><br><b>Interviewer follow-up:</b> what if the values are bounded integers and \\(n\\) is large? Answer: a Fenwick tree still works in \\(O(n\\log V)\\); with \\(V\\) small, it is essentially linear in practice.",
+  "front": "Count inversions in a permutation of \\(n\\) values (pairs \\(i<j\\) with \\(a_i>a_j\\)) in \\(O(n\\log n)\\). Show that the Kendall tau correlation between the permutation and the identity equals \\(1-2\\,\\mathrm{inv}/\\binom n2\\), and say why this matters for a ranking backtest.",
+  "back": "Merge sort: recursively count inversions in each half. During the merge, when an element of the right half is placed before the remaining left-half elements, add the number of remaining left elements. The recurrence \\(T(n)=2T(n/2)+O(n)\\) gives \\(O(n\\log n)\\). A naive double loop costs \\(\\binom n2\\) comparisons, about \\(5\\times10^{11}\\) for \\(n=10^6\\).<br>\nKendall: let \\(C\\) be concordant pairs and \\(D\\) discordant pairs, with \\(C+D=\\binom n2\\). For a permutation, \\(D=\\mathrm{inv}\\). So \\(\\tau=(C-D)/\\binom n2=1-2\\,\\mathrm{inv}/\\binom n2\\). Check: a random permutation of 50 elements with 653 inversions gives \\(\\tau=-0.066\\), matching the formula.<br>\nWhy it matters: \\(\\tau\\) is the rank correlation between a signal and the realised ordering, and inversions count the mis-ordered pairs. \\(O(n\\log n)\\) makes it affordable per date across thousands of names. Ties need Kendall's tau-b, which the permutation formula does not cover.",
   "tags": [
    "algorithms",
    "divide_and_conquer",
-   "complexity"
+   "complexity",
+   "statistics"
   ]
  }
 ]
