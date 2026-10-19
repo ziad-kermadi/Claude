@@ -1,0 +1,645 @@
+[
+ {
+  "type": "basic",
+  "front": "Why can Black-76 not price a rates option when the forward rate is negative, and what does Bachelier change?",
+  "back": "Black-76 assumes lognormal dynamics \\(dF=\\sigma_B F\\,dW\\), so \\(F>0\\) is built into the model. The \\(\\ln(F/K)\\) term in \\(d_1,d_2\\) is undefined for \\(F\\le 0\\) or \\(K\\le 0\\).<br>\nBachelier assumes arithmetic dynamics \\(dF=\\sigma_N\\,dW\\), which put no sign constraint on \\(F\\) or \\(K\\). Negative EUR, CHF and JPY forwards therefore forced the market from Black to normal quoting, not just a change of parameter.",
+  "tags": [
+   "black76",
+   "lognormal",
+   "negative_rates",
+   "conventions"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Give the Bachelier call price for forward \\(F\\), strike \\(K\\), normal vol \\(\\sigma_N\\) and expiry \\(T\\) (undiscounted), and derive the ATM value.",
+  "back": "With \\(d=(F-K)/(\\sigma_N\\sqrt{T})\\):\n\\[C=(F-K)\\,N(d)+\\sigma_N\\sqrt{T}\\,\\varphi(d)\\]\nAt \\(F=K\\), \\(d=0\\), so \\(C=\\sigma_N\\sqrt{T}\\,\\varphi(0)=\\sigma_N\\sqrt{T}/\\sqrt{2\\pi}\\approx 0.4\\,\\sigma_N\\sqrt{T}\\). Only the density term survives at the money because the intrinsic term vanishes.<br>\n<b>Interviewer follow-up:</b> Why is the ATM straddle about \\(0.8\\,\\sigma_N\\sqrt{T}\\)? The straddle payoff is \\(|F_T-K|\\), and for a centred Gaussian \\(\\mathbb E|X|=\\sigma\\sqrt{T}\\sqrt{2/\\pi}\\approx 0.8\\,\\sigma\\sqrt{T}\\). Each leg is half that.",
+  "tags": [
+   "bachelier",
+   "normal_model",
+   "derivation",
+   "atm"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For an ATM option in the normal model, the premium per unit of \\(\\sigma_N\\sqrt{T}\\) is {{c1::0.4}} per leg (exact value \\(1/\\sqrt{2\\pi}\\)), and {{c2::0.8}} for a straddle.",
+  "back": "Quick premium estimate: premium per leg \\(\\approx 0.4\\,\\sigma_N\\sqrt{T}\\), multiplied by the annuity for a swaption or by the discount factor for a cap.",
+  "tags": [
+   "atm",
+   "mental_math",
+   "normal_model",
+   "bachelier"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Convert a 20% lognormal ATM vol on a 2% forward into an approximate normal vol in bp per year.",
+  "back": "First-order ATM rule: \\(\\sigma_N\\approx\\sigma_B F\\). So \\(0.20\\times 0.02=0.004\\), about <b>40bp</b> per year normal.<br>\nRule of thumb: normal vol \\(\\approx\\) lognormal vol \\(\\times\\) forward. This matches ATM prices to first order only. Away from the money, and for long expiries, the mapping depends on strike and on the smile.<br>\n<b>Interviewer follow-up:</b> If the rate doubles to 4% at constant 20% lognormal vol, the normal vol doubles to about 80bp. A book quoted in lognormal vol therefore has bp-vega that scales with the level of rates.",
+  "tags": [
+   "vol_conversion",
+   "mental_math",
+   "normal_model",
+   "lognormal"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "At the money, \\(\\sigma_N \\approx \\sigma_B \\times\\){{c1::forward rate}}. Away from the money the leading-order conversion is \\(\\sigma_N\\approx\\sigma_B\\,(F-K)/\\ln(F/K)\\), which is close to \\(\\sigma_B\\sqrt{FK}\\) near the money.",
+  "back": "The ATM relation is the first-order price match. The strike-dependent factor is a geometric-type mean of \\(F\\) and \\(K\\); it is smaller for low strikes, so the conversion depends on where on the smile you are.",
+  "tags": [
+   "vol_conversion",
+   "atm",
+   "lognormal",
+   "normal_model"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A flat lognormal smile is quoted at a 2% forward. What does this imply for the normal smile, and why does it matter when comparing a Black quote with a normal quote?",
+  "back": "Using \\(\\sigma_N\\approx\\sigma_B\\,(F-K)/\\ln(F/K)\\), the factor is smaller at low strikes, so a flat lognormal smile implies a <b>normal smile that slopes upward in strike</b> (lower normal vol at low strikes).<br>\nA \"flat\" Black smile is not flat in bp. Surfaces must be converted strike by strike before a Black quote is compared with a normal quote, or a fake skew appears.",
+  "tags": [
+   "vol_conversion",
+   "smile",
+   "normal_model",
+   "conventions"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the shifted-lognormal (displaced diffusion) model, and what is its main trade-off?",
+  "back": "Model \\(F+s\\) as lognormal: \\(d(F+s)=\\sigma_s\\,(F+s)\\,dW\\), with shift \\(s\\) chosen so that \\(F+s>0\\) across the relevant range. Price with Black on \\(F+s\\) and \\(K+s\\).<br>\nIt keeps Black's machinery and handles forwards below zero. Trade-offs: the shift is a free parameter fixed by convention; vols are only comparable at the same shift; and it still carries a lognormal-type skew rather than a true arithmetic one.<br>\n<b>Interviewer follow-up:</b> Why is a shifted vol not comparable across two different shifts? Because the lognormal vol is measured on \\(F+s\\), so the same bp move corresponds to a different percentage vol.",
+  "tags": [
+   "shifted_lognormal",
+   "negative_rates",
+   "models"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why is normal (bp) vol the natural quoting unit when rates are near or below zero?",
+  "back": "(1) Lognormal vol is relative: \\(\\sigma_B=\\sigma_N/F\\). For a fixed bp move, lognormal vol explodes as \\(F\\to 0\\) and is undefined for \\(F\\le 0\\).<br>\n(2) Normal vol is an absolute bp-per-year measure, stable across rate levels.<br>\n(3) It matches Gaussian short-rate models (Vasicek, Hull-White) and the SABR \\(\\beta=0\\) framework used in practice.<br>\nNormal quoting does not remove the smile. Normal markets still show skew, which is handled by \\(\\beta=0\\) SABR or a shifted model.",
+  "tags": [
+   "normal_model",
+   "negative_rates",
+   "regime",
+   "conventions"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Give delta, gamma and vega of a normal-model call in closed form, and their ATM values.",
+  "back": "With \\(d\\) as above:\n\\[\\Delta=N(d),\\qquad \\Gamma=\\frac{\\varphi(d)}{\\sigma_N\\sqrt{T}},\\qquad \\mathcal{V}=\\sqrt{T}\\,\\varphi(d)\\]\nAt the money: \\(\\Delta=0.5\\), \\(\\Gamma=\\varphi(0)/(\\sigma_N\\sqrt{T})\\approx 0.4/(\\sigma_N\\sqrt{T})\\), \\(\\mathcal{V}\\approx 0.4\\sqrt{T}\\).<br>\n<b>Interviewer follow-up:</b> Greeks depend on \\(F\\) and \\(K\\) only through \\(d\\), so for fixed \\(\\sigma_N\\) and \\(T\\) the ATM gamma is the same at every rate level. This is why normal greeks are stated in bp.",
+  "tags": [
+   "greeks",
+   "normal_model",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A dealer quotes flat cap vols at 1y, 2y, 3y and so on. Explain how you strip forward caplet volatilities, and why flat vols cannot be used directly as caplet vols.",
+  "back": "A flat cap vol applies one vol to every caplet in the cap. The cap price is \\(\\text{Cap}(T_n)=\\sum_{i\\le n}\\text{Cpl}_i(\\sigma_i)\\), a sum of forward-period caplets.<br>\nBootstrap one period at a time: for each new maturity, solve for the single new caplet vol \\(\\sigma_n\\) that reproduces the new flat cap price, holding earlier caplet vols fixed.<br>\nFlat vols mix caplets of different expiries, so they are a quoting convention, not the forward vol term structure. Stripped caplet vols can be unstable or non-monotone, so they are smoothed or interpolated before use.<br>\n<b>Interviewer follow-up:</b> Why is the first caplet of a spot-starting cap not priced with vol? Its fixing is already set, so its value is deterministic.",
+  "tags": [
+   "caps_floors",
+   "caplets",
+   "bootstrapping",
+   "vol_stripping"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "State cap-floor parity at a common strike \\(K\\), and explain why it needs no volatility model.",
+  "back": "\\[\\text{Cap}(K)-\\text{Floor}(K)=\\sum_i N\\tau_i P(0,T_i)\\,\\big(F_i-K\\big)\\]\nThe right-hand side is the value of a forward-start payer swap at fixed rate \\(K\\). Each caplet minus floorlet equals \\(\\tau_i N P(0,T_i)\\big[(F_i-K)^+-(K-F_i)^+\\big]=\\tau_i N P(0,T_i)(F_i-K)\\), which is linear in the forward. No distribution is assumed, so parity holds for any model and any smile.<br>\n<b>Interviewer follow-up:</b> At which strike do cap and floor have equal value? At the forward swap rate, where the payer swap is worth zero.",
+  "tags": [
+   "caps_floors",
+   "parity",
+   "swaps",
+   "no_arbitrage"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Cap(K) minus Floor(K) at the same strike equals a {{c1::payer swap}} at fixed rate K. At the at-the-money strike (the forward swap rate) its value is {{c2::zero}}, so cap and floor have equal premium.",
+  "back": "Holds for any model. Used to check that quoted cap and floor vols are consistent across strikes and across the cap and floor quotes.",
+  "tags": [
+   "caps_floors",
+   "parity",
+   "swaps"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why do caplets on compounded overnight rates (SONIA, SOFR) not price the same way as legacy term-rate caplets?",
+  "back": "The period rate is compounded from daily fixings, \\(r_c=\\frac{1}{\\tau}\\big(\\prod_d(1+r_d\\delta_d)-1\\big)\\). The payoff depends on the whole path of overnight rates across the period, not on one forward fixing known at the period start.<br>\nStandard practice: price compounded-in-arrears caplets from a forward compounded rate with a convexity or timing adjustment, or from a model of overnight rates. Calibrate vols to compounded-cap quotes; a term-rate vol surface is not directly reusable.<br>\n<b>Interviewer follow-up:</b> Which adjustment is needed for in-arrears fixings? A convexity adjustment, because the compounded rate is not a martingale under the payment measure.",
+  "tags": [
+   "caps_floors",
+   "rfr",
+   "compounding",
+   "convexity"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Flat 1y cap vol is 60bp normal and flat 2y cap vol is 55bp normal. Where is the forward 1y-to-2y caplet normal vol relative to 55bp, and why?",
+  "back": "Bootstrap: the 1y caplet carries 60bp, which is more than 55bp, so it absorbs more of the 2y cap premium. The value left for the second caplet is smaller than a 55bp caplet would be worth, so its implied vol is <b>below 55bp</b>.<br>\nThe forward caplet vol falls by more than the flat vol does, and can sit well below the flat 2y quote. This comes from the stripping logic, not from a fixed rule.<br>\n<b>Interviewer follow-up:</b> Practical consequence? Price and hedge non-standard exposures off caplet or forward vols, never off flat vols.",
+  "tags": [
+   "caps_floors",
+   "vol_term_structure",
+   "stripping",
+   "scenario"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write the payer swaption value using the annuity and a Black-type expression, and name the measure under which it is an expectation.",
+  "back": "With annuity \\(A=\\sum_i\\tau_i P(0,T_i)\\) and forward swap rate \\(S=(P(0,T_0)-P(0,T_n))/A\\):\n\\[V_{\\text{pay}}=A\\,\\mathbb{E}^{A}\\big[(S_{T_0}-K)^+\\big]=A\\,\\big[S\\,N(d_1)-K\\,N(d_2)\\big]\\]\nfor the Black case. The expectation is under the annuity measure, with numeraire \\(A(t)\\), under which \\(S\\) is a martingale. The normal analogue is \\(A\\,[(S-K)N(d)+\\sigma_N\\sqrt{T}\\varphi(d)]\\).<br>\n<b>Interviewer follow-up:</b> Why is \\(S\\) driftless under the annuity measure but not under the spot measure? \\(S\\) is a ratio of bond prices, and dividing by the annuity removes the drift.",
+  "tags": [
+   "swaptions",
+   "annuity_measure",
+   "black",
+   "pricing"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "State payer-receiver parity for European swaptions, and say what it implies at the money.",
+  "back": "Payer minus receiver with the same expiry, tenor and strike \\(K\\) equals the forward-start swap value \\(A\\,(S-K)\\), with no volatility input. At \\(K=S\\), payer and receiver premia are equal.<br>\nA discrepancy at the money usually signals inconsistent conventions (annuity, day count, strike definition) rather than a model error.<br>\n<b>Interviewer follow-up:</b> What is the delta of an ATM payer in rate units? The payer delta is \\(A\\,N(d)\\), so at the money it is about \\(0.5\\,A\\) per unit of rate.",
+  "tags": [
+   "swaptions",
+   "payer_receiver",
+   "parity",
+   "conventions"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For an ATM European swaption in the normal model, the premium per leg is approximately {{c1::0.4}} times \\(\\sigma_N\\sqrt{T}\\) times the annuity. A payer or receiver with 100bp normal vol, 1y expiry and annuity 4.6 costs about {{c2::1.8%}} of notional.",
+  "back": "Working: \\(0.4\\times 0.01\\times 1\\times 4.6\\approx 0.0184\\). Approximate mental-math rule only; the exact value comes from the normal formula. The annuity 4.6 is an approximate value for a 5y annual swap at about 3%.",
+  "tags": [
+   "swaptions",
+   "atm",
+   "mental_math",
+   "normal_model"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You buy a 1y x 5y ATM straddle, payer plus receiver. Describe its delta, gamma and vega, and when it is a clean volatility trade.",
+  "back": "At inception the payer delta (about \\(+0.5A\\)) and receiver delta (about \\(-0.5A\\)) cancel, so the straddle is approximately delta-neutral. It is long gamma and long vega, with vega of about \\(0.8\\sqrt{T}\\,A\\) in normal units.<br>\nIts P&amp;L depends on realised rate moves against the implied normal vol, plus theta. It is a clean vol trade only while the forward stays near the strike. As the rate moves, delta builds up and must be hedged, and the wings remain exposed.",
+  "tags": [
+   "swaptions",
+   "straddle",
+   "greeks",
+   "trade_off"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Describe the swaption volatility cube (expiry, tenor, strike): how is it quoted, and how is it interpolated?",
+  "back": "Each point is an option expiry, an underlying swap tenor and a strike. Market quotes are usually ATM vols on an expiry-by-tenor grid, plus strike spreads at standard offsets in normal bp. These are converted into full strike vols.<br>\nInterpolate in expiry on total variance \\(\\sigma^2 T\\), which keeps calendar no-arbitrage. Strike interpolation uses a parametric smile (typically SABR) fitted per expiry-by-tenor slice. The interpolated surface must stay arbitrage-free in strike.<br>\n<b>Interviewer follow-up:</b> Why quote strikes as spreads? The smile shape is more stable than its level, so quoting relative to ATM lets the ATM vol move while the shape stays put.",
+  "tags": [
+   "swaptions",
+   "vol_cube",
+   "quoting",
+   "interpolation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How would you hedge the vega of a 1y x 10y swaption with liquid instruments, and what residual risk remains?",
+  "back": "Bucket vega by expiry and tenor, then hedge with the nearest liquid swaptions (for example 1y x 5y and 2y x 10y), sized to match the bucketed vegas. The model's correlation and mean reversion inform which hedge matches the forward-rate exposure.<br>\nResidual risk: different points on the cube decorrelate, so bucketed vega is not a complete hedge. Smile differences leave strike-specific vega unmatched, and calibration error adds model risk. The trade-off is hedge cost against exact bucket matching.<br>\n<b>Interviewer follow-up:</b> Can a 10y x 1y swaption hedge a 1y x 10y? No. They sit on different parts of the forward-rate surface, so their rate exposures differ.",
+  "tags": [
+   "swaptions",
+   "vol_cube",
+   "hedging",
+   "vega_bucketing"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why does a payer and a receiver with the same strike have the same implied vol under a consistent model, and what breaks this in practice?",
+  "back": "Payer minus receiver equals \\(A(S-K)\\), a model-free identity, so the two prices imply the same vol when both use the same forward, annuity and strike convention.<br>\nIn practice a mismatch arises from differing annuity or forward definitions, from quoting on different curves, or from stale quotes. A mismatch is a data or convention issue to resolve before calibrating.",
+  "tags": [
+   "swaptions",
+   "implied_vol",
+   "put_call_parity",
+   "smile_consistency"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In SABR, \\(\\alpha\\) sets the {{c1::level}} of volatility, \\(\\beta\\) is the {{c2::CEV exponent}} (0 normal, 1 lognormal), \\(\\rho\\) is the {{c3::spot-vol correlation}} that drives skew, and \\(\\nu\\) is the {{c4::vol-of-vol}} that drives curvature.",
+  "back": "Dynamics: \\(dF=\\alpha F^{\\beta}\\,dW_1\\), \\(d\\alpha=\\nu\\alpha\\,dW_2\\), with \\(\\langle dW_1,dW_2\\rangle=\\rho\\,dt\\).",
+  "tags": [
+   "sabr",
+   "parameters",
+   "smile"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the SABR backbone, and how does \\(\\beta\\) control it?",
+  "back": "The backbone is how ATM vol moves as the forward moves. In lognormal terms \\(\\sigma_{\\text{ATM}}\\approx\\alpha F^{\\beta-1}\\). Equivalently, normal ATM vol is \\(\\approx\\alpha F^{\\beta}\\).<br>\n\\(\\beta=0\\): normal ATM vol is constant in \\(F\\), so ATM vol does not respond to the rate level. \\(\\beta=1\\): ATM lognormal vol is constant, so normal vol is proportional to \\(F\\).<br>\n<b>Interviewer follow-up:</b> Why do desks fix \\(\\beta\\) rather than fit it? A smile alone barely identifies \\(\\beta\\), so it is set by convention or by historical regression of ATM vol against the rate.",
+  "tags": [
+   "sabr",
+   "backbone",
+   "beta"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is Hagan's SABR formula, and why is it an approximation rather than an exact price?",
+  "back": "Hagan et al. (2002) give an implied-vol formula from an asymptotic expansion in the expiry, with a near-ATM expansion in \\(\\ln(F/K)\\). The price is then the Black or Bachelier formula evaluated at that implied vol. It is a closed-form smile, not an exact solution of the SDE.<br>\nIt is accurate for short to moderate expiries and moderate strikes. Errors grow for long expiries, large \\(\\nu\\) and far wings.<br>\n<b>Interviewer follow-up:</b> What is its main failure? The implied density can go negative at low strikes, which is static arbitrage.",
+  "tags": [
+   "sabr",
+   "hagan",
+   "approximation",
+   "arbitrage"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How can Hagan-implied SABR smiles admit static arbitrage, and how do you detect it?",
+  "back": "Under a smile, the risk-neutral density is the discounted second derivative of the call with respect to strike (Breeden-Litzenberger). The Hagan expansion does not guarantee \\(\\partial_K^2 C\\ge 0\\). For large \\(\\nu\\), long expiries, or low strikes with \\(\\beta=0\\), the density can go negative.<br>\nDetection: price calls on a strike grid from the implied vols, then test the butterfly \\(C(K-h)-2C(K)+C(K+h)\\ge 0\\) and the monotonicity \\(\\partial_K C\\le 0\\).<br>\n<b>Interviewer follow-up:</b> Fixes? Use a no-arbitrage variant such as Doust's free-boundary SABR, or enforce the density check inside calibration.",
+  "tags": [
+   "sabr",
+   "arbitrage",
+   "density",
+   "breeden_litzenberger"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The risk-neutral density implied by a call price curve is the discounted {{c1::second derivative of the call price with respect to strike}}, which must be non-negative for the smile to be arbitrage-free.",
+  "back": "Breeden-Litzenberger. In the Hagan expansion this is not automatic, so it has to be checked numerically on a strike grid.",
+  "tags": [
+   "sabr",
+   "arbitrage",
+   "breeden_litzenberger",
+   "density"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compare free-boundary SABR and ZABR as responses to the limitations of Hagan's SABR.",
+  "back": "Free-boundary (no-arbitrage) SABR, Doust (2012), modifies the dynamics so the forward can reach a boundary below zero. This gives an arbitrage-free density at low and negative strikes that the Hagan formula misses.<br>\nZABR (Andreasen and Huge) generalises the volatility dynamics to \\(d\\sigma\\propto\\sigma^{\\gamma}\\). The volatility exponent controls the vol-of-vol shape separately, which improves long-expiry smiles and wing behaviour.<br>\nBoth trade some simplicity for better wing behaviour and no-arbitrage properties.",
+  "tags": [
+   "sabr",
+   "free_boundary",
+   "zabr",
+   "models"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What do \\(\\rho\\) and \\(\\nu\\) control in the SABR smile, and why is this separation useful in calibration?",
+  "back": "\\(\\rho\\) controls skew: negative \\(\\rho\\) makes implied vol rise as strike falls. \\(\\nu\\) controls curvature and wing growth. To leading order skew scales with \\(\\rho\\) and curvature with \\(\\nu^2\\).<br>\nThe separation lets the risk reversal be matched by \\(\\rho\\) and the butterfly by \\(\\nu\\), so each expiry-tenor slice is close to a two-dimensional problem rather than a tangled one.<br>\n<b>Interviewer follow-up:</b> If \\(\\nu\\to 0\\), what remains? Only the CEV-induced skew, with no curvature from vol-of-vol.",
+  "tags": [
+   "sabr",
+   "skew",
+   "curvature",
+   "parameters"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why is \\(\\beta=0\\) (normal SABR) the usual choice when rates are low or negative, and what does it give up?",
+  "back": "\\(\\beta=0\\) makes the forward process arithmetic, \\(dF=\\alpha\\,dW\\). This has no positivity constraint and matches normal quoting.<br>\nTrade-offs: the normal ATM vol is flat in \\(F\\), so it does not respond to the rate level. Its wing behaviour is also the source of the low-strike negative density issue, and \\(\\beta\\) still has to be chosen by convention or regression.<br>\n<b>Interviewer follow-up:</b> Why is \\(\\beta=1\\) a poor fit at low rates? Lognormal dynamics force vol to blow up as \\(F\\to 0\\), which conflicts with normal-quoted markets.",
+  "tags": [
+   "sabr",
+   "beta",
+   "normal_model",
+   "negative_rates"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When the forward turns negative during a SABR calibration, what must change in the set-up?",
+  "back": "The lognormal Hagan formula is undefined once \\(F\\le 0\\) or \\(K\\le 0\\). Options are: calibrate \\(\\beta=0\\) in the normal Hagan expansion; use a shifted SABR with a shift large enough that \\(F+s>0\\) on the grid; or switch to free-boundary SABR. The calibration grid must then include strikes below zero, and the fit should be done on normal vols so that the strikes are comparable.",
+  "tags": [
+   "sabr",
+   "negative_rates",
+   "calibration",
+   "shifted"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two SABR calibrations fit today's smile equally well but give different deltas. Why?",
+  "back": "Static fit does not pin the dynamics. How the smile moves when the forward moves is set by \\(\\beta\\) and \\(\\rho\\), and by the backbone. Those change the smile-adjusted delta \\(\\partial V/\\partial F\\) even when the static smile matches.<br>\nThis is the sticky-strike versus sticky-delta question, and it sets the hedge ratio.",
+  "tags": [
+   "sabr",
+   "hedging",
+   "calibration",
+   "smile_dynamics"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Distinguish sticky-strike and sticky-delta smile dynamics, and give the smile-adjusted delta formula.",
+  "back": "Sticky strike: the implied vol at each fixed strike is unchanged when the forward moves, so \\(\\partial\\sigma/\\partial F=0\\).<br>\nSticky delta: the vol at a fixed moneyness \\(K/F\\) is unchanged, so the smile shifts with the forward.<br>\n\\[\\Delta_{\\text{smile}}=\\frac{\\partial V}{\\partial F}=\\Delta_{\\text{BS}}+\\mathcal{V}\\,\\frac{\\partial\\sigma(K,F)}{\\partial F}\\]\nSticky strike gives \\(\\Delta_{\\text{smile}}=\\Delta_{\\text{BS}}\\). Under sticky delta the second term is non-zero and is typically large for a skewed smile.<br>\n<b>Interviewer follow-up:</b> Which is right? Neither by default. It is an empirical choice, often checked by regressing vol moves against rate moves, and it determines the hedge ratio.",
+  "tags": [
+   "smile_dynamics",
+   "sticky_strike",
+   "sticky_delta",
+   "delta"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive vanna and volga for a normal-model call, and show that both vanish at the money.",
+  "back": "With \\(\\Delta=N(d)\\), \\(\\mathcal{V}=\\sqrt{T}\\varphi(d)\\), \\(\\partial_\\sigma d=-d/\\sigma\\):<br>\nVanna \\(=\\partial_\\sigma\\Delta=\\varphi(d)\\,\\partial_\\sigma d=-\\dfrac{d\\,\\varphi(d)}{\\sigma}\\)<br>\nVolga \\(=\\partial_\\sigma\\mathcal{V}=\\sqrt{T}\\,\\varphi'(d)\\,\\partial_\\sigma d=\\dfrac{\\sqrt{T}\\,d^2\\varphi(d)}{\\sigma}\\)<br>\nBoth are zero at \\(d=0\\). Vanna is odd in \\(d\\), so it measures skew sensitivity. Volga is non-negative and grows with \\(d^2\\), so it lives in the wings.<br>\n<b>Interviewer follow-up:</b> What does this mean for hedging? ATM options carry no volga, so volga hedges must be placed in the wings.",
+  "tags": [
+   "vanna",
+   "volga",
+   "normal_model",
+   "greeks"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In the normal model with no rate drift, theta equals {{c1::minus one half of sigma squared times gamma}}. At the money, gamma is about {{c2::0.4}} divided by \\(\\sigma_N\\sqrt{T}\\).",
+  "back": "Derivation in the next card.",
+  "tags": [
+   "gamma",
+   "theta",
+   "normal_model",
+   "greeks"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Show that the normal (Bachelier) price satisfies \\(\\partial_t V+\\tfrac12\\sigma_N^2\\,\\partial_{FF}V=0\\), and derive the gamma-theta relation.",
+  "back": "Under \\(dF=\\sigma_N\\,dW\\), Itô gives \\(dV=\\partial_tV\\,dt+\\partial_FV\\,dF+\\tfrac12\\sigma_N^2\\partial_{FF}V\\,dt\\). Since \\(V\\) is a martingale under the forward measure, the drift term must vanish, so \\(\\partial_tV=-\\tfrac12\\sigma_N^2\\Gamma\\).<br>\nTheta is therefore exactly the negative of expected gamma P&amp;L at the implied variance. A long-gamma position pays theta in proportion to gamma and variance. Discounting or a non-zero drift adds a rate term.<br>\n<b>Interviewer follow-up:</b> Compare with Black: \\(\\Theta=-\\tfrac12\\sigma_B^2F^2\\Gamma\\).",
+  "tags": [
+   "gamma",
+   "theta",
+   "pde",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the expected delta-hedged P&amp;L of a long normal-model option, and explain why it depends on realised versus implied vol.",
+  "back": "Delta-hedge with \\(\\Delta\\). The position's P&amp;L over a small step is \\(\\tfrac12\\Gamma\\,(dF)^2+\\Theta\\,dt\\). Using \\(\\Theta=-\\tfrac12\\sigma_i^2\\Gamma\\) and realised variance in place of \\((dF)^2\\):\n\\[\\text{P\\&L}\\approx\\tfrac12\\,\\Gamma\\,\\big(\\sigma_r^2-\\sigma_i^2\\big)\\,dt\\]\nOver the life, \\(\\tfrac12\\Gamma T(\\sigma_r^2-\\sigma_i^2)\\). The long gamma position profits when realised exceeds implied.<br>\n<b>Interviewer follow-up:</b> ATM 1y option, \\(\\sigma_i=80\\)bp, \\(\\sigma_r=100\\)bp. Gamma is about \\(0.4/0.008\\approx 50\\) per unit rate. P&amp;L \\(\\approx\\tfrac12\\times 50\\times(0.01^2-0.008^2)\\approx 9\\times 10^{-4}\\), about 9bp of notional.",
+  "tags": [
+   "delta_hedging",
+   "pnl",
+   "realised_implied",
+   "gamma_pnl"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Explain vol-of-vol and correlation risk in a CMS spread option, and state the sign of a long spread-call position's exposure to correlation.",
+  "back": "Vol-of-vol (\\(\\nu\\) in SABR) changes the wings of each underlying's smile, which changes the tails of the spread distribution.<br>\nCorrelation: the spread \\(S_1-S_2\\) has variance \\(\\sigma_1^2+\\sigma_2^2-2\\rho\\sigma_1\\sigma_2\\). Higher correlation reduces dispersion, so a long spread call loses value as \\(\\rho\\) rises. The holder is short correlation. A long straddle on the spread is a dispersion bet and has the same sign.<br>\nCorrelation is rarely traded directly, so this is a model risk to hedge with related options or bound with scenarios.",
+  "tags": [
+   "vol_of_vol",
+   "correlation_risk",
+   "spread_options",
+   "risk"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "In HJM under the risk-neutral measure, with \\(df(t,T)=\\alpha\\,dt+\\sigma(t,T)\\,dW_t\\), what is the forward-rate drift \\(\\alpha\\)?",
+  "back": "\\[\\alpha(t,T)=\\sigma(t,T)\\int_t^T\\sigma(t,u)\\,du\\]\nDerivation: the bond price is \\(P(t,T)=\\exp(-\\int_t^T f(t,u)\\,du)\\). Requiring discounted bond prices to be martingales forces the forward drift to be the volatility times the integral of the volatilities.<br>\n<b>Interviewer follow-up:</b> What does this imply about freedom in the model? The drift is fully determined by the volatilities, so the model is specified by \\(\\sigma(t,T)\\) alone.",
+  "tags": [
+   "hjm",
+   "no_arbitrage",
+   "drift",
+   "multifactor"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why does Hull-White 1F sit inside HJM, and what volatility function does it imply?",
+  "back": "Hull-White, \\(dr=(\\theta(t)-a r)\\,dt+\\sigma\\,dW\\), is an HJM model with deterministic, separable volatility \\(\\sigma(t,T)=\\sigma e^{-a(T-t)}\\). Substituting this into the HJM drift gives a Markov short rate with the correct no-arbitrage drift.<br>\nThe exponential decay in \\(T-t\\) is what makes the model Markovian with a single factor, and it generates mean reversion.<br>\n<b>Interviewer follow-up:</b> Exact bond price? \\(P(t,T)=A(t,T)\\,e^{-B(t,T)r_t}\\) with \\(B(t,T)=(1-e^{-a(T-t)})/a\\).",
+  "tags": [
+   "hjm",
+   "markovian",
+   "hull_white",
+   "models"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In Hull-White 1F, \\(P(t,T)=A(t,T)\\exp(-B\\,r_t)\\) with \\(B(t,T)=\\){{c1::(1-e^{-a(T-t)})/a}}. Starting from \\(r_0\\) with constant \\(\\sigma\\), the variance of \\(r_t\\) is {{c2::\\(\\sigma^2(1-e^{-2at})/(2a)\\)}}.",
+  "back": "Second result is the Ornstein-Uhlenbeck variance. Mean reversion caps the variance as \\(t\\) grows.",
+  "tags": [
+   "hull_white",
+   "bond_price",
+   "mean_reversion"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does the mean-reversion parameter \\(a\\) do in Hull-White, and how is it calibrated?",
+  "back": "\\(a\\) damps shocks: a shock to the short rate has effect \\(e^{-a(T-t)}\\) on the T-forward. Forward rates at different tenors therefore decorrelate, and long-tenor forward vol is damped relative to short-tenor vol.<br>\nCalibration: \\(a\\) and \\(\\sigma\\) are fitted together. \\(a\\) is identified from the ratio of swaption vols across tenors at the same expiry (for example 1y x 1y versus 1y x 10y), not from one tenor alone.<br>\n<b>Interviewer follow-up:</b> Why does \\(a\\) matter for Bermudans? It controls the decorrelation of forward rates, which drives how the exercise value depends on the path.",
+  "tags": [
+   "hull_white",
+   "mean_reversion",
+   "vol_term_structure",
+   "calibration"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Describe calibrating Hull-White 1F to a swaption surface, and name the main limitation.",
+  "back": "Step 1: fit the time-dependent drift \\(\\theta(t)\\) so the model reproduces today's discount curve exactly.<br>\nStep 2: fit the piecewise-constant \\(\\sigma(t)\\) and \\(a\\) so that model swaption prices match the target expiry-by-tenor vols, weighting the most liquid points. Prices come from Jamshidian's decomposition into zero-coupon bond options, or from a tree.<br>\nLimitation: one Gaussian factor gives a single correlation structure, and the smile is missing. The fit is good at the money and poor in the wings.<br>\n<b>Interviewer follow-up:</b> What is Jamshidian's trick? It splits a European swaption into a portfolio of zero-coupon bond options, struck so that each leg is exercised consistently, which gives a fast price in one-factor models.",
+  "tags": [
+   "hull_white",
+   "calibration",
+   "swaptions",
+   "limitations"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How is a Bermudan swaption priced in a one-factor Hull-White model, and what decision is made on each exercise date?",
+  "back": "Build a trinomial tree (or solve a PDE) for the short rate, with nodes spanning all time steps to the last exercise date.<br>\nAt each exercise date \\(t_k\\), node value \\(=\\max(\\text{exercise value},\\text{continuation value})\\). Exercise value is the PV of the remaining swap at that node. Continuation value is the discounted expected value one step later.<br>\nBackward induction gives the price at inception. The tree must be calibrated to the discount curve and the swaption surface, otherwise the Bermudan premium carries a wrong vol level even if the algorithm is correct.",
+  "tags": [
+   "bermudan",
+   "trees",
+   "pde",
+   "backward_induction"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the Bermudan exercise boundary, and why is a Bermudan worth at least as much as its best European component?",
+  "back": "The exercise boundary is the set of state values (swap rate or short rate) at each date where exercise and continuation values are equal. Exercise is optimal beyond it. It is a time-dependent threshold, found by backward induction.<br>\nA Bermudan can choose its exercise date, and each European option is one of its choices. So the Bermudan is at least the maximum of the European swaptions, and the difference is the value of early-exercise optionality.<br>\n<b>Interviewer follow-up:</b> For a payer Bermudan, which region of the state variable triggers exercise? The high-rate region.",
+  "tags": [
+   "bermudan",
+   "exercise_boundary",
+   "optionality",
+   "early_exercise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How would you price a Bermudan when the model is multi-factor or not tree-friendly, such as an LMM?",
+  "back": "Use Monte Carlo with Longstaff-Schwartz regression. Simulate paths. At each exercise date, regress discounted future cashflows of continuing paths on basis functions of the state (for example swap rates) to estimate continuation value. Exercise where intrinsic value exceeds the estimate, and roll back.<br>\nThe regression policy is sub-optimal, so the price is a lower bound. An upper bound comes from dual methods (Andersen-Broadie). Trade-offs: basis choice, path count, and harder Greeks, which need pathwise or AAD methods.",
+  "tags": [
+   "bermudan",
+   "monte_carlo",
+   "lsm",
+   "trade_off"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "In the lognormal forward-rate model (BGM/LMM), what is the drift of \\(L_i\\) under the terminal measure \\(\\mathbb{Q}^{T_N}\\)?",
+  "back": "Under \\(dL_i=\\sigma_i L_i\\,dW_i\\) with \\(\\langle dW_i,dW_j\\rangle=\\rho_{ij}\\,dt\\), a change of numeraire from \\(T_i\\) to \\(T_N\\) gives\n\\[dL_i=-\\sigma_i L_i\\sum_{j=i+1}^{N}\\frac{\\tau_j\\,\\rho_{ij}\\,\\sigma_j L_j}{1+\\tau_j L_j}\\,dt+\\sigma_i L_i\\,dW_i^{T_N}\\]\nThe drift is a finite sum over later rates, with a negative sign. It comes from the change of numeraire to the bond maturing at \\(T_N\\).<br>\n<b>Interviewer follow-up:</b> Why is the terminal measure convenient but not always used? It needs one drift sum and one numeraire, but simulating to \\(T_N\\) is a long path. Bermudan pricing often uses the spot-LIBOR measure instead.",
+  "tags": [
+   "lmm",
+   "bgm",
+   "terminal_measure",
+   "drift"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How is an LMM calibrated to caplets and swaptions, and what does the correlation matrix do?",
+  "back": "Caplets: each \\(L_i\\) has a Black caplet, so \\(\\int_0^{T_{i-1}}\\sigma_i(t)^2\\,dt\\) is fixed by the caplet vol. This pins the time-dependent volatility of each rate.<br>\nSwaptions: approximate the swaption vol from the \\(\\sigma_i\\) and the correlation (for example Rebonato's frozen-weights approximation), then fit the correlation to swaption prices.<br>\nCorrelation is the remaining degree of freedom. The market constrains only part of it, so parametric forms such as exponential decay are used, and this choice matters for Bermudans.",
+  "tags": [
+   "lmm",
+   "calibration",
+   "caplets",
+   "swaptions"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is rank reduction in an LMM, and why does it matter for pricing?",
+  "back": "The correlation matrix is \\(N\\times N\\) and must be positive semi-definite. Rank reduction writes each correlation as an inner product of unit-norm vectors in \\(d\\) dimensions, for example Rebonato's parametrisation, or a PCA of the correlation.<br>\nA small number of factors, often 2 or 3, captures most of the variance of rate moves (approximately 90% or more). This speeds simulation at the cost of approximation error in the correlation, which can shift the swaption fit and Bermudan value.<br>\n<b>Interviewer follow-up:</b> What is the trade-off? Fewer factors lose correlation fidelity. More factors slow simulation and overfit.",
+  "tags": [
+   "lmm",
+   "rank_reduction",
+   "pca",
+   "correlation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two LMM calibrations fit the same swaption cube but price a Bermudan very differently. What is the likely cause, and how would you check it?",
+  "back": "The swaption cube constrains only part of the correlation matrix. The Bermudan depends on how forward rates decorrelate across tenors and on the smile dynamics. Different correlation parametrisations or rank-reduction choices can fit the vanilla surface yet imply different forward correlations, which change the Bermudan's exercise value.<br>\nCheck: compare implied forward correlations with a historical PCA of rate changes, and measure the Bermudan's sensitivity to the correlation parametrisation.",
+  "tags": [
+   "lmm",
+   "calibration",
+   "correlation",
+   "bermudan"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why do Cheyette and stochastic-local-vol models appear when a standard LMM or Hull-White model cannot fit the smile across strikes and expiries?",
+  "back": "Standard constant-parameter Gaussian and lognormal models produce a smile that is only partly controlled. Cheyette (quasi-Gaussian, with state-dependent vol) and SLV (stochastic vol with a local-vol leverage function) add state dependence, so the smile moves with the rate.<br>\nThe leverage function can match the calibrated vanilla surface exactly, and the stochastic component sets the forward smile dynamics that drive exotic values. Trade-off: more parameters and higher computational cost.",
+  "tags": [
+   "cheyette",
+   "slv",
+   "smile",
+   "models"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why is a CMS rate not equal to the forward swap rate, and what sign does the convexity adjustment usually have for a payer CMS?",
+  "back": "A CMS coupon fixes the swap rate \\(S(T_f)\\) at \\(T_f\\) and pays at a later date \\(T_p\\). The forward swap rate is a martingale under the annuity measure, but the payment at \\(T_p\\) needs the \\(T_p\\)-forward measure, under which \\(S\\) has a drift.<br>\nThe convexity adjustment \\(\\mathbb{E}^{T_p}[S]-S_0\\) is positive for a payment after fixing, so the CMS rate is above the forward swap rate. Its size grows with \\(\\sigma^2 T_f\\) and with the payment lag \\(T_p-T_f\\).<br>\n<b>Interviewer follow-up:</b> What happens to the adjustment as the lag shrinks to zero? It tends to zero, and the CMS rate tends to the forward swap rate.",
+  "tags": [
+   "cms",
+   "convexity",
+   "forward_measure",
+   "convexity_adjustment"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Give the static replication formula for \\(\\mathbb{E}^{A}[g(S)]\\) and explain how it prices CMS-type payoffs with a full smile.",
+  "back": "Decompose \\(g\\) around the forward \\(F_0\\): \\(g(S)=g(F_0)+\\int_0^{F_0}g''(K)(K-S)^+\\,dK+\\int_{F_0}^{\\infty}g''(K)(S-K)^+\\,dK\\). Taking expectations under the annuity measure:\n\\[\\mathbb{E}^{A}[g(S)]=g(F_0)+\\int_0^{F_0}g''(K)\\,\\mathrm{Rec}(K)\\,dK+\\int_{F_0}^{\\infty}g''(K)\\,\\mathrm{Pay}(K)\\,dK\\]\nwhere \\(\\mathrm{Pay}(K)\\) and \\(\\mathrm{Rec}(K)\\) are the payer and receiver swaption prices per unit annuity, taken from the market smile at each strike. For a payment lag, a measure change is added.<br>\n<b>Interviewer follow-up:</b> Why is this better than a single-vol convexity formula? It uses the whole smile, so it captures wing and skew effects that a single vol misses.",
+  "tags": [
+   "cms",
+   "static_replication",
+   "smile",
+   "convexity"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a CMS spread call on \\(S_1-S_2\\), the spread variance is \\(\\sigma_1^2+\\sigma_2^2-2\\rho\\sigma_1\\sigma_2\\). Higher correlation {{c1::lowers}} the value of the call, so a long spread call is {{c2::short}} correlation.",
+  "back": "Correlation between swap rates is rarely directly observable. It is typically inferred from the spread-option market or from history, with sensitivity checked across the plausible range.",
+  "tags": [
+   "cms_spread",
+   "correlation",
+   "spread_options",
+   "risk"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How are CMS spread options priced with a copula, and what are the modelling assumptions?",
+  "back": "Price each swap rate's marginal distribution from its own smile model (for example SABR), under the consistent measure. Join the two marginals with a copula that has correlation \\(\\rho\\). Then Monte Carlo or numerical integration gives \\(\\mathbb{E}[(S_1-S_2-K)^+]\\).<br>\nAssumptions: the marginals are right, and the copula captures the joint law. A Gaussian copula has zero tail dependence, while a Student-t copula adds tail dependence, which changes joint extreme scenarios. Those extremes drive the value of spread options.<br>\n<b>Interviewer follow-up:</b> What does the choice of copula change for a spread option? Its joint tail behaviour, which matters for the spread's wings.",
+  "tags": [
+   "cms_spread",
+   "copula",
+   "marginals",
+   "models"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A {{c1::Gaussian}} copula has zero tail dependence. A Student-t copula with finite degrees of freedom has {{c2::positive}} tail dependence.",
+  "back": "Relevant for CMS spread and other joint-extreme payoffs, where the choice of copula changes the value of the wings.",
+  "tags": [
+   "copula",
+   "tail_dependence",
+   "cms_spread",
+   "models"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the risk profile of a range accrual note from the investor's side?",
+  "back": "The coupon accrues only on days the reference rate lies inside a corridor. The investor is effectively long a strip of digital options on the reference being in range. That is equivalent to being short the range boundaries.<br>\nThe investor is usually short volatility: it earns when the rate stays in a band and loses on breakouts. The vega sign depends on the corridor relative to the forward. If the reference is CMS-based, correlation and smile matter as well.",
+  "tags": [
+   "range_accrual",
+   "vol",
+   "structured",
+   "short_vol"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Describe a TARN (target redemption note) and explain why its embedded knockout is the key risk.",
+  "back": "A TARN pays a coupon each period until cumulative coupons reach a target, then redeems. The coupons accumulate fastest in high-rate paths, so the target is hit early in exactly the scenarios where the coupons are highest.<br>\nThe investor is therefore short a path-dependent knockout on the coupon stream. Valuation depends on the whole path of rates, so vol dynamics, smile and correlation across the coupon schedule matter. A constant-vol Gaussian model misprices it.",
+  "tags": [
+   "tarn",
+   "path_dependence",
+   "knockout",
+   "structured"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How does a callable structure relate to a Bermudan swaption, and which party is long or short vol?",
+  "back": "A callable bond is a non-callable bond plus or minus a Bermudan option on the rate, depending on which party holds the call. The call right belongs to the issuer, so the issuer is long a Bermudan option and long vol, while the investor is short that option and short vol.<br>\n<b>Interviewer follow-up:</b> Why does a callable's price fall when vol rises? Higher vol raises the value of the issuer's call, which the investor has sold.",
+  "tags": [
+   "callable",
+   "bermudan",
+   "structured",
+   "vol"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two dealers quote the same swaption smile. One fits a normal SABR with \\(\\beta=0\\), the other a shifted lognormal SABR. Why might their hedges still disagree even though both fit the vanilla surface?",
+  "back": "Both fit the static smile, but they differ in dynamics, which is what the hedge depends on. Their backbones differ, since \\(\\beta=0\\) gives a flat normal ATM vol while a shifted lognormal backbone scales with \\(F+s\\). Their smile-adjusted deltas therefore differ.<br>\nThe fix is to choose the model whose smile dynamics match the market's observed behaviour (regression of ATM vol on rates), not the one that fits today's surface best.",
+  "tags": [
+   "sabr",
+   "backbone",
+   "hedging",
+   "negative_rates"
+  ]
+ }
+]

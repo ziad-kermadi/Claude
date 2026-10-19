@@ -1,0 +1,387 @@
+[
+ {
+  "type": "basic",
+  "front": "A convertible has face 1,000 and a conversion ratio of 12.5 shares per bond. The share price is 75 and the bond trades at 1,020. Compute the conversion price, the parity and the premium over parity.",
+  "back": "Conversion price \\(= 1000 / 12.5 = 80\\).<br>\nParity \\(= 12.5 \\times 75 = 937.5\\).<br>\nPremium \\(= 1020 / 937.5 - 1 \\approx 8.8\\%\\). Per share, the bond costs \\(1020 / 12.5 = 81.6\\), which is 8.8% above spot.<br>\n<b>Interviewer follow-up:</b> What does the premium buy? It buys the embedded option plus any bond-floor support above parity. It is repaid by the coupon pickup over the dividend income forgone (see the payback card).",
+  "tags": [
+   "convertibles",
+   "conversion",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Parity \\(= \\) {{c1::conversion ratio x share price}}. Conversion premium \\(= \\) {{c2::bond price / parity - 1}}. Conversion price \\(= \\) {{c3::face / conversion ratio}}.",
+  "back": "Parity is the immediate conversion value of the bond. A buyer paying above parity needs the stock to rise, net of the coupon pickup, to break even on the premium.",
+  "tags": [
+   "convertibles",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why is a convertible's price bounded below by \\(\\max(\\text{bond floor}, \\text{parity})\\)? Decompose the price into bond plus option and say where the time value is largest.",
+  "back": "Lower bound 1: the holder can always convert, so \\(CB \\ge \\) parity (American feature).<br>\nLower bound 2: the holder can always keep the bond, so \\(CB \\ge\\) the straight-debt value discounted at the issuer's credit-adjusted yield (the bond floor).<br>\nDecomposition: \\(CB = \\text{bond floor} + \\text{equity option}\\) when the call and credit are ignored. The time value is \\(CB - \\max(\\text{floor}, \\text{parity}) \\ge 0\\). It is largest near the money, where neither lower bound binds, and falls to zero deep in the money (price tracks parity) and deep out of the money (price tracks the floor).<br>\n<b>Interviewer follow-up:</b> Why is the floor not a safe floor? It is discounted at the issuer's credit spread, so a weak issuer has a low floor. The downside is then a recovery-type loss, not a par bond.",
+  "tags": [
+   "convertibles",
+   "pricing",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A convertible on a BBB issuer is deep out of the money: bond floor 88, parity 60. Rank its sensitivities to (i) a 1% stock move, (ii) +100bp risk-free rates, (iii) +100bp credit spread and (iv) +10 vol points. Give the economic reason for each.",
+  "back": "Approximate ranking, largest first: credit spread, then rates, then vol, then equity delta.<br>\n(i) Stock: delta per bond is far below the conversion ratio, because the call is far out of the money and the floor does not depend on S.<br>\n(ii) Rates: the floor is a fixed-coupon bond, so rho is negative through its duration. The forward effect on the small call is minor.<br>\n(iii) Spread: the floor's spread duration (CS01) dominates, since a deep out-of-the-money convertible is almost pure debt.<br>\n(iv) Vega: positive but small, because the option value is small.<br>\n<b>Interviewer follow-up:</b> How does the picture change when parity is far above the floor? The convertible becomes equity-like: delta approaches the conversion ratio, CS01 falls, and the vega of the option becomes the main optionality.",
+  "tags": [
+   "convertibles",
+   "greeks",
+   "scenario"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Explain the Tsiveriotis-Fernandes split \\(V = U + E\\). State the discount rate for each component and the conversion constraint. Why is the equity component discounted at the risk-free rate?",
+  "back": "\\[\\partial_t E + \\mathcal{L}E - rE = 0\\]\n\\[\\partial_t U + \\mathcal{L}U - (r+s)U = 0\\]\nHere \\(\\mathcal{L}\\) is the Black-Scholes generator and \\(s\\) is the issuer's credit spread. Coupons are added to \\(U\\), the debt-like part. Conversion is imposed on the total: \\(V \\ge \\text{ratio} \\cdot S\\).<br>\nRationale: the equity part is a claim settled in shares, so it is not discounted for default. The debt part is risky.<br>\n<b>Interviewer follow-up:</b> What is wrong with the split? It is heuristic. Default is not a modelled state, so the stock cannot go to zero on default and the joint equity-credit dynamics are misrepresented. This is why the hazard-rate PDE is preferred.",
+  "tags": [
+   "convertibles",
+   "pricing",
+   "credit",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "With a constant hazard rate \\(\\lambda\\), recovery \\(R\\) on face \\(F\\), and a default that drives the stock to zero, write the credit-adjusted PDE for a convertible in the continuation region. State the conversion and call constraints.",
+  "back": "Under the risk-neutral measure default arrives as a Poisson jump, so the discount rate is \\(r+\\lambda\\) and the bond receives a recovery source:\n\\[V_t + \\tfrac{1}{2}\\sigma^2 S^2 V_{SS} + (r-q) S V_S - (r+\\lambda) V + \\lambda R F = 0.\\]\nHolder conversion: \\(V \\ge \\text{ratio} \\cdot S\\). Issuer call: in the call region the holder receives \\(\\max(K, \\text{ratio} \\cdot S)\\), so \\(V \\le \\max(K, \\text{ratio} \\cdot S)\\) there. On default the shares are worthless and the holder receives \\(RF\\).<br>\n<b>Interviewer follow-up:</b> Why is the recovery \\(\\lambda R F\\) and not \\(\\lambda R V\\)? Recovery is a claim on the bond's face (plus accrued). It depends on the bond's ranking. If the convertible is subordinated, use the appropriate claim.",
+  "tags": [
+   "convertibles",
+   "pricing",
+   "credit",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "The hazard rate is made a decreasing function of the stock price, \\(\\lambda(S)\\). What changes in the PDE, and what does it do to the convertible's joint equity-credit sensitivities?",
+  "back": "Feynman-Kac: the PDE keeps its form with \\(\\lambda\\) replaced by \\(\\lambda(S)\\). Default is a state-dependent Poisson kill, so no extra drift term appears:\n\\[V_t + \\tfrac{1}{2}\\sigma^2 S^2 V_{SS} + (r-q) S V_S - (r+\\lambda(S)) V + \\lambda(S) R F = 0.\\]\nEffects: a stock fall raises \\(\\lambda\\), so the floor falls with the stock. The cross-gamma \\(\\partial^2 V / \\partial S \\partial s\\) is therefore negative in a sell-off. A constant-\\(\\lambda\\) model misses this and overstates floor protection in stress.<br>\nCalibrate \\(\\lambda(S)\\) to CDS levels across equity moves and to equity implied vol. The calibration is the main model risk.<br>\n<b>Interviewer follow-up:</b> Why is this not just a correlation input? The coupling is structural. It fixes the joint law of default and equity, so the delta, CS01 and their cross terms are internally consistent.",
+  "tags": [
+   "convertibles",
+   "pricing",
+   "credit",
+   "scenario"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Outline backward induction for a callable convertible with coupons and a credit spread on a trinomial tree. Give the node update with the holder's conversion and the issuer's call, in order.",
+  "back": "Terminal node: \\(V_T = \\max(F, \\text{ratio} \\cdot S_T)\\), plus the final coupon.<br>\nContinuation at each node: \\(C = e^{-(r+\\lambda)\\Delta t}\\,\\mathbb{E}[V_{t+\\Delta t}]\\), plus the coupon on coupon dates.<br>\nIf the issuer calls at \\(K\\), the holder takes \\(\\max(K, \\text{ratio} \\cdot S)\\). The issuer calls when that is cheaper, so\n\\[V = \\min\\big(\\max(C,\\ \\text{ratio} \\cdot S),\\ \\max(K,\\ \\text{ratio} \\cdot S)\\big).\\]\nTrinomial is preferred to binomial for the extra mid-node flexibility, which helps the stock and spread grid and gives more stable results for the credit term.<br>\n<b>Interviewer follow-up:</b> Why is the holder's conversion applied before the issuer's call? The holder's continuation is what the issuer compares against. If the issuer calls, the holder can still convert, so the call only caps the holder at the better of the call price and conversion.",
+  "tags": [
+   "convertibles",
+   "pricing",
+   "trees",
+   "coding"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A convertible has a soft call: the issuer may call at \\(K\\) only if the stock has closed above 130% of the conversion price for 20 of the last 30 trading days (a typical US trigger, approx.). Why is this path-dependent, and how does it change the holder's payoff?",
+  "back": "The trigger depends on the recent path, not only the current state. Track a counter of days above the trigger in the 30-day window, or use an equivalent window state in the PDE, or simulate with Monte Carlo.<br>\nEffect on the holder: when the trigger is met, the issuer can force conversion. The holder's value is then capped at \\(\\max(K, \\text{ratio} \\cdot S)\\), so the upside beyond the call is truncated. The soft call therefore behaves like a short option, conditional on the path, that reduces the convertible's vega and upside convexity.<br>\n<b>Interviewer follow-up:</b> Why is a soft call worth less to the issuer than a hard call? It can only be used when the stock is high, so it is a costly forced-conversion tool, and holders anticipate this. The effect is largest for convertibles trading near the trigger.",
+  "tags": [
+   "convertibles",
+   "features",
+   "path_dependence"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is a make-whole premium on a convertible, what triggers it, and how does it change the convertible's takeover payoff?",
+  "back": "On a change of control (fundamental change), the holder may convert at an enhanced ratio. The extra shares are read from a make-whole table indexed by the deal share price and the years remaining to maturity. Extra shares are typically larger for lower deal prices and for longer remaining life (approx., deal-specific). A holder put at par often sits alongside it.<br>\nIllustrative only: 2 extra shares at a 75 deal price add \\(2 \\times 75 = 150\\) per bond to the conversion value.<br>\n<b>Interviewer follow-up:</b> Why is the make-whole not a full hedge? The table is fixed at issuance and is capped. The convertible remains exposed to the deal's cash-versus-stock consideration, and to the bond's credit after a leveraged deal.",
+  "tags": [
+   "convertibles",
+   "features",
+   "takeover"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A bank AT1 CoCo has a 7% CET1 trigger and principal write-down. Explain the mechanics. How would you value the trigger, and why is it not simply default?",
+  "back": "Mechanics: if the bank's CET1 ratio falls below the trigger (common levels include 5.125% and 7%, approx.), the instrument is written down or converted to equity, pro rata. Coupons are discretionary and cancellable, which is not a default.<br>\nValuation: the trigger is a barrier (knock-in) on the capital ratio. You need a model of the ratio, driven by earnings, losses and risk-weighted assets, with its volatility and link to equity. The price is the value of the bond less the value of the barrier loss, which depends on the probability of crossing the trigger along the path.<br>\n<b>Interviewer follow-up:</b> Why is the trigger not default? It fires before insolvency, so holders lose value while the bank is still solvent. The loss is path-dependent and can occur without any credit default, so credit-only models misstate it.",
+  "tags": [
+   "convertibles",
+   "coco",
+   "credit",
+   "barrier"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A long convertible is delta-hedged with short stock. Show that the expected hedged P&L per unit time is approximately \\(\\tfrac{1}{2} \\Gamma S^2 (\\sigma_r^2 - \\sigma_i^2)\\,dt\\). Then compute the P&L per bond per year for \\(\\Gamma = 0.05\\) per share, \\(S = 75\\), \\(\\sigma_r = 40\\%\\) and \\(\\sigma_i = 30\\%\\).",
+  "back": "Hedged value: \\(d\\Pi = dV - \\Delta\\, dS\\). Ito gives \\(dV = (V_t + \\tfrac{1}{2}\\sigma_r^2 S^2 \\Gamma)\\,dt + V_S\\, dS\\). Hence \\(d\\Pi = (\\Theta + \\tfrac{1}{2}\\sigma_r^2 S^2 \\Gamma)\\,dt\\).<br>\nThe price satisfies \\(\\Theta + \\tfrac{1}{2}\\sigma_i^2 S^2 \\Gamma = \\text{carry}\\), so \\(d\\Pi = \\tfrac{1}{2}\\Gamma S^2(\\sigma_r^2 - \\sigma_i^2)\\,dt + \\text{carry}\\). Carry includes financing, borrow and credit terms.<br>\nNumbers: \\(\\tfrac{1}{2} \\times 0.05 \\times 75^2 \\times (0.16 - 0.09) = 9.84\\) per year per bond, or about 0.04 per bond per trading day (252 days).<br>\n<b>Interviewer follow-up:</b> What is the sign of gamma P&L when realised vol equals implied vol but the stock gaps? The expected gamma P&L is zero, but the realised path is still volatile. Gap risk and jump-to-default are not captured by the continuous formula.",
+  "tags": [
+   "convertibles",
+   "convertible_arb",
+   "derivation",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Hedged long-convertible P&L per unit time is approximately {{c1::\\(\\tfrac{1}{2}\\Gamma S^2(\\sigma_r^2 - \\sigma_i^2)\\,dt\\)}} before carry, borrow and credit terms. Realised vol above implied gives a {{c2::positive}} gamma P&L.",
+  "back": "Derivation: the hedged position's drift is \\(\\Theta + \\tfrac{1}{2}\\sigma_r^2 S^2 \\Gamma\\), and the price itself uses the implied vol. The difference is the gamma P&L.",
+  "tags": [
+   "convertibles",
+   "convertible_arb",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 5-year CDS hedges a convertible's credit exposure. The convertible's CS01 is 0.24 per bp per 1,000 face. The CDS risky annuity is about 4.5 per unit notional. Roughly what CDS notional is needed? Name two reasons the hedge is imperfect.",
+  "back": "CDS CS01 per unit notional \\(\\approx\\) risky annuity \\(\\times\\) 1bp \\(= 4.5 \\times 0.0001 = 0.00045\\).<br>\nNotional \\(\\approx 0.24 / 0.00045 \\approx 530\\), roughly half of 1,000 face (approx.).<br>\nReasons the hedge is imperfect:<br>\n<ul>\n<li>Basis: the floor is discounted off the bond curve, not the CDS curve, so the two spreads can diverge.</li>\n<li>Cross-effects: the option part responds to the spread through the hazard-equity coupling, so the CS01 is state-dependent and the hedge misses cross-gamma.</li>\n<li>Recovery and jump-to-default: CDS recovery and the convertible's recovery need not match.</li>\n</ul>\n<b>Interviewer follow-up:</b> Why does the desk hedge the CDS notional and not the spread-duration in years? CS01 is the risk measure. Matching notional alone ignores the difference in spread duration between the bond and the CDS.",
+  "tags": [
+   "convertibles",
+   "credit",
+   "hedging",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A convertible desk must short 5 shares per bond with the stock at 75. The stock is hard to borrow at a 3% fee. The bond pays a 2% coupon on 1,000 face. Quantify the annual carry and explain how borrow enters the theoretical value.",
+  "back": "Short notional: \\(5 \\times 75 = 375\\). Borrow cost: \\(3\\% \\times 375 = 11.25\\) per year. Coupon income: \\(2\\% \\times 1000 = 20\\) per year. Net carry from coupon minus borrow: about 8.75 per year, before dividends and financing.<br>\nPricing: the hedge is short stock, so the borrow fee acts like an extra continuous yield in the stock's forward. That lowers the value of the call-like option, so a higher borrow rate reduces the theoretical value (approx., model-dependent).<br>\n<b>Interviewer follow-up:</b> Why do hard-to-borrow names often look cheap? The theoretical value is reduced by borrow, but the market price may not fully reflect the desk's actual hedging cost, so the cheapness must be judged net of the borrow carry.",
+  "tags": [
+   "convertibles",
+   "convertible_arb",
+   "borrow",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How do you decide whether a convertible is cheap? Why is implied vol not a complete answer?",
+  "back": "Method: calibrate the credit input (hazard curve from CDS or the bond curve), then solve for the implied vol \\(\\sigma_i\\) that matches the market price, using the convertible's call, put, soft call, dividend and borrow inputs. Compare \\(\\sigma_i\\) with forecast realised vol. It is cheap if \\(\\sigma_i\\) is below the forecast for a long-gamma position.<br>\nOther measures: the investment premium, the payback period, and the yield-to-put.<br>\nLimitation: implied vol depends on the credit input. A tighter spread raises the floor, which lowers the option value needed to match the price, so implied vol falls and the bond looks cheaper. Cheapness can be manufactured by the credit assumption. A vanilla vol is also inconsistent with soft-call features, which cut vega.<br>\n<b>Interviewer follow-up:</b> How do you test whether a cheapness signal survives the credit assumption? Re-solve implied vol across a range of spreads and check that the sign of the signal holds.",
+  "tags": [
+   "convertibles",
+   "relative_value",
+   "cheapness",
+   "trade_off"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A mandatory convertible pays par in shares at maturity. The ratio is \\(\\text{Par}/S_U\\) when \\(S \\ge S_U\\), \\(\\text{Par}/S\\) when \\(S_L < S < S_U\\), and \\(\\text{Par}/S_L\\) when \\(S \\le S_L\\). Decompose the holder's payoff into options.",
+  "back": "Payoff \\(= \\text{Par} + \\tfrac{\\text{Par}}{S_U}\\max(S - S_U, 0) - \\tfrac{\\text{Par}}{S_L}\\max(S_L - S, 0)\\).<br>\nCheck: for \\(S \\ge S_U\\) the payoff is \\(\\text{Par} \\cdot S / S_U\\). For \\(S \\le S_L\\) it is \\(\\text{Par} \\cdot S / S_L\\). In between it is Par.<br>\nSo the holder is long a zero-like Par claim, long \\(\\text{Par}/S_U\\) calls struck at \\(S_U\\), and short \\(\\text{Par}/S_L\\) puts struck at \\(S_L\\). The holder is short the downside below \\(S_L\\) and long the upside above \\(S_U\\).<br>\n<b>Interviewer follow-up:</b> Why is the issuer happy to sell this? It is a forward sale of shares with a collar, so the issuer locks in an effective sale price. The coupon and dividend terms then set the price.",
+  "tags": [
+   "convertibles",
+   "mandatory",
+   "payoff",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Explain why equity-credit correlation matters for valuing and hedging a convertible. Which sign do you expect, and what is the practical consequence for the bond floor?",
+  "back": "Expect a positive correlation between equity down-moves and spread widening. Equity falls and spreads widen together, so the bond floor falls in the same states where the stock falls.<br>\nConsequence: the floor protects the holder less than it would if default were independent of equity. The joint tail is worse than a sum of bond and option, and the cross-gamma \\(\\partial^2 V / \\partial S \\partial s\\) matters.<br>\nHedging: a delta hedge leaves the spread exposure, and a CDS hedge leaves the cross-term. Use a hazard linked to S, or a copula, and stress joint scenarios.<br>\n<b>Interviewer follow-up:</b> Why is this wrong-way risk for the bank? The bank is long the convertible and short the stock hedge, and the CDS hedge pays when the convertible loses, so the hedge can fail in the same stress.",
+  "tags": [
+   "convertibles",
+   "credit",
+   "correlation",
+   "wrong_way_risk"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Yield-to-put is the discount rate that equates the convertible's price to the present value of coupons up to the put date plus {{c1::the put price, usually par}}, received on {{c2::the put date}}. It is the relevant yield for a holder when the bond trades {{c3::below the put price}}, so that the put is in the money.",
+  "back": "Yield-to-worst for a discount convertible is usually yield-to-put, since the holder can force redemption at par.",
+  "tags": [
+   "convertibles",
+   "convention",
+   "yield"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "All-in coupon with a SOFR floor = {{c1::max(SOFR, floor)}} + {{c2::margin}}. With a 0.50% floor and forward SOFR at 0.20%, the borrower pays {{c3::0.30%}} more per annum than the unfloored coupon for that period.",
+  "back": "The floor is a strip of floorlets. Its value to the lender rises as forwards fall. In a CLO, loans with floors funding liabilities with zero floors create a basis that matters when rates fall.",
+  "tags": [
+   "loans",
+   "floors",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 3-year term loan is priced at 99 with a 350bp margin on quarterly SOFR resets. Estimate the discount margin. Explain how it differs from spread-to-maturity.",
+  "back": "Discount margin (DM) is the margin that discounts the loan's cash flows, assuming the index stays at the current forward curve, to the price.<br>\nApproximately: DM \\(\\approx\\) margin \\(+\\) discount / life. The 1 point discount over a 3-year convention life (approx.) is about 33bp per year, so DM \\(\\approx 350 + 33 \\approx 383\\)bp.<br>\nDifferences: DM is a margin over the reference rate and is the comparable measure for floating-rate loans. Spread-to-maturity is measured to the stated maturity against a fixed-rate benchmark. For loans, DM usually uses the convention or the next call date, not the legal maturity.<br>\n<b>Interviewer follow-up:</b> How does DM change if the loan trades above par? The discount becomes a premium. DM is then measured to the earliest likely call date, so the convention life shortens and DM falls.",
+  "tags": [
+   "loans",
+   "pricing",
+   "convention",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A loan trades at 101.5. It has a 101 soft call for six months and then a par call, with 7 years to maturity. Which yield is quoted as yield-to-worst, and why does prepayment convexity matter?",
+  "back": "Above par, the holder is exposed to repayment at a lower price, so yield-to-worst is the yield to the earliest call. Yield-to-soft-call (at 101, after 6 months) is the lowest, since the 1.5-point premium is earned over a short period. Yield-to-maturity over 7 years is higher.<br>\nConvexity: loans are negatively convex. The borrower refinances when spreads fall, and the holder gets par (or 101) back, so upside is capped. That is why loan yields are quoted to the call or a convention life, not to maturity.<br>\n<b>Interviewer follow-up:</b> What changes if the market price is below par? Yield-to-worst moves to yield-to-maturity, because the borrower has no incentive to refinance.",
+  "tags": [
+   "loans",
+   "prepayment",
+   "convexity",
+   "pricing"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Under ISDA's IBOR fallback, the credit adjustment spread for USD 3-month LIBOR was fixed at {{c1::26.161 bp}}. It is {{c2::added to}} compounded SOFR to replicate the term credit component of LIBOR.",
+  "back": "The CAS was set as a historical median (five-year lookback) of LIBOR minus compounded SOFR. It was fixed at cessation to avoid value transfer, and it does not move with current bank credit.",
+  "tags": [
+   "loans",
+   "clo",
+   "convention",
+   "libor_transition"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compare settlement conventions for par loan trades under LSTA (US) and LMA (Europe). What is delayed compensation, and why do consent-required trades settle slowly?",
+  "back": "LSTA: standard par settlement is T+7 business days (approx.). LMA: standard settlement is customarily longer, around T+10 (approx., varies by trade type).<br>\nDelayed compensation: if settlement runs beyond the standard period, the party causing the delay pays the other a compensation accrual on the notional. It is a rate-based payment, not a fee, and the exact terms follow the trade documentation.<br>\nConsent-required trades settle slowly because the agent's consent, KYC and assignment documentation must be completed before the buyer is a lender of record.<br>\n<b>Interviewer follow-up:</b> Why does settlement timing matter for a distressed buyer? Delayed compensation and loss of voting rights during the restructuring can change the economics, and a buyer who settles late may miss a vote.",
+  "tags": [
+   "loans",
+   "settlement",
+   "convention",
+   "distressed"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does a covenant-lite term loan remove, and how does it change expected loss for the lender? Give the mechanism, not only the description.",
+  "back": "A cov-lite TLB removes the maintenance covenants (a leverage or interest-cover test tested every quarter). It keeps incurrence covenants, which are triggered only by specific actions such as new debt, dividends or acquisitions.<br>\nMechanism: a maintenance test gives the lenders an early trigger to renegotiate before cash runs out. Without it, default comes later, when enterprise value has already eroded. Recovery falls (higher loss given default), and value leakage through EBITDA add-backs, unrestricted-subsidiary transfers and priming becomes easier.<br>\nNet effect: default frequency near-term can fall, because there is no early trigger, but loss given default rises. Expected loss is ambiguous and depends on the document's protections.<br>\n<b>Interviewer follow-up:</b> Which document feature would you check first? The incurrence baskets, the unrestricted-subsidiary terms and the amendment thresholds, since these define the leakage route.",
+  "tags": [
+   "loans",
+   "covenants",
+   "recovery",
+   "trade_off"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why does a loan CDS (LCDS) not trade one-for-one with the CDS on the same issuer's bonds? What does the LCDS-CDS basis capture?",
+  "back": "LCDS references a senior secured term loan. Deliverable obligations are restricted to loans, usually settled physically at par. A bond CDS can deliver from a wider set of bonds, so the cheapest-to-deliver option differs.<br>\nOther differences: the credit-event definitions (restructuring treatment) differ between the two contracts, and secured loan recovery is typically higher than unsecured bond recovery. The reference floating-rate coupon also differs.<br>\nBasis: LCDS spread minus CDS spread. It reflects the cheapest-to-deliver option, the recovery differential and liquidity. Arbitrage is long loan, buy LCDS protection, or the reverse, depending on the sign.<br>\n<b>Interviewer follow-up:</b> Why is the sign ambiguous without a recovery assumption? The implied spread depends on the recovery used, and a common recovery assumption across both contracts can produce a spurious basis.",
+  "tags": [
+   "loans",
+   "cds",
+   "basis",
+   "credit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A CLO holds 100 of par loans at SOFR + 350bp. It funds 90 of debt at SOFR + 160bp on average and pays 0.40 per year in fees. Ignoring defaults, assume SOFR is hedged. What is the levered equity spread on the 10 of equity?",
+  "back": "Asset spread income: \\(100 \\times 3.50\\% = 3.50\\).<br>\nDebt cost: \\(90 \\times 1.60\\% = 1.44\\).<br>\nFees: \\(0.40\\).<br>\nResidual to equity: \\(3.50 - 1.44 - 0.40 = 1.66\\).<br>\nEquity spread: \\(1.66 / 10 \\approx 16.6\\%\\) over SOFR, before defaults, losses, OID and reinvestment drag.<br>\n<b>Interviewer follow-up:</b> What is the main drag on this number? Credit losses. Equity is the first-loss tranche, so a modest default rate removes a large share of the spread, which is why the manager's selection and the OC tests matter.",
+  "tags": [
+   "clo",
+   "arbitrage",
+   "mental_math",
+   "structure"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A CLO has performing collateral par of 400 and senior notes of 320. The OC trigger is 120%. Compute the OC ratio. If defaults reduce performing collateral by 20, what happens to the waterfall? State the IC test.",
+  "back": "OC ratio \\(= 400 / 320 = 125\\%\\), which passes the 120% trigger.<br>\nAfter the 20 of defaults, performing par is 380, so \\(380 / 320 = 118.75\\%\\), a fail.<br>\nEffect: excess interest is diverted from the junior waterfall to pay down senior notes until the ratio is restored. This raises senior protection and cuts equity cash flow now.<br>\nIC test: interest collections divided by interest due on the senior notes, against a deal-specific threshold. A fail diverts cash in the same way.<br>\n<b>Interviewer follow-up:</b> How are defaulted assets counted in the OC test? Usually they are excluded or valued at market or a recovery-type value, depending on the document. Check the definition before using the numbers.",
+  "tags": [
+   "clo",
+   "oc_test",
+   "waterfall",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "CLO pool quality is managed through the {{c1::weighted average rating factor (WARF)}}, the {{c2::diversity score}} and a cap on {{c3::CCC-rated assets}}. Assets above the CCC cap are typically counted at {{c4::market value}} in the par tests.",
+  "back": "WARF is a weighted average of Moody's rating factors, so a higher WARF means a lower pool rating. The diversity score estimates the number of independent obligors equivalent to the pool. Both feed the rating agency's capacity to rate the notes.",
+  "tags": [
+   "clo",
+   "rating",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Explain how the reinvestment period affects CLO equity. Which dominates in a tight primary market: spread compression on new loans, or prepayment and repricing of the existing pool?",
+  "back": "During reinvestment, principal proceeds from repayments, prepayments and sales buy new loans. Equity earns the excess spread on those purchases.<br>\nSpread compression: new loans priced tighter than the existing pool reduce the excess spread, and the effect is magnified by leverage. Prepayment: repaid loans shorten the weighted average life and reduce future spread income. Repricing of the existing pool lowers its margins.<br>\nIn a tight primary market, the reinvestment drag and repricing both reduce equity income. Liability resets or refinancings that lower the debt spread offset part of this.<br>\n<b>Interviewer follow-up:</b> Why does a CLO reset help equity? It lowers the liability spread on the existing pool, which raises the excess spread, at the cost of an extended reinvestment period and a new non-call.",
+  "tags": [
+   "clo",
+   "reinvestment",
+   "equity",
+   "trade_off"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Who is paid in a CLO, and what constrains the manager's incentives? Name two structural differences between European and US CLOs.",
+  "back": "Payments: a senior management fee on the par of the pool (basis points), and a subordinated (incentive) fee paid from the waterfall after equity reaches its hurdle.<br>\nConstraints: risk retention. The US risk retention rule and the EU Securitisation Regulation both require the sponsor to hold 5% of the credit risk (approx.), horizontally or vertically.<br>\nEuropean nuances: (1) EUR assets and liabilities usually reference EURIBOR, with floors that differ between the loans and the notes, which creates a floor basis. (2) European deals rely heavily on the diversity score and rating-agency tests, with different trading and CCC-bucket restrictions. Check the deal documents for the exact limits.<br>\n<b>Interviewer follow-up:</b> How does the sub fee change manager behaviour? It rewards the manager for equity cash flow above the hurdle, so it can encourage risk-taking in the equity tail.",
+  "tags": [
+   "clo",
+   "manager",
+   "regulation",
+   "structure"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A bank pays the total return on a TLB (price change plus coupon) to a fund. The fund pays SOFR + 150bp on a 100 notional. Over one quarter the loan price rises from 98.00 to 98.50. The loan coupon is SOFR + 350bp with SOFR at 4.00%, accruing for 0.25 years. Ignore day counts and defaults. What is the fund's net P&L per 100 notional?",
+  "back": "Price change on 100 notional: \\(+0.50\\).<br>\nCoupon received: \\((4.00\\% + 3.50\\%) \\times 0.25 \\times 100 = 1.875\\).<br>\nFinancing paid: \\((4.00\\% + 1.50\\%) \\times 0.25 \\times 100 = 1.375\\).<br>\nNet P&L: \\(0.50 + 1.875 - 1.375 = 1.00\\) per quarter. Of this, 0.50 is carry (200bp spread over 0.25 years), and 0.50 is price return.<br>\n<b>Interviewer follow-up:</b> What does the fund bear beyond the price? Default: the TRS terminates, the bank pays recovery and the fund may owe the bank's losses on the funding leg. The fund also carries the bank's collateral and margin calls.",
+  "tags": [
+   "trs",
+   "loans",
+   "funding",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compare a drop-down and an uptier liability management exercise (LME). For each, what happens to a non-participating lender, and which covenant gap does it exploit?",
+  "back": "Drop-down: valuable assets (IP or subsidiaries) are moved to an unrestricted subsidiary outside the lenders' collateral group, and new super-priority debt is raised there. It exploits asset-transfer and investment baskets. The J.Crew transaction moved IP to an unrestricted subsidiary, and later agreements added blockers against this.<br>\nUptier: a majority of lenders, under the amendment threshold, approves an exchange in which participants swap into a new super-senior tranche. Non-participants are primed and subordinated. It exploits the amendment threshold and the pro rata sharing and open-market purchase exceptions. In Serta (Fifth Circuit, Dec 2024), the court held the uptier was not an open-market purchase under the credit agreement.<br>\n<b>Interviewer follow-up:</b> Which protection stops an uptier? Pro rata sharing, sacred-right provisions requiring all-lender consent for payment priority, and tight definitions of the open-market purchase exception.",
+  "tags": [
+   "distressed",
+   "lme",
+   "covenants",
+   "legal"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Under Chapter 11 cram-down (section 1129(b)), a plan may bind a dissenting impaired class only if it is fair and equitable. The Absolute Priority Rule requires that {{c1::no junior class receives value unless each senior class is paid in full or consents}}. Cram-down also needs {{c2::at least one impaired class to accept, excluding insiders}}.",
+  "back": "Deviations from absolute priority occur through settlements with senior classes, which are common in practice but need court approval. The best-interests test (section 1129(a)(7)) separately protects dissenting creditors.",
+  "tags": [
+   "distressed",
+   "chapter11",
+   "priority",
+   "legal"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compare a UK Part 26A restructuring plan with a Chapter 11 cram-down. How does each bind a dissenting class, and what is the key sanction condition?",
+  "back": "Chapter 11: a dissenting impaired class can be crammed down if the plan is fair and equitable (absolute priority, with deviations), at least one impaired non-insider class accepts, and the best-interests test is met.<br>\nPart 26A (introduced by the Corporate Insolvency and Governance Act 2020, in the Companies Act 2006): the court can sanction a plan that binds dissenting classes (cross-class cram-down). Its key condition is that no member of a dissenting class is worse off than in the relevant alternative, and the court must be satisfied on this point. The court also checks that the plan has the approval of the required majority in each class, and it can require at least one class in the money to approve.<br>\n<b>Interviewer follow-up:</b> Why does the UK route make the relevant alternative central? The court tests the plan against what would happen without it, so the valuation of the alternative (administration or liquidation) matters more than the absolute priority ranking.",
+  "tags": [
+   "distressed",
+   "chapter11",
+   "uk_restructuring",
+   "legal"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A company has an enterprise value of 450 on emergence. Claims are: DIP 100 (super-priority), first-lien term loan 500, second-lien 200, senior unsecured 300. Ignore admin costs and accrued interest. What is the recovery of each class, and which class is the fulcrum security?",
+  "back": "Waterfall: DIP is paid first, 100 (100% recovery). That leaves 350 for the first lien.<br>\nFirst lien: \\(350 / 500 = 70\\%\\) recovery.<br>\nSecond lien and senior unsecured: 0% recovery.<br>\nFulcrum security: the first lien. It is the most senior class not fully covered, so it is the class that receives the reorganised equity under the plan.<br>\n<b>Interviewer follow-up:</b> How does the fulcrum change if EV rises to 650? The first lien is then paid in full with 50 left over. The second lien becomes the fulcrum only once the first lien is covered, so the second lien takes the equity at the next step.",
+  "tags": [
+   "distressed",
+   "recovery",
+   "waterfall",
+   "mental_math"
+  ]
+ }
+]

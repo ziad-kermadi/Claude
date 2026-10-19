@@ -1,0 +1,442 @@
+[
+ {
+  "type": "basic",
+  "front": "Antithetic variates for a European call under GBM. You simulate \\(N\\) pairs \\((Z_i,-Z_i)\\) and average \\(\\tfrac12[f(Z_i)+f(-Z_i)]\\). Derive the variance of this estimator relative to plain MC with the same total number of paths \\(2N\\), and state when the pairing helps or hurts.",
+  "back": "Let \\(\\sigma_f^2=\\mathrm{Var}\\,f(Z)\\) and \\(\\rho=\\mathrm{corr}(f(Z),f(-Z))\\). Each pair average has variance \\(\\tfrac12\\sigma_f^2(1+\\rho)\\), so\n\\[\\mathrm{Var}_{\\text{anti}}=\\frac{\\sigma_f^2(1+\\rho)}{2N},\\qquad \\mathrm{Var}_{\\text{plain},\\,2N}=\\frac{\\sigma_f^2}{2N}.\\]\nGain factor is \\((1+\\rho)/2\\).<br>\nFor a call, \\(S_T\\) is monotone in \\(Z\\), so \\(f(Z)\\) and \\(f(-Z)\\) are negatively correlated and the scheme helps.<br>\nFor a payoff even in \\(Z\\) (for example a variance-type payoff \\((\\ln S_T-\\mu)^2\\)), \\(\\rho=1\\): the pairs collapse to one sample each and the variance doubles relative to plain MC with \\(2N\\) paths.\n<br><br><b>Interviewer follow-up:</b> how do you know in advance whether antithetics will help? Answer: check the sample correlation of \\(f(Z_i)\\) and \\(f(-Z_i)\\) on a pilot run; if it is near +1, drop the pairing.",
+  "tags": [
+   "monte_carlo",
+   "variance_reduction",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Control variate for an arithmetic Asian call. Let \\(X\\) be the discounted arithmetic Asian payoff and \\(C\\) the discounted geometric Asian payoff on the same paths, with \\(\\mathbb E[C]\\) known in closed form. Give the estimator, the optimal coefficient, and the variance reduction in terms of \\(\\rho=\\mathrm{corr}(X,C)\\).",
+  "back": "\\[\\hat X_{cv}=X-b\\,(C-\\mathbb E[C]),\\qquad b^*=\\frac{\\mathrm{Cov}(X,C)}{\\mathrm{Var}(C)}.\\]\nAt \\(b^*\\), \\(\\mathrm{Var}(\\hat X_{cv})=(1-\\rho^2)\\,\\mathrm{Var}(X)\\). For \\(\\rho=0.95\\) about 90% of the variance is removed; for \\(\\rho=0.5\\) only 25% is removed.<br>\nEstimating \\(b^*\\) on the same paths introduces a bias of order \\(1/N\\). Use a pilot set of paths for \\(b\\), or quantify the effect.<br>\nThe control must be priced in closed form (or very accurately); otherwise \\(\\mathbb E[C]\\) is itself noisy and the gain is partly lost.\n<br><br><b>Interviewer follow-up:</b> why is the geometric Asian the standard control? Answer: its correlation with the arithmetic Asian is very high across typical parameters, and its price is lognormal-closed-form under GBM.",
+  "tags": [
+   "monte_carlo",
+   "control_variates",
+   "variance_reduction"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Importance sampling for a far out-of-the-money call priced by MC. Write the change-of-measure identity, the likelihood ratio when the Brownian driver is shifted by \\(\\theta\\), and the estimator variance. Why can it backfire?",
+  "back": "\\[\\mathbb E_P[f]=\\mathbb E_Q\\!\\left[f\\,\\frac{dP}{dQ}\\right].\\]\nUnder \\(Q\\), \\(Z\\sim N(\\theta,1)\\) instead of \\(N(0,1)\\), so \\(\\frac{dP}{dQ}=\\exp(-\\theta Z+\\tfrac12\\theta^2)\\).<br>\nVariance of the IS estimator: \\(\\mathbb E_Q[(fw)^2]-\\mathbb E_P[f]^2\\) with \\(w=dP/dQ\\).<br>\nChoose \\(\\theta\\) to put the terminal price near the strike: \\(\\theta\\approx\\dfrac{\\ln(K/S_0)-(r-\\sigma^2/2)T}{\\sigma\\sqrt T}\\).<br>\nIt backfires when \\(Q\\) puts too little mass where \\(f\\) is large, or when the shift is large: weights become heavy-tailed, a few paths dominate, and the sample error bar understates the true error.\n<br><br><b>Interviewer follow-up:</b> what diagnostic detects this? Answer: the effective sample size \\((\\sum w_i)^2/\\sum w_i^2\\) and the weight quantiles. A small ESS means the estimate is unreliable even when it looks precise.",
+  "tags": [
+   "monte_carlo",
+   "importance_sampling",
+   "variance_reduction"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Scrambled Sobol QMC for a smooth integrand of effective dimension \\(d\\) converges at roughly {{c1::\\(O\\big((\\log N)^d/N\\big)\\)}}, against {{c2::\\(O(N^{-1/2})\\)}} for pseudo-random MC. Random scrambling makes the QMC estimate {{c3::unbiased}} and gives an empirical error bar.",
+  "back": "Gains need low effective dimension and smoothness. Discontinuous payoffs (digitals, barriers) degrade the rate. The \\((\\log N)^d\\) factor is asymptotic: at moderate \\(N\\) and high \\(d\\), QMC may not beat MC.",
+  "tags": [
+   "monte_carlo",
+   "qmc",
+   "convergence"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You generate a 32-step Brownian path for a path-dependent payoff and feed it Sobol points. Why does the construction order of the Brownian increments matter, and what are the usual choices?",
+  "back": "Sobol uniformity is strongest in the low-index coordinates, and QMC error is driven by the coordinates that carry most of the payoff variance.<br>\nBrownian bridge construction generates \\(W_T\\) first, then midpoints recursively. The first Sobol coordinate then sets the large-scale path shape and later coordinates add fine detail, so the important variance sits in few dimensions.<br>\nPCA construction (eigendecomposition of the path covariance) puts even more variance into the first dimension and is often the best choice for Asian-type payoffs.<br>\nSequential (forward) generation spreads variance evenly across coordinates and wastes the QMC advantage.\n<br><br><b>Interviewer follow-up:</b> why not just add Sobol points? Answer: the QMC rate depends on dimension through the \\((\\log N)^d\\) term; reordering reduces effective dimension without extra points.",
+  "tags": [
+   "qmc",
+   "brownian_bridge",
+   "monte_carlo"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the delta of a European call with (i) the pathwise method and (ii) the likelihood-ratio method. Why does the pathwise method fail for a digital call?",
+  "back": "GBM: \\(S_T=S_0\\exp\\!\\big((r-\\tfrac12\\sigma^2)T+\\sigma\\sqrt T\\,Z\\big)\\). Pathwise: \\(\\partial S_T/\\partial S_0=S_T/S_0\\), so\n\\[\\Delta=e^{-rT}\\,\\mathbb E\\!\\left[\\mathbf 1_{\\{S_T>K\\}}\\frac{S_T}{S_0}\\right].\\]\nFor the digital payoff \\(\\mathbf 1_{\\{S_T>K\\}}\\), the derivative is zero almost everywhere and jumps at \\(K\\). The pathwise estimator is therefore 0 and biased, because the true delta is a density at \\(K\\).<br>\nLikelihood ratio: \\(\\partial_{S_0}\\mathbb E[f(S_T)]=\\mathbb E[f(S_T)\\,\\partial_{S_0}\\ln p(S_T)]\\). For GBM, \\(\\partial_{S_0}\\ln p=Z/(S_0\\sigma\\sqrt T)\\), so\n\\[\\Delta_{\\text{digital}}=e^{-rT}\\,\\mathbb E\\!\\left[\\mathbf 1_{\\{S_T>K\\}}\\frac{Z}{S_0\\sigma\\sqrt T}\\right].\\]\nLR handles discontinuities, but its variance grows with maturity, and gamma needs a second-order weight that is noisier.\n<br><br><b>Interviewer follow-up:</b> which method for a vanilla call, and why? Answer: pathwise, because it has lower variance when the payoff is Lipschitz.",
+  "tags": [
+   "greeks",
+   "pathwise",
+   "likelihood_ratio"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A bump-and-revalue Gamma on an MC price uses central differences in \\(S_0\\) with step \\(h\\). Give the bias, the noise, the MSE-optimal \\(h\\) scaling with \\(N\\) paths, and the trick that makes the difference usable.",
+  "back": "\\[\\Gamma\\approx\\frac{V(S_0+h)-2V(S_0)+V(S_0-h)}{h^2}.\\]\nBias is \\(O(h^2)\\). With fresh paths for each revalue, the standard error is about \\(\\sigma_V/(h^2\\sqrt N)\\). MSE \\(\\propto h^4+1/(Nh^4)\\) is minimised at \\(h\\propto N^{-1/8}\\). For a first derivative (central difference), MSE \\(\\propto h^4+1/(Nh^2)\\) and \\(h\\propto N^{-1/6}\\).<br>\nTrick: common random numbers. Reuse the same normals for \\(S_0\\pm h\\) so that the noise largely cancels and the difference reflects only the payoff's sensitivity.<br>\nPathwise or LR estimators avoid the bump altogether.\n<br><br><b>Interviewer follow-up:</b> why does CRN fail for digitals? Answer: the payoff jump falls on different paths under the two bumps, so the difference stays noisy; smooth the payoff or use LR.",
+  "tags": [
+   "greeks",
+   "bump",
+   "monte_carlo"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "In Longstaff–Schwartz, why is the naive single-sample LSM price not a rigorous bound, and what does the independent-path low estimator fix?",
+  "back": "The continuation value is regressed on in-the-money paths with a finite basis, so the fitted exercise rule approximates the optimal stopping rule and is generally suboptimal. Any stopping rule evaluated fairly gives a lower bound on the true Bermudan value, so the policy error pushes the price down.<br>\nThe naive estimate uses the same paths for fitting and for evaluation, and in-sample overfitting can push it the other way. Hence it has no guaranteed sign.<br>\nLow estimator: fit the exercise policy on one set of paths and evaluate the realised cashflows on an independent set. This gives a valid lower bound in expectation.<br>\nUpper bound: the Andersen–Broadie dual (next card). The gap between the two bounds measures the quality of the exercise policy.\n<br><br><b>Interviewer follow-up:</b> what happens if the basis is too small? Answer: the continuation value is misfit near the exercise boundary, the policy is further from optimal, and the low estimate falls.",
+  "tags": [
+   "american_mc",
+   "longstaff_schwartz",
+   "bias"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Describe the Andersen–Broadie dual upper bound for a Bermudan option and how it complements the LSM lower bound.",
+  "back": "Dual formulation: \\(V_0=\\inf_M\\,\\mathbb E\\big[\\max_t(H_t-M_t)\\big]\\), where \\(H_t\\) is the discounted exercise value and the infimum runs over martingales \\(M\\) with \\(M_0=0\\). Any martingale gives an upper bound, so the bound is valid whatever \\(M\\) you use.<br>\nPractical construction: use the approximate continuation values from the LSM regression to build the martingale increments (the Doob martingale of the approximate value process), then evaluate \\(\\max_t(H_t-M_t)\\) on fresh paths.<br>\nResult: lower and upper bounds bracket the true price. A narrow gap indicates both the exercise policy and the martingale are close to optimal.<br>\nCost: the martingale is usually built with inner simulations or a regression on the nested expectation, which is the expensive part.\n<br><br><b>Interviewer follow-up:</b> does a poor continuation approximation invalidate the upper bound? Answer: no, it widens the gap. Validity holds for any martingale; only tightness depends on the approximation.",
+  "tags": [
+   "american_mc",
+   "andersen_broadie",
+   "bounds"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "List the practical choices in LSM regression: which paths to regress on, which basis, and what goes wrong with raw monomials \\(S^k\\) for a long-dated Bermudan.",
+  "back": "<ul><li>Regress only on in-the-money paths. Regressing on all paths wastes basis flexibility and adds noise. Regress the discounted cashflow one step ahead on the basis evaluated at \\(t\\).</li>\n<li>Basis: Laguerre or Chebyshev polynomials in \\(S_t/K\\) (or in normalised \\(S_t\\)), not raw monomials. Monomials give an ill-conditioned normal-equation matrix with nearly collinear columns.</li>\n<li>Extra state variables (volatility, rates, a second asset) need cross terms, so the basis grows fast. The overfitting risk rises as the number of basis functions approaches the number of in-the-money paths.</li>\n<li>Check the fitted continuation value: it should be smooth and monotone in the right direction across \\(S\\). Kinks or spikes indicate under-sampling near the boundary.</li></ul>\n<br><b>Interviewer follow-up:</b> how do you pick the number of basis functions? Answer: increase until the lower bound stops moving on an independent path set, and watch the out-of-sample regression R-squared.",
+  "tags": [
+   "american_mc",
+   "longstaff_schwartz",
+   "regression"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The Andersen–Broadie dual gives an {{c1::upper}} bound on a Bermudan price using martingale penalties, while LSM evaluated on independent paths gives a {{c2::lower}} bound. The gap between them is a diagnostic of the {{c3::exercise policy and martingale quality}}.",
+  "back": "Both bounds are valid in expectation, so the true price lies between them. A wide gap is a signal to improve the basis or the number of paths, not a sign of a bug.",
+  "tags": [
+   "american_mc",
+   "bounds",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why do you apply a couple of implicit (backward Euler) steps before switching to Crank–Nicolson when pricing a digital option by finite differences?",
+  "back": "Crank–Nicolson is second order in time and unconditionally stable, but it is weakly damping. High-frequency error components decay by a factor close to \\(-1\\) per step, so the discontinuity in the terminal payoff produces persistent non-physical oscillations in \\(\\Delta\\) and \\(\\Gamma\\) near the strike.<br>\nRannacher smoothing: take a few (commonly two) fully implicit steps, each split into two half-steps, then continue with Crank–Nicolson. Implicit steps damp high-frequency modes at the cost of local first-order accuracy, which is quickly washed out.<br>\nAlso align the grid so the strike is a node, so the discontinuity sits on the grid.\n<br><br><b>Interviewer follow-up:</b> what if you use a log-spaced grid? Answer: keep the strike as a node; the log transform changes the mesh ratio but not the need for smoothing.",
+  "tags": [
+   "pde",
+   "crank_nicolson",
+   "rannacher"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For \\(u_t=D\\,u_{xx}\\), the explicit (forward Euler) scheme is stable only if \\(D\\,\\Delta t/\\Delta x^2\\le\\){{c1::\\(1/2\\)}}. Backward Euler is {{c2::unconditionally stable}} but first order in time. Crank–Nicolson is unconditionally stable and {{c3::second order in time}}.",
+  "back": "Von Neumann analysis: the explicit amplification factor is \\(g=1-4\\lambda\\sin^2(k\\Delta x/2)\\) with \\(\\lambda=D\\Delta t/\\Delta x^2\\), and \\(|g|\\le1\\) requires \\(\\lambda\\le1/2\\). Implicit schemes need a tridiagonal solve per step (Thomas algorithm, \\(O(N)\\)).",
+  "tags": [
+   "pde",
+   "stability",
+   "finite_difference"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Set up boundary conditions for a European call on a finite-difference grid \\(S\\in[0,S_{\\max}]\\), \\(t\\in[0,T]\\). Give the terminal condition and both spatial boundaries, and name the main truncation error.",
+  "back": "Terminal: \\(V(S,T)=\\max(S-K,0)\\).<br>\nAt \\(S=0\\): \\(V(0,t)=0\\) (a call is worthless when the stock is zero).<br>\nAt \\(S=S_{\\max}\\): deep in the money, \\(V\\approx S_{\\max}-Ke^{-r(T-t)}\\), i.e. the option is effectively linear in \\(S\\) and the gamma is negligible. A zero-second-derivative condition is an alternative.<br>\nFor a put: \\(V(0,t)=Ke^{-r(T-t)}\\) and \\(V(S_{\\max},t)=0\\).<br>\nTruncation error: \\(S_{\\max}\\) must be far enough that the boundary does not influence the strike region, typically several standard deviations of \\(\\ln S_T\\) out. A log grid \\(x=\\ln S\\) makes the mesh more even.\n<br><br><b>Interviewer follow-up:</b> why is the log grid natural for GBM? Answer: the diffusion coefficient becomes constant in \\(x\\), so the scheme has constant coefficients and a clean tridiagonal structure.",
+  "tags": [
+   "pde",
+   "boundary_conditions",
+   "finite_difference"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why use ADI (alternating direction implicit) for a Heston-type PDE in \\((S,v)\\), and how is the mixed-derivative term \\(\\partial^2V/\\partial S\\partial v\\) handled?",
+  "back": "A fully implicit 2D scheme gives a block-banded system of size \\(N_SN_v\\) per time step, which is costly. ADI splits each step into implicit sweeps in one direction at a time, so each sweep is a set of 1D tridiagonal solves, roughly \\(O(N_SN_v)\\) per step overall.<br>\nThe mixed derivative (from the \\(\\rho\\sigma\\) correlation term) does not fit a one-direction split. It is treated explicitly in schemes such as Douglas or Craig–Sneyd, which keep stability and second-order accuracy in the splitting.<br>\nTrade-offs: a splitting error, and the explicit mixed term can impose a time-step restriction in some regimes. Watch the boundary at \\(v=0\\) when the Feller condition is violated.\n<br><br><b>Interviewer follow-up:</b> how do you check the grid is converged? Answer: refine \\(N_S\\) and \\(N_v\\) and the time step separately; the time-step refinement exposes splitting error.",
+  "tags": [
+   "pde",
+   "adi",
+   "heston"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A CRR binomial tree prices an American put. As \\(N\\) increases, the price oscillates between odd and even \\(N\\) when the strike sits near the node grid. Explain the cause and name two remedies.",
+  "back": "CRR: \\(u=e^{\\sigma\\sqrt{\\Delta t}}\\), \\(d=1/u\\), \\(p=(e^{r\\Delta t}-d)/(u-d)\\). The payoff kink at \\(K\\) falls between nodes for some \\(N\\) and on a node for others. The exercise boundary is sampled inconsistently, so the error alternates in sign.<br>\nRemedies:<br>\n<ul><li>Leisen–Reimer tree: choose parameters so the strike aligns with a node centre, using a Peizer–Pratt style mapping of the normal distribution to the binomial probabilities.</li>\n<li>Smoothing: average consecutive values of \\(N\\), or Ritchken-style boundary smoothing; Richardson extrapolation in \\(N\\) combined with odd/even averaging.</li></ul>\nAlso check \\(d<e^{r\\Delta t}<u\\), which keeps \\(p\\in(0,1)\\). It fails when \\(\\Delta t\\) is large relative to \\(\\sigma\\).\n<br><br><b>Interviewer follow-up:</b> why does a Leisen–Reimer tree converge faster at small \\(N\\)? Answer: the strike is placed on a node and the normal-to-binomial mapping is more accurate, so the kink is resolved.",
+  "tags": [
+   "trees",
+   "american_options",
+   "convergence"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You solve for implied vol with Newton on \\(f(\\sigma)=BS(\\sigma)-P_{\\text{mkt}}\\), using vega as the derivative. Where does Newton fail, and what robust scheme would you use?",
+  "back": "Newton: \\(\\sigma_{n+1}=\\sigma_n-f/f'\\), quadratically convergent near the root. Failure modes:<br>\n<ul><li>Vega is near zero for deep in- or out-of-the-money options and very short expiries. The step explodes and can push \\(\\sigma\\) negative.</li>\n<li>Overshoot and cycling when the starting point is far from the root.</li></ul>\nFixes: Newton on \\(\\ln\\sigma\\) (keeps \\(\\sigma>0\\)); a good starting guess, such as the Brenner–Subrahmanyam approximation for an ATM forward option (\\(\\sigma\\approx\\sqrt{2\\pi/T}\\,C/F\\), approximate); a safeguarded hybrid (Newton with bisection fallback); or Brent on a bracket in vol space. Production systems often use a closed-form rational approximation followed by one or two Halley steps.\n<br><br><b>Interviewer follow-up:</b> why does vega vanish for deep OTM options? Answer: vega is \\(F\\,\\phi(d_1)\\sqrt T\\) (forward form), and \\(\\phi(d_1)\\) decays like a Gaussian in \\(d_1\\).",
+  "tags": [
+   "root_finding",
+   "newton",
+   "implied_vol"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compare sequential and global bootstrapping of a single-curve OIS discount curve from deposits, futures and swaps. What are the trade-offs, and what is the curve Jacobian used for?",
+  "back": "Sequential: solve pillar by pillar. Each instrument depends on discount factors up to its maturity, so each step is a 1D root find (Brent or Newton). The fit is exact and the Jacobian of quotes with respect to pillars is triangular. It is cheap, but breaks when instruments overlap in maturity (e.g. a futures strip plus swaps) or when quotes are inconsistent: one pillar absorbs the error and distorts the curve.<br>\nGlobal: solve all pillars simultaneously by least squares (Levenberg–Marquardt or Gauss–Newton) on the quotes, with smoothing or regularisation, often with fewer knots than quotes. It handles overlap and is smoother, but the Jacobian is dense and the solve is slower.<br>\nCurve Jacobian \\(\\partial(\\text{pillars})/\\partial(\\text{quotes})\\) drives bucketed DV01 and hedging. Sequential gives a triangular system; global gives a dense one.\n<br><br><b>Interviewer follow-up:</b> which would you use for a live desk curve? Answer: sequential with exact par fits when instruments are clean and non-overlapping; least squares with a smoothness penalty when they overlap.",
+  "tags": [
+   "bootstrapping",
+   "root_finding",
+   "curves"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Contrast natural and not-a-knot end conditions for a cubic spline interpolating zero rates. Which one distorts the short end more, and why does it matter for the instantaneous forward?",
+  "back": "Natural spline: \\(S''(x_0)=S''(x_n)=0\\). Not-a-knot: \\(S'''\\) is continuous at \\(x_1\\) and \\(x_{n-1}\\), so the first two and the last two intervals use the same cubic.<br>\nNatural forces zero curvature at the ends. Where the data are sensitive, namely the short end, this bends the interpolant toward a straight line and distorts the first forward rates. Not-a-knot uses the data more fully and gives better end behaviour.<br>\nForward rate \\(f(T)=r(T)+T\\,r'(T)\\) involves the derivative of the zero curve. Splines give \\(C^1\\) forwards but can produce oscillations or negative forwards between pillars. For strictly positive forwards, use a monotone scheme such as monotone convex.\n<br><br><b>Interviewer follow-up:</b> why does the forward matter more than the zero? Answer: pricing of forward-starting cashflows and the hedge ratios depend on discount-factor derivatives, which the forward encodes.",
+  "tags": [
+   "interpolation",
+   "splines",
+   "curves"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why does a single high-degree polynomial interpolant of \\(f(x)=1/(1+25x^2)\\) on \\([-1,1]\\) with equispaced nodes oscillate badly, and what fixes it?",
+  "back": "Interpolation error: \\(\\dfrac{f^{(n+1)}(\\xi)}{(n+1)!}\\prod_i(x-x_i)\\). With equispaced nodes, \\(|\\prod_i(x-x_i)|\\) is much larger near the endpoints than in the middle. For this \\(f\\), which has complex poles at \\(\\pm i/5\\), the error near \\(\\pm1\\) grows without bound as \\(n\\) increases. This is the Runge phenomenon.<br>\nFixes: Chebyshev nodes \\(x_k=\\cos\\!\\big(\\tfrac{(2k+1)\\pi}{2(n+1)}\\big)\\), which minimise \\(\\max|\\prod_i(x-x_i)|\\), or piecewise low-degree interpolants such as splines.<br>\nLesson for curves: avoid a global high-degree polynomial in maturity.\n<br><br><b>Interviewer follow-up:</b> why do local methods dominate rates? Answer: local support, so a change at one pillar does not ripple across the curve, and no global oscillation.",
+  "tags": [
+   "interpolation",
+   "runge",
+   "numerics"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Piecewise log-linear interpolation of discount factors gives piecewise {{c1::constant}} instantaneous forward rates, so forwards {{c2::jump}} at each pillar. It is popular for its simplicity and locality, but the jumps propagate into {{c3::forward-start and short-dated FRA risk}}.",
+  "back": "Since \\(\\ln P(T)\\) is linear in \\(T\\) between pillars, \\(f(T)=-\\partial_T\\ln P(T)\\) is constant on each interval. Monotone convex interpolation (Hagan–West) is designed to avoid these jumps and keep forwards positive while preserving locality.",
+  "tags": [
+   "interpolation",
+   "curves",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the Levenberg–Marquardt step for least-squares calibration \\(\\min_\\theta\\|r(\\theta)\\|^2\\). Explain how \\(\\lambda\\) moves the method between Gauss–Newton and gradient descent, and give the Jacobian cost for \\(m\\) vols and \\(n\\) parameters.",
+  "back": "Linearise \\(r(\\theta+\\delta)\\approx r+J\\delta\\). Solve\n\\[(J^\\top J+\\lambda\\,\\mathrm{diag}(J^\\top J))\\,\\delta=-J^\\top r.\\]\nSmall \\(\\lambda\\): Gauss–Newton, fast near a solution. Large \\(\\lambda\\): \\(\\delta\\approx-\\tfrac1\\lambda J^\\top r\\), a scaled gradient-descent step, safe far from the optimum. Decrease \\(\\lambda\\) after a step that reduces \\(\\|r\\|^2\\), increase it otherwise.<br>\nJacobian cost: bump-and-revalue needs \\(n\\) extra model evaluations per iteration. AAD needs one reverse sweep per output (\\(m\\) sweeps) or one forward sweep per input (\\(n\\) sweeps). With \\(m\\gg n\\), bumps or forward sweeps are cheaper; with \\(n\\gg m\\), reverse mode is cheaper.<br>\nSolve the damped normal equations with Cholesky or QR. Do not form an explicit inverse.\n<br><br><b>Interviewer follow-up:</b> how do you check identifiability at the solution? Answer: the eigenvalues of \\(J^\\top J\\). Tiny eigenvalues mean the quotes cannot pin down those parameter directions.",
+  "tags": [
+   "calibration",
+   "levenberg_marquardt",
+   "optimisation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A stochastic-vol calibration gives different parameters from different starting points, with near-identical fit. Diagnose the issue and propose two remedies.",
+  "back": "Diagnosis: the objective has several local minima and/or a flat valley. Parameters are weakly identified: for example, correlation and vol-of-vol trade off against each other. Small quote moves then shift parameters a lot, which harms hedge stability.<br>\nRemedies:<br>\n<ul><li>Regularisation: add \\(\\lambda\\|\\theta-\\theta_0\\|^2\\) toward a prior or yesterday's calibration (Tikhonov). This improves the conditioning. Choose \\(\\lambda\\) by trading fit error against parameter stability under quote shocks.</li>\n<li>Global-then-local: multi-start LM from a grid of starting points, or a global optimiser to find the right basin, then LM to refine.</li>\n<li>Fix or reduce weakly identified parameters, for example fixing a mean-reversion speed.</li></ul>\n<br><b>Interviewer follow-up:</b> what is the risk of regularising to yesterday's parameters? Answer: stale parameters can hide a real regime change; monitor the fit residuals as well as the parameter drift.",
+  "tags": [
+   "calibration",
+   "regularisation",
+   "optimisation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "List the main pitfalls when calibrating SABR to a swaption smile using the Hagan lognormal approximation.",
+  "back": "<ul><li>\\(\\beta\\) is poorly identified from one smile: \\(\\beta\\) and \\(\\rho\\) both affect the skew and backbone. It is usually fixed by market convention, and \\(\\rho,\\nu\\) fit the shape. \\(\\alpha\\) is pinned by ATM vol.</li>\n<li>\\(\\rho\\) and \\(\\nu\\) trade off against each other, so the fit is flat in a valley. Regularise or fix one.</li>\n<li>The Hagan formula is an asymptotic approximation. For some parameter sets, especially low strikes, long expiries, low rates or large \\(\\nu\\), it implies negative density, which is butterfly arbitrage. Check the implied density across strikes and use a corrected formula or a numerical density.</li>\n<li>Fitting raw vol errors lets wings dominate. Use vega-weighted errors.</li>\n<li>Strike coordinates: use forward-based moneyness. For negative rates, use a shifted SABR.</li></ul>\n<br><b>Interviewer follow-up:</b> why do desks often fix \\(\\beta\\)? Answer: \\(\\beta\\) and \\(\\rho\\) both control the skew, so the smile alone cannot separate them reliably.",
+  "tags": [
+   "calibration",
+   "sabr",
+   "pitfalls"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Explain why adjoint (reverse-mode) differentiation gives the gradient of a scalar price with respect to \\(n\\) inputs at a cost of a small constant multiple of one forward evaluation, independent of \\(n\\).",
+  "back": "The forward pass builds a graph \\(v_k=\\phi_k(\\text{parents of }v_k)\\). Define adjoints \\(\\bar v_k=\\partial y/\\partial v_k\\). Start with \\(\\bar y=1\\) and propagate backwards: for each node \\(k\\), add \\(\\bar v_k\\,\\partial\\phi_k/\\partial v_j\\) into \\(\\bar v_j\\) for each parent \\(j\\). One backward sweep gives \\(\\partial y/\\partial x_i\\) for all inputs at once.<br>\nCost: one forward pass plus one reverse pass, each local partial is \\(O(1)\\). The total is roughly 2 to 5 times the forward cost (a rule of thumb), versus \\(n\\) bump-and-revalue runs.<br>\nMemory: the tape stores intermediate values, so memory scales with the number of operations. That is the main practical limit for MC with many paths and time steps.\n<br><br><b>Interviewer follow-up:</b> when is forward mode better? Answer: with few inputs and many outputs, for example a Jacobian of many vols against a few model parameters, one forward sweep per input is cheaper.",
+  "tags": [
+   "aad",
+   "adjoint",
+   "differentiation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "An adjoint tape for a 10-million-step simulation uses too much memory. Describe checkpointing, its memory and compute cost, and the RNG requirement it creates.",
+  "back": "Checkpointing stores the state only at selected steps during the forward pass. In the reverse pass, the forward values between checkpoints are recomputed segment by segment and the adjoint is run on each segment.<br>\nWith \\(c\\) equally spaced checkpoints for \\(n\\) steps, memory is about \\(O(n/c+c)\\), minimised at \\(c\\approx\\sqrt n\\), giving \\(O(\\sqrt n)\\) rather than \\(O(n)\\). The cost is roughly one extra forward sweep (approximate). Optimal schedules (binomial or revolve-style) trade memory against recomputation under a fixed budget.<br>\nRNG requirement: the recomputed path must be identical. Use a counter-based or seeded generator indexed by path and step, so the normals regenerate exactly without being stored.\n<br><br><b>Interviewer follow-up:</b> why not store the random numbers instead of the states? Answer: storing \\(N\\times M\\) normals costs as much memory as the tape, so you gain nothing.",
+  "tags": [
+   "aad",
+   "checkpointing",
+   "memory"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A curve bootstrap needs to solve \\(Jx=r\\) for the pillar update, where \\(J\\) is the Jacobian of quotes with respect to pillars. Which is preferred, (a) or (b), and why?\n<pre><code>(a) x = np.linalg.inv(J) @ r\n(b) x = np.linalg.solve(J, r)</code></pre>",
+  "back": "(b). Forming \\(J^{-1}\\) costs about the same order, \\(O(n^3)\\), but with several times more flops, and it loses accuracy: the error in \\(x\\) scales with \\(\\kappa(J)\\,\\varepsilon\\), and the explicit inverse adds rounding error on top. The LU factorisation with partial pivoting used by solve is backward stable.<br>\nException: when you genuinely need \\(J^{-1}\\) (for example the sensitivities of pillars to quotes), compute the columns you need by solving against unit vectors, not by forming the full inverse.\n<br><br><b>Interviewer follow-up:</b> when is \\(J\\) triangular? Answer: in a sequential bootstrap, where each quote depends only on earlier pillars. Forward substitution then costs \\(O(n^2)\\) in total.",
+  "tags": [
+   "linear_algebra",
+   "jacobian",
+   "numerics"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You need to simulate five correlated Brownian drivers with a correlation matrix estimated from pairwise historical correlations. Cholesky fails. Explain why and give two fixes.",
+  "back": "Cholesky requires a strictly positive definite matrix. Pairwise-estimated correlation matrices are often indefinite: some eigenvalue is negative. A positive semi-definite but singular matrix (for example two series with correlation exactly 1) has a zero pivot, and plain Cholesky breaks down; pivoted LDL\\(^\\top\\) or an eigendecomposition is needed.<br>\nFixes:<br>\n<ul><li>Eigenvalue clipping: write \\(\\Sigma=V\\Lambda V^\\top\\), set negative eigenvalues to a small positive \\(\\varepsilon\\), rebuild, and rescale to unit diagonal. Simple, but not the nearest matrix.</li>\n<li>Higham's nearest correlation matrix via alternating projections, minimising the Frobenius distance subject to positive semi-definiteness and unit diagonal.</li></ul>\nThen simulate with the factor of the repaired matrix, \\(Z=LG\\) with \\(G\\) i.i.d. normals.\n<br><br><b>Interviewer follow-up:</b> does the repair change the answer? Answer: yes, the correlations shift slightly; measure the size of the perturbation and check it against the data uncertainty.",
+  "tags": [
+   "cholesky",
+   "correlation",
+   "linear_algebra"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For symmetric positive definite \\(\\Sigma\\), the Cholesky factor \\(L\\) satisfies \\(LL^\\top=\\Sigma\\), with \\(L\\) {{c1::lower triangular}}, and costs about {{c2::\\(n^3/3\\)}} flops. Correlated normals are generated as {{c3::\\(Z=LG\\)}} with \\(G\\) i.i.d. standard normals, so \\(\\mathrm{Cov}(Z)=\\Sigma\\).",
+  "back": "For correlated Brownian increments over a step \\(\\Delta t\\), use \\(\\Delta W=\\sqrt{\\Delta t}\\,LG\\). For a few drivers the factorisation cost is negligible next to path generation, so the real decision is PSD handling and stability, not speed.",
+  "tags": [
+   "cholesky",
+   "linear_algebra",
+   "simulation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You run PCA on daily changes of a ten-tenor government yield curve. Describe the typical level, slope and curvature factors, their rough variance shares, and two interpretation pitfalls.",
+  "back": "Typical loadings: PC1 (level) is roughly flat across tenors. PC2 (slope) is monotone from short to long. PC3 (curvature) is hump-shaped, with the belly moving against the wings.<br>\nVariance shares are approximate and depend on the sample and tenor set. Level usually dominates, often well above 80% of variance; slope is a further few percent to around 10%; curvature is typically a low single-digit percentage. Treat these as rules of thumb.<br>\nPitfalls:<br>\n<ul><li>Principal components are defined only up to sign and normalisation. Align signs before comparing factors across dates or regimes.</li>\n<li>PCA on yield levels is dominated by trend and regime changes. Use changes, and check whether the factor structure holds across regimes (for example near the lower bound, where the level variance changes).</li></ul>\n<br><b>Interviewer follow-up:</b> how would you use the factors for hedging? Answer: hedge the level with a duration-type instrument and the slope and curvature with paired instruments, and treat the residual outside the top three components as unhedged risk.",
+  "tags": [
+   "pca",
+   "yield_curve",
+   "factors"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the half-life of an Ornstein–Uhlenbeck process \\(dX_t=\\kappa(\\theta-X_t)\\,dt+\\sigma\\,dW_t\\), and show how to estimate it from a discrete AR(1) fit with coefficient \\(\\varphi\\) at step \\(\\Delta t\\).",
+  "back": "Conditional mean: \\(\\mathbb E[X_t]=\\theta+(X_0-\\theta)e^{-\\kappa t}\\). The gap to \\(\\theta\\) halves when \\(e^{-\\kappa t}=\\tfrac12\\), so \\(t_{1/2}=\\ln 2/\\kappa\\).<br>\nDiscrete: \\(X_{t+\\Delta t}=\\theta(1-\\varphi)+\\varphi X_t+\\epsilon\\) with \\(\\varphi=e^{-\\kappa\\Delta t}\\). Hence \\(\\kappa=-\\ln\\varphi/\\Delta t\\) and\n\\[t_{1/2}=\\frac{-\\ln 2}{\\ln\\varphi}\\,\\Delta t.\\]\nEquivalent regression of \\(\\Delta X\\) on \\(X\\): slope \\(b=\\varphi-1\\), so \\(\\kappa=-\\ln(1+b)/\\Delta t\\).<br>\nPitfall: the OLS estimate of \\(\\varphi\\) is biased downward in small samples. That biases \\(\\kappa\\) upward and the half-life short, so the estimated mean reversion looks faster than it is. Mean reversion requires \\(\\kappa>0\\), i.e. a stationary process.\n<br><br><b>Interviewer follow-up:</b> how do you use the half-life? Answer: as a rough holding-period scale for a spread trade. It is an approximate guide, not a precise forecast.",
+  "tags": [
+   "time_series",
+   "ou_process",
+   "mean_reversion"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Two I(1) series are cointegrated if a linear combination is I(0). In the Engle–Granger procedure, the residuals of the levels regression are tested with an ADF test, but against {{c1::Engle–Granger (MacKinnon) critical values}}, which are {{c2::more negative}} than the standard Dickey–Fuller values, because the residuals are estimated.",
+  "back": "Using standard Dickey–Fuller critical values over-rejects the null of no cointegration. For more than two series, the Johansen procedure tests multiple cointegrating vectors in a VAR, and results are sensitive to the lag choice and sample length.",
+  "tags": [
+   "time_series",
+   "cointegration",
+   "stationarity"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A Kalman filter tracks a time-varying hedge ratio \\(\\beta_t\\) between two assets. The state is \\(x_t=\\beta_t\\) following a random walk, and the observation is \\(y_t=H_t x_t+v_t\\) with \\(H_t\\) the regressor. Write the predict and update equations and interpret the Kalman gain.",
+  "back": "State: \\(x_t=x_{t-1}+w_t\\), \\(w\\sim N(0,Q)\\). Observation: \\(y_t=H_tx_t+v_t\\), \\(v\\sim N(0,R)\\).<br>\nPredict: \\(\\hat x_{t|t-1}=\\hat x_{t-1}\\), \\(P_{t|t-1}=P_{t-1}+Q\\).<br>\nUpdate: \\(K_t=P_{t|t-1}H_t^\\top(H_tP_{t|t-1}H_t^\\top+R)^{-1}\\), \\(\\hat x_t=\\hat x_{t|t-1}+K_t\\,(y_t-H_t\\hat x_{t|t-1})\\), \\(P_t=(I-K_tH_t)P_{t|t-1}\\).<br>\nInterpretation: \\(K_t\\) is the weight on new information. It is large when prior uncertainty is high relative to measurement noise \\(R\\). The ratio \\(Q/R\\) sets how quickly \\(\\beta\\) adapts: too high gives a noisy hedge, too low gives lag.\n<br><br><b>Interviewer follow-up:</b> how do you check the filter is consistent? Answer: the normalised innovations \\((y_t-H_t\\hat x_{t|t-1})/\\sqrt{S_t}\\), with \\(S_t=H_tP_{t|t-1}H_t^\\top+R\\), should look approximately \\(N(0,1)\\) and uncorrelated.",
+  "tags": [
+   "time_series",
+   "kalman",
+   "filtering"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the runtime cost of a C++ virtual call inside a pricing loop, and when does it actually matter? Mention what it blocks.",
+  "back": "A virtual call loads the vtable pointer from the object, indexes the function pointer and makes an indirect call. A well-predicted call costs a few nanoseconds.<br>\nCosts that matter: the compiler cannot inline across the call, so per-element work loses constant propagation and vectorisation. Objects scattered in memory add cache misses. Alternating types mispredict the indirect branch.<br>\nIt matters in tight loops over paths and time steps. It rarely matters at coarse granularity, such as per trade or per path batch.<br>\nMitigations: make the virtual call once per batch and loop inside; use templates or CRTP for static dispatch.\n<br><br><b>Interviewer follow-up:</b> why must a base-class destructor be virtual? Answer: deleting a derived object through a base pointer otherwise has undefined behaviour and skips the derived destructor.",
+  "tags": [
+   "cpp",
+   "virtual",
+   "performance"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compare std::unique_ptr, std::shared_ptr and raw owning pointers for a market-data object used by several pricers. Which should own it, what does shared_ptr cost, and what is the reference-cycle hazard?",
+  "back": "<ul><li>unique_ptr: single owner, move-only, no overhead beyond a raw pointer. The default choice.</li>\n<li>shared_ptr: shared ownership with an atomically updated reference count in a control block. Copies cost atomic increments, which contend across threads. std::make_shared allocates the object and control block together.</li>\n<li>Raw pointers: no ownership semantics. Use them only as non-owning observers.</li></ul>\nReference cycle: two objects holding shared_ptrs to each other never reach a zero count and leak. Break the cycle with a std::weak_ptr on one side.<br>\nFor market data shared by pricers: if the owner outlives its users, pass const references. Use shared_ptr<const T> only when the lifetime is genuinely shared.\n<br><br><b>Interviewer follow-up:</b> why not use shared_ptr everywhere? Answer: atomic reference counting in hot paths costs time, and it hides who owns the object.",
+  "tags": [
+   "cpp",
+   "smart_pointers",
+   "ownership"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "For a Monte Carlo path cache of 10 million doubles, why is traversing a std::vector<double> much faster than a std::list<double>, even though both traversals are O(n)?",
+  "back": "Both are O(n), but vector elements are contiguous. The hardware prefetcher works, each 64-byte cache line brings in 8 useful doubles, and SIMD and auto-vectorisation apply.<br>\nList nodes are allocated separately and linked by pointers. Each step is a dependent load (pointer chasing), usually a cache miss, with no vectorisation. Each node also carries two pointers of overhead.<br>\nInsertion: a list gives O(1) insertion given an iterator. A vector insertion is O(n) but moves memory with memmove, which is fast; for moderate n the vector usually wins even for middle insertions.<br>\nDefault to vector. Use list when you need stable iterators while splicing elements frequently.\n<br><br><b>Interviewer follow-up:</b> what about std::deque? Answer: contiguous blocks give O(1) push at both ends with good locality, but it is not contiguous overall, so SIMD over the whole sequence is weaker.",
+  "tags": [
+   "cpp",
+   "containers",
+   "cache"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compute the sample variance of a long series of prices near 100,000 with small spread. Why does the naive formula \\(\\mathbb E[x^2]-\\mathbb E[x]^2\\) fail numerically, and what does Welford's update do? The naive code is:\n<pre><code>double s = 0, s2 = 0;\nfor (double x : xs) { s += x; s2 += x*x; }\ndouble var = s2/n - (s/n)*(s/n);</code></pre>",
+  "back": "Catastrophic cancellation: \\(\\mathbb E[x^2]\\) and \\(\\mathbb E[x]^2\\) are both about \\(10^{10}\\), each carrying a rounding error of about \\(10^{10}\\times 2^{-53}\\approx 10^{-6}\\). If the true variance is around \\(10^{-2}\\), the subtraction leaves only a few correct digits.<br>\nWelford's update keeps a running mean \\(\\mu\\) and \\(M_2\\): with \\(\\delta=x-\\mu\\), set \\(\\mu\\leftarrow\\mu+\\delta/k\\) and \\(M_2\\leftarrow M_2+\\delta\\,(x-\\mu)\\). The variance is \\(M_2/(k-1)\\). It is one pass and numerically stable.<br>\nAlso use compensated (Kahan) or pairwise summation for very large n, and never compare doubles with ==.\n<br><br><b>Interviewer follow-up:</b> why does the MC price change when you change the summation order? Answer: floating-point addition is not associative. Parallel reductions must use a fixed reduction order if results have to be reproducible.",
+  "tags": [
+   "cpp",
+   "floating_point",
+   "numerics"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "On x86 the cache line is usually {{c1::64}} bytes. Two threads writing to different variables in the same cache line cause {{c2::false sharing}}, which serialises them through cache coherence. Fix it with per-thread accumulators aligned by {{c3::alignas(64)}}.",
+  "back": "Each write invalidates the line in the other core's cache, even though the variables are different. Alignment for SIMD is a separate concern: AVX 256-bit loads are best with 32-byte alignment. These are conventions and hardware-dependent, not guarantees.",
+  "tags": [
+   "cpp",
+   "memory_alignment",
+   "cache"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A pure-Python MC pricer loops over paths and takes 40 minutes. You want a large speedup in one afternoon. Compare vectorised NumPy, numba @njit and multiprocessing with respect to the GIL, memory, and where each breaks.",
+  "back": "GIL: only one thread executes Python bytecode at a time, so threads do not speed up pure-Python CPU loops. NumPy releases the GIL inside many C routines, but a Python-level loop over paths gets nothing from threads.<br>\n<ul><li>Vectorised NumPy: generate an \\(N\\times M\\) normal matrix, then use cumulative sums of log returns and exponentiation, with no Python loop over paths. Memory is \\(N\\times M\\) doubles, so process paths in chunks. Typically a large speedup over pure Python.</li>\n<li>numba @njit (nopython): compiles loops to machine code. It suits path-dependent logic with branching, such as American exercise, where vectorisation is awkward. Watch the first-call compile time, avoid passing Python objects, and seed the RNG inside the jitted code.</li>\n<li>multiprocessing: escapes the GIL with separate processes, at the cost of serialisation and per-process memory. Use independent streams (for example NumPy SeedSequence.spawn) so paths are not correlated.</li></ul>\n<br><b>Interviewer follow-up:</b> is a cumsum simulation enough for a Bermudan with regression? Answer: not by itself. The regression needs a backward pass over stored states, so plan the memory for that step.",
+  "tags": [
+   "python",
+   "numpy",
+   "numba"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Name four pandas pitfalls that silently produce wrong results or slow code in a risk or P&amp;L pipeline, and the fix for each.",
+  "back": "<ol><li>Index alignment: arithmetic between Series aligns on labels, so mismatched or duplicated labels give NaN or unexpected products. Fix: reindex explicitly and assert index equality before arithmetic.</li>\n<li>Chained assignment: <code>df[df.a&gt;0]['b']=1</code> may write to a temporary copy. Fix: <code>df.loc[mask,'b']=1</code>.</li>\n<li>iterrows or row-wise apply: a Python loop per row, far slower than column operations or <code>np.where</code>. Fix: vectorise on columns.</li>\n<li>Dtypes and missing data: integer columns become float when NaN appears, and <code>sum()</code> skips NaN by default, hiding missing trades. Fix: cast explicitly, validate nulls, and use <code>min_count</code> where missing data should raise an error.</li></ol>\n<br><b>Interviewer follow-up:</b> <code>groupby().apply</code> or <code>groupby().transform</code> for a group-level normalisation? Answer: transform returns a like-indexed result and is usually faster; apply can be slow and can reshape the output.",
+  "tags": [
+   "python",
+   "pandas",
+   "data_quality"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When would you choose a hash map over a balanced tree (std::unordered_map versus std::map) for a limit order book keyed by price? Give the complexities and failure modes.",
+  "back": "Hash map: average O(1) lookup, insert and delete, worst case O(n) under collisions. No ordering, so best bid and offer are not available without extra structure.<br>\nBalanced tree (std::map, red-black): O(log n) guaranteed for all operations. Supports ordered iteration, lower_bound and range queries, and best bid or offer as begin() or rbegin().<br>\nAn order book needs ordered price levels for best bid, offer and depth. Options are a tree, or a tick-indexed ladder when the price range is bounded (O(1) with a moving best index). A hash map suits order id to order lookup. Real systems often use both.<br>\nPitfalls: key prices as integer ticks, not doubles; equal prices that hash differently (for example -0.0 and 0.0) break lookups.\n<br><br><b>Interviewer follow-up:</b> how do you get best bid in O(1)? Answer: keep a cached best pointer updated on insert and delete, or use a bounded tick ladder with a moving best index.",
+  "tags": [
+   "data_structures",
+   "hashmap",
+   "order_book"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Given \\(n\\) trade intervals \\([s_i,e_i]\\), find the maximum number of intervals open at the same time. Give the algorithm, its complexity, and when it can be made linear.",
+  "back": "Sweep line: create events (\\(s_i,+1\\)) and (\\(e_i,-1\\)). Sort by time, with a stated tie rule (for half-open intervals, process ends before starts at the same time). Scan with a running count; the maximum is the answer.<br>\nComplexity: \\(O(n\\log n)\\), dominated by the sort, and \\(O(n)\\) for the scan.<br>\nIf the times are small bounded integers, a difference array or counting sort removes the sort and gives \\(O(n+T)\\), with \\(T\\) the time range.\n<br><br><b>Interviewer follow-up:</b> how does it change for a live stream of arrivals and departures? Answer: keep a running count with an ordered structure (a Fenwick tree over discretised times gives \\(O(\\log n)\\) per update and an \\(O(\\log n)\\) query of the maximum over a range).",
+  "tags": [
+   "algorithms",
+   "complexity",
+   "sweep_line"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the time complexity in \\(n\\) (length of xs) of this function, and what is the one-line fix?\n<pre><code>def dedupe(xs):\n    seen = []\n    out = []\n    for x in xs:\n        if x not in seen:\n            seen.append(x)\n            out.append(x)\n    return out</code></pre>",
+  "back": "\\(O(n^2)\\) in the worst case. The test <code>x not in seen</code> scans a list linearly, so when all elements are distinct the total is \\(\\sum_k O(k)=O(n^2)\\).<br>\nFix: use a set for membership, <code>seen = set()</code>, giving average \\(O(n)\\) overall, and keep <code>out</code> as a list to preserve order. The average O(1) assumes a good hash; unhashable elements raise an error.\n<br><br><b>Interviewer follow-up:</b> what if you sort first? Answer: \\(O(n\\log n)\\) to sort and then a linear pass. That also dedupes, but it loses the original order unless you carry indices.",
+  "tags": [
+   "complexity",
+   "python",
+   "data_structures"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Count inversions in an array of \\(n\\) integers (pairs \\(i<j\\) with \\(a_i>a_j\\)) in \\(O(n\\log n)\\). Outline the algorithm and why a naive double loop is too slow for \\(n=10^6\\).",
+  "back": "Naive double loop: \\(O(n^2)\\), about \\(5\\times10^{11}\\) comparisons for \\(n=10^6\\), which is too slow in practice.<br>\nMerge-sort-based counting: recursively split the array, count inversions within each half, then during the merge, when an element from the right half is placed before remaining left elements, add the number of remaining left elements. Recurrence \\(T(n)=2T(n/2)+O(n)\\) gives \\(O(n\\log n)\\).<br>\nAlternative: a Fenwick tree over compressed values, scanning left to right, adding the count of previously seen values greater than the current one, also \\(O(n\\log n)\\).\n<br><br><b>Interviewer follow-up:</b> what if the values are bounded integers and \\(n\\) is large? Answer: a Fenwick tree still works in \\(O(n\\log V)\\); with \\(V\\) small, it is essentially linear in practice.",
+  "tags": [
+   "algorithms",
+   "divide_and_conquer",
+   "complexity"
+  ]
+ }
+]

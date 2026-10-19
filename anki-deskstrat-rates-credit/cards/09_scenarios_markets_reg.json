@@ -1,0 +1,613 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>Mental math:</b> approximate DV01 of a 10y par interest rate swap on \\(£100\\text{m}\\) notional when the 10y par swap rate is 4.00%. Assume semi-annual fixed leg, annual-equivalent discounting consistent with the par rate.",
+  "back": "<b>Answer:</b> about \\(£82\\text{k}\\) per bp, i.e. roughly \\(£820\\) per bp per \\(£1\\text{m}\\).<br><br>\nDerivation: DV01 of the swap is set by the fixed-leg annuity (the floating leg has almost no rate sensitivity until its next reset, and at par its value is fixed by the discount curve, not the swap rate). With \\(\\tau = 0.5\\) and \\(y = 4\\%\\), 20 periods:<br>\n\\[ A = \\sum_{i=1}^{20} 0.5\\,(1.02)^{-i} = \\frac{1-(1.02)^{-20}}{0.04} \\approx \\frac{0.327}{0.04} \\approx 8.18 \\]\n\\[ \\text{DV01} \\approx N \\times A \\times 1\\text{bp} = 100{,}000{,}000 \\times 8.18 \\times 0.0001 \\approx £81{,}800 \\]\nRule of thumb: a 10y par rate-sensitive position has DV01 of about 8 times its notional times 1bp.<br><br>\n<b>Interviewer follow-up:</b> Why is a par 10y bond's DV01 almost the same? Because a par bond's modified duration equals the same annuity (principal is repaid at par and only discounts at the terminal date). They diverge through the swap-vs-government spread, the discount curve used for each leg, and the floating leg's residual DV01 to the next reset.",
+  "tags": [
+   "swaps",
+   "mental_math",
+   "dv01",
+   "duration"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Mental math:</b> a 5y gilt yields 4.50%, repo funding is 4.20%, modified duration is 4.5, and the curve is such that the 4.75y yield is 3bp lower. Over a 3-month horizon on a static curve, what yield rise (in bp) wipes out carry plus roll-down?",
+  "back": "<b>Answer:</b> about \\(4.7\\)bp of yield rise over 3 months.<br><br>\nCarry (price-terms return over 0.25y): \\((4.50\\% - 4.20\\%) \\times 0.25 = 0.075\\%\\) = 7.5bp.<br>\nRoll-down (price gain as the bond rides to 4.75y at a constant curve): \\(D \\times 3\\text{bp} = 4.5 \\times 3 = 13.5\\)bp.<br>\nTotal cushion: \\(7.5 + 13.5 = 21\\)bp.<br>\nBreakeven: \\(\\Delta y_{BE} = \\dfrac{\\text{carry} + \\text{roll}}{D} = \\dfrac{21}{4.5} \\approx 4.7\\)bp.<br><br>\nCaveats: carry is on dirty price, convexity is ignored, and the roll assumes a static curve. Roll-down is often the larger term when the curve is steep at the point being rolled.<br><br>\n<b>Interviewer follow-up:</b> Why does a 3-month breakeven of about 5bp look small, yet in practice this is still the binding constraint? Because the realised 3-month vol of a 5y yield is often several times larger than 5bp, so the trade needs a view on the direction of the curve, not just on the carry.",
+  "tags": [
+   "carry",
+   "roll_down",
+   "breakeven",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Mental math:</b> DV01-neutral and cash-neutral 2s5s10s butterfly with a \\(100\\) notional 5y belly. Approximate modified durations: 2y \\(\\approx 1.9\\), 5y \\(\\approx 4.5\\), 10y \\(\\approx 8.2\\). Find the wing notionals.",
+  "back": "<b>Answer:</b> about \\(59\\) in 2y and \\(41\\) in 10y (long fly = long \\(100\\) 5y, short \\(59\\) 2y, short \\(41\\) 10y).<br><br>\nCash neutral: \\(w_2 + w_{10} = 100\\).<br>\nDV01 neutral: \\(1.9\\,w_2 + 8.2\\,w_{10} = 4.5 \\times 100 = 450\\).<br>\nSubstituting \\(w_{10} = 100 - w_2\\): \\(1.9 w_2 + 820 - 8.2 w_2 = 450\\), so \\(w_2 = 370/6.3 \\approx 58.7\\) and \\(w_{10} \\approx 41.3\\).<br>\nCheck: \\(58.7 \\times 1.9 + 41.3 \\times 8.2 \\approx 111.5 + 338.7 \\approx 450\\).<br><br>\nThe 2y wing carries more notional because it has less duration per unit of notional.<br><br>\n<b>Interviewer follow-up:</b> Why is a DV01-neutral fly still exposed to curve moves? Because it is only first-order neutral. The 10y wing has more convexity per unit of DV01, so the fly has residual curvature exposure. Hedging it fully requires a PCA-style check against level, slope and curvature factors, not just DV01 matching.",
+  "tags": [
+   "butterfly",
+   "dv01",
+   "curve",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Scenario/mental math:</b> a Japanese (JPY-based) investor buys a 10y US Treasury yielding 4.20% and hedges the USD exposure back to JPY with rolling 3-month FX forwards. 3m SOFR is about 4.00%, 3m JPY rate about 0.50%, and the 10y JGB yields about 1.30%. What is the approximate hedged yield, and how does the cross-currency basis change it?",
+  "back": "<b>Answer:</b> about \\(0.7\\%\\) before basis, roughly \\(0.5\\%\\) with a \\(-20\\)bp basis, well below the JGB yield.<br><br>\nCovered interest parity approximation: hedged yield \\(\\approx y_{\\text{foreign}} - (r_{\\text{USD}} - r_{\\text{JPY}})\\).<br>\n\\[ 4.20\\% - (4.00\\% - 0.50\\%) = 0.70\\% \\]\nThe investor sells USD forward. Because USD rates are higher, USD trades at a forward discount, so each roll gives back the rate differential. This is the forward-points cost.<br><br>\nCross-currency basis: the synthetic USD rate obtained through FX swaps can deviate from SOFR. For a JPY-based investor who is effectively borrowing USD synthetically in the hedge, a negative basis (USD scarcity) makes the hedge more expensive, so hedged yield falls by roughly the basis size (illustrative: -20bp gives about 0.5%).<br><br>\n<b>Interviewer follow-up:</b> Why does the basis exist when CIP is a no-arbitrage relation? Balance-sheet and capital costs of intermediating FX swaps (the leverage ratio and bank netting limits) mean the arbitrage is not free. Sign and size vary with which side of the swap the investor is on, so state the convention explicitly and avoid assuming a single sign.",
+  "tags": [
+   "fx_hedging",
+   "cross_currency_basis",
+   "covered_interest_parity",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Mental math:</b> a \\(£10\\text{m}\\) notional 5y CDS, protection bought at a 100bp running spread, recovery 40%. Approximate the CS01 and the jump-to-default (JTD) of the position.",
+  "back": "<b>Answer:</b> CS01 about \\(£4.5\\text{k}\\) per bp; JTD about \\(+£6\\text{m}\\) for the protection buyer, less a small accrued premium.<br><br>\nCS01 = notional \\(\\times\\) risky annuity (RPV01) \\(\\times\\) 1bp. For a 5y CDS at 100bp the risky annuity is about \\(4.5\\)–\\(4.6\\), so:<br>\n\\[ \\text{CS01} \\approx 10{,}000{,}000 \\times 4.5 \\times 0.0001 = £4{,}500 \\text{ per bp} \\]\nJTD (buyer of protection gains on default): \\(N(1-R) = 10 \\times 0.6 = £6\\text{m}\\), net of accrued premium at default.<br>\nCredit triangle sanity check: hazard rate \\(\\lambda \\approx s/(1-R) = 100/0.6 \\approx 167\\)bp per year.<br><br>\n<b>Interviewer follow-up:</b> Why is CS01 for a protection buyer negative? Because the buyer's MTM rises when spreads widen, so under the convention where CS01 is the change in MTM for +1bp, the buyer's sensitivity is negative. Its JTD is the opposite sign of a long-bond position's.",
+  "tags": [
+   "credit",
+   "cds",
+   "cs01",
+   "jtd",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A rates normal vol of \\(100\\)bp per year is about {{c1::6.3bp per day}}, from \\( \\sigma_\\text{day} = \\sigma_\\text{yr} / \\sqrt{252} \\). Over 10 trading days the same vol gives about {{c2::20bp}} (\\(100 \\times \\sqrt{10/252}\\)).",
+  "back": "Convention: rates desks usually use \\(\\sqrt{252}\\) for trading-day scaling, and normal (Bachelier) vol in bp, not lognormal vol. Interviewers often follow up on whether a 1-sigma move at 100bp vol over one month is about \\(100 \\times \\sqrt{1/12} \\approx 29\\)bp.",
+  "tags": [
+   "vol",
+   "normal_vol",
+   "mental_math",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Scenario/mental math:</b> a 2s10s steepener is DV01-neutral and set up with \\(£82\\text{k}\\) per bp of DV01 on each leg (about \\(£100\\text{m}\\) of 10y and \\(£431\\text{m}\\) of 2y face). The 2s10s spread moves from 60bp to 90bp because the 2y yield falls 10bp and the 10y yield rises 20bp. What is the P&L (ignoring carry, roll and convexity)?",
+  "back": "<b>Answer:</b> about \\(+£2.46\\text{m}\\).<br><br>\nLong 2y, short 10y, DV01-neutral. Price P&L on a bond is \\(-\\text{DV01} \\times \\Delta y\\), so:<br>\n\\[ \\text{P\\&L} = -\\text{DV01}_2 \\,\\Delta y_2 + \\text{DV01}_{10}\\,\\Delta y_{10} = \\text{DV01} \\times (\\Delta y_{10} - \\Delta y_2) \\]\n\\[ = 82\\text{k} \\times (20 - (-10)) = 82\\text{k} \\times 30 \\approx £2.46\\text{m} \\]\nThe 2y leg P&L from the 10bp rally is about \\(+£0.82\\text{m}\\), and the 10y short from the 20bp sell-off is about \\(+£1.64\\text{m}\\).<br><br>\n<b>Interviewer follow-up:</b> Why is a DV01-neutral steepener not curve-neutral? The 2y leg is much larger in face value, so the position is cash-heavy and the carry, roll and convexity differ by leg. In a sell-off the 10y leg's higher convexity and roll can dominate, so state the convexity and carry line.",
+  "tags": [
+   "steepener",
+   "curve",
+   "pnl",
+   "dv01",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Mental math:</b> a portfolio has a DV01 of \\(£60{,}000\\) per bp. Hedge with 10y gilt futures. The CTD has clean price 110, modified duration 6.0 and conversion factor 1.10. Contract face is \\(£100{,}000\\). How many contracts, and in which direction?",
+  "back": "<b>Answer:</b> sell about \\(1{,}000\\) contracts.<br><br>\nDV01 of the CTD per \\(£100\\) face \\(= 110 \\times 6.0 \\times 0.0001 = £0.066\\). Per \\(£100{,}000\\) face: \\(£66\\) per bp.<br>\nFutures price moves by \\(\\Delta P_\\text{CTD} / CF\\), so the futures DV01 is \\(66 / 1.10 = £60\\) per contract per bp.<br>\nNumber of contracts \\(= 60{,}000 / 60 = 1{,}000\\), short (the portfolio is long duration).<br><br>\n<b>Interviewer follow-up:</b> What breaks this hedge? A CTD switch changes both the futures' duration and conversion factor. The hedge ratio should be updated for the CTD's actual yield beta, and the delivery option (wildcard and end-of-month) adds value that a pure DV01 hedge ignores.",
+  "tags": [
+   "futures",
+   "hedge_ratio",
+   "ctd",
+   "gilts",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Mental math:</b> 1-month at-the-money swaption straddle on a 1m forward rate where normal vol is 100bp/yr. Approximate the straddle premium in bp, the 1-sigma move over the option's life, and the break-even move if you hold to expiry.",
+  "back": "<b>Answer:</b> premium about \\(23\\)bp; 1-sigma over the option's life about \\(29\\)bp; you need about a \\(0.8\\)-sigma move to break even.<br><br>\nNormal-model ATM call price \\(= \\sigma\\sqrt{T}\\,\\varphi(0) \\approx 0.399\\,\\sigma\\sqrt{T}\\). A straddle is twice that: \\(\\approx 0.798\\,\\sigma\\sqrt{T}\\).<br>\n\\(\\sigma\\sqrt{T} = 100 \\times \\sqrt{1/12} \\approx 28.9\\)bp, so the premium is \\(0.798 \\times 28.9 \\approx 23\\)bp.<br>\nBreak-even at expiry: the absolute rate move must exceed the premium, about \\(23/28.9 \\approx 0.8\\) of a standard deviation.<br><br>\nDelta-hedged, the P&L is roughly the gamma term \\(\\tfrac12\\Gamma(\\text{realised}^2 - \\text{implied}^2)\\) per unit time, so the trade is a bet on realised normal vol exceeding implied.<br><br>\n<b>Interviewer follow-up:</b> Why do desks quote straddles in terms of \\(\\sigma\\sqrt{T}\\)? Because the ATM normal price is linear in \\(\\sigma\\sqrt{T}\\) and the \\(0.8\\) factor is \\(2\\varphi(0)\\). It makes the vol-to-premium conversion a one-line mental calculation.",
+  "tags": [
+   "options",
+   "straddle",
+   "normal_vol",
+   "breakeven",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Scenario:</b> Bank Rate is priced at 4.00% for the next meeting and the MPC delivers an unexpected 25bp hike with no change to forward guidance. You hold a receiver book of \\(£1\\text{bn}\\) 2y SONIA swaps (DV01 about \\(£190\\text{k}\\) per bp). Walk through the reaction across SONIA swaps, gilts, sterling, and the curve, and estimate the immediate loss if the 2y swap rate reprices 20bp.",
+  "back": "<b>Answer:</b> the receiver loses about \\(£3.8\\text{m}\\) (\\(190\\text{k} \\times 20\\)); the curve bear-flattens and sterling typically firms.<br><br>\nMechanism:\n<ul>\n<li><b>Swap rates:</b> a fixed rate is the expected average compounded SONIA over its life. A surprise moves the near-term path immediately, but the average over 2y moves by less than 25bp unless the market reads the hike as persistent. Here the 2y reprices by the persistent portion, plausibly 15–20bp.</li>\n<li><b>Curve:</b> the short end absorbs most of the shock. The 10y moves less, so the curve bear-flattens. A credibility-signalling hike can push the term premium lower.</li>\n<li><b>Gilts:</b> front-end gilts track SONIA expectations, and the gilt-SONIA spread can move separately if supply or demand is different at the front.</li>\n<li><b>FX:</b> a surprise hike usually supports sterling through rate differentials.</li>\n</ul>\n<b>Interviewer follow-up:</b> Why is the loss not simply 25bp times DV01? Because the swap rate reflects the average expected path over the life of the trade, not just the policy rate today. A one-off hike that the market believes is transitory only shifts the 2y rate by a fraction of 25bp.",
+  "tags": [
+   "boe",
+   "sonia",
+   "scenario",
+   "rates",
+   "curve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Scenario:</b> US eSLR (or an equivalent leverage-ratio relief) is loosened. What happens to the 10y swap spread (SOFR swap rate minus the 10y Treasury yield), and why? Give the mechanism, not just the sign.",
+  "back": "<b>Answer:</b> the 10y swap spread should move up (less negative), as Treasuries richen relative to swaps. The size is contested and only partly priced ahead of time.<br><br>\nMechanism:\n<ol>\n<li>Dealers hold Treasury inventory and finance it in repo. Both count in the leverage exposure measure, so when the leverage ratio binds, the marginal cost of carrying Treasury inventory is high.</li>\n<li>When dealers are constrained, they do not absorb Treasury supply or hedge flows at tight prices. Treasuries cheapen (higher yield), and the swap spread becomes more negative.</li>\n<li>Relief lowers the marginal balance-sheet cost of Treasury inventory, so dealers absorb more of it and Treasury yields fall relative to swaps. The swap spread rises.</li>\n</ol>\nSwap positions also use balance sheet, but the leverage charge is on derivative exposure, which is usually small relative to gross notional. The effect is therefore asymmetric across the curve, and it is larger in the long end where pension hedging demand is concentrated.<br><br>\n<b>Interviewer follow-up:</b> Why might the spread not move on announcement? Because the binding constraint is at quarter-ends and on the average-balance measure. Dealers only fully respond when the constraint binds, so the market reprices the expected average, not the headline ratio.",
+  "tags": [
+   "swap_spreads",
+   "slr",
+   "leverage_ratio",
+   "scenario",
+   "treasuries"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Scenario:</b> a volatility spike hits rates markets and CCP initial margin rises sharply across the book. Explain the dynamics: how margin scales with vol, why this is a liquidity shock rather than a loss, and the feedback loop that follows.",
+  "back": "<b>Answer:</b> initial margin (IM) is a stressed VaR-type quantity, so IM rises roughly in proportion to vol and exposure. A doubling of vol roughly doubles IM on a linear book, creating a same-day cash call with no change in MTM.<br><br>\nDynamics:\n<ol>\n<li><b>IM scaling:</b> \\(\\text{IM} \\propto \\sigma \\times \\text{DV01} \\times \\sqrt{h}\\times z\\), with a 99% quantile and a stressed look-back in practice. Option gamma makes the relation non-linear.</li>\n<li><b>Variation margin:</b> daily MTM losses are paid in cash, so a sell-off adds VM on top of IM.</li>\n<li><b>Funding:</b> participants raise cash by selling liquid assets (gilts, Treasuries) or unwinding basis trades, so prices fall and volatility rises.</li>\n<li><b>Feedback:</b> lower prices and higher vol raise IM again. This is the procyclicality that CCP risk models are designed to limit through buffers and stress add-ons.</li>\n</ol>\n<b>Interviewer follow-up:</b> How would you limit a desk's exposure to this? Pre-fund a liquidity buffer sized to a stressed IM scenario, term-finance long-dated positions, and avoid concentrated exposure to the same liquidity source (for example, repo financing the same basis trade).",
+  "tags": [
+   "ccp",
+   "margin",
+   "liquidity",
+   "vol",
+   "scenario"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Scenario:</b> describe the mechanism of the September 2022 UK LDI gilt crisis. Cover the trigger, the leverage channel, the feedback loop, and the policy response.",
+  "back": "<b>Answer:</b> a fiscal shock caused a sharp rise in long gilt yields, collateral calls on leveraged LDI funds forced sales, and forced sales pushed yields higher still until the Bank of England intervened.<br><br>\n<ol>\n<li><b>Trigger:</b> an unfunded fiscal announcement (the late-September 2022 mini-budget) moved long gilt yields by very large amounts in a few days.</li>\n<li><b>Leverage channel:</b> pension schemes used LDI funds to hedge liability duration. The funds were levered through gilt repo and interest rate swaps, so a given DV01 required less cash but more collateral. Yield rises generated mark-to-market losses on the derivative and repo legs.</li>\n<li><b>Feedback loop:</b> losses triggered variation-margin and repo-margin calls. Funds sold gilts to raise cash, which pushed prices lower and yields higher, creating more calls.</li>\n<li><b>Policy response:</b> the Bank of England announced a temporary purchase facility for long-dated gilts (announced 28 September, ended mid-October 2022) and paused its planned active gilt sales. Dates approximate.</li>\n</ol>\nWhy the long end: the highest-duration bonds moved the most and carried the largest hedge notional, so collateral calls scaled with both DV01 and yield moves.<br><br>\n<b>Interviewer follow-up:</b> What are the lessons for a desk? Model collateral calls under a stress path (not a static VaR), monitor concentration in long-dated repo and swap collateral, and check that CCP and bilateral margin terms are compatible with a fast-moving curve.",
+  "tags": [
+   "ldi",
+   "gilts",
+   "liquidity",
+   "boe",
+   "scenario",
+   "pensions"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Scenario:</b> you are short 10y gilt futures and long cash gilts (a long-basis trade). Yields rally 30bp and a different gilt becomes the CTD. What happens to your hedge and the basis P&L?",
+  "back": "<b>Answer:</b> the futures reprice to the new CTD, so the futures DV01 changes and the hedge is now mis-sized; the basis moves against you if the old CTD was cheap.<br><br>\nMechanism:\n<ul>\n<li><b>Futures repricing:</b> the futures price tracks the CTD's conversion-adjusted price. When the CTD changes, the futures' DV01 changes to the new bond's duration divided by its conversion factor. A DV01 hedge set on the old CTD is no longer right.</li>\n<li><b>Basis:</b> gross basis is cash price minus CF times futures price. Before the switch, the old CTD had the lowest implied repo (its basis was cheapest). After the switch the old CTD becomes richer or cheaper relative to the new one, so a long-basis position can lose on the switch even if the outright duration is right.</li>\n<li><b>Options:</b> the delivery option (choice of bond and delivery date) has value to the short. A switch increases that value.</li>\n</ul>\n<b>Interviewer follow-up:</b> How would you measure switch risk? Compute the basis for each deliverable bond and the futures DV01 for each delivery scenario across yield shifts. Then check which bond wins in each scenario, not just at current yields.",
+  "tags": [
+   "ctd",
+   "futures",
+   "basis",
+   "gilts",
+   "scenario"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Scenario:</b> in March 2020, Treasury cash-futures basis blew out. Describe the mechanism: who was positioned, what forced the unwind, and what happened to repo and cash prices.",
+  "back": "<b>Answer:</b> leveraged investors who were long cash Treasuries and short futures (a long-basis trade) were forced to unwind when repo funding became expensive and margin requirements rose. Cash Treasuries cheapened relative to futures.<br><br>\nMechanism:\n<ol>\n<li><b>Position:</b> basis traders earned the gap between bond yield and repo rate, with futures used to hedge duration. The trade was levered through repo, so funding cost was key.</li>\n<li><b>Shock:</b> dash for cash raised repo rates, and dealers tightened haircuts. The positive carry turned negative.</li>\n<li><b>Forced selling:</b> margin calls on futures and repo drove sales of cash bonds into a market with limited dealer balance-sheet capacity (leverage and SLR constraints bound).</li>\n<li><b>Price impact:</b> cash yields rose relative to futures. Central bank asset purchases and facilities restored dealer capacity and repo functioning.</li>\n</ol>\n<b>Interviewer follow-up:</b> Why does the basis not converge in a stress? Arbitrage needs balance sheet, and the arbitrageurs are the constrained balance sheets. A basis gap is therefore a measure of the marginal cost of intermediation, not a free arbitrage.",
+  "tags": [
+   "basis",
+   "treasuries",
+   "repo",
+   "liquidity",
+   "scenario"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Scenario:</b> a credit index rolls to a new on-the-run series. Explain what changes in the old and new series, why the old series' spread and price can diverge, and how a trader executes a roll.",
+  "back": "<b>Answer:</b> the on-the-run series is re-set with a new constituent basket and a fresh 5y maturity. Positions in the old series are rolled to the new series, and the spread difference reflects the maturity, constituent and liquidity differences.<br><br>\nMechanism:\n<ul>\n<li><b>Roll dates:</b> major CDS indices (for example CDX and iTraxx) roll semi-annually, in March and September. The new series has a fresh 5y tenor and a standard fixed coupon (100bp for IG, 500bp for HY).</li>\n<li><b>Constituents:</b> defaulted and downgraded names are removed, and the basket is refreshed. The new series' spread is therefore not the old spread rolled forward.</li>\n<li><b>Old series:</b> once the new series is on-the-run, liquidity moves to it. The old series trades less, and the old-vs-new spread difference reflects both the maturity change (about 6 months shorter for the old series) and the basket change.</li>\n<li><b>Execution:</b> a roll trade is a DV01- or CS01-matched switch: sell the old series and buy the new (or the reverse), priced at the spread difference. Upfront-to-running conversion is needed because coupons are fixed.</li>\n</ul>\n<b>Interviewer follow-up:</b> Why does the index trade rich or cheap to its single names around the roll? Index-vs-basket basis reflects supply and demand for index risk and hedge flows. It is usually compared against the sum of single names' CDS, adjusted for the index's constituent-level weights.",
+  "tags": [
+   "credit",
+   "cds_index",
+   "roll",
+   "convention",
+   "scenario"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Scenario:</b> a sovereign is downgraded by one notch, from A to A-, staying investment grade. What happens to its CDS, bond yields, repo eligibility, index membership and bank risk-weights? Which effects are mechanical and which are discretionary?",
+  "back": "<b>Answer:</b> the spread rises through the rating-linked demand shift, which is mostly price-driven. Mechanical effects come from rules: rating-triggered haircuts, collateral eligibility, and index or mandate thresholds. Discretionary effects come from investors' own limits.<br><br>\nMechanism:\n<ul>\n<li><b>Spreads:</b> sovereign CDS and cash yields move in the same direction, with basis reflecting funding and liquidity. A one-notch move is usually a modest repricing unless it crosses a threshold.</li>\n<li><b>Cliffs:</b> the most damaging moves are threshold crossings. A downgrade below investment grade can trigger forced selling by mandates with IG floors, and index exits.</li>\n<li><b>Collateral:</b> central-bank and CCP eligibility is often rating-linked, so haircuts can rise, with repo financing costs up for holders.</li>\n<li><b>Bank capital:</b> standardised risk-weights for sovereign exposures depend on the rating, so bank holders can face higher capital requirements.</li>\n</ul>\n<b>Interviewer follow-up:</b> Why does a downgrade sometimes have little price effect? When the market has priced the risk through CDS, or the rating agency's action was expected, the move is already in the price. The informative move is in the threshold rules and collateral changes, not the rating letter itself.",
+  "tags": [
+   "sovereign",
+   "ratings",
+   "collateral",
+   "scenario",
+   "credit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Scenario:</b> a central bank announces a faster quantitative tightening (QT) path, running off longer-dated bonds more quickly. What happens to the curve, term premium, swap spreads and repo, and why is the sign of the front-end effect not obvious?",
+  "back": "<b>Answer:</b> the long end cheapens through a higher term premium, so the curve bear-steepens at the long end, while the front end is anchored by policy expectations. Swap spreads and repo tighten if reserves get scarce.<br><br>\nMechanism:\n<ul>\n<li><b>Duration supply:</b> QT moves duration from the central bank to the private sector. Investors need extra compensation for holding it, so the term premium rises mostly at the long end.</li>\n<li><b>Front end:</b> the policy rate path, set by the central bank, governs the front end. QT alone has little effect unless it changes the expected policy path.</li>\n<li><b>Reserves and repo:</b> reserves fall as QT runs off. Repo rates can rise relative to the policy rate if reserves become scarce, pushing funding costs and swap spreads.</li>\n<li><b>Sign ambiguity:</b> QT can lower front-end rates if it is read as a signal of a loosening path, or raise them if it is read as tightening. The announcement and actual sales have different effects.</li>\n</ul>\n<b>Interviewer follow-up:</b> Why does QT not produce a parallel move in yields? Because the effect is a supply shock concentrated where the central bank holds the most duration, so the term premium moves more than the expected policy path.",
+  "tags": [
+   "qt",
+   "term_premium",
+   "central_bank",
+   "scenario",
+   "curve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Scenario:</b> a UK CPI print comes in 0.4pp above consensus. Walk through the effect on breakevens, nominal and real yields, and linkers, including the indexation lag.",
+  "back": "<b>Answer:</b> short-dated breakevens and index-linked yields respond to the print mainly through the indexation mechanism. Nominal yields move through the policy reaction, so the real-yield response depends on whether the market expects the Bank to react.<br><br>\nMechanism:\n<ul>\n<li><b>Indexation lag:</b> UK index-linked gilts use a 3-month lag (with older bonds at 8 months). A CPI or RPI surprise affects linker cash flows months later, so the near-term effect is in the inflation-swap curve, not the linkers' current coupons.</li>\n<li><b>Breakevens:</b> the front-end breakeven (inflation swap or nominal-less-real) rises as realised inflation is revised upward. The longer end moves less if the market expects the surprise to be temporary.</li>\n<li><b>Real yields:</b> if the market expects a policy response, real yields rise and the nominal yield moves up by more than breakevens.</li>\n<li><b>Long-run:</b> UK RPI is to be aligned with CPIH from 2030 (set in the 2020 decision), which reduces RPI-linked uplift over time.</li>\n</ul>\n<b>Interviewer follow-up:</b> Why would a surprise lower a short-dated breakeven? Seasonality and lag: a surprise in a month can reverse if the next print is weaker, and linker carry depends on the index ratio path.",
+  "tags": [
+   "inflation",
+   "breakevens",
+   "linkers",
+   "uk",
+   "scenario"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Scenario:</b> a new-issue sovereign or corporate bond comes at a concession. What is the new-issue concession (NIC), why does it exist, and how does it decay after pricing? Give approximate magnitudes and the signals a trader uses.",
+  "back": "<b>Answer:</b> the NIC is the spread by which a new bond prices cheap to the secondary curve or to comparable existing bonds. It compensates the buyer for supply and price discovery. It typically decays as the bond is placed and traded.<br><br>\nMechanism:\n<ul>\n<li><b>Supply:</b> a large new issue needs the book to absorb it, so the issuer and underwriter price for demand. Sovereign NICs are usually small; corporate and emerging-market NICs are larger.</li>\n<li><b>Price discovery:</b> new-issue spreads are set by the order book, so the bond can misprice relative to a curve if the book is thin.</li>\n<li><b>Decay:</b> once the bond is placed and trades, the concession tightens towards the curve. Trading out of the new-issue premium is the usual flow signal.</li>\n<li><b>Signals:</b> book cover and the final spread vs initial price talk indicate how much concession was needed. Large order books usually mean tighter pricing.</li>\n</ul>\n<b>Interviewer follow-up:</b> Why might a dealer not want to buy the whole new issue? It is an inventory position that sits cheap to the curve and may not be liquid. Taking allocation is a bet on the decay, which is paid for by the NIC.",
+  "tags": [
+   "new_issue",
+   "primary",
+   "concession",
+   "supply",
+   "scenario"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Desk strat:</b> what are client axes, where do they come from, and how do they feed pricing tools? What information should an axe engine hold to be useful?",
+  "back": "<b>Answer:</b> an axe is a stated or inferred desire by a dealer or client to buy or sell a risk at a given level or size. It is a signal of inventory need, not a view on the price.<br><br>\nSources:\n<ul>\n<li><b>Client axes:</b> the client indicates interest in a bond or swap, or a quote shows a pattern.</li>\n<li><b>Dealer axes:</b> the desk's own inventory and risk-limit usage, which decides whether it wants to buy or sell.</li>\n<li><b>Market-wide axes:</b> data from venues and internal flow showing where the street is positioned.</li>\n</ul>\nUseful axe engine: client-level position and historical trading direction, inventory by risk factor (DV01, CS01 by bucket), risk-limit headroom, and a decay rule so stale axes lapse. The output is a skew applied to mids.<br><br>\n<b>Interviewer follow-up:</b> What makes an axe valuable? Its information is about the counterparty's need to trade. An axe that is stale or driven by a hedging need, not a view, is worth less. Attribution should separate client-driven flow from directional flow.",
+  "tags": [
+   "axes",
+   "pricing",
+   "flow",
+   "desk_strat",
+   "client"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Desk strat:</b> you already hold a \\(£500\\text{m}\\) long position in 10y swaps (DV01 about \\(£410\\text{k}\\) per bp). A client wants to sell you \\(£100\\text{m}\\) of 10y risk (DV01 about \\(£82\\text{k}\\) per bp), which adds to your long duration. How do you skew the quote?",
+  "back": "<b>Answer:</b> you are already long, so you skew the mid down and quote a lower bid (you pay less for the risk) and a correspondingly lower offer. The skew is proportional to the inventory cost you take on, not just the bid-offer.<br><br>\nLogic:\n<ul>\n<li>Inventory-skewed mid: \\(\\text{mid}_\\text{adj} = \\text{mid} - \\gamma \\, q \\, \\sigma^2 (T - t)\\) (Avellaneda-Stoikov form, \\(q\\) = inventory). A long book pushes the mid down.</li>\n<li>The trade takes your long DV01 from about \\(£410\\text{k}\\) to about \\(£492\\text{k}\\) per bp, so the inventory cost rises by about 20%. The skew must compensate for that, not just the spread.</li>\n<li>If the same trade reduced your DV01 (a client buying from you), a tighter quote would be justified.</li>\n</ul>\n<b>Interviewer follow-up:</b> When would you refuse the trade? When the client is informed, which shows up as adverse markouts after similar trades. Price the trade for the expected markout, not just the inventory.",
+  "tags": [
+   "axes",
+   "inventory",
+   "skew",
+   "quoting",
+   "desk_strat"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Desk strat:</b> what is TCA for rates and credit, what is a markout, and how does a desk use markouts to tier clients and decide pricing?",
+  "back": "<b>Answer:</b> transaction cost analysis (TCA) measures execution quality against benchmarks. A markout is the price move after a trade, measured from the trade price to the mid at a later horizon, typically 1 second to 5 minutes. It shows whether the client's trade predicted the market.<br><br>\nDefinitions:\n<ul>\n<li><b>Slippage / spread capture:</b> trade price vs mid at trade time. Measures the cost paid.</li>\n<li><b>Markout:</b> sign-adjusted change from trade price to mid at horizon \\(h\\). Positive for the dealer means the client's flow was not informative, negative means the client traded ahead of a move.</li>\n<li><b>Tiering:</b> average markout by client, horizon and product. Persistently negative markouts indicate informed flow, so the client gets wider quotes or a smaller size.</li>\n</ul>\n<b>Interviewer follow-up:</b> How do you separate informed flow from a dealer's own hedging delay? Compare markouts across horizons and against a benchmark of unrelated trades in the same market. A hedging delay shows up as a short-horizon effect; information shows up over longer horizons.",
+  "tags": [
+   "tca",
+   "markouts",
+   "adverse_selection",
+   "flow",
+   "desk_strat"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Desk strat:</b> state the Avellaneda-Stoikov market-making model. Give the reservation price and optimal spread, and explain what each parameter represents.",
+  "back": "<b>Answer:</b> the dealer quotes around a reservation price that shifts with inventory, and sets a spread that rises with risk aversion, volatility and time to horizon, and falls with order-arrival intensity.<br><br>\nSetup: mid \\(s_t\\) follows a Brownian motion with vol \\(\\sigma\\). Inventory \\(q\\) changes with fills. Fills arrive at intensity \\(\\lambda(\\delta) = A e^{-\\kappa \\delta}\\), where \\(\\delta\\) is the quote distance from mid. The dealer maximises expected CARA utility of terminal wealth with risk aversion \\(\\gamma\\).<br>\n\\[ r(s,q,t) = s - q\\,\\gamma\\,\\sigma^2 (T - t) \\]\n\\[ \\delta^a + \\delta^b \\approx \\gamma\\,\\sigma^2 (T-t) + \\frac{2}{\\gamma}\\ln\\!\\left(1 + \\frac{\\gamma}{\\kappa}\\right) \\]\nInterpretation: a long inventory lowers the reservation price, so the dealer is more willing to sell. The spread widens with \\(\\gamma\\) and \\(\\sigma^2\\) and shrinks as \\(T-t\\) falls. \\(\\kappa\\) is how quickly fill probability falls as the quote moves away from mid.<br><br>\n<b>Interviewer follow-up:</b> Why does the inventory term scale with \\(\\sigma^2\\)? Inventory risk is variance times position size, so higher vol makes the same inventory costlier, and the dealer offloads faster. The model is stylised: it ignores client heterogeneity and the adverse selection of informed fills.",
+  "tags": [
+   "market_making",
+   "inventory",
+   "avellaneda_stoikov",
+   "quoting",
+   "desk_strat"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Desk strat:</b> state the Almgren-Chriss optimal execution problem at the mechanism level. What trade-off does the risk-aversion parameter control, and what is the shape of the optimal trajectory?",
+  "back": "<b>Answer:</b> you sell a position \\(X\\) over horizon \\(T\\). Trading faster lowers price-risk exposure but raises temporary market impact. The optimal trajectory front-loads more when risk aversion is high or vol is high, and is closer to linear when impact is high.<br><br>\nModel: temporary impact \\(\\eta\\) per unit trading rate, permanent impact \\(\\gamma\\), price vol \\(\\sigma\\). Minimise expected cost plus \\(\\lambda\\) times the variance of cost.<br>\nOptimal inventory path:\n\\[ x(t) = X \\,\\frac{\\sinh\\!\\big(\\kappa (T - t)\\big)}{\\sinh(\\kappa T)}, \\qquad \\kappa \\approx \\sqrt{\\frac{\\lambda \\sigma^2}{\\eta}} \\]\nTrade-off: \\(\\lambda\\) is risk aversion. Larger \\(\\lambda\\) or \\(\\sigma\\) raises \\(\\kappa\\), so the trajectory front-loads. Larger \\(\\eta\\) lowers \\(\\kappa\\), so trading is spread out.<br><br>\n<b>Interviewer follow-up:</b> Why not trade at a constant rate? A constant rate minimises impact but leaves more price risk. The sinh shape is the efficient frontier of cost and variance, and the linear case is the \\(\\lambda \\to 0\\) limit.",
+  "tags": [
+   "execution",
+   "almgren_chriss",
+   "impact",
+   "microstructure",
+   "desk_strat"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Desk strat:</b> compare RFQ with streaming for a credit or rates client. What are the trade-offs for the client and the dealer, in terms of winner's curse, information leakage, and price quality?",
+  "back": "<b>Answer:</b> an RFQ sends a request to several dealers at once and takes the best response. Streaming means a dealer posts continuous two-way prices. The trade-off is between competition for price and information leakage.<br><br>\n<ul>\n<li><b>RFQ to N dealers:</b> more dealers tighten prices, but each dealer sees a request whose winner has the most aggressive quote. The winner is the one who has the most likely misprice, which is the winner's curse. Dealers widen to compensate, and information leaks to dealers who lose.</li>\n<li><b>Streaming:</b> the dealer quotes continuously, so the client does not reveal its order. But quotes are stale and adverse selection is harder to measure. The dealer must manage fill risk on a quote that may be picked off.</li>\n<li><b>Dealer side:</b> hit rates and markouts on RFQs tell the dealer which clients are informed. Streaming requires fast quote updates and a position-dependent skew.</li>\n</ul>\n<b>Interviewer follow-up:</b> Which is better for a large, illiquid bond? Usually a small RFQ to trusted dealers or portfolio trading, to limit leakage and let the dealer price the position's inventory cost. For a liquid, small ticket, streaming or all-to-all gives better price.",
+  "tags": [
+   "rfq",
+   "streaming",
+   "winners_curse",
+   "execution",
+   "desk_strat"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Desk strat:</b> how would you design an auto-hedging rule for a book of rates options and swaps? Explain the trade-off between hedge frequency, transaction cost and residual risk, and why a no-trade band helps.",
+  "back": "<b>Answer:</b> hedge when the residual risk exceeds a tolerance band, not continuously. The optimal band width grows with transaction costs and with gamma, and the cost of hedging scales with frequency.<br><br>\nDesign:\n<ul>\n<li><b>Trigger:</b> residual DV01 or gamma exposure beyond a limit, or a time-based check. Triggers are cheaper than continuous hedging.</li>\n<li><b>Instrument choice:</b> the cheapest liquid hedge (futures, SOFR or SONIA swaps, CDS index) that matches the risk factor. Liquidity cost is part of the rule.</li>\n<li><b>No-trade band:</b> for option delta-hedging with proportional costs, the optimal half-width scales with \\((\\text{cost} \\times \\Gamma^2)^{1/3}\\) (Whalley-Wilmott). Higher costs widen the band, so you hedge less often.</li>\n</ul>\n<b>Interviewer follow-up:</b> Why is a band of width \\(\\propto c^{1/3}\\) and not \\(\\propto c\\)? The trade-off is between variance of the unhedged position (which grows with band width) and cost of rebalancing (which falls with width). Optimising that gives the cube-root scaling.",
+  "tags": [
+   "auto_hedging",
+   "gamma",
+   "transaction_cost",
+   "risk",
+   "desk_strat"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Market structure:</b> how do dealer-to-client (D2C) venues, all-to-all trading and dealer-to-dealer venues change the desk's role in rates and credit? Name examples and describe the economic trade-off.",
+  "back": "<b>Answer:</b> electronic venues move the desk from pure principal intermediation toward matching and selective liquidity provision. All-to-all lets buy-side firms trade with each other, which competes with the dealer for flow.<br><br>\nStructure:\n<ul>\n<li><b>D2C platforms:</b> RFQ and streaming platforms for credit and rates (MarketAxess and Tradeweb are the main examples in credit and rates). Dealers respond to requests and the venue sets the protocol.</li>\n<li><b>All-to-all:</b> any participant can respond to a request or post a quote. Liquidity comes from buy-side natural flow, not just dealer inventory. MarketAxess Open Trading is an example in credit.</li>\n<li><b>Dealer-to-dealer:</b> interdealer venues such as BrokerTec in UST and European government bonds, where the desk hedges and recycles inventory.</li>\n</ul>\nTrade-off for the desk: lower market share of the best-price flow, but better access to natural liquidity, and more data on who is trading. The desk's value shifts toward risk warehousing and pricing for large or illiquid trades.<br><br>\n<b>Interviewer follow-up:</b> Why might all-to-all not replace dealers entirely? Natural counterparties do not always match on size, timing or direction, and balance-sheet providers still price the residual risk.",
+  "tags": [
+   "market_structure",
+   "d2c",
+   "all_to_all",
+   "electronic_trading",
+   "desk_strat"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Desk strat:</b> what is portfolio trading in credit or government bonds, how is a basket priced, and what risk does the dealer carry that a single-bond trade does not?",
+  "back": "<b>Answer:</b> a client trades a basket of bonds at one aggregate price, usually quoted as a spread or a price relative to a benchmark, and the dealer prices the basket as a set of risk factors rather than bond-by-bond.<br><br>\nPricing:\n<ul>\n<li><b>Risk proxy:</b> the basket is priced by duration, spread and sector buckets, then the dealer adds the inventory cost of the individual bonds it must hedge or sell.</li>\n<li><b>Benefit to client:</b> one price, one execution, lower implicit cost, less leakage.</li>\n<li><b>Risk to dealer:</b> the basket's residual risk is idiosyncratic, so the dealer carries basis risk between the proxy and the individual bonds. Liquidity and hedge costs for the tail names are the main drag.</li>\n</ul>\n<b>Interviewer follow-up:</b> How would you decide which names to hedge with the index? Keep the factor exposure the same as the proxy, and reserve bond-level hedges for names with high idiosyncratic risk or large DV01 relative to liquidity.",
+  "tags": [
+   "portfolio_trading",
+   "credit",
+   "pricing",
+   "liquidity",
+   "desk_strat"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Desk strat:</b> how do you measure the liquidity risk of a position in a rates or credit book? Give a concrete formula for the cost of exiting and a way to estimate market impact.",
+  "back": "<b>Answer:</b> liquidity risk is the cost of exiting a position within a set horizon. Measure it as half the bid-offer spread times size, plus a market-impact term that scales with trade size relative to volume.<br><br>\nFormulas:\n<ul>\n<li><b>Half-spread cost:</b> \\(C_\\text{spread} \\approx \\tfrac12 \\, s \\, |P|\\), where \\(s\\) is the quoted spread in price terms and \\(P\\) the position.</li>\n<li><b>Market impact (square-root law):</b> \\(\\text{impact} \\approx Y\\,\\sigma\\,\\sqrt{Q/V}\\), with \\(Q\\) traded quantity, \\(V\\) daily volume, \\(\\sigma\\) daily vol, and \\(Y\\) a constant of order one (approx.).</li>\n<li><b>Liquidity horizon:</b> time to exit at a target impact, which gives the horizon for risk scaling (similar to FRTB liquidity horizons).</li>\n</ul>\n<b>Interviewer follow-up:</b> Why does the square-root law matter more than linear impact? Because the cost of a trade grows slower than size for large trades, so splitting over time is less valuable than it appears at small sizes. Use it when sizing exits against time horizons.",
+  "tags": [
+   "liquidity",
+   "market_impact",
+   "risk_measurement",
+   "desk_strat"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In Avellaneda-Stoikov, the reservation price is \\( r = s - q\\gamma\\sigma^2(T-t) \\), so a long inventory {{c1::lowers}} the reference price and makes the dealer {{c2::more willing to sell}}.",
+  "back": "The reservation price is a dealer's indifference price given its inventory, not a fair value. The optimal spread then sits symmetrically around \\(r\\) and widens with \\(\\gamma\\), \\(\\sigma^2\\), and \\(T-t\\).",
+  "tags": [
+   "avellaneda_stoikov",
+   "inventory",
+   "market_making",
+   "desk_strat"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Regulation:</b> describe the FRTB sensitivity-based method (SBM). How are delta, vega and curvature charges built, and why are three correlation scenarios used?",
+  "back": "<b>Answer:</b> SBM computes a delta, vega and curvature charge per risk class (GIRR, CSR, equity, FX, commodity), using prescribed risk weights and intra-bucket and inter-bucket correlations. Three correlation scenarios (low, medium, high) are run and the largest result is taken.<br><br>\n<ul>\n<li><b>Delta:</b> weighted sensitivities by bucket, aggregated with intra-bucket correlation \\(\\rho\\) and inter-bucket \\(\\gamma\\). Correlation is stressed because the aggregation is otherwise sensitive to the correlation assumption.</li>\n<li><b>Vega:</b> option sensitivities to implied vol, aggregated the same way.</li>\n<li><b>Curvature:</b> the loss from a large move in each risk factor, net of delta, for the non-linear residual.</li>\n<li><b>Total:</b> sum of delta, vega and curvature across risk classes, with the high/medium/low correlation scenario maximised.</li>\n</ul>\n<b>Interviewer follow-up:</b> Why do correlation scenarios matter? Because a desk with offsetting positions in correlated buckets is penalised when correlations are stressed toward one. The three-scenario max is designed so the capital cannot be reduced by picking correlations that flatter the book.",
+  "tags": [
+   "frtb",
+   "sbm",
+   "capital",
+   "regulation",
+   "market_risk"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Regulation:</b> what is the FRTB default risk charge (DRC) for trading-book credit? Describe how jump-to-default is netted and weighted, and how the IMA DRC differs from the standardised version.",
+  "back": "<b>Answer:</b> the standardised DRC applies jump-to-default losses to net long and net short positions per obligor, weighted by a rating-linked risk weight. The IMA DRC uses a 99.9% VaR-based model, not expected shortfall.<br><br>\n<ul>\n<li><b>Netting:</b> within an obligor, long and short positions offset, which is why the basis trade has a capital cost only for the net exposure.</li>\n<li><b>Weights:</b> rating-based weights increase steeply from AAA (well under 1%) to CCC (over 50%, approx.), with default at 100%.</li>\n<li><b>Aggregation:</b> losses are summed across obligors with prescribed rules for offsetting, so DRC is not a pure VaR charge.</li>\n<li><b>IMA:</b> the internal model captures correlated default and migration, subject to approval.</li>\n</ul>\n<b>Interviewer follow-up:</b> Why does a long-short credit book show low DRC under the standardised rules? Only the net JTD by obligor counts. Hedges by name reduce capital, but the offset is limited for index hedges, which is a common point of disagreement with desks.",
+  "tags": [
+   "frtb",
+   "drc",
+   "credit",
+   "capital",
+   "regulation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Under FRTB the residual risk add-on (RRAO) is {{c1::1.0%}} of notional for exotic underlyings and {{c2::0.1%}} of notional for other residual-risk instruments.",
+  "back": "RRAO is applied on top of SBM and DRC, on gross notional, and is meant to capture risks not covered by the standardised approach, such as gap and correlation risk in exotic options.",
+  "tags": [
+   "frtb",
+   "rrao",
+   "capital",
+   "regulation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Regulation:</b> FRTB's internal model approach (IMA) uses expected shortfall at 97.5%, not 99% VaR. Write the liquidity-horizon-adjusted ES formula and explain what the liquidity horizons do.",
+  "back": "<b>Answer:</b> ES at 97.5%, calibrated to a stressed period, is computed for risk factors grouped by liquidity horizon. Each group is shocked over its own horizon, and the results are combined with scaling for the time increment.<br><br>\nFormula (base horizon \\(T = 10\\) days; liquidity horizons \\(LH_j\\) in \\(\\{10, 20, 40, 60, 120\\}\\)):\n\\[ \\text{ES} = \\sqrt{\\sum_j \\Big( ES_j \\,\\sqrt{\\tfrac{LH_j - LH_{j-1}}{T}}\\Big)^2} \\]\nwhere \\(ES_j\\) is the ES of a portfolio shocked only on risk factors with liquidity horizon at least \\(LH_j\\), and \\(LH_0 = 0\\) by convention.<br><br>\nWhy: a risk factor that takes longer to exit should be stressed over a longer horizon. Expected shortfall at 97.5% on a 10-day base is calibrated to match the tail of 99% VaR in normal data while being more coherent.<br><br>\n<b>Interviewer follow-up:</b> Why is ES not coherent under all definitions? ES is coherent (subadditive). The issue in FRTB is the use of the stressed period and the backtesting regime, plus the P&L attribution requirement.",
+  "tags": [
+   "frtb",
+   "expected_shortfall",
+   "liquidity_horizon",
+   "regulation",
+   "market_risk"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Regulation:</b> what are non-modellable risk factors (NMRFs) under FRTB and how is their capital calculated? Why do they matter for a desk that uses the IMA?",
+  "back": "<b>Answer:</b> an NMRF is a risk factor that does not have enough real price observations to be modelled in the IMA. Its capital is calibrated to a stress scenario, with no diversification benefit assumed across NMRFs.<br><br>\n<ul>\n<li><b>Test:</b> roughly 24 real price observations over 12 months, with no more than 4 in any single month (approx.). Factors that fail are NMRFs.</li>\n<li><b>Capital:</b> a stress-scenario loss per NMRF, summed without diversification (approx.). This is conservative and is the reason desks try to make risk factors modellable.</li>\n<li><b>Effect:</b> a book with many thinly traded curve points or basis factors may find that its IMA capital is dominated by NMRF capital.</li>\n</ul>\n<b>Interviewer follow-up:</b> What can a desk do about it? Improve data sourcing (more real price observations), reduce the number of thinly traded factors through proxies (where the regulator accepts), or hedge NMRFs with liquid instruments.",
+  "tags": [
+   "frtb",
+   "nmrf",
+   "ima",
+   "regulation",
+   "market_risk"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Regulation:</b> explain the FRTB P&L attribution test (PLA). What statistics are used, what are the approximate thresholds, and what happens if a desk fails?",
+  "back": "<b>Answer:</b> the PLA test checks that the risk model's theoretical P&L is consistent with the hypothetical (front-office) P&L. Failing it means the desk falls back to the standardised approach for that desk.<br><br>\nStatistics (approx. thresholds):\n<ul>\n<li><b>Spearman rank correlation</b> between hypothetical and risk-theoretical P&L: green at or above about 0.8, amber between about 0.7 and 0.8, red below about 0.7.</li>\n<li><b>Kolmogorov-Smirnov test</b> on the distribution of differences: green at or below about 0.09, amber between about 0.09 and 0.12, red above about 0.12.</li>\n</ul>\nA desk in the red zone loses IMA eligibility for that desk, so the decision is a capital and business decision, not just a model one.<br><br>\n<b>Interviewer follow-up:</b> Why do desks with large carry or rates basis exposures fail more often? Risk-theoretical P&L may not include intraday moves, new trades or modelled factors that the front-office P&L captures, which reduces correlation.",
+  "tags": [
+   "frtb",
+   "pla",
+   "backtesting",
+   "regulation",
+   "market_risk"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Regulation:</b> state the SA-CCR exposure at default formula. Define replacement cost, potential future exposure and the multiplier, and say what the 1.4 factor does.",
+  "back": "<b>Answer:</b> \\(\\text{EAD} = \\alpha \\times (\\text{RC} + \\text{PFE})\\), where \\(\\alpha = 1.4\\), RC is replacement cost and PFE is the potential future exposure.<br><br>\n\\[ \\text{PFE} = \\text{multiplier} \\times \\text{AddOn}_\\text{agg}, \\qquad \\text{multiplier} = \\min\\!\\left\\{1,\\; \\text{floor} + (1-\\text{floor})\\,\\exp\\!\\left(\\tfrac{V-C}{2(1-\\text{floor})\\,\\text{AddOn}}\\right)\\right\\} \\]\nwith a floor of 5%. RC is \\(\\max(V - C, 0)\\) for unmargined trades, and the margined version uses the threshold and MTA. For an interest rate trade the add-on is supervisory delta times adjusted notional (notional times supervisory duration) times the maturity factor, which for unmargined trades is \\(\\sqrt{\\min(M, 1)}\\).<br><br>\n\\(\\alpha\\) is a conservatism factor that covers model error in replacing internal EEPE models with a standardised approximation.<br><br>\n<b>Interviewer follow-up:</b> Why does the multiplier fall when the portfolio is out-of-the-money? When \\(V - C\\) is negative, the replacement cost is zero and the multiplier reduces PFE through the \\(\\exp\\) term, so netting and collateral reduce exposure smoothly.",
+  "tags": [
+   "sa_ccr",
+   "counterparty_credit",
+   "ead",
+   "regulation",
+   "capital"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "SA-CCR multiplies replacement cost plus potential future exposure by a fixed factor of {{c1::1.4}}, and the PFE multiplier has a floor of {{c2::5%}}.",
+  "back": "The alpha factor is a regulatory conservatism factor, not an economic parameter. Interviewers often ask why it is 1.4 rather than 1.0; the answer is model uncertainty in the approximation.",
+  "tags": [
+   "sa_ccr",
+   "capital",
+   "regulation",
+   "counterparty_credit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Regulation/market structure:</b> what is ISDA SIMM and why is it used for initial margin on uncleared derivatives? Describe the risk classes and how the margin is aggregated.",
+  "back": "<b>Answer:</b> ISDA SIMM is a standardised, sensitivity-based initial margin model used for uncleared derivatives between two parties subject to the margin rules. It is designed so both parties compute the same margin, avoiding disputes over internal models.<br><br>\n<ul>\n<li><b>Risk classes:</b> interest rate, credit (qualifying and non-qualifying), equity, FX and commodity.</li>\n<li><b>Measures:</b> delta, vega and curvature sensitivities per risk class, weighted by prescribed risk weights, then aggregated with intra-bucket and inter-bucket correlations within each risk class, and across risk classes.</li>\n<li><b>Calibration:</b> a stressed period and a 10-day horizon, at a high quantile (approx.). Methodology is published and updated periodically, with versioning.</li>\n</ul>\n<b>Interviewer follow-up:</b> Why is a standard model better than a bilateral internal model for IM? Consistency: two parties with different models produce different IM and disputes. SIMM lowers operational risk and dispute frequency, at the cost of being less risk-sensitive than an internal model.",
+  "tags": [
+   "simm",
+   "initial_margin",
+   "uncleared",
+   "regulation",
+   "market_structure"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Under UMR, initial margin is exchanged between in-scope counterparties above an IM threshold of about {{c1::€50m}} and a minimum transfer amount of about {{c2::€500k}}, with the rule applying once average aggregate notional exceeds {{c3::€8bn}}.",
+  "back": "Thresholds are approximate and apply per counterparty pair under the BCBS-IOSCO framework as implemented in EU, UK and US rules. Check the current rule text before quoting exact figures in a live discussion.",
+  "tags": [
+   "umr",
+   "initial_margin",
+   "regulation",
+   "market_structure"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Regulation:</b> describe the Basel III final CVA capital framework at the mechanism level. How do BA-CVA and SA-CVA differ, and what hedges can reduce capital?",
+  "back": "<b>Answer:</b> CVA capital covers the risk of mark-to-market losses from counterparty credit deterioration. BA-CVA is a formula-based approach using exposure, maturity and hedges, while SA-CVA uses sensitivities similar to FRTB.<br><br>\n<ul>\n<li><b>BA-CVA:</b> capital scales with EAD (from SA-CCR or equivalent), effective maturity, and a correlation parameter, with an aggregation that offsets across counterparties with limited diversification.</li>\n<li><b>SA-CVA:</b> sensitivities of CVA to counterparty spreads and market risk factors are computed, then aggregated with an approach close to the FRTB SBM. It needs supervisory approval.</li>\n<li><b>Hedges:</b> eligible single-name and index CDS can offset CVA capital, subject to eligibility rules. Hedges must be from approved instruments and documented.</li>\n</ul>\n<b>Interviewer follow-up:</b> Why does CVA capital not fully disappear when hedged? Basel rules restrict which hedges count and the correlation between hedge and CVA is imperfect, so residual CVA capital remains.",
+  "tags": [
+   "cva",
+   "capital",
+   "basel",
+   "regulation",
+   "counterparty_credit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Regulation (UK):</b> the PRA is implementing Basel 3.1 (including FRTB-equivalent market-risk rules and the 72.5% output floor). What are the main changes to a UK bank's market-risk capital, and what is the timetable risk for a desk?",
+  "back": "<b>Answer:</b> Basel 3.1 in the UK combines the output floor (capital cannot fall below 72.5% of the standardised approach), the revised market-risk framework (FRTB-style SBM and internal model rules), and CVA changes. The timetable has been moved; check the latest PRA publication before quoting dates. The planned start is approximately 2027.<br><br>\nDesk effects:\n<ul>\n<li>SBM and DRC will change capital allocations, so the desk's cheapest structures may change.</li>\n<li>Output floor limits internal model benefits at the bank level, so model optimisation can be capped.</li>\n<li>The PLA and NMRF regime governs which desks can use the IMA.</li>\n</ul>\n<b>Interviewer follow-up:</b> Why would a bank's capital rise even with the same risk? The output floor binds when the internal model gives a low risk-weighted asset figure relative to the standardised approach. Capital is then driven by the floor, not the model.",
+  "tags": [
+   "basel_3_1",
+   "pra",
+   "uk",
+   "frtb",
+   "regulation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Regulation:</b> how does a leverage ratio constraint change the economics of repo and rates swaps? Explain why a low-risk-weight activity can still be capital-expensive for a bank.",
+  "back": "<b>Answer:</b> the leverage ratio is non-risk-based. It counts exposure without risk weights, so low-risk activities with high gross exposure (repo, sovereign inventory, and some derivatives) use balance sheet at the same rate as risky lending.<br><br>\nEffects:\n<ul>\n<li><b>Repo:</b> on-balance-sheet repo consumes leverage exposure, so the cost of intermediation depends on gross balance sheet, not net risk. Netting and central clearing reduce the measured exposure.</li>\n<li><b>Swaps:</b> derivative exposure is measured by an SA-CCR-type approach. Its economic impact is smaller than repo in many cases, but the add-ons still use balance sheet.</li>\n<li><b>Reserves and central bank claims:</b> some jurisdictions exclude these, which changes the cost of holding them (approx.).</li>\n</ul>\n<b>Interviewer follow-up:</b> Why do dealers shrink their repo books at quarter-ends? Average-balance measures and reporting dates create incentives to reduce gross exposure on the reporting date, which causes repo spikes and swap spread moves.",
+  "tags": [
+   "leverage_ratio",
+   "repo",
+   "swaps",
+   "regulation",
+   "balance_sheet"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "UK sterling interest rate swaps are predominantly cleared at {{c1::LCH SwapClear}}, and UK gilts are issued by the {{c2::Debt Management Office}} through auctions and syndications.",
+  "back": "Useful for UK market-structure questions. Gilt issuance is set by the DMO remit, while the Bank of England runs monetary operations and quantitative easing or tightening, so supply and policy are separate channels.",
+  "tags": [
+   "uk",
+   "market_structure",
+   "clearing",
+   "gilts",
+   "boe"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>UK market structure:</b> what were the main legacy issues from the GBP LIBOR and USD LIBOR cessation, and how did the ISDA fallbacks and spread adjustments handle them? Name the residual risks.",
+  "back": "<b>Answer:</b> the fallbacks convert legacy contracts to risk-free rates (RFRs) such as SONIA and SOFR, using compounded-in-arrears rates, plus a fixed spread adjustment to reduce value transfer. Residual risks remain in contract language, basis, and hedging mismatches.<br><br>\n<ul>\n<li><b>Spread adjustment:</b> set from a historical median difference between LIBOR and the RFR (USD 3-month LIBOR fallback spread about 26bp, approx.). It is fixed, so it does not track the current LIBOR-SOFR basis.</li>\n<li><b>Compounding:</b> SONIA and SOFR are overnight and backward-looking, so coupons are known only at the end of the period, which affects cash-flow certainty.</li>\n<li><b>Hedge mismatch:</b> legacy loans fallen back to RFR may not match the RFR swaps used to hedge them, leaving basis and timing risk.</li>\n<li><b>Legal and operational risk:</b> contracts that did not have robust fallbacks needed legislation or remediation, and some of that is still in dispute.</li>\n</ul>\n<b>Interviewer follow-up:</b> Why is a fixed spread adjustment not a full hedge? Because the true LIBOR-RFR basis changes with market stress, and a fixed spread cannot track it.",
+  "tags": [
+   "libor",
+   "sonia",
+   "fallbacks",
+   "legacy",
+   "uk"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Regulation (UK/EU):</b> how do MiFIR transparency rules apply to bonds and interest rate swaps? Explain pre-trade and post-trade transparency, the role of waivers and deferrals, and the systematic internaliser regime.",
+  "back": "<b>Answer:</b> non-equity instruments have pre-trade and post-trade transparency, but waivers allow firms to trade without pre-trade quotes for large or illiquid sizes. Post-trade publication can be deferred for large trades. Systematic internalisers have quote obligations for liquid instruments.<br><br>\n<ul>\n<li><b>Pre-trade transparency:</b> firms must publish quotes on a trading venue, unless a waiver applies. Waivers include large-in-scale (LIS) and size-specific-to-instrument (SSTI), with thresholds set per instrument.</li>\n<li><b>Post-trade:</b> trades are published through an approved publication arrangement (APA), with deferrals available for large trades.</li>\n<li><b>Systematic internaliser (SI):</b> a firm trading on its own account on a frequent, systematic basis must publish quotes when it deals with clients in liquid instruments, subject to size and frequency thresholds.</li>\n<li><b>Derivatives trading obligation:</b> certain standardised IRS must be traded on a venue or SEF-equivalent (approx.; check scope).</li>\n</ul>\n<b>Interviewer follow-up:</b> Why do desks prefer RFQ to request multi-dealer quotes under the waiver regime? RFQ to a limited set of dealers can fall within waivers, which limit information leakage while keeping execution compliant. Check the instrument's LIS and SSTI thresholds before choosing protocol.",
+  "tags": [
+   "mifid",
+   "transparency",
+   "bonds",
+   "swaps",
+   "regulation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Regulation/market structure:</b> the UK and EU are moving to T+1 settlement. What changes for trade matching, pre-funding, securities lending and FX settlement for cross-currency trades, and why does this matter for a desk?",
+  "back": "<b>Answer:</b> settlement moves from T+2 to T+1, the scheduled date for UK and EU is 11 October 2027 (approx.; check the latest announcements). Shorter cycles compress pre-funding and affirmation time, so mismatches show up as fails.<br><br>\nEffects:\n<ul>\n<li><b>Matching:</b> trade confirmation and affirmation must happen on trade date, so the desk's operations and counterparty matching must be near real-time.</li>\n<li><b>Pre-funding:</b> cash and securities must be in place a day earlier, increasing intraday liquidity needs for cross-border investors.</li>\n<li><b>Securities lending and repo:</b> recalls and borrowing must be arranged earlier, so lending demand and fails can rise around settlement days.</li>\n<li><b>FX settlement:</b> cross-currency trades settled through CLS or nostro networks may have timing mismatches with a one-day securities cycle, so the desk must align FX and securities settlement.</li>\n</ul>\n<b>Interviewer follow-up:</b> Why could T+1 increase fails in a stress? Fewer hours to resolve a mismatch, and a shorter window to source a borrow, so a missed delivery is more likely to become a fail.",
+  "tags": [
+   "t_plus_1",
+   "settlement",
+   "uk",
+   "eu",
+   "market_structure"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "FRTB expected shortfall is computed at {{c1::97.5%}} confidence, on a base horizon of {{c2::10 days}}, with liquidity horizons of {{c3::10, 20, 40, 60 and 120 days}}.",
+  "back": "Liquidity horizons apply to risk factor categories. The base horizon sets the scaling denominator in the liquidity-horizon formula.",
+  "tags": [
+   "frtb",
+   "expected_shortfall",
+   "liquidity_horizon",
+   "regulation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "PLA thresholds (approx.): Spearman correlation green at or above about {{c1::0.8}}, and Kolmogorov-Smirnov green at or below about {{c2::0.09}}.",
+  "back": "Amber and red bands sit below these values. Desks that fall into red for a risk-theoretical P&L test lose IMA eligibility for that desk.",
+  "tags": [
+   "frtb",
+   "pla",
+   "backtesting",
+   "regulation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Credit triangle: hazard rate \\( \\lambda \\approx s/(1-R) \\). A 100bp CDS spread at 40% recovery implies an annual hazard of about {{c1::1.7%}}, or {{c2::167bp}} per year.",
+  "back": "Useful for mental checks of CDS and bond spreads. It is a first-order relation, with the approximation breaking down at high spreads or when the curve is inverted.",
+  "tags": [
+   "credit",
+   "cds",
+   "hazard_rate",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The main CDS index roll months are {{c1::March}} and {{c2::September}}; the standard fixed coupon is {{c3::100bp}} for IG indices and {{c4::500bp}} for HY indices.",
+  "back": "Dates and coupons are conventions. The new series has a fresh 5y maturity, and the old series trades less after the roll.",
+  "tags": [
+   "credit",
+   "cds_index",
+   "roll",
+   "convention"
+  ]
+ }
+]

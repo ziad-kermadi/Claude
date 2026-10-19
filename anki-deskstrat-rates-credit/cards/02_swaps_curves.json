@@ -1,0 +1,606 @@
+[
+ {
+  "type": "basic",
+  "front": "Write the compounded-in-arrears SOFR rate for an interest period with \\(n\\) daily observations \\(r_i\\), accrual days \\(d_i\\), total days \\(D=\\sum d_i\\), on Act/360. Show that on a deterministic curve it telescopes to a discount-factor ratio.",
+  "back": "<b>Answer:</b> \\[R=\\frac{360}{D}\\left(\\prod_{i=1}^{n}\\left(1+\\frac{r_i\\,d_i}{360}\\right)-1\\right)\\]\nOn a deterministic curve the forward over accrual period \\(i\\) satisfies \\(1+f_i d_i/360=DF(t_{i-1})/DF(t_i)\\). The product telescopes to \\(DF(t_0)/DF(t_n)\\), so \\[R=\\frac{360}{D}\\left(\\frac{DF(t_0)}{DF(t_n)}-1\\right).\\]\nConsequence: a compounded float leg with notional \\(N\\) is worth \\(N\\,(DF(t_0)-DF(t_n))\\) when projection and discounting use the same curve.<br>\n<b>Interviewer follow-up:</b> Does the telescoping survive if projection and discounting use different curves? No. Each period's forward comes from the projection curve while cashflows are discounted on the collateral curve, so the product no longer collapses to a single ratio and each period must be priced separately.",
+  "tags": [
+   "swaps",
+   "sofr",
+   "compounding",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Mental math: a flat 5.00% overnight SOFR fixing for 30 calendar days, Act/360. What is the compounded rate on Act/360, and what is the uplift versus the simple rate? Give the leading-order rule.",
+  "back": "<b>Answer:</b> Factor \\((1+0.05/360)^{30}\\approx e^{30\\times 0.00013888}\\approx 1.004175\\). Compounded rate \\(\\approx 0.004175\\times 360/30\\approx 5.010\\%\\), so the uplift is about 1bp.<br>\nLeading-order rule for a flat rate \\(r\\) over \\(D\\) days: uplift \\(\\approx r^2(D-1)/720\\). Here \\(0.05^2\\times 29/720\\approx 1.0\\)bp.<br>\n<b>Interviewer follow-up:</b> For a full year at 5%, the same rule gives roughly 12 to 13bp. Why does the uplift grow with \\(r^2\\)? Because compounding adds the second-order cross-term \\(\\tfrac12(rd/360)^2\\) per period, so it is quadratic in the rate level.",
+  "tags": [
+   "swaps",
+   "sofr",
+   "mental_math",
+   "compounding"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compare lookback and observation-shift conventions for compounded RFR coupons. What does each fix, and what trade-off does each create for payment timing and hedging?",
+  "back": "<b>Answer:</b>\n<ul>\n<li><b>Lookback</b> of \\(d\\) business days: the rate applied to accrual day \\(i\\) is the overnight rate observed \\(d\\) days earlier, while the accrual weight \\(d_i\\) stays with day \\(i\\).</li>\n<li><b>Observation shift</b>: the rate-observation window is moved back by \\(d\\) days, so the weights are the day counts of the shifted window.</li>\n</ul>\nBoth make the final coupon knowable roughly \\(d\\) days before the payment date, so the cashflow can be settled on time without waiting for the last fixing. They differ in which weights attach to which rates. The value effect is small (forward change over the shifted days times a day-count mismatch), but the choice matters for exact cash reconciliation and for matching a hedge to the fixing schedule. The exact convention is set in the confirmation and ISDA definitions, so check it rather than assume it.<br>\n<b>Interviewer follow-up:</b> Why is the value difference tiny even though the conventions look different? Because the mismatch only touches the last few days of the period, and the forward rate barely moves over those days on a normal curve.",
+  "tags": [
+   "swaps",
+   "rfr",
+   "conventions",
+   "compounding"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is a lockout in a compounded RFR coupon? Write the coupon with an \\(L\\)-day lockout and explain why its PV effect is usually small.",
+  "back": "<b>Answer:</b> With a lockout of \\(L\\) business days, the rate for the final \\(L\\) days is frozen at the rate observed on the last business day before the lockout, \\(r_{n-L}\\), and the accrual weight of the lockout window, \\(D_L\\), is applied to that frozen rate. The coupon is \\[R_{lk}=\\frac{360}{D}\\left(\\prod_{i=1}^{n-L}\\left(1+\\frac{r_i\\,d_i}{360}\\right)\\left(1+\\frac{r_{n-L}\\,D_L}{360}\\right)-1\\right).\\]\nPV effect versus no lockout: the difference is \\(\\sum_{\\text{lockout}} d_i\\,(f_i-f_{n-L})\\). It is zero on a flat forward curve and small when forwards are smooth over a few days.<br>\n<b>Interviewer follow-up:</b> What does a lockout buy the market? The coupon amount is known \\(L\\) days before the period ends, which helps settlement and operations. The cost is a small, path-dependent valuation gap versus full compounding.",
+  "tags": [
+   "swaps",
+   "sofr",
+   "compounding",
+   "conventions"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "SONIA accrues on {{c1::Act/365F}}; SOFR and €STR accrue on {{c2::Act/360}}. A 5.00% Act/360 rate is about {{c3::5.07%}} on Act/365F.",
+  "back": "Conversion: \\(r_{365}=r_{360}\\times 365/360\\). It matters for SONIA–SOFR basis quotes and for any comparison of rates quoted on different bases.",
+  "tags": [
+   "swaps",
+   "rfr",
+   "daycount",
+   "convention"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The ISDA IBOR Fallbacks Protocol (October 2020) sets the fallback spread as the {{c1::historical median}} of the difference between term IBOR and the compounded RFR, measured over {{c2::five years}}. For USD 3M LIBOR it is about {{c3::26bp}}.",
+  "back": "The spread is fixed for each tenor and is added to the compounded RFR when a legacy term-rate trade falls back. Check the exact figure against the protocol schedule before quoting it externally.",
+  "tags": [
+   "libor_transition",
+   "fallbacks",
+   "convention",
+   "isda"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why is a fixed fallback spread added when a legacy term IBOR swap moves to compounded RFR? What economic problem does it solve, and what residual risk does it leave?",
+  "back": "<b>Answer:</b> Term IBOR embeds bank credit and term liquidity premia; compounded RFR is close to risk-free overnight. Without an adjustment, the switch would transfer value between counterparties. The spread is a static historical-median adjustment, fixed for the life of the converted trade.\nResidual risk: the fixed spread is not today's term premium, so legacy-to-RFR value can still move, and new trades priced off the same curve carry a curve-basis exposure to the gap.<br>\n<b>Interviewer follow-up:</b> Why not use a live term-premium estimate instead? A dynamic spread would introduce market risk into a converted contract and would not be bilateral-neutral. The protocol deliberately fixed it to make the change value-neutral at conversion.",
+  "tags": [
+   "libor_transition",
+   "fallbacks",
+   "multicurve",
+   "trade_off"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "USD LIBOR 1M, 3M, 6M and 12M ceased publication after {{c1::30 June 2023}}. Legacy contracts without usable fallback language needed a {{c2::contract amendment or the protocol}} to move to a compounded RFR plus a fixed spread.",
+  "back": "Fallback language is contract-specific. The protocol applies only to counterparties that adhered, or where the trade's own clause points to it.",
+  "tags": [
+   "libor_transition",
+   "cessation",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why did single-curve bootstrapping break down after 2008? Give the structural reason and the multi-curve fix.",
+  "back": "<b>Answer:</b> In a single-curve set-up one curve both projects forwards and discounts. After 2008, interbank term rates such as 3M IBOR carried credit and liquidity premia over overnight OIS, and that spread became large and volatile. One curve cannot reprice OIS swaps and tenor swaps at the same time.\n<b>Multi-curve fix:</b> an OIS curve for discounting (consistent with collateral) plus separate projection curves for each tenor, each bootstrapped from its own instruments and linked through basis-swap quotes.<br>\n<b>Interviewer follow-up:</b> What happens to a 3M float leg? It no longer telescopes to \\(1-DF\\). Its PV depends on both the projection and the discount curve, so the basis is embedded in the value.",
+  "tags": [
+   "multicurve",
+   "curves",
+   "ois",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "For a 3M EURIBOR-indexed receiver swap with accrual factors \\(\\tau_i\\), spread \\(s\\) on the float leg and fixed rate \\(K\\), write the PV in a multi-curve set-up. Label which curve projects the forwards and which discounts.",
+  "back": "<b>Answer:</b> \\[\\mathrm{PV}=N\\sum_i \\tau_i\\left(F_i^{3M}+s-K\\right)P^{\\text{disc}}(T_i)\\]\nwith \\(F_i^{3M}=\\frac{1}{\\tau_i}\\left(\\frac{P^{\\text{proj}}(T_{i-1})}{P^{\\text{proj}}(T_i)}-1\\right)\\).\nThe projection curve \\(P^{\\text{proj}}\\) generates the 3M forwards. The discount curve \\(P^{\\text{disc}}\\) (OIS or collateral curve) generates every DF. The two curves are bootstrapped separately, so the same instrument set on both gives a different PV.<br>\n<b>Interviewer follow-up:</b> Which curve carries the tenor basis? The projection curve. The discount curve stays the OIS curve, so the basis enters through the forwards, not the DFs.",
+  "tags": [
+   "multicurve",
+   "projection",
+   "discounting",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why is a collateralised derivative discounted at the collateral rate rather than a risk-free rate? Give the replication argument and state where it breaks down.",
+  "back": "<b>Answer:</b> Under a full CSA with daily variation margin, the posted cash equals the MTM \\(V_t\\) and earns the collateral rate \\(r_c\\). The hedger holds \\(V_t\\) in cash that accrues at \\(r_c\\) and needs no other funding, so the replicating portfolio grows at \\(r_c\\). Hence \\[V_0=\\mathbb E^{Q}\\!\\left[e^{-\\int_0^T r_c(s)\\,ds}\\,\\text{payoff}\\right],\\] discounting on the collateral-currency OIS curve.\n<b>Where it breaks:</b> with a threshold or minimum transfer amount the uncollateralised part is funded at the bank's funding rate, which is what FVA prices. With non-cash or cross-currency collateral there is no single discount rate.<br>\n<b>Interviewer follow-up:</b> Why does the collateral rate matter if both counterparties' cash earns it? Because the discount rate is the rate at which the replicating cash grows, not the rate at which either party wants to borrow.",
+  "tags": [
+   "csa",
+   "discounting",
+   "derivation",
+   "collateral"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A CSA lets the poster deliver any of several eligible currencies as cash collateral, each paying a different rate. Which rate should discount the collateralised claim, and what is the economic role of the cheapest-to-deliver option?",
+  "back": "<b>Answer:</b> The poster can choose the eligible currency that is cheapest to deliver, meaning the one paying the lowest rate on the posted cash. The effective collateral rate is therefore not one curve but a minimum over eligible rates, approximately, and the option has positive value that the pricing must include.\nPractically: price the switch option explicitly (or approximate it by the lower envelope of the eligible rates), then discount with that effective rate. The adjustment is usually small when the eligible rates are close, and large when one currency's rate is well below the others.<br>\n<b>Interviewer follow-up:</b> Why is it not just the single lowest rate? The poster can switch over time, and volatility of the rate spread gives the option its time value; a static minimum ignores that.",
+  "tags": [
+   "csa",
+   "collateral",
+   "options",
+   "discounting"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a daily-margined USD CSA paying SOFR on cash collateral, the discount curve is {{c1::SOFR OIS}}. For a EUR CSA paying on cash collateral, the discount curve is {{c2::€STR OIS}}.",
+  "back": "Check the eligible-collateral clause of each CSA. Where several currencies are eligible, the cheapest-to-deliver logic applies.",
+  "tags": [
+   "csa",
+   "collateral",
+   "convention",
+   "discounting"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the bootstrap recursion for OIS discount factors from par swap rates, with annual fixed payments and single-curve pricing. Then compute \\(DF_2\\) given \\(DF_1=0.9615\\) and a 2y par rate of 4.00%.",
+  "back": "<b>Answer:</b> Par condition: \\(S\\sum_{i=1}^{n}\\tau_i DF_i=1-DF_n\\). Isolating the last DF: \\[DF_n=\\frac{1-S\\sum_{i<n}\\tau_i DF_i}{1+S\\,\\tau_n}.\\]\nWith \\(\\tau=1\\), \\(S=4\\%\\), \\(DF_1=0.9615\\): \\(DF_2=(1-0.04\\times0.9615)/1.04=0.96154/1.04\\approx 0.9246\\).\nCheck: \\(1/1.04^2=0.92456\\), consistent with a flat 4% annual-compounded curve.<br>\n<b>Interviewer follow-up:</b> Why is the recursion exact only for OIS-type swaps? Because the single-curve float leg telescopes to \\(1-DF_n\\). For a 3M-indexed swap the float leg does not telescope, so the recursion needs a projection curve as well.",
+  "tags": [
+   "bootstrapping",
+   "ois",
+   "derivation",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Set out the instrument set and order for bootstrapping a USD SOFR OIS curve from overnight rates, short deposits, SOFR futures and OIS swaps. Which quote pins which node, and what changes when a quote is missing?",
+  "back": "<b>Answer:</b> Use the overnight rate (or a very short deposit) for the first node, then futures or deposits to cover the strip up to the first swap, then par OIS swaps annually and beyond. Each instrument pins the node at its maturity, and nodes are solved in maturity order.\nFutures need a convexity adjustment before they enter as forwards. A missing quote, such as a 3y swap, cannot be solved directly, so the usual practice is to interpolate the par quote (or the DF) and mark the node as interpolated, which leaves the hedge in that bucket approximate.<br>\n<b>Interviewer follow-up:</b> Why is the order important? Each quote depends on the nodes before it, so the solve is sequential. Reordering turns the bootstrap into a simultaneous solve with a dense Jacobian.",
+  "tags": [
+   "bootstrapping",
+   "instruments",
+   "curves",
+   "ois"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the turn-of-year effect in the short end, and how should a curve builder handle a deposit or future that spans 31 December?",
+  "back": "<b>Answer:</b> Funding rates for periods spanning year-end typically spike because of balance-sheet and reporting effects. The forward over the turn is elevated relative to its neighbours.\nA piecewise-constant or smooth interpolation spreads this spike into adjacent nodes and mis-prices neighbouring instruments.\n<b>Handling:</b> (i) add an explicit turn-of-year jump in the forward, either as a separate node or as a discontinuity at the year-end date, solved from the instrument that straddles the turn; (ii) keep the spike out of the smooth segment; (iii) report the turn premium as its own bucket so it is hedged with the straddling instrument.<br>\n<b>Interviewer follow-up:</b> What is the trade-off? An explicit jump reprices the straddling instrument correctly, but its size is estimated from one or two instruments and can be unstable from day to day.",
+  "tags": [
+   "bootstrapping",
+   "turn_of_year",
+   "interpolation",
+   "curves"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the convexity adjustment between a futures-implied forward rate and the true forward rate under a Gaussian (Ho–Lee type) model with normal volatility \\(\\sigma\\). Give the approximate formula and its sign. Compute it for \\(\\sigma=1\\%\\) p.a., fixing \\(t_1=3\\)y and maturity \\(t_2=3.25\\)y.",
+  "back": "<b>Answer:</b> Futures are marked to market daily, so the futures rate is an expectation under the risk-neutral measure with the money-market numeraire. The forward rate is an expectation under the forward measure. To leading order \\[F_{\\text{fut}}-F_{\\text{fwd}}\\approx \\tfrac12\\,\\sigma^2\\,t_1\\,t_2.\\]\nThe sign is positive: the futures rate sits above the forward rate, because margin gains are reinvested when rates rise, which is positive correlation between the futures payoff and rates.\nNumbers: \\(\\tfrac12\\times 10^{-4}\\times 3\\times 3.25\\approx 4.9\\)bp, so the forward is the futures rate minus about 4.9bp.<br>\n<b>Interviewer follow-up:</b> How does the adjustment scale along the strip? It grows roughly with \\(\\sigma^2 t_1 t_2\\), so a contract fixing five years out needs a far larger correction than a 1y contract.",
+  "tags": [
+   "bootstrapping",
+   "futures",
+   "convexity",
+   "derivation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For rate futures, the futures rate is {{c1::above}} the forward rate by approximately {{c2::½σ²t₁t₂}}, because daily margining makes the futures payoff positively correlated with rates.",
+  "back": "Subtract the adjustment from the futures-implied rate before inserting the forward into the bootstrap. The sign flips only if the correlation assumption fails.",
+  "tags": [
+   "futures",
+   "convexity",
+   "bootstrapping",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compare linear interpolation of zero rates with log-linear interpolation of discount factors between pillars. What forward-rate behaviour does each produce, and why does it matter for bucketed risk?",
+  "back": "<b>Answer:</b>\n<ul>\n<li><b>Linear on zeros:</b> \\(z(t)\\) is piecewise linear, so \\(f(t)=z(t)+t\\,z'(t)\\) jumps at each pillar where the slope of \\(z\\) changes.</li>\n<li><b>Log-linear on DF:</b> \\(\\ln DF(t)\\) is piecewise linear, so the continuously compounded forward is piecewise constant and jumps at each pillar.</li>\n</ul>\nBoth keep DFs positive and monotone when the pillars are, but the forward curve is discontinuous at pillars. A single pillar quote then moves forwards in a spiky, local way.\nFor hedging, the DV01 of a par swap maps onto adjacent forward segments that look jagged.<br>\n<b>Interviewer follow-up:</b> What about a cubic spline on log DF? It is smooth, but it can overshoot and produce negative forwards, which is why monotone-convex schemes are preferred for production curves.",
+  "tags": [
+   "interpolation",
+   "curves",
+   "forwards",
+   "risk"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does monotone-convex interpolation (Hagan–West) guarantee that linear-on-zeros or a cubic spline on log DF does not? State the construction at a high level.",
+  "back": "<b>Answer:</b> The method works on the discrete forward rate of each pillar segment. Within each segment it builds a continuous interpolated forward that matches the segment's average forward (so pillar DFs reprice exactly), enforces monotonicity and convexity conditions, and keeps forwards positive whenever the discrete forwards are positive.\nGuarantees: exact repricing, no spurious negative forwards, no overshoot, and a continuous forward curve.\nTrade-off: more involved to implement and to differentiate, and the forward is continuous but not smooth to all orders, so local response is still segment-based.<br>\n<b>Interviewer follow-up:</b> Why does positivity matter for hedging? Negative forwards from a spline distort the sensitivities of forward-linked products such as CMS and forward swaps, even when the PV looks right.",
+  "tags": [
+   "interpolation",
+   "monotone_convex",
+   "curves",
+   "forwards"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A curve trader asks whether a smoother forward curve is always better. Give the trade-off between forward smoothness and bucketed-risk locality.",
+  "back": "<b>Answer:</b> Smoother forwards, from a cubic spline in log DF or from global smoothing penalties, reduce artificial forward noise. But a single pillar quote then moves forwards far from its maturity, so a 10y swap's risk spreads across the 1y to 20y nodes and bucket attribution becomes harder to read.\nLocal schemes, such as linear zeros or log-linear DF, give clean instrument-to-bucket mapping but noisy, jumping forwards. Monotone-convex sits between the two: local response with continuous forwards.\nChoice depends on the book: par-instrument hedging favours locality, while books trading forward-linked products such as CMS and forward swaps favour smoothness.<br>\n<b>Interviewer follow-up:</b> Which matters more for a CMS desk? Forward smoothness, since the CMS and forward-swap values depend on forward curvature across the range the desk is exposed to.",
+  "tags": [
+   "interpolation",
+   "risk",
+   "trade_off",
+   "curves"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "With linear-on-zeros interpolation and a bootstrap, the 5y par quote rises by 10bp and all other quotes are unchanged. Which par rates and forwards move?",
+  "back": "<b>Answer:</b> The 4y par rate is unchanged because DF1 to DF4 are fixed by their own quotes. The 5y par rate moves by 10bp by construction.\nThe 6y quote is still fixed, so the bootstrap re-solves DF6 and the 6y zero moves to keep the 6y par rate where it was. Zeros between 4y and 6y change, and so do forwards in the 4y to 5y and 5y to 6y segments. Forwards beyond 6y also shift, because DF6 feeds every later node.<br>\n<b>Interviewer follow-up:</b> Why does the 6y quote pin a zero that moved? Because the bootstrap enforces each quote exactly. Any sensitivity that appears at the 6y zero is the bootstrap's way of keeping the market quote fixed.",
+  "tags": [
+   "bootstrapping",
+   "scenario",
+   "curves",
+   "risk"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Define the curve Jacobian \\(J=\\partial q/\\partial z\\) for a bootstrapped curve, with \\(q\\) the market quotes and \\(z\\) the node parameters. What is its shape for a sequential bootstrap, and why?",
+  "back": "<b>Answer:</b> \\(J_{ij}=\\partial q_i/\\partial z_j\\). It is square when the number of nodes equals the number of instruments.\nQuote \\(i\\) depends only on nodes up to its own maturity, so \\(J_{ij}=0\\) for nodes beyond that maturity. With a sequential solve, \\(J\\) is lower triangular in maturity order. Its inverse follows by forward substitution, and the bootstrap itself is a Newton step with this Jacobian.\nA simultaneous global solve produces a dense \\(J\\).<br>\n<b>Interviewer follow-up:</b> Why does triangularity matter for risk? It makes the inverse cheap and exact, and it explains why a sequential bootstrap can place sensitivity in unexpected nodes when a quote changes.",
+  "tags": [
+   "curves",
+   "jacobian",
+   "bootstrapping",
+   "risk"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Given node-space sensitivities \\(\\partial V/\\partial z\\) for a portfolio, derive the quote-space bucketed delta \\(\\partial V/\\partial q\\) using the inverse Jacobian. Write it in matrix form and verify the parallel-shift identity.",
+  "back": "<b>Answer:</b> Chain rule: \\(\\partial V/\\partial q_i=\\sum_j \\frac{\\partial z_j}{\\partial q_i}\\frac{\\partial V}{\\partial z_j}\\), with \\(\\partial z/\\partial q=J^{-1}\\). In matrix form \\[\\frac{\\partial V}{\\partial q}=\\left(J^{-1}\\right)^{\\top}\\frac{\\partial V}{\\partial z}.\\]\nCheck: a parallel quote shift \\(dq=\\mathbf 1\\) gives \\(dz=J^{-1}\\mathbf 1\\), so \\(dV=\\mathbf 1^{\\top}\\,\\partial V/\\partial q=(J^{-1}\\mathbf 1)^{\\top}\\,\\partial V/\\partial z\\). That is the sum of the quote-space buckets, so the identity holds.\nThis mapping lets zero-bucket risk be restated as hedgeable par-bucket risk.<br>\n<b>Interviewer follow-up:</b> What breaks the mapping? A non-invertible or ill-conditioned \\(J\\), which happens with redundant quotes or with nodes that no instrument pins.",
+  "tags": [
+   "jacobian",
+   "risk",
+   "derivation",
+   "bucketing"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A trader is long a 10y receiver swap and wants bucketed DV01. Compare par-bucketed and zero-bucketed risk: what does each show, and which should be used to hedge with swaps?",
+  "back": "<b>Answer:</b> Par bucketing bumps each market quote and reports \\(\\partial V/\\partial q_i\\). Zero bucketing bumps each node and reports \\(\\partial V/\\partial z_j\\).\nPar buckets sum to the parallel shift of quotes and map one-to-one onto the instruments that hedge them. A 10y receiver shows its risk concentrated at 10y, so it is hedged with a 10y payer swap.\nZero buckets sum to the parallel zero shift and spread the same risk across nodes below 10y, because bumping a zero node changes the bootstrap.\nUse par buckets for hedging; zero buckets for understanding curve-shape exposure.<br>\n<b>Interviewer follow-up:</b> Why does a single swap show small non-zero par buckets away from its maturity? Bootstrapping couples later DFs to earlier quotes, and interpolation maps part of the sensitivity into neighbouring segments.",
+  "tags": [
+   "risk",
+   "bucketing",
+   "par_risk",
+   "hedging"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The sum of par-bucketed sensitivities equals the sensitivity to a {{c1::parallel shift of all par quotes}}. The sum of zero-bucketed sensitivities equals the sensitivity to a {{c2::parallel shift of all zero rates}}.",
+  "back": "Both identities hold by construction. The gap between the two sums is the curve-shape information lost in one basis or gained in the other.",
+  "tags": [
+   "risk",
+   "bucketing",
+   "par_risk",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the par swap rate for an annual-pay fixed leg from discount factors. Then check it on a flat continuously compounded 4% zero curve over 5 years: what annual par rate results?",
+  "back": "<b>Answer:</b> Par condition \\(S\\,A=1-DF_N\\), with annuity \\(A=\\sum_i\\tau_i DF_i\\), so \\[S=\\frac{1-DF_N}{A}.\\]\nFlat 4% continuously compounded: \\(DF_i=e^{-0.04i}\\) gives 0.96079, 0.92312, 0.88692, 0.85214, 0.81873. Then \\(A\\approx 4.4417\\) and \\(1-DF_5=0.18127\\), so \\(S\\approx 4.081\\%\\).\nThat equals \\(e^{0.04}-1\\), the annual-compounding equivalent of 4% continuous.<br>\n<b>Interviewer follow-up:</b> Why does a flat curve give exactly the compounded-equivalent rate? On a flat curve the par rate is the yield that prices the strip at par, which is the annual-compounding equivalent of the zero rate at the payment frequency.",
+  "tags": [
+   "swaps",
+   "par_rate",
+   "mental_math",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the value of a payer swap with notional \\(N\\), fixed rate \\(K\\), par rate \\(S\\) and annuity \\(A\\), on a single curve with no spread. Give the PV01 and the sign convention.",
+  "back": "<b>Answer:</b> Float leg (single curve, no spread) \\(=N(1-DF_N)\\). Fixed leg \\(=NKA\\) with \\(A=\\sum\\tau_i DF_i\\). Since \\(1-DF_N=SA\\), the payer PV is \\[\\mathrm{PV}_{\\text{payer}}=N A\\,(S-K).\\]\nThe receiver is the negative: \\(NA(K-S)\\).\nPV01 with respect to a parallel move in rates is about \\(NA\\times 1\\)bp for the payer (the payer gains when rates rise) and \\(-NA\\times 1\\)bp for the receiver. Annuity changes add a second-order effect.<br>\n<b>Interviewer follow-up:</b> Why does the receiver lose when rates rise? The receiver is fixed on the leg it receives, so a higher market rate means its fixed coupon is worth less relative to market.",
+  "tags": [
+   "swaps",
+   "pv01",
+   "derivation",
+   "valuation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Mental math: a 5y payer swap with fixed rate 3.00% and par rate 3.20%, notional 100m, annuity 4.60. What is the value? Then give the PV01 for a 10y swap with annuity about 8.0 on the same notional.",
+  "back": "<b>Answer:</b> Payer value \\(=N\\cdot A\\cdot(S-K)=100\\text{m}\\times 4.60\\times 0.0020=+920{,}000\\). The receiver at the same terms is \\(-920{,}000\\).\nPV01 for the 10y: \\(100\\text{m}\\times 8.0\\times 0.0001\\approx 80{,}000\\) per basis point.<br>\n<b>Interviewer follow-up:</b> Why is the 10y PV01 almost nine times the 5y one? The annuity grows with maturity, here from about 4.6 to about 8.0, so the sensitivity to the par rate grows roughly with the annuity.",
+  "tags": [
+   "swaps",
+   "mental_math",
+   "pv01",
+   "valuation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a 10y swap with annuity about {{c1::8.0}}, the PV01 on 100m notional is about {{c2::80,000}} per basis point.",
+  "back": "Rule of thumb: PV01 \\(\\approx N\\times A\\times 10^{-4}\\). The annuity is the quickest handle on swap risk.",
+  "tags": [
+   "pv01",
+   "mental_math",
+   "annuity",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write the forward par swap rate for a swap starting at \\(T_0\\) and ending at \\(T_n\\). With \\(DF(T_0)=0.960\\), \\(DF(T_n)=0.780\\) and forward annuity \\(A=4.20\\), what is the forward rate?",
+  "back": "<b>Answer:</b> \\[S(T_0,T_n)=\\frac{DF(T_0)-DF(T_n)}{A(T_0,T_n)},\\qquad A(T_0,T_n)=\\sum_i\\tau_i DF(T_i)\\] over the forward swap's own schedule.\nHere \\((0.960-0.780)/4.20=0.180/4.20\\approx 4.29\\%\\).\nDerivation: a forward-start float leg with no spread telescopes to \\(DF(T_0)-DF(T_n)\\), the same identity as the spot case.<br>\n<b>Interviewer follow-up:</b> How sensitive is the forward rate to \\(DF(T_0)\\)? \\(\\partial S/\\partial DF(T_0)=1/A\\approx 0.24\\), so a 1% move in the start DF moves the forward by about 24bp.",
+  "tags": [
+   "swaps",
+   "forward_swap",
+   "mental_math",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why is the forward swap rate a martingale under the annuity measure? State the numeraire and what this implies for pricing a European payer swaption with Black's formula.",
+  "back": "<b>Answer:</b> Take the numeraire \\(\\mathcal A(t)=\\sum_i\\tau_i P(t,T_i)\\) over the fixed schedule. The traded asset \\(P(t,T_0)-P(t,T_n)\\), the value of a forward-start floating leg, equals \\(\\mathcal A(t)\\,S(t)\\). Divide by the numeraire and \\(S(t)\\) is a martingale under the annuity measure.\nPayer swaption at inception: \\(V_0=\\mathcal A(0)\\,\\mathbb E^{\\mathcal A}[(S_T-K)^+]\\), which gives Black's formula \\(V_0=\\mathcal A(0)\\,[S\\,\\Phi(d_1)-K\\,\\Phi(d_2)]\\) with a lognormal \\(S\\). No further discounting is needed beyond \\(\\mathcal A(0)\\).<br>\n<b>Interviewer follow-up:</b> Why does this break for a CMS paid on a later date? Payment at \\(T_p\\) requires a different numeraire, and the swap rate is no longer a martingale under that measure. The difference is the convexity adjustment.",
+  "tags": [
+   "swaps",
+   "annuity_measure",
+   "swaptions",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Mental math: value a 1y×5y at-the-money payer swaption with normal volatility 100bp p.a., annuity 4.50 and notional 100m. Give the approximate premium and state the approximation.",
+  "back": "<b>Answer:</b> Bachelier at-the-money: \\(V\\approx N\\cdot A\\cdot\\sigma_N\\sqrt{T}/\\sqrt{2\\pi}\\). With \\(\\sigma_N=0.01\\), \\(T=1\\), \\(A=4.50\\): \\(100\\text{m}\\times 4.50\\times 0.01\\times 0.399\\approx 1.8\\text{m}\\), about 1.8% of notional.\nApproximation: the 0.4 factor is \\(1/\\sqrt{2\\pi}\\), valid at the money and for normal dynamics.<br>\n<b>Interviewer follow-up:</b> Why use normal vol rather than lognormal for a low-rate or negative-rate regime? Lognormal vol is undefined or unstable when the forward approaches zero, so normal vol is the market standard for swaptions.",
+  "tags": [
+   "swaptions",
+   "mental_math",
+   "volatility",
+   "valuation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "ATM normal-vol payer swaption premium \\(\\approx\\) {{c1::0.4}} × \\(\\sigma_N\\) × \\(\\sqrt{T}\\) × {{c2::annuity}} × notional.",
+  "back": "Derived from Bachelier's formula at the money, \\(1/\\sqrt{2\\pi}\\approx 0.4\\).",
+  "tags": [
+   "swaptions",
+   "mental_math",
+   "volatility",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why does a CMS rate exceed the forward swap rate when payment is later than fixing? Explain the mechanism and what drives the size of the adjustment.",
+  "back": "<b>Answer:</b> A CMS coupon pays the swap rate \\(S_{T_f}\\) on a payment date \\(T_p\\ge T_f\\). Under the annuity measure \\(S\\) is a martingale, but the payment is valued with the \\(T_p\\)-forward measure, under which the swap rate has a drift.\nThe difference is a convexity adjustment (CA), roughly the covariance between \\(S\\) and the discount factor to \\(T_p\\). It is positive, and it grows with \\(\\sigma^2 T_f\\), with the payment lag \\(T_p-T_f\\), and with the curvature of the annuity-to-payoff mapping.\nPrice it by static replication: integrate payer and receiver swaption prices across strikes with the smile. A single-vol Black formula understates the correction when the smile is steep.<br>\n<b>Interviewer follow-up:</b> Why does the CA matter more for long-dated CMS? Vol and the lag both scale it up, and long-dated swap rates are more convex in the curve, so the correction becomes a meaningful part of value.",
+  "tags": [
+   "cms",
+   "convexity",
+   "swaptions",
+   "annuity_measure"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "In a mark-to-market cross-currency basis swap, why is the PV of the principal re-exchanges zero at each reset date, and what remains to value?",
+  "back": "<b>Answer:</b> Under MtM, the notionals are reset to the prevailing spot at each reset date. The principal exchanged at each reset is therefore worth its face value in both currencies, and the PV of that re-exchange is zero. The FX exposure of the principal is removed.\nWhat remains is the interest legs: the floating coupons plus the basis spread on one leg. The fair basis is the spread that makes the PV of the two interest legs equal in a common currency.<br>\n<b>Interviewer follow-up:</b> Why does the basis become a pricing input rather than a risk mid-life? Because the reset removes the FX principal exposure, the spread does not need an FX hedge to stay fixed, and the MtM value of an existing trade moves with the basis curve only through the interest legs.",
+  "tags": [
+   "xccy",
+   "basis",
+   "mtm",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "State covered interest parity for EURUSD (USD per EUR) and show how a cross-currency basis enters the USD rate implied by FX forwards. State the sign convention for a negative USD basis.",
+  "back": "<b>Answer:</b> Covered interest parity: \\[F=S\\,\\frac{DF_{\\text{EUR}}(T)}{DF_{\\text{USD}}(T)}.\\]\nWith a basis, the USD rate implied from FX forwards differs from the USD OIS rate by the basis. With a negative USD basis, the synthetic USD rate obtained through FX swaps is above USD OIS, so borrowing USD this way costs more than borrowing it directly.<br>\n<b>Interviewer follow-up:</b> Why does the parity break? Arbitrage across the FX swap market needs balance-sheet capacity and counterparty room, and those constraints are costly in stress, so the parity holds only up to the basis.",
+  "tags": [
+   "xccy",
+   "cip",
+   "fx",
+   "basis"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Mental math: spot EURUSD is 1.1000 (USD per EUR). USD 1y rate is 4.00% and EUR 1y rate is 2.00%. Ignoring day-count and basis effects, what is the 1y forward and the forward points?",
+  "back": "<b>Answer:</b> \\(F\\approx 1.1000\\times 1.04/1.02=1.1000\\times 1.01961\\approx 1.1216\\). The forward points are \\(F-S\\approx 0.0216\\), or about 216 pips.\nThe points are positive because USD rates exceed EUR rates. The sign flips when the differential reverses.<br>\n<b>Interviewer follow-up:</b> How does a negative basis change the quoted points? The quoted points embed the basis, so the market-implied USD rate in the points is OIS plus the basis, which shifts the forward a little away from covered parity.",
+  "tags": [
+   "fx",
+   "forward_points",
+   "mental_math",
+   "xccy"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Decompose an FX swap into its legs and explain what the forward points tell you under covered parity and under a cross-currency basis. Why is the FX swap's principal treatment different from an MtM basis swap?",
+  "back": "<b>Answer:</b> An FX swap is a spot exchange of two currencies plus an opposite forward exchange at a later date. Its value is the difference between the forward points and the covered-parity fair value.\nUnder covered parity the points equal the rate differential. With a basis, the points embed the implied rate, so they carry a basis-adjusted differential.\nPrincipal: an FX swap exchanges principal at both ends, once spot and once forward. There is no interim reset, so FX exposure stays at the forward rate until maturity. An MtM basis swap resets principal at spot, so the FX exposure is removed during the trade.<br>\n<b>Interviewer follow-up:</b> Why does an FX swap look like a short-dated funding trade? Its implied funding rate is the points-adjusted rate, and the exposure does not roll, so the cost is locked for the term.",
+  "tags": [
+   "fx",
+   "fx_swap",
+   "xccy",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is tenor basis, and how does it show up in a 3M-vs-6M basis swap quote? Why does a curve builder need separate projection curves per tenor?",
+  "back": "<b>Answer:</b> Tenor basis is the spread between floating legs that reference different tenors of the same index, such as 3M against 6M EURIBOR. It shows up as the spread on a basis swap that exchanges the two floating legs at par.\nEach tenor has its own forward rate and therefore needs its own projection curve, bootstrapped from that tenor's swaps and basis swaps. A single projection curve cannot reprice the 3M and 6M legs at the same time once the basis is non-zero.<br>\n<b>Interviewer follow-up:</b> Does compounded RFR have a tenor basis? Overnight compounded RFR has no tenor of its own. Its basis is with term RFR and with other forward-looking products, which is a different question.",
+  "tags": [
+   "multicurve",
+   "tenor_basis",
+   "projection",
+   "basis"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Define the 10y SOFR swap spread and list two structural drivers that have pushed it negative. How would a trader be long the spread?",
+  "back": "<b>Answer:</b> The swap spread is the par swap rate minus the yield on a Treasury of matched maturity, so a negative spread means the swap rate is below the Treasury yield.\nDrivers: heavy Treasury supply that cheapens government bonds relative to swaps, and bank balance-sheet and leverage constraints (SLR-type rules) that make holding Treasuries costly for dealers. Hedging and asset-swap demand also shift the spread.\nLong the spread: receive the fixed swap rate and short the Treasury. The position gains if the spread widens, that is, if the swap rate rises relative to the Treasury yield.<br>\n<b>Interviewer follow-up:</b> Why would relief in balance-sheet rules narrow a negative spread? Easing the constraint lowers the cost of holding Treasuries on dealer balance sheets, which increases demand for them and pushes Treasury yields down relative to swaps. The size and timing of that effect are debated, so verify the current rule status before relying on it.",
+  "tags": [
+   "swap_spreads",
+   "treasuries",
+   "trade_idea",
+   "balance_sheet"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why are cleared swaps discounted at the CCP's collateral rate, and what is price alignment interest (PAI)?",
+  "back": "<b>Answer:</b> The CCP takes variation margin in cash that earns a collateral rate, for example SOFR for USD. The cleared trade's MTM is therefore computed on the curve consistent with that cash, so the CCP's discount rate and the collateral rate match.\nPAI is a daily cash flow between the CCP and the member (or between members) that compensates for the difference between the rate paid on the margin cash and the rate used to discount the trade. It aligns the economic value of a cleared trade when the CCP changes its discounting.<br>\n<b>Interviewer follow-up:</b> Why do bilateral CSA trades not need PAI? A bilateral CSA sets the discount rate contractually. A change of collateral rate there is a negotiated change, while a CCP's change is a uniform, daily-settled compensation.",
+  "tags": [
+   "clearing",
+   "pai",
+   "discounting",
+   "collateral"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "LCH SwapClear moved USD discounting from {{c1::effective fed funds}} to {{c2::SOFR}} in {{c3::2020}}, with price alignment interest settling the difference between the two.",
+  "back": "Discounting switches change MTM without changing the cash position. PAI keeps the cleared trade's economics stable across the switch.",
+  "tags": [
+   "clearing",
+   "pai",
+   "discounting_switch",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A cleared swap's MTM rises by a hypothetical 1.0m when a CCP switches its discounting curve. What cash flows arise, and how does the trader's net economics change?",
+  "back": "<b>Answer:</b> The MTM change is a valuation effect, not an economic gain. The CCP settles it in cash through a price alignment amount, so the member's net position, after PAI, is largely unchanged. The trader's future variation margin and PAI now run at the new collateral rate, so the carry changes.\nCheck the bucketed DV01 before and after the switch: the sensitivity profile can move even if the MTM is compensated.<br>\n<b>Interviewer follow-up:</b> Why does the desk still see a P&L effect? If the PAI and the MTM change do not match exactly, for example on a curve or timing mismatch, the residual shows up as P&L. This is why the switch is run through the risk system explicitly.",
+  "tags": [
+   "clearing",
+   "pai",
+   "scenario",
+   "discounting_switch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compare initial margin (IM) and variation margin (VM) for cleared swaps. Which curve or rate funds each, and what happens to IM in a volatility spike?",
+  "back": "<b>Answer:</b>\n<ul>\n<li><b>VM</b> settles the daily change in MTM in cash, typically remunerated at the collateral rate. Its funding cost is small.</li>\n<li><b>IM</b> covers potential future exposure over the margin period of risk. It is posted in cash or eligible securities and is funded at a higher cost than the collateral rate, so it carries a real carry cost.</li>\n</ul>\nIn a volatility spike, IM rises procyclically, because the risk model sees larger potential moves. The member must find cash quickly, which can drain liquidity exactly when markets are stressed.<br>\n<b>Interviewer follow-up:</b> Why does IM generate a valuation adjustment and VM does not? VM is returned at the collateral rate, so it is value-neutral to first order. IM is locked up for the life of the trade, so its funding cost remains and is priced as MVA.",
+  "tags": [
+   "clearing",
+   "margin",
+   "im_vm",
+   "liquidity"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Conceptually, what does FVA measure, and why is an uncollateralised derivative discounted off a funding curve?",
+  "back": "<b>Answer:</b> FVA is the present value of the expected funding cost (or benefit) on uncollateralised exposure. If the trade is an asset, the dealer must fund a hedge at its own funding rate; if it is a liability, the dealer earns a funding benefit on cash it can use.\nThe replicating hedge is financed at the funding rate, so the trade is discounted off a funding curve rather than the collateral curve. FVA is therefore the difference between the funding-curve and collateral-curve values.\nCaution: FVA can overlap with DVA or own-default effects. Frameworks differ on how to avoid double counting.<br>\n<b>Interviewer follow-up:</b> Why is FVA sometimes argued to be double counting? Because the funding benefit from own default and the own-credit benefit in DVA can offset each other; the accounting and pricing frameworks disagree on how to split them.",
+  "tags": [
+   "xva",
+   "fva",
+   "funding",
+   "discounting"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Briefly, what are MVA and KVA, and what does each capture that FVA does not?",
+  "back": "<b>Answer:</b>\n<ul>\n<li><b>MVA</b> (margin valuation adjustment): the lifetime cost of funding initial margin posted on an uncleared trade.</li>\n<li><b>KVA</b> (capital valuation adjustment): the lifetime cost of regulatory capital held against the trade, charged at a hurdle rate.</li>\n</ul>\nFVA captures the funding of the MTM exposure, not the funding of IM or the cost of capital. MVA and KVA are additional adjustments that matter most for long-dated, uncleared, and capital-intensive trades.<br>\n<b>Interviewer follow-up:</b> Why do clearing and SIMM change these numbers? Clearing removes most bilateral capital and changes the IM funding profile, while SIMM changes the IM amount itself, so both alter MVA and KVA.",
+  "tags": [
+   "xva",
+   "mva",
+   "kva",
+   "margin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A dealer compares quoting a 10y USD swap cleared through a CCP with a bilateral trade under a CSA. Which curves and cost terms differ between the two?",
+  "back": "<b>Answer:</b> Cleared: discounting on the CCP's curve, VM in cash at the collateral rate, PAI on any switch, and IM set by the CCP's margin model. Bilateral under a CSA: discounting on the CSA's collateral curve, with collateral that may be non-cash and eligible-currency options, plus MVA and KVA for uncleared IM and capital.\nTrade-off: clearing lowers counterparty capital and CVA, but it makes IM funding and procyclicality more visible. A bilateral CSA gives flexibility over collateral and terms, but it carries more capital and more adjustments.<br>\n<b>Interviewer follow-up:</b> Which is cheaper? Depends on the capital, funding and margin profile of the book, so the comparison should be run as a full XVA calculation, not by one curve.",
+  "tags": [
+   "clearing",
+   "csa",
+   "xva",
+   "trade_off"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Show how a forward rate over \\([t_1,t_2]\\) is obtained from discount factors. Then show that log-linear interpolation of DFs implies a piecewise-constant continuously compounded forward.",
+  "back": "<b>Answer:</b> Simple forward over \\([t_1,t_2]\\) with accrual \\(\\tau\\): \\(F=\\frac{1}{\\tau}\\left(\\frac{DF(t_1)}{DF(t_2)}-1\\right)\\). The continuously compounded forward is \\(f(t)=-\\frac{d}{dt}\\ln DF(t)\\).\nIf \\(\\ln DF(t)\\) is linear between pillars, \\(\\ln DF(t)=a+bt\\), then \\(f(t)=-b\\) is constant on the segment. The forward is therefore flat within each segment and jumps at each pillar.<br>\n<b>Interviewer follow-up:</b> Why does log-linear keep DFs positive? Exponentiating a linear function is always positive, so positivity is automatic. The cost is the forward discontinuity.",
+  "tags": [
+   "curves",
+   "forwards",
+   "derivation",
+   "interpolation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the difference between term SOFR and compounded-in-arrears SOFR? Why does the difference need to be modelled, and where does it matter for swap valuation?",
+  "back": "<b>Answer:</b> Compounded SOFR is backward-looking: it accumulates realised overnight rates over the period. Term SOFR is forward-looking: it is a published rate for a future period, derived from market instruments such as SOFR futures and options. It embeds expectations and a term premium.\nThe term-compounded basis is nonzero and must be modelled. It matters when a trade references one and is hedged with the other, or when a curve is built from term instruments but projected on compounded SOFR.<br>\n<b>Interviewer follow-up:</b> Why does the basis matter for a swap that is priced off a compounded OIS curve? A term-referenced leg needs its own projection curve, and the basis between the two has to be consistent with the basis swap quotes in the curve.",
+  "tags": [
+   "sofr",
+   "term_sofr",
+   "basis",
+   "multicurve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A EURIBOR 6M-vs-€STR OIS basis is quoted. Where in the bootstrap does the spread go, and which curve is affected?",
+  "back": "<b>Answer:</b> The EURIBOR 6M basis belongs on the projection curve, since it changes the forwards of the 6M leg. The €STR OIS curve remains the discount curve and needs no basis adjustment, because discounting is collateral-consistent.\nSo the basis appears as a spread node on the 6M projection curve, bootstrapped against the 6M swaps and the basis quotes.<br>\n<b>Interviewer follow-up:</b> Why not put the basis on the discount curve? That would change every DF and therefore every trade's PV, including trades with no 6M exposure, which is not what the basis represents.",
+  "tags": [
+   "multicurve",
+   "basis",
+   "projection",
+   "bootstrapping"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Log-linear interpolation of discount factors produces piecewise-{{c1::constant}} forwards, while linear interpolation of zero rates produces forwards with {{c2::jumps}} at each pillar.",
+  "back": "Both keep DFs positive and monotone, but neither gives continuous forwards. Monotone-convex interpolation is the usual fix.",
+  "tags": [
+   "interpolation",
+   "forwards",
+   "curves",
+   "convention"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "With a 2-business-day lookback, the accrual on day \\(i\\) uses the rate observed {{c1::two business days}} earlier, while the accrual weight \\(d_i\\) stays {{c2::with day \\(i\\)}}.",
+  "back": "This is a lookback convention. An observation shift instead moves the averaging window, so the weights follow the shifted days.",
+  "tags": [
+   "rfr",
+   "compounding",
+   "conventions",
+   "lookback"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Mental math: compare a 2y discount factor for 4.00% annually compounded with one for 4.00% continuously compounded. What is the PV difference per 100 of notional, and why does the convention matter for curve conversion?",
+  "back": "<b>Answer:</b> Annual: \\(1/1.04^2=0.92456\\). Continuous: \\(e^{-0.08}=0.92312\\). Difference \\(\\approx 0.00144\\), so about 0.14 per 100 notional, or 14bp of notional.\nThe convention matters because a curve quoted in one compounding basis fed into a model expecting the other shifts every DF, and so every PV.<br>\n<b>Interviewer follow-up:</b> Which convention do SOFR and SONIA OIS curves use? They are quoted and bootstrapped with the simple rates on their own day-count bases, then converted to DFs, so compounding conversion is a separate step from day count.",
+  "tags": [
+   "mental_math",
+   "conventions",
+   "discounting",
+   "curves"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why does the cross-currency basis widen in funding stress, and why is it hard to arbitrage away?",
+  "back": "<b>Answer:</b> In stress, demand for USD funding through FX swaps rises sharply, and the banks that intermediate these trades face capital and balance-sheet constraints. The arbitrage that would close the gap (borrowing in the cheaper market and swapping) needs capital, counterparty room and collateral that are scarce exactly then.\nThe result is persistent covered-parity deviation: the basis stays wide until the constraints ease.<br>\n<b>Interviewer follow-up:</b> Which episodes show this? Episodes of market stress, such as 2008 and March 2020, saw the USD basis widen sharply, which is what made the basis an input to curve construction rather than a small correction.",
+  "tags": [
+   "xccy",
+   "basis",
+   "funding",
+   "trade_off"
+  ]
+ }
+]

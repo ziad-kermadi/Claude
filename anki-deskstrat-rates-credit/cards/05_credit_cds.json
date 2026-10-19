@@ -1,0 +1,561 @@
+[
+ {
+  "type": "basic",
+  "front": "Define the G-spread, I-spread and Z-spread of a fixed-coupon bond. Why can the Z-spread differ materially from a yield-based spread?",
+  "back": "<b>G-spread</b>: YTM minus the interpolated government yield at the same maturity.<br>\n<b>I-spread</b>: YTM minus the interpolated swap rate at the same maturity.<br>\n<b>Z-spread</b>: the constant spread \\(z\\) added to every point of the benchmark zero curve such that \\(\\sum_i CF_i \\, DF(t_i)\\, e^{-z t_i} = \\) dirty price (continuous compounding shown).<br>\nYield-based spreads discount every cash flow at one rate (the YTM) and compare with a single point on the curve, so they implicitly assume a flat curve and re-investment at the YTM. On a sloped or humped curve the Z-spread is the correct constant spread because each cash flow is discounted off its own zero rate.<br>\n<b>Interviewer follow-up:</b> Which measure should a swap-hedged book use? The I-spread still uses a yield; the ASW or the Z-spread over the swap curve is the cleaner measure.",
+  "tags": [
+   "bond_spreads",
+   "convention",
+   "curves"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The Z-spread is the constant spread added to the {{c1::zero curve}} such that the discounted cash flows equal the {{c2::dirty price}}.",
+  "back": "For an option-free bond the Z-spread is the spread the investor earns over the risk-free zero curve, cash flow by cash flow. For a callable or putable bond the Z-spread mixes credit spread with option value (see the OAS card).",
+  "tags": [
+   "bond_spreads",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the approximate par-par asset swap spread (ASW) of a bond priced at \\(P\\) (per 100 par), annual coupon \\(c\\), against a par swap rate \\(s\\) with annuity \\(A=\\sum_i \\tau_i DF_i\\). Why does a discount bond have a higher ASW than \\((c-s)\\)?",
+  "back": "Par-par ASW is the spread that makes the asset swap worth zero at inception. The buyer pays \\(P\\) upfront, receives the bond coupons and par at maturity, and in exchange pays fixed \\(s\\) on the swap leg and receives floating plus ASW.<br>\nEquating the present values gives the approximation<br>\n\\[ ASW \\approx (c-s) + \\frac{100-P}{A} \\]\nThe second term amortises the price gap to par over the life of the bond. A discount bond (\\(P<100\\)) therefore has an ASW above \\(c-s\\), and a premium bond has one below it.<br>\n<b>Interviewer follow-up:</b> Why is ASW not the same as the Z-spread? Because the floating leg is referenced to RFR (SOFR, SONIA, ESTR) and the spread is quoted over the swap curve, so ASW carries the swap-spread basis on top of the credit spread.",
+  "tags": [
+   "bond_spreads",
+   "derivation",
+   "swaps"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why is the Z-spread of a callable bond larger than its OAS? What is the sign relationship for a putable bond?",
+  "back": "Z-spread \\(\\approx\\) OAS + option cost, where the option cost is the value of the embedded option measured in spread terms.<br>\nA callable bond gives the issuer a call, so the investor is short the call. The investor's option cost is positive, so the Z-spread overstates the compensation for credit and liquidity risk and the OAS is smaller.<br>\nA putable bond is the reverse: the investor holds a put, so the option value is positive for the investor, the option cost is negative, and the Z-spread is below the OAS.<br>\n<b>Interviewer follow-up:</b> Why does effective duration of a callable bond fall when rates fall? Negative convexity: the call caps the price as yields drop and the issuer refinances.",
+  "tags": [
+   "bond_spreads",
+   "options",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Define spread duration and derive the CS01 of a bond. Mental-math example: $10m face, price 98, spread duration 6.",
+  "back": "Spread duration \\(SD = -\\frac{1}{P}\\frac{\\partial P}{\\partial s}\\), the percentage price sensitivity to a parallel change in the spread \\(s\\).<br>\nCS01 (dollar change per 1bp of spread widening) is \\(CS01 = -\\frac{\\partial P}{\\partial s}\\times 0.0001 = P\\cdot SD \\cdot 0.0001\\) per unit of face.<br>\nExample: \\(10{,}000{,}000 \\times 0.98 \\times 6 \\times 0.0001 \\approx \\$5{,}880\\) per bp. For a bullet bond the spread duration is close to the modified duration measured on the Z-spread-discounted cash flows.<br>\n<b>Interviewer follow-up:</b> Why is the spread duration of a floating-rate note small? Its coupons reset to the RFR, so the spread is only exposed until the next reset date, and spread duration is roughly the time to next reset.",
+  "tags": [
+   "bond_spreads",
+   "risk",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "CS01 of a bond equals {{c1::price × spread duration × 1bp}} per unit of face; for $10m, price 98 and spread duration 6 this is {{c2::≈ $5,880 per bp}}.",
+  "back": "Use per-unit-face arithmetic and scale. The same formula gives the CDS CS01 when the price term is replaced by the risky annuity RPV01.",
+  "tags": [
+   "bond_spreads",
+   "mental_math",
+   "risk"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Define DTS (duration times spread) for a credit bond. Why do portfolio managers hedge DTS rather than spread duration alone?",
+  "back": "\\(DTS = SD \\times s\\). It is roughly spread duration weighted by the spread level, so it proxies the spread-driven exposure to expected default loss rather than pure price sensitivity.<br>\nTwo bonds with the same CS01 and different spreads have different DTS. The high-spread bond has more DTS, so a portfolio matched on DTS is matched on the spread-based risk premium exposure rather than the raw price sensitivity.<br>\n<b>Interviewer follow-up:</b> Why is DTS exposure not linear for a bond near distress? As spreads widen, the spread-level term grows, so DTS rises convexly and a hedge set on today's DTS drifts quickly.",
+  "tags": [
+   "bond_spreads",
+   "risk",
+   "portfolio"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A bond is priced at 95 (per 100 par) with a recovery assumption of 40. You are long the bond. What is its jump-to-default (JTD) loss, and why is it not simply notional times \\((1-R)\\)?",
+  "back": "JTD = market value minus recovery value: \\(JTD = P - R \\times 100 = 95 - 40 = 55\\) per 100 par.<br>\nNotional times \\((1-R)\\) gives the loss measured against par. The bond is marked at 95, so the loss that actually hits the position is measured against its current market value. The gap of 5 points is the price already paid for, which disappears on default.<br>\n<b>Interviewer follow-up:</b> How does accrued interest enter? It is paid or recovered as part of the claim, so it is usually excluded from the MV-based JTD in a first pass.",
+  "tags": [
+   "bond_spreads",
+   "jtd",
+   "risk"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A protection buyer holds $10m notional of single-name CDS with recovery 40%, and the position has a mark-to-market gain of $300k. What is its jump-to-default P&L?",
+  "back": "On default the buyer receives \\((1-R)N = 0.6 \\times 10\\text{m} = \\$6.0\\text{m}\\).<br>\nThe existing MTM of $300k is already in the book, so the incremental jump gain is \\(JTD_{buyer} = (1-R)N - MTM = 6.0 - 0.3 = \\$5.7\\text{m}\\).<br>\nFor the protection seller the sign flips: \\(JTD_{seller} = -(1-R)N + MTM\\).<br>\n<b>Interviewer follow-up:</b> Why does the MTM matter for JTD on CDS but not for a bond measured against par? The CDS settles at a fixed payout, so the existing mark is the only offset; a bond's JTD is measured against its own market value already, as in the previous card.",
+  "tags": [
+   "cds",
+   "jtd",
+   "risk"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write the premium leg and protection leg of a single-name CDS and derive the par spread. Assume a deterministic discount factor \\(DF(t)\\), survival \\(Q(t)\\), and recovery \\(R\\).",
+  "back": "<b>Premium leg</b>: \\(S\\sum_i \\tau_i\\, DF(t_i)\\, Q(t_i)\\) plus an accrual-on-default term, where \\(\\tau_i\\) are accrual fractions. The accrual-on-default term is usually approximated as half a period of premium on the default-date distribution.<br>\n<b>Protection leg</b>: \\((1-R)\\sum_i DF(t_{i})\\,[Q(t_{i-1})-Q(t_i)]\\) in discrete form, or \\((1-R)\\int DF(t)\\,dQ(t)\\) in continuous form.<br>\nThe par spread sets the two legs equal:<br>\n\\[ S^{*} = \\frac{(1-R)\\sum_i DF(t_i)\\,[Q(t_{i-1})-Q(t_i)]}{\\sum_i \\tau_i DF(t_i) Q(t_i)} \\]\nThe denominator is the risky annuity, RPV01.<br>\n<b>Interviewer follow-up:</b> Why does the premium leg need the accrual-on-default term? A default part-way through a period means the buyer owes the accrued premium, and the cost is not zero.",
+  "tags": [
+   "cds",
+   "derivation",
+   "pricing"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How are single-name CDS quoted and paid? Use a 5y IG name with par spread 80bp, standard coupon 100bp and RPV01 of 4.6. Who pays what upfront, and what about HY names?",
+  "back": "Single-name IG CDS trade with a fixed standard coupon (100bp in the North American convention) and a quoted par spread. The protection buyer pays the coupon, and the difference is settled with an upfront payment.<br>\nUpfront \\(\\approx (c - S^{*})\\times RPV01 = (100-80)\\text{bp} \\times 4.6 = 0.92\\) points of notional. The buyer pays 100bp but the market is 80bp, so the buyer overpays and receives 0.92 points from the seller. Accrued premium since the last coupon date is added on top.<br>\nHY names trade with a 500bp coupon, and the quote is points upfront plus the 500bp running premium.<br>\n<b>Interviewer follow-up:</b> Who receives the upfront if the par spread is above the coupon? The protection seller receives it, because the buyer is underpaying.",
+  "tags": [
+   "cds",
+   "convention",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "State the credit-triangle approximation. A 5y CDS trades at 300bp and recovery is 40%. What is the implied flat hazard rate and the approximate 5-year default probability?",
+  "back": "With a flat hazard rate \\(\\lambda\\), the premium leg per unit time is \\(S\\) and the expected loss per unit time is \\(\\lambda(1-R)\\). Equating them gives the credit triangle:<br>\n\\[ S \\approx \\lambda (1-R) \\quad\\Rightarrow\\quad \\lambda \\approx \\frac{S}{1-R} \\]\nHere \\(\\lambda = 0.03/0.6 = 5.0\\%\\). The 5-year cumulative default probability is \\(1-e^{-5\\times0.05} = 1-e^{-0.25}\\approx 22\\%\\).<br>\n<b>Interviewer follow-up:</b> When does the triangle break down? When spreads are large relative to \\(1-R\\), or when the rate level matters, so the risky annuity and discounting need the full model.",
+  "tags": [
+   "cds",
+   "credit_triangle",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Under the credit-triangle approximation the hazard rate is \\(\\lambda \\approx\\) {{c1::\\(S/(1-R)\\)}}; for a 5y spread of 300bp and R = 40% this gives \\(\\lambda \\approx\\) {{c2::5%}}.",
+  "back": "Each 1bp of spread is about \\(1/(1-R)\\) bp of hazard. This is the intuition used in mental-math conversions between spreads and PD.",
+  "tags": [
+   "cds",
+   "credit_triangle",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the risky annuity RPV01 under a flat hazard rate \\(\\lambda\\) and rate \\(r\\). Give a mental approximation for a 5y CDS at 100bp with R = 40%.",
+  "back": "Ignoring accrual-on-default, \\(RPV01 \\approx \\int_0^T e^{-(r+\\lambda)t}\\,dt = \\frac{1-e^{-(r+\\lambda)T}}{r+\\lambda}\\).<br>\nWith \\(\\lambda = 0.01/0.6 \\approx 1.67\\%\\) and \\(r=0\\), \\(RPV01 \\approx T - \\lambda T^2/2 = 5 - 0.21 \\approx 4.8\\).<br>\nRPV01 is always below the risk-free annuity because each premium payment is discounted by survival as well as by the rate.<br>\n<b>Interviewer follow-up:</b> Why does RPV01 fall as spreads widen? Higher \\(\\lambda\\) lowers survival, so fewer premium payments are expected, and the premium's present value drops.",
+  "tags": [
+   "cds",
+   "risky_annuity",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Describe the ISDA Standard CDS Model used to convert quoted CDS spreads into hazard rates and prices. What does \"flat hazard rate\" mean in that context and why is it used?",
+  "back": "The ISDA model bootstraps a survival curve from quoted par spreads, using the ISDA discount curve and standard conventions (quarterly premium, accrual-on-default, standard payment dates, and the IMM maturities). Within each segment it assumes a constant (flat) hazard rate, which makes the survival curve piecewise exponential.<br>\nFlat hazard rates make the bootstrap closed-form per segment and let a single quoted spread map to a single hazard. This ties the spread to a survival probability in a way that is consistent across tenors and reproduces the quoted spreads exactly.<br>\nUpfront quotes are converted using the same survival curve and the standard coupon.<br>\n<b>Interviewer follow-up:</b> Why does a flat hazard curve not match the real term structure? It matches market quotes by construction, but the implied forward hazards jump at each tenor point, so forward-starting CDS priced off it can be unstable.",
+  "tags": [
+   "cds",
+   "pricing",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Define the CDS-bond basis. The bond ASW is 150bp and the 5y CDS is 120bp. Describe the trade and explain why it persists.",
+  "back": "Basis = CDS spread minus cash spread (ASW or Z-spread). Here \\(120-150 = -30\\)bp, a negative basis.<br>\nTrade: buy the bond at a 150bp asset swap spread and buy protection at 120bp. The position locks in about 30bp of spread per year, less the funding cost of the bond above the RFR.<br>\nPersistence comes from frictions: funding costs above the reference rate (repo or unsecured), the cheapest-to-deliver option embedded in the CDS, the cost of the protection seller's counterparty risk (CVA and capital), balance sheet and leverage limits, and the risk of a documentation or delivery mismatch.<br>\n<b>Interviewer follow-up:</b> What happens to the basis in a funding squeeze? Bond investors who finance at higher rates require wider spreads, which pushes the basis more negative.",
+  "tags": [
+   "basis",
+   "cds_bond",
+   "funding"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why does the cheapest-to-deliver option embedded in a CDS tend to push the CDS-bond basis positive?",
+  "back": "After a credit event the protection buyer can deliver any eligible obligation under the clauses of the contract. The buyer picks the cheapest, so the CDS contains a valuable delivery option that is not present in a cash bond.<br>\nThe buyer pays for this option through a higher premium, so the CDS spread sits above the cash-bond-implied spread and the basis (CDS minus bond) is positive.<br>\n<b>Interviewer follow-up:</b> What controls the size of this option? Which obligations are deliverable (restructuring clause, maturity limits, subordination, currency), and how many bonds are eligible, because more eligible bonds means more optionality.",
+  "tags": [
+   "basis",
+   "cds_bond",
+   "options"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A corporate bond is special in repo. Explain how this affects the bond's cash spread and the CDS-bond basis.",
+  "back": "Specialness means the bond is in strong demand to borrow for shorting, so the lender of the bond accepts a lower repo rate. Holders of the bond can finance cheaply, and the bond price is pushed up relative to the curve.<br>\nA higher bond price lowers the bond's yield spread, so the cash spread tightens while the CDS spread is unchanged. The basis (CDS minus cash) therefore moves positive.<br>\n<b>Interviewer follow-up:</b> Why is the rates-based carry for a short seller the opposite? The short pays the special rate on the bond it borrows, so it is cheaper to be short when the bond is special.",
+  "tags": [
+   "basis",
+   "repo",
+   "funding"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Par-par basis versus zero-volatility basis. What does each measure, and when does the difference matter?",
+  "back": "Par-par basis uses the par-par asset swap spread of the bond against the swap curve. It is the classic comparison with a par CDS and is clean for option-free bonds.<br>\nZero-volatility basis uses the spread over the zero curve that prices the bond with no option volatility. For callable or putable bonds it removes the option effect from the cash spread and is the more appropriate measure when the bond has embedded options.<br>\nThe difference matters when the option value is large, for example a deep-in-the-money call. The par-par basis then looks distorted because the embedded call is not in the CDS.<br>\n<b>Interviewer follow-up:</b> Which basis do dealers quote for a bond with a make-whole call? Zero-vol is normally preferred, but the choice must be stated.",
+  "tags": [
+   "basis",
+   "convention",
+   "spreads"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "List the 2014 ISDA credit events relevant to corporate and sovereign reference entities. Which apply only to some entity types?",
+  "back": "Bankruptcy, Failure to Pay (subject to a grace period and a default threshold), Obligation Acceleration, Obligation Default, Repudiation or Moratorium, Restructuring (only if the contract includes a restructuring clause), and Governmental Intervention.<br>\n<b>Corporates</b>: Bankruptcy, Failure to Pay, Obligation Acceleration, Obligation Default and Restructuring if included. Repudiation or Moratorium and Governmental Intervention are not relevant.<br>\n<b>Sovereigns</b>: Repudiation or Moratorium and Restructuring apply.<br>\n<b>Financial Reference Entities</b>: Governmental Intervention is also a credit event.<br>\n<b>Interviewer follow-up:</b> Why is Restructuring optional in North America but treated differently in Europe? Market practice and the choice of restructuring clause were historically regional, and the 2014 definitions preserve the clause choice rather than imposing one.",
+  "tags": [
+   "credit_events",
+   "isda_2014",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compare the restructuring clauses XR14, CR14, MR14 and MM14 in the 2014 definitions. What is the main purpose of the maturity limits?",
+  "back": "<table>\n<tr><th>Clause</th><th>Restructuring is a credit event?</th><th>Limit on deliverable obligation maturity after restructuring</th></tr>\n<tr><td>XR14 (no restructuring)</td><td>No</td><td>n/a</td></tr>\n<tr><td>CR14 (full restructuring)</td><td>Yes</td><td>None</td></tr>\n<tr><td>MR14 (modified restructuring)</td><td>Yes</td><td>30 months</td></tr>\n<tr><td>MM14 (modified-modified restructuring)</td><td>Yes</td><td>60 months for bonds, 30 months for loans (check clause text)</td></tr>\n</table>\nThe maturity limits exist because a restructuring can keep a long-dated bond in the deliverable set. Protection buyers would then deliver the cheapest long-dated bonds, which are hard to value. Limits constrain the delivery option.<br>\n<b>Interviewer follow-up:</b> Which clause is most common for North American IG? XR14 has become the norm there, and European single names trade with MR or MM conventions.",
+  "tags": [
+   "credit_events",
+   "isda_2014",
+   "convention"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Under MR14, the deliverable obligations after a restructuring are limited to a residual maturity of {{c1::30 months}}; this limit reduces the {{c2::cheapest-to-deliver}} option the protection buyer holds.",
+  "back": "Maturity limits are the reason the restructuring clause matters for basis and delivery. MM14 relaxes the limit for bonds, and XR14 removes restructuring as a trigger altogether.",
+  "tags": [
+   "credit_events",
+   "isda_2014",
+   "options"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is governmental intervention as a 2014 credit event, and why does it matter for bank CDS?",
+  "back": "Governmental intervention is triggered when a government or regulator action, such as a compulsory exchange, a write-down, or a conversion, reduces the obligations of a Financial Reference Entity or a Sovereign. The trigger does not need creditor consent and is decided by the Determinations Committee.<br>\nFor banks this captures bail-in and resolution risk. Bank CDS can therefore price the probability of intervention through a resolution regime, even when no default in the usual sense occurs.<br>\n<b>Interviewer follow-up:</b> How does it differ from a restructuring? A restructuring needs a creditor-level change with a specific mechanism. Governmental intervention is imposed by the authority, so the creditor consent test does not apply.",
+  "tags": [
+   "credit_events",
+   "isda_2014",
+   "banks"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Describe the CDS credit-event auction protocol and explain how the final price sets the recovery. Why is open interest netted?",
+  "back": "After a credit event is determined, a CDS auction runs. Dealers submit an initial market midpoint quote, physical settlement requests are collected, and the net open interest is calculated. Bidders then submit prices and the Final Price is set.<br>\nCash settlement pays the protection buyer approximately \\(N\\times(1-\\text{Final Price})\\), adjusted for the coupon and accrued premium conventions. The Final Price is effectively the market recovery of the auctioned bonds.<br>\nNetting open interest reduces the number of bonds that have to be physically delivered, because only the net imbalance has to be filled.<br>\n<b>Interviewer follow-up:</b> Why can the final price differ from the recovery on the bonds? Auction prices reflect deliverable bonds and supply-demand, and they can differ from the eventual workout recovery.",
+  "tags": [
+   "credit_events",
+   "auctions",
+   "settlement"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the role of ISDA Determinations Committees and how do they treat succession events?",
+  "back": "Regional Determinations Committees (DCs) are composed of dealers and buy-side members who vote on whether a credit event has occurred, whether an auction should be held, and what the successor is. Decisions require a supermajority.<br>\nA succession event (merger, spin-off, reorganisation) can split a reference entity into successors. The DC determines the successor(s), and the CDS can be reallocated to them, so the contract may reference a different legal entity afterwards.<br>\n<b>Interviewer follow-up:</b> Why does succession matter for index trades? Index constituents can change after successions, which changes the index's composition and its roll behaviour.",
+  "tags": [
+   "credit_events",
+   "dc",
+   "succession"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "After a succession event, what does the 2014 definitions concept of a \"Narrowed Reference Obligation\" do, and why is it needed?",
+  "back": "After a succession the successor may have obligations whose ranking, currency or maturity differ from the original reference obligation. Without a narrowing mechanism the CDS could end up referencing a broader pool than the one the protection was written on.<br>\nThe Narrowed Reference Obligation concept restricts the CDS to a narrower obligation of the successor, so that the contract's exposure does not expand after the succession. The exact mechanics are defined in the clause text, so verify the operative wording in the 2014 Definitions before relying on it in an interview answer.<br>\n<b>Interviewer follow-up:</b> Why is this a basis risk? Two CDS on the same name can then reference different obligations after succession, so the hedge and the trade can diverge.",
+  "tags": [
+   "credit_events",
+   "isda_2014",
+   "succession"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Standard composition and coupons of the four main CDS indices: iTraxx Main, iTraxx Crossover, CDX IG and CDX HY. Which ones use a 500bp coupon?",
+  "back": "iTraxx Main (European IG): 125 names, 5y, 100bp coupon.<br>\niTraxx Crossover (European sub-IG): 75 names, 5y, 500bp coupon.<br>\nCDX IG (North American IG): 125 names, 5y, 100bp coupon.<br>\nCDX HY (North American HY): 100 names, 5y, 500bp coupon.<br>\nThe HY-style indices (Crossover and CDX HY) are quoted as points upfront plus the 500bp running premium.<br>\n<b>Interviewer follow-up:</b> Why is the composition fixed at each roll? It keeps the index a fixed portfolio for the series life, with defaults handled through the index factor rather than by rebalancing.",
+  "tags": [
+   "indices",
+   "convention",
+   "coupons"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "CDS index series roll semi-annually on the IMM dates {{c1::20 March and 20 September}}; a rolled series is the new {{c2::on-the-run}} series.",
+  "back": "The on-the-run series is the most liquid series. Off-the-run series still trade but with declining liquidity and shorter residual maturity.",
+  "tags": [
+   "indices",
+   "roll",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Explain the roll of a CDS index series. Why does an investor need a roll trade and what is the economic content of that trade?",
+  "back": "At each roll a new series is launched with fresh 5y maturity, a refreshed set of constituents if needed, and a new on-the-run liquidity focus. Positions in the old series remain outstanding until maturity but are less liquid.<br>\nA roll trade swaps the old series for the new one. It is economically a trade on the difference in spread and maturity (and any pricing differences caused by constituent changes or defaults), with the MTM of the old position realised.<br>\n<b>Interviewer follow-up:</b> Why is the old series not simply held? Holding it leaves an illiquid position with a shorter maturity and an exposure that is harder to hedge at market prices.",
+  "tags": [
+   "indices",
+   "roll",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 125-name equal-weight index has R = 40% and one name defaults. Compute the new index factor and the loss to the protection seller as a fraction of the original notional.",
+  "back": "Index factor: \\(124/125 = 0.992\\), so the index notional and coupons now run on 99.2% of the original notional.<br>\nEach name is weighted \\(1/125 = 0.8\\%\\). The defaulted name pays \\((1-R)\\times 0.8\\% = 0.6 \\times 0.8\\% = 0.48\\%\\) of the original notional to the protection buyer, paid by the seller.<br>\nThe defaulted name is removed from the index, and the remaining 124 names continue. The auction on the defaulted name settles the single-name leg.<br>\n<b>Interviewer follow-up:</b> Who gets the loss, and why is it smaller than the index spread times one year? The loss is one-off and equals the defaulted name's weighted LGD; the coupon stream on it stops.",
+  "tags": [
+   "indices",
+   "defaults",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "After one default in a 125-name equal-weight index the index factor becomes {{c1::124/125 ≈ 0.992}}, and the protection seller pays {{c2::(1−R)/125}} of the original notional, which is {{c3::0.48%}} at R = 40%.",
+  "back": "The index factor scales future coupons and spread accruals. The loss uses the per-name weight, not the single-name spread.",
+  "tags": [
+   "indices",
+   "defaults",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Define index-intrinsic basis. CDX IG trades at 65bp and the constituents imply an intrinsic spread of 58bp. What trade captures the convergence and what is its carry?",
+  "back": "Index-intrinsic basis = index spread minus the weighted-average constituent spread (the intrinsic spread), adjusted for upfronts and coupon mismatches.<br>\nThe index is 7bp wide. Buy index protection at 65bp and sell protection on the constituents with a weighted spread of 58bp. The position pays 7bp of net carry per year while the basis is open, and profits as the index tightens to intrinsic.<br>\n<b>Interviewer follow-up:</b> What causes persistent basis? Liquidity of the index relative to single names, dealer hedging demand, skew, and the costs of running many single-name positions across the constituents.",
+  "tags": [
+   "indices",
+   "basis",
+   "trades"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why does the index typically trade wide to its intrinsic spread during stress?",
+  "back": "Demand for protection on the index is typically concentrated because it is liquid and cheap to trade. Dealers who sell index protection have limited balance sheet, so they are paid a premium. Single-name protection requires more capital and carries higher hedging costs.<br>\nIn stress the index is the instrument that clients use to hedge, so the index spread is pushed up relative to the constituents. The positive basis is then harvested by dealers who are long index protection and short single names.<br>\n<b>Interviewer follow-up:</b> Is this basis always positive? Not always, but in most stress regimes it is wide, so the sign of the basis is a useful stress indicator.",
+  "tags": [
+   "indices",
+   "basis",
+   "stress"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write the conditional default probability in a one-factor Gaussian copula and explain the role of the correlation parameter \\(\\rho\\).",
+  "back": "Latent variables: \\(X_i = \\sqrt{\\rho}\\,M + \\sqrt{1-\\rho}\\,\\varepsilon_i\\), with \\(M\\) and \\(\\varepsilon_i\\) independent standard normals. Name \\(i\\) defaults when \\(X_i < \\Phi^{-1}(p)\\), where \\(p\\) is the unconditional default probability.<br>\nConditional on the common factor \\(M\\), defaults are independent with probability<br>\n\\[ p(M) = \\Phi\\!\\left(\\frac{\\Phi^{-1}(p) - \\sqrt{\\rho}\\,M}{\\sqrt{1-\\rho}}\\right) \\]\nTranche expected loss is obtained by integrating over \\(M\\). \\(\\rho=0\\) gives independent defaults, and \\(\\rho\\to1\\) gives all names defaulting together.<br>\n<b>Interviewer follow-up:</b> What does this model miss? It has no tail dependence in the limit and a single correlation for all names, which is why base correlation is used.",
+  "tags": [
+   "tranches",
+   "copula",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is base correlation and why is it used instead of a single implied correlation per tranche?",
+  "back": "Base correlation for a detachment point \\(K\\) is the correlation \\(\\rho_K\\) that reprices the equity tranche \\([0,K]\\) with the one-factor Gaussian copula. Each detachment point then has its own base correlation.<br>\nQuoting by base correlation gives a single consistent correlation curve that reprices all the quoted tranches. A single implied correlation per tranche cannot reprice the whole capital structure consistently, because a [A,B] tranche's implied correlation depends on the other tranches.<br>\nNon-equity tranches are priced from the base correlation curve by difference: \\([A,B]\\) = \\([0,B]\\) minus \\([0,A]\\).<br>\n<b>Interviewer follow-up:</b> Why can base correlation be non-monotone in K? Model and interpolation artefacts or market skew can produce a non-monotone base correlation, which implies negative values for some tranche expected losses and must be fixed.",
+  "tags": [
+   "tranches",
+   "base_correlation",
+   "copula"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why are base correlation curves tranche-specific, and why does this matter for hedging?",
+  "back": "Each base correlation curve point is defined by the equity tranche up to that detachment point. The same correlation number means different things at different attachment points, so the curve is not a single parameter for the whole capital structure.<br>\nHedging with a single correlation number therefore gives a misleading hedge across tranches. Hedges must be done on the base correlation curve at each strike, with the correct sensitivity to each point.<br>\n<b>Interviewer follow-up:</b> How is a senior tranche hedged? With index delta and base correlation vega on the appropriate detachment points, not a single correlation sensitivity.",
+  "tags": [
+   "tranches",
+   "base_correlation",
+   "hedging"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In the one-factor Gaussian copula, a rise in correlation {{c1::lowers}} the expected loss (and the spread) of the 0–3% equity tranche and {{c2::raises}} the expected loss of the senior tranche.",
+  "back": "Equity expected loss falls because defaults become bunched: most scenarios have few defaults and the tranche is rarely hit. The senior tranche gains tail weight, so it loses value for a protection seller.",
+  "tags": [
+   "tranches",
+   "correlation",
+   "scenario"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why is the mezzanine tranche the most sensitive to correlation, and how is it typically hedged?",
+  "back": "Mezzanine tranche expected loss is not monotone in correlation: it can rise and then fall across the correlation range, so the sign of its correlation sensitivity can flip depending on the level of correlation.<br>\nBecause of this, mezzanine tranches are typically hedged with index delta and by balancing base correlation exposures across the adjacent tranches, which removes the first-order correlation risk.<br>\n<b>Interviewer follow-up:</b> Why does mezz correlation risk flip sign? At low correlation the tranche is hit often, so EL is high; at high correlation the tranche is hit rarely, so EL falls. Mezz sits between those regimes, which gives a hump.",
+  "tags": [
+   "tranches",
+   "correlation",
+   "hedging"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Describe a knockout payer option on a CDS index and the front-end protection (FEP) feature. What happens if a constituent defaults before expiry?",
+  "back": "A payer option gives the holder the right to buy protection on the index at a strike spread at expiry. A knockout option ceases to exist if a constituent defaults before expiry.<br>\nWhen a constituent defaults before expiry the option holder receives the front-end protection on the defaulted name, computed as its weighted LGD, and the option knocks out.<br>\nValue to the holder is therefore the FEP payment plus the option's residual value, if any. FEP is the expected protection on defaults before expiry, and it is part of the option's price.<br>\n<b>Interviewer follow-up:</b> Why does a knockout index option not simply behave like a swaption on the index spread? The default payout before expiry is paid on the option, so a pure swaption model misprices the option.",
+  "tags": [
+   "index_options",
+   "fep",
+   "knockout"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why must the forward index spread used to price a knockout index option be adjusted for front-end protection?",
+  "back": "The forward index spread for an option expiring at \\(T\\) should be computed on the index conditional on survival of the names to \\(T\\). If a name defaults before \\(T\\), the option pays FEP and the underlying forward for the remaining notional is different.<br>\nUsing the unconditional forward spread for the underlying ignores the difference between the surviving notional and the notional that the option is written on, and gives a biased option price and hedge ratio.<br>\n<b>Interviewer follow-up:</b> Which effect is larger, FEP or the forward basis? In wide spread regimes FEP is material, so it cannot be ignored even if the forward basis is small.",
+  "tags": [
+   "index_options",
+   "fep",
+   "forward"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Build a CDS spread steepener on a single name (5y and 10y). Which protection do you buy and sell, and how do you choose notionals for carry neutrality?",
+  "back": "A spread steepener profits when the long tenor widens relative to the short tenor. Buy 10y protection and sell 5y protection.<br>\nCarry neutrality sets \\(N_{10} \\times S_{10} = N_5 \\times S_5\\), so the premiums balance per unit time. With \\(S_{10}=110\\)bp and \\(S_5=80\\)bp this gives \\(N_5 = 1.375\\,N_{10}\\).<br>\n<b>Interviewer follow-up:</b> Is this trade also jump-to-default neutral? No. The buyer of 10y protection gains \\((1-R)N_{10}\\) on default while the seller of 5y protection loses \\((1-R)N_5\\), so the net JTD is \\((1-R)(N_{10}-N_5) \\ne 0\\).",
+  "tags": [
+   "curve_trades",
+   "steepener",
+   "carry"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compare carry-neutral and jump-to-default-neutral notional choices for a curve trade. Why can they not both be satisfied with a single name in the same recovery?",
+  "back": "Carry-neutral: \\(N_a S_a = N_b S_b\\). Jump-to-default-neutral: \\(N_a (1-R) = N_b (1-R)\\), so with the same recovery \\(N_a = N_b\\).<br>\nBoth conditions are satisfied only if \\(S_a = S_b\\). When the spreads differ, carry-neutral gives different notionals from JTD-neutral, so the trade has to pick which risk to neutralise.<br>\nPractically, the trader chooses carry neutrality if the curve move is the focus and accepts a JTD exposure, or JTD neutrality if default risk is the concern and accepts negative carry.<br>\n<b>Interviewer follow-up:</b> Which is preferable for a 5s10s steepener in a jump-risk regime? JTD-neutral, because the carry cost is smaller than the jump exposure you would otherwise take.",
+  "tags": [
+   "curve_trades",
+   "carry",
+   "jtd"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A JTD-neutral 5s10s CDS steepener (equal notionals, same recovery) carries {{c1::negative}} carry when the 10y spread is wider than the 5y, because the 10y protection bought costs {{c2::more}} than the 5y premium received.",
+  "back": "Carry is \\((S_5 - S_{10}) N\\) per year. A steeper curve is therefore negative carry for the steepener, which is the price of the JTD neutrality.",
+  "tags": [
+   "curve_trades",
+   "carry",
+   "jtd"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is a recovery lock on a CDS, and what is the payoff for the protection buyer?",
+  "back": "A recovery lock fixes the recovery used in the CDS settlement at \\(R_{lock}\\), so that the contract pays on a locked recovery rather than the realised one.<br>\nThe protection buyer's payoff is \\((R_{lock} - R_{actual})\\,N\\) on top of the standard settlement. Their net payout is \\((1-R_{lock})N\\) in place of \\((1-R_{actual})N\\).<br>\nA buyer who locks at 40% gains if the realised recovery is below 40% and loses if it is above, so the buyer is long low recovery. The recovery lock is a pure recovery view and removes the default-recovery uncertainty from the payout.<br>\n<b>Interviewer follow-up:</b> Who takes the other side? A counterparty that expects recoveries above the locked level, which is short low-recovery exposure, so the lock is a recovery swap between two views.",
+  "tags": [
+   "recovery",
+   "recovery_lock",
+   "payoff"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "With a 5y CDS at 100bp, how does the implied hazard rate change if the assumed recovery moves from 40% to 39%? Why does the sign of the change matter for a trader?",
+  "back": "Credit triangle: \\(\\lambda = S/(1-R)\\).<br>\nAt R = 40%: \\(\\lambda = 0.01/0.60 = 1.667\\%\\).<br>\nAt R = 39%: \\(\\lambda = 0.01/0.61 = 1.639\\%\\).<br>\nA one point drop in the assumed recovery lowers the hazard by about 2.7bp of hazard, or about 1.6% relative. Higher recovery means each default costs less, so a fixed spread requires a higher implied default rate. Lower recovery means the reverse.<br>\n<b>Interviewer follow-up:</b> Why does the recovery assumption matter more for distressed names? At a high spread the \\(1-R\\) denominator drives most of the hazard, so small recovery changes move implied default probabilities more.",
+  "tags": [
+   "recovery",
+   "credit_triangle",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Construct a long dispersion trade on an equity index and state what it profits from.",
+  "back": "Long dispersion is long single-name volatility (or variance) across the constituents and short index volatility (or variance), vega-weighted so that the net exposure is to correlation.<br>\nIt profits when the index moves less than its constituents, which is when realised correlation falls below the level implied by index options. Short dispersion is the reverse.<br>\nVariance-swap versions are used to hedge the vol exposure precisely.<br>\n<b>Interviewer follow-up:</b> Why is the trade exposed in a crisis? In a macro sell-off correlations spike and dispersion collapses, which hurts a long dispersion book.",
+  "tags": [
+   "correlation",
+   "dispersion",
+   "trades"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For N equal-weight names with equal volatility \\(\\sigma\\) and index volatility \\(\\sigma_I\\), the implied correlation is \\(\\rho = \\) {{c1::\\((\\sigma_I^2/\\sigma^2 - 1/N)/(1-1/N)\\)}}; this comes from \\(\\sigma_I^2 = \\sigma^2\\,(1/N + (1-1/N)\\rho)\\).",
+  "back": "General form for unequal weights \\(w_i\\) and vols \\(\\sigma_i\\): \\(\\rho_{impl} = \\dfrac{\\sigma_I^2 - \\sum_i w_i^2\\sigma_i^2}{(\\sum_i w_i\\sigma_i)^2 - \\sum_i w_i^2\\sigma_i^2}\\).",
+  "tags": [
+   "correlation",
+   "dispersion",
+   "formula"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the beta-adjusted index notional that hedges the market-driven spread risk of a single-name CDS position. Define the spread beta.",
+  "back": "Spread beta \\(\\beta = \\Delta S_{name}/\\Delta S_{index}\\), estimated by regression of single-name spread changes on index spread changes.<br>\nRequire the CS01 of the index hedge to match the index-driven part of the name's CS01: \\(N_{index}\\,RPV01_{index}\\,\\Delta S_{index} = N_{name}\\,RPV01_{name}\\,\\beta\\,\\Delta S_{index}\\). Solving,<br>\n\\[ N_{index} = \\beta\\, N_{name}\\,\\frac{RPV01_{name}}{RPV01_{index}} \\]\nOnly the index-driven part is hedged; the residual idiosyncratic spread risk stays on.<br>\n<b>Interviewer follow-up:</b> Why is beta-adjusting not enough on its own? Beta is a regression estimate that is unstable, and the idiosyncratic residual dominates in event-driven names.",
+  "tags": [
+   "hedging",
+   "beta",
+   "cds"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Index notional for a single-name hedge is {{c1::\\(\\beta \\times N_{name} \\times RPV01_{name}/RPV01_{index}\\)}}, where β is the spread beta, and for a name with β = 2 and the same tenor it is {{c2::twice the single-name notional}}.",
+  "back": "A name that moves twice as much as the index needs twice the index notional to neutralise index-driven exposure.",
+  "tags": [
+   "hedging",
+   "beta",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Sovereign CDS: what is redenomination risk, and how does a euro-area sovereign's exit from the euro interact with its CDS contract?",
+  "back": "Redenomination risk is the risk that a sovereign's bonds are converted into a new currency that is expected to depreciate. The contract's payout and the reference obligation then diverge, because the bond's currency changes while the CDS currency may not.<br>\nRedenomination is handled as a restructuring-type event in the credit event analysis, so it can in principle trigger a payout. Whether and how it does so depends on the clause text and the Determinations Committee, so verify the operative wording before relying on it.<br>\n<b>Interviewer follow-up:</b> Why is this a quanto problem? The payout is converted into the contract currency at a fixed rate while the bond is in a depreciating currency, so default and FX are linked.",
+  "tags": [
+   "sovereign",
+   "quanto",
+   "redenomination"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is a quanto CDS and what does the quanto adjustment price?",
+  "back": "A quanto CDS pays in a currency different from the currency of the reference obligation. The recovery payout is converted at a pre-set FX rate, so the protection buyer is exposed to FX at default.<br>\nThe quanto adjustment prices the covariance between the reference entity's default and the FX rate. The adjustment is a spread shift that depends on the sign of that correlation, so it is not a simple FX hedge.<br>\n<b>Interviewer follow-up:</b> Does a quanto CDS need a separate correlation input? Yes. Without a credit-FX correlation assumption the adjustment cannot be estimated, which is why it is a model-risk item.",
+  "tags": [
+   "sovereign",
+   "quanto",
+   "fx"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Approximate the CVA of a derivative exposure using CDS spreads. Give the formula and explain the link to the credit triangle.",
+  "back": "With exposure \\(EE(t)\\), discount factor \\(DF(t)\\), and default probability \\(PD\\), CVA is \\((1-R)\\sum_i DF(t_i)\\,EE(t_i)\\,\\Delta PD_i\\).<br>\nUsing the credit triangle, \\((1-R)\\Delta PD_i \\approx S(t_i)\\,\\Delta t_i\\). Substituting gives<br>\n\\[ CVA \\approx \\sum_i DF(t_i)\\,EE(t_i)\\,S(t_i)\\,\\Delta t_i \\]\nSo each CDS spread point multiplies the expected exposure at that date. This is why CDS spreads are used to hedge CVA.<br>\n<b>Interviewer follow-up:</b> Why is this approximation not enough for wrong-way risk? It assumes exposure and default are independent, and wrong-way risk breaks that link.",
+  "tags": [
+   "cva",
+   "cds",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is DVA, how does it relate to a bank's own CDS spread, and why is it controversial?",
+  "back": "DVA is the debit valuation adjustment: the value gain on a derivative liability from the bank's own default risk, computed the same way as CVA but using the bank's own spread and the bank's negative exposure.<br>\nWhen the bank's spread widens, its liabilities are worth less, so DVA is a gain. This creates a P&L benefit from deteriorating credit.<br>\nControversy: the bank cannot easily hedge its own default, the gain depends on the bank's own credit, and the asymmetry can be seen as artificial. Regulators typically restrict its use in capital.<br>\n<b>Interviewer follow-up:</b> How is DVA hedged? It is usually not hedged, because a bank cannot buy protection on itself; some use proxies, but the basis is large.",
+  "tags": [
+   "dva",
+   "cva",
+   "banks"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Breakeven spread widening vs carry. A protection buyer holds a 5y CDS at 100bp with RPV01 about 4.8. What spread widening over one month offsets one month of carry?",
+  "back": "Carry of a protection buyer over one month is roughly \\(-S\\times\\frac{1}{12} = -8.3\\)bp of notional in premium terms.<br>\nBreakeven widening \\(\\Delta s\\) satisfies \\(\\Delta s \\times RPV01 = S/12\\), so \\(\\Delta s \\approx 8.3/4.8 \\approx 1.7\\)bp.<br>\nOver one month, a spread widening of more than about 1.7bp gives the protection buyer a net gain on the position, ignoring convexity and the time value of the payout.<br>\n<b>Interviewer follow-up:</b> What is the annual breakeven? \\(S/RPV01 = 100/4.8 \\approx 21\\)bp per year. One month is one-twelfth of the carry, so the monthly breakeven is one-twelfth of that, about 1.7bp.",
+  "tags": [
+   "mental_math",
+   "carry",
+   "cds"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "P&L = spread change times CS01. A protection buyer holds $25m notional of a 5y CDS with RPV01 4.8. Spreads widen 20bp. What is the approximate P&L, and what are the limitations of the approximation?",
+  "back": "CS01 \\(= N\\times RPV01\\times 0.0001 = 25{,}000{,}000\\times4.8\\times0.0001 = \\$12{,}000\\) per bp.<br>\nP&L for the buyer \\(\\approx 20 \\times \\$12{,}000 = \\$240{,}000\\) gain, since spread widening benefits the protection buyer.<br>\nLimitations: the approximation is linear in the spread change. For large moves the CS01 changes because RPV01 falls as spreads widen, so the true P&L is slightly below the linear estimate for widening moves.<br>\n<b>Interviewer follow-up:</b> What is the sign for the seller? The seller loses $240k in the same move.",
+  "tags": [
+   "mental_math",
+   "pnl",
+   "cds"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "At RPV01 ≈ 4.8, a $10m 5y CDS has a CS01 of about {{c1::$4,800 per bp}}, so a 15bp widening moves the protection buyer's P&L by roughly {{c2::$72,000}}.",
+  "back": "Scale check: \\(10{,}000{,}000 \\times 4.8 \\times 0.0001 = 4{,}800\\). Multiply by the spread change in bp. Ignore convexity for mental math.",
+  "tags": [
+   "mental_math",
+   "pnl",
+   "cds"
+  ]
+ }
+]

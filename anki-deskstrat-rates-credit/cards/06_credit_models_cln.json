@@ -1,0 +1,592 @@
+[
+  {
+    "type": "basic",
+    "front": "In Merton (1974), write equity as a call on firm value and give the risk-neutral probability of default at maturity \\(T\\).",
+    "back": "Firm value \\(V\\) follows GBM under \\(\\mathbb Q\\) with volatility \\(\\sigma_V\\). Debt is a zero-coupon bond with face \\(D\\) maturing at \\(T\\); default occurs iff \\(V_T<D\\).<br>\n<b>Equity</b> is a call on \\(V\\) struck at \\(D\\): \\(E_0=V_0N(d_1)-De^{-rT}N(d_2)\\), with \\(d_1=\\frac{\\ln(V_0/D)+(r+\\tfrac12\\sigma_V^2)T}{\\sigma_V\\sqrt T}\\) and \\(d_2=d_1-\\sigma_V\\sqrt T\\).<br>\n<b>Risk-neutral PD</b> \\(=N(-d_2)\\).<br>\n<b>Interviewer follow-up:</b> Why is \\(N(-d_2)\\) not the real-world PD? Because \\(d_2\\) embeds the risk-free drift \\(r\\); the real-world version replaces \\(r\\) with the asset drift \\(\\mu\\).",
+    "tags": [
+      "structural",
+      "merton",
+      "derivation"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "In Merton's model, derive the link between equity volatility \\(\\sigma_E\\) and asset volatility \\(\\sigma_V\\). What does the elasticity imply?",
+    "back": "Write \\(E=f(V,t)\\) with \\(f_V=N(d_1)\\). By Itô (or delta-hedging), the diffusion of \\(E\\) is \\(f_V\\,V\\sigma_V\\), so<br>\n\\(\\sigma_E\\,E=N(d_1)\\,V\\,\\sigma_V\\), i.e. \\(\\sigma_E=\\Omega\\,\\sigma_V\\) with gearing \\(\\Omega=\\frac{V\\,N(d_1)}{E}\\ge 1\\) (since \\(E\\le VN(d_1)\\)).<br>\nEquity is a levered claim on \\(V\\); its elasticity \\(\\Omega\\) rises as \\(V\\) falls towards the default boundary, so equity vol exceeds asset vol and grows as the firm deteriorates.<br>\n<b>Interviewer follow-up:</b> How do you back out \\(\\sigma_V\\) in practice? Solve the equity-value and equity-vol equations simultaneously for \\((V,\\sigma_V)\\); this is the standard Merton/KMV calibration.",
+    "tags": [
+      "structural",
+      "merton",
+      "derivation",
+      "equity_credit"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Why does a fall in firm value raise both the Merton credit spread and equity volatility? Give the sign of \\(\\partial s/\\partial V\\) and the mechanism for \\(\\partial\\sigma_E/\\partial V\\).",
+    "back": "Spreads are decreasing in \\(V\\): a lower \\(V\\) moves \\(d_2\\) towards zero and raises \\(N(-d_2)\\), so spreads widen as \\(V\\) falls.<br>\nEquity vol rises because the gearing \\(\\Omega=VN(d_1)/E\\) increases as equity is a smaller slice of a fixed-volatility asset. Equity price and equity vol move negatively (the leverage effect). Spreads move opposite to equity price, so they move in the same direction as equity vol.<br>\n<b>Interviewer follow-up:</b> Why is the empirical equity-vol to CDS link weaker than Merton implies? Because asset vol is not constant, debt is not a single zero-coupon bond, and the premium and liquidity components are unmodelled.",
+    "tags": [
+      "structural",
+      "equity_credit",
+      "leverage"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Why do Merton and fixed-barrier Black–Cox models imply near-zero credit spreads at short maturities, and what is the standard fix?",
+    "back": "With a continuous path and a barrier strictly below the current value, default is <i>predictable</i>: the firm must diffuse continuously down to the trigger. For fixed positive distance \\(d\\), \\(P(\\tau\\le T)\\sim\\exp(-c/T)\\) as \\(T\\to 0\\), which decays faster than any power of \\(T\\), so \\(s(T)\\to0\\). Real short spreads are not zero because defaults arrive by surprise.<br>\n<b>Fixes:</b> (i) jump-to-default (e.g. Zhou jump-diffusion); (ii) uncertain or stochastic barrier and incomplete information (Duffie–Lando); (iii) switch to reduced-form intensity models where default is an unpredictable jump.<br>\n<b>Interviewer follow-up:</b> Does moving the Black–Cox barrier close to \\(V_0\\) fix it? Only in level: spreads become large but the short end still tends to zero for any fixed barrier, because the default time stays predictable.",
+    "tags": [
+      "structural",
+      "merton",
+      "term_structure"
+    ]
+  },
+  {
+    "type": "cloze",
+    "front": "KMV distance-to-default in one-period form is \\(DD=\\frac{V-DPT}{V\\,\\sigma_V}\\), where the default point (DPT) is {{c1::approximately short-term debt + ½ long-term debt}}, and DD is mapped to a default frequency {{c2::empirically, from default history}}, not from the normal CDF.",
+    "back": "The DD-to-EDF mapping is calibrated on historical default data because the normal CDF understates tail default rates. DD is a real-world measure: the real asset drift \\(\\mu\\) enters, not the risk-free rate.",
+    "tags": [
+      "structural",
+      "kmv",
+      "convention"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "For an intensity \\(\\lambda(t)\\) (Cox/Poisson default time \\(\\tau\\)), write the survival probability and the default density. What is the hazard rate in conditional terms?",
+    "back": "\\(Q(\\tau>t)=\\exp\\!\\left(-\\int_0^t\\lambda(s)\\,ds\\right)\\) and the density is \\(f(t)=\\lambda(t)\\exp\\!\\left(-\\int_0^t\\lambda\\right)\\).<br>\nThe hazard is the conditional default rate: \\(P(\\tau\\in[t,t+dt]\\mid\\tau>t)=\\lambda(t)\\,dt\\). It is not a probability: it is a rate per unit time conditional on survival, and it is additive in \\(\\int\\lambda\\), which is why survival, not hazard, is the object bootstrapped from CDS quotes.<br>\n<b>Interviewer follow-up:</b> Is the survival probability model-dependent? Given the market survival curve, the deterministic-intensity model is fully determined by it; stochastic intensity introduces an extra expectation over the factor.",
+    "tags": [
+      "reduced_form",
+      "intensity",
+      "derivation"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Compare Jarrow–Turnbull (1995) and Duffie–Singleton (1999): what recovery convention and discount rate does each use, and why is the credit spread exact only under one of them?",
+    "back": "<b>Jarrow–Turnbull</b> uses recovery of treasury (RT): at default the holder receives \\(R\\) times the value of an otherwise identical risk-free bond, so the payment is \\(R\\,P(\\tau,T)\\) at default time \\(\\tau\\), not \\(R\\,P(0,T)\\). Its credit spread is therefore tenor- and rate-dependent and the credit triangle is not exact.<br>\n<b>Duffie–Singleton</b> uses recovery of market value (RMV): the bond pays a fraction of its pre-default market value. Pricing discounts at \\(r+\\lambda L\\) with \\(L=1-R\\), giving spread \\(\\lambda L\\) exactly when intensity is constant.<br>\n<b>Interviewer follow-up:</b> Which convention does a CDS settlement resemble? A post-default auction price, closer to RMV-type realisation measured after default (see the recovery-definitions card).",
+    "tags": [
+      "reduced_form",
+      "recovery",
+      "convention"
+    ]
+  },
+  {
+    "type": "cloze",
+    "front": "Under recovery of market value (RMV) with constant intensity \\(\\lambda\\) and \\(L=1-R\\), the continuous-time credit spread is {{c1::exactly \\(\\lambda L\\)}}, because the risky discount rate is \\(r+\\lambda L\\).",
+    "back": "The pre-default value \\(P\\) grows at \\(\\mu\\) such that the compensated jump (to \\(RP\\) at rate \\(\\lambda\\)) gives \\(E^{\\mathbb Q}[dP]=rP\\,dt\\), so \\(\\mu=r+\\lambda L\\). With stochastic intensity or a non-flat term structure the identity holds only approximately.",
+    "tags": [
+      "reduced_form",
+      "recovery",
+      "derivation"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "In a doubly stochastic (Cox) model, where does default correlation come from, and what is conditional independence?",
+    "back": "Conditional on the intensity path \\(\\{\\lambda_s\\}\\), default times are independent: \\(P(\\tau_i>t,\\tau_j>t\\mid\\mathcal G)=e^{-\\int\\lambda_i}e^{-\\int\\lambda_j}\\). Correlation arises only through shared factors in the intensities (for example a common CIR factor), and the joint survival is a mixture over factor paths.<br>\nConsequence: no contagion or self-exciting clustering unless the intensities jump when another name defaults.<br>\n<b>Interviewer follow-up:</b> How would you add contagion? Make \\(\\lambda_i\\) jump by a discrete amount at each default of another name (Davis–Lo type contagion).",
+    "tags": [
+      "reduced_form",
+      "correlation",
+      "intensity"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "What is a CIR++ intensity and why is a deterministic shift \\(\\varphi(t)\\) added to a CIR process?",
+    "back": "\\(\\lambda(t)=x(t)+\\varphi(t)\\), with \\(dx=\\kappa(\\theta-x)\\,dt+\\sigma\\sqrt{x}\\,dW\\). The shift \\(\\varphi\\) is deterministic and chosen so that \\(\\exp\\!\\left(-\\int_0^t\\lambda\\right)\\) reproduces today's market survival curve exactly. Survival factorises into the shift term times the CIR survival, so the closed-form affine structure of CIR is preserved.<br>\nNon-negativity: \\(x\\ge0\\) together with \\(\\varphi\\ge0\\) gives \\(\\lambda\\ge0\\).<br>\n<b>Interviewer follow-up:</b> What does the fit cost? The level is fixed by today's curve, while \\(\\kappa,\\theta,\\sigma\\) drive the dynamics and option vol; the fitted shift is not a model-consistent forecast of future curves.",
+    "tags": [
+      "reduced_form",
+      "cir_plus_plus",
+      "calibration"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "For an affine jump-diffusion intensity, why does the survival probability (and often option prices) have closed form?",
+    "back": "If the drift, diffusion variance and jump intensity are affine in the state \\(x\\), then \\(\\mathbb E\\!\\left[\\exp\\!\\left(-\\int_0^T\\lambda\\right)\\right]=\\exp(A(T)+B(T)x_0)\\), where \\(A,B\\) solve Riccati ODEs. Option prices follow from characteristic-function inversion (Fourier methods).<br>\n<b>Interviewer follow-up:</b> Why does the jump component matter for the short end? It gives non-zero short-dated spreads, which a pure diffusion (Merton, CIR) cannot produce.",
+    "tags": [
+      "reduced_form",
+      "affine",
+      "fourier"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Why is the risk-neutral PD implied by CDS usually above the real-world PD, and why is a constant multiplier the wrong way to convert one into the other?",
+    "back": "CDS prices the \\(\\mathbb Q\\)-hazard \\(\\lambda^{\\mathbb Q}=\\lambda^{\\mathbb P}+\\text{premium}\\). The premium includes: (i) default-jump risk compensation and its correlation with the stochastic discount factor; (ii) liquidity and illiquid-bond basis premia; (iii) dealer capital and counterparty charges embedded in CDS quotes; (iv) mismatch between assumed and realised recovery.<br>\nThe ratio \\(\\lambda^{\\mathbb Q}/\\lambda^{\\mathbb P}\\) varies over time, across rating buckets and across the cycle, so no fixed multiplier should be used.<br>\n<b>Interviewer follow-up:</b> Which way does a higher assumed recovery bias the implied hazard? Upwards: \\(\\lambda=s/(1-R)\\) rises with \\(R\\) at fixed spread.",
+    "tags": [
+      "hazard",
+      "risk_premia",
+      "convention"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Mental check: 5y CDS at 150bp, \\(R=40\\%\\). Give the flat hazard and the 5y cumulative risk-neutral PD.",
+    "back": "\\(\\lambda\\approx\\frac{0.015}{0.6}=2.5\\%\\) per year.<br>\nSurvival \\(=e^{-5\\times0.025}=e^{-0.125}\\approx0.8825\\), so the 5y PD \\(\\approx 1-0.8825\\approx11.8\\%\\).<br>\n<b>Interviewer follow-up:</b> Is this a physical default estimate? No. It is risk-neutral, so it overstates the real-world PD by the premium in the previous card.",
+    "tags": [
+      "hazard",
+      "mental_math",
+      "credit_triangle"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Why does the credit-triangle approximation \\(s\\approx\\lambda(1-R)\\) fail for a name with a steep CDS term structure? Give the general form and say what replaces it.",
+    "back": "The triangle assumes a flat hazard. For a general hazard the par spread at tenor \\(T\\) is approximately<br>\n\\(s(T)\\approx(1-R)\\,\\dfrac{\\int_0^T\\lambda(t)\\,Q(t)\\,D(t)\\,dt}{\\int_0^T Q(t)\\,D(t)\\,dt}\\),<br>\na survival-discount-weighted average of forward hazards. Early hazards get more weight, and the spread is not the simple average of \\(\\lambda\\).<br>\nReplacement: bootstrap a piecewise-constant hazard that solves each CDS par equation exactly (see the bootstrap card).<br>\n<b>Interviewer follow-up:</b> Which part of the curve does a 5y spread mostly reflect? The early and mid hazards, weighted by survival and discount; a late hazard spike moves the 5y spread much less than a proportional amount.",
+    "tags": [
+      "bootstrap",
+      "credit_triangle",
+      "term_structure"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Write the par-spread equation for a CDS of maturity \\(T_N\\) (quarterly premium, accrual on default, protection paid at default) used to bootstrap a piecewise-constant hazard. How is it solved pillar by pillar?",
+    "back": "Let \\(S\\) be the par spread, \\(\\Delta_i\\) the accrual fractions, \\(D(t)\\) discount factors, \\(Q(t)\\) survival and \\(R\\) recovery. Then<br>\n\\(S\\sum_i\\Delta_i D(t_i)\\,\\tfrac12\\big(Q(t_{i-1})+Q(t_i)\\big)\\approx(1-R)\\sum_i D(t_i^{*})\\big(Q(t_{i-1})-Q(t_i)\\big)\\),<br>\nwith \\(t_i^{*}\\) a mid-period or end-period discount point. The accrual-on-default term is the \\(\\tfrac12\\) inside the premium leg.<br>\nSolve pillar by pillar: \\(\\lambda_k\\) is constant on \\((T_{k-1},T_k]\\), so \\(Q(t)=Q(T_{k-1})e^{-\\lambda_k(t-T_{k-1})}\\). Each pillar is one-dimensional root-finding because earlier pillars are already fixed.<br>\n<b>Interviewer follow-up:</b> What goes wrong if you omit accrual on default? The premium leg is understated by roughly half a period of premium times the PD over that period.",
+    "tags": [
+      "bootstrap",
+      "cds",
+      "derivation"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Between CDS pillars, why is log-linear interpolation of survival preferred to cubic-spline interpolation of \\(Q\\) or of spreads?",
+    "back": "Log-linear \\(Q\\) is equivalent to a piecewise-constant forward hazard. That hazard is non-negative whenever \\(Q\\) is non-increasing and has local support: each quote affects only the adjacent intervals, so hedges are stable.<br>\nCubic splines on \\(Q\\) or on spreads can oscillate, produce negative forward hazards between pillars and move risk non-locally. The price of piecewise-constant is a discontinuous forward hazard at each pillar.<br>\n<b>Interviewer follow-up:</b> When would you choose a smoother interpolation? When the forward hazard must be continuous for a pricing reason (e.g. option or CVA sensitivity smoothness); then constrain the spline to keep \\(Q\\) monotone.",
+    "tags": [
+      "bootstrap",
+      "interpolation",
+      "convention"
+    ]
+  },
+  {
+    "type": "cloze",
+    "front": "Log-linear interpolation of survival \\(Q\\) is equivalent to {{c1::piecewise-constant forward hazard}}, which is {{c2::non-negative whenever \\(Q\\) is non-increasing}}.",
+    "back": "Only the pillars bounding an interval set its hazard, so a change to one CDS quote is local. Spline interpolation of \\(Q\\) lacks this property.",
+    "tags": [
+      "bootstrap",
+      "interpolation",
+      "convention"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "List the no-arbitrage constraints a bootstrapped survival curve must satisfy.",
+    "back": "<ul>\n<li>\\(Q(0)=1\\) and \\(0\\le Q(t)\\le 1\\).</li>\n<li>\\(Q\\) non-increasing: \\(Q(t_2)\\le Q(t_1)\\) for \\(t_2>t_1\\). Equivalently \\(\\Lambda(t)=-\\ln Q(t)\\) is non-decreasing, and every forward hazard \\(\\frac{\\ln Q(t_1)-\\ln Q(t_2)}{t_2-t_1}\\ge0\\).</li>\n<li>CDS par spreads and the RPV01 are positive, and the protection leg is non-negative.</li>\n</ul>Violations show up as negative forward hazards or survival curves that rise with maturity.",
+    "tags": [
+      "bootstrap",
+      "arbitrage",
+      "convention"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Mental check with \\(R=40\\%\\): 1y par spread 500bp and 5y par spread 80bp. Is there a non-negative forward hazard on \\([1,5]\\)?",
+    "back": "Use the flat-hazard sign test \\(\\Lambda(T)\\approx\\frac{T\\,s(T)}{1-R}\\).<br>\n\\(\\Lambda(1)\\approx\\frac{0.05}{0.6}=8.3\\%\\); \\(\\Lambda(5)\\approx\\frac{5\\times0.008}{0.6}=6.7\\%\\).<br>\nThe cumulative hazard falls, so the forward hazard on \\([1,5]\\) is about \\((6.7\\%-8.3\\%)/4\\approx-0.4\\%\\) p.a., which is negative. No arbitrage-free piecewise-constant bootstrap reproduces these quotes.<br>\n<b>Interviewer follow-up:</b> What do you do? Check the quotes (stale 5y, distressed 1y basis or upfront conversion), then use a constrained fit that enforces monotone \\(Q\\).",
+    "tags": [
+      "bootstrap",
+      "mental_math",
+      "arbitrage"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "An issuer has bonds but no liquid CDS. Outline a proxy-curve construction and the adjustments you would make.",
+    "back": "<ol>\n<li><b>Peer set:</b> match sector, notch-level rating, seniority, region and currency; prefer peers with liquid CDS.</li>\n<li><b>Convert to CDS-equivalent:</b> use peer CDS curves, or convert peer bond spreads (Z- or asset-swap spreads) using each peer's own CDS-bond basis.</li>\n<li><b>Issuer-level adjustment:</b> anchor the level on the target's own bond spreads, its equity-implied distance to default, or rating migration.</li>\n<li><b>Tenor and convention:</b> interpolate by tenor, apply ISDA-standard recovery (commonly 40% for senior unsecured) and the right discount curve.</li>\n<li><b>Diagnostics:</b> report the basis uncertainty and check that hazards are non-negative.</li>\n</ol><b>Interviewer follow-up:</b> Which error dominates? Usually the issuer-level level adjustment; the proxy supplies the shape.",
+    "tags": [
+      "curve_construction",
+      "illiquid",
+      "proxy"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Define the CDS–bond basis, state the sign convention, and explain what a negative basis means.",
+    "back": "Basis \\(= s^{\\text{CDS}}-s^{\\text{bond}}\\), where \\(s^{\\text{bond}}\\) is the asset-swap (or Z-) spread of a bond of the same issuer and maturity. A <b>negative basis</b> means the CDS trades tighter than the bond.<br>\nDrivers: (i) the asset-swap spread embeds funding above the reference rate for a cash-bond holder; (ii) CDS is off-balance-sheet and in demand as a hedge; (iii) the protection buyer holds a free cheapest-to-deliver option, which lowers the CDS spread; (iv) repo specialness and counterparty effects. The basis can flip sign in stress.<br>\n<b>Interviewer follow-up:</b> Why does the negative basis persist rather than being arbitraged? Funding costs, balance-sheet and capital limits, repo constraints and residual counterparty risk make the trade costly.",
+    "tags": [
+      "basis",
+      "cds",
+      "convention"
+    ]
+  },
+  {
+    "type": "cloze",
+    "front": "CDS–bond basis = {{c1::CDS spread minus bond (asset-swap) spread}}; a negative basis means the bond spread is {{c2::wider}} than the CDS spread.",
+    "back": "Negative basis is driven largely by bond funding costs and the protection buyer's cheapest-to-deliver option.",
+    "tags": [
+      "basis",
+      "convention"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "You have only EUR bonds for an issuer and need a USD CDS-equivalent curve. What must you adjust for beyond the bond–CDS basis?",
+    "back": "<ul>\n<li>The asset-swap spread is measured against the EUR swap curve. To compare with a USD CDS, reprice the bond spread on the USD discount curve using a cross-currency swap, which embeds the EUR/USD cross-currency basis.</li>\n<li>The CDS is USD-denominated and discounted on the USD curve. Implied hazards depend on the discount curve, so mis-discounting shifts the implied survival.</li>\n<li>Recovery conventions and deliverable pools differ by currency and documentation.</li>\n</ul>Hazard curves are comparable only once the discount curve is consistent across both markets.",
+    "tags": [
+      "curve_construction",
+      "cross_currency",
+      "convention"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Distinguish recovery of face value (RFV), recovery of market value (RMV) and recovery of treasury (RT). Which is closest to CDS settlement, and what does RT do to the hazard-to-spread mapping?",
+    "back": "<b>RFV:</b> a fraction \\(R\\) of face is paid at default or maturity.<br>\n<b>RMV:</b> a fraction \\(R\\) of the bond's pre-default market value.<br>\n<b>RT:</b> at default the holder receives \\(R\\) times an otherwise identical risk-free bond, i.e. \\(R\\,P(\\tau,T)\\) at \\(\\tau\\).<br>\nCDS cash settlement pays \\(N\\,(1-\\text{auction price})\\). The auction price is a post-default market price, so the realisation resembles RMV measured after default. The 40% senior unsecured figure is a pricing convention, not a forecast.<br>\nRT makes the spread depend on tenor and rates, so \\(s=\\lambda(1-R)\\) is not exact; RMV gives \\(s=\\lambda L\\) exactly for constant intensity.",
+    "tags": [
+      "recovery",
+      "convention",
+      "rmv"
+    ]
+  },
+  {
+    "type": "cloze",
+    "front": "Under recovery of treasury, the payment at default is {{c1::\\(R\\) times the risk-free value of the bond at \\(\\tau\\)}}, so the recovery cash flow depends on {{c2::the default time and the rate curve}}.",
+    "back": "Contrast with RMV, where the recovery is a fraction of the defaulted bond's own pre-default market value. The two conventions give different spreads for the same hazard.",
+    "tags": [
+      "recovery",
+      "rt",
+      "convention"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Name three caveats when using historical recovery data (Altman, Moody's) to set a recovery assumption for a CDS curve.",
+    "back": "<ol>\n<li><b>Definition:</b> datasets measure different things: trading price shortly after default (roughly one month), ultimate recovery after reorganisation, or price at default. Match the definition to the CDS auction price.</li>\n<li><b>Sample and mix:</b> mostly US bonds and loans, with a specific seniority and collateral mix; small, lumpy and sector-concentrated samples.</li>\n<li><b>Cycle dependence:</b> recovery is negatively correlated with default rates, so unconditional averages hide downturn recovery. A stressed curve should use a conditional recovery.</li>\n</ol><b>Interviewer follow-up:</b> Which caveat matters most for a CDS curve? The cycle dependence, because the curve is a risk-neutral object priced in the same states.",
+    "tags": [
+      "recovery",
+      "data",
+      "convention"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Why does negative correlation between recovery and default rate matter for senior tranche pricing, even when expected recovery is unchanged?",
+    "back": "Pool loss is \\(\\sum_i \\mathbf 1_{\\{\\tau_i\\le T\\}}(1-R_i)\\). If \\(R\\) falls in the same states where defaults cluster, the loss distribution has a fatter tail than with fixed \\(R\\) at the same mean.<br>\nSenior tranches (attachment in the far tail) absorb that extra tail loss, so their expected loss and spread rise relative to the fixed-recovery model with the same mean recovery. Equity-tranche effects are smaller.<br>\nModelling: make \\(R\\) a function of the systematic factor (for example a conditional Beta distribution whose mean falls in the bad state).<br>\n<b>Interviewer follow-up:</b> What would positive correlation do? It would reverse the tail effect and thin the senior loss.",
+    "tags": [
+      "recovery",
+      "correlation",
+      "tranches"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "One-factor Gaussian copula: \\(X_i=\\sqrt\\rho\\,M+\\sqrt{1-\\rho}\\,\\varepsilon_i\\), with obligor \\(i\\) defaulting iff \\(X_i<\\Phi^{-1}(p)\\). Derive the conditional default probability given \\(M=m\\).",
+    "back": "Given \\(M=m\\), the \\(\\varepsilon_i\\) are independent \\(N(0,1)\\), so<br>\n\\(p(m)=P\\!\\left(\\varepsilon_i<\\frac{\\Phi^{-1}(p)-\\sqrt\\rho\\,m}{\\sqrt{1-\\rho}}\\right)=\\Phi\\!\\left(\\frac{\\Phi^{-1}(p)-\\sqrt\\rho\\,m}{\\sqrt{1-\\rho}}\\right)\\).<br>\nDefaults are conditionally independent Bernoulli(\\(p(m)\\)), and integrating over \\(M\\) recovers \\(p\\). Higher \\(\\rho\\) spreads the conditional PD across scenarios.<br>\n<b>Interviewer follow-up:</b> What is the joint PD of two names? \\(\\int p(m)^2\\,\\phi(m)\\,dm\\), which is equivalent to the bivariate normal CDF at \\((\\Phi^{-1}(p),\\Phi^{-1}(p);\\rho)\\).",
+    "tags": [
+      "copula",
+      "vasicek",
+      "derivation"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "For a large homogeneous pool with PD \\(p\\) and asset correlation \\(\\rho\\), derive the distribution of the pool loss fraction \\(L\\). State the 99.9% loss quantile.",
+    "back": "By the law of large numbers \\(L\\to p(M)\\). Since \\(p(m)\\) is decreasing in \\(m\\), \\(p(M)\\le l\\) iff \\(M\\ge\\frac{\\Phi^{-1}(p)-\\sqrt{1-\\rho}\\,\\Phi^{-1}(l)}{\\sqrt\\rho}\\). Hence<br>\n\\(P(L\\le l)=\\Phi\\!\\left(\\frac{\\sqrt{1-\\rho}\\,\\Phi^{-1}(l)-\\Phi^{-1}(p)}{\\sqrt\\rho}\\right)\\).<br>\nInverting at 0.999: \\(l_{0.999}=\\Phi\\!\\left(\\frac{\\Phi^{-1}(p)+\\sqrt\\rho\\,\\Phi^{-1}(0.999)}{\\sqrt{1-\\rho}}\\right)\\).<br>\n<b>Interviewer follow-up:</b> Why is there no name-count term? The large-pool limit diversifies all idiosyncratic risk, leaving only the systematic factor.",
+    "tags": [
+      "copula",
+      "vasicek",
+      "portfolio_credit"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Derive the Basel IRB (ASRF) capital requirement per unit exposure from the Vasicek large-pool model at the 99.9% level.",
+    "back": "Capital is the unexpected loss: the conditional 99.9% loss minus expected loss,<br>\n\\(K=\\text{LGD}\\cdot\\Big[\\Phi\\Big(\\frac{\\Phi^{-1}(PD)+\\sqrt{\\rho}\\,\\Phi^{-1}(0.999)}{\\sqrt{1-\\rho}}\\Big)-PD\\Big]\\cdot MA\\),<br>\nwhere \\(MA=\\dfrac{1+(M-2.5)\\,b}{1-1.5\\,b}\\), \\(b=(0.11852-0.05478\\ln PD)^2\\) (IRB corporate, Basel II), and \\(M\\) is effective maturity. LGD multiplies because it is fixed in the ASRF.<br>\n<b>Interviewer follow-up:</b> Why does \\(K\\) not depend on the number of names? The ASRF assumes an infinitely granular portfolio, so idiosyncratic risk is fully diversified.",
+    "tags": [
+      "portfolio_credit",
+      "irb",
+      "derivation"
+    ]
+  },
+  {
+    "type": "cloze",
+    "front": "Basel IRB (ASRF) uses a {{c1::99.9%}} one-factor confidence level over a {{c2::one-year}} horizon. Corporate asset correlation falls from about {{c3::24%}} at low PD to about {{c4::12%}} at high PD.",
+    "back": "Maturity adjustment uses \\(b=(0.11852-0.05478\\ln PD)^2\\) (Basel II IRB corporate). The correlation is a supervisory calibration as a function of PD, not a model output.",
+    "tags": [
+      "portfolio_credit",
+      "irb",
+      "convention"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Why does a Gaussian copula with correlation \\(\\rho\\) underprice joint extreme defaults relative to a Student-t copula with the same \\(\\rho\\)? Quantify the tail dependence.",
+    "back": "A Gaussian copula with \\(|\\rho|<1\\) has zero tail dependence: \\(\\lim_{u\\to0}P(U_2\\le u\\mid U_1\\le u)=0\\).<br>\nA t copula with \\(\\nu\\) degrees of freedom has symmetric tail dependence \\(\\lambda=2\\,t_{\\nu+1}\\!\\left(-\\sqrt{\\tfrac{(\\nu+1)(1-\\rho)}{1+\\rho}}\\right)>0\\), larger for smaller \\(\\nu\\).<br>\nAt equal linear correlation the t copula puts more mass in joint extremes, so senior-tranche spreads are higher and the pool loss tail is fatter.<br>\n<b>Interviewer follow-up:</b> Why not simply raise \\(\\rho\\) to match a senior quote? That distorts the equity and mezzanine prices, which is the motivation for base correlation and tail-aware copulas.",
+    "tags": [
+      "copula",
+      "tail_dependence",
+      "trade_off"
+    ]
+  },
+  {
+    "type": "cloze",
+    "front": "Clayton copula: lower-tail dependence \\(\\lambda_L=\\){{c1::\\(2^{-1/\\theta}\\)}}, upper-tail dependence {{c2::\\(0\\)}}; as \\(\\theta\\to0\\) the copula tends to {{c3::independence}}.",
+    "back": "Clayton suits joint downside-only dependence such as credit in stress; Gumbel is the mirror image with upper-tail dependence.",
+    "tags": [
+      "copula",
+      "tail_dependence",
+      "convention"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "What is random factor loading (RFL) in a one-factor copula, and what does it do to the correlation skew?",
+    "back": "RFL makes the loading \\(\\rho\\) random, either per name or as a function of the systematic state, so the conditional PD becomes \\(p(M,\\rho)\\) and the portfolio is a mixture over \\(\\rho\\).<br>\nIn stress, effective correlation rises, which fattens the tail. This reproduces qualitatively the base-correlation skew (increasing with detachment) that a constant-\\(\\rho\\) Gaussian copula cannot generate.<br>\n<b>Interviewer follow-up:</b> Is RFL a fix for the Gaussian copula's zero tail dependence? It produces tail dependence through mixing, but the mixing distribution must be calibrated to tranche quotes, and it does not match every tranche.",
+    "tags": [
+      "copula",
+      "random_factor_loading",
+      "skew"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Why do desks quote CDO tranches in base correlation rather than compound correlation?",
+    "back": "Compound correlation gives one \\(\\rho\\) per tranche \\([a,d]\\) solving \\(\\text{Price}(\\rho)=\\text{quote}\\). For mezzanine tranches the value is non-monotone in \\(\\rho\\), so the solution can be non-unique or absent, and the numbers are not comparable across tranches.<br>\nBase correlation calibrates \\(\\rho_K\\) on equity tranches \\([0,K]\\), each with a unique monotone solution. A tranche \\([a,d]\\) is then priced as \\(EL_{[0,d]}(\\rho_d)-EL_{[0,a]}(\\rho_a)\\), using the base correlations at each detachment point.<br>\n<b>Interviewer follow-up:</b> What is the cost? Interpolated base correlations can create negative tranche values or non-monotone prices unless the base-correlation curve is constrained.",
+    "tags": [
+      "copula",
+      "base_correlation",
+      "tranches"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "For a CDO with fixed marginal PDs, use Jensen's inequality to explain why the equity-tranche spread falls and the senior-tranche spread rises as correlation rises.",
+    "back": "Higher \\(\\rho\\) keeps the mean of pool loss \\(L\\) fixed but spreads its distribution (a mean-preserving spread).<br>\nEquity tranche \\([0,K]\\) has expected loss \\(E[\\min(L,K)]\\), a concave function of \\(L\\), so dispersion lowers it and its spread falls.<br>\nSenior tranche \\([K,1]\\) has expected loss \\(E[(L-K)^+]\\), convex in \\(L\\), so dispersion raises it and its spread rises.<br>\nMezzanine tranches can be non-monotone in \\(\\rho\\), which is why compound correlation is ill-behaved for them.<br>\n<b>Interviewer follow-up:</b> Which side is long correlation? An equity protection seller's expected loss falls as \\(\\rho\\) rises, so the seller is long correlation; a senior protection seller's expected loss rises, so the seller is short correlation.",
+    "tags": [
+      "tranches",
+      "correlation",
+      "derivation"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "For an equal-weight basket of identical names with fixed marginal PDs, how does the first-to-default (FTD) spread depend on correlation, and how does a senior nth-to-default spread compare?",
+    "back": "FTD protection pays on the first default. With fixed marginals, higher correlation makes defaults cluster, so the probability that at least one name defaults falls and the FTD spread falls. For independent names the first-default intensity is the sum of individual intensities, so the spread approaches the sum of single-name spreads; for perfectly correlated identical names it approaches a single-name spread.<br>\nA senior (large-\\(n\\)) nth-to-default needs many defaults, and higher correlation raises the probability of many defaults jointly, so its spread rises with correlation.<br>\n<b>Interviewer follow-up:</b> Is the FTD protection seller long or short correlation? Long: the probability of any default falls as correlation rises, so the expected loss on the FTD leg falls, which is the mirror of the senior seller.",
+    "tags": [
+      "nth_to_default",
+      "correlation",
+      "scenario"
+    ]
+  },
+  {
+    "type": "cloze",
+    "front": "Under independence, the first-to-default intensity equals the {{c1::sum}} of the individual name intensities, so the FTD spread is approximately {{c2::the sum of the single-name spreads}}.",
+    "back": "As correlation rises the FTD spread falls towards a single-name spread. The FTD spread is therefore a correlation-decreasing quantity.",
+    "tags": [
+      "nth_to_default",
+      "independence",
+      "convention"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Define wrong-way risk (WWR) and distinguish general from specific WWR with one example each.",
+    "back": "WWR: counterparty exposure is positively correlated with that counterparty's PD, so high exposure and default coincide.<br>\n<b>General WWR:</b> a macro driver raises both exposure and the counterparty's default probability, for example a bank with cross-currency exposure where the counterparty's currency weakens in the states that raise its default probability.<br>\n<b>Specific WWR:</b> the trade's structure links exposure to the counterparty itself, for example a put on the counterparty's own stock, or a repo whose collateral is the counterparty's own bonds. Specific WWR is typically treated as a separate exposure and not netted.<br>\n<b>Interviewer follow-up:</b> Why does the standard CVA formula ignore WWR? It assumes \\(EE\\) is independent of default, so the unconditional \\(EE\\) can be used.",
+    "tags": [
+      "wrong_way_risk",
+      "cva",
+      "definition"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Name two practical approaches to model wrong-way risk inside a CVA engine.",
+    "back": "<ol>\n<li><b>Hazard-rate linkage:</b> make the counterparty intensity depend on the exposure driver, for example \\(\\lambda(t)=\\lambda_0\\exp(\\beta X_t)\\) with \\(\\beta>0\\), and calibrate the level so the unconditional curve still matches the CDS.</li>\n<li><b>Joint simulation / copula:</b> correlate the exposure's Gaussian drivers with a latent default factor, simulate default times and exposure paths together, and take the expectation over both.</li>\n</ol><b>Interviewer follow-up:</b> How do you know the WWR effect is material? Compare CVA with and without the linkage, holding the marginal CDS curve fixed; the difference is the WWR add-on.",
+    "tags": [
+      "wrong_way_risk",
+      "modelling",
+      "cva"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Write the discrete unilateral CVA formula for a counterparty with recovery \\(R_C\\). State the assumptions behind it.",
+    "back": "\\(CVA=(1-R_C)\\sum_{i=1}^{N}DF(t_i)\\,EE(t_i)\\,\\big[Q(t_{i-1})-Q(t_i)\\big]\\),<br>\nwhere \\(EE(t)=E^{\\mathbb Q}[\\max(V(t),0)]\\) is the expected positive exposure on the simulated or grid-based profile, \\(DF\\) is the risk-free discount factor, and \\(Q\\) is the counterparty's survival curve from CDS.<br>\nAssumptions: exposure is independent of default (no WWR); only the counterparty defaults (unilateral); discretisation is fine enough that the grid converges.<br>\n<b>Interviewer follow-up:</b> What is the effect of a coarse grid? Default is assumed to occur at grid points, which biases CVA; use a finer grid or mid-period EE.",
+    "tags": [
+      "cva",
+      "derivation",
+      "exposure"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Bilateral CVA: write BCVA in terms of CVA and DVA, and explain why DVA is contested.",
+    "back": "\\(BCVA=CVA-DVA\\), with \\(DVA=(1-R_B)\\sum_i DF(t_i)\\,ENE(t_i)\\big[Q_B(t_{i-1})-Q_B(t_i)\\big]\\), where \\(ENE\\) is expected negative exposure and \\(Q_B\\) is the bank's own survival.<br>\nDVA is contested because: (i) it produces P&L gains as the bank's own credit deteriorates; (ii) own default cannot be hedged directly; (iii) it overlaps with funding valuation (FVA), so it can be double-counted; (iv) prudential regimes often exclude or limit it from capital.<br>\n<b>Interviewer follow-up:</b> Why is the bank's own default hard to hedge? You cannot buy protection on yourself, so the DVA sensitivity is at best proxied.",
+    "tags": [
+      "cva",
+      "dva",
+      "trade_off"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Mental CVA: expected exposure is roughly constant at 10m over 5 years, counterparty spread 120bp, \\(R_C=40\\%\\). Estimate the CVA ignoring discounting.",
+    "back": "\\(\\lambda\\approx\\frac{0.012}{0.6}=2\\%\\) p.a. The 5y PD \\(\\approx 1-e^{-0.10}\\approx 9.5\\%\\).<br>\nCVA \\(\\approx 0.6\\times10\\text{m}\\times9.5\\%\\approx 0.57\\text{m}\\).<br>\n<b>Interviewer follow-up:</b> How does discounting change it? It reduces the CVA, and the effect grows with tenor and with the level of rates.",
+    "tags": [
+      "cva",
+      "mental_math",
+      "exposure"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "How would you hedge the spread sensitivity of a CVA with single-name CDS on the counterparty? What residual risks remain?",
+    "back": "Match CS01s by tenor bucket: choose CDS notional \\(N_{CDS}=\\dfrac{\\partial CVA/\\partial s_C}{\\text{CS01 per unit CDS notional}}\\).<br>\nResidual risks: (i) jump-to-default mismatch: the CVA loss at default is \\((1-R_C)\\,EE\\) at that date, while the CDS pays on a fixed notional; (ii) rates and FX sensitivities hedged separately, not by the CDS; (iii) basis between the counterparty's CDS and its curve; (iv) gamma and rebalancing error; (v) WWR, which the CDS hedge does not capture.<br>\n<b>Interviewer follow-up:</b> Why is the CDS hedge notional not the exposure? Because the CVA is a sensitivity-matched object, not a notional-matched one.",
+    "tags": [
+      "cva",
+      "hedging",
+      "cds"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "For an at-the-money forward with mark-to-market \\(X_T\\sim N(0,\\sigma^2T)\\) (notional units), compute \\(EE(T)=E[\\max(X_T,0)]\\). Give the approximate coefficient on \\(\\sigma\\sqrt T\\).",
+    "back": "\\(E[\\max(X,0)]=\\int_0^\\infty x\\,\\frac{1}{\\sigma\\sqrt T}\\,\\phi\\!\\left(\\frac{x}{\\sigma\\sqrt T}\\right)dx=\\sigma\\sqrt T\\,\\phi(0)=\\frac{\\sigma\\sqrt T}{\\sqrt{2\\pi}}\\approx0.40\\,\\sigma\\sqrt T\\).<br>\nMultiply by notional. EE grows like \\(\\sqrt T\\): exposure is driven by diffusion.<br>\n<b>Interviewer follow-up:</b> Why is PFE much larger than EE? PFE is a high quantile; at 97.5% a Gaussian gives about \\(1.96\\sigma\\sqrt T\\), roughly five times the EE coefficient.",
+    "tags": [
+      "exposure",
+      "derivation",
+      "mental_math"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Why does the expected exposure profile of a vanilla at-the-money interest-rate swap rise and then fall? Where does the peak sit?",
+    "back": "Early on the exposure is small because the rate has had little time to diffuse. Later the remaining cash flows are fewer, so the variance of the remaining swap value shrinks and the exposure runs off to zero at maturity.<br>\nThe peak is a function of the curve and tenor rather than a fixed fraction of life; for typical curves it falls in the earlier part of the life.<br>\n<b>Interviewer follow-up:</b> What changes the shape? Amortisation, forward starts and off-market coupons shift or reshape the hump, and collateral (margin period of risk) truncates it.",
+    "tags": [
+      "exposure",
+      "swaps",
+      "scenario"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Conceptually, how do the Basel III final BA-CVA and SA-CVA approaches differ?",
+    "back": "<b>BA-CVA (basic):</b> a closed-form, model-free formula. It uses counterparty exposure measures based on SA-CCR, supervisory risk weights by counterparty rating and sector, a supervisory correlation between systematic and idiosyncratic parts, and limited recognition of single-name and index CDS hedges. No simulation.<br>\n<b>SA-CVA (standardised):</b> sensitivity-based. The bank computes its CVA sensitivities to regulatory market-risk factors and applies prescribed risk weights and correlations. It recognises hedges within limits, but its availability depends on supervisory approval of the sensitivity calculations, so check the current rules.<br>\n<b>Interviewer follow-up:</b> Why would a bank accept BA-CVA? It is simpler and avoids building a sensitivity system, at the cost of less hedge recognition.",
+    "tags": [
+      "cva",
+      "regulatory",
+      "convention"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Describe the cash flows of a par credit-linked note (CLN) on a single reference entity and identify the embedded position.",
+    "back": "The investor pays par to an SPV issuer. Coupons equal reference rate plus spread while no credit event occurs, and principal \\(N\\) is returned at maturity.<br>\nOn a credit event the note terminates: accrued coupon is paid and the investor receives \\(N\\) times the final recovery price, losing \\(N(1-R)\\).<br>\nEconomically the CLN is a riskless floater (its collateral) plus a short position in CDS protection on the reference name, and the coupon spread is the premium received.<br>\n<b>Interviewer follow-up:</b> What fixes the CLN spread? The CDS premium, adjusted for collateral yield and the issuer-risk component (next cards).",
+    "tags": [
+      "cln",
+      "structure",
+      "cds"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Compare funded and unfunded credit-linked exposure from the protection seller's side. Where does counterparty risk sit in each?",
+    "back": "<b>Funded:</b> the protection seller pays cash up front (buys the note). The cash is held as collateral by the SPV, so the seller's loss is capped at the funded amount, and counterparty exposure is to the SPV, the collateral and the reference.<br>\n<b>Unfunded:</b> a swap-like CDS with no upfront cash. The seller owes contingent payments and carries credit exposure to the buyer, which creates CVA and collateral needs.<br>\n<b>Interviewer follow-up:</b> Which is more capital-efficient for the buyer? Funded, because the buyer holds collateral against its exposure to the seller.",
+    "tags": [
+      "cln",
+      "funded",
+      "counterparty_risk"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "A par CLN pays RFR plus \\(s\\) on a reference name, with collateral earning RFR flat. Why is \\(s\\) approximately the CDS par spread, and what makes the note spread differ? Include dual-name risk.",
+    "back": "The investor is long a riskless floater and short CDS on the same notional and maturity. If the collateral earns exactly the reference rate, \\(s\\approx S_{\\text{CDS}}\\).<br>\nDifferences:<ul>\n<li><b>Dual-name (issuer) risk:</b> the investor is also exposed to the SPV and its collateral. The note spread carries an issuer component, small if collateral is bankruptcy-remote and marked, but not zero.</li>\n<li><b>Collateral basis:</b> collateral in another currency, or earning a spread over RFR, changes the riskless leg.</li>\n<li><b>Termination and conventions:</b> the note ends at the credit event, and accrued-coupon and day-count conventions differ from the CDS.</li>\n</ul><b>Interviewer follow-up:</b> Which risk dominates for a well-structured CLN? The collateral basis and the funding mismatch, because the issuer risk has been mitigated by the SPV structure.",
+    "tags": [
+      "cln",
+      "dual_name",
+      "pricing"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Write the PV of an investor's position in a fixed-coupon CLN with coupon \\(c\\), notional \\(N\\), recovery \\(R\\), survival \\(Q\\), risk-free discount \\(D\\), and \\(F=1-Q\\). How do you solve for the par spread?",
+    "back": "Investor cash flows: coupons while alive, principal at \\(T\\) if no default, and recovery \\(RN\\) at default:<br>\n\\(PV=c\\sum_i\\Delta_i D(t_i)Q(t_i)+N\\,D(T)\\,Q(T)+RN\\int_0^T D(t)\\,dF(t)\\).<br>\nEquivalently PV = PV(coupons) + PV(principal) − PV(protection) in the decomposition where the principal is treated as riskless and the protection leg is \\(N(1-R)\\int_0^T D\\,dF\\) (up to the coupon-after-default and discounting terms).<br>\nSet \\(PV=N\\) and solve for \\(c\\) to get the par CLN spread. When the riskless leg is discounted on the same curve, \\(c\\) approaches the CDS par spread.<br>\n<b>Interviewer follow-up:</b> Why is the coupon-after-default term small? It is a half-period of coupon weighted by the default probability in that period, similar to the accrual-on-default term in CDS.",
+    "tags": [
+      "cln",
+      "pricing",
+      "derivation"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Describe a principal-protected CLN and explain why its coupon is lower than an otherwise identical unprotected note.",
+    "back": "The investor's cash \\(N\\) is split: \\(N\\,D(T)\\) buys a zero-coupon bond paying par at \\(T\\), which guarantees principal even on default. The remainder \\(N(1-D(T))\\) is the credit-linked notional.<br>\nCoupons are paid on that smaller notional, so the coupon is about \\(s\\times(1-D(T))\\) times the unprotected coupon base, which is why it is lower. The cost of protection is the forgone carry of the zero-coupon bond.<br>\n<b>Interviewer follow-up:</b> What is the risk left for the investor? The zero-coupon bond is risk-free only to the extent its issuer and collateral hold; the credit-linked part still loses \\(N(1-D(T))(1-R)\\) on default.",
+    "tags": [
+      "cln",
+      "principal_protection",
+      "structure"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Loan CDS (LCDS) versus bond CDS on the same name: name the key structural differences and why their spreads can differ.",
+    "back": "<ul>\n<li><b>Reference obligation:</b> a syndicated loan, floating and often secured, prepayable and subject to assignment consent, rather than a fixed-rate bond.</li>\n<li><b>Deliverables and mechanics:</b> loan-specific deliverables and auction; restructuring definitions differ.</li>\n<li><b>Premium quote:</b> quoted as spread over a floating index (historically LIBOR, now RFR-based after cessation), not a fixed premium.</li>\n<li><b>Recovery and tenor:</b> secured loans usually recover more than senior unsecured bonds, and prepayment shortens the effective tenor, so LCDS and bond CDS on the same name can differ.</li>\n</ul><b>Interviewer follow-up:</b> Why does the LCDS-bond CDS basis matter for hedging? A loan-book hedge with a bond CDS carries basis risk on the deliverable pool.",
+    "tags": [
+      "lcds",
+      "convention",
+      "basis"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "For a total return swap (TRS) on a corporate bond, describe the cash flows from the total-return receiver's side and what the financing leg prices.",
+    "back": "The receiver gets the bond's coupons plus the change in its market value (total return), and pays a floating rate plus a financing spread. This is an unfunded long exposure to the bond, financed at the TRS spread.<br>\nThe financing spread is the key pricing variable. It reflects the dealer's funding and credit spread, collateral and initial-margin terms, repo specialness and the bond's asset-swap spread. On a credit event the TRS terminates with a payment equal to the price change to recovery.<br>\n<b>Interviewer follow-up:</b> Why does the TRS spread differ from the bond's asset-swap spread? The asset-swap spread is a cash-bond measure, while the TRS financing spread is the dealer's and investor's funding cost, which differs.",
+    "tags": [
+      "trs",
+      "funding",
+      "pricing"
+    ]
+  },
+  {
+    "type": "cloze",
+    "front": "Standard single-name CDS premiums accrue on {{c1::ACT/360}}, with quarterly payments on {{c2::IMM dates (20 Mar, Jun, Sep, Dec)}}; post-2009 standard coupons are {{c3::100bp or 500bp}}.",
+    "back": "Upfront quoting is used when the par spread is far from the standard coupon. The protection buyer pays the upfront when the market spread exceeds the contract coupon.",
+    "tags": [
+      "cds",
+      "convention",
+      "upfront"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Define the risky PV01 (RPV01) of a CDS and state the formula. Why is it smaller than the risk-free annuity?",
+    "back": "\\(RPV01=\\sum_i\\Delta_iD(t_i)\\dfrac{Q(t_{i-1})+Q(t_i)}{2}\\), including accrual on default. It is the present value of 1bp of running premium paid only while the reference name is alive.<br>\nIt is smaller than the risk-free annuity because each payment is weighted by survival. The CDS CS01 is approximately \\(N\\cdot RPV01\\cdot 1\\text{bp}\\).<br>\n<b>Interviewer follow-up:</b> Why does the RPV01 shrink for high-spread names? Survival decays faster when the hazard is higher, so the effective duration of the premium stream falls.",
+    "tags": [
+      "cds",
+      "rpv01",
+      "derivation"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Holding a 200bp CDS spread fixed, how does the implied hazard change as recovery falls from 40% to 20%? Give the numbers and the intuition.",
+    "back": "\\(\\lambda=\\frac{s}{1-R}\\): at \\(R=40\\%\\), \\(\\lambda=2\\%/0.6\\approx3.33\\%\\); at \\(R=20\\%\\), \\(\\lambda=2\\%/0.8=2.5\\%\\).<br>\nThe implied default frequency falls, because each default costs more. The expected loss rate \\(\\lambda(1-R)=2\\%\\) is unchanged. Recovery only splits the same loss rate between frequency and severity.<br>\n<b>Interviewer follow-up:</b> So what is the risk? A recovery shock at a fixed spread is a hazard shock of the opposite sign, which matters for hedge ratios that assume a fixed recovery.",
+    "tags": [
+      "recovery",
+      "scenario",
+      "hazard"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Trade-off: calibrating a CIR++ intensity versus a piecewise-constant hazard to a CDS curve. What do you gain and lose with each?",
+    "back": "<b>Piecewise-constant:</b> exact fit by construction, local, transparent and fast; but no dynamics, forward hazards jump at pillars, hedges are unstable under bump-and-revalue, and it cannot calibrate to option or spread-vol data.<br>\n<b>CIR++:</b> smooth term structure, non-negative intensity, and stochastic dynamics needed for spread options and CVA with spread volatility. The cost: the shift is fixed by today's curve, the CIR parameters are jointly identified with the curve and are non-convex to calibrate, and future-curve dynamics may be unrealistic.<br>\n<b>Interviewer follow-up:</b> Which would you choose for a par-spread CVA hedge? Piecewise-constant, for the locality of hedges; CIR++ if spread dynamics or option pricing drive the book.",
+    "tags": [
+      "trade_off",
+      "calibration",
+      "bootstrap"
+    ]
+  },
+  {
+    "type": "basic",
+    "front": "Trade-off: hedging a bond position with a CDS on the issuer versus shorting the bond itself. What risk remains in each?",
+    "back": "<b>CDS:</b> no repo or borrow needed, liquid for standard names, and the default payout is standardised. Remaining risks: CDS-bond basis moves, deliverable-pool and auction effects, maturity and currency mismatch, and counterparty and collateral exposure.<br>\n<b>Short bond:</b> direct price hedge, but it needs borrow or repo, pays specialness, and the funding cost sits inside the bond's asset-swap spread.<br>\nThe residual is the basis between the two hedges, which is the basis-trade risk.<br>\n<b>Interviewer follow-up:</b> Which hedge has the worse jump-to-default profile? The CDS, because its auction price can differ from the bond's own post-default price.",
+    "tags": [
+      "trade_off",
+      "basis",
+      "hedging"
+    ]
+  }
+]

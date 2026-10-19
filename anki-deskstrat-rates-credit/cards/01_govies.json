@@ -1,0 +1,494 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>Gilt pricing:</b> how do clean and dirty prices relate, and how is accrued interest computed for a semi-annual gilt?",
+  "back": "<b>Headline:</b> Dirty = clean + accrued. Gilts are quoted clean; cash settles dirty.<br>\nAccrued per 100 face with coupon \\(c\\) paid semi-annually:<br>\n\\[AI = \\frac{c}{2}\\cdot\\frac{\\text{days since last coupon}}{\\text{days in the regular coupon period}}\\]\nDay count is ACT/ACT (ICMA): the denominator is the length of the actual regular (quasi-coupon) period, so long or short first coupons are handled through quasi-coupon dates.<br>\n<b>Interviewer follow-up:</b> Why does the denominator use the regular period rather than the actual length of a long first coupon? Because the ICMA convention accrues within the quasi-coupon period, so the accrual rate per day is constant across the coupon regardless of stub length.",
+  "tags": [
+   "gilts",
+   "conventions",
+   "day_count"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 4% semi-annual gilt (face 100) has 61 days elapsed in a 182-day coupon period and a clean price of 98.50. What are accrued and dirty price?",
+  "back": "<b>Headline:</b> accrued \\(\\approx 0.67\\), dirty \\(\\approx 99.17\\).<br>\n\\[AI = \\frac{4}{2}\\times\\frac{61}{182} = 2\\times 0.3352 = 0.670\\]\n\\[P_{dirty} = 98.50 + 0.67 = 99.17\\]\n<b>Interviewer follow-up:</b> If settlement slips by one day, accrued rises by \\(2/182 \\approx 0.011\\) per day. This is why dirty drifts up between coupons while the clean quote is unchanged in the absence of market moves.",
+  "tags": [
+   "gilts",
+   "mental_math",
+   "conventions"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Explain the ex-dividend mechanic for a UK gilt. What happens to accrued and to the dirty-clean relation for a trade settling in the ex-div window?",
+  "back": "<b>Headline:</b> In the ex-div window (7 business days before the coupon date) the seller keeps the next coupon. Accrued turns negative, so dirty is below clean.<br>\n\\[AI_{ex} = -\\frac{c}{2}\\cdot\\frac{\\text{days from settlement to next coupon}}{\\text{days in period}}\\]\nThe buyer pays dirty = clean + \\(AI_{ex}\\), which is less than clean because the buyer does not receive the imminent coupon.<br>\n<b>Interviewer follow-up:</b> Is the clean price itself affected by ex-div? Not directly. The quoted clean price is continuous; what changes is the cash paid, because the coupon is paid to whoever is on the register on the record date, which is the seller for a trade inside the ex-div window.",
+  "tags": [
+   "gilts",
+   "conventions",
+   "ex_div"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "GBP money-market and SONIA accrue on {{c1::Actual/365 Fixed}}. {{c2::SOFR}} and {{c3::€STR}} accrue on {{c4::Actual/360}}. Gilt bonds themselves use {{c5::ACT/ACT (ICMA)}}.",
+  "back": "Mixing day counts across a swap-and-bond hedge creates small but systematic basis when converting rates. Always convert to a common compounding basis before comparing a repo rate with a bond yield.",
+  "tags": [
+   "conventions",
+   "day_count",
+   "repo"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Index-linked gilts: how is the principal indexed, and why does the indexation lag matter for a real-yield trade?",
+  "back": "<b>Headline:</b> Coupons and redemption are scaled by an index ratio = \\(RPI_{\\text{ref}} / RPI_{\\text{base}}\\), where the reference RPI is lagged. Older linkers use an 8-month lag; the later issues use a 3-month lag.<br>\nLag means the inflation accrual for a coupon is known ahead of the period, so the real-yield and breakeven calculations need the lag built in. Mismatch between linker lag and a swap-based inflation fixing creates a basis.<br>\n<b>Interviewer follow-up:</b> What changes in 2030? The UK government's decision is to align RPI with CPIH from 2030, which changes the expected inflation used for linkers and therefore the breakeven. Check exact mechanics in the current DMO documentation before quoting.",
+  "tags": [
+   "gilts",
+   "inflation",
+   "conventions"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Index-linked gilts issued before about 2005 use an {{c1::8-month}} indexation lag; later issues use a {{c2::3-month}} lag. The UK plan to align RPI with {{c3::CPIH}} takes effect from {{c4::2030}}.",
+  "back": "Lag is a convention that drives real yields and inflation breakevens. Confirm lag and base by series in the DMO prospectus before any relative-value trade.",
+  "tags": [
+   "gilts",
+   "inflation",
+   "conventions"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A UK gilt yield is quoted on a semi-annual basis. What is the annual effective equivalent of a 4.00% semi-annual yield, and why does the convention matter for a 30-year duration trade?",
+  "back": "\\[y_{\\text{eff}} = \\left(1+\\frac{0.04}{2}\\right)^2 - 1 = 4.04\\%\\]\nQuoting in the wrong frequency shifts the duration estimate and the DV01 by a small but systematic amount. For a 30-year bond, a 4bp difference between effective and nominal semi-annual yield is material when you scale to a £1bn DV01 book.<br>\n<b>Interviewer follow-up:</b> Which yield does the DMO quote for gilts? Semi-annual nominal (the bond-equivalent convention), so comparisons with swap rates, which are annual-fixed, need a frequency conversion first.",
+  "tags": [
+   "gilts",
+   "mental_math",
+   "conventions"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the modified duration of a bond from its price-yield relationship and show \\(\\Delta P/P \\approx -D_{mod}\\,\\Delta y\\).",
+  "back": "Price: \\(P(y)=\\sum_t CF_t\\,(1+y/m)^{-mt}\\).<br>\nDifferentiate with respect to \\(y\\): \\(\\frac{d}{dy}(1+y/m)^{-mt} = -\\frac{t}{1+y/m}(1+y/m)^{-mt}\\), so\n\\[\\frac{dP}{dy} = -\\frac{1}{1+y/m}\\sum_t t\\,CF_t(1+y/m)^{-mt} = -\\frac{P\\,D_{mac}}{1+y/m}.\\]\nDefine \\(D_{mod} = D_{mac}/(1+y/m)\\), giving \\(\\frac{dP}{P} = -D_{mod}\\,dy\\).<br>\n\\(D_{mac}=\\frac{1}{P}\\sum_t t\\,PV(CF_t)\\) is the PV-weighted average time.<br>\n<b>Interviewer follow-up:</b> Why does the linear approximation under-estimate price rises and over-estimate price falls? Because the price-yield curve is convex; the next term is the convexity correction.",
+  "tags": [
+   "duration",
+   "derivation",
+   "rates"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 10-year par bond with a 5% semi-annual coupon trades at 100 with a 5% yield. Estimate modified duration and DV01 per £10m nominal. Show the mental-math route.",
+  "back": "<b>Headline:</b> \\(D_{mod}\\approx 7.8\\); DV01 \\(\\approx\\) £7,800 per £10m.<br>\nFor a par bond, \\(D_{mod} = \\frac{1}{y}\\left[1-(1+y/2)^{-2n}\\right]\\). Here \\((1.025)^{-20}\\approx 0.610\\), so \\(D_{mod}\\approx \\frac{0.390}{0.05}\\approx 7.8\\).<br>\nDV01 per £10m = \\(10{,}000{,}000 \\times 7.8 \\times 0.0001 \\approx \\text{£}7{,}800\\).<br>\n<b>Interviewer follow-up:</b> Redo at a 4% yield. \\(D_{mod}\\) rises to about 8.2, so DV01 rises to about £8,200 per £10m. Duration grows as yield falls for a fixed maturity.",
+  "tags": [
+   "duration",
+   "dv01",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why is DV01 the right risk measure for a desk, and how does convexity change the P&L of a 100bp move? Give approximate numbers for a 10-year par bond.",
+  "back": "<b>Headline:</b> DV01 is linear risk per basis point. Convexity adds a second-order term that is always positive for option-free bonds.<br>\n\\[\\frac{\\Delta P}{P} \\approx -D_{mod}\\,\\Delta y + \\tfrac{1}{2}C\\,\\Delta y^2\\]\nFor a 10-year par bond, \\(D_{mod}\\approx 8\\) and \\(C\\) is of order 70 (approx.), so for \\(\\Delta y = +100\\)bp the duration term is about \\(-8\\%\\) and the convexity term is about \\(+0.35\\%\\). Convexity is a small correction at 100bp but matters for large moves and for the hedge ratio of a book with negative convexity.<br>\n<b>Interviewer follow-up:</b> Why does convexity matter more for a callable bond? A callable bond's price is capped by the call, so its convexity turns negative as yields fall.",
+  "tags": [
+   "convexity",
+   "dv01",
+   "scenario"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A callable gilt-style bond is trading with positive duration and then yields fall 100bp. Describe the price response relative to an option-free bond with the same duration. What hedging consequence follows?",
+  "back": "<b>Headline:</b> The callable price rises less than the option-free bond, because the issuer's call option caps value. Effective convexity is negative in the rally region.<br>\nHedge consequence: when yields fall, effective duration shortens, so the hedge must be rebalanced into a short position (you sell more duration into rallies). This is the negative-gamma cost, often called the mortgage-convexity problem.<br>\n<b>Interviewer follow-up:</b> Is it possible for an option-free bond to have negative convexity? Not for a plain fixed coupon with positive cash flows, convexity is positive. Negative convexity needs embedded optionality or an explicit cash-flow dependence on rates.",
+  "tags": [
+   "convexity",
+   "scenario",
+   "options"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What are key-rate durations, and why does their sum equal effective duration? What is the trade-off in using them to hedge a curve position?",
+  "back": "<b>Headline:</b> A key-rate duration \\(KRD_i\\) is the sensitivity of price to a shock at one curve tenor \\(T_i\\) with all other tenors held fixed, approximately a triangular bump around \\(T_i\\).<br>\n\\[\\sum_i KRD_i \\approx D_{eff}\\]\nbecause a parallel shift is the sum of individual key-rate shocks, and the linear approximation is additive.<br>\nTrade-off: KRDs expose basis risk and need a hedge set of at least as many instruments as tenors. Hedging with a small set of instruments produces a non-unique solution and a tenor-specific residual.<br>\n<b>Interviewer follow-up:</b> What does a 10-year bullet's KRD look like? It is concentrated at 10y, with small negative or near-zero wings at the adjacent tenors because the bump is triangular.",
+  "tags": [
+   "duration",
+   "key_rate",
+   "hedging"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A zero-coupon bond has Macaulay duration equal to its {{c1::maturity}}, and modified duration of {{c2::maturity/(1+y/m)}}. Convexity of a zero is {{c3::positive}} and grows with maturity.",
+  "back": "Zero-coupon duration is the cleanest benchmark. Compare every coupon bond's duration to its zero equivalent to see how much the coupon shortens duration.",
+  "tags": [
+   "duration",
+   "zero_coupon",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Define carry on a long gilt position financed in repo. Give a mental-math estimate over one quarter for a 10-year bond with 4.00% yield and 3.50% repo.",
+  "back": "<b>Headline:</b> carry \\(\\approx (y_{bond}-r_{repo})\\times \\tfrac{1}{4}\\) of a year, about 12.5bp per 100 face (ignoring pull-to-par and the change in dirty price from accrual).<br>\n\\[\\text{Carry} \\approx (4.00\\% - 3.50\\%)\\times 0.25 = 0.125\\% \\approx 12.5\\text{bp}\\]\nCarry is the income earned on the position minus the financing cost, at constant yields and constant curve.<br>\n<b>Interviewer follow-up:</b> Why is carry on a repo-financed long positive when the yield exceeds the repo rate? The coupon yield exceeds the financing cost, so the position earns a positive spread on borrowed money. That is the reason a long position financed below the bond yield is attractive, and it is what a rate rise erodes.",
+  "tags": [
+   "carry",
+   "repo",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Explain roll-down for a bond on an upward-sloping curve. Estimate the 3-month roll-down return for a 10y bond if the curve slope between 9.75y and 10y is 12bp per year and duration is about 8.",
+  "back": "<b>Headline:</b> roll-down is the price gain from ageing into a lower-yielding part of an upward-sloping curve, with the curve unchanged.<br>\n\\[\\text{Roll-down yield change} \\approx \\text{slope}\\times h = 0.12\\%\\times 0.25 = 0.03\\% = 3\\text{bp}\\]\n\\[\\text{Price gain} \\approx D_{mod}\\times 3\\text{bp} \\approx 8\\times 0.0003 = 0.24\\%\\approx 24\\text{bp per 100 face}\\]\n<b>Interviewer follow-up:</b> Why is roll-down a function of the curve's slope at that point rather than of the level? Because the bond ages along the curve, so its yield moves with the curve shape at its maturity, not with the curve's absolute level.",
+  "tags": [
+   "roll_down",
+   "carry",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Combine carry and roll-down for a 3-month horizon. Using the numbers from the previous two cards, what is the breakeven yield rise that offsets the total gain?",
+  "back": "<b>Headline:</b> about 4.6bp, about 0.0456% of yield for a 3-month horizon.<br>\nTotal carry plus roll-down in price terms: \\(0.125 + 0.24 = 0.365\\) points per 100.<br>\n\\[\\Delta y_{BE} = \\frac{0.365}{D_{mod}} = \\frac{0.365}{8}\\approx 0.0456\\% \\approx 4.6\\text{bp}\\]\nInterpretation: a 10y position at these inputs needs yields to rise by more than about 4.6bp over the quarter to lose money on a total-return basis.<br>\n<b>Interviewer follow-up:</b> Why does a flat curve reduce this cushion? Roll-down goes to zero on a flat curve, so the carry alone must cover the move; a negative slope makes roll-down negative.",
+  "tags": [
+   "carry",
+   "roll_down",
+   "breakeven",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "On a steep curve, a desk is choosing between a 10y bond with more carry and roll-down, and a 7y bond with lower carry but a shorter duration. What is the trade-off, and what does the scenario depend on?",
+  "back": "<b>Headline:</b> the trade-off is carry and roll against a different duration exposure per unit of spread, which depends on the expected move in the curve.<br>\nCompare return per unit of DV01: \\((\\text{carry}+\\text{roll})/\\text{DV01}\\). Roll-down is largest where the curve is steepest, and a parallel selloff costs the position its DV01 times the shock, so the decision is whether the extra roll per unit of DV01 compensates for the different shock exposure.<br>\nScenario dependence: if the curve is expected to bear-steepen, the longer bond loses; if it is expected to bull-flatten, the longer bond gains.<br>\n<b>Interviewer follow-up:</b> What is the risk of assuming a static curve for roll? Forward rates are not realised rates; the expectations-hypothesis roll-down is only an estimate and includes the term premium.",
+  "tags": [
+   "carry",
+   "roll_down",
+   "scenario",
+   "tradeoff"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the approximate par-par asset swap spread for a bond with coupon \\(c\\), price \\(P\\), swap rate \\(S_n\\) and annuity \\(A\\). Give a worked number: \\(c=6\\%\\), \\(S_n=4\\%\\), \\(P=105\\), \\(A=7\\).",
+  "back": "<b>Headline:</b> \\(ASW \\approx (c - S_n) - \\frac{P-100}{A}\\), which is about 129bp in the example.<br>\nDerivation: the investor buys the bond at \\(P\\), receives coupon \\(c\\) and swaps into floating; the swap pays fixed \\(S_n\\) on par notional and the premium amortises over the swap annuity. The premium \\((P-100)\\) is recovered through the spread over the swap annuity \\(A\\): \\(S\\cdot A = (c-S_n)\\cdot A - (P-100)\\), so \\(S = (c-S_n) - (P-100)/A\\).<br>\nNumerically: \\((6-4)\\% - 5/7\\% = 2\\% - 0.714\\% \\approx 1.29\\%\\).<br>\n<b>Interviewer follow-up:</b> Why does a premium bond show a lower asset-swap spread than its coupon-minus-swap-rate suggests? The premium is paid up front and recovered over the life of the swap via the spread, so the spread is reduced.",
+  "tags": [
+   "asset_swap",
+   "spreads",
+   "derivation",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Contrast the I-spread, Z-spread and G-spread for a corporate bond. Which is most appropriate for a gilt, and why?",
+  "back": "<b>I-spread:</b> bond yield minus the interpolated swap rate at the bond's maturity, a par-yield measure.<br>\n<b>Z-spread:</b> constant spread added to every point of the zero curve so that discounted cash flows equal the dirty price.<br>\n<b>G-spread:</b> bond yield minus the interpolated government yield at the same maturity.<br>\nFor a gilt, the G-spread is undefined because the government curve is the gilt curve itself; the relevant measures are the gilt yield versus SONIA swaps (I-spread) or a Z-spread against the gilt zero curve. Z-spreads capture the curve shape better than I-spread when the bond's cash-flow timing differs from a par swap.<br>\n<b>Interviewer follow-up:</b> Why can the I-spread and Z-spread differ in sign for a bond on a steep curve? Their definitions discount at different rates; the difference depends on the curve shape across the bond's cash-flow timing, so sign is not guaranteed.",
+  "tags": [
+   "spreads",
+   "conventions",
+   "trade_off"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The Z-spread is the constant spread added to the {{c1::zero}} curve that equates the bond's {{c2::dirty}} price to the PV of its cash flows. The OAS equals the Z-spread minus the {{c3::option cost}}.",
+  "back": "Z-spread on a callable or putable bond mixes credit with optionality. Use OAS (which strips option value) when comparing with an option-free benchmark.",
+  "tags": [
+   "spreads",
+   "options",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write the invoice price for a bond future delivery and explain each term. Give a numeric example with futures settlement price 110.00, conversion factor 0.9500, accrued at delivery 1.20 per 100 face.",
+  "back": "\\[P_{invoice} = F\\times CF + AI_{\\text{delivery}}\\]\nwhere \\(F\\) is the futures settlement price, \\(CF\\) is the conversion factor, and \\(AI_{\\text{delivery}}\\) is the accrued interest on the delivered bond on the delivery date.<br>\nExample: \\(110.00\\times 0.9500 + 1.20 = 104.50 + 1.20 = 105.70\\) per 100 face.<br>\n<b>Interviewer follow-up:</b> Why is accrued added separately rather than scaled by \\(CF\\)? The futures price is quoted clean, so the accrued interest is paid on the delivered bond at its full value, not scaled by the conversion factor.",
+  "tags": [
+   "futures",
+   "invoice",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the conversion factor for a bond future, and why does it make the cheapest-to-deliver problem tractable? When is a CF above 1?",
+  "back": "<b>Headline:</b> The CF is the price per 1 unit of face of the deliverable bond at a notional 6% yield, on the first delivery day, with coupon and maturity rounded per the exchange rule.<br>\nBecause the CF normalises each bond to a 6% yield, the invoice price for a delivered bond is proportional to the futures price. If market yields equalled 6% for all bonds, the CF would make every bond equivalent in delivery.<br>\nCF above 1 when the bond's coupon is above the notional 6%, because it is worth more than par at 6%. Below 1 for coupons below 6%.<br>\n<b>Interviewer follow-up:</b> Why does CF not eliminate the CTD problem? Because the market yield of each bond differs from 6%, so the bond with the lowest implied net basis is the CTD.",
+  "tags": [
+   "futures",
+   "conversion_factor",
+   "conventions"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the futures hedge ratio for a cash bond position using DV01 and the conversion factor of the CTD. Set up the formula and explain its approximation.",
+  "back": "<b>Headline:</b> \\(N_f \\approx \\frac{DV01_{cash}}{DV01_{futures}}\\), with \\(DV01_{futures}\\approx DV01_{CTD}/CF_{CTD}\\), so \\(N_f \\approx DV01_{cash}\\cdot CF/DV01_{CTD}\\).<br>\nDerivation: the futures price moves approximately with the CTD's clean price divided by its CF, so a 1bp move in yield changes the futures price by \\(DV01_{CTD}/CF\\) per unit of contract price. The contract DV01 is then \\(DV01_{CTD}/CF\\) per unit futures, and the hedge is \\(N_f = DV01_{cash}\\cdot CF/DV01_{CTD}\\).<br>\n<b>Interviewer follow-up:</b> What breaks this hedge? Switching of the CTD when yields move, the delivery options, and the basis changing over time. Hedge against the CTD's DV01 and re-hedge when the CTD changes.",
+  "tags": [
+   "futures",
+   "hedging",
+   "dv01",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Define implied repo rate for a bond future. Compute it for a bond with dirty price 100.00, invoice price at delivery 101.00, and a 90-day delivery horizon on Actual/360.",
+  "back": "<b>Definition:</b> the financing rate that makes buying the cash bond and selling the future, then delivering, break even.<br>\n\\[IRR = \\frac{P_{invoice} - P_{dirty,0}}{P_{dirty,0}}\\times\\frac{360}{t}\\]\nNumerically: \\(\\frac{101-100}{100}\\times\\frac{360}{90}= 1\\%\\times 4 = 4\\%\\).<br>\nIf repo funding is below the IRR, the cash-futures trade earns carry; if above, it loses.<br>\n<b>Interviewer follow-up:</b> Which day count applies? It follows the contract: Actual/360 for US conventions and Actual/365 for the GBP-linked trade, so the day count is set per market, and it changes the answer by a few bps.",
+  "tags": [
+   "futures",
+   "implied_repo",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Define gross basis and net basis for a bond future. Why is the CTD the bond with the lowest net basis, and what happens to the futures price if the CTD changes?",
+  "back": "<b>Gross basis:</b> \\(P_{clean} - F\\times CF\\).<br>\n<b>Net basis:</b> gross basis minus carry (accrued income and coupon received until delivery, less financing). The CTD is the bond with the lowest net basis, equivalently the highest implied repo rate.<br>\nIf the CTD changes, the futures price adjusts to the new CTD's price-yield profile, so the futures can gap in response to switching risk. Switch risk is a major reason for the futures to trade cheap or rich to the CTD.<br>\n<b>Interviewer follow-up:</b> Why does the CTD switch as yields move? Each bond's price-yield profile differs from the 6% notional the CF is built on, so the implied repo rates of two candidates cross at some yield level, and the cheapest bond changes there.",
+  "tags": [
+   "futures",
+   "basis",
+   "ctd"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "List the delivery options embedded in a US Treasury bond future and explain who holds them, and how each affects futures value.",
+  "back": "Options held by the short:<br>\n<ul>\n<li><b>Quality (CTD) option:</b> choice of which eligible bond to deliver.</li>\n<li><b>Timing option:</b> choice of delivery day in the delivery month.</li>\n<li><b>Wild-card option:</b> delivery notice can be given after the futures close, using the prior day's settlement price.</li>\n<li><b>End-of-month option:</b> the short can wait to the last business day of the month.</li>\n</ul>\nThese options are held by the short, so they make the futures cheaper than a single-bond forward. The option value is priced into the futures versus the CTD's forward. Gilt and Bund futures have a narrower option set (quality and timing mainly).<br>\n<b>Interviewer follow-up:</b> Which option is most valuable in a rate shock? The quality option, because a switch of the CTD can produce a large change in the forward value.",
+  "tags": [
+   "futures",
+   "delivery_options",
+   "options"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Describe the cash-futures basis trade. What is the P&L and what risk would cause the position to unwind, using implied repo versus financing rate as the key variable?",
+  "back": "<b>Trade:</b> long the CTD cash bond, short the future with the CF-adjusted hedge, funded in repo.<br>\nP&L is approximately carry: \\((IRR - r_{repo})\\times\\) notional \\(\\times\\) time, plus any change in the net basis. If financing rises above the IRR, the trade loses carry.<br>\nUnwind risks: repo haircut or availability (funding squeeze), CTD switch, the futures contract converging to a different delivery basket, and mark-to-market on the basis when liquidity is thin.<br>\n<b>Interviewer follow-up:</b> Why was the UST cash-futures basis dislocated in March 2020? Dealers' balance-sheet constraints and forced repo unwinds widened the basis, and the trade was unwound at a loss before it converged. Leverage ratio constraints tighten the trade.",
+  "tags": [
+   "futures",
+   "basis",
+   "repo",
+   "scenario"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compare the Long Gilt future, the Bund future and the US 10-year future in terms of notional, notional coupon and deliverable maturity range. What does the deliverable range imply for CTD dynamics?",
+  "back": "<ul>\n<li><b>Long Gilt (LIF):</b> notional £100,000, 6% notional coupon, deliverable gilts with about 8¾ to 13 years remaining (approx.).</li>\n<li><b>Bund (EUREX):</b> notional €100,000, 6% notional coupon, deliverable about 8.5 to 10.5 years.</li>\n<li><b>US 10-year (TY):</b> notional $100,000, 6% notional coupon, deliverable about 6.5 to 10 years.</li>\n</ul>\nA wider deliverable range means more CTD candidates and a greater role for the quality option and CTD switching.<br>\n<b>Interviewer follow-up:</b> Why does a narrower range make a futures contract more sensitive to a single bond? Fewer candidates means the CTD is a more concentrated exposure and a squeeze on that bond moves the future.",
+  "tags": [
+   "futures",
+   "conventions",
+   "comparison"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In the Bund future, the notional is {{c1::€100,000}} with a {{c2::6%}} notional coupon and a deliverable range of about {{c3::8.5 to 10.5}} years. The UST 10-year future has a deliverable range of about {{c4::6.5 to 10}} years.",
+  "back": "Deliverable range and notional coupon are the first things to check before using any futures contract for a hedge.",
+  "tags": [
+   "futures",
+   "conventions",
+   "bund",
+   "ust"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A bond is trading special in repo, at 3.20% against 4.00% general collateral. Explain specialness, who pays it, and how much a short seller saves.",
+  "back": "<b>Specialness</b> is GC rate minus special repo rate: here \\(4.00\\%-3.20\\%=80\\)bp.<br>\nA short seller who needs the bond does a reverse repo: they lend cash and receive the bond as collateral, at the special rate, which is below GC. On that cash they forgo the 80bp difference against GC, and that foregone interest is the price of borrowing the bond. The spread reflects scarcity in the bond, not a credit view.<br>\n<b>Interviewer follow-up:</b> What causes specialness to spike? A short squeeze, a bond with low free float, or a bond that is the CTD of a future and is in high demand for delivery.",
+  "tags": [
+   "repo",
+   "specials",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Explain how a repo transaction affects a dealer's leverage ratio and risk-weighted assets, and why a repo-heavy business may be constrained even with low RWA.",
+  "back": "<b>Headline:</b> the leverage ratio is non-risk-based: it measures Tier 1 capital against an exposure measure that includes repo assets on a gross basis unless netting or central clearing is available.<br>\nRepo with a high-quality counterparty can have low RWA, but the exposure measure still counts gross assets, so balance-sheet usage can dominate capital usage. UK leverage ratio requirements are around 3.25% (approx.) for large banks; Basel III's minimum is 3%.<br>\nNetting, central clearing and accounting netting reduce the exposure. Exposure measures for derivatives use SA-CCR.<br>\n<b>Interviewer follow-up:</b> Why do dealers hedge the leverage ratio at quarter-end? Some reporting dates set balance-sheet snapshots, so dealers reduce gross repo and reverse repo to meet the exposure target at quarter-end, which spikes repo rates.",
+  "tags": [
+   "repo",
+   "balance_sheet",
+   "leverage_ratio",
+   "tradeoff"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Scenario: at quarter-end, specialness in gilt repo spikes and GC rates rise. Explain the mechanism linking balance-sheet constraints to funding rates and the cash-futures hedge.",
+  "back": "<b>Mechanism:</b> dealers reduce gross repo and reverse-repo at the reporting date to shrink exposure, so cash lending falls and borrowing rates rise. Bond financing becomes more expensive, pushing repo above the implied repo of the futures hedge.<br>\nImplications: a cash-futures basis position that is funded in repo loses carry at quarter-end, and the hedge of a leveraged long position can be squeezed. The spike reverses after the reporting date.<br>\n<b>Interviewer follow-up:</b> What would a desk do to protect the position? Term out the funding across the quarter-end, use CCP-cleared repo to net exposures, or pre-fund the trade so the quarter-end does not force a close-out.",
+  "tags": [
+   "repo",
+   "balance_sheet",
+   "scenario",
+   "tradeoff"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compare a DMO gilt auction with a syndication for issuing a new long gilt. What trade-offs drive the choice, and what is an auction tail?",
+  "back": "<b>Auction:</b> competitive sale with pricing set by bids; cheaper to run for benchmark-style issues and transparent. The auction clearing yield is compared with the pre-auction secondary level.<br>\n<b>Syndication:</b> bookbuilt sale to selected banks at a price agreed with the issuer; used for new long gilts where price discovery and distribution to real-money investors matter.<br>\n<b>Auction tail:</b> the difference between the auction clearing yield and the level of the bond in the secondary market just before the auction. A tail of a few bps signals weak demand and a high clearing cost.<br>\n<b>Interviewer follow-up:</b> What does bid-to-cover tell you? Higher bid-to-cover means more demand relative to supply; combined with tail, it informs future issuance timing and pricing.",
+  "tags": [
+   "dmo",
+   "auctions",
+   "syndication",
+   "tradeoff"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Gilt-edged market makers (GEMMs) have {{c1::obligations}} to bid in DMO auctions and to make {{c2::two-way prices}} in the secondary market. New long gilts are often issued by {{c3::syndication}} rather than auction.",
+  "back": "GEMM obligations are the reason the DMO can run auctions at scale without a single dominant buyer.",
+  "tags": [
+   "dmo",
+   "gemms",
+   "conventions"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Explain how central-bank asset purchases (QE) affect the gilt curve through the term premium and through scarcity. Why is the flattening effect typically concentrated at the long end?",
+  "back": "<b>Portfolio-balance channel:</b> the central bank buys duration, removing it from private hands. Investors must hold a smaller amount of duration risk, so they demand less term premium, which compresses long-end yields.<br>\n<b>Scarcity channel:</b> purchases of specific bonds reduce free float, lifting their price and reducing specialness.<br>\nThe long end flattens because duration purchases concentrate at longer maturities, and the term premium is largest there.<br>\n<b>Interviewer follow-up:</b> Why do short-end yields move less? Policy rate expectations anchor the short end; QE acts mainly through duration and term premium rather than through the expected short-rate path.",
+  "tags": [
+   "qe",
+   "term_premium",
+   "curve",
+   "scenario"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Scenario: the central bank moves from passive run-off to active sales of long gilts while the DMO increases long-dated issuance. Describe the effect on the 30y yield and the 10s30s slope, and the trade-off for a curve trader.",
+  "back": "<b>Effect:</b> active sales plus heavy long issuance increase the supply of duration to private investors. Term premium rises, so the long end cheapens relative to the belly, and the 10s30s slope steepens.<br>\nTrade-off: a 10s30s steepener (short 30y versus long 10y) earns carry if the supply view plays out, but the position is exposed to a demand shock, such as liability-driven buying, that flattens the curve.<br>\n<b>Interviewer follow-up:</b> How do you separate policy-rate expectations from term premium? Use a term-premium model (for example, ACM) to decompose yields into expected average short rate and term premium.",
+  "tags": [
+   "qt",
+   "curve",
+   "term_premium",
+   "scenario",
+   "tradeoff"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Construct a DV01-neutral 2s10s steepener with approximate DV01s per 100 face at a 4% par yield: 2y DV01 about 0.0190, 10y DV01 about 0.0818. What is the notional ratio?",
+  "back": "Set \\(N_2\\cdot DV01_2 = N_{10}\\cdot DV01_{10}\\), so\n\\[\\frac{N_2}{N_{10}} = \\frac{DV01_{10}}{DV01_2} = \\frac{0.0818}{0.0190}\\approx 4.3\\]\nThe 2y leg needs about 4.3 times the 10y notional.<br>\nSign: a steepener is long 2y and short 10y, so the P&L is positive when the 10y yield rises relative to the 2y.<br>\n<b>Interviewer follow-up:</b> Why does a 1:1 notional 2s10s steepener have a large residual DV01? The 10y has more DV01 per unit notional, so a 1:1 trade is effectively a short 10y duration position.",
+  "tags": [
+   "curve_trades",
+   "dv01",
+   "mental_math",
+   "steepener"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Explain why a 50:50 notional 5s30s trade is not curve-neutral, using approximate DV01s at a 4% par yield: 5y DV01 about 0.0449 and 30y DV01 about 0.1738 per 100 face.",
+  "back": "A 50:50 notional position has DV01 \\(0.5\\times0.0449\\) on the 5y and \\(0.5\\times0.1738\\) on the 30y, so the 30y leg dominates.<br>\nNet DV01 \\(\\approx 0.0225 - 0.0869\\), roughly \\(-0.064\\) per 100 of total notional, so the position is effectively a large short duration bet on the 30y.<br>\nDV01-neutral weights: \\(N_5 = 3.9\\times N_{30}\\), so a DV01-neutral trade uses about 80% of the notional in the 5y and 20% in the 30y, relative to a combined base.<br>\n<b>Interviewer follow-up:</b> When would 50:50 notional be acceptable? When the desk explicitly wants a duration-weighted view, or the two bonds have similar DV01 per unit notional, which they do not here.",
+  "tags": [
+   "curve_trades",
+   "dv01",
+   "mental_math",
+   "weights"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compare DV01-neutral weights with regression (yield-beta) weights for a curve trade. What are the trade-offs and the main estimation risk?",
+  "back": "<b>DV01-neutral:</b> matches linear rate sensitivity at the current curve. Simple, transparent, and stable, but assumes all tenors move one-for-one with the parallel shift.<br>\n<b>Regression/beta:</b> weights from the historical yield-change regression of one tenor on the other, so the hedge reflects how the tenors actually move together. More consistent with the observed curve dynamics but unstable: sample window, frequency and regime change the beta.<br>\n<b>Estimation risk:</b> a short sample gives unstable betas; a long sample includes regimes that do not persist. Trade-off between economic meaning and statistical stability.<br>\n<b>Interviewer follow-up:</b> How do PCA factors inform the choice? PCA separates level, slope and curvature; a DV01-neutral trade is exposed to slope and curvature in a way that the PCA loadings reveal.",
+  "tags": [
+   "curve_trades",
+   "regression",
+   "beta",
+   "tradeoff"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Construct a DV01-neutral 2s5s10s butterfly with a 5y belly. Using approximate DV01s at 4%: 2y 0.0190, 5y 0.0449, 10y 0.0818. Give weights for the wings if the 2y and 10y each carry equal DV01.",
+  "back": "Equal wing DV01 means each wing contributes half the belly DV01: \\(0.0449/2 = 0.02245\\).<br>\n\\[N_2 = \\frac{0.02245}{0.0190}\\approx 1.18,\\qquad N_{10} = \\frac{0.02245}{0.0818}\\approx 0.27\\]\nper unit of 5y belly notional. The wing notionals are unequal because the 10y has more DV01 per unit notional.<br>\nThe fly is long wings and short belly in the usual sign convention, so it profits if the belly cheapens relative to the wings. Its convexity is positive from the wings.<br>\n<b>Interviewer follow-up:</b> Is a DV01-neutral fly also duration-neutral? Not necessarily; it is DV01-neutral for the parallel shift only, so the residual slope exposure depends on the tenor spacing and weights.",
+  "tags": [
+   "curve_trades",
+   "butterfly",
+   "dv01",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A bond steepener is long the {{c1::2y}} and short the {{c2::10y}}, so it profits when the 10y yield rises {{c3::relative to}} the 2y. Its DV01-weighted P&L is approximately {{c4::DV01 times the change in the 2s10s spread}}.",
+  "back": "Describe the position with DV01 weights, not notional weights, to avoid a hidden duration bet.",
+  "tags": [
+   "curve_trades",
+   "steepener",
+   "conventions"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Explain the mechanics of the UK liability-driven investment (LDI) pooled fund structure before September 2022. Why did leverage create a feedback loop when gilt yields rose?",
+  "back": "<b>Structure:</b> pension schemes hedged the rate and inflation sensitivity of their liabilities with leveraged gilt and interest-rate derivative positions. Leverage came from repo on gilts and from swap positions requiring initial and variation margin.<br>\n<b>Feedback loop:</b> a sharp rise in gilt yields lowers gilt collateral value and increases margin calls. To meet these, funds sell gilts; selling pushes yields higher, which triggers more margin calls and more sales.<br>\nThe loop is reflexive: the forced sales themselves move the price that drives the collateral calls, and liquidity in long gilts was thin.<br>\n<b>Interviewer follow-up:</b> Why does a larger hedge ratio amplify the loop? Each unit of hedged duration needs collateral and each unit of collateral loss forces more sales, so a higher hedge ratio raises the pass-through from price falls to forced selling.",
+  "tags": [
+   "ldi",
+   "pensions",
+   "repo",
+   "scenario"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Scenario: in late September 2022, long gilt yields rose sharply after the mini-budget. Describe the Bank of England's temporary intervention, its design, and the trade-off between financial stability and monetary policy.",
+  "back": "<b>Intervention:</b> the Bank announced temporary purchases of long-dated gilts through its Asset Purchase Facility, to restore orderly market functioning. The purchases had a cap (approx. £65bn) and a fixed end date in mid-October 2022.<br>\n<b>Design:</b> targeted to long maturities, time-limited and capped, so the intervention addressed liquidity rather than the policy rate.<br>\n<b>Trade-off:</b> buying gilts loosens conditions and conflicts with the tightening path; a time limit preserves the inflation mandate but makes the exit a risk.<br>\n<b>Interviewer follow-up:</b> Why is a time-limited, capped purchase more credible than open-ended QE in this episode? It addresses the mechanism (forced selling) without signalling a permanent change to the policy stance, so it limits moral hazard.",
+  "tags": [
+   "ldi",
+   "boe",
+   "qe",
+   "scenario",
+   "tradeoff"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In the UK LDI episode of 2022, leveraged pooled funds used {{c1::repo}} and {{c2::interest-rate swaps}} to gear their liability hedges. Rising yields triggered {{c3::margin calls}} that forced {{c4::gilt sales}}, which pushed yields higher still.",
+  "back": "The episode is a case study in collateral-driven fire sales. Know the loop and the policy response.",
+  "tags": [
+   "ldi",
+   "pensions",
+   "collateral",
+   "scenario"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Decompose a long-end gilt yield into expectations and term premium. Why do term-premium models matter for a desk making a view on QE or fiscal supply?",
+  "back": "\\[y_{n} \\approx \\frac{1}{n}\\sum_{k=0}^{n-1}E[r_{k}] + TP_n\\]\nThe yield equals the expected average short rate over the bond's life plus a term premium that compensates for duration risk.<br>\nModels such as ACM (Adrian, Crump, Moench, from the NY Fed) estimate the term premium from a yield-curve factor model. Their outputs are model-dependent, so the desk should check the estimate against survey-based measures.<br>\nFor a QE or fiscal view, a term-premium estimate separates whether a yield move reflects a change in expected policy rates or a change in the price of duration risk.<br>\n<b>Interviewer follow-up:</b> Why was the term premium negative in the 2010s? Heavy central-bank purchases and a strong demand for duration from liability-driven and regulatory-driven buyers pushed the premium below zero.",
+  "tags": [
+   "term_premium",
+   "models",
+   "qe",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Scenario: a fiscal announcement raises 30y gilt yields by 50bp while 2y yields are unchanged. Interpret the move and describe how you would split it between expectations and term premium.",
+  "back": "<b>Interpretation:</b> a 50bp rise in the 30y with a flat 2y is a bear steepening. Expected policy rates over the next 2 years are unchanged, so most of the move is in the term premium and/or long-run expected rates, not the near-term path.<br>\nSplit: compare the term-premium model's change with the change in the expected average short rate implied by the swap curve and OIS-type forwards. Check breakevens and real yields to see if the move is real or inflation-driven.<br>\n<b>Interviewer follow-up:</b> What trade would express the view that the premium is temporary? A steepener expecting mean reversion, sized by DV01 and with stop-loss on the fiscal news flow.",
+  "tags": [
+   "term_premium",
+   "scenario",
+   "curve"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Central-bank asset purchases tend to {{c1::compress}} the term premium, while heavier issuance and active balance-sheet sales tend to {{c2::raise}} it. The ACM term-premium model is published by the {{c3::NY Fed}}.",
+  "back": "Term premium is a model estimate. Quote the model and date when discussing it.",
+  "tags": [
+   "term_premium",
+   "qe",
+   "models",
+   "conventions"
+  ]
+ }
+]

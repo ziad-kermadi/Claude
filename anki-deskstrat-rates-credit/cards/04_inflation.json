@@ -1,0 +1,464 @@
+[
+ {
+  "type": "basic",
+  "front": "UK index-linked gilts: what does the indexation lag do to the index ratio, and why does it matter when comparing a linker with a swap curve?",
+  "back": "<b>Headline:</b> the lag decides which RPI print sets the cash flows. For settlement in month \\(m\\), \\(IR = RPI_{\\text{ref}}/RPI_{\\text{base}}\\), where \\(RPI_{\\text{ref}}\\) is the print for month \\(m-L\\), with \\(L\\in\\{3,8\\}\\).<br>\n<b>Why it matters:</b>\n<ul><li>Known-ahead cash flows: each index value is published before the date it sets, so inflation exposure ends \\(L\\) months before settlement.</li>\n<li>Comparability: a linker breakeven is only like-for-like with a swap curve of the same lag. The lag mismatch is a deterministic term in the basis.</li></ul>\n<b>Interviewer follow-up:</b> Which way does the lag bias breakeven? The lag removes roughly \\(L\\) months of expected inflation from the index ratio (approx.), so lag-adjust the linker before comparing its breakeven with a swap of a different lag.",
+  "tags": [
+   "linkers",
+   "uk_gilts",
+   "indexation",
+   "convention"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Pre-2005 UK linkers use an {{c1::8-month}} indexation lag with {{c2::linear daily interpolation}} between two RPI prints. Post-2005 issues use a {{c3::3-month}} lag with {{c4::no interpolation}}, so the index ratio is {{c5::flat}} within each calendar month.",
+  "back": "Interpolation makes the index ratio continuous, so accrual is smooth. The flat post-2005 index creates a step at each month start, which shows up in dirty price, accrued interest and index-linked DV01 around month boundaries.",
+  "tags": [
+   "linkers",
+   "uk_gilts",
+   "convention",
+   "indexation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the index ratio on day \\(d\\) of a month with \\(D\\) days for an 8-month-lag UK gilt. The base RPI is fixed at issue.",
+  "back": "\\[IR(d)=\\frac{RPI_{m-8}+\\frac{d-1}{D}\\left(RPI_{m-7}-RPI_{m-8}\\right)}{RPI_{\\text{base}}}\\]\nHere \\(RPI_{m-k}\\) is the print for the month \\(k\\) months before the settlement month. The index is linear in \\(d\\), so within the month it accrues \\((RPI_{m-7}-RPI_{m-8})/(D\\cdot RPI_{\\text{base}})\\) per day: the monthly RPI change spread evenly over the days.<br>\n<b>Interviewer follow-up:</b> Why does interpolation matter for hedging? With interpolation the index sensitivity to a monthly print is spread across days, so accrual is continuous. A step-indexed bond concentrates the same sensitivity on the first day of the month.",
+  "tags": [
+   "linkers",
+   "index_ratio",
+   "derivation",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why is the index ratio of a post-2005 UK linker a step function, and what does the step imply for accrued interest and index-linked DV01 around month-end?",
+  "back": "The post-2005 index ratio is constant through each calendar month: \\(IR_m = RPI_{m-3}/RPI_{\\text{base}}\\). The step on the 1st equals the monthly change in the lagged print: \\(\\Delta IR \\approx IR\\cdot(RPI_{m-3}/RPI_{m-4}-1)\\).\n<ul><li>Within the month the index is already known, so intramonth inflation risk is zero. Index-linked DV01 is concentrated at the month boundary.</li>\n<li>Accrued interest uses the settlement-date IR, so dirty price moves in steps while the clean quote is ex-index.</li></ul>\n<b>Follow-up:</b> Holding the clean price fixed, why does a breakeven computed on the 1st differ from one computed on the 31st? The IR, and so the dirty-to-clean conversion, has stepped between the two dates.",
+  "tags": [
+   "linkers",
+   "index_ratio",
+   "convention",
+   "dv01"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Mental math: a linker pays a 1.25% real coupon semi-annually. Settlement is 60 days into a 182-day coupon period and the settlement index ratio is 1.30. What is accrued interest per 100 nominal?",
+  "back": "\\[\\text{Accrued}=\\frac{c}{2}\\times IR\\times\\frac{\\text{days}}{\\text{period}}=0.625\\times1.30\\times\\frac{60}{182}\\]\n\\(0.625\\times1.30=0.8125\\) and \\(60/182\\approx0.33\\), so \\(0.8125\\times0.33\\approx0.27\\).<br>\n<b>Answer: about 0.27 per 100 nominal</b> (index-scaled).<br>\nCheck: the full half-period coupon is about 0.81, and accrued is roughly a third of it. Use the settlement-date IR, which already includes the lag.",
+  "tags": [
+   "linkers",
+   "mental_math",
+   "accrued",
+   "index_ratio"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Mental math: a nominal gilt yields 4.60% and the breakeven is 3.10%. What is the real yield, and how large is the error from the additive shortcut?",
+  "back": "Exact Fisher: \\(\\frac{1.046}{1.031}-1\\approx1.455\\%\\).<br>\nAdditive shortcut: \\(4.60-3.10=1.50\\%\\).<br>\nThe error is about \\(r\\times\\pi\\approx1.455\\%\\times3.10\\%\\approx0.045\\%\\), i.e. 4 to 5bp. It grows with both the real yield and the breakeven. Use \\(r\\approx n-\\pi-r\\pi\\) when precision matters, and the shortcut for a bp-level estimate.",
+  "tags": [
+   "real_rates",
+   "breakeven",
+   "mental_math",
+   "fisher"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does a UK linker breakeven actually measure? Write the decomposition and give the sign of each term.",
+  "back": "\\[BEI \\approx E^{P}[\\pi] + IRP - LP + C_{\\text{lag}} + C_{\\text{seas}} + C_{\\text{conv}}\\]\n<ul><li>\\(E^{P}[\\pi]\\): expected RPI under the pricing measure, not the real-world forecast.</li>\n<li>\\(IRP\\), inflation risk premium: positive. Nominal holders are compensated for inflation risk, so nominal yields embed it and BEI rises.</li>\n<li>\\(LP\\), linker liquidity premium: enters with a minus sign. Illiquid linkers trade cheap, so their real yield is high and BEI is low.</li>\n<li>\\(C_{\\text{lag}}\\), \\(C_{\\text{seas}}\\): mechanical lag and seasonal terms. Sign depends on the calendar and the seasonal pattern.</li>\n<li>\\(C_{\\text{conv}}\\): convexity/Jensen term from the index ratio, small at short horizons.</li></ul>\n<b>Interviewer follow-up:</b> Is a 10y breakeven a clean market expectation of RPI? Only after removing the premia and the mechanical terms does the residual look like an expectation.",
+  "tags": [
+   "breakeven",
+   "linkers",
+   "inflation_risk_premium",
+   "liquidity"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Holding nominal yields fixed, the expected RPI-CPI wedge widens by 25bp. What happens to RPI-linked and CPI-linked real yields, and to the RPI breakeven?",
+  "back": "Identity: \\(BEI_{RPI}=BEI_{CPI}+w\\), where \\(w\\) is the expected RPI-CPI wedge. The RPI breakeven rises by 25bp. With nominal fixed, the RPI-linker real yield \\(r=n-BEI\\) falls by about 25bp. CPI-linked real yields are unchanged.<br>\nSo the RPI linker gets richer relative to CPI unless the move is already priced. Expressions: long CPI-linked against short RPI-linked, or receive the wedge through an RPI-CPI swap. The move is pure index-definition repricing and needs no view on real rates or the inflation level.<br>\n<b>Follow-up:</b> Is every observed wedge move a view on the formula? No. The wedge also carries liquidity, supply and LDI demand specific to RPI-linked assets.",
+  "tags": [
+   "rpi_cpi",
+   "breakeven",
+   "scenario",
+   "linkers"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Explain the RPI formula effect. Why does the arithmetic-versus-geometric choice bias RPI above CPI? Use a two-item example.",
+  "back": "RPI aggregates elementary prices with the arithmetic mean (Carli): \\(\\bar R_C=\\frac{1}{n}\\sum_i R_i\\). CPI uses the geometric mean (Jevons) at elementary level: \\(\\bar R_J=\\prod_i R_i^{1/n}\\). By AM-GM, \\(\\bar R_C\\ge\\bar R_J\\), with the gap rising with price dispersion.<br>\nExample: two items with price relatives 1.2 and 0.8. Carli gives \\(1.000\\). Jevons gives \\(\\sqrt{0.96}\\approx0.980\\). The Carli measure is about 2% higher at this item level.<br>\nAt the aggregate level the effect is diluted by averaging over many items and by weights, but it is a structural upward bias whenever relative price dispersion is positive. The 2030 alignment removes this component from RPI.",
+  "tags": [
+   "rpi_cpi",
+   "formula_effect",
+   "derivation",
+   "index_construction"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The UK decided that RPI will be calculated with the CPIH methodology from {{c1::2030}}, which removes the {{c2::formula effect}} from RPI.",
+  "back": "Linker index ratios and RPI swaps reference the new RPI after that date, so the forward RPI curve shifts down relative to the old RPI. Coverage and weight differences remain, so the residual wedge is not zero. Check the current transition and compensation details before quoting them.",
+  "tags": [
+   "rpi_reform",
+   "rpi_cpi",
+   "convention",
+   "linkers"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Suppose from 2030 RPI growth falls by a constant \\(w\\) per year relative to the old RPI. Derive the effect on linker cash flows at maturity \\(T\\), and the approximate price effect at constant nominal yields.",
+  "back": "For \\(t\\ge t_0=2030\\), \\(I_{\\text{new}}(T)/I_{\\text{old}}(T)\\approx e^{-w(T-t_0)}\\). Cash flows after 2030 scale by the same factor, so the reduction compounds. Pre-2030 cash flows are unaffected.<br>\nAt constant nominal yield, the breakeven falls by \\(w\\), so the real yield rises by \\(w\\). The price change is therefore approximately \\(-D_r\\,w\\), where \\(D_r\\) is the real duration of the post-2030 cash flows.<br>\nHypothetical: \\(w=0.5\\%\\) and \\(D_r=10\\) gives a price fall of about 5%.<br>\n<b>Follow-up:</b> Why is a constant-\\(w\\) assumption a simplification? The wedge is not constant. It changes with weights, rent and mortgage-cost dynamics, so the post-2030 index path needs a term structure of wedge expectations.",
+  "tags": [
+   "rpi_reform",
+   "linkers",
+   "derivation",
+   "scenario"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is an RPI-CPI wedge swap, and what drives its fair value before and after the 2030 alignment?",
+  "back": "It exchanges the cumulative difference between RPI and CPI growth on a notional. The fixed-leg equivalent is the expected cumulative wedge, discounted.<br>\nBefore 2030, the expected wedge reflects the formula effect plus coverage and weight differences. Mortgage interest payments are in RPI and not in CPI, which is one coverage gap. After 2030, the methodological part is removed from RPI, so the expected residual wedge is smaller and the forward RPI-CPI curve should fall away after the transition.<br>\n<b>Follow-up:</b> Why not price the post-2030 wedge as zero? Coverage and weight differences remain, so back out the residual from quoted swaps rather than assuming zero.",
+  "tags": [
+   "rpi_cpi",
+   "rpi_reform",
+   "inflation_swaps",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compare zero-coupon and year-on-year inflation swaps: payoffs, what the quoted rate means, and which one is the building block of an inflation curve.",
+  "back": "<b>ZCIIS:</b> one exchange at \\(T\\) of \\(N[I(T)/I(0)-(1+K)^T]\\), with \\(I\\) the lagged index. The quote \\(K\\) satisfies \\((1+K)^T=E^{T}[I(T)]/I(0)\\), the annualised cumulative breakeven.<br>\n<b>YoY:</b> annual exchanges of \\(N[I(t_i)/I(t_{i-1})-(1+k_i)]\\), where \\(k_i\\) is the annual rate for period \\(i\\).<br>\nWithout convexity, \\((1+K_T)^T=\\prod_i(1+k_i)\\). The ZC curve is therefore the set of cumulative index levels, and YoY rates are its period-on-period differences.<br>\nTrade-off: ZC quotes are clean and free of intermediate payments. YoY is the market for caps, floors and pension-style structures, and its convexity sits inside the pricer.",
+  "tags": [
+   "inflation_swaps",
+   "yoy",
+   "zc",
+   "curve_construction"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Given zero-coupon breakevens \\(K_1\\) to \\(T_1=1\\)y and \\(K_2\\) to \\(T_2=2\\)y, derive the forward YoY rate for year two, ignoring convexity. Check with \\(K_1=3.0\\%\\), \\(K_2=3.2\\%\\).",
+  "back": "\\(E[I(T_2)]/E[I(T_1)]=\\frac{(1+K_2)^{T_2}}{(1+K_1)^{T_1}}\\). Over period \\(\\tau=T_2-T_1\\), the annual forward is\n\\[1+f_{12}=\\left[\\frac{(1+K_2)^{T_2}}{(1+K_1)^{T_1}}\\right]^{1/\\tau}\\]\nNumerical check: \\((1.032)^2/1.03=1.065024/1.03\\approx1.0340\\), so \\(f_{12}\\approx3.40\\%\\). The forward year-two YoY is above both quoted breakevens, which is the usual result when the ZC curve is upward sloping.",
+  "tags": [
+   "yoy",
+   "zc",
+   "mental_math",
+   "curve_construction"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A YoY leg fixes the index at \\(T_1\\) and pays at \\(T_2=T_1+\\tau\\). Show that the market YoY forward differs from the naive forward implied by ZC rates, and sign the adjustment in terms of the correlation between inflation and nominal rates.",
+  "back": "Let \\(X=I(T_1)/I(0)\\) and \\(P=P(T_1,T_2)\\). The payment at \\(T_2\\) requires the \\(T_2\\)-forward measure. The Radon-Nikodym derivative on \\(\\mathcal F_{T_1}\\) is \\(P/E^{T_1}[P]\\), so\n\\[E^{T_2}[X]=\\frac{E^{T_1}[XP]}{E^{T_1}[P]}\\approx E^{T_1}[X]-\\tau\\,\\mathrm{Cov}^{T_1}(X,r).\\]\nWith lognormal index vol \\(\\sigma_I\\), normal rate vol \\(\\sigma_r\\), constant vols and correlation \\(\\rho\\), \\(\\mathrm{Cov}(\\ln X,r)\\approx\\rho\\sigma_I\\sigma_r T_1\\). Hence\n\\[E^{T_2}[X]\\approx E^{T_1}[X]\\left(1-\\tau\\rho\\sigma_I\\sigma_r T_1\\right).\\]\nSign: for \\(\\rho>0\\) (inflation and rates rising together), the adjustment is negative. A payment received later is worth less when rates are high and inflation is high. For \\(\\rho<0\\) the sign flips. The adjustment grows with both \\(\\tau\\) and \\(T_1\\).",
+  "tags": [
+   "convexity",
+   "yoy",
+   "derivation",
+   "inflation_swaps"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why does a zero-coupon inflation swap not need the timing adjustment that a YoY leg needs, if both reference the same index?",
+  "back": "A ZCIIS has one payment at \\(T\\) for an index fixed at \\(T\\) minus the lag. Its value is \\(E^{T}[I(T)]/I(0)\\) under the \\(T\\)-forward measure, which by the Jarrow-Yildirim argument (card on JY) equals the real/nominal discount ratio directly. There is no separate payment date to shift the measure.<br>\nA YoY with fixing at \\(T_1\\) and payment at \\(T_2\\) needs \\(E^{T_2}[I(T_1)]\\), which requires the measure change in the previous card. So the ZC curve is the natural object with no convexity term, and YoY rates are derived from it plus a convexity correction.<br>\n<b>Follow-up:</b> Where does the YoY convexity sit in a pricer? In the caplet and forward construction, not in the ZC bootstrap.",
+  "tags": [
+   "zc",
+   "convexity",
+   "inflation_swaps",
+   "yoy"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How do you estimate RPI seasonal factors, and what must be controlled for before using them to deseasonalise breakevens?",
+  "back": "<b>Method:</b> take monthly log changes \\(\\Delta_t=\\ln(RPI_t/RPI_{t-1})\\) over \\(N\\) years. Average them by calendar month, \\(\\bar\\Delta_m\\), and subtract the overall mean \\(\\bar\\Delta\\). The seasonal factor \\(s_m\\) is the centred cumulative pattern, normalised so that the factors sum to zero in log terms over the year. Refinements include regression with a trend, smoothing, and using the index series that the swaps and linkers actually reference.<br>\n<b>Controls:</b>\n<ul><li>Structural breaks (methodology or weight changes, shocks): dummy them out or shorten the sample.</li>\n<li>Sample size: a seasonal estimate from a few years is noisy, and the noise in short breakevens can exceed the pattern.</li>\n<li>Revision policy: check which prints are revised and which are not, because the seasonal estimate is only as good as the series.</li></ul>\n<b>Follow-up:</b> Why not use last year's monthly pattern? Single-year noise swamps the signal in short-dated breakevens.",
+  "tags": [
+   "seasonality",
+   "curve_construction",
+   "rpi",
+   "estimation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Hypothetical: a 1y RPI ZC swap fixes in a month where the seasonal factor from the start month to the end month is +0.30%. The quoted 1y ZCIIS is 3.20%. What is the seasonally adjusted expected inflation, and what does it mean for a short-dated breakeven trade?",
+  "back": "Approx. adjusted expectation: \\(3.20\\%-0.30\\%\\approx2.90\\%\\). The quote includes a seasonal uplift because the fixing falls in a seasonally high window, so the underlying pressure is about 2.9%.<br>\nA linker held over the same window accrues the seasonal move mechanically, so its real yield measured on a deseasonalised basis is biased by about 30bp at 1y. Trading the 1y breakeven without a seasonal adjustment is partly a seasonality trade.<br>\n<b>Trade implication:</b> hedge the seasonal path, or express the view on a deseasonalised 1y breakeven, before reading a move as a change in expectations.",
+  "tags": [
+   "seasonality",
+   "breakeven",
+   "scenario",
+   "carry"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Outline how you bootstrap a UK RPI zero-coupon inflation curve from ZCIIS quotes. Where do seasonal adjustments and known fixings enter?",
+  "back": "<ol><li><b>Base:</b> the last published lagged print at trade date sets \\(I(0)\\). Use the swap's own lag to identify the first unknown print.</li>\n<li><b>Known fixings:</b> for any month whose print is published, the index is known. Use it directly and project only the unknown months.</li>\n<li><b>Pillar by pillar:</b> for pillar \\(T_j\\), solve \\(I(T_j)=I(0)(1+K_j)^{T_j}\\) for the unknown index, given the index already determined at earlier pillars and the interpolation rule.</li>\n<li><b>Seasonal adjustment:</b> deseasonalise the monthly index before interpolating, then re-seasonalise to get the fixing. Otherwise short pillars absorb the seasonal pattern and distort the forwards.</li></ol>\nThe output is a monthly projected index, which is the input to linker pricing. Forward YoY rates and the real curve both come from it.",
+  "tags": [
+   "curve_construction",
+   "bootstrap",
+   "fixings",
+   "seasonality"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why is log-linear interpolation of the projected index the usual choice over linear interpolation of ZC rates? Derive the implied forward inflation between pillars.",
+  "back": "If \\(\\ln I(t)\\) is linear between \\(T_1\\) and \\(T_2\\), the instantaneous index growth is constant on that interval:\n\\[f=\\frac{\\ln I(T_2)-\\ln I(T_1)}{T_2-T_1}.\\]\nForward inflation is therefore piecewise constant, and the index stays monotone between pillars. Linear interpolation of rates \\(K(t)\\) gives \\(I(t)=I(0)(1+K(t))^t\\). The implied forwards then depend on \\(K'(t)\\), and can show kinks at pillars or non-monotone behaviour.<br>\n<b>Follow-up:</b> Log-linear on the index does not make the forward curve smooth in time. Its advantage is that it is simple, monotone and avoids artefacts in the lag interpolation.",
+  "tags": [
+   "interpolation",
+   "curve_construction",
+   "derivation",
+   "zc"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Real zero rates satisfy \\((1+r_T)^T=\\frac{(1+n_T)^T}{(1+K_T)^T}\\), so the real curve is only as good as the {{c1::inflation curve}} used to project linker index ratios and the {{c2::seasonal and lag}} conventions stripped from linker prices.",
+  "back": "Linker prices give real yields only once the index ratios are projected, and that projection uses the inflation curve. Real-curve model risk in the 2 to 5y area is mostly inflation-curve risk.",
+  "tags": [
+   "real_rates",
+   "curve_construction",
+   "model_risk",
+   "linkers"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compare US TIPS, French OATi/OAT€i and Italian BTP€i: index, lag, deflation protection, and what this means for comparing breakevens across markets.",
+  "back": "<table><tr><th></th><th>US TIPS</th><th>OATi / OAT€i</th><th>BTP€i</th></tr>\n<tr><td>Index</td><td>US CPI-U (NSA)</td><td>OATi: French CPI ex-tobacco. OAT€i: euro HICPxT (HICP ex-tobacco)</td><td>Italian FOI ex-tobacco</td></tr>\n<tr><td>Lag</td><td>3 months, with daily interpolation</td><td>3 months (approx.)</td><td>3 months (approx.)</td></tr>\n<tr><td>Deflation protection</td><td>Principal floored at par at maturity</td><td>Redemption floored at par (approx.)</td><td>Redemption floored at par (approx.)</td></tr></table>\n<b>Follow-up:</b> Why is an OAT€i breakeven not directly comparable with a euro HICP swap? The ex-tobacco definition, and the lag and interpolation conventions, differ. Check each prospectus and adjust before comparing. Verify the lag and floor terms against the issuing authority's documentation.",
+  "tags": [
+   "tips",
+   "oat",
+   "linkers",
+   "convention"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "US TIPS reference CPI on a day of month \\(m\\) interpolates linearly between CPI for months {{c1::m-3}} and {{c2::m-2}}, so TIPS accrue index {{c3::daily}}, whereas post-2005 UK linkers step {{c4::monthly}}.",
+  "back": "Comparing TIPS and UK linker breakevens therefore needs a convention adjustment for both the lag and the intramonth accrual, as well as the index definition.",
+  "tags": [
+   "tips",
+   "convention",
+   "indexation",
+   "linkers"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "TIPS principal is floored at par at maturity. Price this floor for a 10y TIPS as an option on cumulative inflation, and explain why a normal-model estimate gives almost nothing.",
+  "back": "At maturity, principal is \\(N\\max(I(T)/I(0),1)\\). The floor payoff is \\(N\\max(1-I(T)/I(0),0)\\), a put on cumulative index struck at 1.<br>\nForward cumulative index: with a 10y breakeven of about 3.4%, \\((1.034)^{10}\\approx1.40\\). Strike 1 is therefore far out of the money. With annual normal vol \\(\\sigma\\approx1\\%\\), cumulative vol is about \\(\\sigma\\sqrt{10}\\approx3.2\\%\\). The gap of 0.40 is about 12 standard deviations, so the Bachelier value is effectively zero.<br>\nThe market still prices the floor, so the value sits in the left tail and the skew, not in a normal-model ATM estimate. Price it with a smile that is fitted to deflation-regime strikes.",
+  "tags": [
+   "tips",
+   "deflation_floor",
+   "caps_floors",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Price a YoY inflation caplet on \\([T_1,T_2]\\) under a Bachelier model with forward \\(F\\) and normal vol \\(\\sigma\\). Explain why inflation caps are quoted in normal vol.",
+  "back": "Payoff: \\(N\\tau\\max(YoY-K,0)\\), paid at \\(T_2\\). Price:\n\\[N\\tau\\,P(0,T_2)\\left[(F-K)\\Phi(d)+\\sigma\\sqrt{T_1}\\,\\phi(d)\\right],\\qquad d=\\frac{F-K}{\\sigma\\sqrt{T_1}}.\\]\nThe volatility runs to the fixing date \\(T_1\\), and discounting uses \\(T_2\\). In a Bachelier model, the \\(F\\) here must be the convexity-adjusted YoY forward from the earlier card.<br>\nWhy normal vol: forward YoY rates can be near zero or negative in deflation, where a lognormal model breaks down. Quotes are therefore in absolute (bp) vol and by strike.",
+  "tags": [
+   "caps_floors",
+   "yoy",
+   "convention",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "In a Jarrow-Yildirim setting, show that the zero-coupon forward inflation index equals \\(I(0)P_r(0,T)/P_n(0,T)\\), and hence that the ZC breakeven satisfies \\((1+K)^T=P_r(0,T)/P_n(0,T)\\).",
+  "back": "An indexed zero-coupon bond pays \\(I(T)\\) nominal at \\(T\\). Its nominal price at \\(t\\) is \\(I(t)P_r(t,T)\\), where \\(P_r\\) is the real-units bond price. Under the \\(T\\)-forward nominal measure, prices divided by the numeraire \\(P_n(t,T)\\) are martingales, so\n\\[\\frac{I(t)P_r(t,T)}{P_n(t,T)}\\]\nis a martingale. The forward index is therefore \\(F(0,T)=I(0)P_r(0,T)/P_n(0,T)\\). Setting \\(F(0,T)=I(0)(1+K)^T\\) gives \\((1+K)^T=P_r(0,T)/P_n(0,T)\\).<br>\nConsequence: the ZC breakeven is exactly the ratio of real to nominal discount factors. The Fisher relation is exact in a no-arbitrage model. Lags and seasonal conventions are what break it in practice.",
+  "tags": [
+   "jarrow_yildirim",
+   "derivation",
+   "zc",
+   "real_rates"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compare a Jarrow-Yildirim approach (with a smile extension) and a SABR-type approach for inflation caps and floors. What does each capture, and when would you prefer which?",
+  "back": "<b>JY:</b> a model consistent with real and nominal curves and the index. Hedge ratios to real rates, nominal rates and the index come out coherent across linkers, swaps and caps. A single-factor index volatility gives a flat smile, so a smile extension is needed.<br>\n<b>SABR (normal, beta near 0, approx.):</b> fits each expiry's YoY smile directly by strike. It is flexible for quotes but does not carry the link to the real and nominal curves, and cross-expiry consistency needs care.<br>\n<b>Trade-off:</b> JY gives risk that is consistent across the book. SABR fits observed smiles better, expiry by expiry. A desk typically quotes from the smile fit and hedges with the JY-consistent Greeks.",
+  "tags": [
+   "sabr",
+   "jarrow_yildirim",
+   "caps_floors",
+   "model_risk"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A UK defined-benefit scheme pays LPI increases capped at 5% with a 0% floor on annual RPI. Write the annual LPI payoff as caplets, and state the derivative position the scheme's hedge implies.",
+  "back": "Payoff: \\(\\min(\\max(x,0),5\\%)=\\max(x,0)-\\max(x-5\\%,0)\\), where \\(x\\) is the annual RPI. The first term is a 0%-strike caplet and the second a 5% caplet.<br>\nThe scheme owes this payoff, so it is short the collar. Its hedge receives the same collar through RPI swaps and caps. That is long 0%-strike caplets and short 5% caplets.<br>\n<b>Net:</b> the scheme is structurally short 5% RPI caps. Dealers are the other side, so 5% caps are a supply and demand instrument for pension flows.<br>\n<b>Follow-up:</b> Why does the level matter? A 5% cap is far out of the money at normal inflation, so its value sits in the tail.",
+  "tags": [
+   "lpi",
+   "caps_floors",
+   "ldi",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Scenario: pension schemes add long-dated inflation hedges during a rally in long real yields. Which way do 30y real yields and 30y RPI breakevens move, and what is the feedback channel?",
+  "back": "Schemes want to receive inflation. They buy linkers and pay fixed in ZCIIS. Buying linkers lowers real yields. With nominal yields fixed, breakevens rise. Paying fixed in ZCIIS also raises the fixed rate, which is the breakeven. So the long end sees real yields down and breakevens up, driven by price-insensitive, duration-matching demand.<br>\n<b>Feedback:</b> lower yields raise the discounted value of liabilities, which raises hedge demand, a self-reinforcing duration loop until funding or surplus constraints bind.<br>\n<b>Caveat:</b> in stress the sign of the flow can reverse. In the 2022 UK LDI episode, collateral calls forced selling. Structural demand and forced selling are different regimes, so state which one you are assuming.",
+  "tags": [
+   "ldi",
+   "lpi",
+   "scenario",
+   "linkers"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Define a UK RPI breakeven curve steepener, and list what a DV01-neutral version still leaves unhedged.",
+  "back": "Define long breakeven as paying fixed in ZCIIS (receiving realised inflation). A steepener is long 30y breakeven against short 2y breakeven: pay fixed on the 30y swap and receive fixed on the 2y swap. Size it to inflation DV01 (per bp of breakeven), not notional.<br>\nResidual risks:\n<ul><li>Seasonality on the 2y leg: a seasonal shift moves the 2y breakeven without any change in expectations.</li>\n<li>Lag and convexity mismatch between the 2y and 30y legs.</li>\n<li>Liquidity and pension flow at the 30y point, which is structurally price-insensitive.</li>\n<li>Policy effects such as the 2030 alignment, which affects the long end more than the front.</li></ul>\n<b>Follow-up:</b> What is the view behind the trade? The front is pinned by near-term prints and the long end is anchored by pension hedging. That is a thesis to test, not a fact.",
+  "tags": [
+   "trade_idea",
+   "breakeven",
+   "ldi",
+   "seasonality"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Construct a long-linker, short-nominal trade with real-rate DV01 matched. What P&L remains?",
+  "back": "Long the linker, short a nominal gilt, with duration matched on the real curve: \\(D_L P_L=D_N P_N\\), with real duration on the linker side matched to the nominal leg.<br>\nLinker P&L is approximately \\(-D\\,\\Delta r\\). Short nominal P&L is approximately \\(+D\\,\\Delta n\\), with \\(\\Delta n=\\Delta r+\\Delta BEI\\). Net: \\(D\\,\\Delta BEI\\). The real-rate exposure cancels and what remains is pure breakeven.<br>\nAlso budget the carry, which is the linker real yield plus index accrual minus the nominal yield, net of repo specialness. The residual curve shape of each leg must be matched separately by key rate.",
+  "tags": [
+   "trade_idea",
+   "breakeven",
+   "dv01",
+   "real_rates"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Define the linker-swap basis as the breakeven from linker prices minus the ZCIIS-implied breakeven. List the main components.",
+  "back": "Basis \\(\\approx BEI_{\\text{linker}}-BEI_{\\text{swap}}\\), after lag and seasonal adjustment.<br>\nComponents:\n<ul><li>Convention mismatch: linker lag and step versus swap lag and interpolation.</li>\n<li>Seasonal adjustment differences between the two curves.</li>\n<li>Repo specialness and funding on linkers, which shifts the linker-implied breakeven.</li>\n<li>The linker liquidity premium (card on the breakeven decomposition).</li>\n<li>Demand concentration: LDI hedgers can use either instrument but often prefer one.</li>\n<li>Collateral and credit: swaps are collateralised, and gilts carry no counterparty exposure.</li></ul>\nA basis trade is long the cheap leg against the rich leg, and it earns or pays the carry of both funding positions. Check the sign and carry before calling it cheap.",
+  "tags": [
+   "basis",
+   "linkers",
+   "trade_idea",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Scenario: a downward revision to expected future RPI, such as the 2030 alignment, lowers the post-2030 index path while nominal yields are unchanged. What happens to the linker's implied real yield, its breakeven, and its price on the day of the revision?",
+  "back": "The linker's future cash flows fall by the factor \\(e^{-w(T-t_0)}\\) (card on the 2030 valuation). On the day, the linker price has not changed, so the market must reprice to match. The implied real yield rises, and with nominal yields fixed, the breakeven falls by the same amount.<br>\nThe move is a re-indexation of the cash flows, not a change in real rates. Reading the price move as a real-rate sell-off misattributes the cause.<br>\nUse the revision and the price together to back out the implied wedge.",
+  "tags": [
+   "rpi_reform",
+   "scenario",
+   "breakeven",
+   "linkers"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 10y linker on an upward-sloping real curve and an upward-sloping BEI curve: how do you compute its one-year roll-down, and why must the linker roll use the real curve, not the BEI curve?",
+  "back": "After one year the bond is a 9y bond. Its real yield moves along the real curve: \\(\\Delta r\\approx-\\text{slope}_{\\text{real}}\\times1\\text{y}\\). Real-curve roll-down P&L is approximately \\(+D_r\\cdot\\text{slope}_{\\text{real}}\\cdot1\\text{y}\\).<br>\nThe linker's price depends on real yields, so the linker roll is on the real curve. The BEI slope matters only when the position is hedged with nominals, in which case the BEI roll is the difference \\(\\Delta BEI=\\Delta n-\\Delta r\\).<br>\n<b>Pitfall:</b> using the BEI curve to roll a linker's real yield double-counts the breakeven carry that is already in the hedge.",
+  "tags": [
+   "carry",
+   "rolldown",
+   "real_rates",
+   "breakeven"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Mental math: a 10y zero-coupon inflation swap is quoted at 3.4%. What is the implied cumulative index change, and how much does the index move per bp of the ZC rate?",
+  "back": "Cumulative: \\((1.034)^{10}\\approx1.397\\), so the index is up about 39.7% over ten years, or about 3.4% per year compounded.<br>\nSensitivity: \\(\\frac{d}{dK}(1+K)^{10}=10(1+K)^{9}\\approx10\\times1.351=13.5\\). A 1bp move in the ZC rate therefore changes the cumulative index by about \\(13.5\\times0.0001\\approx0.14\\%\\) of the base index.",
+  "tags": [
+   "mental_math",
+   "zc",
+   "inflation_swaps",
+   "dv01"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Show that, with nominal yields held fixed, a 1bp rise in a linker's breakeven changes its price by approximately its real modified duration times 1bp. Why does the index path not appear as a separate price driver?",
+  "back": "In the JY framework the linker's dirty price is \\(I(0)\\sum_t CF_t\\,P_r(0,t)\\), with real discount factors \\(P_r\\). Expected inflation enters only through the real discount curve.<br>\nWith nominal yields \\(n\\) fixed and \\(BEI=n-r\\), a breakeven rise of \\(\\delta\\) implies \\(\\Delta r=-\\delta\\). So \\(\\Delta P/P\\approx-D_r\\Delta r=D_r\\,\\delta\\).<br>\nHypothetical: a real modified duration of 8 gives about 8bp of price per 1bp of breakeven, or about 0.08% of price.<br>\n<b>Follow-up:</b> Why is the index path not an extra factor? Because the index ratio is already embedded in the real-discounted cash flows. Adding it would double count.",
+  "tags": [
+   "dv01",
+   "breakeven",
+   "derivation",
+   "jarrow_yildirim"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A UK LPI(0,5%) payoff \\(\\min(\\max(x,0),5\\%)\\) equals {{c1::a 0% caplet}} minus {{c2::a 5% caplet}}, so a scheme that pays LPI is structurally short the 5% caps when it hedges.",
+  "back": "Derivation: \\(\\max(x,0)-\\max(x-5\\%,0)\\). Hedging the liability means receiving the same collar, which leaves the scheme short the 5% caplet.",
+  "tags": [
+   "lpi",
+   "caps_floors",
+   "derivation",
+   "ldi"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A ZCIIS and a UK post-2005 linker reference the same month's print, but one is valued on a day between publications. What is the mid-month valuation issue, and how do swaps and pre-2005 linkers differ?",
+  "back": "A swap fixing is a single monthly print. Between publications, the fixed prints are known and only unknown months are projected. Valuation is then a step function in the index, and no intramonth interpolation is needed.<br>\nA pre-2005 linker is interpolated daily between two prints, so its index is continuous. A post-2005 linker is a step, like the swap, but its lag may not match the swap's.<br>\nThe mismatch between step and interpolated conventions is a valuation issue and a basis component. Make sure the valuation uses each instrument's own convention, not a common one.",
+  "tags": [
+   "fixings",
+   "convention",
+   "interpolation",
+   "linkers"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two desks differ on the 10y real yield by 15bp, using the same linkers. List the four inputs most likely to explain the gap.",
+  "back": "<ol><li><b>Inflation curve:</b> the projected index used for index ratios, including the seasonal and interpolation method.</li>\n<li><b>Lag and base conventions:</b> 3-month versus 8-month lag, interpolation treatment, and the base print each desk uses.</li>\n<li><b>Bond selection and liquidity:</b> which linkers enter the fit, and whether an illiquidity or repo adjustment is applied.</li>\n<li><b>Curve method:</b> bootstrap versus smoothing, and how real-rate pillars are interpolated.</li></ol>\nReconcile on a like-for-like basis: same index path, same lag, same bond set, before debating the real-rate view.",
+  "tags": [
+   "model_risk",
+   "real_rates",
+   "curve_construction",
+   "linkers"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "State put-call parity for a YoY inflation caplet and floorlet with the same strike \\(K\\), and use it as a sanity check on quotes.",
+  "back": "Caplet minus floorlet equals the payoff \\(\\max(x-K,0)-\\max(K-x,0)=x-K\\). Under the forward measure this gives:\n\\[\\text{Cap}(K)-\\text{Floor}(K)=N\\tau\\,P(0,T_2)\\,(F-K).\\]\nUse it as a sanity check on quotes. A cap-floor spread that does not match the forward and discount factor means the vol or convention is inconsistent, for example a mismatch in lag or the convexity-adjusted forward.",
+  "tags": [
+   "put_call_parity",
+   "caps_floors",
+   "yoy",
+   "derivation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The RPI-CPI wedge has a formula component (Carli versus Jevons) and a coverage component. CPI excludes {{c1::mortgage interest payments}}, which RPI includes, and CPIH adds {{c2::owner-occupiers' housing costs}} to CPI.",
+  "back": "The 2030 alignment removes the methodological part only. Coverage and weight differences remain, so the residual wedge is not zero.",
+  "tags": [
+   "rpi_cpi",
+   "formula_effect",
+   "convention",
+   "rpi_reform"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Seasonal factors are normalised so that {{c1::they sum to zero in log terms over a 12-month cycle}}. The deseasonalised index is \\(I_t\\exp(-s_m)\\), where \\(s_m\\) is the factor for calendar month \\(m\\).",
+  "back": "This normalisation keeps the annual average growth unchanged, so the seasonal adjustment moves timing within the year and does not add to annual inflation.",
+  "tags": [
+   "seasonality",
+   "curve_construction",
+   "derivation",
+   "rpi"
+  ]
+ }
+]
