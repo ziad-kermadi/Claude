@@ -1,0 +1,907 @@
+[
+ {
+  "type": "basic",
+  "front": "An urn holds 4 red and 3 blue balls. Three balls are drawn at once, uniformly at random, so all \\(\\binom{7}{3}\\) subsets are equally likely. Find \\(P(\\text{exactly one blue})\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> Possible colour counts of blue are \\(0,1,2,3\\).<br><b>L2.</b> The draw is uniform, so each count of blues is equally likely.<br><b>L3.</b> Hence \\(P(\\text{exactly one blue})=\\tfrac14\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: equal likelihood of the four colour counts.<br><b>Why it fails:</b> The colour counts are unordered patterns, not equally likely outcomes. The underlying equally likely objects are the 35 subsets, and their colour patterns have different sizes.<br><b>Correct answer:</b> \\(P=\\binom{4}{2}\\binom{3}{1}/\\binom{7}{3}=\\dfrac{18}{35}\\approx0.514\\). Simulation agrees.<br><b>Smell:</b> Before counting outcomes, identify the equally likely objects (subsets, sequences, or arrangements) and count those. Labels such as 'number of blues' are not equally likely by default.",
+  "tags": [
+   "s_symmetry",
+   "urn",
+   "fmt_debug",
+   "err_ordered_unordered"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two fair dice are rolled. Find \\(P(\\text{both faces equal})\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> Unordered outcomes are \\(\\{a,b\\}\\) with \\(1\\le a\\le b\\le 6\\).<br><b>L2.</b> There are \\(21\\) such outcomes, and \\(6\\) of them are doubles.<br><b>L3.</b> The outcomes are equally likely, so \\(P=6/21=2/7\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L3: the 21 unordered outcomes are equally likely.<br><b>Why it fails:</b> The dice are distinguishable. The pair \\(\\{1,2\\}\\) arises from two ordered rolls, so it has probability \\(2/36\\), while a double has \\(1/36\\).<br><b>Correct answer:</b> Use the 36 ordered outcomes: \\(P=6/36=1/6\\).<br><b>Smell:</b> When objects are distinguishable, count ordered outcomes. A sample space listed as unordered sets is almost never uniform.",
+  "tags": [
+   "s_symmetry",
+   "dice",
+   "fmt_debug",
+   "err_distinguishable"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 5-card hand is dealt from a standard 52-card deck. Find \\(P(\\text{at least one ace})\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> Choose a hand, then mark one ace in it as a witness: \\(4\\) choices of ace.<br><b>L2.</b> The other four cards come from the remaining \\(51\\) cards: \\(\\binom{51}{4}\\) ways.<br><b>L3.</b> So there are \\(4\\binom{51}{4}=999\\,600\\) hands with an ace, and \\(P=999\\,600/2\\,598\\,960\\approx0.385\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L3: the count \\(4\\binom{51}{4}\\) equals the number of hands with at least one ace.<br><b>Why it fails:</b> Each hand with two aces is counted twice, once per ace used as witness. The witness trick overcounts whenever a hand has several qualifying cards.<br><b>Correct answer:</b> Complement: \\(\\binom{52}{5}-\\binom{48}{5}=886\\,656\\) hands, so \\(P=886\\,656/2\\,598\\,960\\approx0.341\\).<br><b>Smell:</b> 'At least one' with a witness-selection count overcounts. Use the complement, or inclusion-exclusion, whenever the event can be witnessed several ways.",
+  "tags": [
+   "s_complement",
+   "s_inclusion_exclusion",
+   "cards",
+   "fmt_debug",
+   "err_double_count"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Count the positive integer solutions of \\(x_1+x_2+x_3+x_4=10\\) with every \\(x_i\\ge1\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> Put \\(y_i=x_i-1\\ge0\\), so \\(\\sum y_i=6\\).<br><b>L2.</b> Non-negative solutions of \\(\\sum_{i=1}^{4}y_i=n\\) number \\(\\binom{n+4}{4}\\).<br><b>L3.</b> With \\(n=6\\) this gives \\(\\binom{10}{4}=210\\) solutions.<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L3: the count of non-negative solutions of \\(\\sum_{i=1}^{k}y_i=n\\) is \\(\\binom{n+k}{k}\\).<br><b>Why it fails:</b> Stars and bars with \\(k\\) variables gives \\(\\binom{n+k-1}{k-1}\\). The formula \\(\\binom{n+k}{k}\\) corresponds to \\(k+1\\) variables and overcounts.<br><b>Correct answer:</b> \\(\\binom{6+3}{3}=\\binom{9}{3}=84\\).<br><b>Smell:</b> Check the formula at \\(k=1\\): there is exactly one solution for every \\(n\\), so the correct form must give \\(\\binom{n}{0}=1\\). Test the formula on the smallest case before using it.",
+  "tags": [
+   "s_stars_bars",
+   "compositions",
+   "fmt_debug",
+   "err_formula_shift"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A uniform random permutation of \\(\\{1,\\dots,5\\}\\). Find \\(P(\\text{no fixed point})\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> Let \\(A_i\\) be the event that \\(i\\) is a fixed point. Then \\(P(A_i)=1/5\\).<br><b>L2.</b> \\(P(\\text{no fixed point})=1-\\sum_i P(A_i)\\).<br><b>L3.</b> So \\(P=1-5\\cdot\\tfrac15=0\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: the complement is \\(1-\\sum_i P(A_i)\\).<br><b>Why it fails:</b> The events \\(A_i\\) overlap: a permutation with several fixed points is counted several times. Truncating inclusion-exclusion after the first term is not valid.<br><b>Correct answer:</b> \\(P=\\sum_{k=0}^{5}(-1)^k/k!=44/120=11/30\\approx0.367\\) (the 44 derangements).<br><b>Smell:</b> An answer of exactly 0 for 'none of several non-trivial events' is a red flag. Full inclusion-exclusion alternates: \\(1-\\sum P_i+\\sum P_{ij}-\\cdots\\).",
+  "tags": [
+   "s_inclusion_exclusion",
+   "permutations",
+   "fmt_debug",
+   "err_inclusion_exclusion"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "23 people. Assume 365 equally likely birthdays. Find \\(P(\\text{at least two share a birthday})\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> There are \\(\\binom{23}{2}=253\\) pairs of people.<br><b>L2.</b> For each pair, \\(P(\\text{same birthday})=1/365\\).<br><b>L3.</b> The pair events are disjoint, so \\(P=253/365\\approx0.693\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L3: the pair events are disjoint.<br><b>Why it fails:</b> Pair events overlap: one triple of people can produce several coincident pairs. Summing indicators gives an upper bound (the union bound), not the probability.<br><b>Correct answer:</b> \\(P=1-\\prod_{i=0}^{22}\\dfrac{365-i}{365}\\approx0.507\\).<br><b>Smell:</b> A sum of pair indicators is an upper bound on the union. Check: if the answer exceeds the probability of the complement's bound, you have overcounted. Use the complement product.",
+  "tags": [
+   "s_indicators",
+   "s_inclusion_exclusion",
+   "birthdays",
+   "fmt_debug",
+   "err_union_bound"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How many distinct arrangements of the letters of MISSISSIPPI are there?<br><br><b>Proposed solution:</b><br><b>L1.</b> The word has \\(11\\) letters.<br><b>L2.</b> Treat all letters as distinct: \\(11!\\) arrangements.<br><b>L3.</b> Divide by the repeats of the identical letters I and S: \\(4!\\) each.<br><b>L4.</b> So the count is \\(11!/(4!\\,4!)=69\\,300\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L3: dividing by the repeats of I and S only.<br><b>Why it fails:</b> The letter P also repeats (twice). Each class of identical letters contributes its own factorial.<br><b>Correct answer:</b> \\(11!/(4!\\,4!\\,2!)=34\\,650\\).<br><b>Smell:</b> List the multiplicity of every letter and divide by each factorial. A multinomial has one factorial per letter class.",
+  "tags": [
+   "s_bijection",
+   "words",
+   "fmt_debug",
+   "err_distinguishable"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Five cards are dealt from a 52-card deck. Find \\(P(\\text{exactly one pair})\\), i.e. two cards of one rank and the other three of three different ranks.<br><br><b>Proposed solution:</b><br><b>L1.</b> Choose the paired rank: \\(13\\) ways. Its two suits: \\(\\binom42=6\\) ways.<br><b>L2.</b> Choose the other three ranks, distinct, from the remaining \\(12\\): as an ordered choice, \\(12\\cdot11\\cdot10=1320\\).<br><b>L3.</b> Suits for those three cards: \\(4^3=64\\).<br><b>L4.</b> Favourable hands \\(=13\\cdot6\\cdot1320\\cdot64\\). Divide by \\(\\binom{52}{5}\\): \\(P\\approx2.54\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: ordered choice of the three ranks.<br><b>Why it fails:</b> Choosing three ranks as a sequence counts each set \\(3!=6\\) times. The impossible answer \\(P>1\\) exposes the error.<br><b>Correct answer:</b> Use \\(\\binom{12}{3}=220\\): \\(13\\cdot6\\cdot220\\cdot64=1\\,098\\,240\\), so \\(P=1\\,098\\,240/2\\,598\\,960=352/833\\approx0.423\\).<br><b>Smell:</b> A probability above 1 means an overcount. When choosing a set of distinct items, either count sets with \\(\\binom{}{}\\) or sequences and divide by \\(k!\\), never mix.",
+  "tags": [
+   "s_bijection",
+   "cards",
+   "fmt_debug",
+   "err_ordered_unordered"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Disease prevalence is \\(1/1000\\). A test has sensitivity \\(99\\%\\) and false-positive rate \\(5\\%\\). A randomly chosen person tests positive. Find \\(P(D\\mid +)\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> Let \\(D\\) be disease and \\(+\\) a positive test.<br><b>L2.</b> \\(P(D\\mid +)=P(+\\mid D)=0.99\\).<br><b>L3.</b> So a positive result means the disease is 99% likely.<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: \\(P(D\\mid +)\\) equated with the sensitivity \\(P(+\\mid D)\\).<br><b>Why it fails:</b> The conditionals are swapped, and the base rate \\(1/1000\\) is ignored. Sensitivity describes the test given disease; the question asks about disease given the test.<br><b>Correct answer:</b> Bayes: \\(\\dfrac{0.99\\cdot0.001}{0.99\\cdot0.001+0.05\\cdot0.999}\\approx0.0194\\).<br><b>Smell:</b> If an answer equals a test characteristic (sensitivity or specificity), you swapped the conditional. Check with counts: in 100 000 people, about 99 true and 4995 false positives.",
+  "tags": [
+   "s_bayes",
+   "medical_testing",
+   "fmt_debug",
+   "err_base_rate"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Three doors, one car. You pick door 1. The host, who knows where the car is, opens door 3 and shows a goat. Find \\(P(\\text{car behind door 2}\\mid\\text{host opened door 3})\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> After the reveal, two doors remain: 1 and 2.<br><b>L2.</b> The car is equally likely to be behind either remaining door.<br><b>L3.</b> So \\(P(\\text{car at door 2})=1/2\\), and switching gains nothing.<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: the car is equally likely behind either remaining door.<br><b>Why it fails:</b> The host's choice depends on where the car is: he never opens the car door. The reveal is not a random event on the doors. The likelihood of 'door 3 opened' differs by hypothesis.<br><b>Correct answer:</b> \\(P(\\text{open }3\\mid\\text{car}1)=\\tfrac12\\), \\(P(\\text{open }3\\mid\\text{car}2)=1\\), \\(P(\\text{open }3\\mid\\text{car}3)=0\\). Posterior for door 2: \\(\\dfrac{\\frac13\\cdot1}{\\frac13\\cdot\\frac12+\\frac13\\cdot1}=\\tfrac23\\).<br><b>Smell:</b> A revealed quantity is not automatically uniform. First write the reveal rule (who chooses, under what conditions), then compute the likelihood of the reveal under each hypothesis.",
+  "tags": [
+   "s_bayes",
+   "s_information_design",
+   "monty_hall",
+   "fmt_debug",
+   "err_info_process"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Population of \\(10^6\\) men, exactly one is the culprit. A DNA test always matches the culprit and matches an innocent man with probability \\(10^{-6}\\). A man chosen from the population matches. Find \\(P(\\text{he is the culprit}\\mid\\text{match})\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> The random-match probability is \\(10^{-6}\\), so the chance the suspect is innocent is \\(10^{-6}\\).<br><b>L2.</b> Hence \\(P(\\text{culprit}\\mid\\text{match})=1-10^{-6}\\).<br><b>L3.</b> The evidence is essentially conclusive.<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L1: \\(10^{-6}\\) is \\(P(\\text{innocent}\\mid\\text{match})\\).<br><b>Why it fails:</b> \\(10^{-6}\\) is \\(P(\\text{match}\\mid\\text{innocent})\\). The question asks for \\(P(\\text{guilty}\\mid\\text{match})\\), which needs the prior of 1 in a million and the number of innocent men who would match.<br><b>Correct answer:</b> Expected innocent matches \\((10^6-1)\\cdot10^{-6}\\approx1\\), plus the culprit: \\(P=\\dfrac{1}{1+0.999999}\\approx0.5\\).<br><b>Smell:</b> Never read \\(P(E\\mid H)\\) as \\(P(H\\mid E)\\). Count expected numbers in the whole population: 'how many innocent people would match?' settles the direction.",
+  "tags": [
+   "s_bayes",
+   "dna_evidence",
+   "fmt_debug",
+   "err_direction"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two cards are dealt without replacement from a 52-card deck. Find \\(P(\\text{both aces}\\mid\\text{at least one ace})\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> \\(P(\\text{both aces})=\\dfrac{4}{52}\\cdot\\dfrac{3}{51}=\\dfrac{1}{221}\\).<br><b>L2.</b> \\(P(\\text{at least one ace})\\approx2\\cdot\\dfrac{4}{52}=\\dfrac{2}{13}\\), since each card is an ace with probability \\(1/13\\).<br><b>L3.</b> So \\(P=\\dfrac{1/221}{2/13}=\\dfrac{1}{34}\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: \\(P(\\text{at least one})\\) computed as the sum of single-card probabilities.<br><b>Why it fails:</b> The two single-card events overlap on the both-aces outcomes, so their sum counts them twice. The denominator is too large, which is why the result is too small.<br><b>Correct answer:</b> \\(P(\\text{at least one})=1-\\dfrac{48}{52}\\cdot\\dfrac{47}{51}=\\dfrac{33}{221}\\), so \\(P=\\dfrac{1/221}{33/221}=\\dfrac{1}{33}\\).<br><b>Smell:</b> 'At least one' is a union. Compute it as \\(1-P(\\text{none})\\), not as a sum of single-event probabilities.",
+  "tags": [
+   "s_bayes",
+   "s_complement",
+   "cards",
+   "fmt_debug",
+   "err_union_bound"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A family has two children, each independently a boy or a girl with probability \\(1/2\\). One of the two children is picked at random, and that child is a boy. Find \\(P(\\text{the other child is a boy})\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> The equally likely families are BB, BG, GB, GG.<br><b>L2.</b> Given that a boy is present, the remaining families are BB, BG, GB.<br><b>L3.</b> Of these three, BB is one, so \\(P=1/3\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: the observation 'a boy is present' is treated as conditioning on the families containing a boy.<br><b>Why it fails:</b> The information came from a random selection of one child. A BB family yields 'boy' with probability 1 when selecting, a BG family with probability \\(1/2\\). Those weights change the posterior.<br><b>Correct answer:</b> \\(P(\\text{selected boy and other boy})=\\tfrac14\\cdot1\\); \\(P(\\text{selected boy})=\\tfrac14+\\tfrac14\\cdot\\tfrac12+\\tfrac14\\cdot\\tfrac12=\\tfrac12\\). Ratio \\(=\\tfrac12\\).<br><b>Smell:</b> 'At least one is a boy' and 'a randomly picked child is a boy' are different observations. Write the rule that generated the observation and weight each case by its probability.",
+  "tags": [
+   "s_bayes",
+   "families",
+   "fmt_debug",
+   "err_info_process"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A coin is fair or two-headed, prior \\(1/2\\) each. You flip once and get heads. Find \\(P(\\text{two-headed}\\mid H)\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> A two-headed coin always gives heads.<br><b>L2.</b> So \\(P(\\text{two-headed}\\mid H)=P(H\\mid\\text{two-headed})=1\\).<br><b>L3.</b> The data are conclusive.<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: \\(P(\\text{two-headed}\\mid H)\\) set equal to \\(P(H\\mid\\text{two-headed})\\).<br><b>Why it fails:</b> The conditionals are swapped. The likelihood \\(P(H\\mid\\text{coin})\\) is not the posterior. The fair coin also produces heads half the time, so the data are not conclusive.<br><b>Correct answer:</b> Bayes: \\(\\dfrac{\\frac12\\cdot1}{\\frac12\\cdot1+\\frac12\\cdot\\frac12}=\\dfrac23\\).<br><b>Smell:</b> A posterior equals 1 only when the alternative assigns zero probability to the data. Write posterior \\(\\propto\\) prior \\(\\times\\) likelihood, with the likelihood indexed by the hypothesis.",
+  "tags": [
+   "s_bayes",
+   "coin_posterior",
+   "fmt_debug",
+   "err_direction"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "The bias \\(p\\) of a coin is uniform on \\([0,1]\\). You observe one flip, heads. Find \\(P(p>1/2\\mid H)\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> The prior \\(U(0,1)\\) is symmetric about \\(1/2\\).<br><b>L2.</b> One flip carries little information, so the posterior is still the prior.<br><b>L3.</b> Hence \\(P(p>1/2\\mid H)=1/2\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: one flip is too weak to change the prior.<br><b>Why it fails:</b> The likelihood \\(P(H\\mid p)=p\\) depends on \\(p\\), so the posterior density is \\(\\propto p\\). Ignoring the likelihood treats heads as uninformative.<br><b>Correct answer:</b> Posterior \\(2p\\) on \\([0,1]\\), so \\(P(p>1/2\\mid H)=\\int_{1/2}^1 2p\\,dp=\\tfrac34\\).<br><b>Smell:</b> Write posterior \\(\\propto\\) prior \\(\\times\\) likelihood as functions of the parameter. A symmetric prior gives a symmetric posterior only when the data are symmetric in the parameter.",
+  "tags": [
+   "s_bayes",
+   "bias_prior",
+   "fmt_debug",
+   "err_likelihood"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Three doors, one car. You pick door 1. The host opens a goat door only when your first pick is the car, choosing one of the two goat doors at random. If your first pick is a goat, he opens nothing. Given that a door was opened, should you switch?<br><br><b>Proposed solution:</b><br><b>L1.</b> The host reveals a goat, so this is the standard Monty Hall situation.<br><b>L2.</b> In the standard analysis, switching wins with probability \\(2/3\\).<br><b>L3.</b> Therefore switch.<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L1: the situation is the standard Monty Hall problem.<br><b>Why it fails:</b> The host's rule differs. A reveal happens only when your first pick was the car, so a reveal certifies that you hold the car. The likelihood of a reveal is 1 under 'car at pick' and 0 otherwise.<br><b>Correct answer:</b> \\(P(\\text{switch wins}\\mid\\text{reveal})=0\\); staying wins with probability 1.<br><b>Smell:</b> Identify the host's (or sampler's) selection rule before using any standard result. The rule determines the likelihood of the observation.",
+  "tags": [
+   "s_bayes",
+   "s_information_design",
+   "monty_hall",
+   "fmt_debug",
+   "err_info_process"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X\\) is a fair die roll and \\(Y=X^2\\). Find \\(E[XY]\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> \\(E[X]=7/2\\).<br><b>L2.</b> \\(E[Y]=E[X^2]=91/6\\).<br><b>L3.</b> \\(E[XY]=E[X]E[Y]=\\tfrac72\\cdot\\tfrac{91}{6}=\\tfrac{637}{12}\\approx53.08\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L3: factorising \\(E[XY]\\) as \\(E[X]E[Y]\\).<br><b>Why it fails:</b> Factorisation needs independence. Here \\(Y\\) is a deterministic function of \\(X\\), the strongest possible dependence.<br><b>Correct answer:</b> \\(XY=X^3\\), so \\(E[XY]=E[X^3]=\\tfrac{1+8+27+64+125+216}{6}=\\tfrac{441}{6}=73.5\\).<br><b>Smell:</b> If one variable is a function of the other, write the product as one function of the source variable before taking expectations.",
+  "tags": [
+   "s_linearity_expectation",
+   "dice",
+   "fmt_debug",
+   "err_independence"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X\\) is a fair die roll. Find \\(E[1/X]\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> \\(E[X]=7/2\\).<br><b>L2.</b> For a positive variable, \\(E[1/X]=1/E[X]\\).<br><b>L3.</b> So \\(E[1/X]=2/7\\approx0.286\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: \\(E[1/X]=1/E[X]\\).<br><b>Why it fails:</b> Reciprocal is convex, so Jensen gives \\(E[1/X]\\ge1/E[X]\\). Equality holds only for a constant \\(X\\).<br><b>Correct answer:</b> \\(E[1/X]=\\frac16\\left(1+\\tfrac12+\\tfrac13+\\tfrac14+\\tfrac15+\\tfrac16\\right)=\\tfrac{49}{120}\\approx0.408\\).<br><b>Smell:</b> For convex \\(f\\), \\(E[f(X)]\\ge f(E[X])\\). Any \\(E[1/X]\\), \\(E[e^{X}]\\), \\(E[X^2]\\) differs from the function of the mean.",
+  "tags": [
+   "s_convexity_jensen",
+   "dice",
+   "fmt_debug",
+   "err_jensen"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(\\mathrm{Var}(X)=4\\), \\(\\mathrm{Var}(Y)=9\\), \\(\\mathrm{Cov}(X,Y)=-3\\). Find \\(\\mathrm{Var}(X+Y)\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> Write \\(\\mathrm{Var}(X+Y)\\) as the variance of the sum of two random variables.<br><b>L2.</b> Variance is additive over sums: \\(\\mathrm{Var}(X+Y)=\\mathrm{Var}X+\\mathrm{Var}Y\\).<br><b>L3.</b> So \\(\\mathrm{Var}(X+Y)=4+9=13\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: variance is additive over sums.<br><b>Why it fails:</b> Additivity needs zero covariance. The cross term is \\(2\\,\\mathrm{Cov}(X,Y)\\), which here is negative and reduces the variance.<br><b>Correct answer:</b> \\(\\mathrm{Var}(X+Y)=4+9+2(-3)=7\\). This is feasible: \\(\\rho=-3/6=-1/2\\).<br><b>Smell:</b> Expand every variance of a sum or difference explicitly. The sign of the covariance decides whether the answer goes up or down.",
+  "tags": [
+   "s_linearity_expectation",
+   "variance",
+   "fmt_debug",
+   "err_covariance"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(U_1,U_2\\) are independent uniform on \\([0,1]\\). Find \\(E[\\max(U_1,U_2)]\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> Each \\(U_i\\) has mean \\(1/2\\), with \\(P(U_i\\le x)=x\\).<br><b>L2.</b> \\(E[\\max(U_1,U_2)]=\\max(E[U_1],E[U_2])=1/2\\), since both have the same mean.<br><b>L3.</b> So the expected maximum is \\(1/2\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: \\(E[\\max]=\\max(E)\\).<br><b>Why it fails:</b> Expectation is linear, but \\(\\max\\) is not. The maximum is convex in the pair, so \\(E[\\max]\\ge\\max E\\), strictly here.<br><b>Correct answer:</b> \\(P(\\max\\le x)=x^2\\), density \\(2x\\), so \\(E[\\max]=\\int_0^1 2x^2dx=\\tfrac23\\).<br><b>Smell:</b> \\(E[\\max]\\ge\\max E\\) always, with equality only when the variables are a.s. equal. Compute the distribution of the max before taking a mean.",
+  "tags": [
+   "s_extremal",
+   "s_order_statistics",
+   "uniform",
+   "fmt_debug",
+   "err_max"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Roll a fair die three times. Find the expected number of distinct faces observed.<br><br><b>Proposed solution:</b><br><b>L1.</b> Let \\(I_k\\) indicate that roll \\(k\\) shows a face not seen before.<br><b>L2.</b> \\(P(I_1)=1\\), \\(P(I_2)=5/6\\), and \\(P(I_3)=4/6\\), since two faces have been seen by then.<br><b>L3.</b> Hence \\(E=1+\\tfrac56+\\tfrac46=\\tfrac52\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: \\(P(I_3)=4/6\\) because two faces have been seen.<br><b>Why it fails:</b> The number of faces seen before roll 3 is random: it is 1 if roll 2 repeated roll 1 (probability 1/6), otherwise 2. So \\(P(I_3)=\\tfrac16\\cdot\\tfrac56+\\tfrac56\\cdot\\tfrac46=\\tfrac{25}{36}\\), not \\(4/6\\).<br><b>Correct answer:</b> Use face indicators: \\(E=6\\left(1-(5/6)^3\\right)=\\tfrac{91}{36}\\approx2.528\\) (the random-state recursion gives the same value).<br><b>Smell:</b> Sequential 'new face' indicators depend on the random history. Use one indicator per face, \\(P(\\text{face unseen})=(5/6)^n\\), which avoids conditioning on the path.",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "dice",
+   "fmt_debug",
+   "err_independence"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Toss a fair coin three times. Let \\(S\\) be the number of adjacent pairs of heads (tosses 1-2 both H, plus tosses 2-3 both H). Find \\(\\mathrm{Var}(S)\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> Let \\(I_1\\) indicate tosses 1 and 2 both H, and \\(I_2\\) tosses 2 and 3 both H.<br><b>L2.</b> Each has \\(P=1/4\\) and variance \\(3/16\\).<br><b>L3.</b> \\(I_1\\) and \\(I_2\\) are independent, so \\(\\mathrm{Cov}=0\\).<br><b>L4.</b> Hence \\(\\mathrm{Var}(S)=2\\cdot\\tfrac{3}{16}=\\tfrac38\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L3: \\(I_1\\) and \\(I_2\\) are independent, so \\(\\mathrm{Cov}=0\\).<br><b>Why it fails:</b> The two windows share toss 2. \\(E[I_1I_2]=P(\\text{HHH})=1/8\\), not \\(1/16\\), so \\(\\mathrm{Cov}=1/16\\neq0\\).<br><b>Correct answer:</b> \\(\\mathrm{Var}(S)=\\tfrac3{16}+\\tfrac3{16}+2\\cdot\\tfrac1{16}=\\tfrac12\\).<br><b>Smell:</b> Indicators of overlapping windows are dependent. Compute \\(E[I_iI_j]\\) from the union of the constraints (HHH is one outcome), never as a product.",
+  "tags": [
+   "s_indicators",
+   "coins",
+   "fmt_debug",
+   "err_covariance"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X\\) and \\(Y\\) are independent and uniform on \\(\\{1,2\\}\\). Find \\(E[X/Y]\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> \\(X\\) and \\(Y\\) are independent, so \\(E[X/Y]=E[X]/E[Y]\\).<br><b>L2.</b> \\(E[X]=E[Y]=3/2\\).<br><b>L3.</b> Hence \\(E[X/Y]=1\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L1: independence lets you write \\(E[X/Y]=E[X]/E[Y]\\).<br><b>Why it fails:</b> Independence gives \\(E[X/Y]=E[X]\\,E[1/Y]\\), not \\(E[X]/E[Y]\\). Here \\(E[1/Y]=\\tfrac12(1+\\tfrac12)=\\tfrac34\\neq\\tfrac23\\).<br><b>Correct answer:</b> \\(E[X]E[1/Y]=\\tfrac32\\cdot\\tfrac34=\\tfrac98=1.125\\). Direct enumeration: \\((1+\\tfrac12+2+1)/4=\\tfrac98\\).<br><b>Smell:</b> Independence splits products, not quotients. For \\(1/Y\\) use Jensen or enumerate the four cases.",
+  "tags": [
+   "s_convexity_jensen",
+   "ratio",
+   "fmt_debug",
+   "err_independence"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(N\\) is uniform on \\(\\{1,\\dots,6\\}\\). Given \\(N\\), flip a fair coin \\(N\\) times and let \\(Y\\) be the number of heads. Find \\(\\mathrm{Var}(Y)\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> Given \\(N=n\\), \\(Y\\sim\\mathrm{Bin}(n,1/2)\\), so \\(\\mathrm{Var}(Y\\mid N)=N/4\\).<br><b>L2.</b> \\(E[N]=7/2\\), since \\(N\\) is uniform on \\(\\{1,\\dots,6\\}\\).<br><b>L3.</b> Hence \\(\\mathrm{Var}(Y)=E[\\mathrm{Var}(Y\\mid N)]=E[N]/4=7/8\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L3: \\(\\mathrm{Var}(Y)=E[\\mathrm{Var}(Y\\mid N)]\\) with no second term.<br><b>Why it fails:</b> The law of total variance has a second term: \\(\\mathrm{Var}(Y)=E[\\mathrm{Var}(Y\\mid N)]+\\mathrm{Var}(E[Y\\mid N])\\). Here \\(E[Y\\mid N]=N/2\\) varies with \\(N\\).<br><b>Correct answer:</b> \\(\\mathrm{Var}(Y)=\\tfrac{7}{8}+\\mathrm{Var}(N/2)=\\tfrac78+\\tfrac{35}{48}=\\tfrac{77}{48}\\approx1.604\\).<br><b>Smell:</b> When the number of trials or a parameter is random, apply the total variance formula. The within-group term alone always underestimates.",
+  "tags": [
+   "s_variance_decomposition",
+   "s_conditional_expectation_tower",
+   "random_n",
+   "fmt_debug",
+   "err_total_variance"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Simple symmetric random walk from \\(0\\). Let \\(T\\) be the first time it hits \\(+1\\). Find \\(E[T]\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> \\(M_n=S_n^2-n\\) is a martingale.<br><b>L2.</b> Optional stopping: \\(E[S_T^2-T]=E[S_0^2]=0\\).<br><b>L3.</b> Since \\(S_T=1\\), \\(E[T]=E[S_T^2]=1\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: applying optional stopping to \\(S_n^2-n\\) at \\(T\\).<br><b>Why it fails:</b> Optional stopping needs integrability, for example \\(T\\) bounded or \\(E[T]<\\infty\\). Here \\(P(T>n)\\sim\\sqrt{2/(\\pi n)}\\), so \\(E[T]=\\infty\\) and the identity does not hold.<br><b>Correct answer:</b> \\(E[T]=\\infty\\). Truncated means grow like \\(E[T\\wedge n]\\approx2\\sqrt{2n/\\pi}\\) (simulation: about 164 at \\(n=10^4\\)).<br><b>Smell:</b> Before \\(E[\\text{stopped}]=\\text{start}\\), check \\(E[T]<\\infty\\) or bounded stopping. A finite answer from a heavy-tailed stopping time is a red flag.",
+  "tags": [
+   "s_optional_stopping",
+   "s_martingale",
+   "random_walk",
+   "fmt_debug",
+   "err_optional_stopping"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair coin. You bet \\(1\\), doubling after each loss, and stop at the first win. Your bankroll is \\(31\\) (enough for five bets: \\(1+2+4+8+16\\)). Find the expected profit.<br><br><b>Proposed solution:</b><br><b>L1.</b> You win at bet \\(j\\le5\\) with net profit \\(2^{j-1}-(2^{j-1}-1)=1\\).<br><b>L2.</b> A win happens with probability 1 eventually, so the profit is \\(+1\\) with certainty.<br><b>L3.</b> Hence \\(E[\\text{profit}]=+1\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: a win happens with probability 1, so the profit is \\(+1\\) surely.<br><b>Why it fails:</b> Five consecutive losses have probability \\(1/32\\), and then you lose the whole bankroll of 31. The 'win surely' argument needs an unbounded bankroll and an unbounded stopping time.<br><b>Correct answer:</b> \\(E=\\tfrac{31}{32}\\cdot1+\\tfrac1{32}\\cdot(-31)=0\\). A fair game, as any martingale stake must be.<br><b>Smell:</b> 'I win with probability one' is false under a finite budget. Compute the loss tail: a near-certain small gain can pay for a rare total loss, and the expectation is unchanged.",
+  "tags": [
+   "s_optional_stopping",
+   "s_martingale",
+   "betting",
+   "fmt_debug",
+   "err_optional_stopping"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Biased walk: up with probability \\(p=2/3\\), down with \\(1/3\\). Start at \\(3\\), absorbing barriers at \\(0\\) and \\(10\\). Find \\(P(\\text{hit }10\\text{ before }0)\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> Let \\(r=p/q=2\\).<br><b>L2.</b> For gambler's ruin, \\(P(\\text{reach }N\\text{ before }0)=\\dfrac{1-r^{k}}{1-r^{N}}\\).<br><b>L3.</b> So \\(P=\\dfrac{1-2^3}{1-2^{10}}=\\dfrac{7}{1023}\\approx0.0068\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L1: \\(r=p/q\\).<br><b>Why it fails:</b> The ratio must be \\(r=q/p\\) (the drift is towards \\(N\\)). With \\(p/q\\) the formula answers the question for the walk with reversed drift, which is the mirror-image problem.<br><b>Correct answer:</b> \\(r=q/p=1/2\\): \\(P=\\dfrac{1-(1/2)^3}{1-(1/2)^{10}}=\\dfrac{896}{1023}\\approx0.876\\).<br><b>Smell:</b> Sanity: upward drift towards the target must make reaching it likely. If the answer contradicts the drift direction, the ratio is inverted.",
+  "tags": [
+   "s_first_step_conditioning",
+   "s_recursion",
+   "gamblers_ruin",
+   "fmt_debug",
+   "err_boundary"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Roll a fair die repeatedly until you roll a 6, then keep rolling until you roll another 6. Find the expected total number of rolls.<br><br><b>Proposed solution:</b><br><b>L1.</b> Failures before the first 6 have expected count \\((1-p)/p=5\\).<br><b>L2.</b> Failures before the second 6 have expected count \\(5\\).<br><b>L3.</b> Add the two sixes that end the waits: \\(+1\\) in total.<br><b>L4.</b> Expected total \\(=5+5+1=11\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L3: adding a single 6 for the two waits.<br><b>Why it fails:</b> Each geometric wait ends with its own success roll. Two waits add two successes, so the total is \\(2\\cdot(5+1)=12\\).<br><b>Correct answer:</b> One wait has \\(E=1/p=6\\) rolls including its success, so the total is \\(6+6=12\\).<br><b>Smell:</b> A geometric wait counts its success: \\(E=1/p\\), not \\((1-p)/p\\). With \\(k\\) successes the expectation is \\(k/p\\).",
+  "tags": [
+   "s_recursion",
+   "dice",
+   "fmt_debug",
+   "err_off_by_one"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Simple random walk with up-probability \\(0.6\\), start \\(0\\). Stop at the first time it hits \\(+1\\) or \\(-1\\). Find \\(P(\\text{hit }+1\\text{ first})\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> \\(S_n\\) is a martingale.<br><b>L2.</b> Optional stopping: \\(E[S_T]=S_0=0\\).<br><b>L3.</b> With \\(S_T\\in\\{+1,-1\\}\\): \\(P(+1)-(1-P(+1))=0\\), so \\(P(+1)=\\tfrac12\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L1: \\(S_n\\) is a martingale.<br><b>Why it fails:</b> The mean step is \\(2p-1=0.2\\neq0\\), so \\(S_n\\) is not a martingale. The martingale is \\(S_n-0.2n\\), or the exponential \\((q/p)^{S_n}\\).<br><b>Correct answer:</b> \\(M_n=(q/p)^{S_n}\\) with \\(q/p=2/3\\): \\(E[M_T]=1\\) gives \\(\\tfrac23a+\\tfrac32(1-a)=1\\), so \\(a=\\tfrac35=0.6\\) (simulation: about 0.597).<br><b>Smell:</b> A sign-symmetric answer for an asymmetric walk is a red flag. Before optional stopping, find the martingale: zero-drift transform or exponential.",
+  "tags": [
+   "s_martingale",
+   "s_optional_stopping",
+   "biased_walk",
+   "fmt_debug",
+   "err_martingale"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Standard Brownian motion \\(W\\). Find \\(P\\!\\left(\\max_{0\\le t\\le1}W_t\\ge1\\right)\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> The reflection principle gives \\(P(\\max_{t\\le T}W_t\\ge a)=P(W_T\\ge a)\\).<br><b>L2.</b> \\(P(W_1\\ge1)=1-\\Phi(1)\\approx0.1587\\).<br><b>L3.</b> So the answer is \\(0.1587\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L1: \\(P(\\max\\ge a)=P(W_T\\ge a)\\).<br><b>Why it fails:</b> Reflection at the first hitting time maps paths that end below \\(a\\) to paths ending above it. This doubles the tail: \\(P(\\max\\ge a)=2P(W_T\\ge a)\\).<br><b>Correct answer:</b> \\(2(1-\\Phi(1))\\approx0.3173\\) (a discrete walk with 1000 steps gives about 0.31, from below).<br><b>Smell:</b> Zero-drift BM: the maximum exceeds a level with about twice the endpoint probability. A factor of 1 is a sign the reflection step was skipped.",
+  "tags": [
+   "s_reflection",
+   "brownian_motion",
+   "fmt_debug",
+   "err_reflection"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Simple symmetric random walk on \\(\\mathbb Z^3\\), started at the origin. Find the probability that it returns to the origin.<br><br><b>Proposed solution:</b><br><b>L1.</b> In one dimension the walk is recurrent, since it returns to 0 with probability 1.<br><b>L2.</b> The same argument extends to every dimension, since the walk revisits each coordinate's axis infinitely often.<br><b>L3.</b> Hence it returns to the origin with probability 1.<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: the one-dimensional argument extends to every dimension.<br><b>Why it fails:</b> Pólya's theorem: recurrent for \\(d\\le2\\), transient for \\(d\\ge3\\). The Green's function \\(\\sum_n P(S_n=0)\\) is finite in 3D.<br><b>Correct answer:</b> Return probability \\(=1-1/u\\), where \\(u\\approx1.5164\\) is the Watson integral: about \\(0.3405\\).<br><b>Smell:</b> Recurrence depends on dimension. Test with the sum \\(\\sum_n P(S_n=0)\\): finite means transient.",
+  "tags": [
+   "s_generating_function",
+   "recurrence",
+   "fmt_debug",
+   "err_transience"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Symmetric walk on \\(\\{0,1,\\dots,10\\}\\), absorbing at \\(0\\) and \\(10\\), started at \\(3\\). Find the expected duration \\(D_3\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> \\(D_k=1+\\tfrac12(D_{k-1}+D_{k+1})\\) for \\(1\\le k\\le 9\\), with \\(D_0=0\\).<br><b>L2.</b> Boundary: \\(D_{10}=1\\), since the walk has just taken its last step.<br><b>L3.</b> Solve \\(D_k=-k^2+ck\\) with \\(D_{10}=1\\): \\(c=10.1\\).<br><b>L4.</b> So \\(D_3=-9+30.3=21.3\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: \\(D_{10}=1\\).<br><b>Why it fails:</b> An absorbing state has zero further steps, so \\(D_{10}=0\\). The constant 1 belongs to the transient-state recursion only.<br><b>Correct answer:</b> \\(D_k=k(10-k)\\), so \\(D_3=21\\).<br><b>Smell:</b> An absorbing state has value 0. A duration must vanish at both boundaries; the boundary check catches the error at once.",
+  "tags": [
+   "s_recursion",
+   "s_first_step_conditioning",
+   "duration",
+   "fmt_debug",
+   "err_boundary"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two independent uniform points on the unit circle. Find \\(P(\\text{the chord joining them is longer than }\\sqrt3)\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> Fix the chord's distance \\(d\\) from the centre, uniform on \\([0,1]\\).<br><b>L2.</b> The chord has length \\(2\\sqrt{1-d^2}\\), which exceeds \\(\\sqrt3\\) iff \\(d<1/2\\).<br><b>L3.</b> So \\(P=1/2\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L1: the distance \\(d\\) from the centre is uniform.<br><b>Why it fails:</b> That is a different random-chord model. Two uniform endpoints do not give a uniform distance. The problem specifies endpoints, so the angle between them is the random variable.<br><b>Correct answer:</b> The angle \\(\\theta\\) between the endpoints is uniform on \\([0,\\pi]\\), and the chord \\(2\\sin(\\theta/2)>\\sqrt3\\) iff \\(\\theta>2\\pi/3\\). So \\(P=\\tfrac{\\pi-2\\pi/3}{\\pi}=\\tfrac13\\).<br><b>Smell:</b> 'Random chord' is ill-defined until the sampling mechanism is stated. The answer depends on the measure (endpoints, midpoint, radius); restate the model first.",
+  "tags": [
+   "s_geometric_probability",
+   "random_chord",
+   "fmt_debug",
+   "err_measure"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X\\sim U(-1,1)\\). Find the density of \\(Y=X^2\\) on \\((0,1)\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> Let \\(y\\in(0,1)\\). Compute the density by substitution.<br><b>L2.</b> \\(f_Y(y)=f_X(\\sqrt y)=\\tfrac12\\).<br><b>L3.</b> So \\(Y\\) is uniform on \\((0,1)\\) with density \\(1/2\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: \\(f_Y(y)=f_X(\\sqrt y)\\).<br><b>Why it fails:</b> \\(x\\mapsto x^2\\) is two-to-one on \\((-1,1)\\), and the Jacobian \\(|d\\sqrt y/dy|=1/(2\\sqrt y)\\) is missing. Also the density \\(1/2\\) integrates to \\(1/2\\) on \\((0,1)\\), so it is not a density.<br><b>Correct answer:</b> \\(P(Y\\le y)=P(|X|\\le\\sqrt y)=\\sqrt y\\), so \\(f_Y(y)=\\dfrac{1}{2\\sqrt y}\\) on \\((0,1)\\), which integrates to 1.<br><b>Smell:</b> Check normalisation. For non-monotone maps sum the preimage branches, each weighted by its Jacobian; for monotone maps use the CDF.",
+  "tags": [
+   "s_geometric_probability",
+   "transformation",
+   "fmt_debug",
+   "err_jacobian"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X\\sim U(0,1)\\). Given \\(X>1/2\\), find \\(P(X>3/4\\mid X>1/2)\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> The conditional law of \\(X\\) given \\(X>1/2\\) is uniform on \\((1/2,1)\\).<br><b>L2.</b> The uniform distribution is memoryless, so the excess \\(X-1/2\\) has the same law as \\(X\\).<br><b>L3.</b> Hence \\(P(X>3/4\\mid X>1/2)=P(X>1/4)=3/4\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: the uniform distribution is memoryless.<br><b>Why it fails:</b> Memorylessness characterises the exponential (and geometric) distributions only. Conditioning \\(U(0,1)\\) on \\(X>1/2\\) gives \\(U(1/2,1)\\), whose excess is \\(U(0,1/2)\\).<br><b>Correct answer:</b> \\(P(X>3/4\\mid X>1/2)=\\dfrac{P(X>3/4)}{P(X>1/2)}=\\dfrac{1/4}{1/2}=\\tfrac12\\).<br><b>Smell:</b> Memorylessness is an exponential property. For any other law compute \\(P(X>s+t)/P(X>s)\\) explicitly.",
+  "tags": [
+   "s_memorylessness",
+   "uniform_memoryless",
+   "fmt_debug",
+   "err_memoryless"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A stick of length 1 is broken at two independent uniform points. Find \\(P(\\text{the three pieces form a triangle})\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> Let the break points be \\(X<Y\\), uniform on \\(\\{x<y\\}\\) with density \\(1\\).<br><b>L2.</b> A triangle forms iff every piece is shorter than \\(1/2\\): \\(x<\\tfrac12\\), \\(y-x<\\tfrac12\\), \\(y>\\tfrac12\\).<br><b>L3.</b> The region has area \\(1/8\\) inside \\(\\{x<y\\}\\).<br><b>L4.</b> So \\(P=1/8\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L1: density \\(1\\) on the ordered region \\(\\{x<y\\}\\).<br><b>Why it fails:</b> The ordered pair of two iid uniforms has density 2 on \\(\\{x<y\\}\\) (the unit square has density 1 and the half-triangle has area 1/2). With density 1 the mass is only half of what it should be.<br><b>Correct answer:</b> With density 2: \\(P=2\\cdot\\tfrac18=\\tfrac14\\). This matches the square-area argument, where the region covers \\(1/4\\) of the unit square.<br><b>Smell:</b> When you order iid variables, the joint density is \\(n!\\) on the ordered simplex. Check normalisation of the density before integrating.",
+  "tags": [
+   "s_geometric_probability",
+   "s_order_statistics",
+   "broken_stick",
+   "fmt_debug",
+   "err_ordering_density"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Four iid \\(U(0,1)\\) variables. Find \\(E[\\text{second smallest}]\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> For four values, the second smallest is the median.<br><b>L2.</b> The median of iid \\(U(0,1)\\) is \\(1/2\\) by symmetry.<br><b>L3.</b> So \\(E[\\text{second smallest}]=1/2\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L1: the second smallest of four is the median.<br><b>Why it fails:</b> A median is the middle value only for odd samples. For \\(n=4\\) the median lies between the second and third order statistics, so the second is not the median.<br><b>Correct answer:</b> \\(E[U_{(k)}]=\\dfrac{k}{n+1}=\\dfrac{2}{5}=0.4\\).<br><b>Smell:</b> Order statistics have \\(E[U_{(k)}]=k/(n+1)\\). A symmetry argument works only for the central order statistic of an odd sample.",
+  "tags": [
+   "s_order_statistics",
+   "median",
+   "fmt_debug",
+   "err_order_statistic"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X\\sim\\mathrm{Exp}(1)\\) and \\(Y\\sim\\mathrm{Exp}(2)\\) are independent. Find \\(P(X<Y)\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> The variable with the larger rate tends to arrive first.<br><b>L2.</b> \\(P(X<Y)=\\dfrac{\\lambda_Y}{\\lambda_X+\\lambda_Y}=\\dfrac23\\).<br><b>L3.</b> So \\(X\\) is smaller with probability \\(2/3\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: \\(P(X<Y)=\\lambda_Y/(\\lambda_X+\\lambda_Y)\\).<br><b>Why it fails:</b> For a race of exponentials, the variable that fires first wins with probability proportional to its own rate. Here \\(X\\) has the lower rate, so it wins only \\(1/3\\) of the time.<br><b>Correct answer:</b> \\(P(X<Y)=\\int_0^\\infty P(Y>x)f_X(x)\\,dx=\\int_0^\\infty e^{-2x}e^{-x}dx=\\tfrac13\\).<br><b>Smell:</b> In races of independent exponentials, \\(P(i\\text{ first})=\\lambda_i/\\sum\\lambda_j\\). Check: the probabilities over all racers must sum to 1.",
+  "tags": [
+   "s_memorylessness",
+   "exponential_race",
+   "fmt_debug",
+   "err_direction"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A point is uniform in the unit disc. Find \\(P(R<1/2)\\), where \\(R\\) is its distance from the centre.<br><br><b>Proposed solution:</b><br><b>L1.</b> The disc has area \\(\\pi\\), and the probability of a region is its area divided by \\(\\pi\\).<br><b>L2.</b> In polar coordinates, \\(R\\) is uniform on \\([0,1]\\) and the angle is uniform on \\([0,2\\pi)\\), independently.<br><b>L3.</b> So \\(P(R<1/2)=1/2\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: \\(R\\) is uniform on \\([0,1]\\).<br><b>Why it fails:</b> The area element is \\(r\\,dr\\,d\\theta\\). The density of \\(R\\) is \\(2r\\) (CDF \\(r^2\\)), not uniform. The factor \\(r\\) is the Jacobian of polar coordinates.<br><b>Correct answer:</b> \\(P(R<1/2)=(1/2)^2=\\tfrac14\\).<br><b>Smell:</b> In polar coordinates always include the Jacobian \\(r\\). If the radius is uniform, the area density is not uniform on the disc.",
+  "tags": [
+   "s_geometric_probability",
+   "uniform_disc",
+   "fmt_debug",
+   "err_jacobian"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ten stones on a table. Each turn a player removes 1, 2 or 3 stones. The player who takes the last stone wins. Who wins with best play, and what is the winning first move?<br><br><b>Proposed solution:</b><br><b>L1.</b> Losing positions for the player to move are the multiples of 3: from a multiple of 3, any move leaves a non-multiple, and the opponent can return to a multiple.<br><b>L2.</b> \\(10\\) is not a multiple of 3, so the first player wins.<br><b>L3.</b> The winning first move is to take 1, leaving \\(9\\), a multiple of 3.<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L1: losing positions are the multiples of 3.<br><b>Why it fails:</b> The move set is \\(\\{1,2,3\\}\\), so the losing positions are the multiples of 4. The mod-3 rule was the answer for the move set \\(\\{1,2\\}\\).<br><b>Correct answer:</b> Losing positions \\(0,4,8\\). From 10 the winning move is to take 2, leaving 8. Taking 1 leaves 9, which the opponent wins by taking 1 and leaving 8.<br><b>Smell:</b> When the move set changes, recompute backward induction from 0 upward. For moves \\(1..m\\), the losing positions are multiples of \\(m+1\\).",
+  "tags": [
+   "s_backward_induction",
+   "nim",
+   "fmt_debug",
+   "err_backward_induction"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Roll a fair die. You may stop and receive the roll, or roll once more and receive the second roll (no further rerolls). Find the optimal expected payoff.<br><br><b>Proposed solution:</b><br><b>L1.</b> Rerolling is worth \\(3.5\\) in expectation.<br><b>L2.</b> So keep the first roll only if it is strictly above \\(5\\), since a \\(4\\) is not clearly better than a reroll.<br><b>L3.</b> Expected payoff \\(=\\tfrac{5+6}{6}+\\tfrac46\\cdot3.5\\approx4.17\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: keep only if the roll is above 5.<br><b>Why it fails:</b> The stopping threshold is the continuation value, \\(3.5\\). A roll of 4 beats \\(3.5\\), so it should be kept. A margin added to the threshold leaves value on the table.<br><b>Correct answer:</b> Keep 4, 5, 6: \\(\\tfrac{4+5+6}{6}+\\tfrac36\\cdot3.5=2.5+1.75=4.25\\).<br><b>Smell:</b> The optimal stop threshold equals the continuation value. Compare each state with what waiting is worth, not with what the best outcome could be.",
+  "tags": [
+   "s_dynamic_programming",
+   "s_backward_induction",
+   "dice_reroll",
+   "fmt_debug",
+   "err_backward_induction"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "The numbers \\(1,\\dots,10\\) are written on a board. Repeatedly pick two numbers \\(a,b\\), erase them and write \\(|a-b|\\). Continue until one number is left. What can you say about the final number?<br><br><b>Proposed solution:</b><br><b>L1.</b> Each move removes two numbers and writes one.<br><b>L2.</b> Replacing \\(a,b\\) by \\(|a-b|\\) keeps the sum of the numbers unchanged.<br><b>L3.</b> The initial sum is \\(55\\), so the final number is \\(55\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: the sum is invariant.<br><b>Why it fails:</b> \\(a+b\\) is replaced by \\(|a-b|\\), which differs by \\(2\\min(a,b)\\). Only the parity is invariant, since \\(|a-b|\\equiv a+b\\pmod 2\\). Also the maximum never increases, so the final number is at most 10, and 55 is impossible.<br><b>Correct answer:</b> The final number is odd (parity invariant) and at most 9 (maximum non-increasing).<br><b>Smell:</b> Test an invariant with concrete numbers on one move. Check a sanity bound too: the final value can't exceed the largest starting number.",
+  "tags": [
+   "s_invariant",
+   "s_parity",
+   "board",
+   "fmt_debug",
+   "err_invariant"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Alice flips a fair coin until she sees HT. Bob flips until he sees HH. Who waits longer on average? Give both expectations.<br><br><b>Proposed solution:</b><br><b>L1.</b> Each pattern has probability \\(1/4\\) in two tosses.<br><b>L2.</b> So each waits a geometric time with mean \\(1/(1/4)=4\\).<br><b>L3.</b> Both expectations are 4, so they are equal.<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: the waiting time for a pattern is geometric with success probability \\(1/4\\).<br><b>Why it fails:</b> The waiting time is not geometric in the pattern's probability when the pattern can overlap itself. HH overlaps with itself: after one H a second H ends the wait, while a T restarts. HT cannot overlap, so its wait is shorter.<br><b>Correct answer:</b> First-step analysis: \\(E_{HH}=6\\), \\(E_{HT}=4\\). For HH: \\(E_0=1+\\tfrac12E_0+\\tfrac12E_H\\), \\(E_H=1+\\tfrac12E_0\\), giving \\(E_0=6\\).<br><b>Smell:</b> Patterns with self-overlap take longer than non-overlapping patterns of the same probability. Use first-step analysis on the prefix states.",
+  "tags": [
+   "s_first_step_conditioning",
+   "patterns",
+   "fmt_debug",
+   "err_overlap"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A and B play rounds. A wins each round with probability \\(0.6\\) (no ties). The first player to win 3 rounds takes the match. Find \\(P(A\\text{ wins the match})\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> The match is decided within three rounds, since three wins are needed.<br><b>L2.</b> \\(P(A\\text{ wins})=P(A\\text{ wins at least 2 of the first 3})=3p^2q+p^3\\).<br><b>L3.</b> \\(=3(0.36)(0.4)+0.216=0.648\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: \\(P(A\\text{ wins})=P(\\text{at least 2 of 3})\\).<br><b>Why it fails:</b> A first-to-3 race is not a best-of-3. It is decided by the first 5 rounds at most. The correct event is 'A wins at least 3 of the first 5 rounds'.<br><b>Correct answer:</b> \\(P=P(\\mathrm{Bin}(5,0.6)\\ge3)=p^3(1+3q+6q^2)=0.68256\\).<br><b>Smell:</b> A race to \\(k\\) wins is decided within \\(2k-1\\) rounds. Relate the threshold to the binomial count, not to the 'best of' label.",
+  "tags": [
+   "s_backward_induction",
+   "race_to_three",
+   "fmt_debug",
+   "err_backward_induction"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Three iid \\(U(0,1)\\) draws in sequence. After each draw you may accept it and stop, or reject it and continue. You must accept the third draw. Find the optimal expected accepted value.<br><br><b>Proposed solution:</b><br><b>L1.</b> After the first draw, continuing is worth the value of a single draw, \\(E=1/2\\).<br><b>L2.</b> So accept the first draw iff it exceeds \\(1/2\\).<br><b>L3.</b> Expected value \\(=E[\\max(U,1/2)]=\\tfrac58\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L1: continuing after draw 1 is worth \\(1/2\\).<br><b>Why it fails:</b> The continuation value after draw 1 is the optimal value of the remaining two-draw game, which is \\(5/8\\), not the value of one draw. Each stage must use the optimal continuation.<br><b>Correct answer:</b> Backward: \\(V_3=1/2\\); \\(V_2=E[\\max(U,\\tfrac12)]=\\tfrac58\\); \\(V_1=E[\\max(U,\\tfrac58)]=\\dfrac{1+(5/8)^2}{2}=\\dfrac{89}{128}\\approx0.695\\).<br><b>Smell:</b> In multistage stopping, the continuation value is the optimal value of the next stage, computed backward from the end. It is usually above a single draw's mean.",
+  "tags": [
+   "s_dynamic_programming",
+   "s_backward_induction",
+   "optimal_stopping",
+   "fmt_debug",
+   "err_backward_induction"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Alice and Bob alternate flipping a fair coin, Alice first. The first to get heads wins. Find \\(P(\\text{Alice wins})\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> Alice flips on turns \\(1,3,5,\\dots\\), and Bob on turns \\(2,4,\\dots\\).<br><b>L2.</b> Each flip is fair, and the rules treat both players alike.<br><b>L3.</b> So the game is symmetric and \\(P(\\text{Alice wins})=1/2\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: symmetric rules imply \\(P=1/2\\).<br><b>Why it fails:</b> Symmetry of the rules is not symmetry of the turn order. Alice flips on odd turns, so she has the first chance.<br><b>Correct answer:</b> \\(P_A=\\tfrac12+\\tfrac14P_A\\), so \\(P_A=\\dfrac{1/2}{1-1/4}=\\tfrac23\\).<br><b>Smell:</b> Before invoking symmetry, check symmetry under swapping players including who moves first. An advantage from turn order shows up as a geometric series.",
+  "tags": [
+   "s_first_step_conditioning",
+   "s_symmetry",
+   "alternating",
+   "fmt_debug",
+   "err_symmetry"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(W\\) is standard Brownian motion with \\(W_0=0\\). Find \\(E[W_1^2]\\) using Itô's formula on \\(f(W)=W^2\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> Apply Itô: \\(d(W_t^2)=2W_t\\,dW_t\\).<br><b>L2.</b> Integrate: \\(W_T^2=2\\int_0^T W_t\\,dW_t\\).<br><b>L3.</b> An Itô integral has mean zero, so \\(E[W_T^2]=0\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L1: \\(d(W_t^2)=2W_t\\,dW_t\\).<br><b>Why it fails:</b> Itô's formula is \\(df(W)=f'(W)\\,dW+\\tfrac12f''(W)\\,dt\\). With \\(f''=2\\), the drift term \\(dt\\) is present. Dropping it loses the quadratic variation.<br><b>Correct answer:</b> \\(d(W^2)=2W\\,dW+dt\\), so \\(W_T^2=2\\int_0^T W\\,dW+T\\), giving \\(E[W_T^2]=T=1\\).<br><b>Smell:</b> Brownian motion has \\((dW)^2=dt\\). Any \\(f\\) with \\(f''\\neq0\\) gets a \\(\\tfrac12f''\\,dt\\) term. Check the expectation: \\(E[f(W_T)]\\) must have the drift integrated.",
+  "tags": [
+   "s_taylor",
+   "ito_formula",
+   "fmt_debug",
+   "err_ito_term"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Find \\(E[e^{W_2}]\\) for standard Brownian motion \\(W\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> \\(W\\) is a martingale with \\(E[W_2]=0\\).<br><b>L2.</b> \\(e^{W_t}\\) is a martingale, since \\(W\\) is one.<br><b>L3.</b> Hence \\(E[e^{W_2}]=e^{W_0}=1\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: \\(e^{W_t}\\) is a martingale, since \\(W\\) is one.<br><b>Why it fails:</b> Itô: \\(de^{W}=e^{W}\\,dW+\\tfrac12e^{W}\\,dt\\). The drift \\(\\tfrac12e^W\\) is non-zero, so \\(e^{W_t}\\) is not a martingale. The martingale is \\(e^{W_t-t/2}\\).<br><b>Correct answer:</b> \\(E[e^{W_t}]=e^{t/2}\\), so \\(E[e^{W_2}]=e\\approx2.718\\).<br><b>Smell:</b> Any exponential of Brownian motion has mean \\(e^{t/2}\\), from the normal moment generating function. The martingale needs the \\(-t/2\\) correction.",
+  "tags": [
+   "s_martingale",
+   "s_taylor",
+   "exp_martingale",
+   "fmt_debug",
+   "err_ito_term"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(S_0=100\\), \\(K=100\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\), \\(T=1\\), real-world drift \\(\\mu=10\\%\\). Price a European call.<br><br><b>Proposed solution:</b><br><b>L1.</b> The price is the discounted expected payoff under the real-world measure.<br><b>L2.</b> Under \\(P\\), \\(S_T=S_0\\exp\\!\\big((\\mu-\\sigma^2/2)T+\\sigma W_T\\big)\\).<br><b>L3.</b> So the price is \\(e^{-rT}E_P[(S_T-K)^+]\\approx13.96\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L1: the price is the discounted expectation under \\(P\\).<br><b>Why it fails:</b> Discounted expectations are taken under the risk-neutral measure \\(Q\\), where the drift is \\(r\\) (replication). Under \\(P\\) the drift \\(\\mu\\) carries a risk premium that is not priced.<br><b>Correct answer:</b> Under \\(Q\\): \\(S_T=S_0\\exp((r-\\sigma^2/2)T+\\sigma W^Q_T)\\). Black-Scholes gives \\(10.45\\) (simulation confirms).<br><b>Smell:</b> If a price depends on the real-world drift \\(\\mu\\), it is wrong. The drift in a pricing expectation must be \\(r\\) (or \\(r-q\\)). Test: the price must not change when \\(\\mu\\) changes.",
+  "tags": [
+   "s_change_of_measure",
+   "s_replication",
+   "bs_measure",
+   "fmt_debug",
+   "err_measure"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compute \\(\\int_0^T W_t\\,dW_t\\) as an Itô integral, and find its expectation.<br><br><b>Proposed solution:</b><br><b>L1.</b> Approximate the integral by left-endpoint Riemann sums \\(\\sum_k W_{t_{k-1}}(W_{t_k}-W_{t_{k-1}})\\).<br><b>L2.</b> In ordinary calculus \\(\\int w\\,dw=w^2/2\\), so \\(\\int_0^T W\\,dW=W_T^2/2\\).<br><b>L3.</b> Hence \\(E\\!\\left[\\int_0^T W\\,dW\\right]=T/2\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: applying ordinary calculus \\(\\int w\\,dw=w^2/2\\).<br><b>Why it fails:</b> The Itô integral with left-point evaluation gives \\(\\tfrac12(W_T^2-T)\\); the extra \\(-T/2\\) is the quadratic variation. Ordinary (Stratonovich or midpoint) calculus gives \\(W_T^2/2\\), a different integral.<br><b>Correct answer:</b> \\(\\int_0^T W\\,dW=\\tfrac12(W_T^2-T)\\), a martingale with \\(E=0\\).<br><b>Smell:</b> Chain rules fail for Brownian integrals. Apply Itô's formula to \\(W^2\\) to find the correction, and check that the Itô integral of an adapted integrand has mean zero.",
+  "tags": [
+   "s_taylor",
+   "strat_ito",
+   "fmt_debug",
+   "err_strat_ito"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Find \\(\\mathrm{Var}\\!\\left(\\int_0^1 t\\,dW_t\\right)\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> Let the integrand be \\(h_t=t\\).<br><b>L2.</b> Itô isometry: \\(\\mathrm{Var}\\!\\left(\\int h\\,dW\\right)=\\int E[h_t]\\,dt\\).<br><b>L3.</b> So \\(\\mathrm{Var}=\\int_0^1 t\\,dt=\\tfrac12\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: the isometry integrates \\(E[h_t]\\).<br><b>Why it fails:</b> The isometry integrates \\(E[h_t^2]\\), the square of the integrand. For \\(h_t=t\\) that is \\(t^2\\), not \\(t\\).<br><b>Correct answer:</b> \\(\\mathrm{Var}=\\int_0^1 t^2\\,dt=\\tfrac13\\) (simulation: about 0.339).<br><b>Smell:</b> The isometry squares the integrand. Dimension check: the variance of \\(\\int h\\,dW\\) has the units of \\(h^2\\) times time.",
+  "tags": [
+   "s_martingale",
+   "isometry",
+   "fmt_debug",
+   "err_ito_isometry"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A cash-or-nothing digital call pays \\(1\\) if \\(S_T>K\\). Take \\(S_0=K=100\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\), \\(T=1\\). Find its delta.<br><br><b>Proposed solution:</b><br><b>L1.</b> Delta is \\(\\partial V/\\partial S_0\\).<br><b>L2.</b> The payoff \\(\\mathbf 1\\{S_T>K\\}\\) is flat in \\(S_0\\) almost everywhere, so its derivative is 0.<br><b>L3.</b> Hence \\(\\Delta=0\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: the derivative of the payoff is 0 almost everywhere.<br><b>Why it fails:</b> The pathwise method (differentiate under the expectation) needs a continuous payoff. The indicator's derivative is a Dirac delta at the strike, which produces the density term.<br><b>Correct answer:</b> \\(\\Delta=e^{-rT}\\varphi(d_2)/(S_0\\sigma\\sqrt T)\\), with \\(d_2=0.15\\): \\(\\Delta\\approx0.0188\\). Finite differences of the price confirm it.<br><b>Smell:</b> Pathwise differentiation requires a continuous payoff. For indicators or barriers use the density or likelihood-ratio form. A digital call's delta is positive.",
+  "tags": [
+   "s_replication",
+   "digital_delta",
+   "fmt_debug",
+   "err_pathwise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Driftless geometric Brownian motion \\(dS=\\sigma S\\,dW\\), \\(S_0=1\\), \\(\\sigma=0.2\\), \\(T=1\\). Find \\(E[\\ln S_T]\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> \\(d\\ln S=\\dfrac{dS}{S}=\\sigma\\,dW\\).<br><b>L2.</b> Integrate: \\(\\ln S_T=\\sigma W_T\\).<br><b>L3.</b> So \\(E[\\ln S_T]=0\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L1: \\(d\\ln S=dS/S\\).<br><b>Why it fails:</b> Itô's formula on \\(\\ln\\) gives \\(d\\ln S=\\dfrac{dS}{S}-\\tfrac12\\sigma^2\\,dt\\). The correction is missing, and it is exactly what makes \\(E[S_T]=1\\) while \\(E[\\ln S_T]<0\\) (Jensen).<br><b>Correct answer:</b> \\(\\ln S_T=\\sigma W_T-\\tfrac12\\sigma^2T\\), so \\(E[\\ln S_T]=-\\tfrac12\\sigma^2T=-0.02\\).<br><b>Smell:</b> Any log of a diffusion needs the \\(-\\tfrac12\\sigma^2\\) correction. 'The log price is a driftless random walk' is the signal of a missing Itô term.",
+  "tags": [
+   "s_taylor",
+   "log_price",
+   "fmt_debug",
+   "err_ito_term"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "European options with \\(S=100\\), \\(K=100\\), \\(T=1\\), \\(r=5\\%\\) and continuous dividend yield \\(q=3\\%\\). Find \\(C-P\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> Put-call parity holds for European options on the same underlying, strike and maturity.<br><b>L2.</b> Put-call parity: \\(C-P=S-Ke^{-rT}\\).<br><b>L3.</b> So \\(C-P=100-100e^{-0.05}\\approx4.88\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: \\(C-P=S-Ke^{-rT}\\).<br><b>Why it fails:</b> With a yield, the stock leg is the present value of the stock you hold, \\(Se^{-qT}\\). The dividends the stock pays are lost to the holder of the shares.<br><b>Correct answer:</b> \\(C-P=Se^{-qT}-Ke^{-rT}=97.04-95.12\\approx1.92\\).<br><b>Smell:</b> The stock leg of parity is \\(Se^{-qT}\\). The naive formula overstates \\(C-P\\) by \\(S(1-e^{-qT})\\).",
+  "tags": [
+   "s_replication",
+   "parity",
+   "fmt_debug",
+   "err_dividend"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "American call on a non-dividend stock: \\(S=100\\), \\(K=80\\), \\(\\sigma=20\\%\\), \\(r=5\\%\\), \\(T=1\\). Find its value.<br><br><b>Proposed solution:</b><br><b>L1.</b> The call is in the money by \\(20\\).<br><b>L2.</b> Early exercise is optimal for in-the-money calls, so the call is worth its intrinsic value \\(\\max(S-K,0)=20\\).<br><b>L3.</b> Waiting only loses time value, so the value is \\(20\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: an in-the-money call should be exercised, so it is worth its intrinsic value.<br><b>Why it fails:</b> With no dividends, early exercise of a call is never optimal: exercising gives up the insurance and the interest on the strike. The intrinsic value 20 is below the lower bound \\(S-Ke^{-rT}\\approx23.90\\).<br><b>Correct answer:</b> Value equals the European Black-Scholes price \\(\\approx24.59\\), above intrinsic value.<br><b>Smell:</b> Check the lower bound \\(S-Ke^{-rT}\\). If intrinsic value is below it, the option is worth more than intrinsic. Early exercise of a call only pays with dividends.",
+  "tags": [
+   "s_replication",
+   "early_exercise",
+   "fmt_debug",
+   "err_early_exercise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(S\\) equals 80 or 120 with probability \\(1/2\\) each. A call struck at 100 pays \\((S-100)^+\\). Compare \\(E[(S-100)^+]\\) with \\((E[S]-100)^+\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> \\(E[S]=100\\), so the call on the average stock is worth \\(0\\).<br><b>L2.</b> The payoff is non-negative, so the expected payoff is at most the payoff at the mean: \\(E[(S-100)^+]\\le0\\).<br><b>L3.</b> Hence \\(E[(S-100)^+]=0\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: \\(E[f(S)]\\le f(E[S])\\) for the non-negative payoff.<br><b>Why it fails:</b> \\(x\\mapsto(x-100)^+\\) is convex, so Jensen gives \\(E[f(S)]\\ge f(E[S])\\). Averaging over outcomes can only add option value.<br><b>Correct answer:</b> \\(E[(S-100)^+]=\\tfrac12\\cdot20=10>0=(E[S]-100)^+\\).<br><b>Smell:</b> Options are convex in the underlying: the price of the option on the average is a lower bound on the average of option payoffs. Check the direction with a two-point example.",
+  "tags": [
+   "s_convexity_jensen",
+   "jensen_option",
+   "fmt_debug",
+   "err_jensen"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Daily return standard deviation is 1%, with independent daily returns. Annualise with 252 trading days.<br><br><b>Proposed solution:</b><br><b>L1.</b> Daily returns are independent, each with standard deviation \\(1\\%\\).<br><b>L2.</b> Volatility is additive in time, so annual volatility \\(=\\sigma_d\\times252\\).<br><b>L3.</b> \\(=2.52\\), i.e. 252% a year.<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: volatility is additive in time.<br><b>Why it fails:</b> Independent returns add variance, not volatility: \\(\\mathrm{Var}(\\sum)=n\\sigma_d^2\\), so \\(\\sigma_{\\text{ann}}=\\sigma_d\\sqrt{n}\\).<br><b>Correct answer:</b> \\(\\sigma_{\\text{ann}}=0.01\\sqrt{252}\\approx15.9\\%\\).<br><b>Smell:</b> Volatility scales with \\(\\sqrt{T}\\) (variance with \\(T\\)). Sanity: a 252% annual volatility from 1% daily moves is implausible; doubling the horizon multiplies volatility by \\(\\sqrt2\\).",
+  "tags": [
+   "s_sqrt_time_scaling",
+   "vol_scaling",
+   "fmt_debug",
+   "err_scaling"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Stock \\(S_0=100\\), discrete dividend \\(D=10\\) paid at \\(t=0.5\\). Continuous rate \\(r=5\\%\\). Find the 1-year forward price.<br><br><b>Proposed solution:</b><br><b>L1.</b> The spot is 100, and a forward is a one-year claim on the stock.<br><b>L2.</b> Forward price is the spot compounded at \\(r\\), minus the dividends.<br><b>L3.</b> \\(F=100e^{0.05}-10\\approx95.13\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: \\(F=Se^{rT}-D\\).<br><b>Why it fails:</b> The dividend is received at \\(t=0.5\\), so the forward holder loses its financing from \\(t=0.5\\) to \\(T\\), not from \\(0\\). The dividend must be discounted to today and compounded to \\(T\\).<br><b>Correct answer:</b> \\(F=(S-De^{-r t_d})e^{rT}=(100-9.753)\\cdot e^{0.05}\\approx94.87\\).<br><b>Smell:</b> For forwards with discrete income, subtract the present value of the income, then compound. Subtracting an uncompounded amount misprices the forward by \\(D(e^{r(T-t_d)}-1)\\).",
+  "tags": [
+   "s_replication",
+   "forward_dividend",
+   "fmt_debug",
+   "err_dividend"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "One-period binomial: \\(S_0=100\\), \\(S_1\\in\\{120,90\\}\\), \\(r=5\\%\\) continuously compounded, \\(T=1\\). Price a call struck at \\(100\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> Risk-neutral probability \\(p^*=\\dfrac{1+r-d}{u-d}\\), with \\(u=1.2\\), \\(d=0.9\\), \\(r=0.05\\).<br><b>L2.</b> So \\(p^*=\\dfrac{1.05-0.9}{0.3}=\\tfrac12\\).<br><b>L3.</b> Price \\(=e^{-0.05}\\cdot\\tfrac12\\cdot20\\approx9.51\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L1: \\(p^*=(1+r-d)/(u-d)\\) with continuous \\(r\\).<br><b>Why it fails:</b> The one-period growth factor for a continuously compounded rate is \\(e^{rT}\\), not \\(1+r\\). The two conventions mix, and \\(p^*\\) comes out 1/2 by coincidence.<br><b>Correct answer:</b> \\(p^*=\\dfrac{e^{0.05}-0.9}{0.3}\\approx0.5042\\); price \\(=e^{-0.05}\\cdot0.5042\\cdot20\\approx9.59\\).<br><b>Smell:</b> The risk-neutral probability must satisfy \\(p^*u+(1-p^*)d=\\)growth factor, with the same compounding as the discount factor.",
+  "tags": [
+   "s_replication",
+   "s_change_of_measure",
+   "binomial",
+   "fmt_debug",
+   "err_compounding"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "EUR/USD spot is \\(1.10\\) USD per EUR. Continuously compounded USD rate \\(5\\%\\), EUR rate \\(3\\%\\), one year. Find the 1-year forward in USD per EUR.<br><br><b>Proposed solution:</b><br><b>L1.</b> Covered interest parity holds, so the forward is set by the interest rate differential.<br><b>L2.</b> Covered interest parity: \\(F=S\\,e^{(r_{\\text{EUR}}-r_{\\text{USD}})T}\\).<br><b>L3.</b> So \\(F=1.10\\,e^{-0.02}\\approx1.078\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: \\(F=S\\,e^{(r_{\\text{EUR}}-r_{\\text{USD}})T}\\).<br><b>Why it fails:</b> The forward is \\(S\\,e^{(r_{\\text{quote}}-r_{\\text{base}})T}\\) with the quote currency USD: the currency with the higher rate trades at a forward discount, so the USD (higher rate) makes EUR trade at a premium.<br><b>Correct answer:</b> \\(F=1.10\\,e^{(0.05-0.03)}=1.10\\,e^{0.02}\\approx1.122\\).<br><b>Smell:</b> Carry: the higher-rate currency is at a forward discount. Check: if the USD rate rises, the forward USD per EUR must rise.",
+  "tags": [
+   "s_replication",
+   "fx_forward",
+   "fmt_debug",
+   "err_carry"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A two-sided test that a coin is fair gives \\(p=0.03\\). Someone says: 'there is a 97% chance the coin is biased.' Assess the statement.<br><br><b>Proposed solution:</b><br><b>L1.</b> A p-value of 0.03 means data this extreme occur on 3% of repetitions if the coin is fair.<br><b>L2.</b> The p-value is the probability that the null hypothesis is true, given the data.<br><b>L3.</b> Hence \\(P(H_0\\mid\\text{data})=0.03\\), so the coin is biased with probability 0.97.<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: the p-value as \\(P(H_0\\mid\\text{data})\\).<br><b>Why it fails:</b> The p-value is \\(P(\\text{data this extreme}\\mid H_0)\\). Swapping the conditional is the base-rate error again. \\(P(H_0\\mid\\text{data})\\) needs a prior and the likelihood under the alternative.<br><b>Correct answer:</b> The p-value alone does not determine \\(P(H_0\\mid\\text{data})\\). Example: with equal prior and likelihoods \\(0.03\\) under \\(H_0\\) and \\(0.3\\) under \\(H_1\\), \\(P(H_0\\mid\\text{data})=0.09\\).<br><b>Smell:</b> A p-value conditions on the null. Any statement 'the null is probably true' needs a prior and the alternative. Flip the conditional before reading a p-value as a posterior.",
+  "tags": [
+   "s_bayes",
+   "p_value",
+   "fmt_debug",
+   "err_pvalue"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A regression of \\(y\\) on 3 real predictors with \\(n=50\\) gives \\(R^2=0.40\\). A fourth variable, which is pure noise independent of \\(y\\), raises \\(R^2\\) to \\(0.415\\). Is the new variable informative?<br><br><b>Proposed solution:</b><br><b>L1.</b> Fitting the four-variable model gives a residual sum of squares no larger than the three-variable model's.<br><b>L2.</b> The increase \\(0.015>0\\) means the new variable carries information.<br><b>L3.</b> Hence the new variable should be kept in the model.<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: any increase in \\(R^2\\) means the new variable carries information.<br><b>Why it fails:</b> \\(R^2\\) rises mechanically with every added regressor: a noise variable adds about \\((1-R^2)/(n-k-1)\\) on average. The raw increase is what noise alone produces.<br><b>Correct answer:</b> F-test for the increment: \\(F=\\dfrac{0.015}{0.585/45}\\approx1.15\\), \\(p\\approx0.29\\). Not significant: no evidence of information.<br><b>Smell:</b> \\(R^2\\) is monotone in the regressors by construction. Judge an added variable with an F-test, adjusted \\(R^2\\), or out-of-sample error, never by the raw increase.",
+  "tags": [
+   "s_variance_decomposition",
+   "r_squared",
+   "fmt_debug",
+   "err_r2"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X_1,\\dots,X_5\\) are iid \\(N(\\mu,4)\\). The estimator \\(\\hat\\sigma^2=\\frac1n\\sum_i(X_i-\\bar X)^2\\) with \\(n=5\\). Find \\(E[\\hat\\sigma^2]\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> The estimator is the average squared deviation from the sample mean.<br><b>L2.</b> Dividing by \\(n\\) gives the unbiased estimator, which is the usual convention.<br><b>L3.</b> So \\(E[\\hat\\sigma^2]=4\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: dividing by \\(n\\) gives the unbiased estimator.<br><b>Why it fails:</b> Estimating the centre \\(\\bar X\\) uses up one degree of freedom: \\(E\\big[\\sum(X_i-\\bar X)^2\\big]=(n-1)\\sigma^2\\). The divisor must be \\(n-1\\).<br><b>Correct answer:</b> \\(E[\\hat\\sigma^2]=\\tfrac{n-1}{n}\\cdot4=3.2\\). The unbiased estimator divides by \\(n-1\\) and gives 4.<br><b>Smell:</b> Each estimated centre costs one degree of freedom. Sanity: at \\(n=1\\) the unbiased divisor is zero (undefined), which is why \\(1/n\\) is tempting but wrong.",
+  "tags": [
+   "s_variance_decomposition",
+   "unbiased_variance",
+   "fmt_debug",
+   "err_n_vs_n1"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "100 samples, 1000 pure-noise features, labels independent of features. Pick the 10 features most correlated with the label using all data, then estimate accuracy by 5-fold cross-validation on those 10 features. Report the accuracy.<br><br><b>Proposed solution:</b><br><b>L1.</b> Feature selection is part of model fitting, so using all data is fine as long as the classifier is cross-validated.<br><b>L2.</b> Cross-validated accuracy is an unbiased estimate of out-of-sample accuracy.<br><b>L3.</b> So the CV accuracy of about 0.8 is an honest measure of skill.<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L1: selecting features on all data is fine if the classifier is cross-validated.<br><b>Why it fails:</b> Selection used the labels of the held-out folds. The chosen features fit noise in the test folds, so the CV score is leaked. Any step that uses the labels must be inside the CV loop.<br><b>Correct answer:</b> With selection repeated inside each training fold, honest accuracy is about 0.50 (chance). The leaked pipeline gave about 0.82 in simulation.<br><b>Smell:</b> Any step that uses labels (feature selection, scaling with label statistics, tuning) belongs inside the CV loop. A suspiciously high score on pure noise is leakage.",
+  "tags": [
+   "s_information_design",
+   "leakage",
+   "fmt_debug",
+   "err_leakage"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "20 independent hypothesis tests, each at level \\(5\\%\\), all nulls true. Find the probability that at least one rejects.<br><br><b>Proposed solution:</b><br><b>L1.</b> Each test has a false-positive rate of 5%.<br><b>L2.</b> The tests are separate, so the overall false-positive rate is also 5%.<br><b>L3.</b> So the probability of at least one false rejection is \\(5\\%\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: the overall rate is 5% because the tests are separate.<br><b>Why it fails:</b> The family-wise error rate compounds across tests: \\(P(\\text{at least one})=1-(1-\\alpha)^m\\). Separate tests do not keep the error rate at \\(\\alpha\\) overall.<br><b>Correct answer:</b> \\(1-0.95^{20}\\approx0.642\\). Bonferroni: test each at \\(0.05/20=0.0025\\) to keep the family-wise rate at 5%.<br><b>Smell:</b> Whenever many tests are run, the chance of at least one false discovery grows as \\(1-(1-\\alpha)^m\\). Correct for the family, not for each test.",
+  "tags": [
+   "s_inclusion_exclusion",
+   "s_complement",
+   "multiple_testing",
+   "fmt_debug",
+   "err_multiple_testing"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Population \\(\\{1,\\dots,10\\}\\). Draw 5 without replacement and let \\(\\bar X\\) be the sample mean. Find \\(\\mathrm{Var}(\\bar X)\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> The population variance is \\(\\sigma^2=8.25\\) (divisor 10).<br><b>L2.</b> Sample means of \\(n\\) draws have variance \\(\\sigma^2/n\\).<br><b>L3.</b> So \\(\\mathrm{Var}(\\bar X)=8.25/5=1.65\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: sample means have variance \\(\\sigma^2/n\\).<br><b>Why it fails:</b> Draws without replacement are negatively correlated, so the finite-population correction \\(\\frac{N-n}{N-1}\\) applies. Sampling half the population removes half the variance.<br><b>Correct answer:</b> \\(\\mathrm{Var}(\\bar X)=\\dfrac{\\sigma^2}{n}\\cdot\\dfrac{N-n}{N-1}=\\dfrac{8.25}{5}\\cdot\\dfrac{5}{9}=\\tfrac{11}{12}\\approx0.917\\) (checked by enumerating all 252 subsets).<br><b>Smell:</b> Sanity: if \\(n=N\\) the mean is exact, so the variance must vanish. A formula that does not go to 0 when you sample everything has forgotten the correction.",
+  "tags": [
+   "s_symmetry",
+   "fpc",
+   "fmt_debug",
+   "err_fpc"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Each person's test score is skill plus independent noise, both \\(N(0,1)\\). Take the top 1% of this year's scores. Next year, their expected score is what?<br><br><b>Proposed solution:</b><br><b>L1.</b> The top 1% have observed scores around \\(3.77\\) on average.<br><b>L2.</b> A score is an estimate of skill, so a top scorer's skill is at the observed level: \\(E[\\text{skill}\\mid\\text{top}]\\approx3.77\\).<br><b>L3.</b> Hence their expected score next year is about \\(3.77\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: the skill of a top scorer equals the observed score level.<br><b>Why it fails:</b> The score contains noise, and the selected group has extreme noise too. \\(E[\\text{skill}\\mid X]=X/2\\), since \\(\\mathrm{Cov}(\\theta,X)/\\mathrm{Var}(X)=1/2\\). Selection on a noisy measure regresses the estimate towards the mean.<br><b>Correct answer:</b> \\(E[\\text{skill}\\mid\\text{top}]\\approx1.88\\), so next year's expected score is about \\(1.88\\), half the observed level (simulation agrees).<br><b>Smell:</b> When you select on a noisy measure, expect regression towards the mean by the reliability factor (here 1/2). Ask what fraction of the observed variance is signal.",
+  "tags": [
+   "s_bayes",
+   "regression_to_mean",
+   "fmt_debug",
+   "err_regression_to_mean"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Is \\(\\begin{pmatrix}1&0.9&0.9\\\\0.9&1&-0.9\\\\0.9&-0.9&1\\end{pmatrix}\\) a valid correlation matrix?<br><br><b>Proposed solution:</b><br><b>L1.</b> It is symmetric with unit diagonal.<br><b>L2.</b> All entries lie in \\([-1,1]\\).<br><b>L3.</b> Hence it is a valid correlation matrix.<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L3: entries in \\([-1,1]\\), symmetry and unit diagonal make it a valid correlation matrix.<br><b>Why it fails:</b> A correlation matrix must be positive semidefinite. Entries in \\([-1,1]\\) and a unit diagonal are necessary but not sufficient. The eigenvalues here are \\(1.9,1.9,-0.8\\).<br><b>Correct answer:</b> \\(\\det=-2.888<0\\), so it is not PSD. No random vector has these correlations: the pairwise correlations are mutually inconsistent.<br><b>Smell:</b> For three variables check \\(1+2\\rho_{12}\\rho_{13}\\rho_{23}-\\rho_{12}^2-\\rho_{13}^2-\\rho_{23}^2\\ge0\\). Entries in range do not imply PSD.",
+  "tags": [
+   "s_eigen",
+   "correlation_matrix",
+   "fmt_debug",
+   "err_psd"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Explicit finite differences for \\(u_t=u_{xx}\\), with \\(\\Delta x=0.1\\) and \\(\\Delta t=0.006\\). Is the scheme stable?<br><br><b>Proposed solution:</b><br><b>L1.</b> Let \\(r=\\Delta t/\\Delta x^2=0.6\\).<br><b>L2.</b> The explicit scheme is stable when \\(r<1\\), so \\(r=0.6\\) is fine.<br><b>L3.</b> So the scheme is stable.<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: explicit stability needs \\(r<1\\).<br><b>Why it fails:</b> The von Neumann amplification factor is \\(g=1-4r\\sin^2(k\\Delta x/2)\\). The worst mode, \\(k\\Delta x=\\pi\\), gives \\(g=1-4r\\). Stability needs \\(|g|\\le1\\), i.e. \\(r\\le1/2\\).<br><b>Correct answer:</b> \\(g=1-4(0.6)=-1.4\\), \\(|g|>1\\): unstable. Need \\(\\Delta t\\le\\Delta x^2/2=0.005\\).<br><b>Smell:</b> For the explicit heat equation the bound is \\(\\Delta t\\le\\Delta x^2/2\\), not \\(\\Delta x^2\\). Compute \\(1-4r\\) for the highest mode: if \\(|1-4r|>1\\), the scheme blows up.",
+  "tags": [
+   "s_recursion",
+   "explicit_scheme",
+   "fmt_debug",
+   "err_stability"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A Monte Carlo estimate of \\(p=1/2\\) uses \\(N=10^4\\) samples, with standard error \\(0.005\\). How many samples halve the standard error?<br><br><b>Proposed solution:</b><br><b>L1.</b> The Monte Carlo standard error is proportional to \\(1/N\\).<br><b>L2.</b> Doubling \\(N\\) to \\(2\\times10^4\\) halves the standard error, to \\(0.0025\\).<br><b>L3.</b> So doubling the samples is enough.<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L1: the standard error is proportional to \\(1/N\\).<br><b>Why it fails:</b> The standard error is \\(\\sqrt{p(1-p)/N}\\), proportional to \\(N^{-1/2}\\). Doubling \\(N\\) gives \\(0.00354\\), a factor \\(\\sqrt2\\).<br><b>Correct answer:</b> Halving the standard error needs \\(4\\times\\) the samples, \\(4\\times10^4\\).<br><b>Smell:</b> Monte Carlo error decays as \\(1/\\sqrt N\\): each extra digit of accuracy costs 100 times the samples, and quadrupling \\(N\\) halves the error.",
+  "tags": [
+   "s_clt_normal_approx",
+   "mc_error",
+   "fmt_debug",
+   "err_mc_scaling"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Generate standard normals \\(Z_1,Z_2\\) with correlation \\(\\rho=0.6\\) as \\(Z_2=\\rho Z_1+c\\,W\\), where \\(W\\sim N(0,1)\\) is independent of \\(Z_1\\). Find \\(c\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> Write \\(Z_2=\\rho Z_1+cW\\) and choose \\(c\\) so that \\(\\mathrm{Var}(Z_2)=1\\).<br><b>L2.</b> Take \\(c=\\sqrt{1-\\rho}\\), which gives \\(\\mathrm{Var}(Z_2)=\\rho^2+(1-\\rho)=1\\).<br><b>L3.</b> Then \\(\\mathrm{Cov}(Z_1,Z_2)=\\rho\\) as required.<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: \\(\\mathrm{Var}(Z_2)=\\rho^2+(1-\\rho)=1\\).<br><b>Why it fails:</b> The variance of the combination is \\(\\rho^2+c^2\\), so \\(c^2=1-\\rho^2\\) is needed (Cholesky). With \\(c^2=1-\\rho\\) the variance is \\(0.76\\), and the correlation is \\(0.6/\\sqrt{0.76}\\approx0.69\\).<br><b>Correct answer:</b> \\(c=\\sqrt{1-\\rho^2}=0.8\\): \\(\\mathrm{Var}(Z_2)=0.36+0.64=1\\) and \\(\\mathrm{Corr}=0.6\\).<br><b>Smell:</b> For a linear combination of independent normals, variances add with squared coefficients. Check \\(\\mathrm{Var}=1\\) and \\(\\mathrm{Cov}=\\rho\\) for every generator you write.",
+  "tags": [
+   "s_eigen",
+   "cholesky",
+   "fmt_debug",
+   "err_cholesky"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two-state chain with transition matrix (rows = from-state) \\(P=\\begin{pmatrix}0.9&0.1\\\\0.5&0.5\\end{pmatrix}\\). Find the stationary distribution \\(\\pi\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> Stationarity means \\(P\\pi=\\pi\\).<br><b>L2.</b> Equation one: \\(0.9\\pi_1+0.1\\pi_2=\\pi_1\\), so \\(\\pi_1=\\pi_2\\).<br><b>L3.</b> Hence \\(\\pi=(1/2,1/2)\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L1: stationarity means \\(P\\pi=\\pi\\).<br><b>Why it fails:</b> With row-stochastic \\(P\\), the stationary distribution satisfies \\(\\pi P=\\pi\\): it is a left eigenvector. Mass flows along rows, so the row-sums of \\(P\\) are the outflows.<br><b>Correct answer:</b> \\(\\pi P=\\pi\\): \\(0.9\\pi_1+0.5\\pi_2=\\pi_1\\), so \\(\\pi_1/\\pi_2=0.5/0.1=5\\), giving \\(\\pi=(5/6,1/6)\\).<br><b>Smell:</b> The sticky state (exit rate 0.1) holds the mass: \\(\\pi_1/\\pi_2=\\) (entry rate into 1)/(exit rate from 1). Check by computing \\((\\pi P)_j\\) for each \\(j\\).",
+  "tags": [
+   "s_markov_chain",
+   "s_eigen",
+   "stationary",
+   "fmt_debug",
+   "err_transpose"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ordinary least squares of \\(y\\) on \\(x\\) with an intercept, for the data \\((1,3),(2,5),(3,7)\\). Find the slope.<br><br><b>Proposed solution:</b><br><b>L1.</b> OLS slope is \\(\\beta=\\dfrac{\\sum x_iy_i}{\\sum x_i^2}\\).<br><b>L2.</b> \\(\\sum x_iy_i=34\\) and \\(\\sum x_i^2=14\\).<br><b>L3.</b> So \\(\\beta\\approx2.43\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L1: the slope is \\(\\sum x_iy_i/\\sum x_i^2\\).<br><b>Why it fails:</b> That is the regression through the origin (no intercept). With an intercept you centre first: \\(\\beta=\\sum(x-\\bar x)(y-\\bar y)/\\sum(x-\\bar x)^2\\).<br><b>Correct answer:</b> \\(\\bar x=2\\), \\(\\bar y=5\\): \\(\\beta=\\dfrac{4}{2}=2\\) and \\(a=\\bar y-2\\bar x=1\\). The data lie exactly on \\(y=2x+1\\).<br><b>Smell:</b> If the model has a constant, the design matrix needs a column of ones. Check: an exactly linear dataset must be reproduced exactly; a biased slope is the symptom of a missing intercept.",
+  "tags": [
+   "s_lagrange",
+   "intercept",
+   "fmt_debug",
+   "err_intercept"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Data \\(x=(10^9+1,\\,10^9+2,\\,10^9+3)\\) in float64. Compute the sample variance with divisor \\(n\\) using \\(\\frac1n\\sum x_i^2-\\bar x^2\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> Use the one-pass identity \\(\\mathrm{Var}=E[x^2]-E[x]^2\\).<br><b>L2.</b> Float64 carries about 16 significant digits, so both terms are accurate enough.<br><b>L3.</b> Result: \\(2/3\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: float64 gives \\(E[x^2]\\) and \\(E[x]^2\\) accurately enough to subtract.<br><b>Why it fails:</b> \\(E[x^2]\\approx10^{18}\\). The spacing of float64 numbers near \\(10^{18}\\) is 128, far larger than the variance \\(2/3\\). The subtraction is pure rounding noise.<br><b>Correct answer:</b> Centre first: \\(\\frac13\\sum(x_i-\\bar x)^2=\\tfrac23\\). Numerically the one-pass formula returns 0.<br><b>Smell:</b> A one-pass variance subtracts two nearly equal large numbers. If the mean is large relative to the spread, centre the data first (two-pass or Welford).",
+  "tags": [
+   "s_dimensional_analysis",
+   "cancellation",
+   "fmt_debug",
+   "err_cancellation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A bet pays decimal odds \\(3.00\\) (return of 3 per unit staked, stake included), with win probability \\(0.6\\). Find the full Kelly fraction.<br><br><b>Proposed solution:</b><br><b>L1.</b> Decimal odds of 3.00 return 3 per unit staked, stake included.<br><b>L2.</b> The net odds are \\(b=3\\), the decimal odds.<br><b>L3.</b> Kelly: \\(f^*=\\dfrac{bp-q}{b}=\\dfrac{3(0.6)-0.4}{3}\\approx0.467\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: \\(b=3\\), the decimal odds.<br><b>Why it fails:</b> Decimal odds \\(d\\) include the stake, so the net odds are \\(b=d-1=2\\). Kelly uses the net profit per unit staked.<br><b>Correct answer:</b> \\(f^*=\\dfrac{2(0.6)-0.4}{2}=0.4\\).<br><b>Smell:</b> Convert to net odds \\(b=d-1\\) before Kelly. Check: \\(f^*=0\\) at \\(p=1/d\\) (a fair bet); with \\(b=3\\) the zero would sit at \\(p=1/4\\), which is wrong.",
+  "tags": [
+   "s_kelly_log_utility",
+   "kelly",
+   "fmt_debug",
+   "err_kelly_odds"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Daily mean return is \\(0.04\\%\\), daily volatility \\(1\\%\\). Compute the annualised Sharpe ratio with 252 trading days.<br><br><b>Proposed solution:</b><br><b>L1.</b> Annual mean \\(=0.04\\%\\times252=10.08\\%\\).<br><b>L2.</b> Annual volatility \\(=1\\%\\times\\sqrt{365}\\approx19.1\\%\\), using calendar days.<br><b>L3.</b> Sharpe \\(=10.08/19.1\\approx0.53\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: annual volatility uses \\(\\sqrt{365}\\).<br><b>Why it fails:</b> Mean and volatility must use the same clock. Mean scales with \\(N\\), volatility with \\(\\sqrt N\\), with \\(N=252\\) throughout.<br><b>Correct answer:</b> \\(\\text{Sharpe}=\\dfrac{0.0004\\cdot252}{0.01\\sqrt{252}}=0.04\\sqrt{252}\\approx0.635\\).<br><b>Smell:</b> Annualise both on the same count \\(N\\). Sharpe scales with \\(\\sqrt N\\): the annual Sharpe equals the daily Sharpe times \\(\\sqrt{N}\\), so check that relation.",
+  "tags": [
+   "s_sqrt_time_scaling",
+   "annualise",
+   "fmt_debug",
+   "err_annualise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A market maker quotes \\(\\pm0.05\\) around mid (spread \\(0.10\\)). Each fill is from an informed trader with probability \\(0.6\\). An informed fill moves the mid by \\(0.10\\) against the maker. Uninformed fills cause no move. Find the expected PnL per fill.<br><br><b>Proposed solution:</b><br><b>L1.</b> The maker earns the half-spread on every fill: \\(+0.05\\).<br><b>L2.</b> Mid moves are symmetric and average out, so they do not matter.<br><b>L3.</b> Expected PnL per fill \\(=+0.05\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: mid moves average out, so they can be ignored.<br><b>Why it fails:</b> Fills are not random: informed traders hit the quote just before the price moves against the maker. The loss is conditional on being filled, not unconditional.<br><b>Correct answer:</b> \\(E[\\text{PnL}]=0.4(0.05)+0.6(0.05-0.10)=-0.01\\). Break-even informed share is \\(0.05/0.10=1/2\\).<br><b>Smell:</b> A maker's PnL is half-spread minus the adverse move conditional on being filled. Quote the break-even share of informed flow, and check whether the spread covers it.",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "s_information_design",
+   "market_making",
+   "fmt_debug",
+   "err_adverse_selection"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A rate of \\(1\\%\\) per month, compounded monthly. Find the effective annual rate.<br><br><b>Proposed solution:</b><br><b>L1.</b> The rate is 1% per month, so there are 12 monthly periods in a year.<br><b>L2.</b> The annual rate is \\(12\\times1\\%=12\\%\\).<br><b>L3.</b> So the effective annual rate is \\(12\\%\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: the annual rate is \\(12\\times1\\%\\).<br><b>Why it fails:</b> Monthly compounding adds interest on interest: \\((1.01)^{12}-1\\approx12.68\\%\\). The gap grows with rate and frequency.<br><b>Correct answer:</b> EAR \\(=(1.01)^{12}-1\\approx0.1268\\), i.e. 12.68%.<br><b>Smell:</b> Effective annual rate \\(=(1+r/m)^m-1\\), always above the nominal rate. Use the compounding factor, not the multiple.",
+  "tags": [
+   "s_taylor",
+   "effective_rate",
+   "fmt_debug",
+   "err_compounding"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Approximate the at-the-money call for \\(S=100\\), \\(\\sigma=20\\%\\), \\(T=3\\) months, zero rates. Use the quick ATM rule.<br><br><b>Proposed solution:</b><br><b>L1.</b> For an at-the-money option the premium depends on the volatility over the life of the option.<br><b>L2.</b> The ATM call is approximately \\(0.4\\,S\\sigma T\\).<br><b>L3.</b> \\(=0.4\\cdot100\\cdot0.2\\cdot0.25=2.0\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: the ATM price is approximately \\(0.4\\,S\\sigma T\\).<br><b>Why it fails:</b> Option value from volatility scales with \\(\\sigma\\sqrt T\\) (Brownian scaling), not with \\(T\\). Linear-in-time gives a premium too small by \\(\\sqrt T\\).<br><b>Correct answer:</b> \\(0.4\\cdot S\\sigma\\sqrt T=0.4\\cdot100\\cdot0.2\\cdot0.5=4.0\\). Exact Black-Scholes at zero rates gives about 3.99.<br><b>Smell:</b> ATM premium scales with \\(\\sqrt T\\): quartering the time halves the premium. A premium linear in \\(T\\) is wrong.",
+  "tags": [
+   "s_sqrt_time_scaling",
+   "s_taylor",
+   "atm_price",
+   "fmt_debug",
+   "err_scaling"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "100 equally likely coupons. Estimate the expected number of draws to collect all of them.<br><br><b>Proposed solution:</b><br><b>L1.</b> Waiting times add, so the expected total is \\(100\\sum_{k=1}^{100}\\frac1k\\).<br><b>L2.</b> Approximate the harmonic sum by \\(\\ln100\\approx4.6\\).<br><b>L3.</b> So \\(E\\approx100\\cdot4.6=460\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "back": "<b>Faulty line:</b> L2: \\(\\sum_{k=1}^{100}1/k\\approx\\ln100\\).<br><b>Why it fails:</b> \\(H_n=\\ln n+\\gamma+O(1/n)\\), with Euler's \\(\\gamma\\approx0.577\\), which is not negligible at this scale. Dropping it understates \\(H_{100}\\) by about 11%.<br><b>Correct answer:</b> \\(E=100H_{100}\\approx100\\cdot5.187=518.7\\).<br><b>Smell:</b> \\(H_n\\approx\\ln n+0.577\\), not \\(\\ln n\\). When a sum of \\(1/k\\) terms matters to 10%, the Euler constant does too.",
+  "tags": [
+   "s_fermi",
+   "coupon",
+   "fmt_debug",
+   "err_approximation"
+  ]
+ }
+]
