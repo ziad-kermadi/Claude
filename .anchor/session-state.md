@@ -1,6 +1,6 @@
 # Session state (auto-saved — last known reality)
 
-_Updated: 2026-10-19 19:45:12_  ·  branch: `claude/quant-deck-cpp-training-0rix4z`
+_Updated: 2026-10-19 19:45:20_  ·  branch: `claude/quant-deck-cpp-training-0rix4z`
 
 ## Uncommitted changes
 ```
@@ -15,6 +15,7 @@ Diff stat:
 
 ## Recent commits
 ```
+2f2df48 WIP: govies diagrams in progress
 40a46fe Fact-check fixes: govies top-up
 59914e7 WIP: govies verification in progress
 c1b6634 WIP: govies verification in progress
@@ -22,7 +23,6 @@ c1b6634 WIP: govies verification in progress
 36cc457 Attach 309 diagrams to cards; add govies top-up; rebuild deck
 b9ccb28 Add C++ modules 5-7 diagrams
 93c68c9 Add C++ modules 1-4 diagrams
-fcf37c3 WIP: diagrams in progress
 ```
 
 ## Resume
