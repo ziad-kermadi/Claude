@@ -1,0 +1,156 @@
+[
+ {
+  "file": "03_rates_options.json",
+  "index": 3,
+  "front_start": "Convert a 20% lognormal ATM vol on a 2% forward into an appr",
+  "image": "03_rates_options_3_atm_normal_vs_level.png",
+  "caption": "A 20% lognormal ATM vol is 40bp normal at a 2% forward and 80bp at 4%."
+ },
+ {
+  "file": "03_rates_options.json",
+  "index": 5,
+  "front_start": "A flat lognormal smile is quoted at a 2% forward. What does ",
+  "image": "03_rates_options_5_lognormal_to_normal_smile.png",
+  "caption": "A flat 20% lognormal smile maps to a normal smile that slopes up in strike (about 29bp at 1%, 40bp at 2%)."
+ },
+ {
+  "file": "03_rates_options.json",
+  "index": 8,
+  "front_start": "Give delta, gamma and vega of a normal-model call in closed ",
+  "image": "03_rates_options_8_normal_greeks_profile.png",
+  "caption": "Normal call delta, gamma and vega (K = 3%, 100bp, 1y) depend only on d."
+ },
+ {
+  "file": "03_rates_options.json",
+  "index": 14,
+  "front_start": "Write the payer swaption value using the annuity and a Black",
+  "image": "03_rates_options_14_payer_swaption_payoff.png",
+  "caption": "Payer swaption at expiry: intrinsic payoff vs full normal-model value, annuity 8.28, K = 3%."
+ },
+ {
+  "file": "03_rates_options.json",
+  "index": 17,
+  "front_start": "You buy a 1y x 5y ATM straddle, payer plus receiver. Describ",
+  "image": "03_rates_options_17_straddle_payoff.png",
+  "caption": "ATM straddle payoff at expiry per unit annuity: |S - K|, a V with a kink at the strike."
+ },
+ {
+  "file": "03_rates_options.json",
+  "index": 1,
+  "front_start": "Give the Bachelier call price for forward \\(F\\), strike \\(K\\",
+  "image": "03_rates_options_1_bachelier_negative_forward.png",
+  "caption": "Bachelier call stays defined for negative forwards, where Black-76 has no value."
+ },
+ {
+  "file": "03_rates_options.json",
+  "index": 22,
+  "front_start": "What is the SABR backbone, and how does \\(\\beta\\) control it",
+  "image": "03_rates_options_22_sabr_backbone.png",
+  "caption": "Backbone: ATM normal vol = alpha F^beta; beta sets how ATM vol moves with the rate."
+ },
+ {
+  "file": "03_rates_options.json",
+  "index": 27,
+  "front_start": "What do \\(\\rho\\) and \\(\\nu\\) control in the SABR smile, and ",
+  "image": "03_rates_options_27_sabr_rho_nu_effects.png",
+  "caption": "Leading-order beta=0 SABR: rho sets the skew, nu sets the curvature of the smile."
+ },
+ {
+  "file": "03_rates_options.json",
+  "index": 55,
+  "front_start": "A range accrual pays a daily coupon when the 10y swap rate l",
+  "image": "03_rates_options_55_range_accrual_prob.png",
+  "caption": "Range accrual 2% to 4% with forward 3% and sd 0.8%: about 79% in range at one date."
+ },
+ {
+  "file": "03_rates_options_deep.json",
+  "index": 0,
+  "front_start": "<b>[Chain: SABR_ARB 1/5]</b> Context: a normal SABR (\\(\\beta",
+  "image": "03_rates_options_deep_0_sabr_butterfly_test.png",
+  "caption": "Hagan SABR (beta=0, 10y): the butterfly and density turn negative in the low-strike wing."
+ },
+ {
+  "file": "03_rates_options_deep.json",
+  "index": 5,
+  "front_start": "<b>[Chain: BERM_SW 1/5]</b> Context: a 5y-tail payer Bermuda",
+  "image": "03_rates_options_deep_5_bermudan_exercise_region.png",
+  "caption": "One-factor Bermudan payer: exercise when the short rate is above a time-indexed threshold (schematic)."
+ },
+ {
+  "file": "03_rates_options_deep.json",
+  "index": 20,
+  "front_start": "<b>Case: delta-hedged long 6m\u00d75y ATM payer.</b> Notional 100",
+  "image": "03_rates_options_deep_20_gamma_pnl_vs_realised.png",
+  "caption": "Expected delta-hedged P&L = 0.5 * Gamma * T * (realised^2 - implied^2); about 38bp at 95bp realised."
+ },
+ {
+  "file": "03_rates_options_deep.json",
+  "index": 21,
+  "front_start": "<b>Case: caplet stripping from two flat caps.</b> Annual-res",
+  "image": "03_rates_options_deep_21_caplet_strip_bars.png",
+  "caption": "Caplet stripping: the 3y cap quote (58bp) cannot price caplet 2 directly; stripped caplet 2 is about 56.5bp."
+ },
+ {
+  "file": "03_rates_options_deep.json",
+  "index": 22,
+  "front_start": "<b>Case: bounding a Bermudan payer.</b> Strike 3.00%, exerci",
+  "image": "03_rates_options_deep_22_bermudan_bounds.png",
+  "caption": "Co-terminal vol slice and European values: the Bermudan lies between 156.8bp and 512.4bp."
+ },
+ {
+  "file": "03_rates_options_deep.json",
+  "index": 23,
+  "front_start": "<b>Case: vega bucketing.</b> A long 100mm 1y\u00d710y payer has 8",
+  "image": "03_rates_options_deep_23_vega_buckets.png",
+  "caption": "Vega bucketing: sell 165.6mm of 1y x 5y and 14.6mm of 2y x 5y to net both buckets to zero."
+ },
+ {
+  "file": "03_rates_options_deep.json",
+  "index": 24,
+  "front_start": "<b>Case: leading-order SABR normal vol.</b> \\(\\beta=0\\), \\(F",
+  "image": "03_rates_options_deep_24_sabr_beta0_smile.png",
+  "caption": "Beta=0 SABR smile (leading order and first-order T correction): 98 to 99bp at 2%, 90 to 91bp ATM."
+ },
+ {
+  "file": "03_rates_options__v3.json",
+  "index": 6,
+  "front_start": "<b>Derivation (smile skew).</b> Hagan's leading-order normal",
+  "image": "03_rates_options__v3_6_smile_skew_linear.png",
+  "caption": "Normal SABR skew at the money: vol falls 6bp per 100bp of strike (rho = -0.3, nu = 0.4)."
+ },
+ {
+  "file": "03_rates_options__v3.json",
+  "index": 7,
+  "front_start": "<b>Derivation (break-even move).</b> Use the Bachelier PDE \\",
+  "image": "03_rates_options__v3_7_breakeven_move_pnl.png",
+  "caption": "Delta-hedged straddle: daily gamma gain equals theta when the one-day move is sigma_N sqrt(dt), about 6.3bp."
+ },
+ {
+  "file": "03_rates_options__v3.json",
+  "index": 9,
+  "front_start": "<b>Derivation (capped CMS, no lag).</b> A CMS cap pays \\(\\mi",
+  "image": "03_rates_options__v3_9_capped_cms_identity.png",
+  "caption": "Capped CMS fixing min(S,k) equals S minus the payoff of a payer struck at k."
+ },
+ {
+  "file": "03_rates_options__v3.json",
+  "index": 12,
+  "front_start": "<b>Case study (Cheyette convexity term against horizon).</b>",
+  "image": "03_rates_options__v3_12_cheyette_convexity_horizon.png",
+  "caption": "Cheyette convexity term rises with horizon and saturates near 1.80% of price for a 5y bond."
+ },
+ {
+  "file": "03_rates_options__v3.json",
+  "index": 13,
+  "front_start": "<b>Case study (ATM straddle decomposition).</b> Long 1y\\(\\ti",
+  "image": "03_rates_options__v3_13_straddle_pnl_vs_move.png",
+  "caption": "100mm 1y x 10y ATM straddle: exact P&L vs forward move; the marked point adds a 3bp vol rise."
+ },
+ {
+  "file": "03_rates_options__v3.json",
+  "index": 15,
+  "front_start": "<b>Case study (capped CMS, flat vol against skew).</b> A 1y-",
+  "image": "03_rates_options__v3_15_capped_cms_skew.png",
+  "caption": "Capped CMS (strike 4%): a negative skew lowers the value of the payer the cap is short."
+ }
+]
