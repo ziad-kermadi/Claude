@@ -49,13 +49,14 @@ The deck is built so you can **regenerate** answers from a blank page. Recognisi
 **Error log.** Search `tag:err_*` to see your recurring error types. The **Smell** line on each debug card is a detector to run on your own live answers.
 
 ## Suggested settings
-- New cards per day: 25 (about 800 cards takes roughly 5 weeks to introduce). Maximum reviews: 300.
+- New cards per day: 25 (the 1,220 cards take about 7 weeks to introduce; use 35 a day if your interview is under 6 weeks away). Maximum reviews: 300.
 - Use FSRS with desired retention 0.90. Raise it to 0.95 in the final two weeks.
 - Leave "Bury related new cards" on so chain cards are spread across days.
 
 ## Tag cheat-sheet
 - `s_*`: structures (for example `s_reflection` or `s_linearity_expectation`).
-- `fmt_recognise`, `fmt_solve`, `fmt_perturb`, `fmt_twin`, `fmt_toolkit`, `fmt_chain`: card formats.
+- `fmt_recognise`, `fmt_solve`, `fmt_perturb`, `fmt_twin`, `fmt_toolkit`, `fmt_chain`, `fmt_rebuild`, `fmt_connect`, `fmt_debug`, `fmt_estimate`, `fmt_generate`, `fmt_code`: card formats.
+- `err_*`: error classes on debug cards.
 - Topic tags such as `dice`, `options`, `random_walk`, `mental_math`.
 
 To rebuild after editing cards: `pip install genanki && python3 build.py`.

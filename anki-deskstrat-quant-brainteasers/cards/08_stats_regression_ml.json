@@ -115,7 +115,7 @@
    "fmt_twin"
   ],
   "hints": [
-   "This is a continuous version of a well-known estimation problem for an unknown upper limit; which single statistic of the sample should the estimate be built on?",
+   "The delivery times are all positive and bounded by the unknown limit. Which single statistic of the sample carries the information about that limit?",
    "Scale the observed maximum by a factor that removes its expected downward bias for a sample of this size.",
    "Write \\(E[M]\\) for four i.i.d. draws on \\((0,T]\\) as a function of \\(T\\), and find the multiple of \\(M\\) whose expectation is \\(T\\)."
   ]
@@ -206,8 +206,8 @@
   ],
   "hints": [
    "A noisy measurement of a quantity drawn from a population with some spread: how should the observation be pulled toward the population centre when the two variances are comparable?",
-   "Use the normal-normal conjugate result: the best estimate is a weight times the observation, with the weight given by the prior's share of the total variance.",
-   "\\(\\hat\\mu=w\\,m\\) with \\(w=\\tau^2/(\\tau^2+s^2)\\); identify \\(\\tau^2\\) and \\(s^2\\) from the prompt."
+   "Structural feature: the observation is the quantity plus independent noise, and both are normal. The best guess weights the observation by how much of its total variance comes from the quantity.",
+   "Setup: write the best estimate as a linear function of \\(m\\) with a coefficient, and find that coefficient by requiring the error to be uncorrelated with the observation."
   ]
  },
  {
@@ -303,8 +303,8 @@
    "fmt_twin"
   ],
   "hints": [
-   "Each \\(R_i\\) is a ratio of two independent standard normals; which known distribution does this ratio belong to, and does a related card already cover averages of it?",
-   "Identify the law of a single ratio, then apply the characteristic-function argument used for averages of that law.",
+   "Each \\(R_i\\) divides one standard normal by another, independent one. What does the distribution of such a quotient look like in the tails, and does a finite mean exist?",
+   "Structural feature: the denominator can be arbitrarily close to zero, so the quotient has heavy tails. Check whether averaging \\(n\\) of them changes that, using a transform of the law.",
    "Write \\(P(R_i\\le r)=P(Z_{1}\\le rZ_{2})\\) and condition on \\(Z_2\\)."
   ]
  },
@@ -524,9 +524,9 @@
    "fmt_twin"
   ],
   "hints": [
-   "The top score of a hundred pure-chance children is the maximum of many standard normals; how does the chance that the maximum exceeds a level relate to each individual exceeding it?",
-   "Use the complement: the maximum stays below a level only if every individual does, so the tail of the maximum is one minus a power of the single-draw CDF.",
-   "\\(P(\\text{top}>c)=1-\\Phi(c)^{100}\\); the typical top score is the expected maximum of 100 standard normals."
+   "Each child's score is pure chance. What must be true of every child for the top score to stay below a level, and how does that combine across the children?",
+   "Structural feature: the scores are independent and identically distributed, so the top score stays below a level only if every single score does. Compare the chance for one child with the chance for all of them.",
+   "Setup: write the probability that the top score exceeds \\(c\\) in terms of one child's tail probability, then find the level at which that probability is one half."
   ]
  },
  {
@@ -865,9 +865,9 @@
    "fmt_twin"
   ],
   "hints": [
-   "All pairs share the same correlation, so the covariance matrix has a special structure; what is the variance of an equal-weight portfolio in terms of that common correlation?",
-   "Write the covariance matrix as a diagonal term plus a rank-one term built from the all-ones vector, then evaluate the quadratic form with equal weights.",
-   "\\(\\Sigma=(1-\\rho)I+\\rho\\,\\mathbf 1\\mathbf 1^\\top\\); compute \\(w^\\top\\Sigma w\\) for \\(w=\\mathbf 1/n\\)."
+   "Ask how the variance of a portfolio depends on the variances and on the pairwise covariances separately, and which of these terms grows with the number of managers.",
+   "Structural feature: the covariance terms outnumber the variance terms as managers are added. Count the variance terms and the covariance terms in the portfolio variance.",
+   "Setup: write the portfolio variance as a sum over all pairs of managers, with diagonal terms counted once and off-diagonal terms counted in full. Evaluate that sum for equal weights."
   ]
  },
  {
@@ -971,9 +971,9 @@
    "fmt_twin"
   ],
   "hints": [
-   "Treat each standardised variable as a unit vector; which geometric inequality constrains the angle between the outer two, given the other two angles?",
-   "Use the triangle inequality for angles: the angle between the outer two is at most the sum of the other two, then convert back to correlation with a cosine.",
-   "Let \\(\\theta_1=\\arccos(0.9)\\) be the angle Paris to Berlin and \\(\\theta_2\\) the angle Berlin to Rome; bound the Paris-to-Rome angle using \\(\\theta_1\\) and \\(\\theta_2\\)."
+   "Treat each standardised variable as a point on a sphere. Given two of the pairwise angles, what range can the third take?",
+   "Structural feature: moving from Paris to Rome can be done via Berlin, so the two-step path bounds the direct angle. Convert the bound on angles back to a correlation.",
+   "Setup: let each correlation be the cosine of an angle, and write the smallest possible Paris-to-Rome correlation as the cosine of the largest allowed angle between them."
   ]
  },
  {
@@ -989,7 +989,7 @@
   "hints": [
    "Each draw independently misses a particular item with the same probability; what is the chance that every draw misses it, and how does that behave as the number of draws grows?",
    "Treat each person's pick as independent with one fixed chance of missing seat 1; raise that chance to the number of people, then take the large-number limit.",
-   "\\(P(\\text{seat 1 never picked})=\\left(1-\\tfrac{1}{N}\\right)^{N}\\) with \\(N=100\\); compare with the standard exponential limit."
+   "Setup: write the probability as the product over people of their chance to miss seat 1, then evaluate for 100 people and consider the limit of that expression."
   ]
  },
  {

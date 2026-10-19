@@ -404,7 +404,7 @@
    "fmt_solve"
   ],
   "hints": [
-   "What is the density of the sum of two independent exponentials? Set up the probability as an integral of that density over \\([0,1]\\).",
+   "The sum of two independent waiting times has its own distribution. What does that distribution look like, and which region of the two variables corresponds to the event?",
    "Convolve the two densities to get the density of \\(S=X+Y\\), then integrate it from 0 to 1. The convolution is a one-dimensional integral over the split point.",
    "\\(f_S(s)=\\int_0^s e^{-x}\\,e^{-(s-x)}\\,dx\\) and \\(P(S\\le 1)=\\int_0^1 f_S(s)\\,ds\\)."
   ]

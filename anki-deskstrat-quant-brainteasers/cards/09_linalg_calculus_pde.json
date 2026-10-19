@@ -167,9 +167,9 @@
    "fmt_twin"
   ],
   "hints": [
-   "Place the three unit vectors as columns of a matrix \\(V\\). What matrix built from their pairwise inner products must be positive semidefinite, and what does that require of its eigenvalues?",
-   "The Gram matrix \\(G=V^\\top V\\) has ones on the diagonal and the given inner products off it. Find its eigenvalue on the all-ones direction, which is the same structure as an equicorrelated matrix.",
-   "Write \\(G\\) with the given entries as a 3 by 3 matrix and apply it to \\(\\mathbf 1\\) to read off the eigenvalue on that direction."
+   "Can three unit vectors be placed so that every pair has the same inner product? Which common values are compatible with that, and how would you test them all at once?",
+   "Structural feature: the pairwise inner products form a symmetric table with ones on the diagonal. Check how that table acts on the vector of all ones, and whether the result can be negative.",
+   "Setup: write the table of inner products as a 3-by-3 symmetric matrix and compute its quadratic form at the all-ones vector to test whether it can be valid."
   ]
  },
  {
@@ -359,9 +359,9 @@
    "fmt_twin"
   ],
   "hints": [
-   "Write \\(E[X^5]\\) as an integral against the Exp(1) density. Which family of integrals, a polynomial times \\(e^{-x}\\) on a half-line, does it belong to?",
-   "Integration by parts with \\(u=x^n\\) and \\(dv=e^{-x}dx\\) lowers the power by one each time. Track the constant that appears at each step.",
-   "Write \\(I_n=\\int_0^\\infty x^ne^{-x}dx\\), take \\(u=x^n\\), \\(dv=e^{-x}dx\\), and write the parts formula including the boundary term."
+   "Write \\(E[X^5]\\) as an integral against the density. What is the integrand's form, and over which range is it taken?",
+   "Structural feature: the density is a single exponential, so the moment of each power can be related to the moment of the next lower power. Find that relation from the density.",
+   "Setup: write \\(E[X^5]\\) as an integral of \\(x^5\\) against the density, and relate it to the same integral with power 4."
   ]
  },
  {
@@ -608,9 +608,9 @@
    "fmt_twin"
   ],
   "hints": [
-   "This update uses no division. Which equation \\(g(x)=0\\) has a Newton step that produces exactly this multiplication-only update?",
-   "Apply Newton's method to \\(f(x)=\\tfrac1x-a\\) and simplify, using \\(f'(x)=-1/x^2\\).",
-   "Write \\(x_{k+1}=x_k-\\dfrac{1/x_k-a}{-1/x_k^2}\\) and simplify the fraction."
+   "The update uses only products and no division. Look for a function whose zero is \\(1/a\\), and ask which iterative step based on its slope gives a formula with only products.",
+   "Structural feature: the fixed point of the update is where a certain function vanishes, and the step uses that function's slope. Find the function whose zero is \\(1/a\\), and write its slope.",
+   "Setup: write the update as the current value minus the function divided by its slope, evaluated at the current value, and simplify the fraction."
   ]
  },
  {
@@ -1001,9 +1001,9 @@
    "fmt_twin"
   ],
   "hints": [
-   "Returning to the start after an even number of \\(\\pm1\\) steps requires a specific count of each direction. How many of each, and how does that count relate to a binomial distribution?",
-   "Map each step to a fair coin flip. Ending at zero means the heads count is half the number of steps, so use the central binomial probability and its large-\\(n\\) size.",
-   "Write \\(P(S_{100}=0)=\\binom{100}{k}2^{-100}\\) and identify \\(k\\)."
+   "What must be true of the number of up-steps for the walk to end where it started, and how likely is that count among 100 independent steps?",
+   "Structural feature: each step is an independent fair choice, so the endpoint is determined by the number of up-steps. Ask which count of up-steps puts the endpoint back at the start, and what its chance is.",
+   "Setup: each specific sequence of 100 steps has probability \\(2^{-100}\\). Count how many sequences end at zero, then multiply."
   ]
  },
  {

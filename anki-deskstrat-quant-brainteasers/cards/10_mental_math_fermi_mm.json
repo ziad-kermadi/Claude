@@ -450,9 +450,9 @@
    "fmt_twin"
   ],
   "hints": [
-   "What is the expected value of the largest of many independent draws from a bell curve, and how does it grow with the number of draws?",
-   "This is the expected maximum of N i.i.d. standard normals. Work with the distribution of the maximum rather than a rule of thumb.",
-   "\\(P(\\max\\le x)=\\Phi(x)^{1000}\\). Then \\(E[\\max]=\\int_0^\\infty\\bigl(1-\\Phi(x)^{1000}\\bigr)\\,dx-\\int_{-\\infty}^0\\Phi(x)^{1000}\\,dx\\)."
+   "A manager runs many funds with independent results, each with the same chance of beating any level. How does the chance that the best one beats a level compare with a single fund's chance?",
+   "Structural feature: the best fund stays below a level only if every fund does, so the chance for the group is a power of one fund's chance. Use that to build the distribution of the best result.",
+   "Setup: write the expected best alpha as an integral of the chance that it exceeds a level, then evaluate it numerically in standard-deviation units."
   ]
  },
  {
@@ -628,9 +628,9 @@
    "fmt_twin"
   ],
   "hints": [
-   "Among several noisy estimates, which one are you most likely to pay for, and what does that imply about its error?",
-   "The highest estimate is the maximum of five i.i.d. standard normals, so the overpayment is the expected maximum.",
-   "The density of the maximum of five i.i.d. standard normals is \\(5\\varphi(x)\\Phi(x)^4\\). Write \\(E[\\max]=\\int x\\,5\\varphi(x)\\Phi(x)^4\\,dx\\)."
+   "Five noisy estimates are compared and you act on the highest. Given that you act on the highest, what can you say about how much of that estimate is noise?",
+   "Structural feature: the five noise terms are independent and identically distributed, and the choice selects the largest estimate. Compare the average value of the selected estimate with the true value.",
+   "Setup: write the chance that the largest estimate is below a level as a power of one estimate's chance, differentiate to get the density, then take the expectation of the error."
   ]
  },
  {
@@ -1068,7 +1068,7 @@
   ],
   "hints": [
    "Taking logs of the bankroll, what does its path look like as a sum over rounds?",
-   "Classic: the median of a multiplicative bankroll is maximised by maximising expected log growth per round.",
+   "Structural feature: the median of a product of independent factors is governed by the typical growth of its logarithm. Ask which \\(f\\) makes the average log factor largest.",
    "\\(\\ln W_n=\\sum_{i=1}^{n}\\ln(1+fX_i)\\) with \\(X_i=\\pm1\\). Write the expected value of one term."
   ]
  },
@@ -1084,8 +1084,8 @@
   ],
   "hints": [
    "For a fair walk between two barriers, is the chance of hitting one barrier first a simple function of the starting point?",
-   "Gambler's ruin: the walk is a martingale, so the hitting probability is linear in the starting position between the barriers.",
-   "Let \\(h(x)=a+bx\\), with \\(h(-1)=0\\) and \\(h(3)=1\\). Solve for \\(a\\) and \\(b\\), then evaluate at \\(x=0\\)."
+   "Structural feature: a fair walk has no drift, so its position's average stays fixed. Use that fact at the moment the walk stops.",
+   "Setup: let \\(h(x)\\) be the chance of hitting the upper barrier first from \\(x\\), and write its two boundary values at the barriers."
   ]
  },
  {

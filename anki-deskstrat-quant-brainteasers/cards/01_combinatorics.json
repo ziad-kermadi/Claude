@@ -438,7 +438,7 @@
    "obstacles"
   ],
   "hints": [
-   "Which paths are the bad ones? Split all the paths by whether they pass through the obstacle point.",
+   "Which paths are the bad ones? What property of a path decides whether it is bad, and how many paths share that property?",
    "Names the move: complement. Count paths through the obstacle by splitting at it into two legs and multiplying.",
    "Setup: \\( \\#\\text{total}=\\binom{10}{5}\\), and \\(\\#\\text{through obstacle}=\\binom{a}{b}\\binom{c}{d}\\) with the step counts of the two legs filled in."
   ]

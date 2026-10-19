@@ -606,7 +606,7 @@
   "hints": [
    "Under \\(Q\\), what is the law of \\(\\ln S_T\\), and does a function of it have an explicit expectation?",
    "\\(\\ln S_T\\) is Gaussian under \\(Q\\), so its expectation is the mean of that Gaussian, discounted.",
-   "\\(E^Q[\\ln S_T]=\\ln S_0+(r-\\tfrac12\\sigma^2)T\\); the price is \\(e^{-rT}\\) times this expectation."
+   "Setup: write the price as \\(e^{-rT}\\) times the risk-neutral expectation of \\(\\ln S_T\\), and find that Gaussian's mean from the drift of \\(\\ln S\\) under \\(Q\\)."
   ]
  },
  {
@@ -956,9 +956,9 @@
    "fmt_twin"
   ],
   "hints": [
-   "For a fair walk between two barriers, is there a martingale quadratic in \\(W\\) whose expectation gives the stopping time?",
-   "Use optional stopping on \\(W_t^2-t\\) at the exit time.",
-   "\\(E[\\tau]=E[W_\\tau^2]\\) with \\(W_\\tau\\in\\{3,-1\\}\\); find the exit probabilities from \\(E[W_\\tau]=0\\) first."
+   "Is there a function of the position and the elapsed time whose average stays fixed as the path runs, and which becomes computable at the exit?",
+   "Structural feature: the square of a fair path drifts up at a steady rate per unit time. Relate its average at the exit time to the average elapsed time.",
+   "Setup: find the exit probabilities from the average position at exit, then write the average of the squared position at exit in terms of them."
   ]
  },
  {
@@ -972,9 +972,9 @@
    "fmt_twin"
   ],
   "hints": [
-   "The question concerns the maximum over a time window. What symmetry handles the running maximum of a driftless path?",
-   "Apply the reflection principle at the level \\(+2\\) over the window \\([0,4]\\).",
-   "Write the reflection identity \\(P(M_4\\ge 2)=2\\,P(W_4\\ge 2)\\), then standardise \\(W_4\\) by its time-4 standard deviation."
+   "The event concerns the highest value reached over the window, not the value at the end. How could the path's behaviour after its first arrival at the level be related to its endpoint?",
+   "Structural feature: the paths that reach the level and end below it can be matched with paths that end above it. Count the probability of those matched paths at the window's end.",
+   "Setup: relate \\(P(M_4\\ge 2)\\) to a single tail probability of \\(W_4\\) through the matched paths, then standardise \\(W_4\\) by its time-4 standard deviation."
   ]
  },
  {
@@ -988,9 +988,9 @@
    "fmt_twin"
   ],
   "hints": [
-   "A path that starts and ends at zero is a bridge. What known law describes the tail of its maximum?",
-   "Use the Brownian-bridge maximum tail, which has a Gaussian-type exponent in the threshold.",
-   "Write \\(P(\\max_{t\\le1}B_t\\ge a)=\\exp(-c\\,a^2)\\) and determine \\(c\\) from the reflection argument for the bridge; then set \\(a\\) to the threshold in the question."
+   "A path that starts and ends at the same level has a constraint on its endpoint. How does that constraint change the chance the path rises far above its start?",
+   "Structural feature: the endpoint constraint makes far excursions much rarer than for a free path. Ask how the exponent in the tail must scale with the threshold.",
+   "Setup: the tail is a function of \\(a\\) alone, of the form \\(\\exp(-c\\,a^2)\\); find \\(c\\) and then set \\(a\\) to the threshold in the question."
   ]
  },
  {
@@ -1004,9 +1004,9 @@
    "fmt_twin"
   ],
   "hints": [
-   "What is the payoff of a long call and a short put at expiry, and what does it look like as a forward?",
-   "Put-call parity with continuous yields: the combination equals a forward on the stock.",
-   "\\(C-P=Se^{-qT}-Ke^{-rT}\\); substitute \\(S=100\\), \\(K=105\\), \\(T=\\tfrac12\\), \\(q\\) and \\(r\\) from the statement."
+   "Compare the payoff of the combination at expiry with the payoff of holding the stock with a loan. What does the position look like at every stock price?",
+   "Structural feature: the combination's payoff is linear in the stock price with slope one. Price a linear payoff by the stock and the discounted strike.",
+   "Setup: write the value as the present value of the expiry payoff, and express the stock part with the dividend discount and the strike part with the rate discount."
   ]
  },
  {
@@ -1021,8 +1021,8 @@
   ],
   "hints": [
    "Is this a sum of independent increments with deterministic weights? How does the variance of a weighted sum of independent terms behave?",
-   "Use the Ito isometry for a deterministic integrand, in its discrete form, where the variance adds the squared weights.",
-   "\\(\\mathrm{Var}=\\sum_i f_i^2\\,\\mathrm{Var}(\\Delta W_i)\\) with \\(f_i=i\\) and \\(\\mathrm{Var}(\\Delta W_i)=0.01\\); evaluate the sum of squares of the weights."
+   "Structural feature: independent increments with fixed weights, so the variance of the total is a sum of weight-squared times increment variance.",
+   "Setup: write the total as a weighted sum of the daily noises and expand its variance term by term, using independence."
   ]
  },
  {
@@ -1036,9 +1036,9 @@
    "fmt_twin"
   ],
   "hints": [
-   "Which parity identity lets you collapse the max of a call and a put at the choice date?",
-   "Put-call parity at \\(t=\\tfrac12\\): the chooser equals a call plus a put with a discounted strike that expires at \\(t\\).",
-   "Value \\(=C_0(100,1)+P_0\\big(100\\,e^{-r/2},\\tfrac12\\big)\\); evaluate both with Black-Scholes."
+   "At the choice date the holder keeps the more valuable of two positions. Can those two positions be rearranged into a combination that has a simpler form?",
+   "Structural feature: the choice depends only on the stock price at the choice date, so compare the two values at that point, and express the difference through the stock and a discounted strike.",
+   "Setup: the value today is a discounted expectation of the larger of two values at the choice date. Write that maximum as a sum of two simpler option payoffs, then price each."
   ]
  },
  {
@@ -1052,9 +1052,9 @@
    "fmt_twin"
   ],
   "hints": [
-   "Which derivative of the call price in strike picks out the density at that strike?",
-   "Breeden-Litzenberger: take the second strike derivative of the discounted call price.",
-   "\\(\\partial_K C\\) involves \\(-e^{-rT}\\,\\mathbb P(S_T>K)\\); differentiate once more to isolate the density term \\(e^{-rT}f(K)\\)."
+   "Each call price is a weighted average of payoffs, one per terminal level. Which operation on the price function isolates the weight at a single level?",
+   "Structural feature: differentiate the price in the strike once to get a tail probability, then ask what a further derivative gives.",
+   "Setup: write the first strike derivative of the discounted price as a probability, and the second derivative as a density at the strike, keeping the discount factor."
   ]
  },
  {
@@ -1068,9 +1068,9 @@
    "fmt_twin"
   ],
   "hints": [
-   "Under which measure is \\(1/S\\) a martingale? Does the forward argument still work for an inverse price?",
-   "Change numeraire to the stock: the cash price is not \\(1/S_0\\) discounted, because \\(E[1/S_T]\\neq 1/E[S_T]\\).",
-   "Price \\(=e^{-rT}E^Q[1/S_T]\\); write the density \\(dQ^S/dQ=S_T/(S_0e^{rT})\\) and use it to relate the two expectations."
+   "Does the usual forward-price argument apply directly to a payoff that is an inverse of the stock price?",
+   "Structural feature: the inverse payoff is a ratio, so expectations of the inverse and of the stock do not swap. Weight the scenarios by the stock's own value to compare.",
+   "Setup: write the price as a discounted expectation under the risk-neutral measure, and express that expectation as an integral against the stock-weighted density."
   ]
  },
  {
