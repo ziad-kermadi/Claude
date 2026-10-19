@@ -41,3 +41,5 @@ Web search returned secondary sources for most items. Where a primary text could
 - 12_structured_exotics 44 (Formosa rules): removed, not searched.
 - 01_govies 30 (SA-CCR in the leverage ratio): removed, not confirmed.
 - 07_converts_loans 28: factors Ba1 940 and Caa3 8,070 rest on one secondary source each. Moody's CLO methodology table should be checked before quoting exact WARF numbers.
+
+**Ho–Lee convexity (resolved by orchestrator):** ½σ²T1T2 (Hull) is correct for continuously compounded rates; σ²T1(T2−T1/2) is correct for the simple rate futures settle on. Difference = ½σ²T1τ. Cards 02_swaps_curves_deep #15 and #23 now state both.

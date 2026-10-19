@@ -1,0 +1,299 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: AAD tape 1/3]</b> A Monte Carlo pricer depends on \\(n=40\\) model inputs (curve pillars, vols, correlations) and returns one scalar price. Forward-mode AD needs one pass per input. Why does reverse-mode AD (the adjoint method) return all \\(n\\) sensitivities at a cost that does not grow with \\(n\\), and what must the forward pass record to make that possible?",
+  "back": "<b>Headline.</b> Forward mode pushes one input direction through the code, so \\(n\\) inputs cost about \\(n\\) passes. Reverse mode seeds the single output with \\(\\bar f=1\\) and pushes adjoints backwards through the code, producing \\(\\partial f/\\partial x_i\\) for every input in one sweep. Cost is a small constant multiple of one valuation, not \\(n\\) times.<br>\n<b>What the forward pass records (the tape).</b> Each elementary operation \\(v_k=\\varphi(v_i,v_j)\\) appends a node holding its parent indices and its local partials. For \\(v_k=v_iv_j\\): \\(\\partial v_k/\\partial v_i=v_j\\) and \\(\\partial v_k/\\partial v_j=v_i\\). The reverse sweep walks the tape backwards and, for each node, does \\(\\bar v_p \\mathrel{+}= \\bar v_k\\,\\partial v_k/\\partial v_p\\) for every parent \\(p\\).<br>\n<b>Interviewer follow-up:</b> Why must the tape store values and not only operation codes? The partials depend on the operands (\\(\\partial(v_iv_j)/\\partial v_i=v_j\\)), so the forward values are needed during the sweep, either stored or recomputed.",
+  "tags": [
+   "aad",
+   "reverse_mode",
+   "chain_aad_tape",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: AAD tape 2/3]</b> Recap: \\(f(x,y)=xy+e^{x}\\) at \\((x,y)=(2,3)\\), recorded as \\(v_1=x\\), \\(v_2=y\\), \\(v_3=v_1v_2\\), \\(v_4=e^{v_1}\\), \\(v_5=v_3+v_4\\). Run the reverse sweep by hand to get \\(\\bar v_1=\\partial f/\\partial x\\) and \\(\\bar v_2=\\partial f/\\partial y\\). Why does \\(\\bar v_1\\) collect two contributions?",
+  "back": "Forward values: \\(v_3=6\\), \\(v_4=7.389056\\), \\(v_5=13.389056\\). Reverse sweep with \\(\\bar v_5=1\\):<br>\n\\(\\bar v_3=\\bar v_5\\cdot 1=1\\) and \\(\\bar v_4=\\bar v_5\\cdot 1=1\\).<br>\n\\(\\bar v_1\\mathrel{+}=\\bar v_3\\,v_2=3\\) (from the product node) and \\(\\bar v_1\\mathrel{+}=\\bar v_4\\,e^{v_1}=7.389056\\) (from the exponential node), so \\(\\bar v_1=10.389056\\).<br>\n\\(\\bar v_2=\\bar v_3\\,v_1=2\\).<br>\nCheck against the closed form: \\(\\partial f/\\partial x=y+e^x=10.389056\\), \\(\\partial f/\\partial y=x=2\\).<br>\n<b>Interview trap:</b> an implementation that writes \\(\\bar v_1=\\dots\\) instead of \\(\\bar v_1\\mathrel{+}=\\dots\\) keeps only the last path's contribution, so the Greek is wrong by exactly the missing term (3 or 7.389 here). Any input used on several paths gets the sum of their contributions, which is the reason adjoints accumulate.",
+  "tags": [
+   "aad",
+   "reverse_mode",
+   "chain_aad_tape",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: AAD tape 3/3]</b> Recap: a path loop with \\(N=10^7\\) time steps records a tape that grows linearly in \\(N\\), too large to hold. Checkpointing stores the state at \\(k\\) segment boundaries, then replays each segment forward from its checkpoint just before its reverse sweep. With uniform segments of \\(m=N/k\\) steps, what memory and work does this cost, and which \\(k\\) minimises memory?",
+  "back": "<b>Memory.</b> \\(k\\) stored states plus one replayed segment of tape, so \\(M(k)\\approx k+N/k\\) step-units. Setting \\(\\frac{d}{dk}\\big(k+N/k\\big)=1-N/k^2=0\\) gives \\(k^*=\\sqrt N\\). For \\(N=10^7\\): \\(k^*\\approx 3162\\) checkpoints and segments of about 3163 steps, so about \\(6.3\\times10^3\\) units instead of \\(10^7\\), a reduction of roughly 1600x.<br>\n<b>Work.</b> The forward pass runs once to place checkpoints, then each segment runs forward once more during the reverse sweep. Forward work is therefore roughly doubled; the reverse sweep itself is unchanged.<br>\n<b>Where it breaks:</b> the replay must reproduce the original path. If a segment is replayed with fresh random numbers, the adjoints are computed on a different trajectory and the Greeks are wrong. Use a counter-based RNG (for example one seed per path and time-step index) so each replay regenerates identical draws. Binomial (Griewank-type) schedules do better when the memory budget is fixed in advance.<br>\n<b>Interviewer follow-up:</b> Why is the \\(\\sqrt N\\) rule not the end of the story for very long simulations? Nested checkpointing or binomial schedules reduce memory further at a modest recomputation cost.",
+  "tags": [
+   "aad",
+   "checkpointing",
+   "chain_aad_tape",
+   "derivation",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Pathwise AAD is run on a Monte Carlo pricer of a digital call paying \\(\\mathbf 1\\{S_T\\gt K\\}\\). What does the adjoint return for delta, why is it wrong even though AAD is exact for the code it sees, and what are two standard fixes?",
+  "back": "<b>Headline.</b> The adjoint is zero on every path. The payoff is locally constant away from \\(S_T=K\\), so its pathwise derivative is 0 almost everywhere, while the true derivative of the expectation is a density-type term at the strike. AAD differentiates the code, not the mathematics: a discontinuity in the code has zero derivative on the tape.<br>\n<b>Fix 1, likelihood ratio (score) method.</b> \\(\\partial_{\\theta}\\mathbb E[g(S_T)]=\\mathbb E[g(S_T)\\,\\partial_\\theta\\log p_\\theta(S_T)]\\). It uses the density instead of the path derivative and is unbiased for digitals. Cost: higher variance, and it needs the transition density.<br>\n<b>Fix 2, smoothing.</b> Replace the indicator by a smooth approximation of width \\(\\varepsilon\\) (for example a logistic function). The bias is of order \\(\\varepsilon\\) and can be controlled, and the tape differentiates the smoothed payoff. Conditional-expectation (Malliavin-type) weights are a third route.<br>\n<b>Interviewer follow-up:</b> Why not bump? A bump on an indicator produces a jump divided by the bump size. With common random numbers the estimate is noisy and biased until the bump is small relative to the spacing of the simulated \\(S_T\\) values.",
+  "tags": [
+   "aad",
+   "monte_carlo",
+   "discontinuity",
+   "interview_trap",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Case study, tape memory. A single global tape for \\(10^5\\) paths, 250 steps, about 10 nodes per step and 32 bytes per node needs {{c1::8.0 GB}} (about 7.45 GiB). Reusing one tape per path, reset after each path's reverse sweep, needs only {{c2::80 KB}} per path and accumulates the sensitivities across paths. Why do both give the same Greeks, and why is the per-path version the one you run?",
+  "back": "Arithmetic: \\(10^5\\times250\\times10\\times32\\) bytes \\(=8\\times10^9\\) bytes. Per path: \\(250\\times10\\times32=80{,}000\\) bytes.<br>\nSame Greeks because the price is an average of path payoffs, so \\(\\partial P/\\partial\\theta=\\frac1{N_p}\\sum_i \\partial P_i/\\partial\\theta\\), and each path's reverse sweep is independent once its random draws are available. The per-path tape fits in L2 cache, so the sweep is much faster. The 32 bytes per node is an assumption; real tapes vary.<br>\n<b>Interviewer follow-up:</b> Where do the random draws come from during the reverse sweep? Either store them (memory grows with paths) or regenerate them with a counter-based RNG.",
+  "tags": [
+   "aad",
+   "memory",
+   "case_study",
+   "monte_carlo",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Read this minimal reverse-mode tape. What does <code>main</code> print, and what does the line <code>adj[n.p1] += adj[i] * n.d1;</code> do that a plain assignment would not?<br><pre><code>#include &lt;cmath&gt;\n#include &lt;cstdio&gt;\n#include &lt;vector&gt;\n\n// Global tape: each node stores its parents and local partial derivatives.\nstruct Tape {\n    struct Node { int p1, p2; double d1, d2; };  // parent index or -1\n    std::vector&lt;double&gt; val;\n    std::vector&lt;Node&gt; node;\n};\nstatic Tape T;\n\nstruct Var { int id; };\n\nVar leaf(double x) {\n    T.val.push_back(x);\n    T.node.push_back({-1, -1, 0.0, 0.0});\n    return {static_cast&lt;int&gt;(T.val.size()) - 1};\n}\n\nVar make(double v, int p1, double d1, int p2, double d2) {\n    T.val.push_back(v);\n    T.node.push_back({p1, p2, d1, d2});\n    return {static_cast&lt;int&gt;(T.val.size()) - 1};\n}\n\ndouble value(Var a) { return T.val[a.id]; }\n\nVar operator*(Var a, Var b) {\n    return make(value(a) * value(b), a.id, value(b), b.id, value(a));\n}\nVar operator+(Var a, Var b) { return make(value(a) + value(b), a.id, 1.0, b.id, 1.0); }\nVar vexp(Var a) {\n    double e = std::exp(value(a));\n    return make(e, a.id, e, -1, 0.0);\n}\n\n// Reverse sweep: nodes were appended in topological order, so walk backwards.\nstd::vector&lt;double&gt; reverse_sweep(Var out) {\n    std::vector&lt;double&gt; adj(T.val.size(), 0.0);\n    adj[out.id] = 1.0;\n    for (int i = static_cast&lt;int&gt;(T.val.size()) - 1; i &gt;= 0; --i) {\n        const Tape::Node&amp; n = T.node[i];\n        if (n.p1 &gt;= 0) adj[n.p1] += adj[i] * n.d1;  // += accumulates shared inputs\n        if (n.p2 &gt;= 0) adj[n.p2] += adj[i] * n.d2;\n    }\n    return adj;\n}\n\nint main() {\n    Var x = leaf(2.0);\n    Var y = leaf(3.0);\n    Var f = x * y + vexp(x);  // f = x*y + exp(x), x used twice\n    std::vector&lt;double&gt; adj = reverse_sweep(f);\n    std::printf(\"f      = %.6f\\n\", value(f));\n    std::printf(\"df/dx  = %.6f\\n\", adj[x.id]);\n    std::printf(\"df/dy  = %.6f\\n\", adj[y.id]);\n    std::printf(\"tape nodes = %zu\\n\", T.val.size());\n    return 0;\n}\n</code></pre>",
+  "back": "Compiled with <code>g++ -std=c++20 -Wall -Wextra -O2</code>, no warnings. Output:<br><pre><code>f      = 13.389056\ndf/dx  = 10.389056\ndf/dy  = 2.000000\ntape nodes = 5</code></pre>\nThe <code>+=</code> accumulates the adjoint of <code>x</code> from both uses (the product node and the exp node), giving \\(3+7.389056\\). A plain assignment would give 7.389056 for <code>df/dx</code>.<br>\n<b>Interview traps.</b> (1) The tape is global, so it must be cleared between evaluations (<code>T.val.clear(); T.node.clear();</code>), otherwise a second pricing call appends to the old tape. (2) Nodes are referenced by index, not by a <code>Node&amp;</code> held across <code>push_back</code>, because the vector can reallocate and invalidate the reference. (3) The sweep is a single backward loop, so its cost is linear in the number of nodes.",
+  "tags": [
+   "aad",
+   "cpp",
+   "coding",
+   "reverse_mode",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Case study, PCA factor DV01. A stylised 4-tenor book has key-rate DV01s \\(p=(+40\\,000,\\;-60\\,000,\\;+30\\,000,\\;-20\\,000)\\) £ per bp at 2y, 5y, 10y and 30y. Take orthonormal stylised eigenvectors: level \\(v_1=\\tfrac12(1,1,1,1)\\), slope \\(v_2=(-3,-1,1,3)/\\sqrt{20}\\), curvature \\(v_3=\\tfrac12(1,-1,-1,1)\\), twist \\(v_4=(1,-3,3,-1)/\\sqrt{20}\\). Compute the factor DV01s \\(g_k=v_k^\\top p\\), find the 2y and 10y swap DV01s that remove level and slope exposure, and state what remains.",
+  "back": "P&amp;L \\(=-\\sum_j p_j\\Delta y_j\\) with \\(\\Delta y=V\\,\\delta f\\), so P&amp;L \\(=-g^\\top\\delta f\\) with \\(g=V^\\top p\\).<br>\nFactor DV01s (£ per bp per unit factor): \\(g_1=-5{,}000\\), \\(g_2\\approx-20{,}125\\), \\(g_3=+25{,}000\\), \\(g_4\\approx+73{,}790\\).<br>\nHedge: \\(h_{2y}=-20{,}000\\) and \\(h_{10y}=+30{,}000\\) solve \\(v_1^\\top(p+h)=v_2^\\top(p+h)=0\\).<br>\nHedged DV01 vector: \\((20{,}000,\\,-60{,}000,\\,60{,}000,\\,-20{,}000)=20{,}000\\,(1,-3,3,-1)\\). Level, slope and curvature are all zero, and what remains is pure twist with factor DV01 \\(20{,}000\\sqrt{20}\\approx 89{,}443\\).<br>\nSanity check: the rotation preserves norm, so \\(\\sum_k g_k^2=|p|^2=6.5\\times10^9\\), which the numbers satisfy.<br>\nNote that zero curvature after this hedge is a feature of these numbers, not of the method: two hedges can clear at most two factors in general.<br>\n<b>Interviewer follow-up:</b> Why is this residual not \"risk-free\" in practice? The twist is the fourth principal component. Its variance is small but not zero, and the hedge leaves that risk on the book.",
+  "tags": [
+   "pca",
+   "hedging",
+   "case_study",
+   "rates",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a book with key-rate DV01 vector \\(p\\) and a full orthonormal eigenbasis \\(V\\) (columns \\(v_k\\)) of yield changes, the factor DV01 vector is \\(g=\\){{c1::\\(V^\\top p\\)}}. Under independent factors with variances \\(\\lambda_k\\), the PnL variance is {{c2::\\(\\sum_k\\lambda_k g_k^2\\)}}. Because \\(V\\) is orthogonal, the factor DV01s satisfy {{c3::\\(\\sum_k g_k^2=|p|^2\\)}}, which is a quick arithmetic check.",
+  "back": "Derivation: \\(\\Delta y=V\\,\\delta f\\) with \\(\\mathrm{Cov}(\\delta f)=\\mathrm{diag}(\\lambda_k)\\), so PnL \\(=-p^\\top V\\delta f=-g^\\top\\delta f\\) and \\(\\mathrm{Var}=g^\\top\\mathrm{diag}(\\lambda)\\,g=\\sum_k\\lambda_k g_k^2\\). Since \\(VV^\\top=I\\) for a full square basis, \\(\\sum_k g_k^2=p^\\top VV^\\top p=|p|^2\\). If the basis is truncated (only the first three PCs), this identity no longer holds and the difference is the variance of the omitted factors.<br>\n<b>Interviewer follow-up:</b> Why does a PCA risk split not add up to the key-rate DV01 risk? It does, when the basis is complete. With a truncated basis the gap is the omitted factor's risk, which is the thing to report.",
+  "tags": [
+   "pca",
+   "hedging",
+   "cloze",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derivation. A book has factor DV01s \\(g_k\\) on uncorrelated yield factors with standard deviations \\(\\sigma_k\\) (bp per day). Derive the PnL standard deviation before and after neutralising level and slope with the 2y and 10y swaps from the previous case. Then evaluate it with \\(g\\) from that case and stylised \\(\\sigma=(8,3,1,0.5)\\) bp per day.",
+  "back": "<b>Derivation.</b> With uncorrelated factors, \\(\\mathrm{Var}(\\text{P\\&amp;L})=\\sum_k\\sigma_k^2g_k^2\\). Neutralising level and slope sets \\(g_1=g_2=0\\). Curvature is also zero after this particular hedge, so only the twist term remains: \\(\\sigma_4^2g_4^2\\).<br>\n<b>Unhedged.</b> \\(\\sigma_k g_k\\): 40,000; 60,375; 25,000; 36,895. Standard deviation \\(\\approx\\)£85,000 per day.<br>\n<b>Hedged.</b> Only the twist remains: \\(0.5\\times89{,}443\\approx\\)£44,721 per day, so the standard deviation falls by about 47%.<br>\n<b>Where it breaks:</b> the \\(\\sigma_k\\) are stylised, not estimated; factors are not exactly uncorrelated in a sample; and the fourth component is usually the smallest but not negligible. The answer is the residual you carry, and it has to be reported rather than assumed to be zero.<br>\n<b>Interviewer follow-up:</b> When would you add a hedge instrument? When the residual factor risk exceeds the limit. A third instrument (for example 5y) clears curvature, and a fourth clears twist.",
+  "tags": [
+   "pca",
+   "hedging",
+   "derivation",
+   "residual_risk",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A desk runs a PCA-neutral hedge with eigenvectors estimated on three years of daily data, using only 2y and 10y swaps. Name three ways this fails out of sample and what you would check or change for each.",
+  "back": "<ul>\n<li><b>Two hedges, more factors.</b> Two instruments clear at most two factors. Curvature and higher PCs stay open, and the book keeps that exposure. Check the residual factor DV01s every day, not just level and slope.</li>\n<li><b>Unstable eigenvectors.</b> Slope and curvature loadings move with the sample window and the regime. An inverted curve changes the economic meaning of the slope factor. A hedge that was exact in-sample is only approximately right later. Compare estimation windows, use rolling estimates, and monitor the loadings.</li>\n<li><b>Instrument basis.</b> The swaps you trade do not reproduce the modelled tenor yield changes exactly (roll, spread and curve-fit differences). Hedge in the instruments you trade, for example with key-rate DV01s for execution, and use PCs for reporting and attribution.</li>\n</ul>\n<b>Interviewer follow-up:</b> When would you prefer key-rate hedging to PCA hedging? When the book sits in a few tenors and execution cost matters. PCA is better for explaining risk and for netting across tenors.",
+  "tags": [
+   "pca",
+   "hedging",
+   "scenario",
+   "model_risk",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: Backtest 1/3]</b> A cross-sectional rates-momentum signal is computed from the 16:00 London close, and the backtest books the position at that same 16:00 close. The reported annual Sharpe is 2.1. Name the bias, explain the mechanism, and state the timing rule the backtest must obey.",
+  "back": "<b>Look-ahead bias (same-bar execution).</b> The signal is built from the close \\(P_t\\), but the position is credited with returns from \\(P_t\\) onward. In practice the signal is known only after the close prints, so that fill is not available. The backtest is credited with a return it could not have captured.<br>\n<b>Rule.</b> Information available at time \\(t\\) drives positions from \\(t+1\\) (next bar or next auction), with an explicit fill model. Point-in-time data matters too: an economic release at 09:30 cannot feed an 08:00 trade.<br>\n<b>Test.</b> Shift the signal by one period and re-run. A real edge loses part of its Sharpe. A same-bar bias typically collapses toward zero. If the Sharpe barely moves under a one-period lag, look for another bug, such as a join that pulls future rows.<br>\n<b>Interviewer follow-up:</b> What about the data itself? Use vintage data for revised series. A Sharpe built on the final revised series overstates what a real-time trader knew.",
+  "tags": [
+   "backtest",
+   "look_ahead",
+   "chain_backtest",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: Backtest 2/3]</b> The same momentum signal, now lagged correctly, has a gross Sharpe of 1.2. The universe is \"the 40 issuers in the index today\", tested over 2010 to 2025. Name the bias, quantify it for a credit universe with 2% annual default probability and 60% loss given default, and say how you would fix the universe.",
+  "back": "<b>Survivorship bias.</b> Today's constituents are the names that did not default, were not downgraded out, and were not removed. Holding them through history drops the losses the strategy would actually have taken. Over five years, with 2% annual default probability, the fraction of names that disappear is \\(1-0.98^5\\approx 9.6\\%\\).<br>\n<b>Size.</b> The expected annual loss from default is roughly \\(PD\\times LGD=0.02\\times0.6=1.2\\%\\) of exposure. A survivor-only universe therefore overstates return by about 1.2% per year on the credit leg (approximate, before spread compensation).<br>\n<b>Fix.</b> Build the universe point in time from index membership history on each rebalance date. Keep delisted and defaulted issuers, and apply their actual recovery prices when they leave. Test sensitivity by re-running with the dropped names included.<br>\n<b>Interviewer follow-up:</b> Why can survivorship hit a momentum signal harder than a buy-and-hold? Selection happens on past returns, and defaulting names tend to sit in the losing bucket, so the short leg is the most distorted.",
+  "tags": [
+   "backtest",
+   "survivorship",
+   "chain_backtest",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: Backtest 3/3]</b> Same strategy, now net of costs. Case study: gross annual return 5.0%, annual volatility 6.0%, one-way turnover of 40 times notional per year, and a cost of 5 bp per unit traded (fees and half-spread). Compute the gross and net Sharpe ratios (zero risk-free rate), the annual cost drag, and the break-even cost per unit traded.",
+  "back": "Gross Sharpe \\(=5.0/6.0=0.83\\).<br>\nCost drag \\(=40\\times5\\text{ bp}=200\\text{ bp}=2.0\\%\\) per year.<br>\nNet return \\(=3.0\\%\\), so net Sharpe \\(=3.0/6.0=0.50\\), assuming costs do not change volatility.<br>\nBreak-even cost: \\(5.0\\%/40=12.5\\text{ bp}\\) per unit traded.<br>\nSensitivity: at 3 bp per unit the drag is 1.2% and the net Sharpe is 0.63.<br>\n<b>Sanity check:</b> with 40x turnover, the Sharpe halves after a modest cost. Turnover, not gross return, decides whether the strategy survives.<br>\n<b>Interviewer follow-up:</b> How would you estimate the 5 bp? Use observed bid-offer on the traded instruments, plus expected market impact for the trade size, not the quoted screen spread alone.",
+  "tags": [
+   "backtest",
+   "transaction_costs",
+   "chain_backtest",
+   "case_study",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derivation. You evaluate \\(N=100\\) zero-skill strategies, each over \\(T=5\\) years, and report the best annualised Sharpe. Using the Gaussian extreme-value approximation, what best Sharpe should luck alone produce? Compare with the naive \\(\\sqrt{2\\ln N}\\) bound and check against simulation.",
+  "back": "Sampling standard deviation of an annualised Sharpe estimate at zero true Sharpe: \\(\\sigma_{SR}\\approx\\sqrt{(1+\\tfrac12 SR^2)/T}=1/\\sqrt5=0.447\\) (approximate).<br>\nFor \\(N\\) i.i.d. standard normals, \\(\\mathbb E[\\max]\\approx\\big[(1-\\gamma)\\Phi^{-1}(1-\\tfrac1N)+\\gamma\\,\\Phi^{-1}(1-\\tfrac{1}{Ne})\\big]\\), with \\(\\gamma\\approx0.5772\\) the Euler–Mascheroni constant. Here \\(\\Phi^{-1}(0.99)=2.326\\) and \\(\\Phi^{-1}(1-1/(100e))=2.680\\), so the bracket is \\(2.531\\) and \\(\\mathbb E[\\max\\,SR]\\approx2.531\\times0.447=1.13\\).<br>\nThe naive \\(\\sqrt{2\\ln N}\\,\\sigma_{SR}=1.36\\) overstates by about 20%. A simulation of 4,000 draws of 100 zero-skill Sharpes gives mean 1.13 and standard deviation 0.20.<br>\nSo a best-of-100 Sharpe of 1.1 over five years is what luck produces. Skill has to clear this hurdle (a deflated Sharpe), and the trial count must include every variant tried, not only the one shown.<br>\n<b>Where it breaks:</b> the Gaussian approximation and the Sharpe standard error both assume roughly i.i.d. returns. Fat tails, autocorrelation and strategy correlation change the hurdle.<br>\n<b>Interviewer follow-up:</b> What if the 100 strategies are correlated? The effective N is smaller and the hurdle drops. Estimate it from the correlation matrix of strategy returns, not from the raw count.",
+  "tags": [
+   "backtest",
+   "overfitting",
+   "derivation",
+   "sharpe",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You replace a 10 ms Monte Carlo swaption pricer with a neural surrogate for a risk run of \\(10^5\\) revaluations. Specify the training design: how you sample inputs, what you target, how you weight the loss, and what you report as acceptance beyond RMSE.",
+  "back": "<ul>\n<li><b>Inputs.</b> Sample the calibrated parameter box with a low-discrepancy design (Sobol) rather than uniform random draws, and extend the box to cover the stressed scenarios the risk run will hit. Standardise inputs (for example to \\([-1,1]\\)) so the optimiser is not dominated by one input's scale.</li>\n<li><b>Targets.</b> Predict implied normal or Black volatilities, or vega-normalised prices, not raw prices. A raw-price error scales with vega and strike; a 0.1 bp vol error is the same tolerance everywhere.</li>\n<li><b>Labels.</b> MC prices carry noise. Use a fixed seed across training points (common random numbers). The label noise sets a floor on accuracy: the surrogate cannot be more precise than the labels it learns from.</li>\n<li><b>Weighting.</b> Weight the loss toward the strikes and tenors that carry the book's vega, not uniformly across the grid.</li>\n<li><b>Acceptance.</b> Report error in vol bp by moneyness and maturity on a hold-out set, error of the Greeks against bump-and-revalue of the pricer, and no-arbitrage checks on the output: monotone in strike, butterfly \\(\\ge0\\), calendar \\(\\ge0\\).</li>\n</ul>\n<b>Interviewer follow-up:</b> Why check no-arbitrage on a surrogate? A fitted network can produce a negative density across strikes. Exotics priced off such a surface are then not arbitrage-consistent, and the error can be large even when RMSE looks small.",
+  "tags": [
+   "ml_pricing",
+   "surrogate",
+   "validation",
+   "numerics",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derivation. Differential machine learning (Huge and Savine, 2020) trains a surrogate \\(\\hat v(x)\\) on true values \\(v_i\\) and true derivatives \\(z_i=\\nabla_x v(x_i)\\), with the derivatives obtained from AAD. Write the loss, explain why derivative labels constrain the fit, and explain how to choose the weight \\(\\lambda\\).",
+  "back": "<b>Loss.</b> \\[\\mathcal L=\\frac1N\\sum_i\\Big[(\\hat v(x_i)-v_i)^2+\\lambda\\,\\big\\|\\nabla_x\\hat v(x_i)-z_i\\big\\|^2\\Big].\\]<br>\n<b>Why it helps.</b> Each training point gives \\(1+d\\) labels for \\(d\\) inputs. For the same number of paths the network gets \\((1+d)\\) times the information, and the fitted function is pinned to the correct tangent at each training point. A price-only network can match prices while its slopes are wrong, and slopes are exactly what the Greeks read.<br>\n<b>Choosing \\(\\lambda\\).</b> Put the two terms on comparable scales, for example \\(\\lambda\\approx\\mathrm{Var}(v)/\\mathrm{Var}(z)\\) per input, and tune on hold-out derivative error.<br>\n<b>Where it breaks:</b> derivative labels from MC AAD are noisy where the payoff is non-smooth (digitals, barriers at the monitoring grid). The penalty then fits noise. Each sample also costs the AAD overhead for its derivative labels.<br>\n<b>Interviewer follow-up:</b> Why AAD rather than bumps? Bumping costs \\(d\\) extra valuations per sample and adds finite-difference error. AAD gives all \\(d\\) derivatives for a small constant multiple of one valuation.",
+  "tags": [
+   "ml_pricing",
+   "differential_ml",
+   "derivation",
+   "aad",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Case study, differential ML toy. Target \\(f(x)=\\sin 3x+x^2\\) on \\([-1,1]\\). Fit a degree-7 Legendre expansion by least squares to 8 random training points, either on values only or on values plus derivatives with \\(\\lambda\\approx0.109\\) (ratio of variances on the grid). Over 300 random training sets, the median RMSE on a dense grid is \\(2.2\\times10^{-3}\\) values-only and \\(7.4\\times10^{-4}\\) with derivatives. The means are 0.039 and 0.022. Explain what the derivative labels add, why the mean and median tell different stories, and what you would check before trusting this in production.",
+  "back": "Derivative labels double the number of equations (8 points give 16 equations), and they constrain the slope where the 8 values alone leave a degree-7 fit under-determined in the shape between points. The median gain is about 3x. The mean is dominated by the worst draws, where training points cluster and the fit is poorly conditioned; the derivative labels also reduce those (0.039 to 0.022).<br>\nThese numbers come from one toy set-up with numpy <code>lstsq</code> and depend on the random draws. They are a sanity check of the mechanism, not a benchmark.<br>\n<b>Before trusting it in production:</b> report error quantiles rather than a single mean; test Greeks out of sample; check behaviour outside the training box; confirm the derivative labels come from the same pricer version and seed as the values.<br>\n<b>Interviewer follow-up:</b> Which number would you show a risk manager? The 95th percentile of the Greek error across the scenario set, not the average.",
+  "tags": [
+   "ml_pricing",
+   "differential_ml",
+   "case_study",
+   "numerics",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A neural surrogate of a barrier-option pricer gives smooth autodiff deltas, but on average they differ by 4% from bump-and-revalue on the true pricer. List four candidate causes and the test that separates each.",
+  "back": "<ul>\n<li><b>Value-only training.</b> The surrogate fits prices, but its slopes are unconstrained. Test: compare derivative error and value error on a hold-out set. Fix: derivative labels (differential ML).</li>\n<li><b>Bump-size mismatch.</b> A one-sided bump on a smooth surrogate is not the same quantity as a central bump on the pricer, and MC noise in the pricer's bumps grows as the bump shrinks. Test: compute both with central differences and the same \\(h\\), on a common seed.</li>\n<li><b>Kink or barrier crossing.</b> The true delta jumps when spot crosses the barrier, and a network smooths that jump. Test: plot delta against spot across the barrier and check whether the mismatch concentrates near the kink.</li>\n<li><b>Out-of-distribution scenarios.</b> The live scenario lies outside the training box, where the network extrapolates. Test: check whether the scenario inputs fall inside the training design's range.</li>\n</ul>\n<b>Interviewer follow-up:</b> Why does this matter for the P&amp;L explain? A 4% delta error produces a 4% error in the delta P&amp;L explain, which is the number the desk reconciles.",
+  "tags": [
+   "ml_pricing",
+   "greeks",
+   "surrogate",
+   "scenario",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derivation. Calibrate parameters \\(\\theta\\) by minimising \\(\\|r(\\theta)\\|^2+\\alpha\\|\\theta-\\theta_0\\|^2\\), where \\(r\\) is the vector of model-minus-market residuals and \\(\\theta_0\\) is a prior or yesterday's parameters. Derive the Gauss–Newton step, express it in the SVD of \\(J=\\partial r/\\partial\\theta\\), and show the filter factors. What happens along weakly identified directions?",
+  "back": "<b>Step.</b> Linearise \\(r(\\theta+\\delta)\\approx r+J\\delta\\). Setting the gradient of \\(\\|r+J\\delta\\|^2+\\alpha\\|\\theta+\\delta-\\theta_0\\|^2\\) in \\(\\delta\\) to zero gives \\[(J^\\top J+\\alpha I)\\,\\delta=-J^\\top r-\\alpha(\\theta-\\theta_0).\\]<br>\n<b>SVD.</b> Write \\(J=\\sum_i\\sigma_i u_iv_i^\\top\\) and take \\(\\theta=\\theta_0\\) for the core term. Then \\(\\delta=-\\sum_i\\frac{\\sigma_i}{\\sigma_i^2+\\alpha}(u_i^\\top r)\\,v_i\\). Unregularised Gauss–Newton has coefficient \\(1/\\sigma_i\\) on each direction. Tikhonov multiplies each term by the filter factor \\(f_i=\\sigma_i^2/(\\sigma_i^2+\\alpha)\\).<br>\n<b>Reading the filter.</b> For \\(\\sigma_i^2\\gg\\alpha\\), \\(f_i\\approx1\\): well-identified directions are fitted as before. For \\(\\sigma_i^2\\ll\\alpha\\), \\(f_i\\approx\\sigma_i^2/\\alpha\\approx0\\): the step along a weak direction is damped, not inflated.<br>\n<b>Where it breaks:</b> \\(\\alpha\\) has the units of the squared residual, so it depends on normalisation (vol bp versus price). Set it relative to \\(\\sigma_1^2\\). The prior biases the fit away from the market, so the residual on the weak direction is larger than the unregularised one. Choose \\(\\alpha\\) by an L-curve or by a maximum acceptable fit error.<br>\n<b>Interviewer follow-up:</b> Is Tikhonov the same as a prior? Yes in the MAP sense: the penalty is the negative log of a Gaussian prior centred at \\(\\theta_0\\), and its strength is set by the ratio of prior variance to residual noise variance, so it has to be chosen with the residual units in mind.",
+  "tags": [
+   "calibration",
+   "regularisation",
+   "derivation",
+   "svd",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Case study, calibration stability. Two-parameter model with Jacobian rows \\((1,1)\\), \\((1,1.0001)\\), \\((1,0.9999)\\), \\((0.5,0.5001)\\): the parameters are nearly indistinguishable along \\((1,-1)\\). Singular values are \\(2.55\\) and \\(1.2\\times10^{-4}\\), condition number \\(\\approx2.1\\times10^4\\). Quotes move by \\(\\pm0.1\\) vol point (\\(\\pm0.001\\) in residual units) in an alternating pattern. Unregularised Gauss–Newton gives a parameter step of norm \\(\\approx14.9\\), split as \\((-10.5,\\,+10.5)\\). With \\(\\alpha=10^{-6}\\) the norm is 0.21; with \\(\\alpha=10^{-4}\\) it is 0.0022. Explain these numbers through the filter factors and what they imply for day-to-day stability.",
+  "back": "The weak direction's coefficient is \\((u_2^\\top r)/\\sigma_2\\). With \\(\\sigma_2=1.2\\times10^{-4}\\), a residual of order \\(10^{-3}\\) becomes a parameter move of order 10. That is the jump.<br>\nFilter factor on the weak direction, \\(f_2=\\sigma_2^2/(\\sigma_2^2+\\alpha)\\): about \\(0.0144\\) at \\(\\alpha=10^{-6}\\) and \\(1.5\\times10^{-4}\\) at \\(\\alpha=10^{-4}\\). The strong direction keeps \\(f_1\\approx1\\), so the fit on well-identified combinations is unchanged.<br>\n<b>Implication.</b> Unregularised calibration converts 0.1 vol point of quote noise into a parameter move of order 10 units. Regularisation keeps parameters stable, at the cost of an explicit fit error on the weak direction.<br>\n<b>Interviewer follow-up:</b> What do you report alongside the parameters? The penalty weight, the fit error, and the parameter drift from yesterday. A stable calibration with a visible fit error is better than an exact fit with unstable hedges.",
+  "tags": [
+   "calibration",
+   "regularisation",
+   "case_study",
+   "ill_posed",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Your Heston calibration fits the surface within 0.2 vol points both yesterday and today. Overnight the vol-of-vol moved from a hypothetical 0.55 to 0.80, and the vega hedge changed a lot. Diagnose the cause and propose two fixes.",
+  "back": "<b>Cause.</b> The parameters are not identified by the quotes. Several parameter sets fit within tolerance, because some combinations (for example vol-of-vol and correlation in the skew) trade off along flat directions of the Jacobian. A different optimiser start lands on a different point, and the parameters move while the prices do not.<br>\n<b>Diagnose.</b> Compute the Jacobian of model vols with respect to parameters, its singular values and condition number. Re-calibrate from several starts and measure the spread of the parameter sets. Check whether the optimiser tolerance stops it early.<br>\n<b>Fix 1.</b> Warm-start from yesterday's parameters with a penalty \\(\\alpha\\|\\theta-\\theta_\\text{prev}\\|^2\\), which damps steps along weak directions.<br>\n<b>Fix 2.</b> Hedge in market instruments (quoted vols, by bucket) rather than in model parameters. The risk then does not depend on which point of a flat direction the optimiser chose.<br>\n<b>Interviewer follow-up:</b> How do you explain to the trader that the parameter moved but the risk should not? Show that the quote-space hedge is unchanged by the parameter move, and that the P&amp;L attribution is driven by quotes rather than parameters.",
+  "tags": [
+   "calibration",
+   "scenario",
+   "model_risk",
+   "hedging",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Longstaff–Schwartz regression with basis \\(1,S,S^2,\\dots,S^5\\) and \\(S\\in[50,150]\\) (\\(S_0=100\\)). The design matrix has condition number {{c1::\\(\\approx1.8\\times10^{13}\\)}}, so the normal matrix has condition number {{c2::\\(\\approx3\\times10^{26}\\)}}, beyond double precision. Use a {{c3::normalised, orthogonal basis (for example Legendre in \\(S/S_0\\))}} and solve with {{c4::QR or SVD}} rather than normal equations. With \\(x=S/S_0\\) on \\([0.5,1.5]\\), the monomial design has condition about \\(5\\times10^4\\) and the Legendre design about 3.3.",
+  "back": "Condition numbers of Vandermonde-type matrices grow quickly with degree and with the scale of the variable, and normal equations square the condition number. The regression then returns noise in the continuation value, and that noise shifts the exercise boundary and therefore the price.<br>\n<b>Interviewer follow-up:</b> Is the fix only numerical? Partly. A poor basis also gives a worse approximation for the same number of functions, so normalising the variable improves both accuracy and stability.",
+  "tags": [
+   "lsm",
+   "numerics",
+   "cloze",
+   "regression",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derivation. Build a Brownian path on \\([0,T]\\) from independent normals using the Brownian bridge. Derive the conditional law of \\(W_t\\) given \\(W_T\\), give the midpoint recursion, and show why the first normal drawn carries the largest share of path variance.",
+  "back": "<b>Conditional law.</b> \\((W_t,W_T)\\) is jointly Gaussian with \\(\\mathrm{Cov}(W_t,W_T)=t\\) and \\(\\mathrm{Var}(W_T)=T\\). Hence \\[W_t\\mid W_T=b\\sim N\\Big(\\tfrac tT\\,b,\\ \\tfrac{t(T-t)}{T}\\Big).\\]<br>\n<b>Construction.</b> Draw \\(W_T=\\sqrt T\\,Z_1\\). Then the midpoint \\(W_{T/2}\\), given \\(W_0=0\\) and \\(W_T\\), has mean \\(W_T/2\\) and variance \\(T/4\\). Recurse on each half interval. Each level halves the interval and the free normal's variance halves, \\(T/4,\\,T/8,\\dots\\), so the earliest normals carry the most variance.<br>\n<b>Variance share.</b> The terminal normal enters as \\(W_t\\approx tW_T\\), so \\(\\int_0^1W_t\\,dt\\approx\\tfrac12W_1\\) and its variance is \\(\\tfrac14\\). Since \\(\\mathrm{Var}\\big(\\int_0^1W_t\\,dt\\big)=\\tfrac13\\), the terminal normal explains \\(\\tfrac34\\) of the variance of the time average. In pointwise terms, \\(\\int_0^1 t^2\\,dt\\big/\\int_0^1 t\\,dt=\\tfrac23\\) of \\(\\int_0^1\\mathrm{Var}(W_t)\\,dt\\).<br>\n<b>Used in:</b> ordering Sobol dimensions so the most important coordinates come first.<br>\n<b>Where it breaks:</b> the bridge is not the optimal basis. The first Karhunen–Loève term carries \\(8/\\pi^2\\approx81\\%\\) of \\(\\int_0^1\\mathrm{Var}(W_t)\\,dt\\), more than the bridge's \\(67\\%\\). Smooth, high-dimensional payoffs are often better served by a PCA construction. The bridge remains the natural choice when the path endpoints matter.<br>\n<b>Interviewer follow-up:</b> Why are barriers simulated with bridges? Conditional on the grid endpoints, the bridge gives the exact probability that the path crossed a barrier between grid points, which removes the discrete-monitoring bias.",
+  "tags": [
+   "qmc",
+   "brownian_bridge",
+   "derivation",
+   "sobol",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a Brownian path on \\([0,1]\\), the first Karhunen–Loève eigenfunction is \\(\\sqrt2\\sin(\\pi t/2)\\), with eigenvalue {{c1::\\(4/\\pi^2\\)}}. It explains {{c2::\\(8/\\pi^2\\approx81\\%\\)}} of \\(\\int_0^1\\mathrm{Var}(W_t)\\,dt=\\){{c3::\\(1/2\\)}}, and {{c4::\\(\\approx98.6\\%\\)}} of \\(\\mathrm{Var}\\big(\\int_0^1W_t\\,dt\\big)\\). The bridge's terminal normal explains only 67% and 75% of those two quantities respectively.",
+  "back": "Mercer expansion of the kernel \\(\\min(s,t)\\): eigenvalues \\(\\lambda_k=1/((k-\\tfrac12)^2\\pi^2)\\) and eigenfunctions \\(\\sqrt2\\sin((k-\\tfrac12)\\pi t)\\), which sum to \\(\\int_0^1\\mathrm{Var}(W_t)\\,dt=\\tfrac12\\). For the average, the first term contributes \\(\\lambda_1\\big(\\int_0^1\\sqrt2\\sin(\\pi t/2)\\,dt\\big)^2=\\frac{4}{\\pi^2}\\cdot\\frac{8}{\\pi^2}\\), which is \\(98.6\\%\\) of \\(\\tfrac13\\).<br>\n<b>Interviewer follow-up:</b> Why does the KL basis help Sobol? Sobol's advantage is in the first few dimensions. A basis that concentrates variance there reduces the effective dimension, but it costs a full eigendecomposition of the covariance and that is the trade-off.",
+  "tags": [
+   "qmc",
+   "brownian_bridge",
+   "cloze",
+   "karhunen_loeve",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Case study, randomised QMC. Integrand \\(\\prod_{j=1}^{5}\\big(1+\\tfrac12(u_j-\\tfrac12)\\big)\\) on \\([0,1]^5\\), exact integral 1. With \\(N=4096\\) points, pseudo-random MC has RMSE \\(4.1\\times10^{-3}\\) over 40 runs, and scrambled Sobol has RMSE \\(7\\times10^{-6}\\). Sixteen independent scrambles of the 4096-point Sobol set give mean \\(1.0000013\\) and standard error \\(2.6\\times10^{-6}\\) from the spread across scrambles. Explain why that spread is a valid error estimate, how you would build the interval, and why this example flatters QMC.",
+  "back": "<b>Why the spread is valid.</b> Each scramble (random, Owen-type digit scrambling) keeps the point set's low-discrepancy structure while making each replicate an unbiased estimator of the integral. The average of \\(m\\) independent scrambles is unbiased, and its standard error is \\(s/\\sqrt m\\) with \\(s\\) the sample standard deviation across scrambles.<br>\n<b>Interval.</b> With \\(m=16\\), a 95% interval uses \\(t_{15,0.975}=2.131\\), giving \\(1.0000013\\pm5.5\\times10^{-6}\\), which covers the exact value 1.<br>\n<b>Why it flatters QMC.</b> The integrand is separable and smooth, with low effective dimension, which is the best case for QMC. A path-dependent payoff with a discontinuity (digital, barrier at a fine grid) loses most of that gain, and convergence falls toward the \\(N^{-1/2}\\) rate of MC with a smaller constant.<br>\n<b>Interviewer follow-up:</b> What would you check before using RQMC in a desk pricer? That the error does fall faster than \\(N^{-1/2}\\) on the actual payoff, by comparing scramble spreads at several \\(N\\), and that the discontinuities are smoothed or handled by a bridge.",
+  "tags": [
+   "qmc",
+   "sobol",
+   "case_study",
+   "error_estimation",
+   "lvl_stretch"
+  ]
+ }
+]

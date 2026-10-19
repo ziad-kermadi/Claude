@@ -14,7 +14,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: PCP 2/4]</b> Context: \\(S=100,\\ K=100,\\ T=1\\), continuous \\(r=5\\%\\), no dividends. Quoted call 10.00, put 5.00. Is there an arbitrage? Give the trade, the cash flows at \\(T\\), and the riskless profit.",
-  "back": "<b>Answer:</b> yes. Parity requires \\(C-P=S-Ke^{-rT}=4.877\\). Quoted \\(C-P=5.00\\). The synthetic stock \\(C-P+Ke^{-rT}=100.12\\) is richer than the real stock at 100.00. Sell the synthetic and buy the real stock:<br>\n<ul><li>Sell the call at 10.00 and buy the put at 5.00: receive 5.00.</li>\n<li>Buy one share at 100.00.</li>\n<li>Borrow \\(Ke^{-rT}=95.12\\) for one year, repaying 100.00 at \\(T\\).</li></ul>\nNet today: \\(5.00-100.00+95.12=0.123\\), riskless.<br>\n<b>Check at \\(T\\):</b> \\(S_T=120\\): short call \\(-20\\), long put 0, stock \\(+120\\), repay \\(-100\\). Total 0. \\(S_T=80\\): short call 0, long put \\(+20\\), stock \\(+80\\), repay \\(-100\\). Total 0.<br>\n<b>Interviewer follow-up:</b> \"What stops this in practice?\" Share borrow cost and availability, bid-offer on both options, and the margin needed to hold a short call.",
+  "back": "<b>Answer:</b> yes. Parity requires \\(C-P=S-Ke^{-rT}=4.877\\). Quoted \\(C-P=5.00\\). The synthetic stock \\(C-P+Ke^{-rT}=100.12\\) is richer than the real stock at 100.00. Sell the synthetic and buy the real stock:<br>\n<ul><li>Sell the call at 10.00 and buy the put at 5.00: receive 5.00.</li>\n<li>Buy one share at 100.00.</li>\n<li>Borrow \\(Ke^{-rT}=95.12\\) for one year, repaying 100.00 at \\(T\\).</li></ul>\nNet today: \\(5.00-100.00+95.1229=0.1229\\), riskless.<br>\n<b>Check at \\(T\\):</b> \\(S_T=120\\): short call \\(-20\\), long put 0, stock \\(+120\\), repay \\(-100\\). Total 0. \\(S_T=80\\): short call 0, long put \\(+20\\), stock \\(+80\\), repay \\(-100\\). Total 0.<br>\n<b>Interviewer follow-up:</b> \"What stops this in practice?\" Share borrow cost and availability, bid-offer on both options, and the margin needed to hold a short call.",
   "tags": [
    "derivatives",
    "options",
@@ -66,7 +66,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: BIN 2/4]</b> Context: same one-step tree (\\(u=1.10,\\ d=0.90,\\ r=5\\%\\)). Convert the replication into risk-neutral probabilities. Show that the discounted stock is a martingale under them, and recompute the call.",
-  "back": "<b>Answer:</b> \\(p=\\dfrac{e^{rh}-d}{u-d}=\\dfrac{1.05127-0.90}{0.20}=0.7564\\). The call is \\(V_0=e^{-rh}[pV_u+(1-p)V_d]=0.95123\\times0.7564\\times10=7.19\\), the same as the hedge.<br>\n<b>Martingale:</b> by construction \\(pS_u+(1-p)S_d=100e^{rh}\\), so \\(e^{-rh}E^Q[S_1]=S_0\\). The discounted stock has no drift under \\(Q\\).<br>\n<b>Conditions:</b> \\(p\\in(0,1)\\) requires \\(d<e^{rh}<u\\). If \\(u=1.02\\), then \\(e^{rh}>u\\), \\(p>1\\), and borrowing to buy the stock is a riskless profit.<br>\n<b>Interviewer follow-up:</b> \"What is \\(p\\) under the real-world measure, and does the price change?\" The price does not change. Real-world drift is replaced by \\(r\\) under \\(Q\\); the price is the same for any real-world \\(p\\) in \\((0,1)\\).",
+  "back": "<b>Answer:</b> \\(p=\\dfrac{e^{rh}-d}{u-d}=\\dfrac{1.05127-0.90}{0.20}=0.7564\\). The call is \\(V_0=e^{-rh}[pV_u+(1-p)V_d]=0.95123\\times0.7564\\times10=7.19\\), the same as the hedge.<br>\n<b>Martingale:</b> by construction \\(pS_u+(1-p)S_d=100e^{rh}\\), so \\(e^{-rh}E^Q[S_1]=S_0\\). The discounted stock has no drift under \\(Q\\).<br>\n<b>Conditions:</b> \\(p\\in(0,1)\\) requires \\(d&lt;e^{rh}&lt;u\\). If \\(u=1.02\\), then \\(e^{rh}>u\\) and \\(p>1\\). The stock then returns less than cash in every state, so the arbitrage is to sell the stock short and lend at \\(r\\).<br>\n<b>Interviewer follow-up:</b> \"What is \\(p\\) under the real-world measure, and does the price change?\" The price does not change. Real-world drift is replaced by \\(r\\) under \\(Q\\); the price is the same for any real-world \\(p\\) in \\((0,1)\\).",
   "tags": [
    "derivatives",
    "binomial",
@@ -129,8 +129,8 @@
  },
  {
   "type": "basic",
-  "front": "<b>[Chain: GAM 3/4]</b> Context: a delta-hedged long ATM option with \\(S=100\\), \\(\\sigma=20\\%\\), \\(r=0\\) for simplicity. Gamma is 0.0188, and theta is about \\(-3.75\\) per year, or \\(-0.0103\\) per day. How far must the stock move in one day for gamma P&amp;L to cover one day of theta?",
-  "back": "<b>Answer:</b> about 1.05 points, or 1.05%. Gamma P&amp;L over a move \\(\\Delta S\\) is \\(\\tfrac12\\Gamma(\\Delta S)^2\\). Set it equal to the daily theta \\(0.0103\\): \\(\\Delta S=\\sqrt{2\\times0.0103/0.0188}=1.047\\).<br>\n<b>Check:</b> \\(S\\sigma\\sqrt{1/365}=100\\times0.20\\times0.0523=1.047\\). The breakeven is exactly the one-day standard deviation implied by the option's vol.<br>\n<b>Meaning:</b> you win on the day if the realised one-day move exceeds the implied one-day move, and lose otherwise.<br>\n<b>Interviewer follow-up:</b> \"What is the one-day breakeven at \\(\\sigma=25\\%\\)?\" \\(100\\times0.25\\times0.0523=1.31\\) points.",
+  "front": "<b>[Chain: GAM 3/4]</b> Context: a delta-hedged long ATM option with \\(S=100\\), \\(\\sigma=20\\%\\), \\(r=0\\) for simplicity. Gamma is 0.01985, and theta is about \\(-3.970\\) per year, or \\(-0.01088\\) per day. How far must the stock move in one day for gamma P&amp;L to cover one day of theta?",
+  "back": "<b>Answer:</b> about 1.05 points, or 1.05%. Gamma P&amp;L over a move \\(\\Delta S\\) is \\(\\tfrac12\\Gamma(\\Delta S)^2\\). Set it equal to the daily theta \\(0.01088\\): \\(\\Delta S=\\sqrt{2\\times0.01088/0.01985}=1.047\\).<br>\n<b>Check:</b> \\(S\\sigma\\sqrt{1/365}=100\\times0.20\\times0.0523=1.047\\). The breakeven is exactly the one-day standard deviation implied by the option's vol.<br>\n<b>Meaning:</b> you win on the day if the realised one-day move exceeds the implied one-day move, and lose otherwise.<br>\n<b>Interviewer follow-up:</b> \"What is the one-day breakeven at \\(\\sigma=25\\%\\)?\" \\(100\\times0.25\\times0.0523=1.31\\) points.",
   "tags": [
    "derivatives",
    "greeks",
@@ -144,7 +144,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: GAM 4/4]</b> Context: you are long an ATM option bought at implied vol \\(\\sigma_I=20\\%\\) and delta-hedge it daily. Realised vol is \\(\\sigma_R\\). With \\(r=0\\) and no drift, what is the expected hedged P&amp;L per unit time, and does the market direction matter?",
-  "back": "<b>Answer:</b> \\(\\mathbb E[\\text{P&amp;L}]\\,dt\\approx\\tfrac12\\Gamma S^2(\\sigma_R^2-\\sigma_I^2)\\,dt\\). The sign depends only on realised versus implied variance.<br>\n<b>Why direction is irrelevant:</b> the gamma P&amp;L is \\(\\tfrac12\\Gamma(\\Delta S)^2\\), which depends on the square of the move. The delta hedge removes the first-order exposure to \\(\\Delta S\\).<br>\n<b>Numbers:</b> \\(\\tfrac12\\Gamma S^2=\\tfrac12\\times0.0188\\times10^4=94\\). With \\(\\sigma_R=25\\%\\), \\(\\sigma_R^2-\\sigma_I^2=0.0625-0.04=0.0225\\). Expected P&amp;L \\(=94\\times0.0225\\approx2.12\\) per year for one option with \\(\\Gamma=0.0188\\).<br>\n<b>Where it breaks:</b> discrete rebalancing adds variance to the P&amp;L, jumps add gap risk, and a non-zero \\(r\\) or skew adds terms.<br>\n<b>Interviewer follow-up:</b> \"Is implied vol a forecast of realised vol?\" No. It is the price of variance paid on the trade date. Being long gamma means being long realised variance against implied.",
+  "back": "<b>Answer:</b> \\(\\mathbb E[\\text{P&amp;L}]\\,dt\\approx\\tfrac12\\Gamma S^2(\\sigma_R^2-\\sigma_I^2)\\,dt\\). The sign depends only on realised versus implied variance.<br>\n<b>Why direction is irrelevant:</b> the gamma P&amp;L is \\(\\tfrac12\\Gamma(\\Delta S)^2\\), which depends on the square of the move. The delta hedge removes the first-order exposure to \\(\\Delta S\\).<br>\n<b>Numbers:</b> \\(\\tfrac12\\Gamma S^2=\\tfrac12\\times0.01985\\times10^4=99.2\\). With \\(\\sigma_R=25\\%\\), \\(\\sigma_R^2-\\sigma_I^2=0.0625-0.04=0.0225\\). Expected P&amp;L \\(=99.2\\times0.0225\\approx2.23\\) per year for one option with \\(\\Gamma=0.01985\\) at \\(r=0\\).<br>\n<b>Where it breaks:</b> discrete rebalancing adds variance to the P&amp;L, jumps add gap risk, and a non-zero \\(r\\) or skew adds terms.<br>\n<b>Interviewer follow-up:</b> \"Is implied vol a forecast of realised vol?\" No. It is the price of variance paid on the trade date. Being long gamma means being long realised variance against implied.",
   "tags": [
    "derivatives",
    "greeks",
@@ -195,7 +195,7 @@
  {
   "type": "basic",
   "front": "<b>Derivation: why a digital equals minus the call's strike derivative.</b> In Black-Scholes, show that \\(\\partial C/\\partial K=-e^{-rT}N(d_2)\\). Explain why the \\(\\partial d_1/\\partial K\\) term drops out, and identify the price of the digital call it represents.",
-  "back": "<b>Setup:</b> \\(C=SN(d_1)-Ke^{-rT}N(d_2)\\). Then \\(\\partial_KC=S\\varphi(d_1)\\partial_Kd_1-e^{-rT}N(d_2)-Ke^{-rT}\\varphi(d_2)\\partial_Kd_2\\). Both \\(d_1\\) and \\(d_2\\) have \\(\\partial_K=-1/(K\\sigma\\sqrt T)\\).<br>\n<b>Cancellation:</b> \\(d_1^2-d_2^2=2\\ln(S/K)+2rT\\), so \\(\\varphi(d_1)/\\varphi(d_2)=(K/S)e^{-rT}\\), i.e. \\(S\\varphi(d_1)=Ke^{-rT}\\varphi(d_2)\\). The first and third terms cancel exactly, leaving \\(\\partial_KC=-e^{-rT}N(d_2)\\).<br>\n<b>Interpretation:</b> \\(-\\partial_KC\\) is the price of a cash digital paying 1 if \\(S_T>K\\). It is also the limit of a call spread of width \\(\\varepsilon\\): \\((C(K)-C(K+\\varepsilon))/\\varepsilon\\).<br>\n<b>Where it breaks:</b> with a smile, \\(\\sigma=\\sigma(K)\\), so the total derivative is \\(dC/dK=\\partial_KC+\\text{vega}\\cdot\\partial_K\\sigma\\). The smile-consistent digital is \\(e^{-rT}N(d_2)-\\text{vega}\\cdot\\partial_K\\sigma\\). With negative skew (\\(\\partial_K\\sigma<0\\)) it is above the BS digital.<br>\n<b>Interviewer follow-up:</b> \"Which way does the skew move the digital?\" Up, by about \\(37.5\\times0.0005=0.019\\) per unit notional on the numbers in the case study.",
+  "back": "<b>Setup:</b> \\(C=SN(d_1)-Ke^{-rT}N(d_2)\\). Then \\(\\partial_KC=S\\varphi(d_1)\\partial_Kd_1-e^{-rT}N(d_2)-Ke^{-rT}\\varphi(d_2)\\partial_Kd_2\\). Both \\(d_1\\) and \\(d_2\\) have \\(\\partial_K=-1/(K\\sigma\\sqrt T)\\).<br>\n<b>Cancellation:</b> \\(d_1^2-d_2^2=2\\ln(S/K)+2rT\\), so \\(\\varphi(d_1)/\\varphi(d_2)=(K/S)e^{-rT}\\), i.e. \\(S\\varphi(d_1)=Ke^{-rT}\\varphi(d_2)\\). The first and third terms cancel exactly, leaving \\(\\partial_KC=-e^{-rT}N(d_2)\\).<br>\n<b>Interpretation:</b> \\(-\\partial_KC\\) is the price of a cash digital paying 1 if \\(S_T>K\\). It is also the limit of a call spread of width \\(\\varepsilon\\): \\((C(K)-C(K+\\varepsilon))/\\varepsilon\\).<br>\n<b>Where it breaks:</b> with a smile, \\(\\sigma=\\sigma(K)\\), so the total derivative is \\(dC/dK=\\partial_KC+\\text{vega}\\cdot\\partial_K\\sigma\\). The smile-consistent digital is \\(e^{-rT}N(d_2)-\\text{vega}\\cdot\\partial_K\\sigma\\). With negative skew (\\(\\partial_K\\sigma&lt;0\\)) it is above the BS digital.<br>\n<b>Interviewer follow-up:</b> \"Which way does the skew move the digital?\" Up, by about \\(37.5\\times0.0005=0.019\\) per unit notional on the numbers in the case study.",
   "tags": [
    "derivatives",
    "digital",
@@ -246,7 +246,7 @@
  {
   "type": "basic",
   "front": "<b>Case study: 1y ATM European call and put.</b> \\(S=100\\), \\(K=100\\), continuous \\(r=5\\%\\), \\(\\sigma=20\\%\\), no dividends. Give \\(d_1,d_2\\), both prices, the call and put delta, gamma, vega and theta, and check parity.",
-  "back": "<b>Parameters:</b> \\(d_1=\\dfrac{0+(0.05+0.02)}{0.2}=0.35\\), \\(d_2=0.15\\). \\(N(d_1)=0.6368\\), \\(N(d_2)=0.5596\\).<br>\n<b>Call:</b> \\(100\\times0.6368-95.12\\times0.5596=63.68-53.23=10.45\\).<br>\n<b>Put:</b> \\(95.12\\times0.4404-100\\times0.3632=41.89-36.32=5.57\\). Parity: \\(10.45-5.57=4.88=100-95.12\\).<br>\n<b>Greeks:</b> call delta 0.637, put delta \\(-0.363\\); gamma 0.0188 (both); vega 37.5 per unit of vol (0.375 per vol point); call theta \\(-6.41\\) per year, put theta \\(-1.66\\) per year.<br>\n<b>Interviewer follow-up:</b> \"Which of call or put has a bigger theta in absolute terms, and why?\" The call, here. Call theta includes the \\(\\tfrac12\\sigma^2S^2\\Gamma\\) term, which the put shares; the put's extra theta is the interest on the strike, \\(rKe^{-rT}\\), which is a benefit to the put holder.",
+  "back": "<b>Parameters:</b> \\(d_1=\\dfrac{0+(0.05+0.02)}{0.2}=0.35\\), \\(d_2=0.15\\). \\(N(d_1)=0.6368\\), \\(N(d_2)=0.5596\\).<br>\n<b>Call:</b> \\(100\\times0.6368-95.12\\times0.5596=63.68-53.23=10.45\\).<br>\n<b>Put:</b> \\(95.12\\times0.4404-100\\times0.3632=41.89-36.32=5.57\\). Parity: \\(10.45-5.57=4.88=100-95.12\\).<br>\n<b>Greeks:</b> call delta 0.637, put delta \\(-0.363\\); gamma 0.0188 (both); vega 37.5 per unit of vol (0.375 per vol point); call theta \\(-6.41\\) per year, put theta \\(-1.66\\) per year.<br>\n<b>Interviewer follow-up:</b> \"Which of call or put has a bigger theta in absolute terms, and why?\" The call, here. Both carry the \\(\\tfrac12\\sigma^2S^2\\Gamma\\) decay term. The call also pays the financing cost of the strike, \\(-rKe^{-rT}N(d_2)\\), while the put receives the offsetting benefit \\(+rKe^{-rT}N(-d_2)\\), so the put's theta is much smaller in size.",
   "tags": [
    "derivatives",
    "black_scholes",
@@ -270,7 +270,7 @@
  {
   "type": "basic",
   "front": "<b>Case study: forward volatility and a forward-start ATM option.</b> Flat ATM lognormal vols: 1y 20%, 2y 22%. Compute the forward 1y-into-1y vol, then the value of a 1y-forward-start ATM call on \\(S=100\\), with \\(r=0\\), that starts in one year and runs one year.",
-  "back": "<b>Forward variance:</b> total variance to 2y is \\(0.22^2\\times2=0.0968\\); to 1y is \\(0.20^2\\times1=0.04\\). Forward variance over \\([1,2]\\) is \\(0.0968-0.04=0.0568\\) per year. So \\(\\sigma_f=\\sqrt{0.0568}=23.8\\%\\).<br>\n<b>Forward-start value:</b> the strike is set at spot in one year, so the option is an ATM call on the forward spot with vol \\(\\sigma_f\\) over one year. Price \\(=S(2N(\\sigma_f/2)-1)=100\\times(2\\times0.5474-1)=9.48\\). The \\(0.4S\\sigma_f\\sqrt{\\tau}\\) rule gives 9.51.<br>\n<b>Interviewer follow-up:</b> \"What happens to \\(\\sigma_f\\) if the 2y vol is 20% flat?\" It is 20%, because the variance has no kink. A kink in the term structure is exactly what the forward variance measures.",
+  "back": "<b>Forward variance:</b> total variance to 2y is \\(0.22^2\\times2=0.0968\\); to 1y is \\(0.20^2\\times1=0.04\\). Forward variance over \\([1,2]\\) is \\(0.0968-0.04=0.0568\\) per year. So \\(\\sigma_f=\\sqrt{0.0568}=23.8\\%\\).<br>\n<b>Forward-start value:</b> the strike is set at spot in one year, so the option is an ATM call on the forward spot with vol \\(\\sigma_f\\) over one year. Price \\(=S(2N(\\sigma_f/2)-1)=100\\times(2\\times0.54742-1)=9.49\\). The \\(\\tfrac{1}{\\sqrt{2\\pi}}S\\sigma_f\\sqrt{\\tau}\\) rule gives 9.51.<br>\n<b>Interviewer follow-up:</b> \"What happens to \\(\\sigma_f\\) if the 2y vol is 20% flat?\" It is 20%, because the variance has no kink. A kink in the term structure is exactly what the forward variance measures.",
   "tags": [
    "derivatives",
    "forward_vol",
@@ -294,7 +294,7 @@
  {
   "type": "basic",
   "front": "<b>Case study: digital option and its call-spread hedge with smile.</b> A 1y digital pays £1m if \\(S_T>100\\). \\(S=100\\), \\(\\sigma=20\\%\\), \\(r=5\\%\\). (a) Give the flat-vol digital. (b) Check it with a call spread at flat vol. (c) Add a skew \\(\\partial_K\\sigma=-0.0005\\) per unit of strike and recompute.",
-  "back": "<b>(a)</b> \\(e^{-rT}N(d_2)=0.9512\\times0.5596=0.5323\\), so £532,323.<br>\n<b>(b)</b> A 0.01-wide spread (100/100.01) at flat vol gives 0.5323. A 1-point spread (100/101) gives 0.5230: the hedge is biased by about 0.009 at width 1, so the spread must be narrow.<br>\n<b>(c)</b> With the skew, the digital is \\(0.5323-\\text{vega}\\times\\partial_K\\sigma=0.5323+37.5\\times0.0005=0.5511\\), so £551,087. Vega is 37.5 per unit of vol, so the correction is about £18,800.<br>\n<b>Interviewer follow-up:</b> \"Which way does a dealer hedge the difference?\" The skew cost is hedged by the strike-ladder of vanilla options, not by the digital delta alone, since the correction is vega times skew.",
+  "back": "<b>(a)</b> \\(e^{-rT}N(d_2)=0.9512\\times0.5596=0.5323\\), so £532,325.<br>\n<b>(b)</b> A 0.01-wide spread (100/100.01) at flat vol gives 0.5322, within 0.0001 of the exact value. A 1-point spread (100/101) gives 0.5230: the hedge is biased by about 0.009 at width 1, so the spread must be narrow.<br>\n<b>(c)</b> With the skew, the digital is \\(0.5323-\\text{vega}\\times\\partial_K\\sigma=0.5323+37.5\\times0.0005=0.5511\\), so £551,075. Vega is 37.5 per unit of vol, so the correction is about £18,750.<br>\n<b>Interviewer follow-up:</b> \"Which way does a dealer hedge the difference?\" The skew cost is hedged by the strike-ladder of vanilla options, not by the digital delta alone, since the correction is vega times skew.",
   "tags": [
    "derivatives",
    "digital",
@@ -332,7 +332,7 @@
  {
   "type": "cloze",
   "front": "Put-call parity for European options on a non-dividend stock: \\(C-P=\\){{c1::\\(S-Ke^{-rT}\\)}}. In forward form the same identity reads \\(C-P=\\){{c2::\\(e^{-rT}(F-K)\\)}}, with \\(F\\) the forward on the stock.",
-  "back": "Both forms need only no-arbitrage and European exercise. The forward form extends to a dividend yield by replacing \\(S\\) with \\(Se^{-qT}\\) in \\(F\\).",
+  "back": "Both forms need only no-arbitrage and European exercise. The forward form extends to a dividend yield through \\(F=Se^{(r-q)T}\\).",
   "tags": [
    "derivatives",
    "put_call_parity",
@@ -342,8 +342,8 @@
  },
  {
   "type": "cloze",
-  "front": "In a one-step binomial tree with continuous \\(r\\), the risk-neutral up probability is \\(p=\\){{c1::\\(\\dfrac{e^{rh}-d}{u-d}\\)}}. No-arbitrage requires \\(d<e^{rh}<u\\).",
-  "back": "If \\(e^{rh}\\ge u\\), buy the stock with borrowed money and earn a riskless profit at the up node. The check is the first thing to do with any tree.",
+  "front": "In a one-step binomial tree with continuous \\(r\\), the risk-neutral up probability is \\(p=\\){{c1::\\(\\dfrac{e^{rh}-d}{u-d}\\)}}. No-arbitrage requires \\(d&lt;e^{rh}&lt;u\\).",
+  "back": "If \\(e^{rh}\\ge u\\), the stock never returns more than cash, so sell the stock short and lend at \\(r\\) for a riskless profit. The check is the first thing to do with any tree.",
   "tags": [
    "derivatives",
    "binomial",
@@ -421,7 +421,7 @@
  {
   "type": "cloze",
   "front": "In Vasicek, \\(dr=a(b-r)dt+\\sigma dW\\), the long-end yield tends to \\(\\){{c1::\\(b-\\sigma^2/(2a^2)\\)}}, which lies {{c2::below}} the long-run mean \\(b\\).",
-  "back": "The convexity term comes from Jensen's inequality: the yield is \\(-\\ln P/\\tau\\), a concave function of the Gaussian bond price.",
+  "back": "The convexity term comes from Jensen's inequality applied to \\(E[e^{-\\int r}]\\): the bond price is the exponential of a Gaussian quantity, and \\(y=-\\ln P/\\tau\\).",
   "tags": [
    "derivatives",
    "vasicek",
@@ -511,7 +511,7 @@
  {
   "type": "basic",
   "front": "What is the ATM vega of a 1y call on \\(S=100\\) in units of \\(\\sigma\\), and what approximation gives it in terms of \\(S\\) and \\(\\sqrt T\\)? Give the ratio of 3-month to 1-year ATM vega.",
-  "back": "<b>Vega:</b> \\(\\mathcal V=S\\varphi(d_1)\\sqrt T\\). At ATM-forward (\\(d_1\\approx0\\)), \\(\\varphi(0)=0.3989\\), so \\(\\mathcal V\\approx0.40\\,S\\sqrt T\\).<br>\n<b>Numbers:</b> with \\(S=K=100\\), \\(r=5\\%\\), \\(d_1=0.35\\), the exact vega is 37.5 per unit of vol, or 0.375 per vol point. At ATM-forward the approximation gives 39.9.<br>\n<b>Term scaling:</b> vega scales with \\(\\sqrt T\\) at the money, so the 3-month ATM vega is \\(\\sqrt{0.25}=0.5\\) of the 1-year vega.<br>\n<b>Interviewer follow-up:</b> \"Is vega the same for call and put?\" Yes, with the same strike and expiry; put-call parity makes \\(\\partial_\\sigma(C-P)=0\\).",
+  "back": "<b>Vega:</b> \\(\\mathcal V=S\\varphi(d_1)\\sqrt T\\). At ATM-forward (\\(d_1\\approx0\\)), \\(\\varphi(0)=0.3989\\), so \\(\\mathcal V\\approx0.40\\,S\\sqrt T\\).<br>\n<b>Numbers:</b> with \\(S=K=100\\), \\(r=5\\%\\), \\(d_1=0.35\\), the exact vega is 37.5 per unit of vol, or 0.375 per vol point. At ATM-forward the approximation gives 39.9.<br>\n<b>Term scaling:</b> at the forward, vega scales with \\(\\sqrt T\\), so the 3-month vega is \\(0.5\\) of the 1-year vega. With \\(S=K=100\\) and \\(r=5\\%\\) the exact ratio is 0.52 (19.64 against 37.52).<br>\n<b>Interviewer follow-up:</b> \"Is vega the same for call and put?\" Yes, with the same strike and expiry; put-call parity makes \\(\\partial_\\sigma(C-P)=0\\).",
   "tags": [
    "derivatives",
    "greeks",
@@ -522,7 +522,7 @@
  {
   "type": "basic",
   "front": "give the Black-Scholes vanna of a European call, \\(\\partial\\Delta/\\partial\\sigma\\), with its formula and value for \\(S=K=100\\), \\(\\sigma=20\\%\\), \\(T=1\\), \\(r=5\\%\\). What does its sign mean for a desk delta-hedging through a vol move?",
-  "back": "<b>Formula:</b> \\(\\partial_\\sigma\\Delta_C=\\varphi(d_1)\\partial_\\sigma d_1=-\\dfrac{\\varphi(d_1)\\,d_2}{\\sigma}\\).<br>\n<b>Value:</b> \\(-0.3752\\times0.15/0.20=-0.281\\).<br>\n<b>Sign:</b> negative when \\(d_2>0\\), i.e. when the call is in the money on the forward. A rise in vol then lowers the call delta, so the desk must sell stock to stay hedged after a vol move. Vanna vanishes at \\(d_2=0\\), the ATM-forward point.<br>\n<b>Interviewer follow-up:</b> \"What does a vol rise do to a desk hedged in a sell-off?\" With negative vanna, a vol rise lowers the call delta. A desk short the call and long stock then has too much stock and sells; a desk long the call buys.",
+  "back": "<b>Formula:</b> \\(\\partial_\\sigma\\Delta_C=\\varphi(d_1)\\partial_\\sigma d_1=-\\dfrac{\\varphi(d_1)\\,d_2}{\\sigma}\\).<br>\n<b>Value:</b> \\(-0.3752\\times0.15/0.20=-0.281\\).<br>\n<b>Sign:</b> negative when \\(d_2>0\\), i.e. when the call is in the money on the forward. A rise in vol then lowers the call delta, so the desk must sell stock to stay hedged after a vol move. Vanna vanishes at \\(d_2=0\\), i.e. at strike \\(K=Fe^{-\\sigma^2T/2}\\), about 103.05 here: slightly below the forward, not at \\(K=F\\).<br>\n<b>Interviewer follow-up:</b> \"What does a vol rise do to a desk hedged in a sell-off?\" With negative vanna, a vol rise lowers the call delta. A desk short the call and long stock then has too much stock and sells; a desk long the call buys.",
   "tags": [
    "derivatives",
    "greeks",
@@ -567,7 +567,7 @@
  {
   "type": "basic",
   "front": "A dealer is short ATM gamma. Explain the direction of its delta-hedging trades as the underlying rises and falls, and why this matters for the market near expiry.",
-  "back": "<b>Direction:</b> for a short call the dealer's delta is \\(-\\Delta_C\\). As the stock rises, \\(\\Delta_C\\) rises, so the short delta becomes more negative: the dealer buys stock as the price rises. As the stock falls it sells stock.<br>\n<b>Scale:</b> 10,000 ATM options with gamma 0.0188 per share are short 188 shares of delta per £1 move.<br>\n<b>Market effect:</b> the dealer's trades move the price in the same direction as the market, which amplifies moves. Near expiry, gamma concentrates at the strike, so hedging flows pin the price there.<br>\n<b>Interviewer follow-up:</b> \"What is the opposite position, and what flow does it create?\" A long-gamma dealer buys low and sells high, which dampens moves.",
+  "back": "<b>Direction:</b> for a short call the dealer's delta is \\(-\\Delta_C\\). As the stock rises, \\(\\Delta_C\\) rises, so the short delta becomes more negative: the dealer buys stock as the price rises. As the stock falls it sells stock.<br>\n<b>Scale:</b> 10,000 ATM options with gamma 0.0188 per share are short 188 shares of delta per £1 move.<br>\n<b>Market effect:</b> the dealer's trades move the price in the same direction as the market, which amplifies moves. Near expiry, gamma concentrates at the strike, so these flows are strongest there: a short-gamma dealer accelerates moves through the strike, while a long-gamma dealer pins the price near it.<br>\n<b>Interviewer follow-up:</b> \"What is the opposite position, and what flow does it create?\" A long-gamma dealer buys low and sells high, which dampens moves.",
   "tags": [
    "derivatives",
    "greeks",
@@ -579,7 +579,7 @@
  {
   "type": "basic",
   "front": "Define the 25-delta risk reversal and the butterfly quote. Give the sign of the risk reversal in a market with negative equity skew, and compute both for ATM 20%, 25-delta call 19%, 25-delta put 22%.",
-  "back": "<b>Risk reversal:</b> \\(RR=\\sigma_{25\\Delta C}-\\sigma_{25\\Delta P}\\). It measures skew, the tilt of the smile.<br>\n<b>Butterfly:</b> \\(BF=\\tfrac12(\\sigma_{25\\Delta C}+\\sigma_{25\\Delta P})-\\sigma_{ATM}\\). It measures smile curvature, the excess kurtosis of the implied distribution.<br>\n<b>Sign:</b> negative skew makes puts richer, so \\(RR<0\\).<br>\n<b>Numbers:</b> \\(RR=19-22=-3\\) vol points. \\(BF=\\tfrac12(19+22)-20=0.5\\) vol points.<br>\n<b>Interviewer follow-up:</b> \"Which quote drives the strike of a strangle?\" The 25-delta call and put strikes. The strangle's vol is \\(\\sigma_{ATM}+BF\\) when the RR is zero.",
+  "back": "<b>Risk reversal:</b> \\(RR=\\sigma_{25\\Delta C}-\\sigma_{25\\Delta P}\\). It measures skew, the tilt of the smile.<br>\n<b>Butterfly:</b> \\(BF=\\tfrac12(\\sigma_{25\\Delta C}+\\sigma_{25\\Delta P})-\\sigma_{ATM}\\). It measures smile curvature, the excess kurtosis of the implied distribution.<br>\n<b>Sign:</b> negative skew makes puts richer, so \\(RR&lt;0\\).<br>\n<b>Numbers:</b> \\(RR=19-22=-3\\) vol points. \\(BF=\\tfrac12(19+22)-20=0.5\\) vol points.<br>\n<b>Interviewer follow-up:</b> \"Which quote drives the strike of a strangle?\" The 25-delta call and put strikes. The strangle's vol is \\(\\sigma_{ATM}+BF\\) when the RR is zero.",
   "tags": [
    "derivatives",
    "smile",
@@ -591,7 +591,7 @@
  {
   "type": "basic",
   "front": "For a 1y ATM straddle on \\(S=100\\) (\\(K=100\\), \\(\\sigma=20\\%\\), \\(r=5\\%\\)), give its delta, gamma, vega and theta. Explain why its delta is not zero even though it is struck at spot.",
-  "back": "<b>Greeks:</b> delta \\(=\\Delta_C+\\Delta_P=0.637-0.363=0.274\\). Gamma \\(=2\\times0.0188=0.0375\\). Vega \\(=2\\times37.5=75.0\\) per unit of vol, or 0.75 per vol point. Theta \\(=-6.41-1.66=-8.07\\) per year.<br>\n<b>Why delta is positive:</b> the forward is \\(100e^{0.05}=105.13\\), above the strike. The straddle's delta is \\(2N(d_1)-1\\), which is zero only when the strike equals the forward.<br>\n<b>Interviewer follow-up:</b> \"At what strike is the straddle delta-neutral?\" At the forward, \\(K=Se^{rT}\\), where \\(d_1=0\\).",
+  "back": "<b>Greeks:</b> delta \\(=\\Delta_C+\\Delta_P=0.637-0.363=0.274\\). Gamma \\(=2\\times0.0188=0.0375\\). Vega \\(=2\\times37.5=75.0\\) per unit of vol, or 0.75 per vol point. Theta \\(=-6.41-1.66=-8.07\\) per year.<br>\n<b>Why delta is positive:</b> the forward is \\(100e^{0.05}=105.13\\), above the strike. The straddle's delta is \\(2N(d_1)-1\\), which is zero only at \\(d_1=0\\), i.e. \\(K=Se^{(r+\\frac12\\sigma^2)T}=107.25\\), a strike above the forward.<br>\n<b>Interviewer follow-up:</b> \"At what strike is the straddle delta-neutral?\" At \\(K=Se^{(r+\\frac12\\sigma^2)T}=107.25\\), where \\(d_1=0\\).",
   "tags": [
    "derivatives",
    "greeks",
