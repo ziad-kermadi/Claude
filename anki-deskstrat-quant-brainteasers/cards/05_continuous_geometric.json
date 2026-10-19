@@ -225,6 +225,11 @@
    "uniform",
    "beta",
    "fmt_solve"
+  ],
+  "hints": [
+   "Sort the five draws. What is the distribution of the middle one, and does its rank tell you its parameters?",
+   "The median is an order statistic. Use the fact that a uniform order statistic has a Beta law, then apply the Beta variance formula.",
+   "Let \\(\\alpha\\) be the rank and \\(\\beta=n-\\text{rank}+1\\), with \\(n\\) the number of draws; write \\(\\text{Var}=\\dfrac{\\alpha\\beta}{(\\alpha+\\beta)^2(\\alpha+\\beta+1)}\\) and substitute your own \\(\\alpha,\\beta\\)."
   ]
  },
  {
@@ -237,6 +242,11 @@
    "stick",
    "uniform",
    "fmt_solve"
+  ],
+  "hints": [
+   "Three pieces form a triangle only under a constraint on each piece. Can two pieces violate that constraint at the same time?",
+   "Use the complement: find the chance that some piece is at least half the stick, and check whether those bad events can overlap.",
+   "Order the cuts as \\(U_{(1)}<U_{(2)}\\); the pieces are \\(U_{(1)}\\), \\(U_{(2)}-U_{(1)}\\) and \\(1-U_{(2)}\\), and the triangle event is that each piece is less than \\(\\tfrac12\\)."
   ]
  },
  {
@@ -248,6 +258,11 @@
    "s_geometric_probability",
    "circle",
    "fmt_solve"
+  ],
+  "hints": [
+   "Is there a natural reference point among the five, so that 'all in one half' can be decided from it?",
+   "Choose the point that is first clockwise of the others. The rest must all fall in the half-circle that starts there, and these reference events are disjoint, so you can add them.",
+   "\\(P=n\\,q^{\\,n-1}\\), where \\(n\\) is the number of points and \\(q\\) is the chance that one other point lands in the half-circle starting at the reference; identify \\(q\\)."
   ]
  },
  {
@@ -259,6 +274,11 @@
    "meeting",
    "uniform",
    "fmt_solve"
+  ],
+  "hints": [
+   "Draw the two arrival times as a point in the unit square. Which region of the square corresponds to a meeting?",
+   "A meeting is a diagonal band around \\(X=Y\\). Find its area by subtracting the corner regions outside it.",
+   "Meeting means \\(|X-Y|\\le w\\) with \\(w\\) the wait in hours; write \\(P=1-(\\text{area of the two corner triangles})\\), and give each triangle legs \\(1-w\\)."
   ]
  },
  {
@@ -270,6 +290,11 @@
    "bertrand",
    "disk",
    "fmt_solve"
+  ],
+  "hints": [
+   "Chord length depends on how far its midpoint is from the centre. For which midpoints is the chord longer than \\(\\sqrt3\\)?",
+   "Express chord length through the midpoint's distance \\(d\\) from the centre. The long-chord event becomes 'the midpoint lies in a smaller concentric disk', so compare areas.",
+   "A chord whose midpoint is at distance \\(d\\) has length \\(2\\sqrt{1-d^2}\\); set \\(2\\sqrt{1-d^2}>\\sqrt3\\), solve for the critical radius \\(r\\), and write \\(P=r^2\\)."
   ]
  },
  {
@@ -281,6 +306,11 @@
    "s_indicators",
    "buffon",
    "fmt_solve"
+  ],
+  "hints": [
+   "Consider the needle's centre and the nearest line. What tilt of the needle is needed to reach that line, and how does the tilt affect the crossing?",
+   "A crossing happens iff the centre's distance to the nearest line is at most half the needle's vertical extent. Average over the uniform distance and the uniform angle.",
+   "Let \\(h\\) be the centre's distance to the nearest line and \\(\\theta\\) the angle; crossing iff \\(h\\le \\tfrac{\\ell}{2}|\\sin\\theta|\\), so \\(P=\\mathbb E\\!\\left[\\tfrac{2}{d}\\cdot\\tfrac{\\ell}{2}|\\sin\\theta|\\right]\\) with \\(\\ell=d/2\\)."
   ]
  },
  {
@@ -292,6 +322,11 @@
    "exponential",
    "races",
    "fmt_solve"
+  ],
+  "hints": [
+   "Several independent clocks start together. What determines which one rings first, and how long the first ring takes?",
+   "Use the race fact: the first ring is exponential with rate equal to the sum of all the rates, and each clock wins with probability proportional to its own rate.",
+   "Let \\(\\Lambda\\) be the sum of the three rates; then \\(P(\\text{clock }i\\text{ first})=\\lambda_i/\\Lambda\\) and \\(E[\\text{first ring}]=1/\\Lambda\\). Compute \\(\\Lambda\\) from the statement."
   ]
  },
  {
@@ -303,6 +338,11 @@
    "s_memorylessness",
    "exponential",
    "fmt_solve"
+  ],
+  "hints": [
+   "The failures happen one after another. After the first failure, do the surviving machines still have the same remaining-life distribution?",
+   "Use the spacings view: the gaps between successive failures are independent exponentials, and each gap's rate is set by how many machines are still working.",
+   "\\(E[X_{(2)}]=E[G_1]+E[G_2]\\), where \\(G_j\\) is exponential with rate equal to (number still working)\\(\\times\\lambda\\); write the rate for \\(G_1\\) and for \\(G_2\\)."
   ]
  },
  {
@@ -314,6 +354,11 @@
    "poisson",
    "superposition",
    "fmt_solve"
+  ],
+  "hints": [
+   "Merge the two streams and look only at the labels of the events. What is the chance that a given merged event is type A?",
+   "Each merged event is independently type A with a fixed probability, so the number of A's before the first B is geometric. Combine that with the chance that the B comes next.",
+   "\\(P=p_A^{\\,2}\\,p_B\\) with \\(p_A=\\lambda_A/(\\lambda_A+\\lambda_B)\\) and \\(p_B=1-p_A\\); evaluate \\(p_A\\) from the two rates."
   ]
  },
  {
@@ -325,6 +370,11 @@
    "poisson",
    "inspection_paradox",
    "fmt_solve"
+  ],
+  "hints": [
+   "A random arrival is more likely to land in a long gap. Are all headways equally likely to contain your arrival?",
+   "Use the inspection formula: the expected wait is \\(E[X^2]/(2E[X])\\), where \\(X\\) is the headway distribution seen by the arrival.",
+   "With the two headway values \\(a\\) and \\(b\\) equally likely, write \\(E[X]=\\tfrac{a+b}{2}\\) and \\(E[X^2]=\\tfrac{a^2+b^2}{2}\\), then substitute into the inspection formula."
   ]
  },
  {
@@ -336,6 +386,11 @@
    "uniform",
    "irwin_hall",
    "fmt_solve"
+  ],
+  "hints": [
+   "\\(N=3\\) means the first two draws stay within a level and the third pushes past it. Which cumulative events are easiest to compute?",
+   "Use the tail trick \\(P(N=n)=P(N>n-1)-P(N>n)\\). The event \\(N>n\\) is that the first \\(n\\) draws sum to at most the level.",
+   "\\(P(N>n)=P(U_1+\\cdots+U_n\\le 1)\\), the volume of a corner region of the unit cube; write \\(P(N=3)=P(N>2)-P(N>3)\\)."
   ]
  },
  {
@@ -347,6 +402,11 @@
    "convolution",
    "exponential",
    "fmt_solve"
+  ],
+  "hints": [
+   "What is the density of the sum of two independent exponentials? Set up the probability as an integral of that density over \\([0,1]\\).",
+   "Convolve the two densities to get the density of \\(S=X+Y\\), then integrate it from 0 to 1. The convolution is a one-dimensional integral over the split point.",
+   "\\(f_S(s)=\\int_0^s e^{-x}\\,e^{-(s-x)}\\,dx\\) and \\(P(S\\le 1)=\\int_0^1 f_S(s)\\,ds\\)."
   ]
  },
  {
@@ -357,6 +417,11 @@
    "s_clt_normal_approx",
    "gaussian_integral",
    "fmt_solve"
+  ],
+  "hints": [
+   "Recognise the Gaussian kernel in the integrand. Whose moments does this integral compute?",
+   "Write the integral as the normalising constant of the standard normal times a moment: the polynomial becomes an expectation under that normal law.",
+   "\\(\\int_{-\\infty}^{\\infty} x^4 e^{-x^2/2}\\,dx=\\sqrt{2\\pi}\\;\\mathbb E[Z^4]\\) for \\(Z\\sim N(0,1)\\); evaluate \\(\\mathbb E[Z^4]\\)."
   ]
  },
  {
@@ -368,6 +433,11 @@
    "normal",
    "correlation",
    "fmt_solve"
+  ],
+  "hints": [
+   "Split the plane into four quadrants by the signs of \\(X\\) and \\(Y\\). How does a correlation of \\(\\tfrac12\\) redistribute mass among the quadrants compared with independence?",
+   "Use the orthant formula for a standard bivariate normal: the positive-positive probability is a constant plus an arcsine term in \\(\\rho\\), divided by \\(\\pi\\).",
+   "\\(P(X>0,Y>0)=\\tfrac14+\\dfrac{\\arcsin\\rho}{2\\pi}\\); substitute \\(\\rho=\\tfrac12\\) and simplify."
   ]
  },
  {
@@ -379,6 +449,11 @@
    "normal",
    "max",
    "fmt_solve"
+  ],
+  "hints": [
+   "Rewrite the maximum of two variables in terms of their sum and their absolute difference. What is the distribution of the difference \\(X-Y\\)?",
+   "Use \\(\\max(a,b)=\\tfrac{a+b}{2}+\\tfrac{|a-b|}{2}\\). The sum has mean zero, so the work is in the mean of an absolute normal.",
+   "\\(E[\\max(X,Y)]=\\tfrac12E[X+Y]+\\tfrac12E|X-Y|\\), with \\(\\sigma^2=\\text{Var}(X-Y)=2-2\\rho\\) and \\(E|X-Y|=\\sigma\\sqrt{2/\\pi}\\); compute \\(\\sigma\\) for this \\(\\rho\\)."
   ]
  },
  {
@@ -390,6 +465,11 @@
    "normal",
    "conditioning",
    "fmt_solve"
+  ],
+  "hints": [
+   "Once the sum is fixed at a value, what is the distribution of \\(X\\)? Is it still normal, and what are its mean and variance?",
+   "Conditioning a bivariate normal on a linear combination gives a normal conditional law. Use the regression formulas for its mean and variance, then standardise.",
+   "\\(X\\mid X+Y=s\\sim N(\\mu,\\sigma^2)\\) with \\(\\mu=\\dfrac{\\text{Cov}(X,S)}{\\text{Var}(S)}\\,s\\) and \\(\\sigma^2=\\text{Var}(X)-\\dfrac{\\text{Cov}(X,S)^2}{\\text{Var}(S)}\\); then \\(P(X>1)=1-\\Phi\\!\\left(\\tfrac{1-\\mu}{\\sigma}\\right)\\)."
   ]
  },
  {
@@ -401,6 +481,11 @@
    "cauchy",
    "normal",
    "fmt_solve"
+  ],
+  "hints": [
+   "Think of \\((X,Y)\\) as a point in the plane. What does the ratio \\(X/Y\\) measure about that point, and what symmetry does the joint law have?",
+   "The pair is rotationally symmetric, so its angle is uniform. The ratio is the tangent of that angle, so the event is a union of arcs.",
+   "Write \\(X/Y=\\tan\\theta\\) with \\(\\theta\\) uniform on \\([0,2\\pi)\\); the event is \\(|\\tan\\theta|>\\sqrt3\\), and its probability is the total arc length of that set divided by \\(2\\pi\\)."
   ]
  },
  {
@@ -412,6 +497,11 @@
    "exponential",
    "jacobian",
    "fmt_solve"
+  ],
+  "hints": [
+   "Introduce the sum \\(S=X+Y\\) and the share \\(R=X/S\\). Does the joint density of \\((S,R)\\) factorise, and what law does \\(R\\) follow?",
+   "Change variables to \\((S,R)\\) with the Jacobian. If the joint density factorises, the share has a simple marginal law that you can integrate.",
+   "With \\(x=sr\\) and \\(y=s(1-r)\\), the Jacobian is \\(|J|=s\\), so \\(f_{S,R}(s,r)=|J|\\,f_X(sr)\\,f_Y(s(1-r))\\); simplify this and read off the marginal of \\(R\\)."
   ]
  },
  {
@@ -423,6 +513,11 @@
    "uniform",
    "product",
    "fmt_solve"
+  ],
+  "hints": [
+   "Condition on the first uniform. For a fixed value of it, what range of the second makes the product at most the threshold?",
+   "Integrate over the first variable. For each \\(u\\), the condition is \\(V\\le t/u\\), capped at 1. Split the integral at the point where \\(t/u\\) reaches 1.",
+   "\\(P(UV\\le t)=\\displaystyle\\int_0^1\\min\\!\\left(1,\\tfrac{t}{u}\\right)du\\); split at \\(u=t\\) and evaluate the two pieces with \\(t\\) kept symbolic first."
   ]
  },
  {
@@ -434,6 +529,11 @@
    "uniform",
    "range",
    "fmt_solve"
+  ],
+  "hints": [
+   "The range is the difference of two rank-based quantities. What are the expected values of the smallest and largest of \\(n\\) uniforms?",
+   "Use \\(E[U_{(k)}]=k/(n+1)\\) for the maximum and for the minimum, then subtract.",
+   "\\(E[R]=E[U_{(n)}]-E[U_{(1)}]=\\dfrac{n}{n+1}-\\dfrac{1}{n+1}\\), with \\(n\\) the number of draws in the statement."
   ]
  },
  {
@@ -445,6 +545,11 @@
    "s_order_statistics",
    "exponential",
    "fmt_solve"
+  ],
+  "hints": [
+   "Waiting for all four to occur means waiting for the last one. Can that wait be split into stages, one for each occurrence?",
+   "Use the spacings view for the maximum of iid exponentials: the time to the last one is a sum of independent exponentials whose rates change as each one occurs.",
+   "\\(E[\\max]=\\displaystyle\\sum_{j=1}^{4}\\frac{1}{j\\lambda}\\), where \\(\\lambda\\) is the per-hour rate given in the statement; write this sum out and evaluate it."
   ]
  },
  {
@@ -456,6 +561,11 @@
    "stick",
    "uniform",
    "fmt_solve"
+  ],
+  "hints": [
+   "Three pieces come from two random cuts. Is there any reason one position should be treated differently from the other two?",
+   "Use symmetry: the three pieces are exchangeable, so each is equally likely to be the longest, and ties have probability zero.",
+   "Let \\(p\\) be the probability that a given piece is the longest. Write the equation that the three such probabilities sum to 1, using the symmetry you found."
   ]
  },
  {
@@ -467,6 +577,11 @@
    "stick",
    "uniform",
    "fmt_solve"
+  ],
+  "hints": [
+   "Find the expected maximum through its tail: what is the chance that the longest piece exceeds a threshold \\(t\\)?",
+   "Use \\(E[M]=\\int_0^1 P(M>t)\\,dt\\). Get \\(P(M>t)\\) by inclusion-exclusion over the three pieces, since the events that two pieces both exceed \\(t\\) have a simple form.",
+   "\\(P(M>t)=\\sum_i P(S_i>t)-\\sum_{i<j}P(S_i>t,S_j>t)+P(S_1>t,S_2>t,S_3>t)\\), where each \\(S_i\\) is a piece; write each term as a power of a length in \\(t\\)."
   ]
  },
  {
@@ -478,6 +593,11 @@
    "bertrand",
    "circle",
    "fmt_solve"
+  ],
+  "hints": [
+   "The chord's length depends only on the angle between its two endpoints. Which angles produce a chord longer than the triangle's side?",
+   "A chord subtending angle \\(\\varphi\\) has length \\(2\\sin(\\varphi/2)\\). Find the set of separations that satisfy the threshold, and compare its size to the full circle.",
+   "Solve \\(2\\sin(\\varphi/2)>\\sqrt3\\) for \\(\\varphi\\in[0,2\\pi]\\), then \\(P=\\dfrac{\\text{length of that set}}{2\\pi}\\), since the separation of two uniform endpoints is uniform."
   ]
  },
  {
@@ -489,6 +609,11 @@
    "s_indicators",
    "uniform",
    "fmt_solve"
+  ],
+  "hints": [
+   "Instead of tracking the order statistics, consider each draw separately. Does each draw's position relative to \\(1/2\\) depend on the others?",
+   "Each draw falls below the level with a fixed probability, independently of the others, so the count is binomial. Count the ways to choose which two draws are below.",
+   "\\(P=\\binom{4}{2}\\,p^{2}(1-p)^{2}\\) with \\(p\\) the chance that one uniform draw is below \\(1/2\\); evaluate \\(p\\)."
   ]
  },
  {
@@ -499,6 +624,11 @@
    "s_order_statistics",
    "uniform",
    "fmt_solve"
+  ],
+  "hints": [
+   "The absolute difference of two numbers is the gap between the larger and the smaller. What are the expected values of the larger and the smaller?",
+   "Write \\(|U_1-U_2|=U_{(2)}-U_{(1)}\\), then use \\(E[U_{(k)}]=k/(n+1)\\) with \\(n=2\\) for both order statistics.",
+   "\\(E|U_1-U_2|=E[U_{(2)}]-E[U_{(1)}]\\); evaluate each term with the \\(k/(n+1)\\) formula."
   ]
  },
  {
@@ -510,6 +640,11 @@
    "stick",
    "perturbation",
    "fmt_perturb"
+  ],
+  "hints": [
+   "One cut is no longer random. Which of the earlier symmetry arguments still hold, and which cut is now free?",
+   "Condition on the random cut and treat the fixed cut as a constant. The triangle event becomes a constraint on the random cut alone, which you integrate over.",
+   "Let \\(y\\) be the uniform cut; the pieces are \\(1/3\\), \\(|y-1/3|\\) and \\(1-\\max(1/3,y)\\), so \\(P=\\displaystyle\\int_0^1\\mathbf 1\\{\\text{every piece}<\\tfrac12\\}\\,dy\\)."
   ]
  },
  {
@@ -520,6 +655,11 @@
    "s_order_statistics",
    "perturbation",
    "fmt_perturb"
+  ],
+  "hints": [
+   "The uniform formula for a minimum assumes a particular distribution function. What changes when the density is not flat?",
+   "Use the survival function of the minimum: \\(P(\\min>t)\\) is the square of \\(P(X_1>t)\\), then integrate over \\([0,1]\\).",
+   "\\(E[\\min]=\\displaystyle\\int_0^1\\big(1-F(t)\\big)^2\\,dt\\), where \\(F\\) is the CDF of one draw; find \\(F\\) from the density \\(2x\\)."
   ]
  },
  {
@@ -531,6 +671,11 @@
    "meeting",
    "perturbation",
    "fmt_perturb"
+  ],
+  "hints": [
+   "The meeting band is no longer centred on the diagonal of the square. Which corners fall outside the meeting region, and how big are they?",
+   "The meeting event is a shifted band between two diagonals. Subtract the corner triangles outside it, and let each have its own leg length set by the waits.",
+   "Meeting iff \\(Y-X\\in[-a,\\,b]\\) for constants \\(a,b\\) fixed by the two waits; write \\(P=1-(\\text{area of the two corner triangles})\\), each triangle having legs \\(1\\) minus the relevant bound."
   ]
  },
  {
@@ -542,6 +687,11 @@
    "circle",
    "perturbation",
    "fmt_perturb"
+  ],
+  "hints": [
+   "In the semicircle argument, what does the value one half do? If the arc is smaller than half the circle, does the same reference argument still work?",
+   "Use the reference-point argument with arc fraction \\(f\\): choose a reference point, and require every other point to lie within the arc of length \\(f\\) starting there.",
+   "\\(P=n\\,f^{\\,n-1}\\) for \\(f\\le\\tfrac12\\), where \\(n\\) is the number of points and \\(f\\) the arc fraction given in the statement; substitute these values."
   ]
  },
  {
@@ -554,6 +704,11 @@
    "inspection_paradox",
    "perturbation",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Regular buses give a passenger half a headway on average. Does random arrival of buses still make the expected wait half the headway?",
+   "Use the length-biased inspection formula: expected wait \\(=E[X^2]/(2E[X])\\) for the headway \\(X\\), and exponential headways have a known second moment.",
+   "For exponential \\(X\\) with mean \\(\\mu\\), \\(E[X^2]=2\\mu^2\\); write the expected wait in terms of \\(\\mu\\), then substitute the mean from the statement."
   ]
  },
  {
@@ -565,6 +720,11 @@
    "uniform",
    "perturbation",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Does having already waited change the remaining time when the arrival is bounded? Think about what the distribution looks like after you have survived past 4 minutes.",
+   "Condition on the elapsed wait: given the bus has not come yet, its arrival is uniform on the rest of the interval, so the remaining wait is the mean of that shorter interval.",
+   "Given \\(T>4\\), \\(T\\sim U(4,b)\\) with \\(b\\) the upper end of the window; write the expected remaining wait as the midpoint of \\([4,b]\\) minus 4."
   ]
  },
  {
@@ -576,6 +736,11 @@
    "uniform",
    "perturbation",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Rescale the draws so they look like the standard case. How does a threshold on a sum change when each term is multiplied by a constant?",
+   "Write \\(V_i=c\\,U_i\\) with \\(U_i\\) standard uniform, so the threshold on the sum rescales. Then reuse the tail-sum formula \\(E[N]=\\sum_{n\\ge0}P(N>n)\\).",
+   "\\(\\sum V_i\\le 1\\iff\\sum U_i\\le a\\) with \\(a=1/c\\); then \\(E[N]=\\sum_{n\\ge0}P(U_1+\\cdots+U_n\\le a)\\), where \\(c\\) comes from the support \\(U(0,2)\\)."
   ]
  },
  {
@@ -588,6 +753,11 @@
    "exponential",
    "perturbation",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Equal rates gave a neat density for the sum. What changes in that density when the two rates differ, and does it still simplify?",
+   "Convolve the two different exponential densities directly; the density of the sum is then a difference of two exponential terms. Integrate it over \\([0,1]\\).",
+   "\\(f_{X+Y}(s)=\\displaystyle\\int_0^s \\lambda e^{-\\lambda x}\\,\\mu e^{-\\mu(s-x)}\\,dx\\) with \\(\\lambda,\\mu\\) the two rates; evaluate this for the rates given."
   ]
  },
  {
@@ -599,6 +769,11 @@
    "exponential",
    "perturbation",
    "fmt_perturb"
+  ],
+  "hints": [
+   "With equal rates the share was uniform. Does changing one rate keep the share's law the same, or does it tilt toward one side?",
+   "Rewrite the event \\(\\{X/(X+Y)\\le t\\}\\) as \\(\\{Y\\ge cX\\}\\) for a constant \\(c\\) depending on \\(t\\), then use the exponential tail \\(P(Y>cX)\\).",
+   "\\(P(Y>cX)=\\displaystyle\\int_0^\\infty \\lambda e^{-\\lambda x}\\,e^{-\\mu c x}\\,dx\\), with \\(c=(1-t)/t\\) and \\(\\lambda,\\mu\\) the rates of \\(X\\) and \\(Y\\); evaluate it."
   ]
  },
  {
@@ -611,6 +786,11 @@
    "normal",
    "perturbation",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Does the sign of \\(X/Y\\) depend only on whether \\(X\\) and \\(Y\\) share a sign? Which quadrants does a positive correlation favour?",
+   "Reduce the question to a sign event for the pair. Then use the orthant formula for correlated normals, where the quadrant probabilities depend on \\(\\rho\\).",
+   "\\(P(X/Y\\le 0)=P(XY\\le 0)=1-P(XY>0)\\), and \\(P(XY>0)=\\tfrac12+\\tfrac{1}{\\pi}\\arcsin\\rho\\); substitute \\(\\rho=0.6\\)."
   ]
  },
  {
@@ -623,6 +803,11 @@
    "max",
    "perturbation",
    "fmt_perturb"
+  ],
+  "hints": [
+   "The earlier closed form assumed zero means. How would a nonzero mean change where the mass of the maximum lies?",
+   "Use Clark's formula for the expected maximum of two independent normals, which combines the means, the combined standard deviation and \\(\\Phi\\), \\(\\varphi\\) terms.",
+   "With \\(\\theta=\\sqrt{\\sigma_1^2+\\sigma_2^2}\\) and \\(\\alpha=(\\mu_1-\\mu_2)/\\theta\\), write \\(E[\\max]=\\mu_1\\Phi(\\alpha)+\\mu_2\\Phi(-\\alpha)+\\theta\\varphi(\\alpha)\\) and substitute the means and variances."
   ]
  },
  {
@@ -634,6 +819,11 @@
    "irwin_hall",
    "perturbation",
    "fmt_perturb"
+  ],
+  "hints": [
+   "The corner-simplex argument needs nonnegative variables. What does the support \\(U(-1,1)\\) do to the location of the sum?",
+   "Map each variable to a standard uniform by \\(V_i=2U_i-1\\), so the event becomes a threshold on a sum of standard uniforms; then use the symmetry \\(U\\mapsto 1-U\\).",
+   "Substitute \\(V_i=2U_i-1\\) into \\(\\sum V_i\\le 1\\) and solve for the threshold on \\(\\sum U_i\\); then write \\(P\\) as one minus a lower-tail probability using the symmetry."
   ]
  },
  {
@@ -646,6 +836,11 @@
    "circle",
    "twin",
    "fmt_twin"
+  ],
+  "hints": [
+   "A triangle inscribed in a circle misses the centre exactly when all three vertices lie on one side of it. What does that imply about a half-circle?",
+   "The hub is inside iff the three points are not all in one semicircle, so compute the complement with the reference-point count.",
+   "\\(P(\\text{hub inside})=1-P(\\text{all in one semicircle})\\), and \\(P(\\text{all in one semicircle})=n\\,(1/2)^{n-1}\\) with \\(n=3\\) points; write this subtraction."
   ]
  },
  {
@@ -657,6 +852,11 @@
    "meeting",
    "twin",
    "fmt_twin"
+  ],
+  "hints": [
+   "Two firing times are uniform on an interval. Draw them as a point in a square; which points count as a trip?",
+   "A trip is a diagonal band \\(|X-Y|\\le w\\). Find its area by subtracting the two corner triangles outside it.",
+   "\\(P=1-(\\text{area of the two corner triangles})\\), each with legs \\(1-w\\), where \\(w\\) is the coincidence window given in the statement."
   ]
  },
  {
@@ -668,6 +868,11 @@
    "stick",
    "twin",
    "fmt_twin"
+  ],
+  "hints": [
+   "Normalising the three lengths by their total maps them to a familiar set. What does 'can form a triangle' require of each normalised length?",
+   "Normalise by the sum: the normalised lengths are uniform on a simplex, which is the stick-breaking structure. A triangle needs each piece below half the total.",
+   "Let \\(S=L_1+L_2+L_3\\) and \\(p_i=L_i/S\\); a triangle exists iff every \\(p_i<\\tfrac12\\), so write \\(P\\) as the probability of that event on the simplex."
   ]
  },
  {
@@ -680,6 +885,11 @@
    "exponential",
    "twin",
    "fmt_twin"
+  ],
+  "hints": [
+   "Split the time until the last bulb burns out into stages, one per burnout. How long is each stage, given how many bulbs are still burning?",
+   "Use the spacings decomposition of the maximum: the first burnout, then the wait for the second, then for the third. Each stage is exponential with rate equal to the number still burning.",
+   "\\(E[\\max]=E[X_{(1)}]+E[X_{(2)}-X_{(1)}]+E[X_{(3)}-X_{(2)}]\\), with each term \\(=1/(j\\lambda)\\) for the number \\(j\\) still burning; write the three terms."
   ]
  },
  {
@@ -692,6 +902,11 @@
    "twin",
    "brownian",
    "fmt_twin"
+  ],
+  "hints": [
+   "Split the path at time 1. Given the value at time 2, what is the value at time 1, and how is the increment from 1 to 2 related to it?",
+   "Write \\(W_1\\) and \\(W_2-W_1\\) as independent normals. Conditioning on their sum is a linear regression, so use the regression formulas.",
+   "Set \\(X=W_1\\), \\(Y=W_2-W_1\\), \\(S=X+Y=W_2\\); then \\(E[X\\mid S=1]=\\tfrac{\\text{Cov}(X,S)}{\\text{Var}(S)}\\cdot 1\\) and \\(\\text{Var}(X\\mid S)=\\text{Var}(X)-\\tfrac{\\text{Cov}(X,S)^2}{\\text{Var}(S)}\\). Evaluate the covariances."
   ]
  },
  {
@@ -704,6 +919,11 @@
    "uniform",
    "twin",
    "fmt_twin"
+  ],
+  "hints": [
+   "Exponential service times have a memoryless property. What is the distribution of the first customer's share of the total service time?",
+   "For two iid exponentials the share is uniform, the same law as breaking a stick at a uniform point. Use that to read off the probability.",
+   "\\(P\\!\\left(\\tfrac{A}{A+B}\\le t\\right)=P\\!\\left(A\\le \\tfrac{t}{1-t}B\\right)\\); condition on \\(B\\) and integrate the exponential tail of \\(A\\) against the density of \\(B\\)."
   ]
  },
  {
@@ -715,6 +935,11 @@
    "buffon",
    "twin",
    "fmt_twin"
+  ],
+  "hints": [
+   "The seams are parallel lines and the stick is the same length as the spacing. Does the crossing chance depend on where the stick lands, or only on its angle?",
+   "Use Buffon's needle formula: for a stick no longer than the spacing, the crossing probability depends only on the ratio of length to spacing, with a factor \\(1/\\pi\\).",
+   "\\(P(\\text{cross})=\\dfrac{2\\ell}{\\pi d}\\) for \\(\\ell\\le d\\); identify the stick length \\(\\ell\\) and the seam spacing \\(d\\) in terms of \\(w\\)."
   ]
  },
  {
@@ -726,6 +951,11 @@
    "uniform",
    "twin",
    "fmt_twin"
+  ],
+  "hints": [
+   "Four independent uniform times in an interval. For four such points, where does the third-earliest one tend to land?",
+   "Use the order-statistic mean: the \\(k\\)-th smallest of \\(n\\) uniforms on an interval sits at expected fraction \\(k/(n+1)\\) of the way along.",
+   "\\(E[\\text{third arrival}]=\\dfrac{k}{n+1}\\times(\\text{interval length})\\) with \\(k=3\\), \\(n=4\\), and an interval of one hour; convert the result to minutes."
   ]
  },
  {
@@ -827,6 +1057,11 @@
    "uniform",
    "spacings",
    "fmt_chain"
+  ],
+  "hints": [
+   "The nine points cut the interval into ten pieces that are exchangeable. What is known about the expected maximum of a set of exchangeable spacings?",
+   "Use the known formula for the expected largest spacing from iid uniform cuts: it is a normalised sum of reciprocals, which you can read off from the number of cuts.",
+   "With \\(m\\) uniform points, \\(E[\\text{max gap}]=\\dfrac{1}{m+1}\\sum_{k=1}^{m+1}\\dfrac{1}{k}\\); identify \\(m\\) from the statement and write out the sum."
   ]
  },
  {
@@ -838,6 +1073,11 @@
    "s_complement",
    "spacings",
    "fmt_chain"
+  ],
+  "hints": [
+   "Can two of the ten gaps both exceed one half at once? What does that say about how the events for different gaps overlap?",
+   "Gaps longer than the level are disjoint events, so the probability is a sum over the gaps. For each gap, the chance it exceeds the level is a power of the complement.",
+   "\\(P(\\text{some gap}>t)=\\sum_{i=1}^{10}P(\\text{gap}_i>t)\\), with \\(P(\\text{gap}_i>t)=(1-t)^{9}\\) for each \\(i\\) and \\(t=\\tfrac12\\); write the sum."
   ]
  },
  {
@@ -849,6 +1089,11 @@
    "uniform",
    "spacings",
    "fmt_chain"
+  ],
+  "hints": [
+   "For the first gap to exceed a level, where must every one of the nine points lie?",
+   "Use the survival of the leftmost gap: it exceeds \\(t\\) exactly when all points lie beyond \\(t\\), and the points are independent.",
+   "\\(P(\\text{first gap}>t)=P(U_i>t\\ \\text{for all }i)=(1-t)^{9}\\); substitute \\(t=0.3\\)."
   ]
  },
  {
@@ -860,6 +1105,11 @@
    "s_geometric_probability",
    "circle",
    "fmt_chain"
+  ],
+  "hints": [
+   "With three points on a circle, is there one point you can single out as a reference, so that the other two must fall in a half-circle from it?",
+   "Pick the first clockwise point as reference. The other two must lie in the half-circle that starts there, and the choices of reference point are disjoint events.",
+   "\\(P=n\\,q^{\\,n-1}\\) with \\(n=3\\), where \\(q\\) is the chance a single other point lies in the half-circle starting at the reference; identify \\(q\\) and evaluate."
   ]
  },
  {
@@ -871,6 +1121,11 @@
    "s_geometric_probability",
    "circle",
    "fmt_chain"
+  ],
+  "hints": [
+   "With four points, does the reference argument still single out one point? How many other points must fall in the half-circle, and what is the chance for each?",
+   "Same reference-point count with four points: the reference is any of the four, and the other three must each fall in the half-circle clockwise from it.",
+   "\\(P=n\\,q^{\\,n-1}\\) with \\(n=4\\) and \\(q\\) the chance that one point lies in that half-circle; write the product of the three independent factors."
   ]
  },
  {
@@ -882,6 +1137,11 @@
    "s_geometric_probability",
    "circle",
    "fmt_chain"
+  ],
+  "hints": [
+   "Generalise the reference argument to any number of points. Why are the events for different reference points disjoint?",
+   "Write the probability as a count of reference choices times the chance that all remaining points fall in one half-circle from that reference. Then evaluate at the requested \\(n\\).",
+   "\\(P(n)=n\\,(1/2)^{\\,n-1}\\) for general \\(n\\); substitute the requested value of \\(n\\) and simplify."
   ]
  }
 ]
