@@ -118,7 +118,7 @@
  {
   "type": "basic",
   "front": "Six people are at a party. Prove that some three of them are mutual acquaintances, or some three are mutual strangers.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
-  "back": "<b>Structure:</b> s_pigeonhole, s_extremal (Ramsey-type).<br><b>Trigger:</b> every pair is labelled friend or stranger; fix one person and split the other five by label.<br><b>Key move:</b> Five others, two labels, so one label has at least three: call them A, B, C. If two of them are friends, they form a triangle with the fixed person. Otherwise A, B, C are mutual strangers.<br><b>Answer:</b> Yes. Five people are not enough (a pentagon-and-pentagram colouring avoids both, checked by exhaustive search), so \\(R(3,3)=6\\).",
+  "back": "<b>Structure:</b> s_pigeonhole, s_extremal (Ramsey-type).<br><b>Trigger:</b> every pair is labelled friend or stranger; fix one person and split the other five by label.<br><b>Key move:</b> Five others, two labels, so one label is shared by at least three of them: call them A, B, C. If that label is 'friend' and two of A, B, C are friends, those two and the fixed person form a friend triangle; otherwise A, B, C are mutual strangers. If the shared label is 'stranger', swap the two labels in this argument.<br><b>Answer:</b> Yes. Five people are not enough (a pentagon-and-pentagram colouring avoids both, checked by exhaustive search), so \\(R(3,3)=6\\).",
   "tags": [
    "s_pigeonhole",
    "s_extremal",
@@ -143,8 +143,8 @@
  },
  {
   "type": "basic",
-  "front": "Five pirates divide 100 gold coins by the classic sequential rule (the proposer needs at least half the votes, including his own; a rejected proposal kills the proposer). Change one rule: if a proposal is rejected, everyone dies and nobody gets any coins. Pirate 1 still needs at least half the votes. What does pirate 1 propose now?",
-  "back": "<b>What breaks:</b> the tail of the argument. In the classic game a rejected pirate expects a future share, which sets the price of his vote. With no future round, a rejection gives every other pirate 0.<br><b>Fix:</b> Pirate 1 needs 2 votes from pirates 2 to 5 (3 of 5 with his own). Each costs 1 coin, and any two pirates will do.<br><b>New answer:</b> Pirate 1 keeps 98; any two of pirates 2 to 5 get 1 coin each, the rest get 0 (for example \\((98,1,1,0,0)\\)).",
+  "front": "Five pirates divide 100 gold coins by the classic sequential rule (the proposer needs at least half the votes, including his own; a rejected proposal kills the proposer). Change one rule: if a proposal is rejected, everyone dies and nobody gets any coins. Pirate 1 still needs at least half the votes. Pirates first want to survive, then to maximise gold. What does pirate 1 propose now?",
+  "back": "<b>What breaks:</b> the tail of the argument. In the classic game a rejected pirate expects a future share, which sets the price of his vote. Here a rejection kills everyone, so every pirate prefers any offer that keeps him alive, even 0 coins.<br><b>Fix:</b> Pirate 1 needs 2 votes from pirates 2 to 5 (3 of 5 with his own). Each of them accepts 0, because the alternative is death.<br><b>New answer:</b> Pirate 1 keeps all 100 and offers 0 to everyone else: \\(100,0,0,0,0\\). All five accept, so the proposal passes.",
   "tags": [
    "s_backward_induction",
    "s_game_theory_equilibrium",
@@ -246,7 +246,7 @@
  {
   "type": "basic",
   "front": "A building has 100 floors. You have two identical eggs. An egg dropped from floor \\(f\\) breaks if \\(f\\) is at or above an unknown threshold \\(t\\) in \\(\\{1,\\dots,100\\}\\), or above 100 if none is in range, and survives otherwise. A broken egg is lost. What is the minimum worst-case number of drops needed to find \\(t\\)?",
-  "back": "<b>Answer:</b> 14 drops.<br><b>Structure:</b> s_dynamic_programming, s_extremal. Trigger: a fixed budget of tests, one breakable resource that is lost on failure.<br><b>Key move:</b> Drop from floor 14 first; if it survives, drop from 27, then 39, and so on, with steps shrinking by one. This uses the second egg as a linear scan at the end.<br><b>Working:</b> With \\(m\\) drops and 2 eggs, the number of resolvable thresholds is \\(\\binom m1+\\binom m2=\\tfrac{m(m+1)}2\\). Need \\(\\tfrac{m(m+1)}2\\ge 101\\) for thresholds in 1..100 or none: \\(m=13\\) gives 91, \\(m=14\\) gives 105.<br><b>Sanity check:</b> Dynamic programming over (eggs, drops) gives the same values for all small floor counts checked.<br><b>Transfer:</b> The 1000-floor version (below) and the three-egg version (chain).",
+  "back": "<b>Answer:</b> 14 drops.<br><b>Structure:</b> s_dynamic_programming, s_extremal. Trigger: a fixed budget of tests, one breakable resource that is lost on failure.<br><b>Key move:</b> Drop from floor 14 first; if it survives, drop from 27, then 39, and so on, with steps shrinking by one. This uses the second egg as a linear scan at the end.<br><b>Working:</b> With \\(m\\) drops and 2 eggs, the number of floors you can check is \\(\\binom m1+\\binom m2=\\tfrac{m(m+1)}2\\). The 101 outcomes (threshold 1..100, or none) need 100 floors checked, so \\(\\tfrac{m(m+1)}2\\ge 100\\): \\(m=13\\) gives 91, \\(m=14\\) gives 105.<br><b>Sanity check:</b> Dynamic programming over (eggs, drops) gives the same values for all small floor counts checked.<br><b>Transfer:</b> The 1000-floor version (below) and the three-egg version (chain).",
   "tags": [
    "s_dynamic_programming",
    "s_extremal",
@@ -258,7 +258,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: EGG 1/4]</b> Setup: 2 identical eggs and 100 floors. An egg breaks when dropped from floor \\(f\\) at or above an unknown threshold in 1..100, or survives if the threshold is higher. A broken egg is lost. What is the minimum worst-case number of drops to find the threshold?",
-  "back": "<b>Answer:</b> 14 drops.<br><b>Why:</b> With \\(m\\) drops and 2 eggs, the number of thresholds you can separate is \\(m(m+1)/2\\), so you need \\(m(m+1)/2\\ge 101\\). \\(m=13\\) separates only 91; \\(m=14\\) separates 105.",
+  "back": "<b>Answer:</b> 14 drops.<br><b>Why:</b> With \\(m\\) drops and 2 eggs, you can check \\(m(m+1)/2\\) floors, and 100 floors must be checked, so you need \\(m(m+1)/2\\ge 100\\). \\(m=13\\) checks only 91; \\(m=14\\) checks 105.",
   "tags": [
    "s_dynamic_programming",
    "s_extremal",
@@ -282,7 +282,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: EGG 3/4]</b> Same building (100 floors, unknown threshold, identical eggs that are lost when broken), now with 3 eggs. What is the minimum worst-case number of drops?",
-  "back": "<b>Answer:</b> 9 drops.<br><b>Why:</b> With \\(k\\) eggs and \\(m\\) drops you can separate \\(\\sum_{i=1}^{k}\\binom mi\\) thresholds. For \\(k=3\\): \\(m=8\\) gives \\(8+28+56=92\\lt 101\\); \\(m=9\\) gives \\(9+36+84=129\\ge 101\\).",
+  "back": "<b>Answer:</b> 9 drops.<br><b>Why:</b> With \\(k\\) eggs and \\(m\\) drops you can check \\(\\sum_{i=1}^{k}\\binom mi\\) floors, and 100 must be checked. For \\(k=3\\): \\(m=8\\) gives \\(8+28+56=92\\lt 100\\); \\(m=9\\) gives \\(9+36+84=129\\ge 100\\).",
   "tags": [
    "s_dynamic_programming",
    "s_extremal",
@@ -440,8 +440,8 @@
  },
  {
   "type": "basic",
-  "front": "Three piles of coins, sizes known. A move removes any positive number of coins from one pile. The player who takes the last coin wins. Who wins with perfect play?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
-  "back": "<b>Structure:</b> s_invariant (XOR of pile sizes; Sprague-Grundy for a sum of impartial games).<br><b>Trigger:</b> several heaps, each move touches one heap, normal play, and no shared resource.<br><b>Key move:</b> Losing positions for the mover are those with XOR 0. From a nonzero XOR, move one heap \\(h\\) to \\(h\\oplus X\\), where \\(X\\) is the total XOR.<br><b>Answer:</b> The mover wins iff the XOR is nonzero.",
+  "front": "Three piles hold 6, 9 and 13 coins. A move removes any positive number of coins from one pile. The player who takes the last coin wins. Who wins with perfect play?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_invariant (XOR of pile sizes; Sprague-Grundy for a sum of impartial games).<br><b>Trigger:</b> several heaps, each move touches one heap, normal play, and no shared resource.<br><b>Key move:</b> Losing positions for the mover are those with XOR 0. From a nonzero XOR, move one heap \\(h\\) to \\(h\\oplus X\\), where \\(X\\) is the total XOR.<br><b>Answer:</b> The first player wins. \\(6\\oplus9\\oplus13=2\\neq0\\), so take 2 coins from the 6-pile, leaving \\((4,9,13)\\) with XOR 0.",
   "tags": [
    "s_invariant",
    "s_game_theory_equilibrium",
@@ -529,7 +529,7 @@
  {
   "type": "basic",
   "front": "The same red/black game (turn cards, stop, win if the next card is red), but the deck has 30 red and 20 black cards. What is the maximum win probability under optimal play?",
-  "back": "<b>What breaks:</b> nothing in the argument. The martingale now starts at \\(p_0=30/50\\), not \\(1/2\\).<br><b>Fix:</b> Same optional stopping: win probability \\(=E[p_T]=p_0\\), and dynamic programming confirms it.<br><b>New answer:</b> 3/5. Every stopping rule gives 3/5. For 27 red and 26 black the answer would be 27/53.",
+  "back": "<b>What breaks:</b> nothing in the argument. The martingale now starts at \\(p_0=30/50\\), not \\(1/2\\).<br><b>Fix:</b> Same optional stopping: win probability \\(=E[p_T]=p_0\\), and dynamic programming confirms it.<br><b>New answer:</b> 3/5. Every rule that stops before the deck runs out gives 3/5 (a rule that never stops wins nothing). For 27 red and 26 black the answer would be 27/53.",
   "tags": [
    "s_martingale",
    "s_optional_stopping",
@@ -567,7 +567,7 @@
  {
   "type": "basic",
   "front": "100 applicants arrive in random order. You interview each one and must hire or reject immediately; rejected applicants cannot be recalled. You only learn each applicant's rank among those seen so far. You want to hire the single best applicant. What is the best success probability, and what rule achieves it?",
-  "back": "<b>Answer:</b> About 0.3710. Reject the first 37 or 38 applicants (both give 0.37101 or 0.37104), then hire the first one better than everyone seen so far.<br><b>Structure:</b> s_dynamic_programming, s_extremal. Trigger: irrevocable choices with only relative information.<br><b>Key move:</b> Threshold rule: reject the first \\(r-1\\), then take the first relative best. Success probability \\(P(r)=\\frac{r-1}{n}\\sum_{i=r}^{n}\\frac{1}{i-1}\\).<br><b>Working:</b> Candidate \\(i\\) is hired and is the best iff he is the overall best (probability \\(1/n\\)) and the best of the first \\(i-1\\) is among the first \\(r-1\\) (probability \\((r-1)/(i-1)\\)). Sum over \\(i\\).<br><b>Sanity check:</b> The limit is \\(1/e\\approx0.3679\\). A Monte Carlo of 100,000 trials gives 0.373, within sampling error of 0.371.<br><b>Transfer:</b> The house-hunting twin and the forced-hire perturbation.",
+  "back": "<b>Answer:</b> About 0.3710. Reject the first 36 or 37 applicants (success 0.37101 or 0.37104; skipping 38 gives 0.3708), then hire the first one better than everyone seen so far.<br><b>Structure:</b> s_dynamic_programming, s_extremal. Trigger: irrevocable choices with only relative information.<br><b>Key move:</b> Threshold rule: reject the first \\(r-1\\), then take the first relative best. Success probability \\(P(r)=\\frac{r-1}{n}\\sum_{i=r}^{n}\\frac{1}{i-1}\\).<br><b>Working:</b> Candidate \\(i\\) is hired and is the best iff he is the overall best (probability \\(1/n\\)) and the best of the first \\(i-1\\) is among the first \\(r-1\\) (probability \\((r-1)/(i-1)\\)). Sum over \\(i\\).<br><b>Sanity check:</b> The limit is \\(1/e\\approx0.3679\\). A Monte Carlo of 100,000 trials gives 0.373, within sampling error of 0.371.<br><b>Transfer:</b> The house-hunting twin and the forced-hire perturbation.",
   "tags": [
    "s_dynamic_programming",
    "s_extremal",
@@ -615,7 +615,7 @@
  {
   "type": "basic",
   "front": "You visit 100 houses in random order, one per day. After each visit you must buy that house or let it go forever. You want the single best house out of the 100, judged only by comparing each house with those already seen. What is the best probability of buying the best house, and what rule achieves it?",
-  "back": "<b>Classic:</b> the secretary problem (best of 100 candidates interviewed in random order, no recall).<br><b>Mapping:</b> houses are applicants; buying is hiring; the comparison is the relative rank.<br><b>Answer:</b> About 0.3710. Skip the first 37 or 38 houses, then buy the first one better than all seen so far.",
+  "back": "<b>Classic:</b> the secretary problem (best of 100 candidates interviewed in random order, no recall).<br><b>Mapping:</b> houses are applicants; buying is hiring; the comparison is the relative rank.<br><b>Answer:</b> About 0.3710. Skip the first 36 or 37 houses, then buy the first one better than all seen so far.",
   "tags": [
    "s_dynamic_programming",
    "s_extremal",
@@ -774,7 +774,7 @@
  {
   "type": "basic",
   "front": "Four people must cross a bridge at night. They have one torch, the bridge holds at most two people, and each pair crosses at the speed of the slower one. Their crossing times are 1, 2, 5 and 10 minutes. What is the minimum total time?",
-  "back": "<b>Answer:</b> 17 minutes.<br><b>Structure:</b> s_dynamic_programming. Trigger: a shared torch must come back, and a pair's cost is its slower member.<br><b>Key move:</b> Send the two fastest over, the fastest returns the torch; then the two slowest cross together, the second-fastest returns, and the two fastest cross.<br><b>Working:</b> \\((1,2)\\) cross: 2. 1 returns: 1. \\((5,10)\\) cross: 10. 2 returns: 2. \\((1,2)\\) cross: 2. Total \\(2+1+10+2+2=17\\). For sorted times \\(a\\le b\\le c\\le d\\), the answer is \\(\\min(a+3b+d,\\;2a+c+d)\\), which gives 17 here.<br><b>Sanity check:</b> An exhaustive shortest-path search over all states confirms 17.<br><b>Transfer:</b> The capacity-three variant (next card); the 1, 2, 5, 8 times give 15.",
+  "back": "<b>Answer:</b> 17 minutes.<br><b>Structure:</b> s_dynamic_programming. Trigger: a shared torch must come back, and a pair's cost is its slower member.<br><b>Key move:</b> Send the two fastest over, the fastest returns the torch; then the two slowest cross together, the second-fastest returns, and the two fastest cross.<br><b>Working:</b> \\((1,2)\\) cross: 2. 1 returns: 1. \\((5,10)\\) cross: 10. 2 returns: 2. \\((1,2)\\) cross: 2. Total \\(2+1+10+2+2=17\\). For sorted times \\(a\\le b\\le c\\le d\\), the answer is \\(\\min(a+3b+d,\\;2a+c+d)\\), which gives 17 here.<br><b>Sanity check:</b> An exhaustive shortest-path search over all states confirms 17.<br><b>Transfer:</b> The capacity-three variant (next card). For the times 1, 2, 5, 8 the answer is 15 with capacity two and 11 with capacity three.",
   "tags": [
    "s_dynamic_programming",
    "bridge_torch",
