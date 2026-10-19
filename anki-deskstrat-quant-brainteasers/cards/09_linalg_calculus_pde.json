@@ -18,6 +18,11 @@
    "correlation_matrix",
    "psd",
    "fmt_solve"
+  ],
+  "hints": [
+   "Write the 5 by 5 correlation matrix with 1 on the diagonal and rho everywhere else. Which property must every valid correlation matrix have, and how would you test it for a one-parameter family?",
+   "Matrices of the form (scalar) times I plus (scalar) times J, with J the all-ones matrix, have eigenvalues you can read off by hand: check what J does to the all-ones vector and to vectors whose entries sum to zero.",
+   "Set \\(C=(1-\\rho)I+\\rho J\\) and apply \\(C\\) to \\(\\mathbf 1\\), and separately to a vector \\(v\\) with \\(\\sum v_i=0\\). Write each eigenvalue equation \\(Cv=\\lambda v\\)."
   ]
  },
  {
@@ -29,6 +34,11 @@
    "correlation_matrix",
    "psd",
    "fmt_perturb"
+  ],
+  "hints": [
+   "A matrix with 1s on the diagonal and entries in \\([-1,1]\\) off it can still fail to be a covariance matrix. Which property does a covariance matrix need that the pairwise bounds do not guarantee, and how would you test it on a 3 by 3 matrix?",
+   "For a symmetric matrix, the determinant is the product of the eigenvalues. Compute the determinant of the new matrix; if it is negative, at least one eigenvalue must be negative.",
+   "Write \\(C=\\begin{pmatrix}1&0.9&0.9\\\\0.9&1&-0.9\\\\0.9&-0.9&1\\end{pmatrix}\\) and expand \\(\\det C\\) with the 3 by 3 formula."
   ]
  },
  {
@@ -40,6 +50,11 @@
    "cholesky",
    "simulation",
    "fmt_solve"
+  ],
+  "hints": [
+   "You need a matrix \\(L\\) that turns independent normals into correlated ones. If \\(L\\) has zeros above the diagonal, which matrix product must equal the covariance, and how many unknown entries are left?",
+   "Write \\(\\Sigma=LL^\\top\\) with \\(L\\) lower triangular and match entries position by position, starting from the top-left.",
+   "\\(\\begin{pmatrix}1&0.6\\\\0.6&1\\end{pmatrix}=\\begin{pmatrix}l_{11}&0\\\\l_{21}&l_{22}\\end{pmatrix}\\begin{pmatrix}l_{11}&l_{21}\\\\0&l_{22}\\end{pmatrix}\\). Multiply out the right side and compare entries."
   ]
  },
  {
@@ -62,6 +77,11 @@
    "determinant",
    "trace",
    "fmt_solve"
+  ],
+  "hints": [
+   "Three invariants of a 3 by 3 matrix (trace, sum of principal minors, determinant) fix a polynomial. Which polynomial, and what do its roots tell you about the matrix?",
+   "Use the characteristic polynomial \\(\\det(\\lambda I-A)\\). Its coefficients are the trace, the sum of the 2 by 2 principal minors and the determinant, with alternating signs. Then factor the cubic by testing small integers.",
+   "Write \\(\\det(\\lambda I-A)=\\lambda^3-6\\lambda^2+11\\lambda-\\det A\\) and substitute the stated value of \\(\\det A\\)."
   ]
  },
  {
@@ -85,6 +105,11 @@
    "matrix_inverse",
    "sherman_morrison",
    "fmt_solve"
+  ],
+  "hints": [
+   "The matrix is the identity plus a matrix of rank one. Which structure lets you invert and take the determinant of such a matrix without a full elimination?",
+   "Write \\(J=\\mathbf 1\\mathbf 1^\\top\\). A rank-one update of \\(I\\) has a closed-form inverse and determinant (Sherman-Morrison and the matrix determinant lemma), with a scalar that involves \\(\\mathbf 1^\\top\\mathbf 1\\).",
+   "Set \\(u=v=\\mathbf 1\\) in \\((I+uv^\\top)^{-1}=I-\\dfrac{uv^\\top}{1+v^\\top u}\\) and write the scalar \\(1+v^\\top u\\) in terms of \\(n\\)."
   ]
  },
  {
@@ -96,6 +121,11 @@
    "projection",
    "regression",
    "fmt_solve"
+  ],
+  "hints": [
+   "\\(P\\) maps every vector onto the column space of \\(X\\). Which two properties of such a matrix let you read its diagonal and trace without multiplying out \\(P\\)?",
+   "Each diagonal entry is \\(P_{ii}=x_i^\\top(X^\\top X)^{-1}x_i\\), where \\(x_i^\\top\\) is row \\(i\\) of \\(X\\). The inverse of \\(X^\\top X\\) is the only nontrivial step.",
+   "First compute \\(X^\\top X\\) entry by entry, then write \\(P_{11}=(1,0)\\,(X^\\top X)^{-1}(1,0)^\\top\\)."
   ]
  },
  {
@@ -118,6 +148,11 @@
    "condition_number",
    "ill_conditioned",
    "fmt_solve"
+  ],
+  "hints": [
+   "For a symmetric positive-definite matrix, the 2-norm condition number is a ratio of two numbers attached to the matrix. Which two numbers, and how can you get them cheaply for a 2 by 2 matrix?",
+   "For a symmetric positive-definite matrix the singular values equal the eigenvalues. For a 2 by 2 matrix, the sum and product of the eigenvalues come from the trace and determinant, so a quadratic gives both.",
+   "Write \\(\\lambda^2-(\\operatorname{tr}A)\\lambda+\\det A=0\\) with \\(\\operatorname{tr}A=2+\\varepsilon\\), and compute \\(\\det A\\) for the given matrix."
   ]
  },
  {
@@ -130,6 +165,11 @@
    "gram_matrix",
    "twin",
    "fmt_twin"
+  ],
+  "hints": [
+   "Place the three unit vectors as columns of a matrix \\(V\\). What matrix built from their pairwise inner products must be positive semidefinite, and what does that require of its eigenvalues?",
+   "The Gram matrix \\(G=V^\\top V\\) has ones on the diagonal and the given inner products off it. Find its eigenvalue on the all-ones direction, which is the same structure as an equicorrelated matrix.",
+   "Write \\(G\\) with the given entries as a 3 by 3 matrix and apply it to \\(\\mathbf 1\\) to read off the eigenvalue on that direction."
   ]
  },
  {
@@ -142,6 +182,11 @@
    "linear_constraint",
    "twin",
    "fmt_twin"
+  ],
+  "hints": [
+   "You want to minimise a length subject to one linear equation. At a minimiser, how must the gradient of the length relate to the gradient of the constraint, and what does that say about the direction of \\(x\\)?",
+   "Introduce a multiplier \\(\\lambda\\) for the constraint \\(a^\\top x=1\\) with \\(a=(1,2,3)\\), and differentiate \\(\\lVert x\\rVert^2-\\lambda(a^\\top x-1)\\) with respect to \\(x\\).",
+   "Stationarity gives \\(2x=\\lambda a\\). Substitute this into \\(a^\\top x=1\\) and solve for \\(\\lambda\\)."
   ]
  },
  {
@@ -165,6 +210,11 @@
    "min_variance",
    "long_only",
    "fmt_perturb"
+  ],
+  "hints": [
+   "The unconstrained answer has a negative weight. Which inequality constraint is violated, and where on the line \\(w_1+w_2=1\\) must the minimum then sit?",
+   "Parametrise the feasible set as \\(w=(t,1-t)\\) with both weights nonnegative, and study the variance as a function of \\(t\\) on that interval. Check its derivative at the endpoints.",
+   "Write \\(V(t)=\\sigma_1^2t^2+\\sigma_2^2(1-t)^2+2\\rho\\sigma_1\\sigma_2\\,t(1-t)\\) with the given values, and differentiate it at \\(t=1\\)."
   ]
  },
  {
@@ -177,6 +227,11 @@
    "min_variance",
    "chain",
    "fmt_chain"
+  ],
+  "hints": [
+   "Minimise a quadratic form over weights that sum to one. Given that the sum-to-one constraint only fixes the scale of the weights, what is the natural direction for them?",
+   "Stationarity gives \\(\\Sigma w=\\lambda\\mathbf 1\\), so \\(w\\) is proportional to \\(\\Sigma^{-1}\\mathbf 1\\). Solve \\(\\Sigma y=\\mathbf 1\\), then normalise \\(y\\) so its entries sum to one.",
+   "Write \\(\\Sigma=\\begin{pmatrix}0.04&0.03\\\\0.03&0.09\\end{pmatrix}\\) and solve \\(\\Sigma y=\\mathbf 1\\) as two linear equations in \\(y_1,y_2\\)."
   ]
  },
  {
@@ -189,6 +244,11 @@
    "correlation",
    "chain",
    "fmt_chain"
+  ],
+  "hints": [
+   "How does the optimal weight depend on the covariance between the two assets? Consider the two extreme cases \\(\\rho=0\\) and \\(\\rho\\to1\\) separately.",
+   "Use the two-asset minimum-variance formula \\(w_1=\\dfrac{\\sigma_2^2-\\rho\\sigma_1\\sigma_2}{\\sigma_1^2+\\sigma_2^2-2\\rho\\sigma_1\\sigma_2}\\), which comes from \\(\\Sigma w\\propto\\mathbf 1\\), and evaluate it at each extreme.",
+   "Start with \\(\\rho=0\\): substitute \\(\\sigma_1=0.2\\) and \\(\\sigma_2=0.3\\) into the numerator and denominator of the formula."
   ]
  },
  {
@@ -201,6 +261,11 @@
    "min_variance",
    "chain",
    "fmt_chain"
+  ],
+  "hints": [
+   "Now there are \\(n\\) assets and the covariance is a matrix. What does the solution look like when the covariance is diagonal, and what combination of \\(\\Sigma\\) and \\(\\mathbf 1\\) gives the general answer?",
+   "Use the Lagrangian for \\(\\min w^\\top\\Sigma w\\) subject to \\(\\mathbf 1^\\top w=1\\). Stationarity gives \\(\\Sigma w=\\lambda\\mathbf 1\\), so solve \\(\\Sigma y=\\mathbf 1\\) and normalise.",
+   "Write \\(L=w^\\top\\Sigma w-\\lambda(\\mathbf 1^\\top w-1)\\) and set \\(\\nabla_w L=0\\)."
   ]
  },
  {
@@ -213,6 +278,11 @@
    "polar_coordinates",
    "chain",
    "fmt_chain"
+  ],
+  "hints": [
+   "The integrand has no elementary antiderivative, so direct substitution fails. What trick turns a one-dimensional integral into a two-dimensional one that is easier to evaluate?",
+   "Square the integral and write it as a double integral over the plane. The integrand depends only on \\(x^2+y^2\\), so switch to polar coordinates.",
+   "Write \\(I^2=\\iint e^{-(x^2+y^2)/2}\\,dx\\,dy\\) and substitute \\(x=r\\cos\\theta,\\ y=r\\sin\\theta\\), including the Jacobian."
   ]
  },
  {
@@ -225,6 +295,11 @@
    "moments",
    "chain",
    "fmt_chain"
+  ],
+  "hints": [
+   "The base integral is known. Can you split \\(x^2e^{-x^2/2}\\) into a product in which one factor is the derivative of something simple?",
+   "Use integration by parts with \\(u=x\\) and \\(dv=x e^{-x^2/2}dx\\), together with \\(\\tfrac{d}{dx}e^{-x^2/2}=-xe^{-x^2/2}\\).",
+   "Write \\(\\int x^2e^{-x^2/2}dx=\\int x\\cdot(xe^{-x^2/2})\\,dx\\) and use the antiderivative \\(-e^{-x^2/2}\\) of \\(xe^{-x^2/2}\\) in the parts formula."
   ]
  },
  {
@@ -237,6 +312,11 @@
    "moments",
    "chain",
    "fmt_chain"
+  ],
+  "hints": [
+   "Each even power should reduce to a lower one by the same mechanism as before. What does repeating that step produce, and what is the base case?",
+   "Integration by parts with \\(u=x^{2n-1}\\) and \\(dv=x\\,e^{-x^2/2}dx\\) gives a recursion between consecutive even powers.",
+   "Write \\(J_n=\\int x^{2n}e^{-x^2/2}dx\\) and apply parts to \\(x^{2n-1}\\cdot xe^{-x^2/2}\\) to relate \\(J_n\\) to \\(J_{n-1}\\)."
   ]
  },
  {
@@ -249,6 +329,11 @@
    "completing_square",
    "chain",
    "fmt_chain"
+  ],
+  "hints": [
+   "The exponent is a quadratic in \\(x\\) with a linear term. Can you rewrite it so that the base Gaussian integral appears after a shift?",
+   "Complete the square in the exponent, then shift the variable so the squared term is centred at zero.",
+   "Write \\(-ax^2+bx=-a\\big(x-\\tfrac{b}{2a}\\big)^2+\\text{(remainder)}\\) and identify the remainder."
   ]
  },
  {
@@ -272,6 +357,11 @@
    "exponential_distribution",
    "twin",
    "fmt_twin"
+  ],
+  "hints": [
+   "Write \\(E[X^5]\\) as an integral against the Exp(1) density. Which family of integrals, a polynomial times \\(e^{-x}\\) on a half-line, does it belong to?",
+   "Integration by parts with \\(u=x^n\\) and \\(dv=e^{-x}dx\\) lowers the power by one each time. Track the constant that appears at each step.",
+   "Write \\(I_n=\\int_0^\\infty x^ne^{-x}dx\\), take \\(u=x^n\\), \\(dv=e^{-x}dx\\), and write the parts formula including the boundary term."
   ]
  },
  {
@@ -283,6 +373,11 @@
    "gamma_function",
    "gaussian_integral",
    "fmt_solve"
+  ],
+  "hints": [
+   "The Gamma integral at a half-integer looks unfamiliar. Is there a change of variable that turns \\(x^{-1/2}\\) into something you already know?",
+   "Substitute \\(x=t^2\\) to remove the fractional power. The integral then becomes a Gaussian integral, which you have already evaluated.",
+   "Write \\(x=t^2\\), so \\(dx=2t\\,dt\\), and rewrite \\(x^{-1/2}e^{-x}\\,dx\\) entirely in terms of \\(t\\)."
   ]
  },
  {
@@ -294,6 +389,11 @@
    "integration_by_parts",
    "logarithm",
    "fmt_solve"
+  ],
+  "hints": [
+   "The integrand is a logarithm times a power. Which standard technique handles a product of two different function types?",
+   "Integration by parts with \\(u=\\ln x\\), whose derivative is simpler, and \\(dv=x^n\\,dx\\). Check the boundary term at \\(x=0\\) separately.",
+   "Write \\(\\int_0^1x^n\\ln x\\,dx=\\big[\\tfrac{x^{n+1}}{n+1}\\ln x\\big]_0^1-\\int_0^1\\tfrac{x^{n+1}}{n+1}\\cdot\\tfrac1x\\,dx\\)."
   ]
  },
  {
@@ -327,6 +427,11 @@
    "calculus",
    "logarithm",
    "fmt_solve"
+  ],
+  "hints": [
+   "The variable is both base and exponent. What transformation would turn it into something you can differentiate easily?",
+   "Take logarithms: let \\(y=x^x\\) and minimise \\(\\ln y\\) instead, which has the same minimiser. Then set the derivative to zero.",
+   "Write \\(\\ln y=x\\ln x\\) and compute \\(\\dfrac{d}{dx}(x\\ln x)\\)."
   ]
  },
  {
@@ -360,6 +465,11 @@
    "limits",
    "growth_rate",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Here the exponent grows with \\(n\\) at a different rate than before. What happens to the product of the exponent and \\(\\ln(1+1/n)\\) as \\(n\\) grows?",
+   "Take logs and use \\(\\ln(1+x)\\approx x\\) for small \\(x\\) to estimate \\(n^2\\ln(1+\\tfrac1n)\\).",
+   "Write \\(\\ln L_n=n^2\\ln\\!\\left(1+\\tfrac1n\\right)\\) and expand the logarithm to first order in \\(1/n\\)."
   ]
  },
  {
@@ -371,6 +481,11 @@
    "stirling",
    "binomial",
    "fmt_solve"
+  ],
+  "hints": [
+   "The probability is a ratio of factorials. Which asymptotic formula applies to factorials of large numbers, and which factorials cancel?",
+   "Substitute Stirling's formula for \\(100!\\), \\(50!\\) and the second \\(50!\\) in \\(\\binom{100}{50}/2^{100}\\). Many factors \\(\\sqrt{2\\pi n}\\) and \\((n/e)^n\\) cancel or combine.",
+   "Write \\(\\dfrac{\\binom{100}{50}}{2^{100}}=\\dfrac{100!}{(50!)^2\\,2^{100}}\\) and substitute \\(n!\\approx\\sqrt{2\\pi n}\\,(n/e)^n\\) for each factorial."
   ]
  },
  {
@@ -404,6 +519,11 @@
    "exponential",
    "approximation",
    "fmt_perturb"
+  ],
+  "hints": [
+   "The Taylor polynomial of \\(e^x\\) about 0 is known. How does changing the sign of \\(x\\) affect each term of the series?",
+   "Keep the same truncated series but track the sign of each term: odd powers of \\(x\\) flip sign, even powers do not.",
+   "Write \\(e^{-0.1}\\approx1+(-0.1)+\\tfrac{(-0.1)^2}{2}+\\tfrac{(-0.1)^3}{6}\\) and evaluate each term."
   ]
  },
  {
@@ -415,6 +535,11 @@
    "exponential",
    "error_bound",
    "fmt_solve"
+  ],
+  "hints": [
+   "What bounds the error when a Taylor series is stopped after finitely many terms? Which term dominates the size of that error?",
+   "Use the Lagrange remainder \\(R_n=\\dfrac{x^{n+1}}{(n+1)!}e^{\\xi}\\) with \\(0<\\xi<x\\), and bound \\(e^{\\xi}\\) by its value at the right endpoint.",
+   "With \\(x=0.1\\), write the inequality \\(\\dfrac{(0.1)^{n+1}}{(n+1)!}\\,e^{0.1}<10^{-5}\\) and test successive values of \\(n\\)."
   ]
  },
  {
@@ -448,6 +573,11 @@
    "newton_method",
    "root_finding",
    "fmt_solve"
+  ],
+  "hints": [
+   "Newton's method replaces the function by its tangent line at the current point. Where does the tangent line to \\(x^2-2\\) at a given \\(x_k\\) cross zero?",
+   "Use \\(x_{k+1}=x_k-f(x_k)/f'(x_k)\\) with \\(f(x)=x^2-2\\), and simplify the update to an average of \\(x_k\\) and \\(2/x_k\\).",
+   "Compute \\(x_1=x_0-\\dfrac{x_0^2-2}{2x_0}\\) at \\(x_0=1\\), then repeat the same substitution for \\(x_2\\)."
   ]
  },
  {
@@ -459,6 +589,11 @@
    "newton_method",
    "root_finding",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Newton's update divides by the current iterate. Which starting values make that division impossible, and what sign does the iteration preserve?",
+   "Check whether \\(f'(x_0)=2x_0\\) vanishes for your start, and track the sign of \\(x_k\\) through one step of the update.",
+   "Write one step \\(x_1=\\tfrac12\\big(x_0+\\tfrac{2}{x_0}\\big)\\) and substitute \\(x_0=-1\\)."
   ]
  },
  {
@@ -471,6 +606,11 @@
    "reciprocal",
    "twin",
    "fmt_twin"
+  ],
+  "hints": [
+   "This update uses no division. Which equation \\(g(x)=0\\) has a Newton step that produces exactly this multiplication-only update?",
+   "Apply Newton's method to \\(f(x)=\\tfrac1x-a\\) and simplify, using \\(f'(x)=-1/x^2\\).",
+   "Write \\(x_{k+1}=x_k-\\dfrac{1/x_k-a}{-1/x_k^2}\\) and simplify the fraction."
   ]
  },
  {
@@ -493,6 +633,11 @@
    "s_kelly_log_utility",
    "volatility_drag",
    "fmt_solve"
+  ],
+  "hints": [
+   "Two different averages of the period returns are asked for. Which one compounds over time, and what function of the gross return does it average?",
+   "Geometric growth is the expectation of the log of the gross return, so the growth rate per period is \\(\\exp(E[\\ln(1+r)])-1\\).",
+   "Write the two-state geometric growth as \\(\\exp\\!\\big(\\tfrac12\\ln(1+r_u)+\\tfrac12\\ln(1+r_d)\\big)-1\\) with \\(r_u=0.5\\), \\(r_d=-0.4\\)."
   ]
  },
  {
@@ -504,6 +649,11 @@
    "volatility_drag",
    "probability",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Which quantity changed when the probabilities changed? Which of the two averages is linear in the probability, and does the geometric one stay linear?",
+   "The arithmetic mean is \\(p(1+r_u)+(1-p)(1+r_d)\\), linear in \\(p\\). The geometric rate is \\(\\exp\\big(p\\ln(1+r_u)+(1-p)\\ln(1+r_d)\\big)-1\\), which is not linear in \\(p\\).",
+   "Write the geometric rate as \\(\\exp\\big(p\\ln1.5+(1-p)\\ln0.6\\big)-1\\) and evaluate it at \\(p=0.6\\)."
   ]
  },
  {
@@ -526,6 +676,11 @@
    "ornstein_uhlenbeck",
    "half_life",
    "fmt_solve"
+  ],
+  "hints": [
+   "The expected deviation from the long-run level obeys a simple first-order rule. What function of time describes how a deviation decays, and which parameter sets its rate?",
+   "Take expectations in the SDE: the stochastic term has mean zero, so \\(m(t)=E[X_t]\\) satisfies a linear ODE.",
+   "Write \\(\\dfrac{d}{dt}(m-\\mu)=-\\kappa(m-\\mu)\\) with \\(m(0)=\\mu+1\\), and find the time at which \\(m(t)-\\mu\\) is half its initial value."
   ]
  },
  {
@@ -537,6 +692,11 @@
    "ornstein_uhlenbeck",
    "variance",
    "fmt_perturb"
+  ],
+  "hints": [
+   "The variance formula has a factor \\(1-e^{-2\\kappa t}\\) divided by \\(\\kappa\\). What does a ratio of this form look like when \\(\\kappa\\) is very small?",
+   "Expand \\(e^{-2\\kappa t}\\) to first order in \\(\\kappa t\\) and simplify the ratio.",
+   "Write \\(e^{-2\\kappa t}\\approx 1-2\\kappa t\\) and substitute into \\(\\operatorname{Var}X_t\\)."
   ]
  },
  {
@@ -548,6 +708,11 @@
    "linear_ode",
    "integrating_factor",
    "fmt_solve"
+  ],
+  "hints": [
+   "This is a first-order linear ODE with constant coefficients. Which multiplying function turns the left side into an exact derivative?",
+   "Use the integrating factor \\(\\mu(t)=e^{2t}\\), so that \\((e^{2t}y)'=e^{2t}(y'+2y)\\).",
+   "Multiply through by \\(e^{2t}\\) to get \\(\\dfrac{d}{dt}\\big(e^{2t}y\\big)=e^{t}\\), then integrate both sides."
   ]
  },
  {
@@ -570,6 +735,11 @@
    "heat_equation",
    "fundamental_solution",
    "fmt_solve"
+  ],
+  "hints": [
+   "Verifying a PDE solution is a direct computation. Which two derivatives must you compare, and which identity do you need for the total mass?",
+   "Differentiate once in \\(t\\) and twice in \\(x\\) and compare. For the mass, use the Gaussian integral \\(\\int e^{-s^2}ds\\) after a substitution that makes the exponent \\(-s^2\\).",
+   "Write \\(u=(4\\pi Dt)^{-1/2}e^{-x^2/(4Dt)}\\), compute \\(u_t\\) and \\(u_{xx}\\) separately, then compare \\(u_t\\) with \\(Du_{xx}\\)."
   ]
  },
  {
@@ -581,6 +751,11 @@
    "heat_equation",
    "separation_of_variables",
    "fmt_solve"
+  ],
+  "hints": [
+   "Dirichlet conditions on an interval suggest a family of functions that vanish at both ends. Which family, and how does the time dependence separate from space?",
+   "Separate variables \\(u=T(t)X(x)\\). The spatial part must satisfy \\(X''=\\lambda X\\) with \\(X(0)=X(\\pi)=0\\), which fixes \\(X=\\sin nx\\) for integers \\(n\\).",
+   "Write the general solution as \\(u=\\sum_n b_n e^{-n^2t}\\sin nx\\) and match \\(t=0\\) against the initial data."
   ]
  },
  {
@@ -592,6 +767,11 @@
    "heat_equation",
    "neumann",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Which functions satisfy the new boundary conditions and are eigenfunctions of \\(d^2/dx^2\\)? Check whether \\(\\sin x\\) still qualifies at \\(x=0\\) when you differentiate.",
+   "For Neumann conditions the eigenfunctions are cosines. Expand the initial data in them, and note which eigenvalue is zero: that mode does not decay.",
+   "Write \\(u(x,t)=\\sum_{n\\ge0}b_n e^{-n^2t}\\cos nx\\) and identify the \\(n=0\\) coefficient from the average of the initial data over \\((0,\\pi)\\)."
   ]
  },
  {
@@ -603,6 +783,11 @@
    "finite_difference",
    "stability",
    "fmt_solve"
+  ],
+  "hints": [
+   "A stability bound for an explicit scheme relates the time step to the grid spacing. Which dimensionless combination of \\(D\\), \\(\\Delta t\\) and \\(\\Delta x\\) controls it?",
+   "Do a von Neumann analysis: substitute a Fourier mode and find the amplification factor \\(G(\\theta)\\). Stability needs \\(|G|\\le1\\) for every \\(\\theta\\).",
+   "Write the FTCS update \\(u_j^{n+1}=u_j^n+r\\,(u_{j+1}^n-2u_j^n+u_{j-1}^n)\\) with \\(r=D\\Delta t/\\Delta x^2\\), and substitute \\(u_j^n=G^n e^{ij\\theta}\\)."
   ]
  },
  {
@@ -614,6 +799,11 @@
    "finite_difference",
    "stability",
    "fmt_perturb"
+  ],
+  "hints": [
+   "What changes in the amplification factor when \\(r\\) grows past the stability threshold? Which Fourier mode is most dangerous, and where is it on the \\(\\theta\\)-axis?",
+   "Use the amplification factor \\(G(\\theta)=1-4r\\sin^2(\\theta/2)\\) from the stable case, and evaluate it at the mode with the largest \\(\\sin^2(\\theta/2)\\).",
+   "Write \\(G(\\pi)=1-4r\\sin^2(\\pi/2)\\) and insert \\(r=0.6\\)."
   ]
  },
  {
@@ -650,6 +840,11 @@
    "monte_carlo",
    "standard_error",
    "fmt_solve"
+  ],
+  "hints": [
+   "The estimator is an average of i.i.d. indicator values. What is the variance of one indicator, and how does the standard error of an average scale with the number of samples?",
+   "Use the CLT: the standard error of a sample mean is \\(\\sigma/\\sqrt N\\), and for an indicator \\(\\sigma^2=p(1-p)\\). A 95% half-width multiplies the standard error by \\(1.96\\).",
+   "Write \\(\\mathrm{SE}=\\sqrt{p(1-p)/N}\\) with \\(p=0.5\\), \\(N=10^4\\). For the sample size, solve \\(1.96\\sqrt{p(1-p)/N}=0.001\\) for \\(N\\)."
   ]
  },
  {
@@ -661,6 +856,11 @@
    "monte_carlo",
    "antithetic_variates",
    "fmt_solve"
+  ],
+  "hints": [
+   "Antithetic pairs help when two draws are negatively correlated. What is the covariance between \\(f(U)\\) and \\(f(1-U)\\) for a monotone \\(f\\), and what does it do to the variance of their average?",
+   "The variance of a pair average is \\(\\tfrac14\\big(\\operatorname{Var}f(U)+\\operatorname{Var}f(1-U)+2\\operatorname{Cov}\\big)\\). Compute the two variances and the covariance for \\(f(u)=e^u\\).",
+   "Write \\(\\operatorname{Var}\\big(\\tfrac{f(U)+f(1-U)}2\\big)=\\tfrac12(V+C)\\) with \\(V=\\operatorname{Var}f(U)\\) and \\(C=\\operatorname{Cov}(f(U),f(1-U))\\), and compute \\(E[f(U)^2]\\) for \\(f=e^u\\)."
   ]
  },
  {
@@ -672,6 +872,11 @@
    "monte_carlo",
    "antithetic_variates",
    "fmt_perturb"
+  ],
+  "hints": [
+   "Check the sign of the covariance between \\(f(U)\\) and \\(f(1-U)\\) when \\(f\\) has a symmetry about \\(\\tfrac12\\). What does a symmetry of that kind do to the second evaluation?",
+   "If \\(f(1-u)=f(u)\\) for all \\(u\\), the partner adds no new information. Compare \\(\\operatorname{Cov}(f(U),f(1-U))\\) with \\(\\operatorname{Var}f(U)\\).",
+   "For \\(f(u)=(u-\\tfrac12)^2\\), write \\(f(1-U)\\) and simplify it in terms of \\(f(U)\\)."
   ]
  },
  {
@@ -683,6 +888,11 @@
    "monte_carlo",
    "control_variates",
    "fmt_solve"
+  ],
+  "hints": [
+   "A quantity correlated with the target and with a known mean can reduce variance by subtracting its fluctuation. Which coefficient minimises the variance of the adjusted estimate?",
+   "Use \\(\\hat\\mu=\\overline X+c(\\overline Y-EY)\\) with \\(X=e^U\\) and \\(Y=U\\), and choose \\(c\\) to minimise the variance: \\(c^*=-\\operatorname{Cov}(X,Y)/\\operatorname{Var}Y\\).",
+   "Compute \\(\\operatorname{Cov}(e^U,U)=E[Ue^U]-E[e^U]E[U]\\) as integrals over \\((0,1)\\), and \\(\\operatorname{Var}U=E[U^2]-\\tfrac14\\)."
   ]
  },
  {
@@ -717,6 +927,11 @@
    "rayleigh_quotient",
    "constraint",
    "fmt_perturb"
+  ],
+  "hints": [
+   "The top eigenvector no longer satisfies the new linear constraint. Which subspace is now available, and how does the Rayleigh quotient restrict to it?",
+   "Restrict to unit vectors orthogonal to \\((1,1)\\). That subspace is one-dimensional, so the maximum is the Rayleigh quotient of \\(A\\) at its single unit direction.",
+   "Write the constraint as \\(x\\perp(1,1)\\), parametrise \\(x=t(1,-1)\\) with \\(\\lVert x\\rVert=1\\), and compute \\(x^\\top Ax\\)."
   ]
  },
  {
@@ -728,6 +943,11 @@
    "determinant",
    "toeplitz",
    "fmt_solve"
+  ],
+  "hints": [
+   "A covariance matrix whose entries decay with distance has a Markov-type structure. What does each new variable add to the variance once you condition on the previous one?",
+   "Use the sequential factorisation: \\(\\det\\Sigma\\) is the product of conditional variances, each obtained by conditioning on the earlier variables. For a stationary AR(1) process the steps are alike.",
+   "Write \\(\\Sigma=\\begin{pmatrix}1&\\rho&\\rho^2\\\\\\rho&1&\\rho\\\\\\rho^2&\\rho&1\\end{pmatrix}\\) and compute the conditional variance of \\(X_2\\) given \\(X_1\\) as \\(\\Sigma_{22}-\\Sigma_{21}^2/\\Sigma_{11}\\)."
   ]
  },
  {
@@ -750,6 +970,11 @@
    "gaussian_conditioning",
    "regression",
    "fmt_perturb"
+  ],
+  "hints": [
+   "The slope in a Gaussian regression is a covariance divided by a variance. Which variance changed here, and does the slope still come from the same ratio?",
+   "Write \\(E[X\\mid Y]=\\dfrac{\\operatorname{Cov}(X,Y)}{\\operatorname{Var}Y}\\,Y\\) and \\(\\operatorname{Var}(X\\mid Y)=\\operatorname{Var}X-\\dfrac{\\operatorname{Cov}(X,Y)^2}{\\operatorname{Var}Y}\\).",
+   "Insert \\(\\operatorname{Var}X=1\\), \\(\\operatorname{Var}Y=4\\), \\(\\operatorname{Cov}(X,Y)=1.2\\) into the slope formula and evaluate it at \\(Y=2\\)."
   ]
  },
  {
@@ -774,6 +999,11 @@
    "binomial",
    "twin",
    "fmt_twin"
+  ],
+  "hints": [
+   "Returning to the start after an even number of \\(\\pm1\\) steps requires a specific count of each direction. How many of each, and how does that count relate to a binomial distribution?",
+   "Map each step to a fair coin flip. Ending at zero means the heads count is half the number of steps, so use the central binomial probability and its large-\\(n\\) size.",
+   "Write \\(P(S_{100}=0)=\\binom{100}{k}2^{-100}\\) and identify \\(k\\)."
   ]
  },
  {
@@ -785,6 +1015,11 @@
    "normal_distribution",
    "absolute_moment",
    "fmt_solve"
+  ],
+  "hints": [
+   "The absolute value makes the integrand non-smooth at zero. Does the symmetry of the density let you fold the integral onto half the line?",
+   "Use symmetry: \\(E|Z|=2\\int_0^\\infty x\\varphi(x)\\,dx\\), where \\(\\varphi\\) is the standard normal density. The factor \\(x\\varphi(x)\\) is the derivative of a simple function.",
+   "Write \\(E|Z|=2\\int_0^\\infty x\\,\\tfrac{1}{\\sqrt{2\\pi}}e^{-x^2/2}\\,dx\\) and find an antiderivative of \\(xe^{-x^2/2}\\)."
   ]
  }
 ]
