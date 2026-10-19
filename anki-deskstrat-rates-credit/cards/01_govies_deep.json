@@ -1,0 +1,328 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CTD_SWITCH 1/3]</b> Context: a bond future at F = 110.00, repo 4.00%, delivery in 0.25 years. Bond X: clean 104.50, CF 0.9500, coupon 4.00%. Bond Y: clean 106.70, CF 0.9700, coupon 3.50%. Which is the CTD, and what are the gross basis, carry and net basis of each?",
+  "back": "<b>Headline:</b> X is the CTD (net basis 0.045 versus 0.192 for Y). Gross basis is zero for both, so the ranking comes entirely from carry.<br>\nPer 100 face, with coupon income approximated as \\(c\\,t\\) and financing \\(r\\,P\\,t\\):<br>\n\\[\\text{gross basis} = P - F\\cdot CF:\\quad X: 104.50 - 104.50 = 0.000,\\quad Y: 106.70 - 106.70 = 0.000\\]\n\\[\\text{carry} = c\\,t - r\\,P\\,t:\\quad X: 1.000 - 1.045 = -0.045,\\quad Y: 0.875 - 1.067 = -0.192\\]\n\\[\\text{net basis} = \\text{gross} - \\text{carry}:\\quad X: +0.045,\\quad Y: +0.192\\]\nImplied repo solves net basis \\(=0\\): \\(IRR = \\frac{c\\,t - \\text{gross}}{P\\,t}\\). X: \\(1.000/26.125 = 3.83\\%\\). Y: \\(0.875/26.675 = 3.28\\%\\).<br>\nThe CTD is the bond with the lowest net basis, equivalently the highest implied repo, which is X.<br>\n<b>Interviewer follow-up:</b> Why does X win despite a 4.00% coupon on a higher price? X's income of 1.00 against financing of 1.045 is a smaller negative carry than Y's 0.875 against 1.067, because the carry is measured per unit of price financed. Carry, not the price level, decides the CTD when gross basis is flat.",
+  "tags": [
+   "ctd_switch",
+   "futures",
+   "basis",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CTD_SWITCH 2/3]</b> Context: the same bonds X and Y, repo 4.00%, carries as in card 1 (X net carry -0.045, Y -0.192). At what futures price does the CTD switch from X to Y, and what sets the size of the threshold?",
+  "back": "<b>Headline:</b> the switch happens at \\(F^* \\approx 117.35\\). X is the CTD below it and Y above it.<br>\nCarry does not depend on \\(F\\) in this approximation, so define the forward price \\(fwd_i = P_i - carry_i\\): \\(fwd_X = 104.545\\), \\(fwd_Y = 106.892\\). Then \\(NB_i(F) = fwd_i - F\\cdot CF_i\\).<br>\nSetting \\(NB_X = NB_Y\\):\n\\[F^* = \\frac{fwd_Y - fwd_X}{CF_Y - CF_X} = \\frac{2.347}{0.0200} \\approx 117.35\\]\nEach 1-point rise in \\(F\\) cuts X's net basis by 0.95 and Y's by 0.97, so the gap between them closes slowly.<br>\n<b>Interviewer follow-up:</b> Why is the threshold so far from market when the forwards differ by only 2.3 points? The threshold is set by the ratio of the forward gap to the CF gap. A small CF difference pushes the switch point out, which is why CTD switches are rare when CFs are close and the forwards are well separated.",
+  "tags": [
+   "ctd_switch",
+   "futures",
+   "conversion_factor"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CTD_SWITCH 3/3]</b> Context: with F = 110.00, X is the CTD. The futures price implied by delivering X alone is \\(\\min\\) over deliverables of \\(fwd_i/CF_i\\): 110.047 for X and 110.198 for Y. What is the value of the short's switch option, and how does it depend on yield volatility?",
+  "back": "<b>Headline:</b> the static gap to the next-cheapest deliverable is 0.15 futures points (about £150 per £100k contract). The option's true value is an expectation over yield paths and rises with volatility.<br>\nFutures fair value is \\(F = \\min_i\\left(\\frac{fwd_i}{CF_i}\\right) = 110.047\\), so the short effectively owns the minimum over deliverables. Today's option value relative to a Y-only delivery is \\(110.198 - 110.047 = 0.151\\) points.<br>\nUnder yield uncertainty the ranking of the two net bases can flip in either direction, so the value is \\(E\\big[\\min(A,B)\\big]\\) relative to the forward of a single bond, and it increases with volatility and with the CF gap relative to the forward gap.<br>\n<b>Where it breaks:</b> the timing option (delivery day), the wild-card or end-of-month features in other contracts, and the assumption that forwards are independent of the delivery choice. The value is priced by the futures, not by the desk's own CTD view.<br>\n<b>Interviewer follow-up:</b> Who owns the option and who pays for it? The short holds it and the long pays through a lower futures price than a single-bond forward. A desk that is long CTD cash and short futures is effectively selling this option, so it earns it only if the switch risk stays small.",
+  "tags": [
+   "ctd_switch",
+   "futures",
+   "options"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: LDI_SPIRAL 1/3]</b> Context: a pension LDI fund with NAV £100m, gilt exposure £300m (leverage 3.0x), effective duration 15, and a policy of holding leverage at 3.0x. Yields rise 100bp before any sale. What is the NAV, the leverage, and the sale needed to restore 3.0x?",
+  "back": "<b>Headline:</b> exposure falls to £255m, NAV to £55m, leverage rises to 4.64x, and restoring 3.0x requires selling £90m.<br>\n\\[\\Delta E = -E_0 D \\Delta y = -300\\times 15\\times 0.01 = -45 \\;\\Rightarrow\\; E_1 = 255,\\quad NAV_1 = 100 - 45 = 55\\]\n\\[\\text{Target exposure} = 3.0\\times 55 = 165,\\qquad \\text{sale} = 255 - 165 = 90\\]\nGeneral result when the fund starts at its target: \\(S = E_0 D\\Delta y\\,(L-1)\\), where \\(L\\) is the target leverage. Here \\(45\\times(3-1) = 90\\), so each £1 of loss forces £(L-1) of sales.<br>\n<b>Interviewer follow-up:</b> Why is the sale twice the loss? Leverage is exposure over equity. After equity falls by 45, the target exposure falls by \\(3\\times45 = 135\\). The price move has already removed 45 of exposure, so the fund must sell the remaining \\(135 - 45 = 90 = 2\\times45\\).",
+  "tags": [
+   "ldi",
+   "leverage",
+   "pensions",
+   "ldi_spiral"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: LDI_SPIRAL 2/3]</b> Context: after the 100bp shock (card 1), the fund sells £90m of 30y gilts to get back to 3.0x. Assume each £100m sold moves the 30y yield by 5bp, and the fund keeps targeting 3.0x as NAV falls. What are the total sale, final NAV and total yield move?",
+  "back": "<b>Headline:</b> total sales converge to about £92.3m, NAV ends near £53.9m, and the 30y yield rises about 4.6bp more than the initial shock.<br>\nIterate: round 1 sells 90, which moves yields +4.5bp. The remaining £165m loses \\(165\\times15\\times0.00045 = 1.11\\), so NAV is 53.89 and the target is 161.7. Round 2 sells 2.23 (+0.1bp). Round 3 sells 0.05, and the process has converged.<br>\nLoop gain per round: \\(k \\approx (L-1)\\,D\\,\\lambda\\,E\\), with \\(\\lambda = 0.000005\\) yield per £1m sold and \\(E = 165\\). Then \\(k = 2\\times15\\times0.000005\\times165 \\approx 0.025\\), so the spiral damps quickly here.<br>\n<b>Where it breaks:</b> \\(k\\) rises with leverage, duration, exposure and thinner liquidity (higher \\(\\lambda\\)). Near \\(k=1\\) the feedback is unbounded, which is the stress scenario the 2022 episode approached. The impact coefficient is the key unknown and should be calibrated, not assumed.<br>\n<b>Interviewer follow-up:</b> Why does the loop not show up in a DV01 risk report? DV01 is computed on the static portfolio. The feedback changes the portfolio and the market price together, so the true risk is a second-order, path-dependent quantity.",
+  "tags": [
+   "ldi",
+   "collateral",
+   "liquidity",
+   "ldi_spiral"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: LDI_SPIRAL 3/3]</b> Context: the same stress forces the LDI funds to sell 30y gilts and to unwind receive-fixed swaps they had used to hedge liability DV01, to free collateral. The gilt-swap spread is gilt yield minus the matched SONIA swap rate. In which direction does it move, and what determines the sign?",
+  "back": "<b>Headline:</b> the sign is not determined a priori. It depends on which leg cheapens more.<br>\n\\[\\Delta(\\text{gilt-swap spread}) = \\Delta y_{gilt} - \\Delta S_{swap}\\]\nGilt sales push \\(\\Delta y_{gilt}\\) up. Unwinding receive-fixed positions is economically a pay-fixed trade, which pushes \\(\\Delta S_{swap}\\) up. Both effects raise yields, so the net effect on the spread is a difference of two positive numbers.<br>\nIllustrative: gilts +4.6bp (from card 2) and swaps +2bp give a spread widening of about 2.6bp. If swap unwinds are larger in DV01 terms, the swap leg moves more and the spread can narrow or invert.<br>\n<b>Where it breaks:</b> the one-for-one mapping from DV01 sold to yield moved is unreliable under stress, the swap-leg size is hard to observe because positions are cleared and margined, and collateral moves through variation margin rather than through outright sales.<br>\n<b>Interviewer follow-up:</b> What would you monitor to tell the two legs apart? Gilt auction tails and secondary asset-swap levels for the gilt leg, and the sterling swap curve in the same tenor for the swap leg, with clearing-house margin data if available.",
+  "tags": [
+   "ldi",
+   "gilt_swaps",
+   "spreads",
+   "scenario",
+   "ldi_spiral"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: AUCTION_CONC 1/3]</b> Context: a new 10y gilt clears at 4.33%, the pre-auction secondary yield is 4.30%, and the DV01 of £100m nominal is about £80k per bp. What is the concession, and what does a dealer earn if it sells at the pre-auction level?",
+  "back": "<b>Headline:</b> concession = clearing minus pre-auction secondary = 3bp. Selling back at 4.30% earns about £240k per £100m.<br>\nDefine concession \\(= y_{clear} - y_{pre}\\). The dealer buys at \\(y_{clear}\\) and sells at \\(y_{sell}\\), so P&amp;L \\(\\approx DV01\\,(y_{clear} - y_{sell})\\). With \\(y_{sell} = 4.30\\%\\), P&amp;L \\(=80{,}000\\times 3 = £240{,}000\\).<br>\nThe concession is the yield the issuer pays for the risk the dealer absorbs and distributes. It is a return to be earned only if the secondary level holds, which is the market-risk question in the next card.<br>\n<b>Interviewer follow-up:</b> Why is the concession defined against the pre-auction level and not the when-issued level? Pre-auction secondary is the observable benchmark just before the bids are placed. Check the DMO's own definitions before quoting a figure, because the benchmark matters for comparing auctions.",
+  "tags": [
+   "auctions",
+   "gilts",
+   "dv01",
+   "mental_math",
+   "auction_conc"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: AUCTION_CONC 2/3]</b> Context: the dealer buys £100m at the auction (concession 3bp, DV01 £80k per bp) and must sell it down over three days. Daily yield volatility is about 1.2bp and the dealer is unhedged. What is the one-sigma P&L risk of the sell-down, and how does it compare with the concession?",
+  "back": "<b>Headline:</b> one sigma is about £166k, so the 3bp concession (£240k) covers only about 1.44 sigma.<br>\nSell-down yield change \\(X\\sim N(0,\\sigma_d^2 h)\\), so \\(\\sigma = 1.2\\sqrt{3} = 2.08\\) bp, which is \\(2.08\\times 80{,}000 \\approx £166k\\).<br>\nLoss occurs when \\(X > 3\\)bp, so with zero drift \\(P(\\text{loss}) = 1 - \\Phi(3/2.08) = 1 - \\Phi(1.44) \\approx 7.4\\%\\).<br>\n<b>Where it breaks:</b> the normal assumption understates tail risk around auction days, drift is not zero when the dealer's own supply moves the secondary market, and the realised volatility of a new issue can differ from the curve average.<br>\n<b>Interviewer follow-up:</b> How would you reduce this risk? Hedge the parallel DV01 with futures or swaps on the auction day. The residual is curve and basis risk, which the concession does not compensate.",
+  "tags": [
+   "auctions",
+   "risk",
+   "hedging",
+   "auction_conc"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: AUCTION_CONC 3/3]</b> Context: the dealer expects to sell the £100m allocation at 4.30% and faces £30k of costs (bid-offer and hedge slippage). DV01 is £80k per bp. What is the break-even clearing yield below which the dealer should not bid?",
+  "back": "<b>Headline:</b> break-even clearing yield \\(\\approx 4.30\\% + 0.375\\)bp \\(= 4.30375\\%\\).<br>\nExpected P&amp;L from buying at \\(c\\) and selling at \\(y_{pre}\\) is \\(DV01\\,(c - y_{pre}) - \\text{costs}\\). Setting this to zero:\n\\[c^* = y_{pre} + \\frac{\\text{costs}}{DV01} = 4.30\\% + \\frac{30{,}000}{80{,}000}\\text{ bp} = 4.30\\% + 0.375\\text{bp}\\]\nAny concession below 0.375bp is value-destroying in expectation, and any clearing yield above it is a positive expected trade before risk.<br>\n<b>Where it breaks:</b> the auction format matters, since a uniform-price result and a multiple-price result give different bidding incentives. Check the DMO's current rules before modelling. The expected secondary level is itself influenced by the dealer's own selling.<br>\n<b>Interviewer follow-up:</b> What changes if the sell-down is hedged with futures that have basis to the bond? The basis cost goes into the costs term, so the break-even concession rises with the basis volatility.",
+  "tags": [
+   "auctions",
+   "dealer_economics",
+   "mental_math",
+   "auction_conc"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: convexity of a bond.</b> Derive \\(C = \\frac{1}{P}\\frac{d^2P}{dy^2}\\) for \\(P(y)=\\sum_t CF_t(1+y)^{-t}\\) with annual compounding, evaluate it for a 10-year zero at 4%, and check the second-order price approximation for \\(\\Delta y=\\pm 100\\)bp.",
+  "back": "<b>Step 1 (first derivative):</b> \\(\\frac{dP}{dy} = -\\frac{1}{1+y}\\sum_t t\\,PV_t\\), so \\(D_{mod} = \\frac{D_{mac}}{1+y}\\) with \\(D_{mac} = \\frac{1}{P}\\sum_t t\\,PV_t\\).<br>\n<b>Step 2 (second derivative):</b> \\(\\frac{d^2P}{dy^2} = \\frac{1}{(1+y)^2}\\sum_t t(t+1)\\,PV_t\\), so \\(C = \\frac{\\sum_t t(t+1)PV_t}{(1+y)^2 P}\\).<br>\n<b>Step 3 (zero, T = 10, y = 4%):</b> \\(C = \\frac{T(T+1)}{(1+y)^2} = \\frac{110}{1.0816} = 101.70\\). \\(D_{mod} = 10/1.04 = 9.615\\).<br>\n<b>Step 4 (Taylor):</b> \\(\\frac{\\Delta P}{P} \\approx -D_{mod}\\Delta y + \\tfrac12 C\\,\\Delta y^2\\). For +100bp: linear \\(-9.615\\%\\), convexity \\(+0.508\\%\\), total \\(-9.107\\%\\). Exact: \\(1.05^{-10}/1.04^{-10}-1 = -9.126\\%\\). Error is third order.<br>\n<b>Worked check (30y par 4% gilt, semi-annual):</b> \\(D_{mod}=17.38\\), \\(C\\approx 421\\). For +100bp: linear \\(-17.38\\%\\), convexity \\(+2.10\\%\\), second order \\(-15.28\\%\\), exact \\(-15.45\\%\\).<br>\n<b>Where it breaks:</b> the formula assumes the yield basis is the one used in discounting. Semi-annual quotes need \\((1+y/2)^{-2t}\\) and the convexity changes accordingly. Embedded options make the price non-smooth, so \\(C\\) is then effective convexity from finite differences, which can be negative.",
+  "tags": [
+   "derivation",
+   "convexity",
+   "duration",
+   "rates"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: the conversion factor in closed form.</b> A bond future's conversion factor is the clean price per unit face of the deliverable bond, computed at a 6% notional yield. Write the closed form for a bond with coupon \\(c\\), \\(n\\) remaining coupon dates, and fraction \\(v\\in(0,1]\\) of a period to the first coupon. Check it for a 4% coupon with 10 years remaining.",
+  "back": "<b>Setup:</b> \\(r = 3\\%\\) per half-year, coupons \\(c/2\\) at \\(v, v+1, \\ldots, v+n-1\\) periods, redemption 1 at \\(v+n-1\\).<br>\n<b>Dirty price:</b> the coupon annuity is geometric with ratio \\(1/(1+r)\\):\n\\[\\sum_{k=0}^{n-1}\\frac{c}{2}(1+r)^{-(v+k)} = \\frac{c}{2}(1+r)^{1-v}\\,\\frac{1-(1+r)^{-n}}{r}\\]\nSo \\(D = \\frac{c}{2}(1+r)^{1-v}\\frac{1-(1+r)^{-n}}{r} + (1+r)^{-(v+n-1)}\\).<br>\n<b>Clean price (CF):</b> subtract accrued \\(\\frac{c}{2}(1-v)\\), since futures are quoted clean:\n\\[CF = D - \\tfrac{c}{2}(1-v)\\]\n<b>Check:</b> 6% coupon, \\(v=1\\), \\(n=20\\): \\(CF = 1.0000\\), as required for a par bond at its own yield. 4% coupon, \\(v=1\\), \\(n=20\\): \\(0.02\\times 14.8775 + 1.03^{-20} = 0.29755 + 0.55368 = 0.8512\\).<br>\n<b>Where it breaks:</b> the exchange rounds the maturity and the coupon in its rules, and the CF is fixed at a single 6% yield, so the CTD ranking is only approximately the market ranking. Checks against the exchange's published CF table are required before relying on the number.",
+  "tags": [
+   "derivation",
+   "conversion_factor",
+   "futures",
+   "conventions"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: roll-down from the zero curve.</b> Derive \\(\\partial y/\\partial T\\) for a zero-coupon yield from the forward-rate identity, then give the 3-month roll-down of a 10-year zero when \\(y(10) = 4.00\\%\\) and the instantaneous forward \\(f(10) = 4.40\\%\\).",
+  "back": "<b>Step 1:</b> discount factor \\(DF(T) = \\exp(-\\int_0^T f(s)\\,ds)\\), so \\(T\\,y(T) = \\int_0^T f(s)\\,ds\\).<br>\n<b>Step 2:</b> differentiate: \\(y(T) + T\\,y'(T) = f(T)\\), so \\(\\frac{\\partial y}{\\partial T} = \\frac{f(T) - y(T)}{T}\\).<br>\n<b>Step 3 (ageing by \\(h\\)):</b> with the curve unchanged, the bond's yield moves from \\(y(T)\\) to \\(y(T-h)\\approx y(T) - h\\,\\frac{f(T)-y(T)}{T}\\).<br>\n<b>Numbers:</b> \\(\\frac{f - y}{T} = \\frac{0.40\\%}{10} = 4\\)bp per year. Over \\(h = 0.25\\): \\(\\Delta y = -1\\)bp. Zero \\(D_{mod} = 9.62\\), so the price gain is \\(9.62\\times 1\\)bp \\(\\approx 0.096\\) points per 100 face.<br>\n<b>Where it breaks:</b> the forward is an expectation plus a term premium, so the realised roll rarely equals the implied one. Coupon bonds roll through coupon dates and must be decomposed into zeros. The formula needs a zero curve, not par yields, and a flat or inverted region changes the sign.<br>\n<b>Interviewer follow-up:</b> When does roll-down turn negative for a bond on an upward-sloping curve? When \\(f(T) < y(T)\\), which only happens where the curve is locally inverted or the desk's zero curve has a kink.",
+  "tags": [
+   "derivation",
+   "roll_down",
+   "forwards",
+   "curve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: DV01 from the dirty-price sensitivity.</b> Derive \\(\\text{DV01} = -\\frac{\\partial P_{dirty}}{\\partial y}\\times 0.0001\\) and show that for a bond quoted clean, DV01 per 100 face scales with the dirty price rather than the duration alone. Compare a par 10y at 100 with a 10y bond priced at 80, both with \\(D_{mod}=10\\).",
+  "back": "<b>Step 1:</b> \\(\\frac{\\partial P_{dirty}}{\\partial y} = -P_{dirty}\\,D_{mod}\\). Accrued interest depends on time, not yield, so \\(\\partial P_{clean}/\\partial y = \\partial P_{dirty}/\\partial y\\).<br>\n<b>Step 2:</b> \\(\\text{DV01}_{100} = P_{dirty}\\,D_{mod}\\times 0.0001\\) per 100 face. For the 10y par at 5% (\\(D_{mod}=7.8\\)): \\(100.5\\times 7.8\\times 10^{-4} = 0.0784\\) per 100 face. Using clean (100) understates it by about 0.5%.<br>\n<b>Step 3:</b> with \\(D_{mod}=10\\), a bond at 100 has DV01 \\(0.100\\), and one at 80 has DV01 \\(0.080\\). Duration is the same, but the price level scales the dollar sensitivity.<br>\n<b>Where it breaks:</b> DV01 is first-order. Its change with yield is the gamma term, so for large moves or near call strikes the DV01 used for hedging must be re-marked. For a futures contract, the DV01 is \\(\\text{DV01}_{CTD}/CF\\), which is also a first-order result.",
+  "tags": [
+   "derivation",
+   "dv01",
+   "duration",
+   "risk"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: key-rate durations by piecewise-linear shocks.</b> Key-rate shocks are piecewise linear hats: a shock to key tenor \\(T_1\\) falls to zero at \\(T_0\\) and \\(T_2\\). Derive the key-rate durations of a zero maturing at \\(T=7.5\\)y between key tenors 7y and 10y, at \\(y=4\\%\\), and check that they sum to effective duration.",
+  "back": "<b>Step 1:</b> for \\(T\\in[T_1,T_2]\\), the zero sees the shock \\(\\Delta y(T) = w_1\\Delta y_1 + w_2\\Delta y_2\\) with \\(w_1 = \\frac{T_2-T}{T_2-T_1}\\) and \\(w_2 = \\frac{T-T_1}{T_2-T_1}\\).<br>\n<b>Step 2:</b> price change \\(\\Delta P/P = -D_{mod}\\,(w_1\\Delta y_1 + w_2\\Delta y_2)\\), so \\(KRD_i = D_{mod}\\,w_i\\).<br>\n<b>Numbers:</b> \\(D_{mod} = 7.5/1.04 = 7.21\\). \\(w_7 = 2.5/3 = 0.833\\), so \\(KRD_7 = 6.01\\). \\(w_{10} = 0.167\\), so \\(KRD_{10} = 1.20\\). The sum is \\(7.21 = D_{mod}\\).<br>\n<b>Why the sum is the effective duration:</b> the hats sum to 1 across the interior, so a parallel shift is the sum of the hat shocks.<br>\n<b>Where it breaks:</b> beyond the first and last key tenors the hat is flat, so a zero shorter than the first key tenor puts its entire KRD there. Coupon bonds split across buckets by PV weight. The result depends on the key tenor set, and sums hold only for the linear interpolation chosen.",
+  "tags": [
+   "derivation",
+   "key_rate",
+   "duration",
+   "hedging"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: PCA-neutral butterfly weights.</b> Let the belly (5y) be short 0.0449 DV01 per 100 face, and the wings (2y and 10y) be long with DV01s \\(a_2\\) and \\(a_{10}\\). Using illustrative loadings for the level PC \\(L=(0.35,0.42,0.48)\\) and the slope PC \\(S=(-0.55,0.00,0.60)\\) for (2y, 5y, 10y), solve for \\(a_2,a_{10}\\) so the fly has zero level and slope exposure. Convert to notionals per unit belly notional.",
+  "back": "<b>Step 1 (level neutral):</b> \\(0.35\\,a_2 + 0.48\\,a_{10} = 0.0449\\times 0.42 = 0.01886\\).<br>\n<b>Step 2 (slope neutral):</b> \\(-0.55\\,a_2 + 0.60\\,a_{10} = 0\\), so \\(a_{10} = 0.9167\\,a_2\\).<br>\n<b>Step 3:</b> substitute: \\(0.35a_2 + 0.44a_2 = 0.79a_2 = 0.01886\\), so \\(a_2 = 0.02387\\) and \\(a_{10} = 0.02188\\).<br>\n<b>Notionals:</b> \\(N_2 = 0.02387/0.0190 = 1.26\\) and \\(N_{10} = 0.02188/0.0818 = 0.27\\) per unit of 5y notional.<br>\n<b>Residual:</b> the wings' DV01 sums to 0.0458 against a belly of 0.0449, so the fly is about 2% long DV01. All the remaining exposure sits in curvature. With curvature loadings \\(C=(0.35,-0.80,0.45)\\), the residual is about 0.054 in PC3 units.<br>\n<b>Where it breaks:</b> the loadings are estimated from a window of history and are unstable. Curvature is the residual that a DV01 hedge leaves, so the fly is a curvature trade in disguise. Use your own PCA, not the illustrative values.",
+  "tags": [
+   "derivation",
+   "pca",
+   "butterfly",
+   "curve_trades"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: forward rates and the implied repo from discount factors.</b> Given continuously compounded zeros \\(z(0.25)=4.00\\%\\) and \\(z(0.50)=4.05\\%\\), derive the 3-month forward for the period [0.25, 0.50] in continuous and simple terms. Explain how this relates to an implied repo.",
+  "back": "<b>Step 1:</b> \\(DF(t) = e^{-z(t)t}\\), so \\(DF_1 = e^{-0.01} = 0.990050\\) and \\(DF_2 = e^{-0.02025} = 0.979954\\).<br>\n<b>Step 2 (continuous forward):</b> \\(f = \\frac{z_2 t_2 - z_1 t_1}{t_2 - t_1} = \\frac{0.02025 - 0.01000}{0.25} = 4.10\\%\\).<br>\n<b>Step 3 (simple, ACT/365 convention):</b> \\(F = \\frac{1}{\\tau}\\left(\\frac{DF_1}{DF_2}-1\\right) = \\frac{1.010259-1}{0.25} = 4.12\\%\\).<br>\n<b>Link to implied repo:</b> the implied repo is the financing rate that makes a cash-futures package riskless given the CTD's cash flows, so comparing it with this curve forward (on the same day count and compounding basis) isolates the basis edge.<br>\n<b>Where it breaks:</b> compounding and day-count mismatches (continuous vs simple, ACT/365 vs ACT/360) change the forward by several bp. Interpolation of log discount factors and the choice of curve (SONIA-OIS vs gilt zeros) also move the answer.",
+  "tags": [
+   "derivation",
+   "forwards",
+   "implied_repo",
+   "conventions"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: Macaulay duration as a PV-weighted average.</b> Derive \\(D_{mac}=\\frac{1}{P}\\sum_t t\\,PV_t\\) and show that it equals a weighted average of zero-coupon maturities. Compute for a 3-year 4% annual-coupon bond at \\(y=4\\%\\), then convert to modified duration.",
+  "back": "<b>Step 1:</b> \\(P = \\sum_t CF_t(1+y)^{-t}\\). Each cash flow \\(t\\) behaves as a zero of maturity \\(t\\), with weight \\(w_t = PV_t/P\\).<br>\n<b>Step 2:</b> \\(D_{mac} = \\sum_t w_t\\,t\\), a weighted average of zero maturities.<br>\n<b>Numbers:</b> \\(PV = (3.846,\\ 3.698,\\ 92.456)\\), summing to 100.000. \\(D_{mac} = (3.846 + 2\\times3.698 + 3\\times92.456)/100 = 2.886\\). Then \\(D_{mod} = 2.886/1.04 = 2.775\\).<br>\n<b>Interpretation:</b> coupons pull weight to earlier maturities, so \\(D_{mac}\\) is below the maturity of 3 years. That is the source of the gap between duration and maturity.<br>\n<b>Where it breaks:</b> \\(D_{mac}\\) is defined at one yield. On a curve, duration becomes the sum of key-rate durations, which are the zero weights times each zero's own sensitivity to its bucket. Non-annual coupons need the \\((1+y/m)\\) denominator for modified duration.",
+  "tags": [
+   "derivation",
+   "duration",
+   "zero_coupon",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: break-even yield for a carry-plus-roll cushion.</b> Over a horizon, a 10y 4% semi-annual par bond at 100 earns carry plus roll of \\(R = 0.365\\) points per 100 face. Its \\(D_{mod}=8.18\\) and \\(C=78.9\\). Derive the break-even yield rise from \\(R - P D_{mod}\\Delta y + \\tfrac12 P C\\,\\Delta y^2 = 0\\), and compare the linear and second-order answers.",
+  "back": "<b>Step 1 (linear):</b> \\(\\Delta y = R/(P\\,D_{mod}) = 0.365/818 = 4.46\\)bp.<br>\n<b>Step 2 (second order):</b> solve \\(3945\\,\\Delta y^2 - 818\\,\\Delta y + 0.365 = 0\\), taking the smaller root: \\(\\Delta y = 4.47\\)bp.<br>\n<b>Interpretation:</b> at a few bp the convexity term is negligible (about \\(10^{-4}\\) points). It is not negligible at 100bp, where \\(\\tfrac12 C\\Delta y^2 = 0.39\\) points per 100, more than the whole cushion of 0.365.<br>\n<b>Where it breaks:</b> the cushion is an expected return, not a guaranteed one. The break-even is only as good as the roll and carry inputs, and it ignores the vol of the yield over the horizon, which is what determines whether the cushion is large relative to risk.<br>\n<b>Interviewer follow-up:</b> Why does convexity matter for barbell versus bullet choices but not for a 3-month break-even? Because the barbell's convexity is larger in size, and a 3-month cushion of a few bp is well inside the region where the linear term dominates.",
+  "tags": [
+   "derivation",
+   "breakeven",
+   "convexity",
+   "carry"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: cash-futures basis trade P&amp;L with repo.</b> Buy £100m nominal of bond X (clean 104.50, CF 0.9500, coupon 4.00%) and sell futures against it at F = 110.00 on a 3-month horizon. The position is financed at 3.50% repo. Compute the number of contracts, the carry, the implied repo and the P&amp;L if the futures price and CTD status are unchanged at delivery.",
+  "back": "<b>Step 1 (contracts):</b> hedge contracts \\(= \\frac{\\text{nominal}\\times CF}{£100{,}000} = \\frac{100\\text{m}\\times0.95}{100{,}000} = 950\\) short.<br>\n<b>Step 2 (carry, per 100 face):</b> income \\(4.00\\times0.25 = 1.000\\); financing \\(3.50\\%\\times104.50\\times0.25 = 0.914\\). Net carry \\(= +0.086\\). On £100m: \\(+£86{,}000\\) before any basis change.<br>\n<b>Step 3 (implied repo):</b> \\(IRR = \\frac{1.000 - 0}{104.50\\times0.25} = 3.83\\%\\). The trade earns \\((IRR - r)\\times P\\times t = (3.83\\%-3.50\\%)\\times104.50\\times0.25 \\approx £86k\\).<br>\n<b>Step 4 (sensitivity):</b> at a 4.00% repo the trade loses about £45k, so the edge is 0.33%, and it disappears entirely at about 3.83% repo.<br>\n<b>Sanity check:</b> net basis is 0.045 per 100, so \\(0.045\\times£1{,}000{,}000 = £45k\\) at entry, matching the negative-carry figure at 4.00%.<br>\n<b>Where it breaks:</b> the futures move before delivery and the basis may be marked, the CTD can switch (card CTD_SWITCH 2/3), repo haircuts and availability change, and the delivery option value (card CTD_SWITCH 3/3) is ignored here.",
+  "tags": [
+   "basis",
+   "futures",
+   "case_study",
+   "repo"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: hedging a £50m 30y gilt position with Long Gilt futures.</b> The position has duration 17.0 at price 100. The CTD of the Long Gilt future has a DV01 of 0.108 per 100 face and a CF of 0.90. Each contract is £100k face. How many contracts hedge the position on a DV01 basis, and how does the answer change if 30y yields move at 0.9 times the CTD yield?",
+  "back": "<b>Step 1 (position DV01):</b> \\(50\\text{m}\\times17.0\\times10^{-4} = £85{,}000\\) per bp.<br>\n<b>Step 2 (contract DV01):</b> \\(\\text{DV01}_{fut} = \\frac{\\text{DV01}_{CTD}\\text{ per £100k}}{CF} = \\frac{1{,}000\\times0.108}{0.90} = £120\\) per bp per contract.<br>\n<b>Step 3 (hedge):</b> \\(N = 85{,}000/120 = 708\\) contracts, a futures notional of about £71m.<br>\n<b>Step 4 (beta adjustment):</b> if 30y yields move at 0.9 times the CTD yield, the position's sensitivity to the CTD yield is \\(0.9\\times85{,}000\\), so \\(N = 0.9\\times708 = 638\\) contracts.<br>\n<b>Sanity check:</b> the futures notional should be \\((D_{pos}/D_{CTD})\\times CF\\times£50\\text{m} = (17/10.8)\\times0.90\\times£50\\text{m} = £71\\text{m}\\), which matches 708 contracts at £100k.<br>\n<b>Where it breaks:</b> the CTD may switch, the CF uses a 6% yield so it is an approximation, and the 30y-to-CTD beta is unstable across regimes. Re-hedge on each CTD change.",
+  "tags": [
+   "hedging",
+   "futures",
+   "case_study",
+   "dv01"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: beta-neutral 2s5s10s butterfly.</b> The 5y belly is short £100m nominal (DV01 £44.9k per bp). Yield betas to the 5y are 0.8 for the 2y and 1.1 for the 10y. Find the wing DV01s that make the fly exactly neutral to a common 5y factor and also DV01-neutral, and compare with equal-DV01 wings.",
+  "back": "<b>Step 1 (DV01 units, per 100 face):</b> belly \\(0.0449\\). Unknown wing DV01s \\(a_2,a_{10}\\).<br>\n<b>Step 2 (DV01-neutral):</b> \\(a_2 + a_{10} = 0.0449\\).<br>\n<b>Step 3 (factor-neutral):</b> \\(0.8\\,a_2 + 1.1\\,a_{10} = 0.0449\\).<br>\n<b>Step 4 (solve):</b> \\(a_{10} = 0.0300\\) and \\(a_2 = 0.0150\\). Notionals per unit belly: \\(N_2 = 0.0150/0.0190 = 0.79\\) and \\(N_{10} = 0.0300/0.0818 = 0.37\\).<br>\n<b>Comparison with equal-DV01 wings:</b> each wing \\(0.02245\\). Factor exposure \\(= 0.8(0.02245)+1.1(0.02245) = 0.04266\\), against belly \\(0.0449\\), so the residual is \\(-0.00224\\), which is 5% of belly DV01. In £ that is \\(\\approx £2{,}240\\) per bp of the common move per £100m of belly.<br>\n<b>Sensitivity:</b> a 0.1 error in \\(\\beta_{10}\\) moves the residual by \\(0.1\\times0.02245 = 0.00225\\), the same size as the residual itself.<br>\n<b>Where it breaks:</b> the betas are noisy and regime-dependent, so the 'neutral' weights are only as good as the sample.",
+  "tags": [
+   "butterfly",
+   "regression",
+   "case_study",
+   "curve_trades"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: auction concession with unhedged sell-down.</b> Pre-auction secondary 4.30%, clearing 4.33%. The dealer buys £100m (DV01 £80k per bp) and the secondary moves to 4.38% by the time it is sold down. Compute the P&amp;L decomposition (concession, market move, total) without and with a futures hedge taken at the pre-auction level.",
+  "back": "<b>Step 1 (concession):</b> \\(3\\)bp \\(\\times\\,£80k = +£240k\\).<br>\n<b>Step 2 (market move):</b> from 4.30% to 4.38% is 8bp of yield rise. A long position marked lower: \\(-8\\times£80k = -£640k\\).<br>\n<b>Step 3 (total unhedged):</b> \\(240 - 640 = -£400k\\). Equivalently \\(-DV01\\,(4.38 - 4.33) = -5\\times80k = -£400k\\).<br>\n<b>Step 4 (hedged):</b> sell futures with DV01 equal to £80k per bp at the pre-auction level. The 8bp market move is offset to first order, leaving the concession \\(+£240k\\) less hedge slippage and bid-offer. Hedge slippage at £30k gives about \\(+£210k\\).<br>\n<b>Sanity check:</b> the break-even concession from card AUCTION_CONC 3/3 is 0.375bp, so the 3bp concession is about 8 times the cost hurdle in expectation, and the unhedged loss is about 1.7 times the concession.<br>\n<b>Where it breaks:</b> the secondary move here is a fixed input, but in practice it correlates with the dealer's own selling, and futures hedge slippage is not constant.",
+  "tags": [
+   "auctions",
+   "hedging",
+   "case_study",
+   "dv01"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: LDI leverage stress with iterated forced sales.</b> A fund holds £300m of 30y gilts (duration 15) with NAV £100m and a leverage target of 3.0x. A 100bp rise is followed by forced sales that move the 30y yield by 5bp per £100m sold. Compute the final sale, final NAV, final leverage and total yield move after the loop converges, and state the loop gain.",
+  "back": "<b>Step 1:</b> shock: exposure 255, NAV 55, leverage 4.64x, first sale 90 (target 165).<br>\n<b>Step 2 (loop):</b> sale 90 moves yields +4.5bp, losing \\(165\\times15\\times0.00045 = £1.11\\)m. NAV 53.89, target 161.7, sale 2.23. Next round sale 0.05, then nothing.<br>\n<b>Result:</b> total sale \\(\\approx £92.3\\)m; NAV \\(\\approx £53.9\\)m; exposure \\(\\approx £161.6\\)m; leverage 3.00x; total 30y yield move \\(\\approx 104.6\\)bp, of which 4.6bp is feedback.<br>\n<b>Loop gain:</b> \\(k = (L-1)\\,E\\,D\\,\\lambda = 2\\times165\\times15\\times0.000005 \\approx 0.025\\). Each round is about 2.5% of the previous one.<br>\n<b>Sensitivity:</b> at \\(\\lambda = 0.0005\\) per £1m (100 times the impact), \\(k\\approx 2.5\\) and the loop diverges. The conclusion depends almost entirely on the impact coefficient, which must be calibrated from observed market depth.<br>\n<b>Where it breaks:</b> the model ignores the collateral waterfall (cash, unencumbered gilts, repo capacity) and the swap leg, which the next card covers.",
+  "tags": [
+   "ldi",
+   "case_study",
+   "leverage",
+   "liquidity"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: convexity P&amp;L on a £50m 30y gilt position.</b> The position is a 30y 4% semi-annual par gilt at 100 (\\(D_{mod}=17.38\\), \\(C\\approx421\\)). Compute the P&amp;L of a 100bp fall and of a 100bp rise in yield using (a) duration only, (b) duration plus convexity, and (c) exact repricing. Which term is the hedging error?",
+  "back": "<b>Step 1 (duration only):</b> \\(-D\\Delta y\\): for -100bp, \\(+17.38\\%\\), so \\(+£8.69\\)m. For +100bp, \\(-£8.69\\)m.<br>\n<b>Step 2 (convexity term):</b> \\(\\tfrac12 C\\Delta y^2 = 0.5\\times421\\times10^{-4} = +2.10\\%\\), so \\(+£1.05\\)m on both sides.<br>\n<b>Step 3 (second-order total):</b> -100bp gives \\(+19.49\\%\\) (\\(+£9.74\\)m); +100bp gives \\(-15.28\\%\\) (\\(-£7.64\\)m).<br>\n<b>Step 4 (exact):</b> -100bp gives \\(+19.69\\%\\) (\\(+£9.85\\)m); +100bp gives \\(-15.45\\%\\) (\\(-£7.73\\)m).<br>\n<b>Sanity check:</b> the convexity term is symmetric and worth about \\(£1.05\\)m on either move, so the asymmetry in the exact result comes from third-order terms (about \\(0.1\\%\\) of price). Duration-only P&amp;L understates the gain on a rally and overstates the loss on a sell-off, which is why a long-gilt book with positive convexity hedged at DV01 is not flat in large moves.<br>\n<b>Where it breaks:</b> for a callable or MBS-type position the convexity term is negative, so the sign of the error flips and the hedging rebalancing cost (see the callable-bond card in the govies deck) applies.",
+  "tags": [
+   "convexity",
+   "case_study",
+   "dv01",
+   "gilts"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: carry and roll on a 5y gilt over six months.</b> The 5y gilt yields 4.00%, the 5y forward is 4.20%, repo is 3.60%, and \\(D_{mod}=4.5\\). Compute carry, roll-down and the break-even yield rise over six months.",
+  "back": "<b>Step 1 (slope):</b> \\((f - y)/T = (4.20\\%-4.00\\%)/5 = 4\\)bp per year.<br>\n<b>Step 2 (roll):</b> over \\(h=0.5\\)y, \\(\\Delta y = -0.5\\times4 = -2\\)bp, so price gain \\(= 4.5\\times2 = 0.09\\) points per 100.<br>\n<b>Step 3 (carry):</b> \\((4.00\\%-3.60\\%)\\times0.5 = 0.20\\) points per 100.<br>\n<b>Step 4 (break-even):</b> total \\(0.29\\) points; break-even rise \\(= 0.29/4.5 = 6.4\\)bp over six months.<br>\n<b>Sanity check:</b> the cushion is about 6bp. Compare it with the six-month yield volatility of the 5y: if that volatility is well above 6bp, the position is a curve or rates view, not a carry trade.<br>\n<b>Where it breaks:</b> coupon payments inside the horizon are ignored, the forward is not a forecast, and repo would be the term rate for the horizon, not the overnight rate.",
+  "tags": [
+   "carry",
+   "roll_down",
+   "case_study",
+   "breakeven"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: quarter-end repo spike on a £2bn long-basis position.</b> A desk holds £2bn of cash bond against short futures, funded in GC repo. On quarter-end GC rises 25bp for one day and the basis adversely moves 5bp (0.05 points per 100 face). Compute the one-day funding cost and the basis loss, and explain when the position would be forced to unwind.",
+  "back": "<b>Step 1 (funding):</b> \\(£2\\text{bn}\\times0.0025/365 = £13.7\\)k for one day (about £13.9k on ACT/360).<br>\n<b>Step 2 (basis loss):</b> \\(0.05\\) points per 100 face on £2bn is \\(£2\\text{bn}\\times0.0005 = £1.0\\)m.<br>\n<b>Step 3 (comparison):</b> the funding cost is small relative to the basis loss, so the risk is the availability of financing, not its price.<br>\n<b>Unwind trigger:</b> if repo lenders cut reverse-repo capacity at quarter-end, the desk may be unable to roll funding at any price. A forced close-out then crystallises the basis at the prevailing level, which may be wider than the desk's own valuation.<br>\n<b>Mitigants:</b> term out repo across the reporting date, pre-fund the position, or use CCP-cleared repo to net exposures, which also helps the leverage measure.",
+  "tags": [
+   "repo",
+   "basis",
+   "case_study",
+   "balance_sheet"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "SONIA compounded-in-arrears coupons observe the overnight rate over the interest period with an observation shift of approx. {{c1::five}} London business days, so the coupon amount is {{c2::known a few days before payment}}, not at period start.",
+  "back": "The shift is a convention that lets the coupon be paid on time without waiting for the period's last fixing. Check the exact lag in the product's documentation before quoting it.",
+  "tags": [
+   "sonia",
+   "conventions",
+   "compounding"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The OLS yield beta of tenor j on tenor i is {{c1::Cov(Δy_j, Δy_i)/Var(Δy_i)}}, the slope from regressing Δy_j on Δy_i with an intercept.",
+  "back": "Note the direction. A hedge ratio built from a regression of P&amp;L on a factor uses the other way round, so check which regression your formula uses.",
+  "tags": [
+   "regression",
+   "beta",
+   "curve_trades"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "On a government-bond yield-change covariance matrix, PC1 (level) typically explains {{c1::roughly 90% or more}} of variance, with slope and curvature (PC2 and PC3) explaining most of the rest (approx.).",
+  "back": "Figures depend on the sample window, the tenor set and the frequency of changes. Quote the decomposition from your own estimate.",
+  "tags": [
+   "pca",
+   "curve",
+   "risk"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A key-rate shock at the first key tenor is {{c1::flat}} for every maturity shorter than it, so the key-rate duration of a 6-month zero sits entirely at the {{c2::first key tenor}}.",
+  "back": "This is why the choice of the shortest key tenor matters for front-end hedges. The flat extension is an assumption about the shock shape, not a market fact.",
+  "tags": [
+   "key_rate",
+   "hedging",
+   "convention"
+  ]
+ }
+]
