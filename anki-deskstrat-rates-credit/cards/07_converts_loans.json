@@ -6,7 +6,8 @@
   "tags": [
    "convertibles",
    "conversion",
-   "mental_math"
+   "mental_math",
+   "lvl_foundation"
   ]
  },
  {
@@ -17,7 +18,8 @@
    "convertibles",
    "payback",
    "carry",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -27,7 +29,8 @@
   "tags": [
    "convertibles",
    "pricing",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -37,7 +40,8 @@
   "tags": [
    "convertibles",
    "greeks",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -48,7 +52,8 @@
    "convertibles",
    "pricing",
    "credit",
-   "derivation"
+   "derivation",
+   "lvl_stretch"
   ]
  },
  {
@@ -59,7 +64,8 @@
    "convertibles",
    "pricing",
    "credit",
-   "derivation"
+   "derivation",
+   "lvl_stretch"
   ]
  },
  {
@@ -70,7 +76,8 @@
    "convertibles",
    "pricing",
    "credit",
-   "scenario"
+   "scenario",
+   "lvl_stretch"
   ]
  },
  {
@@ -81,7 +88,8 @@
    "convertibles",
    "pricing",
    "trees",
-   "coding"
+   "coding",
+   "lvl_vp_core"
   ]
  },
  {
@@ -91,7 +99,8 @@
   "tags": [
    "convertibles",
    "features",
-   "path_dependence"
+   "path_dependence",
+   "lvl_stretch"
   ]
  },
  {
@@ -101,7 +110,8 @@
   "tags": [
    "convertibles",
    "features",
-   "takeover"
+   "takeover",
+   "lvl_vp_core"
   ]
  },
  {
@@ -112,7 +122,8 @@
    "convertibles",
    "coco",
    "credit",
-   "barrier"
+   "barrier",
+   "lvl_vp_core"
   ]
  },
  {
@@ -123,7 +134,8 @@
    "convertibles",
    "convertible_arb",
    "derivation",
-   "mental_math"
+   "mental_math",
+   "lvl_stretch"
   ]
  },
  {
@@ -133,7 +145,8 @@
   "tags": [
    "convertibles",
    "convertible_arb",
-   "derivation"
+   "derivation",
+   "lvl_stretch"
   ]
  },
  {
@@ -144,7 +157,8 @@
    "convertibles",
    "credit",
    "hedging",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -155,7 +169,8 @@
    "convertibles",
    "convertible_arb",
    "borrow",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -166,7 +181,8 @@
    "convertibles",
    "relative_value",
    "cheapness",
-   "trade_off"
+   "trade_off",
+   "lvl_vp_core"
   ]
  },
  {
@@ -177,7 +193,8 @@
    "convertibles",
    "mandatory",
    "payoff",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -188,7 +205,8 @@
    "convertibles",
    "credit",
    "correlation",
-   "wrong_way_risk"
+   "wrong_way_risk",
+   "lvl_stretch"
   ]
  },
  {
@@ -198,7 +216,8 @@
   "tags": [
    "convertibles",
    "convention",
-   "yield"
+   "yield",
+   "lvl_foundation"
   ]
  },
  {
@@ -210,7 +229,8 @@
    "floors",
    "clo",
    "basis",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -221,7 +241,8 @@
    "loans",
    "discount_margin",
    "convention",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -232,7 +253,8 @@
    "loans",
    "prepayment",
    "convexity",
-   "pricing"
+   "pricing",
+   "lvl_vp_core"
   ]
  },
  {
@@ -243,7 +265,8 @@
    "loans",
    "clo",
    "convention",
-   "libor_transition"
+   "libor_transition",
+   "lvl_vp_core"
   ]
  },
  {
@@ -254,7 +277,8 @@
    "loans",
    "settlement",
    "convention",
-   "distressed"
+   "distressed",
+   "lvl_vp_core"
   ]
  },
  {
@@ -265,7 +289,8 @@
    "loans",
    "covenants",
    "recovery",
-   "trade_off"
+   "trade_off",
+   "lvl_vp_core"
   ]
  },
  {
@@ -276,7 +301,8 @@
    "loans",
    "cds",
    "basis",
-   "credit"
+   "credit",
+   "lvl_vp_core"
   ]
  },
  {
@@ -287,7 +313,8 @@
    "clo",
    "arbitrage",
    "mental_math",
-   "structure"
+   "structure",
+   "lvl_vp_core"
   ]
  },
  {
@@ -298,7 +325,8 @@
    "clo",
    "oc_test",
    "waterfall",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -309,7 +337,8 @@
    "clo",
    "rating",
    "warf",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -321,7 +350,8 @@
    "reinvestment",
    "equity",
    "reset",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -333,7 +363,8 @@
    "manager",
    "fees",
    "incentives",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -344,7 +375,8 @@
    "trs",
    "loans",
    "funding",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -355,7 +387,8 @@
    "distressed",
    "lme",
    "covenants",
-   "legal"
+   "legal",
+   "lvl_vp_core"
   ]
  },
  {
@@ -366,7 +399,8 @@
    "distressed",
    "chapter11",
    "priority",
-   "legal"
+   "legal",
+   "lvl_stretch"
   ]
  },
  {
@@ -377,7 +411,8 @@
    "distressed",
    "chapter11",
    "uk_restructuring",
-   "legal"
+   "legal",
+   "lvl_stretch"
   ]
  },
  {
@@ -388,7 +423,8 @@
    "distressed",
    "recovery",
    "waterfall",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  }
 ]

@@ -8,7 +8,8 @@
    "chain",
    "convertibles",
    "hedging",
-   "greeks"
+   "greeks",
+   "lvl_vp_core"
   ]
  },
  {
@@ -19,7 +20,8 @@
    "cb_arb",
    "chain",
    "gamma",
-   "derivation"
+   "derivation",
+   "lvl_stretch"
   ]
  },
  {
@@ -30,7 +32,8 @@
    "cb_arb",
    "chain",
    "credit",
-   "hedging"
+   "hedging",
+   "lvl_vp_core"
   ]
  },
  {
@@ -42,7 +45,8 @@
    "chain",
    "borrow",
    "liquidity",
-   "history"
+   "history",
+   "lvl_vp_core"
   ]
  },
  {
@@ -54,7 +58,8 @@
    "chain",
    "clo",
    "structure",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -66,7 +71,8 @@
    "chain",
    "oc_test",
    "waterfall",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -78,7 +84,8 @@
    "chain",
    "oc_test",
    "equity",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -90,7 +97,8 @@
    "chain",
    "irr",
    "scenario",
-   "case_study"
+   "case_study",
+   "lvl_vp_core"
   ]
  },
  {
@@ -102,7 +110,8 @@
    "chain",
    "uptier",
    "distressed",
-   "covenants"
+   "covenants",
+   "lvl_vp_core"
   ]
  },
  {
@@ -114,7 +123,8 @@
    "chain",
    "recovery",
    "waterfall",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -126,7 +136,8 @@
    "chain",
    "loans",
    "pricing",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -138,7 +149,8 @@
    "chain",
    "loans",
    "pricing",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -150,7 +162,8 @@
    "derivation",
    "tsiveriotis_fernandes",
    "greeks",
-   "pricing"
+   "pricing",
+   "lvl_stretch"
   ]
  },
  {
@@ -162,7 +175,8 @@
    "credit",
    "derivation",
    "cds",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -174,7 +188,8 @@
    "derivation",
    "cds",
    "recovery",
-   "pricing"
+   "pricing",
+   "lvl_vp_core"
   ]
  },
  {
@@ -186,7 +201,8 @@
    "derivation",
    "discount_margin",
    "convention",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -198,7 +214,8 @@
    "derivation",
    "convertible_arb",
    "hedging",
-   "numerics"
+   "numerics",
+   "lvl_stretch"
   ]
  },
  {
@@ -210,7 +227,8 @@
    "derivation",
    "leverage",
    "equity",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -222,7 +240,8 @@
    "case_study",
    "hedging",
    "gamma",
-   "mental_math"
+   "mental_math",
+   "lvl_stretch"
   ]
  },
  {
@@ -234,7 +253,8 @@
    "case_study",
    "discount_margin",
    "floors",
-   "oid"
+   "oid",
+   "lvl_vp_core"
   ]
  },
  {
@@ -246,7 +266,8 @@
    "case_study",
    "oc_test",
    "ccc",
-   "mental_math"
+   "mental_math",
+   "lvl_stretch"
   ]
  },
  {
@@ -258,7 +279,8 @@
    "case_study",
    "recovery",
    "waterfall",
-   "fulcrum"
+   "fulcrum",
+   "lvl_vp_core"
   ]
  },
  {
@@ -270,7 +292,8 @@
    "mandatory",
    "payoff",
    "case_study",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -282,7 +305,8 @@
    "case_study",
    "equity",
    "defaults",
-   "scenario"
+   "scenario",
+   "lvl_stretch"
   ]
  },
  {
@@ -294,7 +318,8 @@
    "case_study",
    "yield",
    "convention",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -305,7 +330,8 @@
    "credit",
    "convention",
    "cds",
-   "recovery"
+   "recovery",
+   "lvl_vp_core"
   ]
  },
  {
@@ -316,7 +342,8 @@
    "convertibles",
    "credit",
    "greeks",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -327,7 +354,8 @@
    "loans",
    "discount_margin",
    "convention",
-   "derivation"
+   "derivation",
+   "lvl_stretch"
   ]
  },
  {
@@ -338,7 +366,8 @@
    "gamma",
    "derivation",
    "convertible_arb",
-   "numerics"
+   "numerics",
+   "lvl_stretch"
   ]
  },
  {
@@ -349,7 +378,8 @@
    "lme",
    "recovery",
    "waterfall",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  }
 ]

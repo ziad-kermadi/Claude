@@ -14,7 +14,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: CLO IC 2/4]</b> Same CLO as the previous card, but now with no fees and no hedge. Assets earn \\(S+m_a\\) with \\(m_a=3.50\\%\\). Senior notes pay \\(S+m_l\\) with \\(m_l=1.60\\%\\). Derive how the senior IC ratio depends on SOFR \\(S\\), and give its limit as \\(S\\to\\infty\\).",
-  "back": "Write \\(\\mathrm{IC}(S)=\\dfrac{A(S+m_a)}{L(S+m_l)}\\) with \\(A=400\\), \\(L=320\\).<br>\nDifferentiate: \\(\\partial_S\\mathrm{IC}=\\dfrac{A}{L}\\cdot\\dfrac{(S+m_l)-(S+m_a)}{(S+m_l)^2}=-\\dfrac{A}{L}\\cdot\\dfrac{m_a-m_l}{(S+m_l)^2}<0\\). IC falls as SOFR rises, because the asset margin exceeds the liability margin.<br>\nThe limit is \\(A/L=125\\%\\): the collateral-to-senior par ratio.<br>\nValues: \\(S=0\\): 273%. \\(S=4\\%\\): 167%. \\(S=8\\%\\): 150%.<br>\nUsed in the deck for: the rate-up check in IC chain card 4.<br>\nWhere it breaks: floors on the loans or the notes make the derivative zero below the floor on the floored side; a fixed-rate swap on the loans removes the asset-side SOFR sensitivity altogether.",
+  "back": "Write \\(\\mathrm{IC}(S)=\\dfrac{A(S+m_a)}{L(S+m_l)}\\) with \\(A=400\\), \\(L=320\\).<br>\nDifferentiate: \\(\\partial_S\\mathrm{IC}=\\dfrac{A}{L}\\cdot\\dfrac{(S+m_l)-(S+m_a)}{(S+m_l)^2}=-\\dfrac{A}{L}\\cdot\\dfrac{m_a-m_l}{(S+m_l)^2}&lt;0\\). IC falls as SOFR rises, because the asset margin exceeds the liability margin.<br>\nThe limit is \\(A/L=125\\%\\): the collateral-to-senior par ratio.<br>\nValues: \\(S=0\\): 273%. \\(S=4\\%\\): 167%. \\(S=8\\%\\): 150%.<br>\nUsed in the deck for: the rate-up check in IC chain card 4.<br>\nWhere it breaks: floors on the loans or the notes make the derivative zero below the floor on the floored side; a fixed-rate swap on the loans removes the asset-side SOFR sensitivity altogether.",
   "tags": [
    "chain_clo_ic",
    "clo",
@@ -39,7 +39,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: CLO IC 4/4]</b> Case study. Same deal: 400 pool, senior 320 at S+160, fees 0.15%, IC trigger 120%. Non-accruing loans (defaulted or non-paying) stop producing interest. (a) At SOFR 4.00%, how much non-accruing par takes the senior IC to 120%? (b) At SOFR 8.00%, with no non-accruing par, does the test pass?",
-  "back": "(a) Net proceeds needed \\(=1.20\\times17.92=21.50\\). With performing par \\(P\\): \\(P\\times(0.075-0.0015)=21.50\\), so \\(P=292.6\\). Non-accruing par \\(=400-292.6=107.4\\), i.e. 26.9% of the pool. Recovery cash is not counted in interest proceeds until received.<br>\n(b) Senior coupon \\(=320\\times(8.00\\%+1.60\\%)=30.72\\). Net proceeds \\(=400\\times11.50\\%-0.60=45.40\\). IC \\(=45.40/30.72=147.8\\%\\). The test passes, since IC falls only from 164% to 148% when base rates rise (see card 2).<br>\nSanity check: a 27% non-accruing share is a severe stress for senior IC alone. In a default cycle the OC test usually binds first, because it counts par, not interest.<br>\nInterviewer follow-up: which test binds earlier for a CLO with mostly CCC loans, and why?",
+  "back": "(a) Net proceeds needed \\(=1.20\\times17.92=21.50\\). With performing par \\(P\\) and the senior fee on the full 400 pool: \\(0.075P-0.60=21.50\\), so \\(P=294.7\\). Non-accruing par \\(=400-294.7=105.3\\), i.e. 26.3% of the pool. Recovery cash is not counted in interest proceeds until received.<br>\n(b) Senior coupon \\(=320\\times(8.00\\%+1.60\\%)=30.72\\). Net proceeds \\(=400\\times11.50\\%-0.60=45.40\\). IC \\(=45.40/30.72=147.8\\%\\). The test passes, since IC falls only from 164% to 148% when base rates rise (see card 2).<br>\nSanity check: a 26% non-accruing share is a severe stress for senior IC alone. In a default cycle the OC test usually binds first, because it counts par, not interest.<br>\nInterviewer follow-up: which test binds earlier for a CLO with mostly CCC loans, and why?",
   "tags": [
    "chain_clo_ic",
    "clo",
@@ -75,7 +75,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: CLO BDR 3/3]</b> Same deal, ignoring excess spread. Recovery is 40%. For the mezzanine tranche (50 of a 500 pool, attachment 10%, detachment 20% of pool loss), find the range of cumulative default rates over which mezzanine principal is impaired. Then compare the mezzanine's sensitivity per unit of pool loss with the senior's.",
-  "back": "Mezzanine first impaired when \\(D(1-R)=50\\), so \\(D=83.3\\) (16.7% of pool). Wiped out when \\(D(1-R)=100\\), so \\(D=166.7\\) (33.3%).<br>\nSenior attaches at pool loss 100 (\\(D=166.7\\), 33.3%) and is impaired only past that point.<br>\nSensitivity: one par of pool loss takes \\(1/50=2.0\\%\\) of mezzanine principal, but only \\(1/400=0.25\\%\\) of senior. Mezzanine is 8 times more sensitive per unit of loss,.<br>\nInterviewer follow-up: which tranche is most sensitive per unit of pool loss, and by how much? The mezzanine, by a factor of 8 over the senior.",
+  "back": "Mezzanine first impaired when \\(D(1-R)=50\\), so \\(D=83.3\\) (16.7% of pool). Wiped out when \\(D(1-R)=100\\), so \\(D=166.7\\) (33.3%).<br>\nSenior attaches at pool loss 100 (\\(D=166.7\\), 33.3%) and is impaired only past that point.<br>\nSensitivity: one par of pool loss takes \\(1/50=2.0\\%\\) of mezzanine principal, but only \\(1/400=0.25\\%\\) of senior. Mezzanine is 8 times more sensitive per unit of loss.<br>\nInterviewer follow-up: which tranche is most sensitive per unit of pool loss, and by how much? The mezzanine, by a factor of 8 over the senior.",
   "tags": [
    "chain_clo_bdr",
    "clo",
@@ -87,7 +87,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: convert Greeks 1/3]</b> A 4-year convertible on a non-dividend stock. Face 1,000, conversion ratio 12.5 (conversion price 80). Stock 80, vol 30%, flat rate 4%. No credit risk, no call, no put. Decompose the value into bond and option parts, then give the convertible's delta per bond in shares.",
-  "back": "Decomposition: convertible \\(=\\) straight bond \\(+\\) 12.5 calls struck at \\(F/\\text{ratio}=80\\). With no credit, the bond part has no equity delta.<br>\n\\(d_1=\\dfrac{\\ln(80/80)+(0.04+\\tfrac12\\cdot0.09)\\cdot4}{0.30\\cdot2}=0.567\\), so \\(N(d_1)=0.7145\\).<br>\nDelta per bond \\(=12.5\\times0.7145=8.93\\) shares, or 893 shares per 100 bonds (notional 71,440 at 80).<br>\nInterviewer follow-up: why is delta below the ratio 12.5 at the money? The option delta is \\(N(d_1)<1\\). The convertible reaches delta 12.5 only deep in the money, where \\(N(d_1)\\to1\\).",
+  "back": "Decomposition: convertible \\(=\\) straight bond \\(+\\) 12.5 calls struck at \\(F/\\text{ratio}=80\\). With no credit, the bond part has no equity delta.<br>\n\\(d_1=\\dfrac{\\ln(80/80)+(0.04+\\tfrac12\\cdot0.09)\\cdot4}{0.30\\cdot2}=0.567\\), so \\(N(d_1)=0.7145\\).<br>\nDelta per bond \\(=12.5\\times0.7145=8.93\\) shares, or 893 shares per 100 bonds (notional 71,440 at 80).<br>\nInterviewer follow-up: why is delta below the ratio 12.5 at the money? The option delta is \\(N(d_1)&lt;1\\). The convertible reaches delta 12.5 only deep in the money, where \\(N(d_1)\\to1\\).",
   "tags": [
    "chain_convert_greeks",
    "convertibles",
@@ -160,7 +160,7 @@
  {
   "type": "basic",
   "front": "A CLO pool is 400, with 40 of CCC-rated loans. Assume the indenture caps CCC at 7.5% of the pool (30 here), and that excess CCC above the cap counts in the OC numerator at market value of 70 (not par). Senior notes are 320, with an OC trigger of 125%. Compute the numerator, the OC ratio and whether the test passes.",
-  "back": "Excess CCC \\(=40-30=10\\). Counted at 70 per 100, so \\(10\\times0.70=7\\). Haircut \\(=3\\).<br>\nNumerator \\(=360\\) (non-CCC, at par) \\(+30\\) (CCC within the cap, at par) \\(+7\\) (excess CCC at market) \\(=397\\).<br>\nOC \\(=397/320=124.1\\%\\). Required numerator for 125% is \\(1.25\\times320=400\\), so the test fails by 3.<br>\nCure: sell CCC to bring the bucket within the cap, or divert interest to senior paydown. Each 1 of numerator is worth \\(1/320=0.31\\) points of OC.<br>\nCaveat: the 7.5% cap and the market-value rule are typical of US CLO indentures and differ by deal. Check the specific indenture before relying on the numbers.<br>\nInterviewer follow-up: why is the CCC haircut an immediate OC hit even though the loan still pays? The test counts market value on the test date, so the mark-down reduces the numerator now, while the coupon keeps accruing.",
+  "back": "Excess CCC \\(=40-30=10\\). Counted at 70 per 100, so \\(10\\times0.70=7\\). Haircut \\(=3\\).<br>\nNumerator \\(=360\\) (non-CCC, at par) \\(+30\\) (CCC within the cap, at par) \\(+7\\) (excess CCC at market) \\(=397\\).<br>\nOC \\(=397/320=124.1\\%\\). Required numerator for 125% is \\(1.25\\times320=400\\), so the test fails by 3.<br>\nCure: sell CCC to bring the bucket within the cap, or divert interest to senior paydown. Each 1 of numerator is worth \\(1/320=0.31\\) points of OC.<br>\nCaveat: a 7.5% cap is typical for US CLO indentures (5% also occurs), and excess CCC is valued at market or at the agency recovery rate if lower, depending on the deal. Check the specific indenture before relying on the numbers.<br>\nInterviewer follow-up: why is the CCC haircut an immediate OC hit even though the loan still pays? The test counts market value on the test date, so the mark-down reduces the numerator now, while the coupon keeps accruing.",
   "tags": [
    "clo",
    "oc_test",
@@ -171,7 +171,7 @@
  },
  {
   "type": "basic",
-  "front": "Case study. A CLO's original collateral was 500, and it has amortised to 50 of par, which is the clean-up threshold (typically 10% of the original, approx.). Notes outstanding are 45 at par. The remaining loans are marked at 101.0. The call costs 0.50. The equity holder considers exercising the clean-up call. Compute the residual to equity, and the loan price below which the call is not worth exercising on this basis.",
+  "front": "Case study. A CLO's original collateral was 500, and it has amortised to 50 of par, which is taken as the clean-up threshold in this example (the indenture sets the real level). Notes outstanding are 45 at par. The remaining loans are marked at 101.0. The call costs 0.50. The equity holder considers exercising the clean-up call. Compute the residual to equity, and the loan price below which the call is not worth exercising on this basis.",
   "back": "Sale proceeds \\(=50\\times1.01=50.50\\). Repay notes at par \\(45.00\\). Call costs \\(0.50\\).<br>\nResidual to equity \\(=50.50-45.00-0.50=5.00\\).<br>\nBreak-even loan price \\(=(45.00+0.50)/50=91.0\\). Above 91.0 the call releases positive value to equity on this basis.<br>\nStretch point: exercising the call is an option the equity holds. The residual of 5.00 must beat the value of continuing: remaining excess spread, reinvestment optionality and the chance of spread tightening. Exercising early gives up that option, so the decision is not just the 5.00 residual.<br>\nWhere it breaks: the clean-up call usually requires redemption of all notes at par plus accrued interest, and the exact threshold varies by deal. Check the indenture.<br>\nInterviewer follow-up: why would the senior sponsor prefer a refinancing to a clean-up call? A refinancing resets the spread on the notes and keeps the equity invested.",
   "tags": [
    "clo",
@@ -217,7 +217,7 @@
  },
  {
   "type": "cloze",
-  "front": "A clean-up call is typically available once collateral falls to about {{c1::10\\%}} of original collateral (approx.; set by the indenture). It lets equity redeem the notes at {{c2::par plus accrued interest}}, so equity captures the residual {{c3::market value of the collateral less the notes and costs}}.",
+  "front": "A clean-up call becomes available once collateral falls to a threshold {{c1::set by the indenture, as a share of the original balance}}. It lets equity redeem the notes at {{c2::par plus accrued interest}}, so equity captures the residual {{c3::market value of the collateral less the notes and costs}}.",
   "back": "Threshold and call price are deal-specific. In the case study the residual is 50.50 - 45.00 - 0.50 = 5.00.",
   "tags": [
    "clo",

@@ -7,7 +7,8 @@
    "swaps",
    "mental_math",
    "dv01",
-   "duration"
+   "duration",
+   "lvl_foundation"
   ]
  },
  {
@@ -18,7 +19,8 @@
    "carry",
    "roll_down",
    "breakeven",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -29,7 +31,8 @@
    "butterfly",
    "dv01",
    "curve",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -40,7 +43,8 @@
    "fx_hedging",
    "cross_currency_basis",
    "covered_interest_parity",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -52,7 +56,8 @@
    "cds",
    "cs01",
    "jtd",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -63,7 +68,8 @@
    "vol",
    "normal_vol",
    "mental_math",
-   "convention"
+   "convention",
+   "lvl_foundation"
   ]
  },
  {
@@ -75,7 +81,8 @@
    "curve",
    "pnl",
    "dv01",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -87,7 +94,8 @@
    "hedge_ratio",
    "ctd",
    "gilts",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -99,7 +107,8 @@
    "straddle",
    "normal_vol",
    "breakeven",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -109,7 +118,8 @@
    "sonia",
    "scenario",
    "rates",
-   "curve"
+   "curve",
+   "lvl_vp_core"
   ],
   "front": "<b>Scenario:</b> Bank Rate is 4.00% and the MPC delivers an unexpected 25bp hike with no change to forward guidance. You hold a receiver book of \\(\\pounds 1\\text{bn}\\) 2y SONIA swaps (DV01 about \\(\\pounds 190\\text{k}\\) per bp). If the 2y swap rate reprices 20bp, what is the immediate loss? Why is the swap move not simply 25bp, and what determines how much of the hike reaches the 2y rate?",
   "back": "<b>Answer:</b> the receiver loses \\(190\\text{k} \\times 20 = \\pounds 3.8\\text{m}\\). A 2y swap rate is the average expected compounded SONIA over two years plus a term premium. A policy move reaches the 2y rate only through the part of the path it changes.<br><br>\n<ul>\n<li><b>Permanent hike:</b> if the market expects 4.25% for the full 2y, the 2y rate rises by about 25bp.</li>\n<li><b>Transitory hike:</b> if the hike is reversed after one quarter, the 2y average rises by about \\(25 \\times 0.25/2 \\approx 3\\)bp.</li>\n<li><b>Guidance and later meetings:</b> a hike with unchanged guidance is read as a path shift only if the market also reprices later meetings. That is the source of the 15-20bp scenario.</li>\n</ul>\nThe loss is therefore set by the persistence the market assigns, not by the 25bp headline. The curve bear-flattens, since the 2y absorbs more of the move than the 10y. Gilts and sterling move with the front end, and sterling usually firms on a surprise tightening, though the sign is not a law.<br><br>\n<b>Interviewer follow-up:</b> How would you hedge the 2y receiver against a surprise? Pay-fixed 2y swaps or SONIA futures match DV01 at the front. Because the risk is the persistence of the path, a DV01 match alone leaves the 3-to-25bp uncertainty unhedged, so a bear-flattener on 2s10s is a complementary position."
@@ -123,7 +133,8 @@
    "slr",
    "leverage_ratio",
    "scenario",
-   "treasuries"
+   "treasuries",
+   "lvl_stretch"
   ]
  },
  {
@@ -135,7 +146,8 @@
    "margin",
    "liquidity",
    "vol",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -148,7 +160,8 @@
    "liquidity",
    "boe",
    "scenario",
-   "pensions"
+   "pensions",
+   "lvl_vp_core"
   ]
  },
  {
@@ -160,7 +173,8 @@
    "futures",
    "basis",
    "gilts",
-   "scenario"
+   "scenario",
+   "lvl_stretch"
   ]
  },
  {
@@ -172,7 +186,8 @@
    "treasuries",
    "repo",
    "liquidity",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -184,7 +199,8 @@
    "cds_index",
    "roll",
    "convention",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -194,7 +210,8 @@
    "ratings",
    "collateral",
    "scenario",
-   "credit"
+   "credit",
+   "lvl_vp_core"
   ],
   "front": "<b>Scenario:</b> a sovereign is downgraded one notch, from A to A-, staying investment grade. Separate the effects into (a) price moves that the market has not priced, (b) rule-based mechanical effects through index, collateral and capital rules, and (c) forced selling from mandates. Which is most likely to be large, and which threshold matters most?",
   "back": "<b>Answer:</b> a one-notch move inside investment grade usually has a modest price effect, because CDS and bond prices already anticipate most rating actions. The large effects come from threshold rules, not from the letter of the rating.<br><br>\n<ul>\n<li><b>Price (unpriced part):</b> the residual widening after anticipation. A 5bp repricing on a 10y bond with modified duration 8 costs \\(8 \\times 0.05\\% = 0.4\\%\\) of price.</li>\n<li><b>Mechanical (rules):</b> rating-linked collateral haircuts and eligibility for central-bank or CCP facilities, and index membership rules that use rating thresholds. Each rule is specific to the issuer and the facility, so check the current text rather than relying on the general pattern.</li>\n<li><b>Capital:</b> where standardised risk weights for sovereign exposures depend on the rating, the holder's capital requirement can rise.</li>\n<li><b>Discretionary (mandates):</b> investors with minimum-rating limits sell. These are the forced sellers, and they cluster at the bottom of investment grade.</li>\n</ul>\nSovereign-ceiling effects on domestic bank ratings, where they still apply, transmit the move to bank bonds and CDS.<br><br>\n<b>Interviewer follow-up:</b> Why is the price effect of an A to A- move smaller than an A- to BBB+ move? The A to A- step does not cross a mandate or index floor. The cliff at the bottom of investment grade is what triggers forced sales, so the risk is nonlinear in the rating."
@@ -206,7 +223,8 @@
    "term_premium",
    "central_bank",
    "scenario",
-   "curve"
+   "curve",
+   "lvl_vp_core"
   ],
   "front": "<b>Scenario:</b> a central bank accelerates quantitative tightening, running off long-dated bonds faster. Decompose the effect on the 10y yield into the expected policy path and the term premium. Which part moves the 2s10s slope, and why is the sign of any swap-spread or repo effect not determined by the mechanism alone?",
   "back": "<b>Answer:</b> \\(y_{10} = \\text{average expected short rate over 10y} + \\text{term premium}\\). QT changes the term premium. It moves duration from the central bank to the private sector, so private holders require more compensation to hold it. The expected policy path is set by the reaction function and is not changed by the balance sheet alone.<br><br>\n<ul>\n<li><b>Long end:</b> the term premium rises, so the 10y yield rises with the 2y unchanged. This is a bear-steepening of 2s10s. A 10bp term-premium rise with an unchanged 2y steepens 2s10s by 10bp.</li>\n<li><b>Front end:</b> little direct effect. It moves only if the market reads the QT as a change to the policy reaction function, which is an expectations effect.</li>\n<li><b>Reserves and repo:</b> QT reduces reserves. If reserves become scarce, repo can trade above the policy rate, which changes the funding cost for holders of bonds.</li>\n<li><b>Swap spreads:</b> the sign depends on which leg is squeezed (bond funding, dealer balance sheet, or the swap curve). State the channel, and do not assume the sign.</li>\n</ul>\n<b>Interviewer follow-up:</b> Why might an announced faster QT lower front-end rates? If the market reads the faster run-off as a sign that the central bank is less worried about inflation, the expected path falls and the front end rallies. The announcement effect and the operational effect can have opposite signs."
@@ -220,7 +238,8 @@
    "breakevens",
    "linkers",
    "uk",
-   "scenario"
+   "scenario",
+   "lvl_stretch"
   ]
  },
  {
@@ -230,7 +249,8 @@
    "primary",
    "concession",
    "supply",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ],
   "front": "<b>Scenario:</b> a 10y sovereign syndication prices at a new-issue concession (NIC) to the curve. Define the NIC precisely, state how you measure it, and list the three main determinants of its size. How would you value a £1bn allocation at a 3bp NIC with 10y DV01 of about £800k per bp?",
   "back": "<b>Answer:</b> the NIC is the new bond's yield at pricing minus the fair yield on the secondary curve at the same time, using comparable bonds on the same curve point. It is a cheapness the buyer receives in exchange for taking supply and price-discovery risk.<br><br>\n<ul>\n<li><b>Measurement:</b> use the fair curve at the moment of pricing, not the initial talk. Initial talk is set by the bookrunners and overstates the concession if the book tightens.</li>\n<li><b>Determinants:</b> (1) deal size against market depth; (2) book quality, measured by the order book and the final tightening from initial talk; (3) market volatility at launch, since higher vol widens the concession.</li>\n<li><b>Decay:</b> the bond converges to the curve as it is distributed and traded. Convergence depends on distribution quality and index inclusion, and reopening risk can delay it.</li>\n</ul>\nAllocation value: a 3bp NIC on a \\(\\pounds 1\\text{bn}\\) allocation is worth about \\(3 \\times \\pounds 800\\text{k} = \\pounds 2.4\\text{m}\\) of price if it fully converges. The allocation is still a duration position, so a market move of 5bp in the wrong direction costs \\(5 \\times \\pounds 800\\text{k} = \\pounds 4\\text{m}\\), which can exceed the NIC.<br><br>\n<b>Interviewer follow-up:</b> Why would a dealer take a large allocation at all? The NIC pays for the inventory risk and the distribution work. A dealer that cannot hedge the duration cheaply, or does not expect the concession to decay, should not take the allocation."
@@ -242,7 +262,8 @@
    "flow",
    "client",
    "desk_strat",
-   "informed_flow"
+   "informed_flow",
+   "lvl_vp_core"
   ],
   "front": "<b>Desk strat:</b> over one hour, three clients ask to pay fixed in 10y swaps, and the desk's hit rate on its receiver quotes rises sharply. How do you tell a client's hedging need (a stated axe) from informed flow that predicts a move? What would you change in the axe engine as a result?",
   "back": "<b>Answer:</b> a hedging axe and informed flow look the same at the moment of the trade. They differ in what happens after. A hedging axe reflects the client's inventory and produces no subsequent move. Informed flow produces a markout, because the client trades ahead of a move.<br><br>\nTests:\n<ul>\n<li><b>Markouts:</b> compare 1-second and few-second markouts (latency and hedging) with 5- to 30-minute markouts (information). Informed flow shows the longer-horizon move.</li>\n<li><b>Clustering:</b> several clients trading the same direction together may reflect a common macro view, not separate hedging needs.</li>\n<li><b>Context:</b> check the client's known portfolio, index events and benchmark roll dates. A hedging need is usually linked to a known exposure.</li>\n</ul>\nAxe engine changes: store each client's signed flow and subsequent markouts by horizon, decay stale axes, and separate the desk's own inventory axe from the client-driven axe. The output is a skew on the mid and a size limit, both tiered by the client's realised markout, not by volume alone.<br><br>\n<b>Interviewer follow-up:</b> Why is a rising hit rate on receiver quotes not automatically a sign of informed flow? A rising hit rate can also come from a competitor quoting stale prices, or from the desk's own quotes being too tight for the current vol. Check the markouts before reacting."
@@ -256,7 +277,8 @@
    "inventory",
    "skew",
    "quoting",
-   "desk_strat"
+   "desk_strat",
+   "lvl_vp_core"
   ]
  },
  {
@@ -266,7 +288,8 @@
    "markouts",
    "adverse_selection",
    "execution",
-   "desk_strat"
+   "desk_strat",
+   "lvl_vp_core"
   ],
   "front": "<b>Desk strat:</b> define effective spread, realised spread and markout for a dealer trade, and explain why the realised spread is the better measure of dealer edge after adverse selection. Use a worked buy at 99.50 when the mid is 99.55 at trade, and 99.52 five minutes later.",
   "back": "<b>Answer:</b> for a dealer buying at price \\(P\\), with mid \\(m_0\\) at the trade and \\(m_h\\) at horizon \\(h\\):\n<ul>\n<li><b>Effective spread (edge at trade):</b> \\(m_0 - P = 99.55 - 99.50 = 0.05\\).</li>\n<li><b>Markout (adverse selection cost):</b> \\(m_0 - m_h = 99.55 - 99.52 = 0.03\\). The mid fell after the dealer bought, which is a loss to a long.</li>\n<li><b>Realised spread:</b> effective spread less markout, \\(0.05 - 0.03 = 0.02\\), equal to \\(m_h - P = 99.52 - 99.50\\).</li>\n</ul>\nThe effective spread overstates the dealer's gain whenever the client's trade is informative, because part of the quoted edge is given back as the mid moves. The realised spread is the dealer's true gain after that cost, so tiering uses realised spread by client and horizon, not effective spread. A low realised spread with a high effective spread is the signature of informed flow.<br><br>\n<b>Interviewer follow-up:</b> Why choose the 5-minute horizon? Choose a horizon long enough for the dealer to hedge and short enough that the mid is driven by the client's information. Check the horizon with a term structure of markouts before fixing it."
@@ -280,7 +303,8 @@
    "inventory",
    "avellaneda_stoikov",
    "quoting",
-   "desk_strat"
+   "desk_strat",
+   "lvl_vp_core"
   ]
  },
  {
@@ -292,7 +316,8 @@
    "almgren_chriss",
    "impact",
    "microstructure",
-   "desk_strat"
+   "desk_strat",
+   "lvl_vp_core"
   ]
  },
  {
@@ -304,7 +329,8 @@
    "streaming",
    "winners_curse",
    "execution",
-   "desk_strat"
+   "desk_strat",
+   "lvl_vp_core"
   ]
  },
  {
@@ -316,7 +342,8 @@
    "gamma",
    "transaction_cost",
    "risk",
-   "desk_strat"
+   "desk_strat",
+   "lvl_vp_core"
   ]
  },
  {
@@ -328,7 +355,8 @@
    "d2c",
    "all_to_all",
    "electronic_trading",
-   "desk_strat"
+   "desk_strat",
+   "lvl_vp_core"
   ]
  },
  {
@@ -340,7 +368,8 @@
    "credit",
    "pricing",
    "liquidity",
-   "desk_strat"
+   "desk_strat",
+   "lvl_vp_core"
   ]
  },
  {
@@ -350,7 +379,8 @@
    "market_impact",
    "risk_measurement",
    "desk_strat",
-   "square_root_law"
+   "square_root_law",
+   "lvl_vp_core"
   ],
   "front": "<b>Desk strat:</b> a desk holds £500m of 10y gilts (DV01 £400k/bp, average half-spread 0.2bp in yield, daily volume £2bn, daily yield vol 4bp). Estimate the cost to exit over one day, and over two days. Use the square-root law with \\(Y = 1\\). Why is a bid-offer-only estimate wrong?",
   "back": "<b>Answer:</b> exit cost \\(= \\tfrac12 s\\cdot DV01 + Y\\sigma_{bp}\\sqrt{Q/V}\\cdot DV01_\\text{traded}\\), with \\(s\\) the full spread in yield.<br><br>\n<ul>\n<li><b>Half-spread:</b> \\(0.2 \\times 400\\text{k} = \\pounds 80\\text{k}\\), the same over either horizon.</li>\n<li><b>One day:</b> \\(Q/V = 500/2000 = 0.25\\), so impact \\(= 4 \\times \\sqrt{0.25} = 2\\)bp. Cost \\(= 2 \\times 400\\text{k} = \\pounds 800\\text{k}\\). Total \\(\\approx \\pounds 880\\text{k}\\).</li>\n<li><b>Two days (\\(250\\text{m}\\) per day):</b> \\(Q/(nV) = 0.125\\), so impact \\(= 4 \\times \\sqrt{0.125} = 1.41\\)bp per day on \\(DV01 = 200\\text{k}\\). Cost \\(= 2 \\times 1.41 \\times 200\\text{k} = \\pounds 566\\text{k}\\). Total \\(\\approx \\pounds 646\\text{k}\\).</li>\n</ul>\nA bid-offer-only estimate gives \\(\\pounds 80\\text{k}\\), which understates the one-day exit by about a factor of 11. It ignores size relative to volume, the time over which the position is exited, and the price response to the desk's own selling. The liquidity horizon is the shortest exit time for which the cost is below the target.<br><br>\n<b>Interviewer follow-up:</b> Why is the two-day exit cheaper, and what does it cost in price risk? The impact falls as \\(1/\\sqrt{n}\\), but the position is exposed to yield moves for one more day, \\(\\sigma\\sqrt{1}\\) times DV01, about \\(4 \\times 400\\text{k} = \\pounds 1.6\\text{m}\\) of one-sigma P&amp;L. Impact saved has to be weighed against that risk."
@@ -363,7 +393,8 @@
    "avellaneda_stoikov",
    "inventory",
    "market_making",
-   "desk_strat"
+   "desk_strat",
+   "lvl_vp_core"
   ]
  },
  {
@@ -375,7 +406,8 @@
    "sbm",
    "capital",
    "regulation",
-   "market_risk"
+   "market_risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -387,7 +419,8 @@
    "drc",
    "credit",
    "capital",
-   "regulation"
+   "regulation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -398,7 +431,8 @@
    "frtb",
    "rrao",
    "capital",
-   "regulation"
+   "regulation",
+   "lvl_stretch"
   ]
  },
  {
@@ -410,7 +444,8 @@
    "expected_shortfall",
    "liquidity_horizon",
    "regulation",
-   "market_risk"
+   "market_risk",
+   "lvl_stretch"
   ]
  },
  {
@@ -422,7 +457,8 @@
    "nmrf",
    "ima",
    "regulation",
-   "market_risk"
+   "market_risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -434,7 +470,8 @@
    "pla",
    "backtesting",
    "regulation",
-   "market_risk"
+   "market_risk",
+   "lvl_stretch"
   ]
  },
  {
@@ -446,7 +483,8 @@
    "counterparty_credit",
    "ead",
    "regulation",
-   "capital"
+   "capital",
+   "lvl_stretch"
   ]
  },
  {
@@ -457,7 +495,8 @@
    "sa_ccr",
    "capital",
    "regulation",
-   "counterparty_credit"
+   "counterparty_credit",
+   "lvl_stretch"
   ]
  },
  {
@@ -469,7 +508,8 @@
    "initial_margin",
    "uncleared",
    "regulation",
-   "market_structure"
+   "market_structure",
+   "lvl_vp_core"
   ]
  },
  {
@@ -480,7 +520,8 @@
    "umr",
    "initial_margin",
    "regulation",
-   "market_structure"
+   "market_structure",
+   "lvl_vp_core"
   ]
  },
  {
@@ -492,7 +533,8 @@
    "capital",
    "basel",
    "regulation",
-   "counterparty_credit"
+   "counterparty_credit",
+   "lvl_vp_core"
   ]
  },
  {
@@ -504,7 +546,8 @@
    "pra",
    "uk",
    "frtb",
-   "regulation"
+   "regulation",
+   "lvl_stretch"
   ]
  },
  {
@@ -516,7 +559,8 @@
    "repo",
    "swaps",
    "regulation",
-   "balance_sheet"
+   "balance_sheet",
+   "lvl_vp_core"
   ]
  },
  {
@@ -528,7 +572,8 @@
    "market_structure",
    "clearing",
    "gilts",
-   "boe"
+   "boe",
+   "lvl_foundation"
   ]
  },
  {
@@ -540,7 +585,8 @@
    "sonia",
    "fallbacks",
    "legacy",
-   "uk"
+   "uk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -550,7 +596,8 @@
    "transparency",
    "bonds",
    "swaps",
-   "regulation"
+   "regulation",
+   "lvl_stretch"
   ],
   "front": "<b>Regulation (UK/EU):</b> a dealer has to hedge a £500m block of 10y swaps after a client trade. Explain how MiFIR post-trade transparency and the deferral regime affect the timing of publication, and what the desk must check before relying on a deferral. State any points you are unsure of.",
   "back": "<b>Answer:</b> post-trade transparency requires a trade in a non-equity instrument to be published close to real time through an approved publication arrangement (APA). Deferrals allow publication to be delayed for trades above size thresholds, so that a large trade does not reveal the hedge the dealer is about to execute.<br><br>\nWhat the desk must check:\n<ul>\n<li><b>Eligibility:</b> whether the instrument and the trade size qualify for a deferral, using the thresholds and the deferral length for the instrument category in the current rules. These thresholds are set per instrument and change with the review.</li>\n<li><b>Timing:</b> the publication deadline on the deferred trade and how it interacts with the desk's hedge execution.</li>\n<li><b>Pre-trade:</b> whether a waiver applies to a quote request. Waivers are instrument- and size-specific, and an RFQ to a limited set of dealers does not automatically qualify. Check the current rules before assuming it does.</li>\n<li><b>Derivatives trading obligation:</b> whether the swap is in scope for a venue or equivalent trading requirement, which depends on its type, currency and maturity.</li>\n</ul>\nUncertainty: the thresholds, deferral lengths and DTO scope have changed through reviews of the regime. Verify each against the current rulebook before use. The MiFIR review (Regulation (EU) 2024/791, in force 28 March 2024) is still being implemented through delegated acts, and the derivatives transparency regime was under ESMA consultation in 2025; its final thresholds and DTO scope are unverified here.<br><br>\n<b>Interviewer follow-up:</b> Why does the deferral matter more for a hedge than for the client trade? The client trade is already done. The hedge is the next order, and its publication reveals the size and direction of the dealer's remaining risk to the market."
@@ -564,7 +611,8 @@
    "settlement",
    "uk",
    "eu",
-   "market_structure"
+   "market_structure",
+   "lvl_vp_core"
   ]
  },
  {
@@ -575,7 +623,8 @@
    "frtb",
    "expected_shortfall",
    "liquidity_horizon",
-   "regulation"
+   "regulation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -586,7 +635,8 @@
    "frtb",
    "pla",
    "backtesting",
-   "regulation"
+   "regulation",
+   "lvl_stretch"
   ]
  },
  {
@@ -597,7 +647,8 @@
    "credit",
    "cds",
    "hazard_rate",
-   "mental_math"
+   "mental_math",
+   "lvl_foundation"
   ]
  },
  {
@@ -608,7 +659,8 @@
    "credit",
    "cds_index",
    "roll",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  }
 ]

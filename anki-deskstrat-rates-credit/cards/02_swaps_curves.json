@@ -7,7 +7,8 @@
    "swaps",
    "sofr",
    "compounding",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -18,7 +19,8 @@
    "swaps",
    "sofr",
    "mental_math",
-   "compounding"
+   "compounding",
+   "lvl_foundation"
   ]
  },
  {
@@ -29,7 +31,8 @@
    "swaps",
    "rfr",
    "conventions",
-   "compounding"
+   "compounding",
+   "lvl_vp_core"
   ]
  },
  {
@@ -40,7 +43,8 @@
    "swaps",
    "sofr",
    "compounding",
-   "conventions"
+   "conventions",
+   "lvl_vp_core"
   ]
  },
  {
@@ -51,7 +55,8 @@
    "swaps",
    "rfr",
    "daycount",
-   "convention"
+   "convention",
+   "lvl_foundation"
   ]
  },
  {
@@ -62,7 +67,8 @@
    "libor_transition",
    "fallbacks",
    "convention",
-   "isda"
+   "isda",
+   "lvl_vp_core"
   ]
  },
  {
@@ -73,7 +79,8 @@
    "libor_transition",
    "fallbacks",
    "multicurve",
-   "trade_off"
+   "trade_off",
+   "lvl_vp_core"
   ]
  },
  {
@@ -83,7 +90,8 @@
   "tags": [
    "libor_transition",
    "cessation",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -94,7 +102,8 @@
    "multicurve",
    "curves",
    "ois",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -105,7 +114,8 @@
    "multicurve",
    "projection",
    "discounting",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -116,7 +126,8 @@
    "csa",
    "discounting",
    "derivation",
-   "collateral"
+   "collateral",
+   "lvl_vp_core"
   ]
  },
  {
@@ -127,7 +138,8 @@
    "csa",
    "collateral",
    "options",
-   "discounting"
+   "discounting",
+   "lvl_stretch"
   ]
  },
  {
@@ -138,7 +150,8 @@
    "csa",
    "collateral",
    "convention",
-   "discounting"
+   "discounting",
+   "lvl_foundation"
   ]
  },
  {
@@ -149,7 +162,8 @@
    "bootstrapping",
    "ois",
    "derivation",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -160,7 +174,8 @@
    "bootstrapping",
    "instruments",
    "curves",
-   "ois"
+   "ois",
+   "lvl_vp_core"
   ]
  },
  {
@@ -171,7 +186,8 @@
    "bootstrapping",
    "turn_of_year",
    "interpolation",
-   "curves"
+   "curves",
+   "lvl_vp_core"
   ]
  },
  {
@@ -182,7 +198,8 @@
    "bootstrapping",
    "futures",
    "convexity",
-   "derivation"
+   "derivation",
+   "lvl_stretch"
   ]
  },
  {
@@ -193,7 +210,8 @@
    "futures",
    "convexity",
    "bootstrapping",
-   "convention"
+   "convention",
+   "lvl_foundation"
   ]
  },
  {
@@ -204,7 +222,8 @@
    "interpolation",
    "curves",
    "forwards",
-   "risk"
+   "risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -215,7 +234,8 @@
    "interpolation",
    "monotone_convex",
    "curves",
-   "forwards"
+   "forwards",
+   "lvl_vp_core"
   ]
  },
  {
@@ -226,7 +246,8 @@
    "interpolation",
    "risk",
    "trade_off",
-   "curves"
+   "curves",
+   "lvl_vp_core"
   ]
  },
  {
@@ -237,7 +258,8 @@
    "bootstrapping",
    "scenario",
    "curves",
-   "risk"
+   "risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -248,7 +270,8 @@
    "curves",
    "jacobian",
    "bootstrapping",
-   "risk"
+   "risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -259,7 +282,8 @@
    "jacobian",
    "risk",
    "derivation",
-   "bucketing"
+   "bucketing",
+   "lvl_vp_core"
   ]
  },
  {
@@ -270,7 +294,8 @@
    "risk",
    "bucketing",
    "par_risk",
-   "hedging"
+   "hedging",
+   "lvl_vp_core"
   ]
  },
  {
@@ -281,7 +306,8 @@
    "risk",
    "bucketing",
    "par_risk",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -292,7 +318,8 @@
    "swaps",
    "par_rate",
    "mental_math",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -303,7 +330,8 @@
    "swaps",
    "pv01",
    "derivation",
-   "valuation"
+   "valuation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -314,7 +342,8 @@
    "swaps",
    "mental_math",
    "pv01",
-   "valuation"
+   "valuation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -325,7 +354,8 @@
    "pv01",
    "mental_math",
    "annuity",
-   "convention"
+   "convention",
+   "lvl_foundation"
   ]
  },
  {
@@ -336,7 +366,8 @@
    "swaps",
    "forward_swap",
    "mental_math",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -347,7 +378,8 @@
    "swaps",
    "annuity_measure",
    "swaptions",
-   "derivation"
+   "derivation",
+   "lvl_stretch"
   ]
  },
  {
@@ -358,7 +390,8 @@
    "swaptions",
    "mental_math",
    "volatility",
-   "valuation"
+   "valuation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -369,7 +402,8 @@
    "swaptions",
    "mental_math",
    "volatility",
-   "convention"
+   "convention",
+   "lvl_foundation"
   ]
  },
  {
@@ -380,7 +414,8 @@
    "cms",
    "convexity",
    "swaptions",
-   "annuity_measure"
+   "annuity_measure",
+   "lvl_vp_core"
   ]
  },
  {
@@ -391,7 +426,8 @@
    "xccy",
    "basis",
    "mtm",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -402,7 +438,8 @@
    "xccy",
    "cip",
    "fx",
-   "basis"
+   "basis",
+   "lvl_vp_core"
   ]
  },
  {
@@ -413,7 +450,8 @@
    "fx",
    "forward_points",
    "mental_math",
-   "xccy"
+   "xccy",
+   "lvl_vp_core"
   ]
  },
  {
@@ -424,7 +462,8 @@
    "fx",
    "fx_swap",
    "xccy",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -435,7 +474,8 @@
    "multicurve",
    "tenor_basis",
    "projection",
-   "basis"
+   "basis",
+   "lvl_vp_core"
   ]
  },
  {
@@ -446,7 +486,8 @@
    "swap_spreads",
    "treasuries",
    "trade_idea",
-   "balance_sheet"
+   "balance_sheet",
+   "lvl_vp_core"
   ]
  },
  {
@@ -457,7 +498,8 @@
    "clearing",
    "pai",
    "discounting",
-   "collateral"
+   "collateral",
+   "lvl_vp_core"
   ]
  },
  {
@@ -468,7 +510,8 @@
    "clearing",
    "pai",
    "discounting_switch",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -479,7 +522,8 @@
    "clearing",
    "pai",
    "scenario",
-   "discounting_switch"
+   "discounting_switch",
+   "lvl_vp_core"
   ]
  },
  {
@@ -490,7 +534,8 @@
    "clearing",
    "margin",
    "im_vm",
-   "liquidity"
+   "liquidity",
+   "lvl_vp_core"
   ]
  },
  {
@@ -501,7 +546,8 @@
    "xva",
    "fva",
    "funding",
-   "discounting"
+   "discounting",
+   "lvl_vp_core"
   ]
  },
  {
@@ -512,7 +558,8 @@
    "xva",
    "mva",
    "kva",
-   "margin"
+   "margin",
+   "lvl_vp_core"
   ]
  },
  {
@@ -523,7 +570,8 @@
    "clearing",
    "csa",
    "xva",
-   "trade_off"
+   "trade_off",
+   "lvl_vp_core"
   ]
  },
  {
@@ -534,7 +582,8 @@
    "curves",
    "forwards",
    "derivation",
-   "interpolation"
+   "interpolation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -545,7 +594,8 @@
    "sofr",
    "term_sofr",
    "basis",
-   "multicurve"
+   "multicurve",
+   "lvl_vp_core"
   ]
  },
  {
@@ -556,7 +606,8 @@
    "multicurve",
    "basis",
    "projection",
-   "bootstrapping"
+   "bootstrapping",
+   "lvl_vp_core"
   ]
  },
  {
@@ -567,7 +618,8 @@
    "interpolation",
    "forwards",
    "curves",
-   "convention"
+   "convention",
+   "lvl_foundation"
   ]
  },
  {
@@ -578,7 +630,8 @@
    "rfr",
    "compounding",
    "conventions",
-   "lookback"
+   "lookback",
+   "lvl_vp_core"
   ]
  },
  {
@@ -589,7 +642,8 @@
    "mental_math",
    "conventions",
    "discounting",
-   "curves"
+   "curves",
+   "lvl_foundation"
   ]
  },
  {
@@ -600,7 +654,8 @@
    "xccy",
    "basis",
    "funding",
-   "trade_off"
+   "trade_off",
+   "lvl_vp_core"
   ]
  }
 ]

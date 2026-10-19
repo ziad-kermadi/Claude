@@ -7,7 +7,8 @@
    "bermudan_lsm",
    "american_mc",
    "longstaff_schwartz",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -18,7 +19,8 @@
    "bermudan_lsm",
    "regression",
    "numerics",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -29,7 +31,8 @@
    "bermudan_lsm",
    "american_mc",
    "bias",
-   "diagnostics"
+   "diagnostics",
+   "lvl_stretch"
   ]
  },
  {
@@ -40,7 +43,8 @@
    "bermudan_lsm",
    "andersen_broadie",
    "bounds",
-   "derivation"
+   "derivation",
+   "lvl_stretch"
   ]
  },
  {
@@ -51,7 +55,8 @@
    "bermudan_lsm",
    "aad",
    "greeks",
-   "derivation"
+   "derivation",
+   "lvl_stretch"
   ]
  },
  {
@@ -62,7 +67,8 @@
    "curve_bootstrap",
    "ois",
    "derivation",
-   "coding"
+   "coding",
+   "lvl_foundation"
   ]
  },
  {
@@ -73,7 +79,8 @@
    "curve_bootstrap",
    "newton",
    "jacobian",
-   "derivation"
+   "derivation",
+   "lvl_stretch"
   ]
  },
  {
@@ -84,7 +91,8 @@
    "curve_bootstrap",
    "least_squares",
    "levenberg_marquardt",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -95,7 +103,8 @@
    "curve_bootstrap",
    "aad",
    "implicit_function",
-   "risk"
+   "risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -106,7 +115,8 @@
    "iv_solver",
    "newton",
    "root_finding",
-   "coding"
+   "coding",
+   "lvl_vp_core"
   ]
  },
  {
@@ -117,7 +127,8 @@
    "iv_solver",
    "no_arbitrage",
    "bounds",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -128,7 +139,8 @@
    "iv_solver",
    "brent",
    "numerics",
-   "trade_off"
+   "trade_off",
+   "lvl_vp_core"
   ]
  },
  {
@@ -139,7 +151,8 @@
    "pde",
    "crank_nicolson",
    "stability",
-   "derivation"
+   "derivation",
+   "lvl_stretch"
   ]
  },
  {
@@ -150,7 +163,8 @@
    "monte_carlo",
    "variance_reduction",
    "efficiency",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -161,7 +175,8 @@
    "greeks",
    "pathwise",
    "likelihood_ratio",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -172,7 +187,8 @@
    "aad",
    "adjoint",
    "complexity",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -183,7 +199,8 @@
    "cholesky",
    "correlation",
    "simulation",
-   "derivation"
+   "derivation",
+   "lvl_foundation"
   ]
  },
  {
@@ -194,7 +211,8 @@
    "time_series",
    "ou_process",
    "mean_reversion",
-   "derivation"
+   "derivation",
+   "lvl_stretch"
   ]
  },
  {
@@ -205,7 +223,8 @@
    "greeks",
    "numerics",
    "automatic_differentiation",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -216,7 +235,8 @@
    "swaptions",
    "normal_vol",
    "black_scholes",
-   "derivation"
+   "derivation",
+   "lvl_stretch"
   ]
  },
  {
@@ -227,7 +247,8 @@
    "swaptions",
    "change_of_numeraire",
    "convexity",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -238,7 +259,8 @@
    "time_series",
    "ou_process",
    "bias",
-   "convention"
+   "convention",
+   "lvl_stretch"
   ]
  },
  {
@@ -248,7 +270,8 @@
   "tags": [
    "iv_solver",
    "no_arbitrage",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -258,7 +281,8 @@
   "tags": [
    "greeks",
    "numerics",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -268,7 +292,8 @@
   "tags": [
    "aad",
    "adjoint",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -279,7 +304,8 @@
    "monte_carlo",
    "control_variates",
    "swaptions",
-   "case_study"
+   "case_study",
+   "lvl_vp_core"
   ]
  },
  {
@@ -290,7 +316,8 @@
    "monte_carlo",
    "standard_error",
    "swaptions",
-   "case_study"
+   "case_study",
+   "lvl_vp_core"
   ]
  },
  {
@@ -301,7 +328,8 @@
    "python",
    "pandas",
    "performance",
-   "case_study"
+   "case_study",
+   "lvl_vp_core"
   ]
  },
  {
@@ -312,7 +340,8 @@
    "cpp",
    "concurrency",
    "caching",
-   "case_study"
+   "case_study",
+   "lvl_vp_core"
   ]
  },
  {
@@ -323,7 +352,8 @@
    "cpp",
    "automatic_differentiation",
    "templates",
-   "case_study"
+   "case_study",
+   "lvl_vp_core"
   ]
  }
 ]

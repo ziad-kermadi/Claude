@@ -8,7 +8,8 @@
    "chain_boot_sonia",
    "bootstrapping",
    "ois",
-   "chain_boot"
+   "chain_boot",
+   "lvl_vp_core"
   ]
  },
  {
@@ -20,7 +21,8 @@
    "chain_boot_sonia",
    "interpolation",
    "curves",
-   "chain_boot"
+   "chain_boot",
+   "lvl_vp_core"
   ]
  },
  {
@@ -32,7 +34,8 @@
    "chain_boot_sonia",
    "forwards",
    "risk",
-   "chain_boot"
+   "chain_boot",
+   "lvl_stretch"
   ]
  },
  {
@@ -44,7 +47,8 @@
    "bootstrapping",
    "risk",
    "derivation",
-   "chain_boot"
+   "chain_boot",
+   "lvl_vp_core"
   ]
  },
  {
@@ -56,7 +60,8 @@
    "discounting",
    "swaps",
    "derivation",
-   "chain_csa"
+   "chain_csa",
+   "lvl_vp_core"
   ]
  },
  {
@@ -68,7 +73,8 @@
    "pai",
    "discounting",
    "scenario",
-   "chain_csa"
+   "chain_csa",
+   "lvl_vp_core"
   ]
  },
  {
@@ -80,7 +86,8 @@
    "discounting",
    "risk",
    "dv01",
-   "chain_csa"
+   "chain_csa",
+   "lvl_stretch"
   ]
  },
  {
@@ -92,7 +99,8 @@
    "cip",
    "basis",
    "fx",
-   "chain_xccy"
+   "chain_xccy",
+   "lvl_vp_core"
   ]
  },
  {
@@ -104,7 +112,8 @@
    "basis",
    "pv01",
    "curves",
-   "chain_xccy"
+   "chain_xccy",
+   "lvl_vp_core"
   ]
  },
  {
@@ -116,7 +125,8 @@
    "balance_sheet",
    "basis",
    "trade_off",
-   "chain_xccy"
+   "chain_xccy",
+   "lvl_stretch"
   ]
  },
  {
@@ -128,7 +138,8 @@
    "convexity",
    "annuity_measure",
    "derivation",
-   "chain_cms"
+   "chain_cms",
+   "lvl_stretch"
   ]
  },
  {
@@ -140,7 +151,8 @@
    "convexity",
    "volatility",
    "smile",
-   "chain_cms"
+   "chain_cms",
+   "lvl_stretch"
   ]
  },
  {
@@ -152,7 +164,8 @@
    "static_replication",
    "smile",
    "swaptions",
-   "chain_cms"
+   "chain_cms",
+   "lvl_stretch"
   ]
  },
  {
@@ -163,7 +176,8 @@
    "swaps",
    "derivation",
    "par_rate",
-   "forwards"
+   "forwards",
+   "lvl_vp_core"
   ]
  },
  {
@@ -174,7 +188,8 @@
    "swaps",
    "annuity_measure",
    "cms",
-   "derivation"
+   "derivation",
+   "lvl_stretch"
   ]
  },
  {
@@ -185,7 +200,8 @@
    "futures",
    "convexity",
    "hull_white",
-   "derivation"
+   "derivation",
+   "lvl_stretch"
   ]
  },
  {
@@ -196,7 +212,8 @@
    "jacobian",
    "bootstrapping",
    "derivation",
-   "risk"
+   "risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -207,7 +224,8 @@
    "xccy",
    "cip",
    "fx",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -218,7 +236,8 @@
    "bootstrapping",
    "case_study",
    "ois",
-   "curves"
+   "curves",
+   "lvl_vp_core"
   ]
  },
  {
@@ -229,7 +248,8 @@
    "swaps",
    "valuation",
    "case_study",
-   "pv01"
+   "pv01",
+   "lvl_vp_core"
   ]
  },
  {
@@ -240,7 +260,8 @@
    "risk",
    "dv01",
    "hedging",
-   "case_study"
+   "case_study",
+   "lvl_vp_core"
   ]
  },
  {
@@ -251,7 +272,8 @@
    "xccy",
    "basis",
    "mtm",
-   "case_study"
+   "case_study",
+   "lvl_vp_core"
   ]
  },
  {
@@ -262,7 +284,8 @@
    "swaps",
    "pv01",
    "scenario",
-   "case_study"
+   "case_study",
+   "lvl_vp_core"
   ]
  },
  {
@@ -273,7 +296,8 @@
    "futures",
    "convexity",
    "hull_white",
-   "case_study"
+   "case_study",
+   "lvl_stretch"
   ]
  },
  {
@@ -284,7 +308,8 @@
    "swaps",
    "derivation",
    "par_rate",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -295,7 +320,8 @@
    "futures",
    "convexity",
    "hull_white",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -306,7 +332,8 @@
    "swaps",
    "par_rate",
    "mental_math",
-   "convention"
+   "convention",
+   "lvl_foundation"
   ]
  },
  {
@@ -317,7 +344,8 @@
    "csa",
    "discounting",
    "derivation",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -328,7 +356,8 @@
    "xccy",
    "basis",
    "pv01",
-   "convention"
+   "convention",
+   "lvl_foundation"
   ]
  },
  {
@@ -339,7 +368,8 @@
    "cms",
    "convexity",
    "annuity_measure",
-   "convention"
+   "convention",
+   "lvl_stretch"
   ]
  }
 ]

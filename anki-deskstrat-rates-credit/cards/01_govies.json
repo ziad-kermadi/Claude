@@ -6,7 +6,8 @@
   "tags": [
    "gilts",
    "conventions",
-   "day_count"
+   "day_count",
+   "lvl_foundation"
   ]
  },
  {
@@ -16,7 +17,8 @@
   "tags": [
    "gilts",
    "mental_math",
-   "conventions"
+   "conventions",
+   "lvl_vp_core"
   ]
  },
  {
@@ -26,7 +28,8 @@
   "tags": [
    "gilts",
    "conventions",
-   "ex_div"
+   "ex_div",
+   "lvl_vp_core"
   ]
  },
  {
@@ -36,7 +39,8 @@
   "tags": [
    "conventions",
    "day_count",
-   "repo"
+   "repo",
+   "lvl_foundation"
   ]
  },
  {
@@ -46,7 +50,8 @@
   "tags": [
    "gilts",
    "inflation",
-   "conventions"
+   "conventions",
+   "lvl_vp_core"
   ]
  },
  {
@@ -56,7 +61,8 @@
   "tags": [
    "gilts",
    "inflation",
-   "conventions"
+   "conventions",
+   "lvl_vp_core"
   ]
  },
  {
@@ -66,7 +72,8 @@
   "tags": [
    "gilts",
    "mental_math",
-   "conventions"
+   "conventions",
+   "lvl_foundation"
   ]
  },
  {
@@ -76,7 +83,8 @@
   "tags": [
    "duration",
    "derivation",
-   "rates"
+   "rates",
+   "lvl_vp_core"
   ]
  },
  {
@@ -86,7 +94,8 @@
   "tags": [
    "duration",
    "dv01",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -96,7 +105,8 @@
   "tags": [
    "convexity",
    "dv01",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -107,7 +117,8 @@
    "convexity",
    "callable",
    "hedging",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -117,7 +128,8 @@
   "tags": [
    "duration",
    "key_rate",
-   "hedging"
+   "hedging",
+   "lvl_vp_core"
   ]
  },
  {
@@ -128,7 +140,8 @@
    "duration",
    "zero_coupon",
    "convexity",
-   "conventions"
+   "conventions",
+   "lvl_foundation"
   ]
  },
  {
@@ -138,7 +151,8 @@
   "tags": [
    "carry",
    "repo",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -148,7 +162,8 @@
   "tags": [
    "roll_down",
    "carry",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -159,7 +174,8 @@
    "carry",
    "roll_down",
    "breakeven",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -170,7 +186,8 @@
    "carry",
    "roll_down",
    "tradeoff",
-   "curve_trades"
+   "curve_trades",
+   "lvl_vp_core"
   ]
  },
  {
@@ -181,7 +198,8 @@
    "asset_swap",
    "spreads",
    "derivation",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -191,7 +209,8 @@
   "tags": [
    "spreads",
    "conventions",
-   "trade_off"
+   "trade_off",
+   "lvl_vp_core"
   ]
  },
  {
@@ -201,7 +220,8 @@
   "tags": [
    "spreads",
    "options",
-   "convention"
+   "convention",
+   "lvl_foundation"
   ]
  },
  {
@@ -211,7 +231,8 @@
   "tags": [
    "futures",
    "invoice",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -221,7 +242,8 @@
   "tags": [
    "futures",
    "conversion_factor",
-   "conventions"
+   "conventions",
+   "lvl_foundation"
   ]
  },
  {
@@ -232,7 +254,8 @@
    "futures",
    "hedging",
    "dv01",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -242,7 +265,8 @@
   "tags": [
    "futures",
    "implied_repo",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -252,7 +276,8 @@
   "tags": [
    "futures",
    "basis",
-   "ctd"
+   "ctd",
+   "lvl_vp_core"
   ]
  },
  {
@@ -262,7 +287,8 @@
   "tags": [
    "futures",
    "delivery_options",
-   "options"
+   "options",
+   "lvl_vp_core"
   ]
  },
  {
@@ -273,7 +299,8 @@
    "futures",
    "basis",
    "repo",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -284,7 +311,8 @@
    "futures",
    "conventions",
    "conversion_factor",
-   "ctd"
+   "ctd",
+   "lvl_vp_core"
   ]
  },
  {
@@ -295,7 +323,8 @@
    "futures",
    "conventions",
    "bund",
-   "ust"
+   "ust",
+   "lvl_vp_core"
   ]
  },
  {
@@ -305,7 +334,8 @@
   "tags": [
    "repo",
    "specials",
-   "mental_math"
+   "mental_math",
+   "lvl_foundation"
   ]
  },
  {
@@ -316,7 +346,8 @@
    "repo",
    "balance_sheet",
    "leverage_ratio",
-   "tradeoff"
+   "tradeoff",
+   "lvl_vp_core"
   ]
  },
  {
@@ -327,7 +358,8 @@
    "repo",
    "balance_sheet",
    "basis",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -338,7 +370,8 @@
    "dmo",
    "auctions",
    "syndication",
-   "tradeoff"
+   "tradeoff",
+   "lvl_vp_core"
   ]
  },
  {
@@ -348,7 +381,8 @@
   "tags": [
    "dmo",
    "gemms",
-   "conventions"
+   "conventions",
+   "lvl_foundation"
   ]
  },
  {
@@ -359,7 +393,8 @@
    "qe",
    "term_premium",
    "curve",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -371,7 +406,8 @@
    "curve",
    "term_premium",
    "scenario",
-   "tradeoff"
+   "tradeoff",
+   "lvl_vp_core"
   ]
  },
  {
@@ -382,7 +418,8 @@
    "curve_trades",
    "dv01",
    "mental_math",
-   "steepener"
+   "steepener",
+   "lvl_vp_core"
   ]
  },
  {
@@ -393,7 +430,8 @@
    "curve_trades",
    "dv01",
    "mental_math",
-   "weights"
+   "weights",
+   "lvl_vp_core"
   ]
  },
  {
@@ -404,7 +442,8 @@
    "curve_trades",
    "regression",
    "beta",
-   "tradeoff"
+   "tradeoff",
+   "lvl_stretch"
   ]
  },
  {
@@ -415,7 +454,8 @@
    "curve_trades",
    "butterfly",
    "dv01",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -426,7 +466,8 @@
    "curve_trades",
    "dv01",
    "steepener",
-   "conventions"
+   "conventions",
+   "lvl_vp_core"
   ]
  },
  {
@@ -437,7 +478,8 @@
    "ldi",
    "pensions",
    "repo",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -449,7 +491,8 @@
    "boe",
    "qe",
    "scenario",
-   "tradeoff"
+   "tradeoff",
+   "lvl_vp_core"
   ]
  },
  {
@@ -460,7 +503,8 @@
    "ldi",
    "pensions",
    "collateral",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -471,7 +515,8 @@
    "term_premium",
    "models",
    "qe",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -482,7 +527,8 @@
    "term_premium",
    "curve",
    "scenario",
-   "decomposition"
+   "decomposition",
+   "lvl_stretch"
   ]
  },
  {
@@ -493,7 +539,8 @@
    "term_premium",
    "qe",
    "models",
-   "conventions"
+   "conventions",
+   "lvl_vp_core"
   ]
  }
 ]

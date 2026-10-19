@@ -7,7 +7,8 @@
    "ctd_switch",
    "futures",
    "basis",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -17,7 +18,8 @@
   "tags": [
    "ctd_switch",
    "futures",
-   "conversion_factor"
+   "conversion_factor",
+   "lvl_stretch"
   ]
  },
  {
@@ -27,7 +29,8 @@
   "tags": [
    "ctd_switch",
    "futures",
-   "options"
+   "options",
+   "lvl_stretch"
   ]
  },
  {
@@ -38,7 +41,8 @@
    "ldi",
    "leverage",
    "pensions",
-   "ldi_spiral"
+   "ldi_spiral",
+   "lvl_vp_core"
   ]
  },
  {
@@ -49,7 +53,8 @@
    "ldi",
    "collateral",
    "liquidity",
-   "ldi_spiral"
+   "ldi_spiral",
+   "lvl_stretch"
   ]
  },
  {
@@ -61,7 +66,8 @@
    "gilt_swaps",
    "spreads",
    "scenario",
-   "ldi_spiral"
+   "ldi_spiral",
+   "lvl_stretch"
   ]
  },
  {
@@ -73,7 +79,8 @@
    "gilts",
    "dv01",
    "mental_math",
-   "auction_conc"
+   "auction_conc",
+   "lvl_vp_core"
   ]
  },
  {
@@ -84,7 +91,8 @@
    "auctions",
    "risk",
    "hedging",
-   "auction_conc"
+   "auction_conc",
+   "lvl_vp_core"
   ]
  },
  {
@@ -95,7 +103,8 @@
    "auctions",
    "dealer_economics",
    "mental_math",
-   "auction_conc"
+   "auction_conc",
+   "lvl_vp_core"
   ]
  },
  {
@@ -106,7 +115,8 @@
    "derivation",
    "convexity",
    "duration",
-   "rates"
+   "rates",
+   "lvl_vp_core"
   ]
  },
  {
@@ -117,7 +127,8 @@
    "derivation",
    "conversion_factor",
    "futures",
-   "conventions"
+   "conventions",
+   "lvl_vp_core"
   ]
  },
  {
@@ -128,7 +139,8 @@
    "derivation",
    "roll_down",
    "forwards",
-   "curve"
+   "curve",
+   "lvl_vp_core"
   ]
  },
  {
@@ -139,7 +151,8 @@
    "derivation",
    "dv01",
    "duration",
-   "risk"
+   "risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -150,7 +163,8 @@
    "derivation",
    "key_rate",
    "duration",
-   "hedging"
+   "hedging",
+   "lvl_vp_core"
   ]
  },
  {
@@ -161,7 +175,8 @@
    "derivation",
    "pca",
    "butterfly",
-   "curve_trades"
+   "curve_trades",
+   "lvl_stretch"
   ]
  },
  {
@@ -172,7 +187,8 @@
    "derivation",
    "forwards",
    "implied_repo",
-   "conventions"
+   "conventions",
+   "lvl_vp_core"
   ]
  },
  {
@@ -183,7 +199,8 @@
    "derivation",
    "duration",
    "zero_coupon",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -194,7 +211,8 @@
    "derivation",
    "breakeven",
    "convexity",
-   "carry"
+   "carry",
+   "lvl_stretch"
   ]
  },
  {
@@ -205,7 +223,8 @@
    "basis",
    "futures",
    "case_study",
-   "repo"
+   "repo",
+   "lvl_vp_core"
   ]
  },
  {
@@ -216,7 +235,8 @@
    "hedging",
    "futures",
    "case_study",
-   "dv01"
+   "dv01",
+   "lvl_vp_core"
   ]
  },
  {
@@ -227,7 +247,8 @@
    "butterfly",
    "regression",
    "case_study",
-   "curve_trades"
+   "curve_trades",
+   "lvl_stretch"
   ]
  },
  {
@@ -238,7 +259,8 @@
    "auctions",
    "hedging",
    "case_study",
-   "dv01"
+   "dv01",
+   "lvl_vp_core"
   ]
  },
  {
@@ -249,7 +271,8 @@
    "ldi",
    "case_study",
    "leverage",
-   "liquidity"
+   "liquidity",
+   "lvl_stretch"
   ]
  },
  {
@@ -260,7 +283,8 @@
    "convexity",
    "case_study",
    "dv01",
-   "gilts"
+   "gilts",
+   "lvl_vp_core"
   ]
  },
  {
@@ -271,7 +295,8 @@
    "carry",
    "roll_down",
    "case_study",
-   "breakeven"
+   "breakeven",
+   "lvl_vp_core"
   ]
  },
  {
@@ -282,7 +307,8 @@
    "repo",
    "basis",
    "case_study",
-   "balance_sheet"
+   "balance_sheet",
+   "lvl_vp_core"
   ]
  },
  {
@@ -292,7 +318,8 @@
   "tags": [
    "sonia",
    "conventions",
-   "compounding"
+   "compounding",
+   "lvl_vp_core"
   ]
  },
  {
@@ -302,7 +329,8 @@
   "tags": [
    "regression",
    "beta",
-   "curve_trades"
+   "curve_trades",
+   "lvl_stretch"
   ]
  },
  {
@@ -312,7 +340,8 @@
   "tags": [
    "pca",
    "curve",
-   "risk"
+   "risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -322,7 +351,8 @@
   "tags": [
    "key_rate",
    "hedging",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  }
 ]
