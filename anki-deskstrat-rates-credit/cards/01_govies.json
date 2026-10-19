@@ -101,12 +101,13 @@
  },
  {
   "type": "basic",
-  "front": "A callable gilt-style bond is trading with positive duration and then yields fall 100bp. Describe the price response relative to an option-free bond with the same duration. What hedging consequence follows?",
-  "back": "<b>Headline:</b> The callable price rises less than the option-free bond, because the issuer's call option caps value. Effective convexity is negative in the rally region.<br>\nHedge consequence: when yields fall, effective duration shortens, so the hedge must be rebalanced into a short position (you sell more duration into rallies). This is the negative-gamma cost, often called the mortgage-convexity problem.<br>\n<b>Interviewer follow-up:</b> Is it possible for an option-free bond to have negative convexity? Not for a plain fixed coupon with positive cash flows, convexity is positive. Negative convexity needs embedded optionality or an explicit cash-flow dependence on rates.",
+  "front": "A long position in a 10y callable bond (issuer call at par; yield 5%; option-free duration about 7.8) is hedged with DV01-matched swaps. Yields fall 100bp, then rise 100bp back. Describe the price response relative to an option-free bond, how effective duration moves, and which way the hedge must be rebalanced.",
+  "back": "<b>Headline:</b> the callable gains less than the option-free bond on the rally, its duration shortens as yields fall, and the hedge is rebalanced by buying duration after rallies and selling it after sell-offs. That is negative gamma.<br>\nCallable value = option-free value minus the call option value. On a 100bp rally the option-free bond gains about 7.8% (duration times move). The callable gains less, illustratively around 4%, because the call caps value near the strike price. On a sell-off the callable's gain is not capped, and its duration extends.<br>\nEffective duration falls as yields fall and rises as yields rise. With the swap hedge sized at the initial DV01, after a rally the net position is short duration (the callable's DV01 has shrunk), so the desk buys back hedge at lower yields. After a sell-off it is under-hedged and sells more duration at higher yields.<br>\n<b>Interviewer follow-up:</b> Can an option-free bond have negative convexity? No. A plain fixed-coupon bond has positive convexity, so negative convexity needs embedded optionality or cash flows that depend on rates.",
   "tags": [
    "convexity",
-   "scenario",
-   "options"
+   "callable",
+   "hedging",
+   "scenario"
   ]
  },
  {
@@ -121,12 +122,13 @@
  },
  {
   "type": "cloze",
-  "front": "A zero-coupon bond has Macaulay duration equal to its {{c1::maturity}}, and modified duration of {{c2::maturity/(1+y/m)}}. Convexity of a zero is {{c3::positive}} and grows with maturity.",
-  "back": "Zero-coupon duration is the cleanest benchmark. Compare every coupon bond's duration to its zero equivalent to see how much the coupon shortens duration.",
+  "front": "A zero-coupon bond with maturity T and annual-compounding yield y has Macaulay duration {{c1::T}}, modified duration {{c2::T/(1+y)}}, and convexity {{c3::T(T+1)/(1+y)^2}}. Its DV01 per 100 face is {{c4::100\\,(1+y)^{-T}\\,\\tfrac{T}{1+y}\\times 0.0001}}.",
+  "back": "Worked: a 10y zero at 4% has price 67.56 per 100 face, \\(D_{mod}=9.62\\), convexity 101.7, and DV01 per 100 face \\(67.56\\times9.62\\times10^{-4}=0.065\\). Check the closed forms before using them, since the modified duration and convexity both use the annual compounding basis.",
   "tags": [
    "duration",
    "zero_coupon",
-   "convention"
+   "convexity",
+   "conventions"
   ]
  },
  {
@@ -162,13 +164,13 @@
  },
  {
   "type": "basic",
-  "front": "On a steep curve, a desk is choosing between a 10y bond with more carry and roll-down, and a 7y bond with lower carry but a shorter duration. What is the trade-off, and what does the scenario depend on?",
-  "back": "<b>Headline:</b> the trade-off is carry and roll against a different duration exposure per unit of spread, which depends on the expected move in the curve.<br>\nCompare return per unit of DV01: \\((\\text{carry}+\\text{roll})/\\text{DV01}\\). Roll-down is largest where the curve is steepest, and a parallel selloff costs the position its DV01 times the shock, so the decision is whether the extra roll per unit of DV01 compensates for the different shock exposure.<br>\nScenario dependence: if the curve is expected to bear-steepen, the longer bond loses; if it is expected to bull-flatten, the longer bond gains.<br>\n<b>Interviewer follow-up:</b> What is the risk of assuming a static curve for roll? Forward rates are not realised rates; the expectations-hypothesis roll-down is only an estimate and includes the term premium.",
+  "front": "A desk chooses between a 10y bond (yield 4.00%, \\(D_{mod}\\approx8.2\\), roll slope 12bp per year at 10y) and a 7y bond (yield 3.80%, \\(D_{mod}\\approx6.1\\), roll slope 20bp per year at 7y) on a steep 7s10s curve, financed at 3.50% repo, over a 3-month horizon. Which has the larger carry-plus-roll cushion per unit of DV01, and why is that not the whole decision?",
+  "back": "<b>Headline:</b> the 7y has the larger cushion in bp (about 6.2bp against 4.5bp for the 10y), but the choice depends on the volatility of each yield over the horizon, not the cushion alone.<br>\n10y: carry \\((4.00-3.50)\\times0.25 = 0.125\\); roll \\(=8.2\\times3\\text{bp}=0.245\\); total 0.370 points. Cushion \\(=0.370/8.2 = 4.5\\)bp.<br>\n7y: carry \\((3.80-3.50)\\times0.25 = 0.075\\); roll \\(=6.1\\times5\\text{bp}=0.305\\); total 0.380 points. Cushion \\(=0.380/6.1 = 6.2\\)bp.<br>\nThe relevant ratio is cushion divided by the 3-month vol of the bond's yield. If the 7y vol is higher than the 10y vol in the same proportion, the 7y advantage disappears. A steepening move (10y up relative to 7y) also hurts the 10y more than the 7y, so the pair is a view on the curve as well.<br>\n<b>Interviewer follow-up:</b> Why is cushion per unit of DV01 not the same as cushion per unit of risk? Because DV01 normalises the rate sensitivity, not the volatility of the yield being hedged. The decision needs cushion divided by the expected vol of the relevant curve segment.",
   "tags": [
    "carry",
    "roll_down",
-   "scenario",
-   "tradeoff"
+   "tradeoff",
+   "curve_trades"
   ]
  },
  {
@@ -276,12 +278,13 @@
  },
  {
   "type": "basic",
-  "front": "Compare the Long Gilt future, the Bund future and the US 10-year future in terms of notional, notional coupon and deliverable maturity range. What does the deliverable range imply for CTD dynamics?",
-  "back": "<ul>\n<li><b>Long Gilt (LIF):</b> notional £100,000, 6% notional coupon, deliverable gilts with about 8¾ to 13 years remaining (approx.).</li>\n<li><b>Bund (EUREX):</b> notional €100,000, 6% notional coupon, deliverable about 8.5 to 10.5 years.</li>\n<li><b>US 10-year (TY):</b> notional $100,000, 6% notional coupon, deliverable about 6.5 to 10 years.</li>\n</ul>\nA wider deliverable range means more CTD candidates and a greater role for the quality option and CTD switching.<br>\n<b>Interviewer follow-up:</b> Why does a narrower range make a futures contract more sensitive to a single bond? Fewer candidates means the CTD is a more concentrated exposure and a squeeze on that bond moves the future.",
+  "front": "Compare the UK Long Gilt, Euro-Bund and US 10-year futures in terms of notional, notional coupon and deliverable maturity range. How do the notional coupon and the range together determine the CTD set and the dispersion of conversion factors?",
+  "back": "<ul>\n<li><b>Long Gilt (LIF):</b> £100,000 notional, 4% notional coupon, deliverable gilts with about 8¾ to 13 years remaining (approx.).</li>\n<li><b>Bund (EUREX):</b> €100,000 notional, 6% notional coupon, deliverable about 8.5 to 10.5 years (approx.).</li>\n<li><b>US 10-year (TY):</b> $100,000 notional, 6% notional coupon, deliverable about 6.5 to 10 years (approx.).</li>\n</ul>\nThe conversion factor is the bond's clean price at the notional yield, so CF dispersion grows with the distance between a bond's coupon and the notional coupon and with its remaining maturity. A 4% notional coupon sits near the coupons of many long gilts, so CFs cluster closer to 1 for those bonds. The CF converts CTD DV01 into contract DV01 (\\(\\text{DV01}_{CTD}/CF\\)), so CF dispersion sets how much the hedge ratio jumps when the CTD switches.<br>\n<b>Interviewer follow-up:</b> Why does the 4% notional coupon not make the Long Gilt a better hedge for 30y exposure? The CTD is a 10-to-13 year bond, so the contract's DV01 tracks the CTD's curve point, not the 30y. A 30y hedge needs a beta adjustment on top of the CF-based ratio.",
   "tags": [
    "futures",
    "conventions",
-   "comparison"
+   "conversion_factor",
+   "ctd"
   ]
  },
  {
@@ -318,13 +321,13 @@
  },
  {
   "type": "basic",
-  "front": "Scenario: at quarter-end, specialness in gilt repo spikes and GC rates rise. Explain the mechanism linking balance-sheet constraints to funding rates and the cash-futures hedge.",
-  "back": "<b>Mechanism:</b> dealers reduce gross repo and reverse-repo at the reporting date to shrink exposure, so cash lending falls and borrowing rates rise. Bond financing becomes more expensive, pushing repo above the implied repo of the futures hedge.<br>\nImplications: a cash-futures basis position that is funded in repo loses carry at quarter-end, and the hedge of a leveraged long position can be squeezed. The spike reverses after the reporting date.<br>\n<b>Interviewer follow-up:</b> What would a desk do to protect the position? Term out the funding across the quarter-end, use CCP-cleared repo to net exposures, or pre-fund the trade so the quarter-end does not force a close-out.",
+  "front": "Quarter-end: GC gilt repo rises 25bp for one day and dealers cut balance-sheet repo. A desk holds a £2bn long-basis position funded in repo. Quantify the one-day funding cost, then explain when it becomes a forced unwind.",
+  "back": "<b>Funding cost:</b> \\(£2\\text{bn}\\times0.0025/365 \\approx £13.7\\)k for the day (about £13.9k on ACT/360). Small against carry.<br>\n<b>Mechanism:</b> quarter-end balance-sheet snapshots lead dealers to shrink reverse repo and gross repo, so the cash lent to the market falls and borrowing rates rise. A position funded at GC can see its financing move before the basis reprices.<br>\n<b>Forced unwind:</b> the real risk is availability. If lenders cut capacity or raise haircuts, the desk may not roll funding at any price. A close-out then crystallises the basis at the prevailing level. A 5bp adverse basis move on £2bn is about £1.0m, which is the scale to compare with the funding cost.<br>\n<b>Interviewer follow-up:</b> What protects the position? Term out the funding across the reporting date, pre-fund the trade, or use CCP-cleared repo, which nets exposures and helps the leverage ratio at the same time.",
   "tags": [
    "repo",
    "balance_sheet",
-   "scenario",
-   "tradeoff"
+   "basis",
+   "scenario"
   ]
  },
  {
@@ -395,8 +398,8 @@
  },
  {
   "type": "basic",
-  "front": "Compare DV01-neutral weights with regression (yield-beta) weights for a curve trade. What are the trade-offs and the main estimation risk?",
-  "back": "<b>DV01-neutral:</b> matches linear rate sensitivity at the current curve. Simple, transparent, and stable, but assumes all tenors move one-for-one with the parallel shift.<br>\n<b>Regression/beta:</b> weights from the historical yield-change regression of one tenor on the other, so the hedge reflects how the tenors actually move together. More consistent with the observed curve dynamics but unstable: sample window, frequency and regime change the beta.<br>\n<b>Estimation risk:</b> a short sample gives unstable betas; a long sample includes regimes that do not persist. Trade-off between economic meaning and statistical stability.<br>\n<b>Interviewer follow-up:</b> How do PCA factors inform the choice? PCA separates level, slope and curvature; a DV01-neutral trade is exposed to slope and curvature in a way that the PCA loadings reveal.",
+  "front": "Why can a DV01-neutral 2s5s10s fly still carry a common-factor bet when the yield betas to the 5y are 0.8 for the 2y and 1.1 for the 10y? Quantify the residual for a belly of £100m nominal (DV01 £44.9k per bp), and say why the betas themselves are a risk.",
+  "back": "<b>Headline:</b> equal-DV01 wings leave a residual common-factor exposure of about £2.2k per bp per £100m of belly, which is 5% of belly DV01.<br>\nEach wing has DV01 \\(0.02245\\) per 100 face. Beta-weighted wing exposure is \\(0.8\\times0.02245+1.1\\times0.02245 = 0.04266\\), against belly \\(0.0449\\). The residual \\(-0.00224\\) is about 5% of the belly, and is worth \\(\\approx£2{,}240\\) per bp of the common move per £100m of belly. The fly is therefore a small bet that yields rise.<br>\n<b>Estimation risk:</b> a 0.1 error in \\(\\beta_{10}\\) changes the wing exposure by \\(0.1\\times0.02245 = 0.00225\\), the same size as the residual. The betas are regression outputs from a specific window and regime, so the residual can be larger than the one you calculated.<br>\n<b>Interviewer follow-up:</b> How would you choose between DV01-neutral and beta-neutral weights? Use DV01-neutral when the betas are unstable, and beta-neutral only when the regression is stable across windows and the desk has a view on the common factor.",
   "tags": [
    "curve_trades",
    "regression",
@@ -417,10 +420,11 @@
  },
  {
   "type": "cloze",
-  "front": "A bond steepener is long the {{c1::2y}} and short the {{c2::10y}}, so it profits when the 10y yield rises {{c3::relative to}} the 2y. Its DV01-weighted P&L is approximately {{c4::DV01 times the change in the 2s10s spread}}.",
-  "back": "Describe the position with DV01 weights, not notional weights, to avoid a hidden duration bet.",
+  "front": "A DV01-neutral 2s10s steepener, long £43m of 2y and short £10m of 10y (DV01s £8,170 and £8,180 per bp), earns about {{c1::£8,180}} for a 10y move of +1bp with the 2y unchanged, and about {{c2::£10}} for a parallel +1bp move.",
+  "back": "Steepening is long 2y and short 10y, so the short 10y gains when its yield rises. The DV01 match cancels the parallel move to within about £10 per bp, leaving the spread exposure. Weighting by DV01 rather than notional is what removes the hidden duration bet.",
   "tags": [
    "curve_trades",
+   "dv01",
    "steepener",
    "conventions"
   ]
@@ -472,12 +476,13 @@
  },
  {
   "type": "basic",
-  "front": "Scenario: a fiscal announcement raises 30y gilt yields by 50bp while 2y yields are unchanged. Interpret the move and describe how you would split it between expectations and term premium.",
-  "back": "<b>Interpretation:</b> a 50bp rise in the 30y with a flat 2y is a bear steepening. Expected policy rates over the next 2 years are unchanged, so most of the move is in the term premium and/or long-run expected rates, not the near-term path.<br>\nSplit: compare the term-premium model's change with the change in the expected average short rate implied by the swap curve and OIS-type forwards. Check breakevens and real yields to see if the move is real or inflation-driven.<br>\n<b>Interviewer follow-up:</b> What trade would express the view that the premium is temporary? A steepener expecting mean reversion, sized by DV01 and with stop-loss on the fiscal news flow.",
+  "front": "A fiscal announcement lifts the 30y nominal gilt yield by 50bp while the 2y is unchanged and the 30y breakeven rises 20bp. Split the move into real yield, breakeven and term premium, and describe a test that separates a change in expected long-run rates from a change in the term premium.",
+  "back": "<b>Headline:</b> a 50bp bear steepener with a flat 2y is mostly long-end. Nominal = real + breakeven, so the 20bp breakeven move implies a 30bp real-yield move, with the split illustrative.<br>\n<b>Test:</b> nominal 30y yield = expected average short rate over 30 years + term premium. If the 10y10y forward (from the swap curve) moves by roughly the full 50bp, the move is expectations of the long-run rate. If the forward is unchanged and only the 30y yield moves, the move is term premium.<br>\n<b>Caveat:</b> the 10y10y forward also contains a term premium, so the test is a bound, not a decomposition. Use a term-premium model for the split and check it against the forward.<br>\n<b>Interviewer follow-up:</b> What trade expresses the view that the premium is temporary? A 10s30s steepener sized by DV01, with the position stopped out if the 10y10y forward starts moving with the 30y.",
   "tags": [
    "term_premium",
+   "curve",
    "scenario",
-   "curve"
+   "decomposition"
   ]
  },
  {

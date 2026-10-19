@@ -7,7 +7,8 @@
    "swaps",
    "chain_boot_sonia",
    "bootstrapping",
-   "ois"
+   "ois",
+   "chain_boot"
   ]
  },
  {
@@ -18,7 +19,8 @@
    "swaps",
    "chain_boot_sonia",
    "interpolation",
-   "curves"
+   "curves",
+   "chain_boot"
   ]
  },
  {
@@ -29,7 +31,8 @@
    "swaps",
    "chain_boot_sonia",
    "forwards",
-   "risk"
+   "risk",
+   "chain_boot"
   ]
  },
  {
@@ -40,7 +43,8 @@
    "jacobian",
    "bootstrapping",
    "risk",
-   "derivation"
+   "derivation",
+   "chain_boot"
   ]
  },
  {
@@ -51,7 +55,8 @@
    "csa",
    "discounting",
    "swaps",
-   "derivation"
+   "derivation",
+   "chain_csa"
   ]
  },
  {
@@ -62,7 +67,8 @@
    "csa",
    "pai",
    "discounting",
-   "scenario"
+   "scenario",
+   "chain_csa"
   ]
  },
  {
@@ -73,7 +79,8 @@
    "csa",
    "discounting",
    "risk",
-   "dv01"
+   "dv01",
+   "chain_csa"
   ]
  },
  {
@@ -84,7 +91,8 @@
    "xccy",
    "cip",
    "basis",
-   "fx"
+   "fx",
+   "chain_xccy"
   ]
  },
  {
@@ -95,7 +103,8 @@
    "xccy",
    "basis",
    "pv01",
-   "curves"
+   "curves",
+   "chain_xccy"
   ]
  },
  {
@@ -106,7 +115,8 @@
    "xccy",
    "balance_sheet",
    "basis",
-   "trade_off"
+   "trade_off",
+   "chain_xccy"
   ]
  },
  {
@@ -117,7 +127,8 @@
    "cms",
    "convexity",
    "annuity_measure",
-   "derivation"
+   "derivation",
+   "chain_cms"
   ]
  },
  {
@@ -128,7 +139,8 @@
    "cms",
    "convexity",
    "volatility",
-   "smile"
+   "smile",
+   "chain_cms"
   ]
  },
  {
@@ -139,7 +151,8 @@
    "cms",
    "static_replication",
    "smile",
-   "swaptions"
+   "swaptions",
+   "chain_cms"
   ]
  },
  {
