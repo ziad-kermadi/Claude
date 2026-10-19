@@ -299,6 +299,10 @@ line(13, "n >= ln(2/delta)/(2 eps^2) = 4611.1", "4611.1", f"{n_real:.2f}", abs(n
 ok13 = (2 * exp(-2 * n_ceil * eps**2) <= delta) and (2 * exp(-2 * (n_ceil - 1) * eps**2) > delta)
 line(13, "minimal integer n = 4612", "4612", str(n_ceil), n_ceil == 4612 and ok13)
 clt_n = (norm.ppf(0.975) / eps) ** 2 * 0.25
+n_one = math.ceil(log(1 / delta) / (2 * eps**2))
+line(13, "one-sided: n >= ln(1/delta)/(2 eps^2) = 3744.7, so 3745", "3745", str(n_one),
+     abs(log(1 / delta) / (2 * eps**2) - 3744.67) < 0.01 and n_one == 3745
+     and 2 * exp(-2 * n_one * eps**2) > 0 and exp(-2 * n_one * eps**2) <= delta)
 line(13, "CLT contrast (p=1/2): (1.96/eps)^2/4 = 2401", "2401", f"{clt_n:.2f}", abs(clt_n - 2401) < 1)
 n13m = 100_000
 phat = RNG.binomial(n_ceil, 0.5, n13m) / n_ceil

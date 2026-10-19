@@ -132,71 +132,77 @@ def _leaf(ax, xy, label, hi=False, w=1.75, grey=False):
 def _(ax):
     # Player picks door 1. Car is at 1, 2 or 3 with prob 1/3 each.
     # Host (knows the car) opens 2 or 3, never the car, never door 1.
-    R = (0.6, 1.7)
-    C = {1: (2.0, 2.9), 2: (2.0, 1.5), 3: (2.0, 0.5)}
+    R = (0.5, 1.7)
+    C = {1: (2.3, 2.9), 2: (2.3, 1.5), 3: (2.3, 0.5)}
+    L = {"1a": (4.35, 3.3), "1b": (4.35, 2.5), "2": (4.35, 1.5), "3": (4.35, 0.5)}
     _nb(ax, R, "car door", w=1.1, h=0.46)
     for k in (1, 2, 3):
         _nb(ax, C[k], f"car at {k}", w=1.1, h=0.46)
-        _edge(ax, R, C[k], "1/3", lo=(-0.05, 0.2))
-    L = {"1a": (3.95, 3.3), "1b": (3.95, 2.5), "2": (3.95, 1.5), "3": (3.95, 0.5)}
-    _edge(ax, C[1], L["1a"], "1/2", lo=(0.0, 0.15))
-    _edge(ax, C[1], L["1b"], "1/2", lo=(0.0, -0.17))
-    _edge(ax, C[2], L["2"], "1", lo=(0.0, 0.15))
-    _edge(ax, C[3], L["3"], "1", lo=(0.0, 0.15))
     _leaf(ax, L["1a"], "host opens 2:  1/6", grey=True)
     _leaf(ax, L["1b"], "host opens 3:  1/6", hi=True)
     _leaf(ax, L["2"], "host opens 3:  1/3", hi=True)
     _leaf(ax, L["3"], "host opens 2:  1/3", grey=True)
-    ax.text(2.3, -0.5, r"given host opens 3: car at 1 : car at 2 = $\frac{1}{6}:\frac{1}{3}$, so switch wins $\frac{2}{3}$",
+    _edge(ax, R, C[1], "1/3", lo=(-0.12, 0.2))
+    _edge(ax, R, C[2], "1/3", lo=(0.0, 0.2))
+    _edge(ax, R, C[3], "1/3", lo=(-0.12, -0.2))
+    _edge(ax, C[1], L["1a"], "1/2", lo=(0.0, 0.17))
+    _edge(ax, C[1], L["1b"], "1/2", lo=(0.0, -0.17))
+    _edge(ax, C[2], L["2"], "1", lo=(0.0, 0.17))
+    _edge(ax, C[3], L["3"], "1", lo=(0.0, 0.17))
+    ax.text(2.55, -0.5, r"given host opens 3: car at 1 : car at 2 = $\frac{1}{6}:\frac{1}{3}$, so switch wins $\frac{2}{3}$",
             ha="center", va="center", fontsize=FS)
-    ax.set_xlim(-0.3, 5.0); ax.set_ylim(-0.8, 3.7)
+    ax.set_xlim(-0.3, 5.4); ax.set_ylim(-0.8, 3.7)
 
 
 @figure("f02_monty_habit", w=5.0, h=2.9, axis=False)
 def _(ax):
     # Host habit: car at your door (1) -> he opens 2 w.p. 1/4, 3 w.p. 3/4.
-    R = (0.6, 1.7)
-    C = {1: (2.0, 2.9), 2: (2.0, 1.5), 3: (2.0, 0.5)}
+    R = (0.5, 1.7)
+    C = {1: (2.3, 2.9), 2: (2.3, 1.5), 3: (2.3, 0.5)}
+    L = {"1a": (4.35, 3.3), "1b": (4.35, 2.5), "2": (4.35, 1.5), "3": (4.35, 0.5)}
     _nb(ax, R, "car door", w=1.1, h=0.46)
     for k in (1, 2, 3):
         _nb(ax, C[k], f"car at {k}", w=1.1, h=0.46)
-        _edge(ax, R, C[k], "1/3", lo=(-0.05, 0.2))
-    L = {"1a": (3.95, 3.3), "1b": (3.95, 2.5), "2": (3.95, 1.5), "3": (3.95, 0.5)}
-    _edge(ax, C[1], L["1a"], "1/4", lo=(0.0, 0.15))
-    _edge(ax, C[1], L["1b"], "3/4", lo=(0.0, -0.17))
-    _edge(ax, C[2], L["2"], "1", lo=(0.0, 0.15))
-    _edge(ax, C[3], L["3"], "1", lo=(0.0, 0.15))
     _leaf(ax, L["1a"], "host opens 2:  1/12", hi=True)
     _leaf(ax, L["1b"], "host opens 3:  1/4", grey=True)
     _leaf(ax, L["2"], "host opens 3:  1/3", grey=True)
     _leaf(ax, L["3"], "host opens 2:  1/3", hi=True)
-    ax.text(2.3, -0.5, r"given host opens 2: car at 1 : car at 3 = $\frac{1}{12}:\frac{1}{3}$, switch to 3 wins $\frac{4}{5}$",
+    _edge(ax, R, C[1], "1/3", lo=(-0.12, 0.2))
+    _edge(ax, R, C[2], "1/3", lo=(0.0, 0.2))
+    _edge(ax, R, C[3], "1/3", lo=(-0.12, -0.2))
+    _edge(ax, C[1], L["1a"], "1/4", lo=(0.0, 0.17))
+    _edge(ax, C[1], L["1b"], "3/4", lo=(0.0, -0.17))
+    _edge(ax, C[2], L["2"], "1", lo=(0.0, 0.17))
+    _edge(ax, C[3], L["3"], "1", lo=(0.0, 0.17))
+    ax.text(2.55, -0.5, r"given host opens 2: car at 1 : car at 3 = $\frac{1}{12}:\frac{1}{3}$, switch to 3 wins $\frac{4}{5}$",
             ha="center", va="center", fontsize=FS)
-    ax.set_xlim(-0.3, 5.0); ax.set_ylim(-0.8, 3.7)
+    ax.set_xlim(-0.3, 5.4); ax.set_ylim(-0.8, 3.7)
 
 
 @figure("f02_monty_random", w=5.0, h=3.2, axis=False)
 def _(ax):
     # Host opens 2 or 3 at random (not knowing the car). Each of 6 outcomes has prob 1/6.
-    R = (0.6, 2.0)
-    C = {1: (2.0, 3.6), 2: (2.0, 2.0), 3: (2.0, 0.4)}
+    R = (0.5, 2.0)
+    C = {1: (2.2, 3.6), 2: (2.2, 2.0), 3: (2.2, 0.4)}
     _nb(ax, R, "car door", w=1.1, h=0.46)
     for k in (1, 2, 3):
         _nb(ax, C[k], f"car at {k}", w=1.1, h=0.46)
-        _edge(ax, R, C[k], "1/3", lo=(-0.05, 0.2))
+    _edge(ax, R, C[1], "1/3", lo=(-0.12, 0.2))
+    _edge(ax, R, C[2], "1/3", lo=(0.0, 0.2))
+    _edge(ax, R, C[3], "1/3", lo=(-0.12, -0.2))
     rows = {(1, 2): 4.0, (1, 3): 3.2, (2, 2): 2.4, (2, 3): 1.6, (3, 2): 0.8, (3, 3): 0.0}
     for (k, d), y in rows.items():
-        xy = (3.75, y)
-        _edge(ax, C[k], xy)
-        if k == 2 and d == 2:
-            _leaf(ax, xy, "opens 2: car shown", grey=True, w=2.1)
-        elif d == 2:
-            _leaf(ax, xy, "opens 2: goat  1/6", hi=True, w=2.1)
+        xy = (4.2, y)
+        if k == d:  # the host opens the car's door
+            _leaf(ax, xy, f"opens {d}: car shown", grey=True, w=2.0)
+        elif d == 2:  # goat at 2 (key outcome)
+            _leaf(ax, xy, "opens 2: goat  1/6", hi=True, w=2.0)
         else:
-            _leaf(ax, xy, "opens 3: goat  1/6", grey=True, w=2.1)
-    ax.text(2.3, -0.55, r"each outcome $\frac{1}{6}$; goat at 2 (orange): car at 1 and car at 3 each $\frac{1}{2}$",
+            _leaf(ax, xy, "opens 3: goat  1/6", grey=True, w=2.0)
+        _edge(ax, C[k], xy)
+    ax.text(2.55, -0.55, r"each outcome $\frac{1}{6}$; goat at 2 (orange): car at 1 and car at 3 each $\frac{1}{2}$",
             ha="center", va="center", fontsize=FS)
-    ax.set_xlim(-0.3, 4.9); ax.set_ylim(-0.9, 4.3)
+    ax.set_xlim(-0.3, 5.3); ax.set_ylim(-0.9, 4.3)
 
 
 @figure("f02_hundred_doors", w=5.2, h=2.3, axis=False)
@@ -308,7 +314,7 @@ def _(ax):
     _grid2(ax, 3.4, 0.2, {("B", "B"), ("B", "G"), ("G", "B")})
     ax.text(4.3, 2.6, "at least one boy", ha="center", va="center", fontsize=FS)
     ax.text(4.3, -0.45, r"$P(\mathrm{BB})=\frac{1}{3}$", ha="center", va="center", fontsize=FS)
-    ax.set_xlim(-0.4, 5.2); ax.set_ylim(-0.8, 2.9)
+    ax.set_xlim(-0.4, 5.5); ax.set_ylim(-0.8, 2.9)
 
 
 @figure("f02_sampled_child", w=4.8, h=3.0, axis=False)
@@ -588,22 +594,22 @@ def _(ax):
 @figure("f02_polya_tree", w=5.0, h=2.9, axis=False)
 def _(ax):
     # Urn starts 1 red, 1 black; draw, return it plus one more of the same colour.
-    start = (0.6, 1.8)
-    N1, N2 = (2.1, 2.8), (2.1, 0.8)
+    start = (0.5, 1.8)
+    N1, N2 = (2.0, 2.8), (2.0, 0.8)
+    L = {"RR": (4.0, 3.3), "RB": (4.0, 2.3), "BR": (4.0, 1.3), "BB": (4.0, 0.3)}
     _nb(ax, start, "1R 1B", w=1.0, h=0.46)
     _nb(ax, N1, "2R 1B", w=1.0, h=0.46)
     _nb(ax, N2, "1R 2B", w=1.0, h=0.46)
-    _edge(ax, start, N1, r"R  $\frac{1}{2}$", lo=(0.0, 0.2))
-    _edge(ax, start, N2, r"B  $\frac{1}{2}$", lo=(0.0, -0.2))
-    L = {"RR": (3.8, 3.3), "RB": (3.8, 2.3), "BR": (3.8, 1.3), "BB": (3.8, 0.3)}
-    _edge(ax, N1, L["RR"], r"R  $\frac{2}{3}$", lo=(0.0, 0.18))
-    _edge(ax, N1, L["RB"], r"B  $\frac{1}{3}$", lo=(0.0, -0.18))
-    _edge(ax, N2, L["BR"], r"R  $\frac{1}{3}$", lo=(0.0, 0.18))
-    _edge(ax, N2, L["BB"], r"B  $\frac{2}{3}$", lo=(0.0, -0.18))
     _leaf(ax, L["RR"], r"RR:  $\frac{1}{3}$", hi=True, w=1.2)
     _leaf(ax, L["RB"], r"RB:  $\frac{1}{6}$", hi=True, w=1.2)
     _leaf(ax, L["BR"], r"BR:  $\frac{1}{6}$", grey=True, w=1.2)
     _leaf(ax, L["BB"], r"BB:  $\frac{1}{3}$", grey=True, w=1.2)
+    _edge(ax, start, N1, r"R  $\frac{1}{2}$", lo=(0.0, 0.2))
+    _edge(ax, start, N2, r"B  $\frac{1}{2}$", lo=(0.0, -0.2))
+    _edge(ax, N1, L["RR"], r"R  $\frac{2}{3}$", lo=(0.0, 0.18))
+    _edge(ax, N1, L["RB"], r"B  $\frac{1}{3}$", lo=(0.0, -0.18))
+    _edge(ax, N2, L["BR"], r"R  $\frac{1}{3}$", lo=(0.0, 0.18))
+    _edge(ax, N2, L["BB"], r"B  $\frac{2}{3}$", lo=(0.0, -0.18))
     ax.text(2.3, -0.55, r"$P(\mathrm{R}_2\mid\mathrm{R}_1)=\frac{1/3}{1/2}=\frac{2}{3}$",
             ha="center", va="center", fontsize=FS)
     ax.set_xlim(-0.3, 4.9); ax.set_ylim(-0.9, 3.8)
@@ -668,18 +674,20 @@ def _(ax):
 @figure("f02_bias_tree", w=4.8, h=3.0, axis=False)
 def _(ax):
     # Bias is 0.2 or 0.8 with prob 1/2; flips independent given the bias.
-    root = (0.5, 1.5)
-    B = {0.2: (1.7, 2.6), 0.8: (1.7, 0.4)}
-    H = {0.2: (3.0, 2.6), 0.8: (3.0, 0.4)}
-    LF = {0.2: (4.9, 2.6), 0.8: (4.9, 0.4)}
-    _nb(ax, root, "bias", w=0.9, h=0.46)
+    root = (0.4, 1.5)
+    B = {0.2: (1.5, 2.6), 0.8: (1.5, 0.4)}
+    H = {0.2: (2.9, 2.6), 0.8: (2.9, 0.4)}
+    LF = {0.2: (4.6, 2.6), 0.8: (4.6, 0.4)}
+    _nb(ax, root, "bias", w=0.8, h=0.46)
     for p in (0.2, 0.8):
         _nb(ax, B[p], f"bias {p}", w=1.1, h=0.46)
-        _nb(ax, H[p], "H_1", w=0.9, h=0.46)
-        _edge(ax, root, B[p], r"$\frac{1}{2}$", lo=(0.0, 0.2 if p == 0.2 else -0.2))
-        _edge(ax, B[p], H[p], f"{p}", lo=(0.0, 0.18 if p == 0.2 else -0.18))
-        _edge(ax, H[p], LF[p], f"{p}", lo=(0.0, 0.18 if p == 0.2 else -0.18))
+        _nb(ax, H[p], "H_1", w=0.8, h=0.46)
         _leaf(ax, LF[p], f"H_1 H_2: {0.5 * p * p:.2f}", w=1.6, hi=(p == 0.8))
+    for p in (0.2, 0.8):
+        up = p == 0.2
+        _edge(ax, root, B[p], r"$\frac{1}{2}$", lo=(-0.15, 0.15) if up else (-0.15, -0.15))
+        _edge(ax, B[p], H[p], f"{p}", lo=(0.0, 0.2 if up else -0.2))
+        _edge(ax, H[p], LF[p], f"{p}", lo=(0.0, 0.2 if up else -0.2))
     ax.text(2.6, -0.8, r"$P(H_1H_2)=0.02+0.32=0.34$ vs $P(H_1)^2=0.25$",
             ha="center", va="center", fontsize=FS)
     ax.set_xlim(-0.2, 5.8); ax.set_ylim(-1.1, 3.4)
@@ -699,7 +707,7 @@ def _(ax):
     ax.annotate(r"$P(A\cap B)=0.2$: $\rho\approx0.218$", (0.2, (0.2 - 0.15) / sd),
                 xytext=(0.012, 0.5), fontsize=FS, color=ORANGE, arrowprops=dict(arrowstyle="-", color=ORANGE))
     ax.plot([0.0, 0.3], [rho[0], rho[-1]], "o", color=INK, ms=4)
-    ax.text(0.008, rho[0] + 0.04, r"$-0.655$", fontsize=FS, ha="left", va="bottom")
+    ax.text(0.01, rho[0] - 0.05, r"$-0.655$", fontsize=FS, ha="left", va="top")
     ax.text(0.3, rho[-1] + 0.06, r"$+0.655$", fontsize=FS, ha="right", va="bottom")
     ax.set_xlabel(r"$P(A\cap B)$", fontsize=FS)
     ax.set_ylabel(r"$\rho(A,B)$", fontsize=FS)
@@ -717,15 +725,17 @@ def _(ax):
     m = th > 45
     L.fill_between(th[m], 0, dens[m], color=LIGHT_BLUE, zorder=1)
     L.set_xlabel("latitude (deg)", fontsize=FS)
-    L.set_ylabel("density", fontsize=FS)
+    L.set_ylabel("density per radian", fontsize=FS)
     L.set_title("meridian: $\\frac{1}{2}\\cos\\theta$", fontsize=FS)
     L.set_xticks([-90, -45, 0, 45, 90])
     L.tick_params(labelsize=FS)
     lon = np.linspace(-180, 180, 2)
-    R.plot(lon, [1 / 360, 1 / 360], color=INK, lw=1.6)
-    R.fill_between([-90, 90], 0, 1 / 360, color=LIGHT_BLUE, zorder=1)
+    u = 1 / (2 * np.pi)  # uniform longitude on (-pi, pi), per radian, same scale as the meridian
+    R.plot(lon, [u, u], color=INK, lw=1.6)
+    R.fill_between([-90, 90], 0, u, color=LIGHT_BLUE, zorder=1)
     R.set_xlim(-180, 180)
-    R.set_ylim(0, 1.6 / 360)
+    R.set_ylim(0, 0.55)
+    L.set_ylim(0, 0.55)
     R.set_xlabel("longitude (deg)", fontsize=FS)
     R.set_title("equator: uniform longitude", fontsize=FS)
     R.set_xticks([-180, -90, 0, 90, 180])
@@ -739,22 +749,22 @@ def _(ax):
 @figure("f02_two_coins_tree", w=4.8, h=2.7, axis=False)
 def _(ax):
     # Coin A fair, coin B P(H)=0.9, each chosen with prob 1/2; two flips both heads.
-    root = (0.5, 1.4)
-    nA, hA, lA = (1.9, 2.5), (3.2, 2.5), (4.55, 2.5)
-    nB, hB, lB = (1.9, 0.3), (3.2, 0.3), (4.55, 0.3)
-    _nb(ax, root, "coin", w=0.9, h=0.46)
+    root = (0.4, 1.4)
+    nA, hA, lA = (1.6, 2.5), (2.9, 2.5), (4.5, 2.5)
+    nB, hB, lB = (1.6, 0.3), (2.9, 0.3), (4.5, 0.3)
+    _nb(ax, root, "coin", w=0.8, h=0.46)
     _nb(ax, nA, "coin A", w=1.1, h=0.46)
     _nb(ax, hA, "H", w=0.7, h=0.46)
     _nb(ax, nB, "coin B", w=1.1, h=0.46)
     _nb(ax, hB, "H", w=0.7, h=0.46)
-    _edge(ax, root, nA, r"$\frac{1}{2}$", lo=(0.0, 0.2))
-    _edge(ax, root, nB, r"$\frac{1}{2}$", lo=(0.0, -0.2))
-    _edge(ax, nA, hA, r"$\frac{1}{2}$", lo=(0.0, 0.17))
-    _edge(ax, hA, lA, r"$\frac{1}{2}$", lo=(0.0, 0.17))
-    _edge(ax, nB, hB, "0.9", lo=(0.0, 0.17))
-    _edge(ax, hB, lB, "0.9", lo=(0.0, 0.17))
     _leaf(ax, lA, "A, HH: 0.125", grey=True, w=1.6)
     _leaf(ax, lB, "B, HH: 0.405", hi=True, w=1.6)
+    _edge(ax, root, nA, r"$\frac{1}{2}$", lo=(-0.15, 0.15))
+    _edge(ax, root, nB, r"$\frac{1}{2}$", lo=(-0.15, -0.15))
+    _edge(ax, nA, hA, r"$\frac{1}{2}$", lo=(0.0, 0.2))
+    _edge(ax, hA, lA, r"$\frac{1}{2}$", lo=(0.0, 0.2))
+    _edge(ax, nB, hB, "0.9", lo=(0.0, 0.2))
+    _edge(ax, hB, lB, "0.9", lo=(0.0, 0.2))
     ax.text(2.6, -0.8, r"$P(B\mid HH)=\frac{0.405}{0.530}=\frac{81}{106}\approx0.764$",
             ha="center", va="center", fontsize=FS)
     ax.set_xlim(-0.2, 5.5); ax.set_ylim(-1.1, 3.2)

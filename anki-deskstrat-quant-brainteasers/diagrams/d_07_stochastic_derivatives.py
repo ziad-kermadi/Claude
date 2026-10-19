@@ -210,9 +210,10 @@ def _(ax):
     ax.axvline(median, color=ORANGE, ls="--", lw=1.2)
     ax.axvline(mean, color=INK, ls="-.", lw=1.0)
     ax.text(98, 0.04 * ymax, "$S_0=100$", ha="right", color=GREY, fontsize=9.5)
-    ax.text(median + 2, 0.92 * ymax, f"median {median:.2f}", color=ORANGE, fontsize=9.5)
-    ax.text(mean + 2, 0.72 * ymax, f"mean {mean:.2f}", color=INK, fontsize=9.5)
-    ax.text(160, 0.30 * ymax, f"$P(S_T>100)={p_above:.3f}$", color=BLUE, fontsize=9.5)
+    wbox = dict(fc="white", ec="none", pad=0.8)
+    ax.text(median + 2, 0.92 * ymax, f"median {median:.2f}", color=ORANGE, fontsize=9.5, bbox=wbox, zorder=6)
+    ax.text(mean + 2, 0.72 * ymax, f"mean {mean:.2f}", color=INK, fontsize=9.5, bbox=wbox, zorder=6)
+    ax.text(165, 0.62 * ymax, f"$P(S_T>100)={p_above:.3f}$", color=BLUE, fontsize=9.5)
     ax.set_xlim(20, 280); ax.set_ylim(0, 1.05 * ymax)
     ax.set_xlabel(r"$S_T$"); ax.set_ylabel("density")
     ax.set_title(r"lognormal $S_T$: $\mu=10\%$, $\sigma=30\%$, $T=2$", fontsize=10)
@@ -354,9 +355,9 @@ def _(ax):
     S = np.linspace(60, 140, 401)
     call_pay = np.maximum(S - K0, 0)
     short_put = -np.maximum(K0 - S, 0)
-    ax.plot(S, call_pay, color=BLUE, lw=1.3, ls="--", label="long call payoff")
-    ax.plot(S, short_put, color=RED, lw=1.3, ls="--", label="short put payoff")
-    ax.plot(S, call_pay + short_put, color=INK, lw=2.0, label=r"$S_T-K$")
+    ax.plot(S, call_pay + short_put, color=INK, lw=3.0, alpha=0.35, label=r"$S_T-K$ (sum)")
+    ax.plot(S, call_pay, color=BLUE, lw=1.6, ls="--", label="long call payoff")
+    ax.plot(S, short_put, color=RED, lw=1.6, ls="--", label="short put payoff")
     ax.axhline(0, color=GREY, lw=0.7)
     ax.axvline(K0, color=GREY, ls=":", lw=1.0)
     ax.text(K0 + 1, -36, "$K=100$", color=GREY, fontsize=9.5)
@@ -376,11 +377,11 @@ def _(ax):
     delta = Phi(d1)
     gamma = phi(d1) / (S * SIG)
     l1 = ax.plot(S, delta, color=BLUE, lw=1.8, label=r"$\Delta_C=N(d_1)$ (left)")
-    ax.set_ylim(0, 1.05)
+    ax.set_ylim(0, 1.3)
     ax2 = ax.twinx()
     ax2.spines["right"].set_visible(True)
     l2 = ax2.plot(S, gamma, color=ORANGE, lw=1.8, label=r"$\Gamma$ (right)")
-    ax2.set_ylim(0, 0.025)
+    ax2.set_ylim(0, 0.035)
     ax2.set_ylabel("Gamma", color=ORANGE)
     ax2.tick_params(axis="y", colors=ORANGE)
     d1_0, _ = d12(100.0, K0, R, SIG, 1.0)
@@ -549,13 +550,17 @@ def _(ax):
     node(ax, (xs[-1], 0), "-1")
     node(ax, (xs[0], 0), "0", ec=ORANGE, lw=2.0)
     node(ax, (xs[1], 0), "+1", fc=LIGHT_GREEN, ec=GREEN)
-    for lo, hi in [(-2, -1), (-1, 0), (0, 1)]:
+    # up-steps leave the transient states -1 and 0 only
+    for lo, hi in [(-1, 0), (0, 1)]:
         arrow(ax, (xs[lo], 0), (xs[hi], 0), None, rad=-0.35, color=BLUE, shrink=16)
+        ax.text((xs[lo] + xs[hi]) / 2, 0.62, "0.6", ha="center", color=BLUE, fontsize=10)
+    # down-steps leave -1 and 0 only (-2 and +1 are absorbing)
+    for lo, hi in [(-2, -1), (-1, 0)]:
         arrow(ax, (xs[hi], 0), (xs[lo], 0), None, rad=-0.35, color=RED, shrink=16)
-        mid = (xs[lo] + xs[hi]) / 2
-        ax.text(mid, 0.62, "0.6", ha="center", color=BLUE, fontsize=10)
-        ax.text(mid, -0.62, "0.4", ha="center", color=RED, fontsize=10)
-    frame(ax, -0.7, 5.5, -1.05, 1.15)
+        ax.text((xs[lo] + xs[hi]) / 2, -0.62, "0.4", ha="center", color=RED, fontsize=10)
+    for s in (-2, 1):
+        ax.text(xs[s], -0.9, "absorbing", ha="center", color=GREY, fontsize=9)
+    frame(ax, -0.7, 5.5, -1.1, 1.15)
     caption(ax, r"$P_0=\frac{1-(q/p)^2}{1-(q/p)^3}=\frac{15}{19}\approx 0.7895$ (fair walk: $\frac{2}{3}$)")
 
 
@@ -575,7 +580,7 @@ def _(ax):
         if M.max() < 4.0:
             ax.plot(t, M, color=GREY, lw=0.7, alpha=0.6)
             shown += 1
-    ax.plot(t, np.exp(t / 2), color=RED, lw=1.8, label=r"$E[e^{W_t}]=e^{t/2}$, $=1.6487$ at $t=1$")
+    ax.plot(t, np.exp(t / 2), color=RED, lw=1.8, label=r"$E[e^{W_t}]=e^{t/2}$ (1.6487 at $t=1$)")
     ax.axhline(1, color=BLUE, lw=1.8, ls="--", label=r"$E[e^{W_t-t/2}]=1$")
     ax.plot(1, math.exp(0.5), "o", color=RED, ms=4, zorder=5)
     ax.set_xlim(0, T); ax.set_ylim(0, 4.0)
@@ -605,15 +610,16 @@ def _(ax):
 @figure("f07_static_max", w=5.0, h=2.6)
 def _(ax):
     S = np.linspace(60, 140, 401)
-    ax.plot(S, np.maximum(K0 - S, 0), color=RED, lw=1.4, ls="--", label=r"put $(K-S_T)^+$")
-    ax.plot(S, np.maximum(S, K0), color=INK, lw=2.2, label=r"$\max(S_T,K)$")
+    ax.plot(S, np.maximum(S, K0), color=INK, lw=2.2, label=r"$\max(S_T,K)=S_T+(K-S_T)^+$")
+    ax.plot(S, S, color=BLUE, lw=1.2, ls=":", label=r"stock $S_T$")
+    ax.plot(S, np.maximum(K0 - S, 0), color=RED, lw=1.6, ls="--", label=r"put $(K-S_T)^+$")
     ax.axvline(K0, color=GREY, ls=":", lw=1.0)
-    ax.text(K0 + 1, 62, "$K=100$", color=GREY, fontsize=9.5)
+    ax.text(K0 + 1, 122, "$K=100$", color=GREY, fontsize=9.5)
     price = S0 + float(put(S0, K0, R, SIG, 1.0))
     assert abs(price - 105.5735) < 5e-4, price
-    ax.set_xlim(60, 140); ax.set_ylim(-2, 70)
+    ax.set_xlim(60, 140); ax.set_ylim(-3, 150)
     ax.set_xlabel(r"$S_T$"); ax.set_ylabel("payoff")
-    ax.legend(loc="upper left", fontsize=9, frameon=False)
+    ax.legend(loc="upper left", fontsize=8.5, frameon=False)
     ax.set_title(r"$\max(S_T,K)=S_T+(K-S_T)^+$: price $100+5.5735=105.5735$", fontsize=9.5)
 
 

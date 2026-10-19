@@ -95,6 +95,8 @@ q5 = float(np.quantile(e, 0.05))
 chk(2, "EG residual 5% quantile (T=500, N=1e5)", -3.34, q5,
     se=boot_quantile_se(e, 0.05), half_unit=0.005, allow=0.01)
 pe = float(np.mean(e < -2.86))
+chk(2, "EG residual 1% quantile (T=500, N=1e5)", -3.90, float(np.quantile(e, 0.01)),
+    se=boot_quantile_se(e, 0.01), half_unit=0.005, allow=0.02)
 chk(2, "P(EG tau < -2.86) = rejection rate at table", 0.15, pe,
     se=math.sqrt(pe * (1 - pe) / len(e)), half_unit=0.005)
 d = []
@@ -166,7 +168,9 @@ for j in range(1, 30):                   # step j -> state at t+j+1
     if j + 1 == 30:
         fc[30] = (s2.mean(), s2.std() / math.sqrt(R))
 chk(6, "MC E[sigma^2_{t+10}] (x1e4)", 3.50, fc[10][0] * 1e4, se=fc[10][1] * 1e4, half_unit=0.005)
-chk(6, "MC E[sigma^2_{t+30}] (x1e4)", 2.67, fc[30][0] * 1e4, se=fc[30][1] * 1e4, half_unit=0.005)
+chk(6, "MC E[sigma^2_{t+30}] (x1e4)", 2.66, fc[30][0] * 1e4, se=fc[30][1] * 1e4, half_unit=0.005)
+chk(6, "closed form E[sigma^2_{t+30}] (x1e4)", 2.67, (V + (al + be) ** 29 * (s_next - V)) * 1e4, half_unit=0.005)
+chk(6, "closed form E[sigma^2_{t+10}] (x1e4)", 3.50, (V + (al + be) ** 9 * (s_next - V)) * 1e4, half_unit=0.005)
 
 print("=== Card 7: GARCH(1,1) fat tails, alpha=0.10, beta=0.85, normal innovations ===")
 al7, be7 = 0.10, 0.85
@@ -225,6 +229,18 @@ chk(10, "steady predicted variance p = 3/47", 0.0638, float(pw), half_unit=0.000
 chk(10, "Q/R = 423/110450", 0.00383, float(Qw), half_unit=0.000005)
 chk(10, "quadratic residual p^2 - Qp - QR = 0", 0.0, float(pw * pw - Qw * pw - Qw * Rw), half_unit=1e-12)
 chk(10, "1/(Q/R) about 261", 261, float(1 / Qw), half_unit=0.5)
+# failure mode: AR(1) state (phi=0.9, Q=1, R=4). Steady filter weights decay by (1-K)*phi, not 1-K.
+phs, Qs, Rs = 0.9, 1.0, 4.0
+Ps = 10.0
+for _ in range(500):
+    ps_ = phs * phs * Ps + Qs; Ks = ps_ / (ps_ + Rs); Ps = (1 - Ks) * ps_
+hs = []; m_ = 0.0
+for k in range(6):
+    y_ = 1.0 if k == 0 else 0.0
+    mp = phs * m_; m_ = mp + Ks * (y_ - mp); hs.append(m_)
+ratio = hs[2] / hs[1]
+chk(10, "AR(1) state: weight ratio = (1-K)*phi (phi=0.9)", (1 - Ks) * phs, ratio, half_unit=1e-9)
+chk(10, "AR(1) state: ratio / (1-K) = phi", phs, ratio / (1 - Ks), half_unit=1e-9)
 
 print("=== Card 11: dynamic hedge ratio, beta_prior=1.2, P=0.01, Q=4e-4, R=0.01, x=2, y=2.5 ===")
 bp = F(12, 10); Pb = F(1, 100); Qb = F(4, 10000); Rb = F(1, 100); xb = F(2); yb = F(5, 2)
@@ -249,6 +265,8 @@ Xp = ar1_paths(ph, 200000, 600)              # cross-section at t=600 is station
 v_cs = Xp[:, -1].var()
 chk(12, "MC stationary variance, cross-section, N=2e5", 5.263, float(v_cs),
     se=float(v_cs) * math.sqrt(2 / Xp.shape[0]), half_unit=0.0005)
+chk(12, "MC variance as quoted on card (5.24)", 5.24, float(v_cs),
+    se=float(v_cs) * math.sqrt(2 / Xp.shape[0]), half_unit=0.005)
 
 print("=== Card 13: OLS bias of phi, T=50 observations ===")
 kend = -(1 + 3 * 0.9) / 50
@@ -260,7 +278,7 @@ bh = ((xx - xm) * (yy - ym)).sum(1) / ((xx - xm) ** 2).sum(1)
 chk(13, "simulated bias at phi=0.9, T=50", -0.081, float(bh.mean() - 0.9),
     se=float(bh.std()) / math.sqrt(len(bh)), half_unit=0.0005)
 means = {}
-for phi_t in [0.97, 0.99, 1.0]:
+for phi_t in [0.97, 0.98, 0.99, 1.0]:
     Xs = ar1_paths(phi_t, 100000, 51)
     xx = Xs[:, :-1]; yy = Xs[:, 1:]
     xm = xx.mean(1, keepdims=True); ym = yy.mean(1, keepdims=True)
@@ -269,6 +287,13 @@ for phi_t in [0.97, 0.99, 1.0]:
     print(f"   phi={phi_t}: E[phihat] = {means[phi_t][0]:.4f} (se {means[phi_t][1]:.4f})")
 chk(13, "simulated E[phihat] at true phi=1.0 is about 0.90", 0.90, means[1.0][0],
     se=means[1.0][1], half_unit=0.005)
+chk(13, "simulated E[phihat] at true phi=0.98 is about 0.88", 0.88, means[0.98][0],
+    se=means[0.98][1], half_unit=0.005)
+sd_b = float(bs_.std())
+chk(13, "sampling sd of phihat at phi=1, T=50, about 0.08", 0.08, sd_b, half_unit=0.005,
+    se=sd_b / math.sqrt(2 * len(bs_)))
+chk(13, "gap in means phi=0.98 vs 1.0 (about 0.015)", 0.015, means[1.0][0] - means[0.98][0],
+    se=math.hypot(means[1.0][1], means[0.98][1]), half_unit=0.001)
 chk(13, "E[phihat] at phi=0.97 is about 0.88", 0.88, means[0.97][0], se=means[0.97][1], half_unit=0.005)
 chk(13, "first-order Kendall inversion gives phi about 0.979", 0.979,
     (0.90 + 1 / 50) / (1 - 3 / 50), half_unit=0.0005)

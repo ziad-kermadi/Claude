@@ -7,7 +7,7 @@ Every number a figure states is recomputed here and asserted against the card's 
 """
 import numpy as np
 from math import comb, log, sqrt
-from scipy.stats import norm
+from scipy.stats import norm, binom, hypergeom
 from scipy.integrate import quad
 from scipy.optimize import brentq
 from qcfig import *
@@ -98,7 +98,7 @@ def _(ax):
     ax.set_ylim(98.4, 101.6)
     ax.set_xlabel("inventory q (contracts)")
     ax.set_ylabel("price")
-    ax.set_title(r"reservation price $r = \mathrm{mid} - 0.1\,q$; band = bid/ask $\pm 1$", fontsize=10)
+    ax.set_title(r"reservation price $r = \mathrm{mid} - 0.1\,q$; illustrative quotes $r \pm 1$", fontsize=10)
 
 
 # ---------- Kelly ----------
@@ -257,7 +257,7 @@ def _(ax):
     box(ax, (xs[2], row1), "£0.5m/day\ncaptured", w=w, h=h, fs=9.5)
     box(ax, (xs[2], row2), "£250/day\nedge", w=w, h=h, fs=9.5, fc=LIGHT_BLUE, ec=BLUE)
     box(ax, (xs[1], row2), "£63k/yr\ngross", w=w, h=h, fs=9.5, fc=LIGHT_BLUE, ec=BLUE)
-    box(ax, (xs[0], row2), "£31k/yr\nnet", w=w, h=h, fs=9.5, fc=LIGHT_ORANGE, ec=ORANGE)
+    box(ax, (xs[0], row2), "£31.5k/yr\nnet", w=w, h=h, fs=9.5, fc=LIGHT_ORANGE, ec=ORANGE)
     ax.annotate("", xy=(xs[1] - w / 2 - 0.05, row1), xytext=(xs[0] + w / 2 + 0.05, row1),
                 arrowprops=dict(arrowstyle="-|>", color=INK, lw=1.2))
     ax.text((xs[0] + xs[1]) / 2, row1 + 0.32, "× £10", ha="center", va="center", fontsize=9.5)
@@ -354,10 +354,6 @@ def _(ax):
     assert abs((0.1 - log(1.1)) - 0.0046898) < 1e-6
     ax.loglog(r, e1, color=BLUE, lw=2, label=r"$\ln(1+r) \approx r$")
     ax.loglog(r, e2, color=ORANGE, lw=2, label=r"$\ln(1+r) \approx r - r^2/2$")
-    ax.loglog(r, r ** 2 / 2, color=GREY, ls=":", lw=1.1)
-    ax.loglog(r, r ** 3 / 3, color=GREY, ls="-.", lw=1.1)
-    ax.text(0.0035, 0.00035, r"$r^2/2$", color=GREY, fontsize=9.5)
-    ax.text(0.0035, 0.00001, r"$r^3/3$", color=GREY, fontsize=9.5)
     for x, lab in [(0.01, "r = 0.01"), (0.05, "r = 0.05"), (0.1, "r = 0.1")]:
         ax.axvline(x, color=INK, lw=0.6, ls=":", alpha=0.6)
         ax.text(x, 0.45, lab, ha="center", va="bottom", fontsize=9, color=INK)
@@ -366,7 +362,7 @@ def _(ax):
     ax.set_xlabel("r")
     ax.set_ylabel("absolute error")
     ax.legend(frameon=False, fontsize=9, loc="lower right")
-    ax.set_title("truncation error of the log series", fontsize=10)
+    ax.set_title(r"error: $r^2/2$ (blue) and $r^3/3$ (orange)", fontsize=10)
 
 
 @figure("f10_sd_error_loglog", w=4.6, h=2.6)
@@ -402,7 +398,8 @@ def _(ax):
     T = 0.5 + 0.4 * d
     assert abs(norm.cdf(0.25) - 0.5987) < 5e-5 and abs(norm.cdf(0.5) - 0.6915) < 5e-5
     assert abs((0.5 + 0.4 * 0.5) - 0.70) < 1e-12
-    ax.fill_between(d, N, T, color=LIGHT_ORANGE, alpha=0.7, zorder=1)
+    near = np.abs(d) <= 1.0
+    ax.fill_between(d[near], N[near], T[near], color=LIGHT_ORANGE, alpha=0.7, zorder=1)
     ax.plot(d, N, color=BLUE, lw=2, zorder=3)
     ax.plot(d, T, color=ORANGE, lw=1.6, ls="--", zorder=3)
     ax.plot([0], [0.5], "o", color=INK, ms=4, zorder=4)
@@ -414,7 +411,7 @@ def _(ax):
     ax.annotate("d = 0.5\n0.6915 vs 0.700", xy=(0.5, norm.cdf(0.5)), xytext=(0.72, 0.27),
                 fontsize=9, va="center", arrowprops=dict(arrowstyle="-", color=GREY, lw=0.8))
     ax.text(-1.4, 0.84, r"$N(d)$", color=BLUE, fontsize=10)
-    ax.text(-1.4, 0.2, r"$0.5 + 0.4\,d$", color=ORANGE, fontsize=10)
+    ax.text(-1.45, 0.62, r"$0.5 + 0.4\,d$", color=ORANGE, fontsize=10)
     ax.set_xlim(-1.5, 1.5)
     ax.set_ylim(0.1, 0.92)
     ax.set_xlabel("d")
@@ -459,12 +456,219 @@ def _(ax):
     assert abs(good[1] - 0.1428) < 1e-12
     target = 1 / 7
     k = np.arange(6)
-    ax.semilogy(k, np.abs(bad - target), "o-", color=RED, lw=1.8, ms=5, label=r"$x_0 = 0.3$ (outside basin)")
-    ax.semilogy(k, np.abs(good - target) + 1e-12, "o-", color=BLUE, lw=1.8, ms=5,
+    floor = 1e-17  # machine-precision errors are drawn at the floor, not clipped
+    ax.semilogy(k, np.maximum(np.abs(bad - target), floor), "o-", color=RED, lw=1.8, ms=5,
+                label=r"$x_0 = 0.3$ (outside basin)")
+    ax.semilogy(k, np.maximum(np.abs(good - target), floor), "o-", color=BLUE, lw=1.8, ms=5,
                 label=r"$x_0 = 0.14$ (inside $0<x_0<2/7$)")
     ax.set_xlim(-0.2, 5.2)
-    ax.set_ylim(1e-9, 30)
+    ax.set_ylim(floor, 30)
+    ax.set_yticks([1e-16, 1e-12, 1e-8, 1e-4, 1])
     ax.set_xlabel("iteration k")
     ax.set_ylabel(r"$|x_k - 1/7|$")
     ax.legend(frameon=False, fontsize=9, loc="center right")
     ax.set_title(r"$x_{k+1} = x_k(2-7x_k)$: error grows outside the basin", fontsize=10)
+
+
+# ---------- barriers, Bayes, sampling without replacement, tails, lattices, CLT ----------
+
+@figure("f10_ruin_barrier", w=5.0, h=2.6)
+def _(ax):
+    # fair +-1 walk absorbed at -1 (ruin) and +3 (target): h(x) = P(hit +3 before -1 | start x)
+    A, b = np.eye(3), np.zeros(3)
+    for i, x in enumerate([0, 1, 2]):
+        for dx in (-1, 1):
+            j = x + dx
+            if 0 <= j <= 2:
+                A[i, j] -= 0.5
+            elif j == 3:
+                b[i] += 0.5
+    h = np.concatenate([[0.0], np.linalg.solve(A, b), [1.0]])
+    xs = np.arange(-1, 4)
+    assert np.allclose(h, (xs + 1) / 4) and abs(h[1] - 0.25) < 1e-12
+    ax.plot(xs, h, color=BLUE, lw=2, zorder=2)
+    ax.plot(xs[1:-1], h[1:-1], "o", color=BLUE, ms=5, zorder=3)
+    ax.plot([-1], [0], "o", color=RED, ms=8, zorder=4)
+    ax.plot([3], [1], "o", color=GREEN, ms=8, zorder=4)
+    ax.plot([0], [0.25], "o", color=ORANGE, ms=8, zorder=5)
+    ax.vlines(0, 0, 0.25, colors=ORANGE, ls=":", lw=1.2)
+    ax.hlines(0.25, -1, 0, colors=ORANGE, ls=":", lw=1.2)
+    ax.text(0.15, 0.2, r"start at 0: $P = \frac{1}{4}$", ha="left", va="top", color=ORANGE, fontsize=10)
+    ax.text(-1, -0.14, "ruin at -1", ha="center", va="center", color=RED, fontsize=9.5)
+    ax.text(3, 1.14, "target +3", ha="center", va="center", color=GREEN, fontsize=9.5)
+    ax.set_xticks(xs)
+    ax.set_xlim(-1.5, 3.5)
+    ax.set_ylim(-0.25, 1.3)
+    ax.set_yticks([0, 0.25, 0.5, 0.75, 1])
+    ax.set_xlabel("position x (fair ±1 steps)")
+    ax.set_ylabel("P(reach +3 first)")
+    ax.set_title(r"gambler's ruin: $P = (x+1)/4$ between barriers $-1$ and $+3$", fontsize=10)
+
+
+@figure("f10_bias_update", w=4.8, h=2.7)
+def _(ax):
+    # theta in {0.6, 0.4}, prior 1/2; a buy has likelihood ratio 0.8/0.2 = 4 in favour of 0.6
+    odds = [1, 4, 16]
+    post = [o / (1 + o) for o in odds]
+    means = [p * 0.6 + (1 - p) * 0.4 for p in post]
+    assert abs(post[1] - 0.8) < 1e-12 and abs(post[2] - 16 / 17) < 1e-12
+    assert abs(means[1] - 0.56) < 1e-12 and abs(means[2] - 0.588) < 5e-4
+    names = ["prior", "after 1 buy", "after 2 buys"]
+    ax.bar(range(3), post, width=0.55, color=[GREY, BLUE, BLUE], alpha=0.85)
+    for i, p in enumerate(post):
+        ax.text(i, p + 0.03, f"{p:.3f}" if i == 2 else f"{p:.2f}", ha="center", va="bottom", fontsize=10)
+    ax.set_xticks(range(3))
+    ax.set_xticklabels([f"{n}\n" + rf"mean $\theta$ = {m:.3g}" for n, m in zip(names, means)], fontsize=9.5)
+    ax.set_ylim(0, 1.15)
+    ax.set_ylabel(r"$P(\theta = 0.6 \mid \mathrm{data})$")
+    ax.set_title(r"each buy multiplies the odds by $0.8/0.2 = 4$", fontsize=10)
+
+
+@figure("f10_red_card_pmf", w=5.0, h=2.7)
+def _(ax):
+    k = np.arange(0, 11)
+    hyp = hypergeom(M=52, n=26, N=10)
+    assert abs(hyp.var() - 10 * 0.25 * 42 / 51) < 1e-12 and abs(binom(10, 0.5).var() - 2.5) < 1e-12
+    pm_h, pm_b = hyp.pmf(k), binom(10, 0.5).pmf(k)
+    ax.bar(k, pm_h, width=0.7, color=BLUE, alpha=0.85, label=r"without replacement: $\mathrm{Var} = 2.06$")
+    ax.plot(k, pm_b, "o--", color=ORANGE, ms=4.5, lw=1.4, label=r"with replacement: $\mathrm{Var} = 2.5$")
+    ax.set_xticks(k)
+    ax.set_xlim(-0.6, 10.6)
+    ax.set_ylim(0, max(pm_h.max(), pm_b.max()) * 1.5)
+    ax.set_xlabel("red cards K in 10 draws")
+    ax.set_ylabel("probability")
+    ax.legend(frameon=False, fontsize=9.5, loc="upper right")
+    ax.set_title(r"mean 5 in both; the factor $\frac{42}{51}$ narrows the spread", fontsize=10)
+
+
+@figure("f10_dice_tail", w=5.0, h=2.6)
+def _(ax):
+    s = np.arange(2, 13)
+    p = np.array([sum(1 for a in range(1, 7) for b in range(1, 7) if a + b == k) for k in s]) / 36
+    tail = s >= 8
+    assert abs(p[tail].sum() - 15 / 36) < 1e-12
+    cond_mean = (s[tail] * p[tail]).sum() / p[tail].sum()
+    assert abs(cond_mean - 140 / 15) < 1e-12
+    ax.bar(s, 100 * p, width=0.8, color=[BLUE if t else GREY for t in tail], alpha=0.85)
+    ax.vlines(cond_mean, 0, 19.5, colors=ORANGE, lw=1.8)
+    ax.text(cond_mean - 0.2, 20.5, r"$E[S \mid S \geq 8] = \frac{140}{15} = 9.33$", ha="right", va="center",
+            color=ORANGE, fontsize=9.5)
+    ax.text(3.6, 12.5, r"excluded: $S < 8$", ha="center", va="center", color=GREY, fontsize=9.5)
+    ax.text(10.6, 14.5, r"kept: $P = \frac{15}{36}$", ha="center", va="center", color=BLUE, fontsize=9.5)
+    ax.set_xticks(s)
+    ax.set_xlim(1.4, 12.6)
+    ax.set_ylim(0, 23)
+    ax.set_xlabel("sum S of two dice")
+    ax.set_ylabel("probability (%)")
+    ax.set_title(r"condition on $S \geq 8$, renormalise by $\frac{15}{36}$, then average", fontsize=10)
+
+
+@figure("f10_stpete_cap", w=5.0, h=2.6)
+def _(ax):
+    k = np.arange(1, 21)
+    contrib = np.array([2.0 ** j * 2.0 ** (-j) for j in range(1, 20)] + [2.0 ** 20 * 2.0 ** (-19)])
+    assert np.allclose(contrib[:19], 1.0) and abs(contrib[19] - 2.0) < 1e-12 and abs(contrib.sum() - 21) < 1e-12
+    assert abs(sum(2.0 ** -j for j in range(20, 200)) - 2.0 ** -19) < 1e-15
+    ax.bar(k[:19], contrib[:19], width=0.7, color=BLUE, alpha=0.85)
+    ax.bar(k[19], contrib[19], width=0.7, color=ORANGE, alpha=0.85)
+    ax.text(20, contrib[19] + 0.08, "2", ha="center", va="bottom", color=ORANGE, fontsize=10)
+    ax.text(9.5, 2.5, r"total $= 19 + 2 = 21$", ha="center", va="center", fontsize=10)
+    ax.set_xticks([1, 5, 10, 15, 19, 20])
+    ax.set_xticklabels(["1", "5", "10", "15", "19", r"$\geq 20$"])
+    ax.set_xlim(0, 21)
+    ax.set_ylim(0, 3.0)
+    ax.set_xlabel("k (payoff $2^k$ with probability $2^{-k}$, capped at $2^{20}$)")
+    ax.set_ylabel("contribution to E")
+    ax.set_title(r"each term $2^k\cdot 2^{-k} = 1$; the capped tail adds $2^{20}\cdot 2^{-19} = 2$", fontsize=9.5)
+
+
+@figure("f10_rb_lattice", w=5.2, h=3.4, axis=False)
+def _(ax):
+    from fractions import Fraction
+    from functools import lru_cache
+
+    @lru_cache(None)
+    def V(r, b):  # expected score under optimal guessing with r red and b black cards left
+        if r == 0 and b == 0:
+            return 0.0
+        n = r + b
+        cont = (r * V(r - 1, b) if r else 0.0) + (b * V(r, b - 1) if b else 0.0)
+        return max(r - b, b - r) / n + cont / n
+
+    assert abs(V(2, 2) - 5 / 3) < 1e-12 and abs(V(1, 2) - 5 / 3) < 1e-12
+    assert abs(V(1, 1) - 1) < 1e-12 and abs(V(0, 2) - 2) < 1e-12
+    pos = {(2, 2): (0.0, 4.4), (1, 2): (-1.3, 3.3), (2, 1): (1.3, 3.3),
+           (0, 2): (-2.2, 2.2), (1, 1): (0.0, 2.2), (2, 0): (2.2, 2.2),
+           (0, 1): (-1.1, 1.1), (1, 0): (1.1, 1.1), (0, 0): (0.0, 0.0)}
+    hw, hh = 0.78, 0.4  # half-width and half-height of a state box, in data units
+
+    def label(r, b):
+        fr = Fraction(V(r, b)).limit_denominator(12)
+        val = str(fr.numerator) if fr.denominator == 1 else rf"\frac{{{fr.numerator}}}{{{fr.denominator}}}"
+        return f"{r} red, {b} black\n" + rf"$V = {val}$"
+
+    edges = [((2, 2), (1, 2), r"$\frac{1}{2}$"), ((2, 2), (2, 1), r"$\frac{1}{2}$"),
+             ((1, 2), (0, 2), r"$\frac{1}{3}$"), ((1, 2), (1, 1), r"$\frac{2}{3}$"),
+             ((2, 1), (1, 1), r"$\frac{2}{3}$"), ((2, 1), (2, 0), r"$\frac{1}{3}$"),
+             ((1, 1), (0, 1), r"$\frac{1}{2}$"), ((1, 1), (1, 0), r"$\frac{1}{2}$"),
+             ((0, 2), (0, 1), "1"), ((2, 0), (1, 0), "1"), ((0, 1), (0, 0), "1"), ((1, 0), (0, 0), "1")]
+    for src, dst, lab in edges:
+        (x1, y1), (x2, y2) = pos[src], pos[dst]
+        dx, dy = x2 - x1, y2 - y1
+        # start and stop on the box borders
+        t = min(hw / abs(dx) if dx else np.inf, hh / abs(dy))
+        a, c = (x1 + t * dx, y1 + t * dy), (x2 - t * dx, y2 - t * dy)
+        ax.annotate("", xy=c, xytext=a, arrowprops=dict(arrowstyle="-|>", color=INK, lw=1.1, shrinkA=0, shrinkB=0))
+        mx, my = (a[0] + c[0]) / 2, (a[1] + c[1]) / 2
+        side = -0.12 if dx < 0 else 0.12
+        ax.text(mx + side, my, lab, ha="right" if dx < 0 else "left", va="center", fontsize=9.5, color=INK)
+    for (r, b), (x, y) in pos.items():
+        ax.add_patch(Rectangle((x - hw, y - hh), 2 * hw, 2 * hh, fc=LIGHT_BLUE if (r, b) == (2, 2) else "white",
+                               ec=BLUE if (r, b) == (2, 2) else INK, lw=1.2, zorder=3))
+        ax.text(x, y, label(r, b), ha="center", va="center", fontsize=9, zorder=4)
+    ax.set_xlim(-3.1, 3.1)
+    ax.set_ylim(-0.7, 5.0)
+    caption(ax, "edge label = probability of that draw; each state is the cards left", fs=9.5)
+
+
+@figure("f10_walk_sqrt_t", w=5.0, h=2.7)
+def _(ax):
+    n = 252
+    rng = np.random.default_rng(3)
+    steps = rng.choice([-1, 1], size=(8, n))
+    W = np.hstack([np.zeros((8, 1)), np.cumsum(steps, axis=1)])
+    t = np.arange(n + 1)
+    assert abs(np.sqrt(252) - 15.87) < 0.005
+    m = 10 * np.ceil(np.abs(W).max() / 10 + 0.1)
+    for i in range(8):
+        ax.plot(t, W[i], color=BLUE, lw=0.9, alpha=0.45)
+    ax.plot(t, np.sqrt(t), color=ORANGE, lw=1.8)
+    ax.plot(t, -np.sqrt(t), color=ORANGE, lw=1.8)
+    ax.plot([n], [np.sqrt(n)], "o", color=ORANGE, ms=5)
+    ax.text(n - 4, np.sqrt(n) + 0.8 * m / 10, r"$\sqrt{252} \approx 15.87$", ha="right", va="bottom",
+            color=ORANGE, fontsize=9.5)
+    ax.axhline(0, color=GREY, lw=0.8)
+    ax.set_xlim(0, n)
+    ax.set_ylim(-m, m)
+    ax.set_xlabel("day t")
+    ax.set_ylabel("tally after t days")
+    ax.set_title(r"sd of the tally after $t$ days is $\sqrt{t}$ (orange = $\pm\sqrt{t}$)", fontsize=10)
+
+
+@figure("f10_coin_clt", w=5.0, h=2.6)
+def _(ax):
+    k = np.arange(30, 71)
+    dist = binom(100, 0.5)
+    pm = dist.pmf(k)
+    inside = (k >= 45) & (k <= 55)
+    p1 = dist.cdf(55) - dist.cdf(44)
+    assert abs(p1 - 0.7287) < 5e-4 and abs(dist.std() - 5) < 1e-12
+    ax.bar(k, pm, width=0.85, color=[BLUE if i else GREY for i in inside], alpha=0.85)
+    ax.text(50, pm.max() * 1.12, r"$P(45 \leq X \leq 55) = 0.729$", ha="center", va="bottom",
+            color=BLUE, fontsize=10)
+    ax.set_xticks([30, 40, 45, 50, 55, 60, 70])
+    ax.set_xlim(29, 71)
+    ax.set_ylim(0, pm.max() * 1.35)
+    ax.set_xlabel("heads X in 100 fair flips")
+    ax.set_ylabel("probability")
+    ax.set_title(r"$\mu = 50$, $\sigma = \sqrt{np(1-p)} = 5$; blue = within $\pm 1\sigma$", fontsize=10)

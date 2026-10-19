@@ -16,6 +16,9 @@
    "Where does the largest of the five draws sit relative to \\(\\theta\\), and what does its cumulative distribution look like?",
    "Find the CDF of \\(M\\) from the event that every draw is below \\(m\\), differentiate it, then compute the mean and rescale to remove the bias.",
    "\\(P(M\\le m)=P(X_i\\le m\\ \\forall i)\\); write this as a power of \\(m/\\theta\\) and differentiate to get the density of \\(M\\)."
+  ],
+  "figs_back": [
+   "f08_unif_max_density"
   ]
  },
  {
@@ -33,6 +36,9 @@
    "Once you know the distribution of the maximum from the previous card, which moments do you need, and can both come from one density?",
    "Compute \\(E[M^k]\\) directly from the density of \\(M\\) for \\(k=1\\) and \\(k=2\\), then combine them as \\(E[M^2]-E[M]^2\\).",
    "\\(E[M^k]=\\int_0^\\theta m^k f_M(m)\\,dm\\) with \\(f_M\\) the density of the maximum; set up the integrals for \\(k=1,2\\)."
+  ],
+  "figs_back": [
+   "f08_unif_max_density"
   ]
  },
  {
@@ -50,6 +56,9 @@
    "Which statistic of the sample carries all the information about \\(\\theta\\), and can a rescaled version of it beat a simple moment-based estimator?",
    "Rescale \\(M\\) by a constant chosen so the expectation equals \\(\\theta\\), then compare its variance with that of \\(2\\bar X\\) using the variance of one draw.",
    "Require \\(E[cM]=\\theta\\) and solve for \\(c\\) using your \\(E[M]\\) from the earlier card; for the comparison, \\(\\mathrm{Var}(2\\bar X)=4\\,\\mathrm{Var}(X)/n\\)."
+  ],
+  "figs_back": [
+   "f08_unif_max_density"
   ]
  },
  {
@@ -164,6 +173,9 @@
    "Here the estimator is a scaled-down sample mean; what two competing quantities make up its mean squared error as the scale changes?",
    "Write the MSE as squared bias plus variance, both as functions of the scale \\(c\\), then set the derivative with respect to \\(c\\) to zero.",
    "\\(\\mathrm{MSE}(c)=(c-1)^2\\theta^2+c^2s^2\\); differentiate with respect to \\(c\\)."
+  ],
+  "figs_back": [
+   "f08_shrink_mse"
   ]
  },
  {
@@ -176,6 +188,9 @@
    "overfitting",
    "regression",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f08_bias_variance_u"
   ]
  },
  {
@@ -192,6 +207,9 @@
    "Does the divisor that removes bias also minimise mean squared error, and what distribution does the scaled sum of squares follow?",
    "Let \\(Q=\\sum(X_i-\\bar X)^2/\\sigma^2\\), which is chi-squared with \\(n-1\\) degrees of freedom; write the MSE of \\(\\sigma^2 Q/c\\) as squared bias plus variance using the mean and variance of that distribution.",
    "\\(\\mathrm{MSE}=\\mathrm{Bias}^2+\\mathrm{Var}\\) with \\(E[Q]=n-1\\) and \\(\\mathrm{Var}(Q)=2(n-1)\\); express both in terms of \\(c\\) and minimise over \\(c\\)."
+  ],
+  "figs_back": [
+   "f08_divisor_mse"
   ]
  },
  {
@@ -273,6 +291,9 @@
    "cauchy",
    "heavy_tails",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f08_cauchy_running_mean"
   ]
  },
  {
@@ -290,6 +311,9 @@
    "Would the usual averaging argument work for this distribution, and what transform of the distribution would tell you the law of the average?",
    "Use the characteristic function: the average's characteristic function is the single-draw one evaluated at \\(t/n\\), raised to the power \\(n\\).",
    "\\(\\varphi_{\\bar X}(t)=\\big[\\varphi_X(t/n)\\big]^n\\), with \\(\\varphi_X(t)=E[e^{itX}]\\) for the standard Cauchy law."
+  ],
+  "figs_back": [
+   "f08_cauchy_running_mean"
   ]
  },
  {
@@ -306,6 +330,9 @@
    "Each \\(R_i\\) divides one standard normal by another, independent one. What does the distribution of such a quotient look like in the tails, and does a finite mean exist?",
    "Structural feature: the denominator can be arbitrarily close to zero, so the quotient has heavy tails. Check whether averaging \\(n\\) of them changes that, using a transform of the law.",
    "Write \\(P(R_i\\le r)=P(Z_{1}\\le rZ_{2})\\) and condition on \\(Z_2\\)."
+  ],
+  "figs_back": [
+   "f08_cauchy_running_mean"
   ]
  },
  {
@@ -345,6 +372,9 @@
    "Coverage is a probability over the random count; for which outcomes of the count does the interval actually contain the true value?",
    "Treat coverage as the expectation of an indicator over the binomial outcome, and list the counts \\(k\\) whose interval contains \\(p\\).",
    "\\(\\text{Coverage}=\\sum_k \\mathbf 1\\{p\\in\\mathrm{CI}(k)\\}\\binom{10}{k}p^k(1-p)^{10-k}\\)."
+  ],
+  "figs_back": [
+   "f08_wald_coverage"
   ]
  },
  {
@@ -362,6 +392,9 @@
    "With zero successes the normal approximation breaks down; which conjugate family turns this prior into a posterior you can read off in closed form?",
    "Use the conjugate update: add the successes to one prior parameter and the failures to the other, then invert the posterior CDF at the two tail levels.",
    "Write the posterior as \\(\\mathrm{Beta}(a+x,\\,b+n-x)\\) and identify \\(a\\) and \\(b\\) from the prior in the prompt."
+  ],
+  "figs_back": [
+   "f08_beta_posterior"
   ]
  },
  {
@@ -373,6 +406,9 @@
    "p_values",
    "hypothesis_testing",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f08_base_rate_tree"
   ]
  },
  {
@@ -389,6 +425,9 @@
    "Condition on the event that the test came out significant; how does that event split between the two states of the world?",
    "Apply Bayes' rule: the posterior probability of no edge is the joint probability of no edge and significance, divided by the total probability of significance.",
    "\\(P(H_0\\mid S)=\\dfrac{P(S\\mid H_0)P(H_0)}{P(S)}\\), with \\(P(S)=P(S\\mid H_0)P(H_0)+P(S\\mid H_1)P(H_1)\\)."
+  ],
+  "figs_back": [
+   "f08_base_rate_tree"
   ]
  },
  {
@@ -405,6 +444,9 @@
    "Are the five looks fresh tests, or do they share data? What does the running cumulative sum look like across the five sample sizes?",
    "Model the standardised statistics at the five looks as a random walk; the question is the chance that this walk ever crosses the boundary at one of the looks.",
    "Let \\(S_k\\) be the running sum and \\(z_k=S_k/\\sqrt k\\); the target is \\(P\\big(\\max_{k\\le5}|z_k|>1.96\\big)\\)."
+  ],
+  "figs_back": [
+   "f08_peeking_paths"
   ]
  },
  {
@@ -421,6 +463,9 @@
    "The test statistic takes only a few values; which cut-offs are available, and can a rule that rejects only part of the time hit the target level exactly?",
    "Compute the exact binomial tail probabilities for each cut-off, then consider a randomised rule that rejects the boundary value with some probability.",
    "Size \\(=P(X\\ge 9)+\\gamma\\,P(X=8)\\) under \\(H_0\\); set this equal to \\(\\alpha\\) and solve for \\(\\gamma\\)."
+  ],
+  "figs_back": [
+   "f08_binom_tail"
   ]
  },
  {
@@ -449,6 +494,9 @@
    "What is the chance that at least one of many independent tests gives a false alarm, and what simple bound on a union of events could replace the exact calculation?",
    "Use the complement for the exact probability under independence, and the union bound to choose a per-test threshold that caps the family error rate.",
    "\\(P(\\text{at least one false positive})=1-(1-\\alpha_{\\text{per}})^{m}\\); for Bonferroni, set \\(\\alpha_{\\text{per}}=\\alpha/m\\)."
+  ],
+  "figs_back": [
+   "f08_fwer_growth"
   ]
  },
  {
@@ -482,6 +530,9 @@
    "Plot the sorted p-values against a rising line; how many points must lie below the line, and which is the last one that does?",
    "Bonferroni uses one flat threshold; the BH rule compares the \\(k\\)-th smallest p-value with a threshold that grows linearly in rank. Find the largest rank that passes.",
    "Find the largest \\(k\\) with \\(p_{(k)}\\le \\dfrac{k}{m}\\,q\\), where \\(m=10\\) and \\(q=0.05\\)."
+  ],
+  "figs_back": [
+   "f08_bh_step_up"
   ]
  },
  {
@@ -510,6 +561,9 @@
    "Among a hundred strategies with zero true edge, the best estimate is a maximum of many draws; what is the expected maximum of a hundred standard normals, and how does the standard error scale the answer?",
    "Write the expected maximum as an integral against the density of the largest of 100 i.i.d. normals, then multiply by the standard error of each Sharpe estimate.",
    "\\(E[\\max]=\\int x\\,\\dfrac{d}{dx}\\Phi(x)^{100}\\,dx\\) for standard normals; the answer then scales by the standard error."
+  ],
+  "figs_back": [
+   "f08_expected_max"
   ]
  },
  {
@@ -527,6 +581,9 @@
    "Each child's score is pure chance. What must be true of every child for the top score to stay below a level, and how does that combine across the children?",
    "Structural feature: the scores are independent and identically distributed, so the top score stays below a level only if every single score does. Compare the chance for one child with the chance for all of them.",
    "Setup: write the probability that the top score exceeds \\(c\\) in terms of one child's tail probability, then find the level at which that probability is one half."
+  ],
+  "figs_back": [
+   "f08_expected_max"
   ]
  },
  {
@@ -588,6 +645,9 @@
    "At the minimum of the sum of squared residuals, what must hold for the residuals with respect to each coefficient?",
    "Set the partial derivatives of the sum of squares with respect to the intercept and the slope to zero, and solve the intercept equation first.",
    "\\(\\partial_a:\\ \\sum_i(y_i-a-bx_i)=0\\) and \\(\\partial_b:\\ \\sum_i x_i(y_i-a-bx_i)=0\\)."
+  ],
+  "figs_back": [
+   "f08_ols_residuals"
   ]
  },
  {
@@ -646,6 +706,9 @@
    "Are successive observations uncorrelated here, and what happens to the variance of a sum when its terms are correlated?",
    "The variance of the sample mean is the sum of all autocovariances, not only the lag-zero term; write it as a series in the autocorrelation.",
    "\\(T\\,\\mathrm{Var}(\\bar x)\\to\\sum_{k\\in\\mathbb Z}\\gamma_k\\), with \\(\\gamma_k=\\sigma_x^2\\rho^{|k|}\\) for an AR(1) with \\(\\rho=0.5\\)."
+  ],
+  "figs_back": [
+   "f08_ar1_acf"
   ]
  },
  {
@@ -663,6 +726,9 @@
    "Swap the roles of the two variables; how do the two regression slopes relate to each other and to the correlation between \\(x\\) and \\(y\\)?",
    "Write each slope as a covariance divided by a variance, multiply the two, and see what remains.",
    "\\(\\hat\\beta_{yx}=S_{xy}/S_{xx}\\) and \\(\\hat\\beta_{xy}=S_{xy}/S_{yy}\\); compute \\(S_{xx}\\), \\(S_{yy}\\) and \\(S_{xy}\\) from the data."
+  ],
+  "figs_back": [
+   "f08_two_slopes"
   ]
  },
  {
@@ -691,6 +757,9 @@
    "The short regression leaves out a variable related to the included one; which way does its coefficient get pushed, and what auxiliary regression sets the size of the push?",
    "Regress the omitted variable on the included one, then substitute that auxiliary slope into the expected coefficient of the short regression.",
    "\\(E[\\hat b_{\\text{short}}]=\\beta_1+\\beta_2\\,\\delta\\), where \\(\\delta\\) is the slope from regressing \\(x_2\\) on \\(x_1\\)."
+  ],
+  "figs_back": [
+   "f08_dag_omitted"
   ]
  },
  {
@@ -703,6 +772,9 @@
    "collider",
    "causal_inference",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f08_dag_collider"
   ]
  },
  {
@@ -715,6 +787,9 @@
    "endogeneity",
    "instrumental_variables",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f08_dag_iv"
   ]
  },
  {
@@ -748,6 +823,9 @@
    "The best guess of an unobserved quantity from a noisy score is a regression of the quantity on the score; what share of the score's variance comes from the true quantity?",
    "Use the linear conditional expectation: the mean plus the covariance-to-variance ratio times the deviation of the observed score from its mean.",
    "\\(E[T\\mid X]=\\mu+\\dfrac{\\mathrm{Cov}(T,X)}{\\mathrm{Var}(X)}(X-\\mu)\\); fill in \\(\\mathrm{Var}(X)=\\mathrm{Var}(T)+\\mathrm{Var}(e)\\)."
+  ],
+  "figs_back": [
+   "f08_regression_to_mean"
   ]
  },
  {
@@ -759,6 +837,9 @@
    "regression_to_mean",
    "selection",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f08_regression_to_mean"
   ]
  },
  {
@@ -789,6 +870,9 @@
    "The penalty adds a term that acts like extra curvature in the objective; what normal equation replaces the OLS one, and which Gaussian prior makes the penalty appear in a posterior?",
    "Differentiate the penalised objective to get a modified normal equation, then match the penalty weight to the ratio of noise variance to prior variance.",
    "\\((\\sum x^2+\\lambda)\\beta=\\sum xy\\), and for a Gaussian prior \\(\\lambda=\\sigma^2/\\tau^2\\)."
+  ],
+  "figs_back": [
+   "f08_ridge_path"
   ]
  },
  {
@@ -806,6 +890,9 @@
    "Which penalty has a corner at zero, and what does a corner do to the solution when the signal is weaker than the penalty?",
    "Check the subgradient optimality condition at \\(\\beta=0\\) first, then solve in the region where \\(\\beta\\neq 0\\).",
    "Write the first-order condition \\(\\beta-z+\\lambda s=0\\) with \\(s\\in\\partial|\\beta|\\), and ask whether \\(\\beta=0\\) can satisfy it for some \\(s\\in[-1,1]\\)."
+  ],
+  "figs_back": [
+   "f08_soft_threshold"
   ]
  },
  {
@@ -834,6 +921,9 @@
    "This is a symmetric matrix with equal diagonal entries; what do the eigenvectors look like when the two variables are treated symmetrically?",
    "For a symmetric matrix with equal diagonal entries, try vectors whose two components have equal magnitude, then solve the characteristic equation.",
    "\\(\\det(\\Sigma-\\lambda I)=(1-\\lambda)^2-0.8^2=0\\)."
+  ],
+  "figs_back": [
+   "f08_pca_ellipse"
   ]
  },
  {
@@ -880,6 +970,9 @@
    "random_matrix",
    "pitfalls",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f08_mp_bulk"
   ]
  },
  {
@@ -896,6 +989,9 @@
    "Three variables with given pairwise correlations: which property of the full 3-by-3 correlation matrix restricts the third correlation, and what must be nonnegative?",
    "Require the determinant of the 3-by-3 correlation matrix to be nonnegative, and solve the resulting quadratic in the unknown correlation.",
    "\\(\\det\\begin{pmatrix}1&0.9&r\\\\0.9&1&0.9\\\\r&0.9&1\\end{pmatrix}\\ge 0\\); expand it in \\(r\\)."
+  ],
+  "figs_back": [
+   "f08_corr_angles"
   ]
  },
  {
@@ -912,6 +1008,9 @@
    "Can three pairwise correlations be chosen freely? Check a property of the whole matrix rather than the individual entries.",
    "Compute the determinant and the smallest eigenvalue; a valid correlation matrix must have all eigenvalues nonnegative.",
    "\\(\\det R=1+2\\rho_{12}\\rho_{23}\\rho_{13}-\\rho_{12}^2-\\rho_{23}^2-\\rho_{13}^2\\); substitute the entries from the prompt."
+  ],
+  "figs_back": [
+   "f08_corr_angles"
   ]
  },
  {
@@ -974,6 +1073,9 @@
    "Treat each standardised variable as a point on a sphere. Given two of the pairwise angles, what range can the third take?",
    "Structural feature: moving from Paris to Rome can be done via Berlin, so the two-step path bounds the direct angle. Convert the bound on angles back to a correlation.",
    "Setup: let each correlation be the cosine of an angle, and write the smallest possible Paris-to-Rome correlation as the cosine of the largest allowed angle between them."
+  ],
+  "figs_back": [
+   "f08_corr_angles"
   ]
  },
  {
@@ -1035,6 +1137,9 @@
    "backtest_overfitting",
    "selection_bias",
    "fmt_recognise"
+  ],
+  "figs_back": [
+   "f08_expected_max"
   ]
  }
 ]
