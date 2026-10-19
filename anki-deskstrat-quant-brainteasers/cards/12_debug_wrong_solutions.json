@@ -36,7 +36,7 @@
  {
   "type": "basic",
   "front": "Count the positive integer solutions of \\(x_1+x_2+x_3+x_4=10\\) with every \\(x_i\\ge1\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> Put \\(y_i=x_i-1\\ge0\\), so \\(\\sum y_i=6\\).<br><b>L2.</b> Non-negative solutions of \\(\\sum_{i=1}^{4}y_i=n\\) number \\(\\binom{n+4}{4}\\).<br><b>L3.</b> With \\(n=6\\) this gives \\(\\binom{10}{4}=210\\) solutions.<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
-  "back": "<b>Faulty line:</b> L3: the count of non-negative solutions of \\(\\sum_{i=1}^{k}y_i=n\\) is \\(\\binom{n+k}{k}\\).<br><b>Why it fails:</b> Stars and bars with \\(k\\) variables gives \\(\\binom{n+k-1}{k-1}\\). The formula \\(\\binom{n+k}{k}\\) corresponds to \\(k+1\\) variables and overcounts.<br><b>Correct answer:</b> \\(\\binom{6+3}{3}=\\binom{9}{3}=84\\).<br><b>Smell:</b> Check the formula at \\(k=1\\): there is exactly one solution for every \\(n\\), so the correct form must give \\(\\binom{n}{0}=1\\). Test the formula on the smallest case before using it.",
+  "back": "<b>Faulty line:</b> L2: the count of non-negative solutions of \\(\\sum_{i=1}^{k}y_i=n\\) is \\(\\binom{n+k}{k}\\).<br><b>Why it fails:</b> Stars and bars with \\(k\\) variables gives \\(\\binom{n+k-1}{k-1}\\). The formula \\(\\binom{n+k}{k}\\) corresponds to \\(k+1\\) variables and overcounts.<br><b>Correct answer:</b> \\(\\binom{6+3}{3}=\\binom{9}{3}=84\\).<br><b>Smell:</b> Check the formula at \\(k=1\\): there is exactly one solution for every \\(n\\), so the correct form must give \\(\\binom{n}{0}=1\\). Test the formula on the smallest case before using it.",
   "tags": [
    "s_stars_bars",
    "compositions",
@@ -58,7 +58,7 @@
  {
   "type": "basic",
   "front": "23 people. Assume 365 equally likely birthdays. Find \\(P(\\text{at least two share a birthday})\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> There are \\(\\binom{23}{2}=253\\) pairs of people.<br><b>L2.</b> For each pair, \\(P(\\text{same birthday})=1/365\\).<br><b>L3.</b> The pair events are disjoint, so \\(P=253/365\\approx0.693\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
-  "back": "<b>Faulty line:</b> L3: the pair events are disjoint.<br><b>Why it fails:</b> Pair events overlap: one triple of people can produce several coincident pairs. Summing indicators gives an upper bound (the union bound), not the probability.<br><b>Correct answer:</b> \\(P=1-\\prod_{i=0}^{22}\\dfrac{365-i}{365}\\approx0.507\\).<br><b>Smell:</b> A sum of pair indicators is an upper bound on the union. Check: if the answer exceeds the probability of the complement's bound, you have overcounted. Use the complement product.",
+  "back": "<b>Faulty line:</b> L3: the pair events are disjoint.<br><b>Why it fails:</b> Pair events overlap: one triple of people can produce several coincident pairs. Summing indicators gives an upper bound (the union bound), not the probability.<br><b>Correct answer:</b> \\(P=1-\\prod_{i=0}^{22}\\dfrac{365-i}{365}\\approx0.507\\).<br><b>Smell:</b> A sum of event probabilities is an upper bound on the probability of their union (Boole's inequality), with equality only for disjoint events. Overlapping events need the complement product or inclusion-exclusion.",
   "tags": [
    "s_indicators",
    "s_inclusion_exclusion",
@@ -194,7 +194,7 @@
  {
   "type": "basic",
   "front": "\\(X\\) is a fair die roll. Find \\(E[1/X]\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> \\(E[X]=7/2\\).<br><b>L2.</b> For a positive variable, \\(E[1/X]=1/E[X]\\).<br><b>L3.</b> So \\(E[1/X]=2/7\\approx0.286\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
-  "back": "<b>Faulty line:</b> L2: \\(E[1/X]=1/E[X]\\).<br><b>Why it fails:</b> Reciprocal is convex, so Jensen gives \\(E[1/X]\\ge1/E[X]\\). Equality holds only for a constant \\(X\\).<br><b>Correct answer:</b> \\(E[1/X]=\\frac16\\left(1+\\tfrac12+\\tfrac13+\\tfrac14+\\tfrac15+\\tfrac16\\right)=\\tfrac{49}{120}\\approx0.408\\).<br><b>Smell:</b> For convex \\(f\\), \\(E[f(X)]\\ge f(E[X])\\). Any \\(E[1/X]\\), \\(E[e^{X}]\\), \\(E[X^2]\\) differs from the function of the mean.",
+  "back": "<b>Faulty line:</b> L2: \\(E[1/X]=1/E[X]\\).<br><b>Why it fails:</b> Reciprocal is convex, so Jensen gives \\(E[1/X]\\ge1/E[X]\\). Equality holds only for a constant \\(X\\).<br><b>Correct answer:</b> \\(E[1/X]=\\frac16\\left(1+\\tfrac12+\\tfrac13+\\tfrac14+\\tfrac15+\\tfrac16\\right)=\\tfrac{49}{120}\\approx0.408\\).<br><b>Smell:</b> For convex \\(f\\), \\(E[f(X)]\\ge f(E[X])\\). For non-constant \\(X\\), each of \\(E[1/X]\\), \\(E[e^{X}]\\), \\(E[X^2]\\) strictly exceeds the function evaluated at \\(E[X]\\).",
   "tags": [
    "s_convexity_jensen",
    "dice",
@@ -216,7 +216,7 @@
  {
   "type": "basic",
   "front": "\\(U_1,U_2\\) are independent uniform on \\([0,1]\\). Find \\(E[\\max(U_1,U_2)]\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> Each \\(U_i\\) has mean \\(1/2\\), with \\(P(U_i\\le x)=x\\).<br><b>L2.</b> \\(E[\\max(U_1,U_2)]=\\max(E[U_1],E[U_2])=1/2\\), since both have the same mean.<br><b>L3.</b> So the expected maximum is \\(1/2\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
-  "back": "<b>Faulty line:</b> L2: \\(E[\\max]=\\max(E)\\).<br><b>Why it fails:</b> Expectation is linear, but \\(\\max\\) is not. The maximum is convex in the pair, so \\(E[\\max]\\ge\\max E\\), strictly here.<br><b>Correct answer:</b> \\(P(\\max\\le x)=x^2\\), density \\(2x\\), so \\(E[\\max]=\\int_0^1 2x^2dx=\\tfrac23\\).<br><b>Smell:</b> \\(E[\\max]\\ge\\max E\\) always, with equality only when the variables are a.s. equal. Compute the distribution of the max before taking a mean.",
+  "back": "<b>Faulty line:</b> L2: \\(E[\\max]=\\max(E)\\).<br><b>Why it fails:</b> Expectation is linear, but \\(\\max\\) is not. The maximum is convex in the pair, so \\(E[\\max]\\ge\\max E\\), strictly here.<br><b>Correct answer:</b> \\(P(\\max\\le x)=x^2\\), density \\(2x\\), so \\(E[\\max]=\\int_0^1 2x^2dx=\\tfrac23\\).<br><b>Smell:</b> \\(E[\\max]\\ge\\max E\\) always, with equality only when one variable dominates the other almost surely. Compute the distribution of the max before taking a mean.",
   "tags": [
    "s_extremal",
    "s_order_statistics",
@@ -274,7 +274,7 @@
  {
   "type": "basic",
   "front": "Simple symmetric random walk from \\(0\\). Let \\(T\\) be the first time it hits \\(+1\\). Find \\(E[T]\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> \\(M_n=S_n^2-n\\) is a martingale.<br><b>L2.</b> Optional stopping: \\(E[S_T^2-T]=E[S_0^2]=0\\).<br><b>L3.</b> Since \\(S_T=1\\), \\(E[T]=E[S_T^2]=1\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
-  "back": "<b>Faulty line:</b> L2: applying optional stopping to \\(S_n^2-n\\) at \\(T\\).<br><b>Why it fails:</b> Optional stopping needs integrability, for example \\(T\\) bounded or \\(E[T]<\\infty\\). Here \\(P(T>n)\\sim\\sqrt{2/(\\pi n)}\\), so \\(E[T]=\\infty\\) and the identity does not hold.<br><b>Correct answer:</b> \\(E[T]=\\infty\\). Truncated means grow like \\(E[T\\wedge n]\\approx2\\sqrt{2n/\\pi}\\) (simulation: about 164 at \\(n=10^4\\)).<br><b>Smell:</b> Before \\(E[\\text{stopped}]=\\text{start}\\), check \\(E[T]<\\infty\\) or bounded stopping. A finite answer from a heavy-tailed stopping time is a red flag.",
+  "back": "<b>Faulty line:</b> L2: applying optional stopping to \\(S_n^2-n\\) at \\(T\\).<br><b>Why it fails:</b> Optional stopping needs integrability, for example \\(T\\) bounded or \\(E[T]<\\infty\\). Here \\(P(T>n)\\sim\\sqrt{2/(\\pi n)}\\), so \\(E[T]=\\infty\\) and the identity does not hold.<br><b>Correct answer:</b> \\(E[T]=\\infty\\). Truncated means grow like \\(E[T\\wedge n]\\approx2\\sqrt{2n/\\pi}\\) (simulation: about 157 at \\(n=10^4\\)).<br><b>Smell:</b> Before \\(E[\\text{stopped}]=\\text{start}\\), check \\(E[T]<\\infty\\) or bounded stopping. A finite answer from a heavy-tailed stopping time is a red flag.",
   "tags": [
    "s_optional_stopping",
    "s_martingale",
@@ -321,7 +321,7 @@
  {
   "type": "basic",
   "front": "Simple random walk with up-probability \\(0.6\\), start \\(0\\). Stop at the first time it hits \\(+1\\) or \\(-1\\). Find \\(P(\\text{hit }+1\\text{ first})\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> \\(S_n\\) is a martingale.<br><b>L2.</b> Optional stopping: \\(E[S_T]=S_0=0\\).<br><b>L3.</b> With \\(S_T\\in\\{+1,-1\\}\\): \\(P(+1)-(1-P(+1))=0\\), so \\(P(+1)=\\tfrac12\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
-  "back": "<b>Faulty line:</b> L1: \\(S_n\\) is a martingale.<br><b>Why it fails:</b> The mean step is \\(2p-1=0.2\\neq0\\), so \\(S_n\\) is not a martingale. The martingale is \\(S_n-0.2n\\), or the exponential \\((q/p)^{S_n}\\).<br><b>Correct answer:</b> \\(M_n=(q/p)^{S_n}\\) with \\(q/p=2/3\\): \\(E[M_T]=1\\) gives \\(\\tfrac23a+\\tfrac32(1-a)=1\\), so \\(a=\\tfrac35=0.6\\) (simulation: about 0.597).<br><b>Smell:</b> A sign-symmetric answer for an asymmetric walk is a red flag. Before optional stopping, find the martingale: zero-drift transform or exponential.",
+  "back": "<b>Faulty line:</b> L1: \\(S_n\\) is a martingale.<br><b>Why it fails:</b> The mean step is \\(2p-1=0.2\\neq0\\), so \\(S_n\\) is not a martingale. The martingale is \\(S_n-0.2n\\), or the exponential \\((q/p)^{S_n}\\).<br><b>Correct answer:</b> \\(M_n=(q/p)^{S_n}\\) with \\(q/p=2/3\\): \\(E[M_T]=1\\) gives \\(\\tfrac23a+\\tfrac32(1-a)=1\\), so \\(a=\\tfrac35=0.6\\) (simulation: about 0.60).<br><b>Smell:</b> A sign-symmetric answer for an asymmetric walk is a red flag. Before optional stopping, find the martingale: zero-drift transform or exponential.",
   "tags": [
    "s_martingale",
    "s_optional_stopping",
@@ -333,7 +333,7 @@
  {
   "type": "basic",
   "front": "Standard Brownian motion \\(W\\). Find \\(P\\!\\left(\\max_{0\\le t\\le1}W_t\\ge1\\right)\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> The reflection principle gives \\(P(\\max_{t\\le T}W_t\\ge a)=P(W_T\\ge a)\\).<br><b>L2.</b> \\(P(W_1\\ge1)=1-\\Phi(1)\\approx0.1587\\).<br><b>L3.</b> So the answer is \\(0.1587\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
-  "back": "<b>Faulty line:</b> L1: \\(P(\\max\\ge a)=P(W_T\\ge a)\\).<br><b>Why it fails:</b> Reflection at the first hitting time maps paths that end below \\(a\\) to paths ending above it. This doubles the tail: \\(P(\\max\\ge a)=2P(W_T\\ge a)\\).<br><b>Correct answer:</b> \\(2(1-\\Phi(1))\\approx0.3173\\) (a discrete walk with 1000 steps gives about 0.31, from below).<br><b>Smell:</b> Zero-drift BM: the maximum exceeds a level with about twice the endpoint probability. A factor of 1 is a sign the reflection step was skipped.",
+  "back": "<b>Faulty line:</b> L1: \\(P(\\max\\ge a)=P(W_T\\ge a)\\).<br><b>Why it fails:</b> Reflection at the first hitting time maps paths that end below \\(a\\) to paths ending above it. This doubles the tail: \\(P(\\max\\ge a)=2P(W_T\\ge a)\\).<br><b>Correct answer:</b> \\(2(1-\\Phi(1))\\approx0.3173\\) (a discrete walk with 1000 steps gives about 0.31, from below).<br><b>Smell:</b> Zero-drift BM: the maximum exceeds a level with exactly twice the endpoint probability. A factor of 1 is a sign the reflection step was skipped.",
   "tags": [
    "s_reflection",
    "brownian_motion",
@@ -389,7 +389,7 @@
  {
   "type": "basic",
   "front": "\\(X\\sim U(0,1)\\). Given \\(X>1/2\\), find \\(P(X>3/4\\mid X>1/2)\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> The conditional law of \\(X\\) given \\(X>1/2\\) is uniform on \\((1/2,1)\\).<br><b>L2.</b> The uniform distribution is memoryless, so the excess \\(X-1/2\\) has the same law as \\(X\\).<br><b>L3.</b> Hence \\(P(X>3/4\\mid X>1/2)=P(X>1/4)=3/4\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
-  "back": "<b>Faulty line:</b> L2: the uniform distribution is memoryless.<br><b>Why it fails:</b> Memorylessness characterises the exponential (and geometric) distributions only. Conditioning \\(U(0,1)\\) on \\(X>1/2\\) gives \\(U(1/2,1)\\), whose excess is \\(U(0,1/2)\\).<br><b>Correct answer:</b> \\(P(X>3/4\\mid X>1/2)=\\dfrac{P(X>3/4)}{P(X>1/2)}=\\dfrac{1/4}{1/2}=\\tfrac12\\).<br><b>Smell:</b> Memorylessness is an exponential property. For any other law compute \\(P(X>s+t)/P(X>s)\\) explicitly.",
+  "back": "<b>Faulty line:</b> L2: the uniform distribution is memoryless.<br><b>Why it fails:</b> Memorylessness characterises the exponential (and geometric) distributions only. Conditioning \\(U(0,1)\\) on \\(X>1/2\\) gives \\(U(1/2,1)\\), whose excess is \\(U(0,1/2)\\).<br><b>Correct answer:</b> \\(P(X>3/4\\mid X>1/2)=\\dfrac{P(X>3/4)}{P(X>1/2)}=\\dfrac{1/4}{1/2}=\\tfrac12\\).<br><b>Smell:</b> Memorylessness characterises the exponential (and geometric) laws. For any other law compute \\(P(X>s+t)/P(X>s)\\) explicitly.",
   "tags": [
    "s_memorylessness",
    "uniform_memoryless",
@@ -455,7 +455,7 @@
  },
  {
   "type": "basic",
-  "front": "Roll a fair die. You may stop and receive the roll, or roll once more and receive the second roll (no further rerolls). Find the optimal expected payoff.<br><br><b>Proposed solution:</b><br><b>L1.</b> Rerolling is worth \\(3.5\\) in expectation.<br><b>L2.</b> So keep the first roll only if it is strictly above \\(5\\), since a \\(4\\) is not clearly better than a reroll.<br><b>L3.</b> Expected payoff \\(=\\tfrac{5+6}{6}+\\tfrac46\\cdot3.5\\approx4.17\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "front": "Roll a fair die. You may stop and receive the roll, or roll once more and receive the second roll (no further rerolls). Find the optimal expected payoff.<br><br><b>Proposed solution:</b><br><b>L1.</b> Rerolling is worth \\(3.5\\) in expectation.<br><b>L2.</b> So keep the first roll only if it is strictly above \\(5\\), since a \\(4\\) is not clearly better than a reroll.<br><b>L3.</b> Expected payoff \\(=\\tfrac66+\\tfrac56\\cdot3.5=\\tfrac{47}{12}\\approx3.92\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
   "back": "<b>Faulty line:</b> L2: keep only if the roll is above 5.<br><b>Why it fails:</b> The stopping threshold is the continuation value, \\(3.5\\). A roll of 4 beats \\(3.5\\), so it should be kept. A margin added to the threshold leaves value on the table.<br><b>Correct answer:</b> Keep 4, 5, 6: \\(\\tfrac{4+5+6}{6}+\\tfrac36\\cdot3.5=2.5+1.75=4.25\\).<br><b>Smell:</b> The optimal stop threshold equals the continuation value. Compare each state with what waiting is worth, not with what the best outcome could be.",
   "tags": [
    "s_dynamic_programming",
@@ -537,7 +537,7 @@
  {
   "type": "basic",
   "front": "Find \\(E[e^{W_2}]\\) for standard Brownian motion \\(W\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> \\(W\\) is a martingale with \\(E[W_2]=0\\).<br><b>L2.</b> \\(e^{W_t}\\) is a martingale, since \\(W\\) is one.<br><b>L3.</b> Hence \\(E[e^{W_2}]=e^{W_0}=1\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
-  "back": "<b>Faulty line:</b> L2: \\(e^{W_t}\\) is a martingale, since \\(W\\) is one.<br><b>Why it fails:</b> Itô: \\(de^{W}=e^{W}\\,dW+\\tfrac12e^{W}\\,dt\\). The drift \\(\\tfrac12e^W\\) is non-zero, so \\(e^{W_t}\\) is not a martingale. The martingale is \\(e^{W_t-t/2}\\).<br><b>Correct answer:</b> \\(E[e^{W_t}]=e^{t/2}\\), so \\(E[e^{W_2}]=e\\approx2.718\\).<br><b>Smell:</b> Any exponential of Brownian motion has mean \\(e^{t/2}\\), from the normal moment generating function. The martingale needs the \\(-t/2\\) correction.",
+  "back": "<b>Faulty line:</b> L2: \\(e^{W_t}\\) is a martingale, since \\(W\\) is one.<br><b>Why it fails:</b> Itô: \\(de^{W}=e^{W}\\,dW+\\tfrac12e^{W}\\,dt\\). The drift \\(\\tfrac12e^W\\) is non-zero, so \\(e^{W_t}\\) is not a martingale. The martingale is \\(e^{W_t-t/2}\\).<br><b>Correct answer:</b> \\(E[e^{W_t}]=e^{t/2}\\), so \\(E[e^{W_2}]=e\\approx2.718\\).<br><b>Smell:</b> \\(W_t\\) is normal, so \\(E[e^{W_t}]=e^{t/2}\\) by the normal moment generating function. The martingale needs the \\(-t/2\\) correction.",
   "tags": [
    "s_martingale",
    "s_taylor",
@@ -548,7 +548,7 @@
  },
  {
   "type": "basic",
-  "front": "\\(S_0=100\\), \\(K=100\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\), \\(T=1\\), real-world drift \\(\\mu=10\\%\\). Price a European call.<br><br><b>Proposed solution:</b><br><b>L1.</b> The price is the discounted expected payoff under the real-world measure.<br><b>L2.</b> Under \\(P\\), \\(S_T=S_0\\exp\\!\\big((\\mu-\\sigma^2/2)T+\\sigma W_T\\big)\\).<br><b>L3.</b> So the price is \\(e^{-rT}E_P[(S_T-K)^+]\\approx13.96\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
+  "front": "\\(S_0=100\\), \\(K=100\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\), \\(T=1\\), real-world drift \\(\\mu=10\\%\\). Price a European call.<br><br><b>Proposed solution:</b><br><b>L1.</b> The price is the discounted expected payoff under the real-world measure.<br><b>L2.</b> Under \\(P\\), \\(S_T=S_0\\exp\\!\\big((\\mu-\\sigma^2/2)T+\\sigma W_T\\big)\\).<br><b>L3.</b> So the price is \\(e^{-rT}E_P[(S_T-K)^+]\\approx13.95\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
   "back": "<b>Faulty line:</b> L1: the price is the discounted expectation under \\(P\\).<br><b>Why it fails:</b> Discounted expectations are taken under the risk-neutral measure \\(Q\\), where the drift is \\(r\\) (replication). Under \\(P\\) the drift \\(\\mu\\) carries a risk premium that is not priced.<br><b>Correct answer:</b> Under \\(Q\\): \\(S_T=S_0\\exp((r-\\sigma^2/2)T+\\sigma W^Q_T)\\). Black-Scholes gives \\(10.45\\) (simulation confirms).<br><b>Smell:</b> If a price depends on the real-world drift \\(\\mu\\), it is wrong. The drift in a pricing expectation must be \\(r\\) (or \\(r-q\\)). Test: the price must not change when \\(\\mu\\) changes.",
   "tags": [
    "s_change_of_measure",
@@ -572,7 +572,7 @@
  {
   "type": "basic",
   "front": "Find \\(\\mathrm{Var}\\!\\left(\\int_0^1 t\\,dW_t\\right)\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> Let the integrand be \\(h_t=t\\).<br><b>L2.</b> Itô isometry: \\(\\mathrm{Var}\\!\\left(\\int h\\,dW\\right)=\\int E[h_t]\\,dt\\).<br><b>L3.</b> So \\(\\mathrm{Var}=\\int_0^1 t\\,dt=\\tfrac12\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
-  "back": "<b>Faulty line:</b> L2: the isometry integrates \\(E[h_t]\\).<br><b>Why it fails:</b> The isometry integrates \\(E[h_t^2]\\), the square of the integrand. For \\(h_t=t\\) that is \\(t^2\\), not \\(t\\).<br><b>Correct answer:</b> \\(\\mathrm{Var}=\\int_0^1 t^2\\,dt=\\tfrac13\\) (simulation: about 0.339).<br><b>Smell:</b> The isometry squares the integrand. Dimension check: the variance of \\(\\int h\\,dW\\) has the units of \\(h^2\\) times time.",
+  "back": "<b>Faulty line:</b> L2: the isometry integrates \\(E[h_t]\\).<br><b>Why it fails:</b> The isometry integrates \\(E[h_t^2]\\), the square of the integrand. For \\(h_t=t\\) that is \\(t^2\\), not \\(t\\).<br><b>Correct answer:</b> \\(\\mathrm{Var}=\\int_0^1 t^2\\,dt=\\tfrac13\\) (simulation: about 0.33).<br><b>Smell:</b> The isometry squares the integrand. Dimension check: the variance of \\(\\int h\\,dW\\) has the units of \\(h^2\\) times time.",
   "tags": [
    "s_martingale",
    "isometry",
@@ -683,7 +683,7 @@
  {
   "type": "basic",
   "front": "A two-sided test that a coin is fair gives \\(p=0.03\\). Someone says: 'there is a 97% chance the coin is biased.' Assess the statement.<br><br><b>Proposed solution:</b><br><b>L1.</b> A p-value of 0.03 means data this extreme occur on 3% of repetitions if the coin is fair.<br><b>L2.</b> The p-value is the probability that the null hypothesis is true, given the data.<br><b>L3.</b> Hence \\(P(H_0\\mid\\text{data})=0.03\\), so the coin is biased with probability 0.97.<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
-  "back": "<b>Faulty line:</b> L2: the p-value as \\(P(H_0\\mid\\text{data})\\).<br><b>Why it fails:</b> The p-value is \\(P(\\text{data this extreme}\\mid H_0)\\). Swapping the conditional is the base-rate error again. \\(P(H_0\\mid\\text{data})\\) needs a prior and the likelihood under the alternative.<br><b>Correct answer:</b> The p-value alone does not determine \\(P(H_0\\mid\\text{data})\\). Example: with equal prior and likelihoods \\(0.03\\) under \\(H_0\\) and \\(0.3\\) under \\(H_1\\), \\(P(H_0\\mid\\text{data})=0.09\\).<br><b>Smell:</b> A p-value conditions on the null. Any statement 'the null is probably true' needs a prior and the alternative. Flip the conditional before reading a p-value as a posterior.",
+  "back": "<b>Faulty line:</b> L2: the p-value as \\(P(H_0\\mid\\text{data})\\).<br><b>Why it fails:</b> The p-value is \\(P(\\text{data this extreme}\\mid H_0)\\). Swapping the conditional is the base-rate error again. \\(P(H_0\\mid\\text{data})\\) needs a prior and the likelihood under the alternative.<br><b>Correct answer:</b> The p-value alone does not determine \\(P(H_0\\mid\\text{data})\\). Example: with equal prior and a likelihood ratio of 10 in favour of \\(H_1\\), \\(P(H_0\\mid\\text{data})=1/11\\approx0.09\\). The posterior depends on the likelihood ratio, not on the p-value alone.<br><b>Smell:</b> A p-value conditions on the null. Any statement 'the null is probably true' needs a prior and the alternative. Flip the conditional before reading a p-value as a posterior.",
   "tags": [
    "s_bayes",
    "p_value",
@@ -716,7 +716,7 @@
  {
   "type": "basic",
   "front": "100 samples, 1000 pure-noise features, labels independent of features. Pick the 10 features most correlated with the label using all data, then estimate accuracy by 5-fold cross-validation on those 10 features. Report the accuracy.<br><br><b>Proposed solution:</b><br><b>L1.</b> Feature selection is part of model fitting, so using all data is fine as long as the classifier is cross-validated.<br><b>L2.</b> Cross-validated accuracy is an unbiased estimate of out-of-sample accuracy.<br><b>L3.</b> So the CV accuracy of about 0.8 is an honest measure of skill.<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
-  "back": "<b>Faulty line:</b> L1: selecting features on all data is fine if the classifier is cross-validated.<br><b>Why it fails:</b> Selection used the labels of the held-out folds. The chosen features fit noise in the test folds, so the CV score is leaked. Any step that uses the labels must be inside the CV loop.<br><b>Correct answer:</b> With selection repeated inside each training fold, honest accuracy is about 0.50 (chance). The leaked pipeline gave about 0.82 in simulation.<br><b>Smell:</b> Any step that uses labels (feature selection, scaling with label statistics, tuning) belongs inside the CV loop. A suspiciously high score on pure noise is leakage.",
+  "back": "<b>Faulty line:</b> L1: selecting features on all data is fine if the classifier is cross-validated.<br><b>Why it fails:</b> Selection used the labels of the held-out folds. The chosen features fit noise in the test folds, so the CV score is leaked. Any step that uses the labels must be inside the CV loop.<br><b>Correct answer:</b> With selection repeated inside each training fold, honest accuracy is about 0.50 (chance). The leaked pipeline gave about 0.80 in simulation.<br><b>Smell:</b> Any step that uses labels (feature selection, scaling with label statistics, tuning) belongs inside the CV loop. A suspiciously high score on pure noise is leakage.",
   "tags": [
    "s_information_design",
    "leakage",
@@ -739,7 +739,7 @@
  {
   "type": "basic",
   "front": "Population \\(\\{1,\\dots,10\\}\\). Draw 5 without replacement and let \\(\\bar X\\) be the sample mean. Find \\(\\mathrm{Var}(\\bar X)\\).<br><br><b>Proposed solution:</b><br><b>L1.</b> The population variance is \\(\\sigma^2=8.25\\) (divisor 10).<br><b>L2.</b> Sample means of \\(n\\) draws have variance \\(\\sigma^2/n\\).<br><b>L3.</b> So \\(\\mathrm{Var}(\\bar X)=8.25/5=1.65\\).<br><br><i>Find the flaw. Which line, why, and what is the right answer?</i>",
-  "back": "<b>Faulty line:</b> L2: sample means have variance \\(\\sigma^2/n\\).<br><b>Why it fails:</b> Draws without replacement are negatively correlated, so the finite-population correction \\(\\frac{N-n}{N-1}\\) applies. Sampling half the population removes half the variance.<br><b>Correct answer:</b> \\(\\mathrm{Var}(\\bar X)=\\dfrac{\\sigma^2}{n}\\cdot\\dfrac{N-n}{N-1}=\\dfrac{8.25}{5}\\cdot\\dfrac{5}{9}=\\tfrac{11}{12}\\approx0.917\\) (checked by enumerating all 252 subsets).<br><b>Smell:</b> Sanity: if \\(n=N\\) the mean is exact, so the variance must vanish. A formula that does not go to 0 when you sample everything has forgotten the correction.",
+  "back": "<b>Faulty line:</b> L2: sample means have variance \\(\\sigma^2/n\\).<br><b>Why it fails:</b> Draws without replacement are negatively correlated, so the finite-population correction \\(\\frac{N-n}{N-1}\\) applies. Here the correction factor is \\(5/9\\), so the naive \\(\\sigma^2/n\\) overstates the variance by 80%.<br><b>Correct answer:</b> \\(\\mathrm{Var}(\\bar X)=\\dfrac{\\sigma^2}{n}\\cdot\\dfrac{N-n}{N-1}=\\dfrac{8.25}{5}\\cdot\\dfrac{5}{9}=\\tfrac{11}{12}\\approx0.917\\) (checked by enumerating all 252 subsets).<br><b>Smell:</b> Sanity: if \\(n=N\\) the mean is exact, so the variance must vanish. A formula that does not go to 0 when you sample everything has forgotten the correction.",
   "tags": [
    "s_symmetry",
    "fpc",
