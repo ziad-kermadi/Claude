@@ -1,0 +1,53 @@
+{
+  "types": {
+    "insight": {
+      "emoji": "★",
+      "name": "Insight",
+      "description": "Explain specific implementation decisions in the code just written. Focus on the 'why' behind choices, not general concepts.",
+      "when": "After writing or modifying non-trivial code",
+      "enabled": true
+    },
+    "flow": {
+      "emoji": "⟳",
+      "name": "Flow",
+      "description": "Trace the execution path of what was just written. Map what enters, what transforms, what exits. Especially useful for async code, crawlers, and pipelines.",
+      "when": "After writing complex multi-step or async code",
+      "enabled": false
+    },
+    "tradeoff": {
+      "emoji": "⬡",
+      "name": "Tradeoff",
+      "description": "Explain what alternatives existed and why this approach was chosen. Ground it in context: 'in this codebase, X matters more than Y, so we chose Z'.",
+      "when": "After a non-obvious architectural or design decision",
+      "enabled": true
+    },
+    "pattern": {
+      "emoji": "❐",
+      "name": "Pattern",
+      "description": "Identify the design pattern in use and explain why it fits this specific situation — not generically, but 'this pattern fits here because of X constraint'.",
+      "when": "When a recognizable software pattern is being applied",
+      "enabled": true
+    },
+    "levelup": {
+      "emoji": "▲",
+      "name": "Level Up",
+      "description": "Extract one transferable insight that applies beyond this specific code. What can be taken from this and applied to other contexts, languages, or problems?",
+      "when": "After solving something non-trivial with broader applicability",
+      "enabled": true
+    },
+    "concept": {
+      "emoji": "🎓",
+      "name": "Concept",
+      "description": "Define a term, pattern, paradigm, or concept that appears in the code. Direct explanation, no academicism, grounded in 'why this matters here'. Always check the glossary first — if already explained, reference it instead of repeating.",
+      "when": "When a technical term appears that an empirical developer may not know",
+      "enabled": true
+    },
+    "curious": {
+      "emoji": "⊛",
+      "name": "Curious",
+      "description": "Before executing significant tasks, explicitly question assumptions. Ask: why this approach? What are we really trying to achieve? What am I taking for granted? What could go wrong with my assumptions? Express genuine doubt — do not just execute blindly.",
+      "when": "Before starting any significant implementation, decision, or task",
+      "enabled": true
+    }
+  }
+}

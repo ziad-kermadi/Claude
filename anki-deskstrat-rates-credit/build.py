@@ -17,6 +17,26 @@ SUBDECKS = {
     "10_xva_funding": "XVA & Funding::XVA, Funding & Capital",
     "11_repo_financing": "Rates::5 Repo, Financing & Balance Sheet",
     "12_structured_exotics": "Structured Products::Exotics & Structuring",
+    "13_found_prob": "0 Foundations::1 Probability & Stochastic Calculus",
+    "14_found_fi": "0 Foundations::2 Fixed-Income Maths & Instruments",
+    "15_found_deriv": "0 Foundations::3 Derivatives Pricing Basics",
+    "16_found_stats": "0 Foundations::4 Linear Algebra, Statistics & Econometrics",
+    "17_cpp_m1": "Quant & Coding::C++ Course::1 Language Core",
+    "17_cpp_m2": "Quant & Coding::C++ Course::2 Classes, RAII & Polymorphism",
+    "17_cpp_m3": "Quant & Coding::C++ Course::3 Memory, Ownership & Move Semantics",
+    "17_cpp_m4": "Quant & Coding::C++ Course::4 Templates & Generic Programming",
+    "17_cpp_m5": "Quant & Coding::C++ Course::5 STL, Iterators & Lambdas",
+    "17_cpp_m6": "Quant & Coding::C++ Course::6 Concurrency & Performance",
+    "17_cpp_m7": "Quant & Coding::C++ Course::7 Quant Library Design & Interview Problems",
+    "18_desk_1": "Desk Practice::1 Daily Workflow & P&L Explain",
+    "18_desk_2": "Desk Practice::2 Marking, Valuation Control & Model Governance",
+    "18_desk_3": "Desk Practice::3 Booking, Lifecycle, Clearing & Systems",
+    "18_desk_4": "Desk Practice::4 Rates Market Making & E-Trading",
+    "18_desk_5": "Desk Practice::5 Credit Trading Desk Practice",
+    "18_desk_6": "Desk Practice::6 Rates Client Flows & Event Days",
+    "18_desk_7": "Desk Practice::7 Risk Management, Limits & Hedging Decisions",
+    "18_desk_8": "Desk Practice::8 Strat Deliverables & Tooling",
+    "18_desk_9": "Desk Practice::9 Market Episodes & Lessons",
 }
 ROOT = "DeskStrat VP London"
 
@@ -72,7 +92,7 @@ def clean(t):
 decks = {ROOT: genanki.Deck(did(ROOT), ROOT)}
 n = 0
 for f in sorted(glob.glob(os.path.join(D, "cards", "*.json"))):
-    key = os.path.basename(f)[:-5].replace("_deep", "")
+    key = os.path.basename(f)[:-5].split("__")[0].replace("_deep", "")
     name = f"{ROOT}::{SUBDECKS[key]}"
     for part in range(1, name.count("::") + 1):
         pass

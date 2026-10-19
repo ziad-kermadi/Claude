@@ -31,3 +31,18 @@ Three formats are required in every new file, in roughly equal measure:
 3. **Worked case studies**: a realistic multi-step problem with concrete numbers (notional, rates, spreads, vols), solved step by step with intermediate results, final answer, and a sanity check. Tag `case_study`. Do the arithmetic carefully (use python to verify every number).
 Also keep ~15% cloze for must-know formulas/conventions.
 Use python3 to verify every numerical result before writing it.
+
+## v3 expansion — additional rules
+v3 adds a foundations layer, a C++ course, a desk-practice layer, reinforcement of thin subdecks and gap topics. All earlier rules still apply (HTML, MathJax, JSON schema, answer structure, factual care, python-verified numbers).
+
+**Difficulty tag (mandatory, exactly one per card):** `lvl_foundation` (graduate-quant baseline the rest of the deck assumes), `lvl_vp_core` (what a VP candidate must answer cleanly), `lvl_stretch` (top-decile / final-round curveball). Tags may go to 7 including this one.
+
+**No duplicates:** `verify/existing_fronts_v2.txt` lists every existing card front by file. Read the part relevant to your topic first and do not repeat a card already there; go deeper or adjacent instead.
+
+**Foundations cards (`lvl_foundation` mostly):** teach, do not just test. Answer structure: one-line answer → intuition → precise statement/formula → small worked example with numbers → "Used in the deck for:" line naming where it reappears (e.g. "annuity measure in swaption pricing"). Build chains that climb from basic to the level the VP cards assume. Still no fluff: no "finance is important" sentences.
+
+**C++ course cards:** the learner is a quant who knows Python but little C++. Each card teaches one idea with a short, complete, compilable snippet in `<pre><code>` (HTML-escape `<`, `>` and `&` inside code as `&lt;` `&gt;` `&amp;`). Compile every snippet that has a `main` (or wrap it in one) with `g++ -std=c++20 -Wall -Wextra -O2` in a scratch dir and fix errors before writing. Answer structure: what it is → code → what the code prints/does → "Interview trap:" line (the classic mistake or follow-up). Mix basic cards, cloze for syntax/rules, "what does this print / what is wrong with this code" cards, and implement-it cards.
+
+**Desk-practice cards:** make the candidate sound like they have sat on a London rates/credit desk. Concrete workflows, numbers, timings, systems-agnostic where vendor specifics are uncertain (say "the booking system", not invented screen names). Bloomberg functions only if certain (e.g. YAS, SWPM, CDSW, OVML, VCUB, ALLQ, BVAL). Scenario style: "It is 16:15, the P&amp;L explain shows X unexplained — walk through how you find it". Answers give the exact steps, the checks, the numbers, and the trader/risk/control-function angle. No behavioural/HR questions; every card must have a technical answer.
+
+**Writing method:** build the cards in a python script (a list of dicts) and dump with `json.dump(cards, f, ensure_ascii=False, indent=1)`; for >30 cards write in 2-3 scripts appending to the same list via an intermediate JSON. Validate at the end and print the count and the tag counts for lvl_*.
