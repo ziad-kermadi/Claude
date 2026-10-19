@@ -56,7 +56,7 @@
  {
   "type": "basic",
   "front": "When should you reach for <i>Markov chains</i>, and when does it fail?",
-  "back": "<b>Triggers:</b> The future depends only on the current state; long-run fractions of time; stationary distribution; a process with a finite set of states such as weather, queues or inventory.<br><b>Move:</b> Write the transition matrix P, solve \\(\\pi P=\\pi\\) with \\(\\sum\\pi_i=1\\). For expected hitting times, use first-step conditioning.<br><b>Example:</b> Two states: \\(0\\to1\\) with probability 0.3 and \\(1\\to0\\) with probability 0.1. Balance gives \\(\\pi_0\\cdot0.3=\\pi_1\\cdot0.1\\), so \\(\\pi_0=\\tfrac14\\).<br><b>Fails when:</b> When the history matters and you have not enlarged the state. Reducible or periodic chains: the stationary distribution may be non-unique, and the time-average is then the right object.",
+  "back": "<b>Triggers:</b> The future depends only on the current state; long-run fractions of time; stationary distribution; a process with a finite set of states such as weather, queues or inventory.<br><b>Move:</b> Write the transition matrix P, solve \\(\\pi P=\\pi\\) with \\(\\sum\\pi_i=1\\). For expected hitting times, use first-step conditioning.<br><b>Example:</b> Two states: \\(0\\to1\\) with probability 0.3 and \\(1\\to0\\) with probability 0.1. Balance gives \\(\\pi_0\\cdot0.3=\\pi_1\\cdot0.1\\), so \\(\\pi_0=\\tfrac14\\).<br><b>Fails when:</b> When the history matters and you have not enlarged the state. Reducible chains can have many stationary distributions. Periodic chains still have a unique stationary distribution when irreducible, but \\(P^n\\) does not converge, so the long-run time-average is the right object.",
   "tags": [
    "s_markov_chain",
    "markov",
@@ -88,7 +88,7 @@
  {
   "type": "basic",
   "front": "When should you reach for <i>stars and bars</i>, and when does it fail?",
-  "back": "<b>Triggers:</b> Nonnegative integer solutions of \\(x_1+\\dots+x_k=n\\); identical items into distinct boxes; multisets.<br><b>Move:</b> \\(\\binom{n+k-1}{k-1}\\) solutions. A lower bound \\(x_i\\ge1\\) shifts to \\(\\binom{n-1}{k-1}\\). Upper bounds need inclusion-exclusion.<br><b>Example:</b> \\(x+y+z=10\\) with \\(x,y,z\\ge0\\): \\(\\binom{12}{2}=66\\). With \\(x,y,z\\ge1\\): \\(\\binom{9}{2}=36\\).<br><b>Fails when:</b> Upper bounds (each \\(\\le 4\\) gives 6, not \\(66\\) minus a naive count); distinguishable items (then \\(k^n\\)).",
+  "back": "<b>Triggers:</b> Nonnegative integer solutions of \\(x_1+\\dots+x_k=n\\); identical items into distinct boxes; multisets.<br><b>Move:</b> \\(\\binom{n+k-1}{k-1}\\) solutions. A lower bound \\(x_i\\ge1\\) shifts to \\(\\binom{n-1}{k-1}\\). Upper bounds need inclusion-exclusion.<br><b>Example:</b> \\(x+y+z=10\\) with \\(x,y,z\\ge0\\): \\(\\binom{12}{2}=66\\). With \\(x,y,z\\ge1\\): \\(\\binom{9}{2}=36\\).<br><b>Fails when:</b> Upper bounds: with each \\(x_i\\le4\\) only 6 solutions remain, so the plain formula overcounts; subtract the violating cases by inclusion-exclusion. Also fails for distinguishable items (then \\(k^n\\)).",
   "tags": [
    "s_stars_bars",
    "combinatorics",
@@ -174,7 +174,7 @@
  {
   "type": "basic",
   "front": "When should you reach for <i>optional stopping</i>, and when does it fail?",
-  "back": "<b>Triggers:</b> A stopping rule applied to a fair game; \"expected payoff if you stop when\"; a claim that a clever stopping time changes the mean.<br><b>Move:</b> For a martingale and a bounded stopping time, \\(E[M_\\tau]=M_0\\). Check the boundedness (or uniform integrability) before using it.<br><b>Example:</b> Fair \\(\\pm1\\) walk from 0 stopped on hitting \\(-10\\) or \\(+10\\): bounded in expectation, so \\(E[S_\\tau]=0\\).<br><b>Fails when:</b> Unbounded \\(\\tau\\): stop a fair walk at its first hit of +1. Then \\(S_\\tau=1\\) always, yet \\(S_0=0\\), so the naive equation fails.",
+  "back": "<b>Triggers:</b> A stopping rule applied to a fair game; \"expected payoff if you stop when\"; a claim that a clever stopping time changes the mean.<br><b>Move:</b> For a martingale and a bounded stopping time, \\(E[M_\\tau]=M_0\\). Check the boundedness (or uniform integrability) before using it.<br><b>Example:</b> Fair \\(\\pm1\\) walk from 0 stopped on hitting \\(-10\\) or \\(+10\\): the stopped walk is bounded by 10 (\\(|S_{t\\wedge\\tau}|\\le10\\)), so \\(E[S_\\tau]=0\\).<br><b>Fails when:</b> Unbounded \\(\\tau\\): stop a fair walk at its first hit of +1. Then \\(S_\\tau=1\\) always, yet \\(S_0=0\\), so the naive equation fails.",
   "tags": [
    "s_optional_stopping",
    "random_walk",
@@ -295,7 +295,7 @@
  {
   "type": "basic",
   "front": "When should you reach for <i>dimensional analysis</i>, and when does it fail?",
-  "back": "<b>Triggers:</b> A formula with an unknown constant; \"how does the answer scale with a or n\"; a quick units sanity check.<br><b>Move:</b> Express the answer in the units of the inputs. Only one combination of parameters has the right units; fix the exponents and compute the dimensionless constant separately.<br><b>Example:</b> Brownian motion exits \\((-a,a)\\) in expected time \\(a^2\\): time has units of length squared, so the form is forced and the constant (here 1) comes from a martingale.<br><b>Fails when:</b> Dimensionless constants (\\(\\pi\\), \\(\\tfrac12\\), \\(\\log2\\)) are invisible to units. Dimensions fix scaling only.",
+  "back": "<b>Triggers:</b> A formula with an unknown constant; \"how does the answer scale with a or n\"; a quick units sanity check.<br><b>Move:</b> Express the answer in the units of the inputs. Only one combination of parameters has the right units; fix the exponents and compute the dimensionless constant separately.<br><b>Example:</b> Standard Brownian motion exits \\((-a,a)\\) in expected time \\(a^2\\): time has units of length squared, so the form is forced and the constant (here 1) comes from a martingale.<br><b>Fails when:</b> Dimensionless constants (\\(\\pi\\), \\(\\tfrac12\\), \\(\\log2\\)) are invisible to units. Dimensions fix scaling only.",
   "tags": [
    "s_dimensional_analysis",
    "stochastic_calculus",
@@ -435,7 +435,7 @@
  {
   "type": "basic",
   "front": "When should you reach for <i>information design</i>, and when does it fail?",
-  "back": "<b>Triggers:</b> A sender chooses what information a receiver gets before the receiver acts; \"design the experiment to maximise the sender's payoff\"; persuasion.<br><b>Move:</b> The optimal value is the concave envelope of the sender's payoff over posterior beliefs. Split the prior into posteriors that make the receiver just indifferent.<br><b>Example:</b> Prior \\(P(\\text{good})=\\tfrac13\\); the receiver acts iff posterior \\(\\ge\\tfrac12\\). Signal 'good' always in the good state and with probability \\(\\tfrac12\\) in the bad state: posterior \\(=\\tfrac12\\), and the receiver acts with probability \\(\\tfrac23\\), against 0 without information.<br><b>Fails when:</b> It assumes the sender can commit to a signal scheme (no commitment, no gain). Tie-breaking and the receiver's preferences must be specified.",
+  "back": "<b>Triggers:</b> A sender chooses what information a receiver gets before the receiver acts; \"design the experiment to maximise the sender's payoff\"; persuasion.<br><b>Move:</b> The optimal value is the concave envelope of the sender's payoff over posterior beliefs. Split the prior into posteriors that make the receiver just indifferent.<br><b>Example:</b> Prior \\(P(\\text{good})=\\tfrac13\\); the receiver acts iff posterior \\(\\ge\\tfrac12\\). Signal 'good' always in the good state and with probability \\(\\tfrac12\\) in the bad state: posterior \\(=\\tfrac12\\), and the receiver acts (ties broken towards acting) with probability \\(\\tfrac23\\), against 0 without information.<br><b>Fails when:</b> It assumes the sender can commit to a signal scheme (no commitment, no gain). Tie-breaking and the receiver's preferences must be specified.",
   "tags": [
    "s_information_design",
    "games",
@@ -493,7 +493,7 @@
  {
   "type": "basic",
   "front": "Same walk: fair coin, start at 3, absorbing at 0 and 10. Expected number of flips until absorption?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
-  "back": "<b>Structure:</b> Martingale \\(S_n^2-n\\) with optional stopping<br><b>Trigger:</b> The question asks for a time. For a fair walk \\(S_n^2-n\\) is a martingale, so the time is the variance-like term.<br><b>Key move:</b> \\(E[\\tau]=E[S_\\tau^2]\\) gives \\(E[\\tau]=k(N-k)=3\\cdot7=21\\).<br><b>Answer:</b> \\(21\\)<br><b>Contrast:</b> Same walk as the hitting-probability drill; that one needs only S, not the martingale correction.",
+  "back": "<b>Structure:</b> Martingale \\(S_n^2-n\\) with optional stopping<br><b>Trigger:</b> The question asks for a time. For a fair walk \\(S_n^2-n\\) is a martingale, so the expected time is read off from the endpoint.<br><b>Key move:</b> \\(E[\\tau]=E[S_\\tau^2]\\) gives \\(E[\\tau]=k(N-k)=3\\cdot7=21\\).<br><b>Answer:</b> \\(21\\)<br><b>Contrast:</b> Same walk as the hitting-probability drill; that one needs only S, not the martingale correction.",
   "tags": [
    "s_martingale",
    "s_optional_stopping",
@@ -549,7 +549,7 @@
  {
   "type": "basic",
   "front": "Simple symmetric random walk from 0, ten steps of \\(\\pm1\\) with probability 1/2 each. Probability it reaches \\(+3\\) at some step?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
-  "back": "<b>Structure:</b> Reflection principle<br><b>Trigger:</b> A path that touches a level, then the question is about the endpoint.<br><b>Key move:</b> \\(P(\\max\\ge3)=P(S_{10}\\ge3)+P(S_{10}>3)\\). Reflect the path after the first hit.<br><b>Answer:</b> \\(\\tfrac{11}{32}\\approx0.344\\)<br><b>Contrast:</b> Forgetting the \\(P(S_{10}>3)\\) term gives \\(0.172\\).",
+  "back": "<b>Structure:</b> Reflection principle<br><b>Trigger:</b> The question asks whether a walk ever reaches a level; the endpoint distribution is the easy quantity to compute.<br><b>Key move:</b> \\(P(\\max\\ge3)=P(S_{10}\\ge3)+P(S_{10}>3)\\). Reflect the path after the first hit.<br><b>Answer:</b> \\(\\tfrac{11}{32}\\approx0.344\\)<br><b>Contrast:</b> Forgetting the \\(P(S_{10}>3)\\) term gives \\(0.172\\).",
   "tags": [
    "s_reflection",
    "random_walk",

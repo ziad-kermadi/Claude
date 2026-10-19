@@ -48,7 +48,7 @@
  {
   "type": "basic",
   "front": "How many subsets of \\(\\{1,2,\\dots,10\\}\\) contain no two consecutive integers?",
-  "back": "<b>Answer:</b> \\(144=F_{12}\\)<br><b>Structure:</b> s_bijection to binary strings with no two adjacent 1s; the count obeys a Fibonacci recursion.<br><b>Key move:</b> Let \\(a_n\\) count valid strings of length \\(n\\). If the last bit is 0, the rest is any valid string of length \\(n-1\\). If it is 1, the bit before must be 0, leaving length \\(n-2\\). So \\(a_n=a_{n-1}+a_{n-2}\\).<br><b>Working:</b> \\(a_0=1,\\ a_1=2,\\ a_2=3,\\ a_3=5,\\dots,\\ a_{10}=144\\), the Fibonacci number \\(F_{12}\\).<br><b>Sanity check:</b> Brute force over \\(2^{10}=1024\\) subsets gives 144; about 14% of subsets qualify, which is plausible as the density decays like \\(\\varphi^{-n}\\).<br><b>Transfer:</b> Non-adjacent seating; no two consecutive heads in a coin string; codes with no adjacent 1s.",
+  "back": "<b>Answer:</b> \\(144=F_{12}\\)<br><b>Structure:</b> s_bijection to binary strings with no two adjacent 1s; the count obeys a Fibonacci recursion.<br><b>Key move:</b> Let \\(a_n\\) count valid strings of length \\(n\\). If the last bit is 0, the rest is any valid string of length \\(n-1\\). If it is 1, the bit before must be 0, leaving length \\(n-2\\). So \\(a_n=a_{n-1}+a_{n-2}\\).<br><b>Working:</b> \\(a_0=1,\\ a_1=2,\\ a_2=3,\\ a_3=5,\\dots,\\ a_{10}=144\\), the Fibonacci number \\(F_{12}\\).<br><b>Sanity check:</b> Brute force over \\(2^{10}=1024\\) subsets gives 144; about 14% of subsets qualify, which is plausible as the density decays like \\((\\varphi/2)^n\\).<br><b>Transfer:</b> Non-adjacent seating; no two consecutive heads in a coin string; codes with no adjacent 1s.",
   "tags": [
    "fmt_solve",
    "s_bijection",
@@ -419,7 +419,7 @@
  {
   "type": "basic",
   "front": "A 5-card hand is dealt from a standard 52-card deck. What is the probability of four of a kind?",
-  "back": "<b>Answer:</b> \\(\\dfrac{13\\cdot 48}{\\binom{52}{5}}=\\dfrac{624}{2598960}=\\dfrac{1}{4165}\\approx 0.00024\\)<br><b>Structure:</b> s_bijection: hands are counted by their rank structure.<br><b>Key move:</b> Choose the rank with four copies (13 ways), then the fifth card from the other 48.<br><b>Working:</b> \\(13\\cdot 48=624\\); \\(\\binom{52}{5}=2598960\\).<br><b>Sanity check:</b> Four of a kind (1 in 4165) is far rarer than a flush (about 1 in 500).<br><b>Transfer:</b> Four of a kind in 7-card hold'em; four identical symbols in a random 5-letter string.",
+  "back": "<b>Answer:</b> \\(\\dfrac{13\\cdot 48}{\\binom{52}{5}}=\\dfrac{624}{2598960}=\\dfrac{1}{4165}\\approx 0.00024\\)<br><b>Structure:</b> s_bijection: hands are counted by their rank structure.<br><b>Key move:</b> Choose the rank with four copies (13 ways), then the fifth card from the other 48.<br><b>Working:</b> \\(13\\cdot 48=624\\); \\(\\binom{52}{5}=2598960\\).<br><b>Sanity check:</b> Four of a kind (1 in 4165) is far rarer than a flush (about 1 in 500).<br><b>Transfer:</b> Four of a kind in 7-card hold'em (same rank-count argument, different hand size).",
   "tags": [
    "fmt_solve",
    "s_bijection",
@@ -485,7 +485,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: POKER 4/4]</b> Generalise: a 7-card hand dealt from a standard 52-card deck. What is the probability that all seven cards have different ranks (no pair at all)?",
-  "back": "<b>Answer:</b> \\(\\dfrac{\\binom{13}{7}4^7}{\\binom{52}{7}}=\\dfrac{28114944}{133784560}\\approx 0.21012\\)<br><b>Structure:</b> s_complement and s_bijection: no repeated rank means choosing 7 distinct ranks and one suit for each.<br><b>Key move:</b> Choose 7 distinct ranks (\\(\\binom{13}{7}\\)), then one of 4 suits for each card.<br><b>Working:</b> \\(\\binom{13}{7}=1716\\), \\(4^7=16384\\), product \\(28114944\\); \\(\\binom{52}{7}=133784560\\).<br><b>Sanity check:</b> Down from about 0.51 for 5 cards: the pair-free fraction falls quickly as the hand grows.<br><b>Transfer:</b> Birthday-type repeats for 7 draws from 13 categories.",
+  "back": "<b>Answer:</b> \\(\\dfrac{\\binom{13}{7}4^7}{\\binom{52}{7}}=\\dfrac{28114944}{133784560}\\approx 0.21015\\)<br><b>Structure:</b> s_complement and s_bijection: no repeated rank means choosing 7 distinct ranks and one suit for each.<br><b>Key move:</b> Choose 7 distinct ranks (\\(\\binom{13}{7}\\)), then one of 4 suits for each card.<br><b>Working:</b> \\(\\binom{13}{7}=1716\\), \\(4^7=16384\\), product \\(28114944\\); \\(\\binom{52}{7}=133784560\\).<br><b>Sanity check:</b> Down from about 0.51 for 5 cards: the pair-free fraction falls quickly as the hand grows.<br><b>Transfer:</b> Birthday-type repeats for 7 draws from 13 categories.",
   "tags": [
    "fmt_chain",
    "s_complement",
@@ -497,7 +497,7 @@
  },
  {
   "type": "basic",
-  "front": "Thirteen colours each come in four shades. A bag holds one ball of each shade for every colour, 52 balls in total. Five balls are drawn without replacement. How many draws have five different colours?",
+  "front": "Thirteen colours each come in four shades. A bag holds one ball of each shade for every colour, 52 balls in total. Five balls are drawn without replacement; a draw is the set of 5 balls, order ignored. How many draws have five different colours?",
   "back": "<b>Classic:</b> a 5-card hand with five different ranks (no pair).<br><b>Mapping:</b> colours are ranks, shades are suits. Choose 5 colours \\(\\binom{13}{5}\\), then one shade of each \\(4^5\\).<br><b>Answer:</b> \\(\\binom{13}{5}4^5=1317888\\), probability \\(\\approx 0.50708\\).",
   "tags": [
    "fmt_twin",
@@ -588,7 +588,7 @@
  {
   "type": "basic",
   "front": "When can you approximate the birthday no-collision probability by \\(\\exp(-n(n-1)/(2N))\\), and when does it fail?",
-  "back": "<b>Triggers:</b> a no-collision question with \\(N\\) uniform bins and \\(n\\) items, where you need a quick closed-form estimate.<br><b>Move:</b> \\(\\ln\\prod(1-i/N)\\approx -\\sum i/N=-\\binom{n}{2}/N\\), so the probability is about \\(e^{-n^2/2N}\\).<br><b>Canonical example:</b> \\(n=23,\\ N=365\\): approximation 0.4999 against exact 0.4927.<br><b>Failure mode:</b> the second-order term \\(\\sum i^2/(2N^2)\\approx n^3/(6N^2)\\) matters once \\(n\\) is comparable to \\(N^{2/3}\\). It also fails for k-way collisions, where the Poisson shape changes.",
+  "back": "<b>Triggers:</b> a no-collision question with \\(N\\) uniform bins and \\(n\\) items, where you need a quick closed-form estimate.<br><b>Move:</b> \\(\\ln\\prod(1-i/N)\\approx -\\sum i/N=-\\binom{n}{2}/N\\), so the probability is about \\(e^{-n^2/2N}\\).<br><b>Canonical example:</b> \\(n=23,\\ N=365\\): approximation 0.5000 against exact 0.4927.<br><b>Failure mode:</b> the second-order term \\(\\sum i^2/(2N^2)\\approx n^3/(6N^2)\\) matters once \\(n\\) is comparable to \\(N^{2/3}\\). It also fails for k-way collisions, where the Poisson shape changes.",
   "tags": [
    "fmt_toolkit",
    "s_complement",
