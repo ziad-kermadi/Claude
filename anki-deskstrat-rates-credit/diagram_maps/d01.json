@@ -1,0 +1,156 @@
+[
+ {
+  "file": "01_govies__v3.json",
+  "index": 2,
+  "front_start": "<b>[Chain: EURFUT 3/3]</b> Context: Schatz, Bobl and Bund fu",
+  "image": "01_govies__v3_2_fly_dv01_weights.png",
+  "caption": "Position DV01 by leg of the 2s5s9s fly: 1.26 Schatz and 0.28 Bund per Bobl"
+ },
+ {
+  "file": "01_govies__v3.json",
+  "index": 6,
+  "front_start": "<b>[Chain: BTP_BUND 1/3]</b> Context: illustrative 10-year y",
+  "image": "01_govies__v3_6_btp_bund_decomposition.png",
+  "caption": "Decomposition of the 110 bp BTP-Bund outright into asset-swap and residual components"
+ },
+ {
+  "file": "01_govies__v3.json",
+  "index": 9,
+  "front_start": "Scenario: the ECB's Transmission Protection Instrument (TPI)",
+  "image": "01_govies__v3_9_tpi_convex_payoff.png",
+  "caption": "Long BTP-Bund P&L with a TPI-style cap at a trigger K (illustrative) if activated"
+ },
+ {
+  "file": "01_govies__v3.json",
+  "index": 11,
+  "front_start": "Case study: a covered bond programme with a cover pool of €1",
+  "image": "01_govies__v3_11_cover_pool_stress.png",
+  "caption": "Cover pool recovery vs uniform property price fall; break-even fall about 44% (10% cost)"
+ },
+ {
+  "file": "01_govies__v3.json",
+  "index": 12,
+  "front_start": "Covered bonds: explain the difference between a hard-bullet ",
+  "image": "01_govies__v3_12_hard_soft_bullet_timeline.png",
+  "caption": "Hard bullet pays on the scheduled date; soft bullet adds an extension period"
+ },
+ {
+  "file": "01_govies__v3.json",
+  "index": 14,
+  "front_start": "<b>[Chain: SWAP_SPREAD 1/3]</b> Context: 10-year SOFR par sw",
+  "image": "01_govies__v3_14_swap_spread_legs.png",
+  "caption": "Legs of a long 10y swap spread: pay fixed swap plus long Treasury financed in repo"
+ },
+ {
+  "file": "01_govies__v3.json",
+  "index": 16,
+  "front_start": "<b>[Chain: SWAP_SPREAD 3/3]</b> Context: long the 10-year sp",
+  "image": "01_govies__v3_16_swap_spread_pnl.png",
+  "caption": "Spread P&L and one-month carry for a DV01-matched $100m long 10y swap spread"
+ },
+ {
+  "file": "01_govies__v3.json",
+  "index": 19,
+  "front_start": "Case study: a US dollar investor buys a 10-year JGB at a 1.5",
+  "image": "01_govies__v3_19_jgb_hedged_yield_bridge.png",
+  "caption": "Yield bridge: unhedged JGB 1.50% plus rate differential less basis gives 4.60% hedged"
+ },
+ {
+  "file": "01_govies.json",
+  "index": 1,
+  "front_start": "A 4% semi-annual gilt (face 100) has 61 days elapsed in a 18",
+  "image": "01_govies_1_accrued_interest_timeline.png",
+  "caption": "Accrued interest within the 182-day coupon period: 0.67, dirty price 99.17"
+ },
+ {
+  "file": "01_govies.json",
+  "index": 29,
+  "front_start": "A bond is trading special in repo, at 3.20% against 4.00% ge",
+  "image": "01_govies_29_specialness_repo_flow.png",
+  "caption": "Specialness: GC 4.00% vs special repo 3.20%, an 80 bp cost of borrowing the bond"
+ },
+ {
+  "file": "01_govies.json",
+  "index": 40,
+  "front_start": "A DV01-neutral 2s10s steepener, long £43m of 2y and short £1",
+  "image": "01_govies_40_steepener_pnl_bars.png",
+  "caption": "Steepener P&L per +1 bp: 10y-only move vs parallel move, net about GBP 10 for parallel"
+ },
+ {
+  "file": "01_govies_deep.json",
+  "index": 1,
+  "front_start": "<b>[Chain: CTD_SWITCH 2/3]</b> Context: the same bonds X and",
+  "image": "01_govies_deep_1_ctd_switch_net_basis.png",
+  "caption": "Net basis of bonds X and Y vs futures price; CTD switches from X to Y at F about 117.35"
+ },
+ {
+  "file": "01_govies_deep.json",
+  "index": 6,
+  "front_start": "<b>[Chain: AUCTION_CONC 1/3]</b> Context: a new 10y gilt cle",
+  "image": "01_govies_deep_6_auction_concession_timeline.png",
+  "caption": "Auction concession: clearing 4.33% vs pre-auction 4.30%, 3 bp"
+ },
+ {
+  "file": "01_govies_deep.json",
+  "index": 7,
+  "front_start": "<b>[Chain: AUCTION_CONC 2/3]</b> Context: the dealer buys £1",
+  "image": "01_govies_deep_7_sell_down_pnl_distribution.png",
+  "caption": "Sell-down P&L distribution for a GBP 100m allocation, one sigma about GBP 166k"
+ },
+ {
+  "file": "01_govies_deep.json",
+  "index": 9,
+  "front_start": "<b>Derivation: convexity of a bond.</b> Derive \\(C = \\frac{1",
+  "image": "01_govies_deep_9_price_yield_convexity.png",
+  "caption": "Price-yield curve of a 10y zero at 4% with the duration tangent; convexity bends the curve above it"
+ },
+ {
+  "file": "01_govies_deep.json",
+  "index": 13,
+  "front_start": "<b>Derivation: key-rate durations by piecewise-linear shocks",
+  "image": "01_govies_deep_13_key_rate_hats.png",
+  "caption": "Piecewise-linear key-rate hats for a 7.5y zero between the 7y and 10y key tenors"
+ },
+ {
+  "file": "01_govies_deep.json",
+  "index": 16,
+  "front_start": "<b>Derivation: Macaulay duration as a PV-weighted average.</",
+  "image": "01_govies_deep_16_macaulay_pv_weights.png",
+  "caption": "PV of each cash flow of a 3y 4% bond at 4%; Macaulay duration is the PV-weighted time"
+ },
+ {
+  "file": "01_govies_deep.json",
+  "index": 18,
+  "front_start": "<b>Case study: cash-futures basis trade P&amp;L with repo.</",
+  "image": "01_govies_deep_18_basis_trade_pnl_vs_repo.png",
+  "caption": "Basis trade P&L vs repo rate; break-even at about 3.83%"
+ },
+ {
+  "file": "01_govies_deep.json",
+  "index": 20,
+  "front_start": "<b>Case study: beta-neutral 2s5s10s butterfly.</b> The 5y be",
+  "image": "01_govies_deep_20_beta_neutral_fly_dv01.png",
+  "caption": "Wing DV01s for equal-DV01 vs beta-neutral 2s5s10s fly against the 5y belly"
+ },
+ {
+  "file": "01_govies_deep.json",
+  "index": 23,
+  "front_start": "<b>Case study: convexity P&amp;L on a £50m 30y gilt position",
+  "image": "01_govies_deep_23_convexity_pnl_bars.png",
+  "caption": "P&L of a 100 bp rally and sell-off on GBP 50m: duration only, with convexity, and exact"
+ },
+ {
+  "file": "01_govies_deep.json",
+  "index": 24,
+  "front_start": "<b>Case study: carry and roll on a 5y gilt over six months.<",
+  "image": "01_govies_deep_24_carry_roll_bridge.png",
+  "caption": "Carry plus roll-down over six months: 0.29 points, break-even yield rise 6.4 bp"
+ },
+ {
+  "file": "01_govies_deep.json",
+  "index": 25,
+  "front_start": "<b>Case study: quarter-end repo spike on a £2bn long-basis p",
+  "image": "01_govies_deep_25_quarter_end_loss_bars.png",
+  "caption": "One-day quarter-end funding cost vs basis loss on a GBP 2bn long-basis position"
+ }
+]
