@@ -1,0 +1,919 @@
+[
+ {
+  "type": "basic",
+  "front": "Compute \\(53^2\\) in your head. Name the identity you used.",
+  "back": "<b>Answer:</b> \\(53^2=2809\\).<br><b>Structure:</b> s_taylor: expand around a round base point. The expansion of a quadratic is exact, so there is no approximation error.<br><b>Key move:</b> \\((50+a)^2=2500+100a+a^2\\) with \\(a=3\\).<br><b>Working:</b> \\((50+3)^2=2500+300+9=2809\\).<br><b>Sanity check:</b> Lies between \\(50^2=2500\\) and \\(60^2=3600\\). Units digit \\(3\\cdot3=9\\) matches.<br><b>Transfer:</b> \\(47^2=(50-3)^2=2500-300+9=2209\\). \\(57^2=2500+700+49=3249\\).",
+  "tags": [
+   "s_taylor",
+   "mental_math",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compute \\(47\\times 53\\) instantly.<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Difference of squares around a round number (s_taylor).<br><b>Trigger:</b> The two factors are symmetric about 50: \\(50-3\\) and \\(50+3\\).<br><b>Key move:</b> \\((50-3)(50+3)=50^2-3^2\\).<br><b>Answer:</b> \\(2500-9=2491\\).",
+  "tags": [
+   "s_taylor",
+   "mental_math",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compute \\(37\\times 43\\) without writing long multiplication.",
+  "back": "<b>Answer:</b> \\(37\\times43=1591\\).<br><b>Structure:</b> s_taylor: difference of squares, \\(a^2-b^2\\), centred on 40.<br><b>Key move:</b> Write both factors as \\(40\\mp3\\), so the product is \\(40^2-3^2\\).<br><b>Working:</b> \\((40-3)(40+3)=1600-9=1591\\).<br><b>Sanity check:</b> A product of two numbers with mean 40 is at most \\(40^2=1600\\) (AM-GM). 1591 is just below.<br><b>Transfer:</b> \\(88\\times92=8100-16=8084\\). \\(96\\times104=10000-16=9984\\).",
+  "tags": [
+   "s_taylor",
+   "mental_math",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two-digit products: \\(37\\times33\\) and \\(37\\times58\\). When do shortcuts work and when do they fail?",
+  "back": "<b>Triggers:</b> (i) Same tens digit and units digits summing to 10: \\(37\\times33\\). (ii) Factors symmetric about a round number: \\(83\\times87=85^2-2^2\\).<br><b>Move:</b> For (i), multiply tens by tens+1 and units times units: \\(3\\cdot4=12\\), \\(7\\cdot3=21\\), giving \\(1221\\). For (ii), use the difference of squares.<br><b>Example:</b> \\(37\\times33=1221\\); \\(83\\times87=7225-4=7221\\).<br><b>Failure mode:</b> Neither pattern holds for \\(37\\times58\\). Split instead: \\(37\\cdot60-37\\cdot2=2220-74=2146\\).",
+  "tags": [
+   "s_taylor",
+   "mental_math",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Estimate 17% of 240 without a calculator.<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Linearity of a percentage: split the rate into digit parts (s_linearity_expectation).<br><b>Trigger:</b> Any percentage that is not a round number: write it as a sum of 10% and smaller pieces.<br><b>Key move:</b> \\(0.17\\cdot240=0.10\\cdot240+0.07\\cdot240\\).<br><b>Answer:</b> \\(24+16.8=40.8\\).",
+  "tags": [
+   "s_linearity_expectation",
+   "mental_math",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When do you use the rule of 72 (or 69.3) for doubling time, and when does it fail? Compare 8%, 6% and 50%.",
+  "back": "<b>Triggers:</b> Quick doubling or halving of a compounding rate, when an answer to within 1 year is enough.<br><b>Move:</b> Years to double \\(\\approx 72/r\\%\\) for annual compounding, and \\(\\approx 69.3/r\\%\\) for continuous compounding, because \\(\\ln 2=0.693\\).<br><b>Example:</b> 8%: exact \\(\\ln2/\\ln1.08=9.01\\) vs \\(72/8=9\\). 6%: exact \\(11.90\\) vs \\(12\\).<br><b>Failure mode:</b> At 50%, \\(72/50=1.44\\) against exact \\(\\ln2/\\ln1.5=1.71\\). The error grows with the rate.",
+  "tags": [
+   "s_taylor",
+   "mental_math",
+   "compounding",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Estimate \\(1.05^{10}\\) to four significant figures without a calculator.",
+  "back": "<b>Answer:</b> \\(1.05^{10}\\approx1.6289\\).<br><b>Structure:</b> s_taylor: log-series approximation. Powers become exponentials of a sum.<br><b>Key move:</b> \\((1+r)^n=\\exp(n\\ln(1+r))\\) and \\(\\ln(1+r)\\approx r-r^2/2+r^3/3\\).<br><b>Working:</b> \\(\\ln1.05\\approx0.05-0.00125+0.0000417=0.048792\\). Then \\(e^{0.48792}\\approx1.6289\\) (exact \\(1.628895\\)).<br><b>Sanity check:</b> \\(1.05^{10}\\) is a little above 1.6, which matches the 5%-for-10-years memory.<br><b>Transfer:</b> \\(1.07^{10}\\approx1.967\\) (close to 2). \\(1.04^{25}\\approx2.666\\).",
+  "tags": [
+   "s_taylor",
+   "mental_math",
+   "compounding",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You approximate \\((1.01)^{100}\\) by \\(e^{100\\cdot0.01}=e\\). What breaks, and by how much?",
+  "back": "<b>What breaks:</b> \\(\\ln(1+r)<r\\), so replacing \\(\\ln(1+r)\\) with \\(r\\) overstates the exponent by about \\(nr^2/2\\). Here that is \\(100\\cdot0.00005=0.005\\), an overstatement of about 0.5%.<br><b>Fix:</b> Keep the second-order term: exponent \\(n(r-r^2/2)=100(0.01-0.00005)=0.995\\).<br><b>New answer:</b> \\(e^{0.995}\\approx2.7046\\), against the exact \\(1.01^{100}=2.7048\\). The true value is \\(2.7048\\), not \\(e=2.7183\\).",
+  "tags": [
+   "s_taylor",
+   "mental_math",
+   "compounding",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Estimate \\(\\ln 1.1\\) to four significant figures without a calculator.",
+  "back": "<b>Answer:</b> \\(\\ln1.1\\approx0.09531\\).<br><b>Structure:</b> s_taylor: series expansion of \\(\\ln(1+x)\\) at \\(x=0\\).<br><b>Key move:</b> \\(\\ln(1+x)=x-x^2/2+x^3/3-x^4/4+\\dots\\), with \\(x=0.1\\).<br><b>Working:</b> \\(0.1-0.005+0.000333=0.095333\\). The fourth term \\(-0.000025\\) gives \\(0.095308\\). Exact \\(0.095310\\).<br><b>Sanity check:</b> \\(\\ln(1+x)<x\\) because \\(\\ln\\) is concave, consistent with \\(0.0953<0.1\\).<br><b>Transfer:</b> \\(\\ln1.02\\approx0.02-0.0002+0.0000027=0.0198027\\) (exact \\(0.0198026\\)).",
+  "tags": [
+   "s_taylor",
+   "mental_math",
+   "logs",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write \\(1/7\\), \\(2/7\\) and \\(3/7\\) as decimals without long division. Why do the digits repeat?",
+  "back": "<b>Answer:</b> \\(1/7=0.\\overline{142857}\\), \\(2/7=0.\\overline{285714}\\), \\(3/7=0.\\overline{428571}\\).<br><b>Structure:</b> s_recursion: long division is a recursion on the remainder, \\(r_{k+1}=10r_k \\bmod 7\\).<br><b>Key move:</b> Run the remainders once: \\(1\\to3\\to2\\to6\\to4\\to5\\to1\\). The period is 6. Multiples \\(k/7\\) are cyclic shifts of 142857.<br><b>Working:</b> \\(10=1\\cdot7+3\\), \\(30=4\\cdot7+2\\), \\(20=2\\cdot7+6\\), \\(60=8\\cdot7+4\\), \\(40=5\\cdot7+5\\), \\(50=7\\cdot7+1\\). Digits \\(1,4,2,8,5,7\\).<br><b>Sanity check:</b> \\(0.142857\\times7=0.999999\\), consistent with \\(1/7\\cdot7=1\\).<br><b>Transfer:</b> \\(5/7=0.\\overline{714285}\\). The period of \\(1/13\\) is 6 as well: \\(1/13=0.\\overline{076923}\\).",
+  "tags": [
+   "s_recursion",
+   "mental_math",
+   "fractions",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The decimal of \\(1/37\\) repeats the block {{c1::027}}, because \\(999=27\\times37\\) and so \\(1/37={{c2::27/999}}\\).",
+  "back": "Denominators that divide \\(10^k-1\\) repeat with period \\(k\\). Here \\(10^3\\equiv1\\pmod{37}\\), so the period is 3. For \\(1/7\\) the period is 6 because \\(10^6\\equiv1\\pmod 7\\). Check: \\(27/999=0.\\overline{027}\\).",
+  "tags": [
+   "s_recursion",
+   "mental_math",
+   "fractions",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Estimate \\(\\sqrt{2}\\) with two Newton steps starting from 1.5. How many correct digits do you get?",
+  "back": "<b>Answer:</b> \\(x_1=1.41667\\), \\(x_2=1.414216\\) (exact \\(1.414214\\)). Four correct digits.<br><b>Structure:</b> s_recursion: Newton's method for \\(f(x)=x^2-a\\), i.e. \\(x_{k+1}=\\tfrac12(x_k+a/x_k)\\).<br><b>Key move:</b> Each step squares the relative error: \\(e_{k+1}\\approx e_k^2/(2x)\\).<br><b>Working:</b> \\((1.5+2/1.5)/2=1.416667\\). Then \\((1.416667+2/1.416667)/2=1.4142157\\). Error went \\(0.0858\\to0.00245\\), and \\(0.0858^2/3=0.00245\\).<br><b>Sanity check:</b> Starting above the root, the iteration decreases monotonically towards \\(\\sqrt2\\).<br><b>Transfer:</b> Reciprocal without division: \\(x_{k+1}=x_k(2-ax_k)\\) gives \\(1/7\\) from \\(x_0=0.14\\): \\(0.1428\\), then \\(0.142857\\).",
+  "tags": [
+   "s_recursion",
+   "mental_math",
+   "sqrt",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Convert 20% annual volatility to daily volatility. Use 252 trading days.",
+  "back": "<b>Answer:</b> \\(\\sigma_d=0.20/\\sqrt{252}\\approx1.26\\%\\).<br><b>Structure:</b> s_sqrt_time_scaling: independent daily shocks add in variance, so sd scales with \\(\\sqrt{\\text{time}}\\).<br><b>Key move:</b> \\(\\sigma_{\\text{period}}=\\sigma_{\\text{annual}}\\sqrt{\\Delta t}\\), with \\(\\Delta t=1/252\\).<br><b>Working:</b> \\(\\sqrt{252}\\approx15.87\\) (or \\(16(1-1/128)\\approx15.875\\)). \\(0.20/15.87=0.0126\\).<br><b>Sanity check:</b> \\(1/\\sqrt{252}\\approx1/16\\), so 20% gives about \\(1.25\\%\\).<br><b>Transfer:</b> A 10% annual vol gives \\(0.10/15.87=0.63\\%\\) per day.",
+  "tags": [
+   "s_sqrt_time_scaling",
+   "mental_math",
+   "volatility",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is 1-month volatility, using 30 trading days, if annual volatility is 20%?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_sqrt_time_scaling: sd of a sum of independent shocks.<br><b>Trigger:</b> The horizon is given in trading days, so the scale factor is \\(\\sqrt{T/252}\\).<br><b>Key move:</b> \\(\\sigma_{30}=\\sigma\\sqrt{30/252}\\).<br><b>Answer:</b> \\(0.20\\times0.345=6.90\\%\\).",
+  "tags": [
+   "s_sqrt_time_scaling",
+   "mental_math",
+   "volatility",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A tally moves +1 or -1 each day with equal probability, independently. After 252 days, how many standard deviations wide is the tally? Give a number.",
+  "back": "<b>Classic:</b> Annualising volatility: an annual sd is the daily sd times \\(\\sqrt{252}\\).<br><b>Mapping:</b> The tally is a sum of 252 i.i.d. shocks with variance 1 each, so its variance is 252. The sd is \\(\\sqrt{252}\\).<br><b>Answer:</b> \\(\\sqrt{252}\\approx15.87\\) daily units.",
+  "tags": [
+   "s_sqrt_time_scaling",
+   "volatility",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is monthly volatility, using 12 months, if annual volatility is 10%? Weekly, using 52?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_sqrt_time_scaling: the same square-root-of-time rule as the daily case.<br><b>Trigger:</b> Any horizon that is a fixed fraction of a year.<br><b>Key move:</b> Divide by \\(\\sqrt{\\text{periods per year}}\\).<br><b>Answer:</b> Monthly \\(0.10/\\sqrt{12}=2.89\\%\\). Weekly \\(0.10/\\sqrt{52}=1.39\\%\\).",
+  "tags": [
+   "s_sqrt_time_scaling",
+   "mental_math",
+   "volatility",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Give the probability a standard normal lies within 1, 2 and 3 standard deviations, and the one-sided 95% and 99% quantiles.",
+  "back": "<b>Answer:</b> 68.27%, 95.45%, 99.73%. One-sided: \\(1.645\\) (95%) and \\(2.326\\) (99%).<br><b>Structure:</b> s_clt_normal_approx: memorise the \\(k\\sigma\\) coverages and the quantile pairs.<br><b>Key move:</b> Two-sided coverage is \\(2\\Phi(k)-1\\). Quantiles \\(z_{0.95}=1.645\\), \\(z_{0.99}=2.326\\).<br><b>Working:</b> \\(2\\Phi(1)-1=0.6827\\), \\(2\\Phi(2)-1=0.9545\\), \\(2\\Phi(3)-1=0.9973\\). \\(\\Phi^{-1}(0.95)=1.6449\\), \\(\\Phi^{-1}(0.99)=2.3263\\).<br><b>Sanity check:</b> \\(1.96\\) is the two-sided 95% point, equivalently the one-sided 97.5% point.<br><b>Transfer:</b> Two-sided 99% uses \\(2.576\\). One-sided 90% uses \\(1.2816\\).",
+  "tags": [
+   "s_clt_normal_approx",
+   "mental_math",
+   "normal",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Your risk model uses 1.645 as the one-sided 95% quantile. Suppose returns follow a unit-variance Student-t with 3 degrees of freedom. What are the true 95% and 99% quantiles?",
+  "back": "<b>What breaks:</b> The normal quantiles assume thin tails. With 3 degrees of freedom the 95% quantile is lower but the 99% quantile is higher, because the variance is spent far out in the tail.<br><b>Fix:</b> Use the scaled t quantile, \\(t_{\\nu}(p)\\sqrt{(\\nu-2)/\\nu}\\), or estimate the quantile from data.<br><b>New answer:</b> 95%: \\(2.3534\\times\\sqrt{1/3}=1.359\\) (lower than 1.645). 99%: \\(4.5407\\times\\sqrt{1/3}=2.622\\) (higher than 2.326).",
+  "tags": [
+   "s_clt_normal_approx",
+   "mental_math",
+   "normal",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When is \\(N(d)\\approx 0.5+0.4\\,d\\) good enough for quick option deltas, and when does it fail?",
+  "back": "<b>Triggers:</b> You need \\(N(d)\\) to about 0.01 and \\(|d|\\) is small, for example a near-the-money delta where \\(d_1\\approx0\\).<br><b>Move:</b> Use \\(N'(0)=\\varphi(0)=1/\\sqrt{2\\pi}\\approx0.399\\), so \\(N(d)\\approx0.5+0.4d\\). Use \\(N(-d)=1-N(d)\\) for negative arguments.<br><b>Example:</b> \\(N(0.25)=0.5987\\) vs the approximation \\(0.600\\). \\(N(0.5)=0.6915\\) vs \\(0.700\\).<br><b>Failure mode:</b> Beyond about \\(|d|=0.5\\) the error exceeds 0.008. Anchor on \\(N(1)=0.8413\\) and \\(N(2)=0.9772\\), then interpolate.",
+  "tags": [
+   "s_taylor",
+   "mental_math",
+   "options",
+   "normal",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Stock at 100, volatility 20%, one year, zero rates. Estimate the at-the-money straddle in one line, then check.",
+  "back": "<b>Answer:</b> Straddle \\(\\approx0.8\\,\\sigma\\sqrt{T}\\,S=16\\). Exact \\(15.93\\).<br><b>Structure:</b> s_taylor and s_dimensional_analysis: price is linear in \\(S\\) and depends on \\(\\sigma\\sqrt{T}\\) alone.<br><b>Key move:</b> ATM call \\(=S(2N(\\sigma\\sqrt T/2)-1)\\). Expand \\(N\\) about 0 with \\(N'(0)=0.399\\), so one call is \\(\\approx0.4\\,\\sigma\\sqrt T\\,S\\).<br><b>Working:</b> \\(0.4\\times0.2\\times100=8\\) per call, so 16 for the straddle. Exact call \\(100(2N(0.1)-1)=7.97\\).<br><b>Sanity check:</b> Dimension check: price in currency, \\(\\sigma\\sqrt T\\) dimensionless, so the answer must be \\(S\\) times a function of \\(\\sigma\\sqrt T\\).<br><b>Transfer:</b> A one-month ATM call on 50 at 30% vol: \\(0.4\\times0.3\\times\\sqrt{1/12}\\times50=1.73\\).",
+  "tags": [
+   "s_taylor",
+   "s_dimensional_analysis",
+   "mental_math",
+   "options",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Estimate \\(1.02^{365}\\) in your head.<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_taylor: take logs, use a series, then exponentiate.<br><b>Trigger:</b> A power of a number near 1 with a large exponent becomes \\(e^{n\\ln(1+r)}\\).<br><b>Key move:</b> \\(\\ln 1.02\\approx0.0198\\), so \\(365\\ln1.02\\approx7.23\\), and \\(e^{7.23}\\approx1377\\).<br><b>Answer:</b> \\(1377\\) (exact \\(1377.4\\)).",
+  "tags": [
+   "s_taylor",
+   "mental_math",
+   "compounding",
+   "logs",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Estimate \\(\\sqrt{252}\\) without a calculator, anchoring at a nearby square.",
+  "back": "<b>Answer:</b> \\(\\sqrt{252}\\approx15.875\\) (exact \\(15.8745\\)).<br><b>Structure:</b> s_taylor: anchor on the nearest perfect square and expand.<br><b>Key move:</b> \\(\\sqrt{256-4}=16\\sqrt{1-1/64}\\approx16(1-1/128)\\).<br><b>Working:</b> \\(16\\times(1-0.0078125)=15.875\\).<br><b>Sanity check:</b> \\(15<\\sqrt{252}<16\\). The answer is just under 16, as expected for an argument just under 256.<br><b>Transfer:</b> \\(\\sqrt{365}\\approx19(1+2/361)\\approx19.105\\) (exact \\(19.105\\)).",
+  "tags": [
+   "s_taylor",
+   "mental_math",
+   "sqrt",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Convert a 5% annual rate to its continuously compounded equivalent.<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_taylor: \\(e^{r_c}=1+r\\), so \\(r_c=\\ln(1+r)\\).<br><b>Trigger:</b> Compounding frequency changes the rate. Continuous compounding uses a logarithm.<br><b>Key move:</b> \\(r_c=\\ln(1.05)\\approx0.05-0.00125+0.00004\\).<br><b>Answer:</b> \\(\\ln1.05=4.88\\%\\). So 5% annual equals 4.88% continuous.",
+  "tags": [
+   "s_taylor",
+   "mental_math",
+   "compounding",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Use \\(1/7\\) as a template: what changes in the decimal of \\(1/14\\)?",
+  "back": "<b>What breaks:</b> The factor 2 in 14 adds a pre-period. The period (6) is unchanged, because the repeating part depends only on the factor 7.<br><b>Fix:</b> Separate the pre-period from the repeating part. Write \\(1/14=\\tfrac12\\cdot\\tfrac17\\), then shift the \\(1/7\\) digits by one place.<br><b>New answer:</b> \\(1/14=0.0\\overline{714285}\\), i.e. 0.0714285714...",
+  "tags": [
+   "s_recursion",
+   "mental_math",
+   "fractions",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Newton's method for a reciprocal, \\(x_{k+1}=x_k(2-7x_k)\\), started at \\(x_0=0.3\\). What breaks?",
+  "back": "<b>What breaks:</b> The iteration only converges when \\(0<x_0<2/7\\). Here \\(x_0=0.3>0.2857\\), so \\(|1-7x_0|=1.1>1\\) and the error grows at each step.<br><b>Fix:</b> Start inside the basin: take \\(x_0=0.14\\), which is below \\(2/7\\) and close to \\(1/7\\).<br><b>New answer:</b> Iterates: \\(0.3\\to-0.03\\to-0.066\\to-0.163\\to-0.514\\), diverging. From \\(x_0=0.14\\) the iterates go to \\(1/7\\).",
+  "tags": [
+   "s_recursion",
+   "mental_math",
+   "sqrt",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Daily sd is 1%, and daily returns follow an AR(1) with autocorrelation 0.1. A colleague annualises with \\(\\sqrt{252}\\). What breaks?",
+  "back": "<b>What breaks:</b> The \\(\\sqrt{T}\\) rule assumes independent increments. With autocorrelation \\(\\rho\\), long-horizon variance per period is multiplied by \\((1+\\rho)/(1-\\rho)\\), here \\(1.222\\).<br><b>Fix:</b> Multiply the \\(\\sqrt{252}\\) annualisation by \\(\\sqrt{(1+\\rho)/(1-\\rho)}=1.105\\), or estimate the variance ratio from data.<br><b>New answer:</b> Annual vol \\(=0.01\\times15.87\\times1.105=17.5\\%\\), not \\(15.9\\%\\).",
+  "tags": [
+   "s_sqrt_time_scaling",
+   "mental_math",
+   "volatility",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Estimate the total weight of all London buses. State assumptions and the uncertainty factor.",
+  "back": "<b>Answer:</b> About \\(10^8\\) kg (roughly 100,000 tonnes), uncertain by a factor of about 2 either way.<br><b>Structure:</b> s_fermi: decompose a quantity into a count times a per-unit size, bound each factor.<br><b>Key move:</b> Count times mass per unit. Bound each factor, then multiply the bounds.<br><b>Working:</b> Assumed fleet 9,000 buses \\(\\times\\) 11 t average = \\(9.9\\times10^4\\) t \\(\\approx10^8\\) kg. Bounds: \\(6000\\times8=4.8\\times10^4\\) t to \\(12000\\times13=1.6\\times10^5\\) t.<br><b>Sanity check:</b> Cross-check via cars: a bus is about 7 cars by mass. \\(9000\\times7=63000\\) cars at 1.5 t gives about \\(10^5\\) t, consistent.<br><b>Transfer:</b> Same method for the total weight of a city's taxis: count \\(\\times\\) mass.",
+  "tags": [
+   "s_fermi",
+   "fermi",
+   "mental_math",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Estimate London's daily FX turnover. Decompose, then triangulate with a top-down figure.",
+  "back": "<b>Answer:</b> Low single-digit trillions of US dollars a day. Central estimate about $2tn.<br><b>Structure:</b> s_fermi: two independent routes to one quantity (bottom-up and top-down) and a geometric mean.<br><b>Key move:</b> Bottom-up: desks \\(\\times\\) trades per desk \\(\\times\\) average size. Top-down: global turnover \\(\\times\\) London share.<br><b>Working:</b> Bottom-up: \\(400\\times250\\times$10\\text{m}=$1.0\\)tn. Top-down: recalled BIS 2022 survey figure about $7.5tn globally, London share about 38%, giving about $2.85tn. Geometric mean \\(\\sqrt{1.0\\times2.85}\\approx1.7\\)tn. The BIS figures are recalled, so verify them before quoting.<br><b>Sanity check:</b> A factor-of-3 gap is normal for Fermi estimates. The top-down route is usually the stronger anchor because it is a measured aggregate.<br><b>Transfer:</b> Use the same two-route method for a bank's daily payment volume.",
+  "tags": [
+   "s_fermi",
+   "fermi",
+   "fx",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A single liquid FTSE stock has average daily value traded of £500m and an average trade of £10k. How many trades per day, and how often does one trade?",
+  "back": "<b>Answer:</b> About 50,000 trades per day, so one trade every 0.6 seconds over an 8.5-hour session.<br><b>Structure:</b> s_fermi with s_dimensional_analysis: divide notional by ticket size to get a count.<br><b>Key move:</b> Count = notional \\(\\div\\) average ticket size. Rate = session length \\(\\div\\) count.<br><b>Working:</b> \\(5\\times10^8/10^4=5\\times10^4\\). Session \\(=8.5\\times3600=30600\\) s. \\(30600/50000=0.61\\) s.<br><b>Sanity check:</b> Units check: £ divided by £ per trade gives trades. The result is plausible for an algorithmic stock.<br><b>Transfer:</b> Check the units before trusting the output: a ticket size in pence instead of pounds would move the count by a factor of 100.",
+  "tags": [
+   "s_fermi",
+   "s_dimensional_analysis",
+   "fermi",
+   "market_making",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Five independent factors, each known to within a factor of 2 (uniform in log between 1/2 and 2), multiply together. What is the 1-sigma band of the product?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_fermi and s_clt_normal_approx: a product of independent factors is log-normal by the CLT on the logs.<br><b>Trigger:</b> A product of many independent uncertain factors. Logs add, so the spread adds in variance.<br><b>Key move:</b> Per factor, \\(\\sigma_{\\ln}=\\ln2/\\sqrt3=0.400\\). For five, \\(0.400\\sqrt5=0.894\\), and \\(e^{0.894}=2.45\\).<br><b>Answer:</b> Multiply or divide by about 2.45 for 1 sigma. Simulation of \\(10^5\\) draws gave 2.44.",
+  "tags": [
+   "s_fermi",
+   "s_clt_normal_approx",
+   "fermi",
+   "uncertainty",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Same five-factor estimate, except two of the factors (bus count and mean bus mass) both scale with city size, with correlation +0.5 and each log-sd 0.40. What breaks?",
+  "back": "<b>What breaks:</b> The independence assumption. Variance of a sum of two correlated log-factors is \\(\\sigma_1^2+\\sigma_2^2+2\\rho\\sigma_1\\sigma_2\\), not the sum of the variances.<br><b>Fix:</b> Model the joint: combine the correlated pair into one factor with its own spread, then propagate the rest as before.<br><b>New answer:</b> Pair sd \\(=\\sqrt{0.16+0.16+0.16}=0.693\\), so one sigma is \\(\\times2.0\\), against \\(\\times1.76\\) if independent (\\(\\sqrt{0.32}=0.566\\)). Positive correlation widens the band.",
+  "tags": [
+   "s_fermi",
+   "fermi",
+   "uncertainty",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A manager runs 1000 zero-skill funds. Each fund's annual alpha is an independent standard normal, in units of its own sd. Expected alpha of the best fund, in sd units?",
+  "back": "<b>Classic:</b> The expected maximum of \\(N\\) i.i.d. standard normals. The naive asymptotic \\(\\sqrt{2\\ln N}\\) overshoots here.<br><b>Mapping:</b> The best fund is the maximum of 1000 draws. Each draw is independent, so this is an order statistic problem.<br><b>Answer:</b> About 3.24 sd. Simulation of \\(10^5\\) samples of the maximum gave \\(3.242\\). The asymptotic \\(\\sqrt{2\\ln1000}=3.72\\) is too high.",
+  "tags": [
+   "s_extremal",
+   "s_fermi",
+   "fermi",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Estimate the annual gross P&L of quoting one liquid stock: 1m shares a day at £10, you take 5% of volume, earn half-spread of 5 bp. 252 days. Then adjust for adverse selection.",
+  "back": "<b>Answer:</b> About £63k gross per year, about £30k after assuming adverse selection halves the edge.<br><b>Structure:</b> s_fermi with s_linearity_expectation: P&amp;L equals trades times edge per trade.<br><b>Key move:</b> P&amp;L = (volume) \\(\\times\\) (share you capture) \\(\\times\\) (edge per unit). Edge per unit = half-spread minus adverse selection.<br><b>Working:</b> Notional \\(=10^6\\times£10=£10^7\\). Captured \\(=5\\%\\times£10^7=£5\\times10^5\\). Edge \\(=5\\) bp so \\(£250\\)/day. Over 252 days \\(=£63000\\).<br><b>Sanity check:</b> The answer is linear in every input. Doubling the spread doubles the gross, but only if flow stays the same.<br><b>Transfer:</b> Same method for the expected P&L of a bank's FX desk, replacing volume with client flow.",
+  "tags": [
+   "s_fermi",
+   "s_linearity_expectation",
+   "fermi",
+   "market_making",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Top-down and bottom-up Fermi estimates differ by a factor of 3. What do you do next?",
+  "back": "<b>Triggers:</b> Two routes to the same quantity, with partly independent inputs.<br><b>Move:</b> Take the geometric mean, state the band, find the factor with the largest log-sensitivity, and refine it.<br><b>Example:</b> FX turnover: $1.0tn bottom-up vs $2.85tn top-down, geometric mean about $1.7tn. The gap points at inter-dealer and tail flow.<br><b>Failure mode:</b> If both routes share one input, agreement is not evidence. Check that the inputs really are independent.",
+  "tags": [
+   "s_fermi",
+   "fermi",
+   "uncertainty",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How many days of returns do you need to estimate daily volatility to within ±10%? Within ±1%?",
+  "back": "<b>Answer:</b> About 50 days for ±10%, and about 5000 days for ±1%.<br><b>Structure:</b> s_fermi with s_clt_normal_approx: the standard error of a sample sd is about \\(\\sigma/\\sqrt{2n}\\).<br><b>Key move:</b> Relative error \\(\\approx1/\\sqrt{2n}\\). Set it equal to the target and solve for \\(n\\).<br><b>Working:</b> \\(1/\\sqrt{2n}=0.10\\Rightarrow n=50\\). \\(1/\\sqrt{2n}=0.01\\Rightarrow n=5000\\). A simulation of \\(10^5\\) samples of size 50 gave relative sd about 0.10.<br><b>Sanity check:</b> The required sample grows with the inverse square of the target error, so precision costs quadratically.<br><b>Transfer:</b> Half-precision in the vol estimate costs four times the data.",
+  "tags": [
+   "s_fermi",
+   "s_clt_normal_approx",
+   "fermi",
+   "volatility",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You make a market on the sum of two fair dice. What is your mid, and what is the 1-sigma width?",
+  "back": "<b>Answer:</b> Mid 7. Variance \\(35/6\\approx5.83\\), sd \\(\\approx2.42\\). A width of about ±2.4 covers about two thirds of outcomes.<br><b>Structure:</b> s_linearity_expectation for the mean, s_variance_decomposition for independent dice.<br><b>Key move:</b> Mean is additive. Variance is additive for independent dice. Use the sd as the scale of the width.<br><b>Working:</b> \\(E[S]=3.5+3.5=7\\). \\(\\mathrm{Var}(S)=2\\cdot35/12=35/6\\). \\(\\sigma=\\sqrt{35/6}=2.415\\).<br><b>Sanity check:</b> \\(P(5\\le S\\le9)=24/36=2/3\\), so ±2.4 around 7 covers about two thirds.<br><b>Transfer:</b> Sum of three dice: mean 10.5, sd \\(\\sqrt{8.75}=2.96\\).",
+  "tags": [
+   "s_linearity_expectation",
+   "s_variance_decomposition",
+   "market_making",
+   "dice",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A market on the number of red cards in 10 cards drawn without replacement from a standard 52-card deck. What are the mean and sd?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_indicators: a sum of dependent indicators. The variance has a finite-population correction.<br><b>Trigger:</b> A count of successes in draws from a finite population without replacement.<br><b>Key move:</b> Mean \\(n/2\\). Variance \\(np(1-p)\\frac{N-n}{N-1}\\).<br><b>Answer:</b> Mean 5. Variance \\(10\\cdot\\tfrac14\\cdot\\tfrac{42}{51}=2.06\\). sd \\(1.43\\). Simulation of \\(10^5\\) draws gave variance 2.04.",
+  "tags": [
+   "s_indicators",
+   "market_making",
+   "cards",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Same market on red cards in 10 draws, but each card is replaced before the next draw. What breaks?",
+  "back": "<b>What breaks:</b> The draws are no longer dependent, so the finite-population correction \\(\\frac{N-n}{N-1}=\\frac{42}{51}\\) must be dropped.<br><b>Fix:</b> Use the binomial variance, \\(np(1-p)\\), and do not apply the correction.<br><b>New answer:</b> Mean 5, variance \\(10\\cdot0.25=2.5\\), sd \\(1.58\\). Simulation of \\(10^5\\) draws gave 2.50.",
+  "tags": [
+   "s_indicators",
+   "market_making",
+   "cards",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A market on the number of heads in 100 fair coin flips. How wide should you quote for 1 sigma?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_clt_normal_approx: binomial approximated by a normal.<br><b>Trigger:</b> A count of many independent fair trials.<br><b>Key move:</b> Mean \\(np=50\\). Sd \\(\\sqrt{np(1-p)}=5\\). Width is proportional to the sd, not to the range.<br><b>Answer:</b> Mid 50, 1-sigma width ±5. Two sigma (about 95%) is ±10, i.e. 40 to 60.",
+  "tags": [
+   "s_clt_normal_approx",
+   "market_making",
+   "coins",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two independent draws, each uniform on (0,1). What is the expected value of the larger one?",
+  "back": "<b>Classic:</b> Expected maximum of two fair dice, \\(161/36\\approx4.47\\).<br><b>Mapping:</b> Tail-sum: \\(E[\\max]=\\int_0^1 P(\\max>x)\\,dx\\) with \\(P(\\max\\le x)=x^2\\). For dice the same sum runs over the 6 faces.<br><b>Answer:</b> \\(\\int_0^1(1-x^2)\\,dx=2/3\\). Discrete dice: \\(161/36=4.4722\\), from exact enumeration of the 36 outcomes.",
+  "tags": [
+   "s_order_statistics",
+   "market_making",
+   "dice",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A market on the sum of two fair dice. You learn the sum is at least 8. What is the new fair value?",
+  "back": "<b>Answer:</b> \\(E[S\\mid S\\ge8]=140/15=9.33\\).<br><b>Structure:</b> s_conditional_expectation_tower: condition the distribution, then take the mean.<br><b>Key move:</b> Restrict the distribution to \\(S\\ge8\\), renormalise by \\(P(S\\ge8)=15/36\\), then average.<br><b>Working:</b> Probabilities for 8,9,10,11,12 are \\(5,4,3,2,1\\) out of 36. \\(E=(8\\cdot5+9\\cdot4+10\\cdot3+11\\cdot2+12\\cdot1)/15=140/15=9.33\\). Monte Carlo of \\(10^5\\) rolls gave 9.33.<br><b>Sanity check:</b> The mean sits below 10 because the probability falls as the sum grows.<br><b>Transfer:</b> Given \\(S\\ge10\\), the mean is \\(64/6=10.67\\).",
+  "tags": [
+   "s_conditional_expectation_tower",
+   "market_making",
+   "dice",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Market on value \\(V\\sim U[0,100]\\). You quote an ask of 50. One informed buyer lifts it only when \\(V>50\\). Expected P&amp;L per fill and per order? Break-even ask?",
+  "back": "<b>Answer:</b> Per fill, \\(-25\\). Per informed order (unconditional), \\(-12.5\\). Break-even ask is 100.<br><b>Structure:</b> s_conditional_expectation_tower and s_game_theory_equilibrium: the winner's curse. Getting filled reveals \\(V>a\\).<br><b>Key move:</b> A fill at \\(a\\) happens only when \\(V>a\\), so \\(E[V\\mid\\text{fill}]=(a+100)/2>a\\). Your loss per fill is \\((100-a)/2\\).<br><b>Working:</b> \\(E[V\\mid V>50]=75\\), so P&amp;L per fill \\(=50-75=-25\\). Unconditional \\(=-(100-a)^2/200=-12.5\\). Monte Carlo of \\(10^6\\) gave \\(-12.50\\) and \\(-24.99\\).<br><b>Sanity check:</b> Loss shrinks to zero only as \\(a\\to100\\). Against informed flow alone, no ask below 100 breaks even.<br><b>Transfer:</b> The same arithmetic applies to a bid hit by an informed seller.",
+  "tags": [
+   "s_conditional_expectation_tower",
+   "s_game_theory_equilibrium",
+   "market_making",
+   "winners_curse",
+   "adverse_selection",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You quote an ask of 50 on \\(V\\sim U[0,100]\\), and you are lifted. What is your fair value for the asset now?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_conditional_expectation_tower: being filled is evidence about the value.<br><b>Trigger:</b> A fill at a price reveals which side of the threshold the value lies on.<br><b>Key move:</b> Fair value becomes \\(E[V\\mid V>50]\\).<br><b>Answer:</b> 75, not 50. For a bid hit at 50 instead, the fair value is \\(E[V\\mid V<50]=25\\).",
+  "tags": [
+   "s_conditional_expectation_tower",
+   "market_making",
+   "winners_curse",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Five analysts each estimate a stock's value as the true value plus independent N(0,1) noise. You buy at the highest estimate's price. Expected overestimate, in sd units?",
+  "back": "<b>Classic:</b> Auction winner's curse: the winning bid overpays on average because the winner is the one with the largest error.<br><b>Mapping:</b> Highest estimate = max of five i.i.d. normals. The expected overestimate equals \\(E[\\max\\text{ of }5]\\).<br><b>Answer:</b> \\(E[\\max_5]\\approx1.163\\) (exact by integration \\(1.16296\\); simulation of \\(10^5\\) gave 1.165).",
+  "tags": [
+   "s_extremal",
+   "s_order_statistics",
+   "winners_curse",
+   "fermi",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How should you set market width when quoting an unknown quantity?",
+  "back": "<b>Triggers:</b> You are making a two-sided market on a quantity with uncertain value, and some counterparties may know more than you.<br><b>Move:</b> Width = adverse-selection cost (expected loss to an informed trade) + inventory cost + margin. Scale the expected-move part with the sd of the outcome.<br><b>Example:</b> Dice sum: sd 2.42, so a ±1-sd market is about ±2.4. Against informed flow, add the winner's-curse loss from the single-informed-buyer card.<br><b>Failure mode:</b> Widening too much loses uninformed flow and earns no edge. Widening too little bleeds to informed traders. Re-quote after each trade if the flow looks informed.",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "s_information_design",
+   "market_making",
+   "adverse_selection",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For \\(V\\sim U[0,100]\\), \\(E[V\\mid V>a]=\\){{c1::\\((a+100)/2\\)}}, so a lift at ask \\(a\\) costs {{c2::\\((100-a)/2\\)}} per fill.",
+  "back": "Check at \\(a=50\\): conditional mean 75, cost 25. This matches the Monte Carlo in the winner's-curse solve card. The same logic runs for a bid hit by an informed seller.",
+  "tags": [
+   "s_conditional_expectation_tower",
+   "market_making",
+   "winners_curse",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You are long 5 contracts. Your reservation-price rule is \\(r=\\text{mid}-q\\,\\gamma\\sigma^2(T-t)\\), with \\(\\gamma\\sigma^2(T-t)=0.1\\) per unit. How do you shift the quote?",
+  "back": "<b>Answer:</b> Shift both bid and ask down by 0.5. Lean towards selling.<br><b>Structure:</b> s_dynamic_programming: inventory skew from a stochastic-control problem (Avellaneda-Stoikov type).<br><b>Key move:</b> Reservation price moves against inventory: long inventory lowers the mid, short raises it.<br><b>Working:</b> \\(5\\times0.1=0.5\\), so \\(r=\\text{mid}-0.5\\).<br><b>Sanity check:</b> Zero inventory means no skew. The sign is right: a long position should be cheaper to sell.<br><b>Transfer:</b> Short 5 contracts: shift up by 0.5 instead.",
+  "tags": [
+   "s_dynamic_programming",
+   "market_making",
+   "inventory",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A trader buys with prob 0.8 if the coin is 0.6, and with prob 0.2 if it is 0.4. The prior is 50/50. You observe one buy. What is your posterior on 0.6, and the mean probability? Then two buys.<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_bayes: flow as a noisy signal of a hidden parameter.<br><b>Trigger:</b> A counterparty's action is a likelihood-ratio signal about the hidden state.<br><b>Key move:</b> Posterior odds = likelihood ratio \\(\\times\\) prior odds. Each buy multiplies the odds by \\(0.8/0.2=4\\).<br><b>Answer:</b> One buy: posterior 0.80, mean \\(0.8\\cdot0.6+0.2\\cdot0.4=0.56\\). Two buys: odds 16, posterior \\(16/17=0.941\\), mean \\(0.588\\). Monte Carlo of \\(10^6\\) gave 0.80.",
+  "tags": [
+   "s_bayes",
+   "market_making",
+   "bayes_update",
+   "adverse_selection",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: MM session 1/4]</b> Market on the sum of two fair dice. Your fair value is 7 (no information). You quote bid 6, ask 8.<br><b>Question:</b> A buyer lifts your 8 and you know nothing more about them. What is your edge against fair value, and what is your position?",
+  "back": "<b>Answer:</b> +1 edge, short 1 at 8.<br><b>Structure:</b> s_game_theory_equilibrium<br><b>Key move:</b> An uninformed fill earns half the spread against fair value.<br><b>Working:</b> Edge = ask minus fair = \\(8-7=1\\). Position short 1.<br><b>Sanity check:</b> Mark at 7 gives \\(+1\\). The full round trip is 2, as in the next card of this chain.<br><b>Transfer:</b> A spread of 2 is worth 1 per side against a uninformed flow.",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "market_making",
+   "market_making",
+   "dice",
+   "fmt_chain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: MM session 2/4]</b> Recap: you are short 1 at 8, edge +1. Next, an uninformed seller hits your bid of 6.<br><b>Question:</b> What is your position now, and what is the locked-in P&amp;L?",
+  "back": "<b>Answer:</b> Flat, locked +2.<br><b>Structure:</b> s_game_theory_equilibrium<br><b>Key move:</b> A round trip at bid and ask earns the full spread.<br><b>Working:</b> Short 1 at 8, long 1 at 6: net position 0, cash \\(8-6=2\\).<br><b>Sanity check:</b> Locked P&amp;L is \\(+2\\). Against fair 7 this is \\(+1\\) per side.<br><b>Transfer:</b> A round trip of two uninformed fills earns the full quoted spread.",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "market_making",
+   "market_making",
+   "dice",
+   "fmt_chain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: MM session 3/4]</b> Recap: flat, locked +2. Next, a buyer lifts your 8. This buyer has already seen the first die, and it shows 6.<br><b>Question:</b> What is the fair value now given that information, and what is your running P&amp;L after marking the new short?",
+  "back": "<b>Answer:</b> Fair 9.5. Short at 8 marked to 9.5 gives \\(-1.5\\). Running P&amp;L \\(+0.5\\).<br><b>Structure:</b> s_conditional_expectation_tower<br><b>Key move:</b> Condition on the first die shown by the buyer: the second die is still uniform, so the fair value is \\(6+3.5\\).<br><b>Working:</b> \\(E[S\\mid d_1=6]=6+3.5=9.5\\). Short at 8, marked at 9.5, so \\(8-9.5=-1.5\\). Running \\(2-1.5=+0.5\\).<br><b>Sanity check:</b> Monte Carlo confirms \\(E[S\\mid d_1=6]=9.5\\). The \\(-1.5\\) is an adverse-selection cost.<br><b>Transfer:</b> Once you see which informed side is trading, the mark changes at once.",
+  "tags": [
+   "s_conditional_expectation_tower",
+   "s_information_design",
+   "market_making",
+   "market_making",
+   "adverse_selection",
+   "dice",
+   "fmt_chain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: MM session 4/4]</b> Recap: fair value now 9.5, short 1 at 8, running P&amp;L +0.5. Further buyers may also have seen the first die.<br><b>Question:</b> Give a new mid, a width, and the reason for each.",
+  "back": "<b>Answer:</b> Mid 9.5. Widen to about 8.5 bid / 10.5 ask. The 8 ask was filled by a buyer whose information cost you 1.5 per unit.<br><b>Structure:</b> s_information_design<br><b>Key move:</b> Re-centre on the new conditional fair value. Widen by the expected adverse-selection cost when informed flow is present.<br><b>Working:</b> New mid \\(9.5\\). Width of ±1 gives 8.5 to 10.5. Expected cost of the next informed fill is about 1.5 per unit, above the uninformed edge of 1.<br><b>Sanity check:</b> If informed flow dominates, widen further or stop quoting. Quoting at 8 again would lose 1.5 per fill.<br><b>Transfer:</b> Recentre on conditional mean after each informed fill, and never quote a side at a price below the new fair.",
+  "tags": [
+   "s_information_design",
+   "market_making",
+   "market_making",
+   "adverse_selection",
+   "fmt_chain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: Kelly 1/3]</b> Even-money coin, \\(p=0.6\\). You bet a fraction \\(f\\) of bankroll on each flip.<br><b>Question:</b> What is the Kelly fraction \\(f^*\\), and the growth per bet at \\(f^*\\)?",
+  "back": "<b>Answer:</b> \\(f^*=0.20\\), growth \\(g^*=0.0201\\) per bet (2.01% in log terms).<br><b>Structure:</b> s_kelly_log_utility<br><b>Key move:</b> Maximise \\(g(f)=p\\ln(1+f)+q\\ln(1-f)\\) and set the derivative to zero.<br><b>Working:</b> \\(g'(f)=p/(1+f)-q/(1-f)=0\\), so \\(f^*=p-q=0.2\\). \\(g(0.2)=0.6\\ln1.2+0.4\\ln0.8=0.02014\\).<br><b>Sanity check:</b> Small bets: \\(g\\approx f(p-q)\\) for tiny \\(f\\), so growth is increasing until the optimum.<br><b>Transfer:</b> A 55/45 even-money coin gives \\(f^*=0.10\\).",
+  "tags": [
+   "s_kelly_log_utility",
+   "market_making",
+   "kelly",
+   "betting",
+   "fmt_chain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: Kelly 2/3]</b> Recap: \\(p=0.6\\), even money, \\(f^*=0.2\\), \\(g^*=2.01\\%\\) per bet. You now bet 40% of bankroll on each flip.<br><b>Question:</b> What is the log growth per bet, and what happens over many bets?",
+  "back": "<b>Answer:</b> \\(g(0.4)=-0.0024\\). Negative: the bankroll shrinks in the long run despite a positive edge.<br><b>Structure:</b> s_kelly_log_utility<br><b>Key move:</b> Growth is concave in \\(f\\). Overbetting past the zero-growth point loses money in the long run even with a positive edge.<br><b>Working:</b> \\(g(0.4)=0.6\\ln1.4+0.4\\ln0.6=0.20188-0.20433=-0.00245\\). Zero-growth point \\(f_0\\approx0.389\\), so 0.4 already loses.<br><b>Sanity check:</b> \\(f=2f^*=0.4\\) is past the zero-growth point. Overbetting is worse than not betting.<br><b>Transfer:</b> The expected value per bet is positive at every \\(f\\), but the expected log is not.",
+  "tags": [
+   "s_kelly_log_utility",
+   "market_making",
+   "kelly",
+   "betting",
+   "fmt_chain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: Kelly 3/3]</b> Recap: overbetting at \\(f=0.4\\) gives negative growth. You now bet half-Kelly, \\(f=0.1\\).<br><b>Question:</b> What fraction of the maximum growth do you keep, and why is this a good trade-off?",
+  "back": "<b>Answer:</b> \\(g(0.1)=0.01504\\), about 75% of \\(g^*=0.02014\\). Volatility and drawdown fall much more than growth does.<br><b>Structure:</b> s_kelly_log_utility<br><b>Key move:</b> Half-Kelly gives up 25% of growth for much less variance. Fractional Kelly is the default in practice.<br><b>Working:</b> \\(g(0.1)=0.6\\ln1.1+0.4\\ln0.9=0.05719-0.04214=0.01504\\). Ratio \\(0.747\\).<br><b>Sanity check:</b> Quarter-Kelly keeps \\(2(1/4)-(1/4)^2\\approx44\\%\\) of growth in the continuous model.<br><b>Transfer:</b> The loss in growth is quadratic in the error of \\(f\\), so mis-sizing by a factor of 2 costs less than the full edge.",
+  "tags": [
+   "s_kelly_log_utility",
+   "market_making",
+   "kelly",
+   "betting",
+   "fmt_chain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A bet pays 3 to 1 (\\(b=3\\)) with win probability 0.3. What is the Kelly fraction?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_kelly_log_utility: discrete Kelly with odds \\(b\\).<br><b>Trigger:</b> A binary bet with odds \\(b\\) different from even money.<br><b>Key move:</b> \\(f^*=(bp-q)/b\\).<br><b>Answer:</b> \\((3\\cdot0.3-0.7)/3=0.2/3=1/15\\approx0.0667\\).",
+  "tags": [
+   "s_kelly_log_utility",
+   "market_making",
+   "kelly",
+   "betting",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Even-money bet with \\(p=0.55\\). Kelly fraction and growth per bet?",
+  "back": "<b>Answer:</b> \\(f^*=0.10\\). Growth \\(g=0.0050\\) per bet.<br><b>Structure:</b> s_kelly_log_utility: the small-edge approximation \\(g\\approx(p-q)^2/2\\).<br><b>Key move:</b> At even money the Kelly fraction is the edge \\(p-q\\). Maximise the log growth.<br><b>Working:</b> \\(f^*=p-q=0.1\\). Then \\(g=0.55\\ln1.1+0.45\\ln0.9=0.05242-0.04741=0.00501\\).<br><b>Sanity check:</b> Small-edge formula: \\((0.1)^2/2=0.005\\), matching.<br><b>Transfer:</b> Doubling \\(p-q\\) quadruples the growth rate in this regime.",
+  "tags": [
+   "s_kelly_log_utility",
+   "market_making",
+   "kelly",
+   "betting",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Continuous model: an asset has excess return \\(\\mu=8\\%\\) and volatility \\(\\sigma=20\\%\\). What is the Kelly fraction, the growth rate, and the growth at half-Kelly?",
+  "back": "<b>Answer:</b> \\(f^*=\\mu/\\sigma^2=2\\) (200% of bankroll). \\(g^*=\\mu^2/(2\\sigma^2)=8\\%\\). Half-Kelly \\(f=1\\) gives \\(g=6\\%\\).<br><b>Structure:</b> s_kelly_log_utility: maximise \\(f\\mu-f^2\\sigma^2/2\\).<br><b>Key move:</b> Differentiate: \\(\\mu-f\\sigma^2=0\\), so \\(f^*=\\mu/\\sigma^2\\).<br><b>Working:</b> \\(f^*=0.08/0.04=2\\). \\(g^*=0.08\\cdot2-4\\cdot0.04/2=0.08\\). Half-Kelly: \\(0.08-0.02=0.06\\).<br><b>Sanity check:</b> Sharpe \\(S=\\mu/\\sigma=0.4\\), and \\(g^*=S^2/2=0.08\\).<br><b>Transfer:</b> Leverage of 2 in an asset with Sharpe 0.4 is exactly Kelly. Real markets rarely allow this safely.",
+  "tags": [
+   "s_kelly_log_utility",
+   "market_making",
+   "kelly",
+   "volatility",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Fractional Kelly. In the continuous model, growth at \\(\\lambda f^*\\) relative to the maximum is \\(g(\\lambda f^*)/g^*=\\){{c1::\\(2\\lambda-\\lambda^2\\)}}. Half-Kelly (\\(\\lambda=\\tfrac12\\)) keeps {{c2::75%}} of the growth.",
+  "back": "Check: \\(\\lambda=2\\) gives \\(4-4=0\\), zero growth, so \\(2f^*\\) is the break-even point of the continuous model. In the discrete coin model the zero-growth point is about \\(0.389\\), close to but not exactly \\(2f^*=0.4\\).",
+  "tags": [
+   "s_kelly_log_utility",
+   "market_making",
+   "kelly",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Coin with \\(p=0.6\\), even money. You bet full Kelly, \\(f=0.2\\), each flip. What is the chance your wealth ever falls to half its starting value? Give a rigorous bound and check by simulation.",
+  "back": "<b>Answer:</b> At most \\(1/2\\). Simulation over 1000 bets gave 0.456.<br><b>Structure:</b> s_martingale and s_optional_stopping: \\(1/W_t\\) is a martingale, so Doob's maximal inequality bounds the drawdown.<br><b>Key move:</b> Choose \\(f^*=0.2\\). Then \\(E[1/(1+fX)]=0.6/1.2+0.4/0.8=1\\), so \\(M_t=1/W_t\\) is a positive martingale with \\(M_0=1\\).<br><b>Working:</b> \\(P(\\sup_t M_t\\ge2)\\le E[M_0]/2=1/2\\). Event \\(\\sup M\\ge2\\) is the same as \\(W\\) falling to \\(1/2\\). Simulation of \\(10^5\\) paths over 1000 bets gave 0.456.<br><b>Sanity check:</b> The bound is loose for this edge, which is consistent with the simulation sitting below it.<br><b>Transfer:</b> Under half-Kelly, \\(1/W\\) is a supermartingale, since \\(E[1/(1+0.1X)]=0.99<1\\), so the same bound still holds, and the drawdown probability is much lower.",
+  "tags": [
+   "s_martingale",
+   "s_optional_stopping",
+   "market_making",
+   "kelly",
+   "drawdown",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You bet Kelly fraction 0.2 on a coin that you believe has \\(p=0.6\\). The true \\(p\\) is 0.5. What breaks?",
+  "back": "<b>What breaks:</b> The optimal \\(f\\) assumed the edge \\(p-q=0.2\\). With \\(p=0.5\\) the true optimum is \\(f=0\\). Growth at \\(f=0.2\\) is negative.<br><b>Fix:</b> Shrink the edge estimate and bet on the posterior mean of \\(p\\). Use a fraction of Kelly. Bet zero until the edge is clearer.<br><b>New answer:</b> \\(g(0.2)=0.5\\ln1.2+0.5\\ln0.8=-0.0204\\) per bet, a loss of 2.04% per flip in log terms.",
+  "tags": [
+   "s_kelly_log_utility",
+   "market_making",
+   "kelly",
+   "betting",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Game: payoff \\(2^k\\) with probability \\(2^{-k}\\), \\(k\\ge1\\) (2 with prob 1/2, 4 with prob 1/4...). Infinite expected value. What is the most you would pay at wealth 100, under log utility?",
+  "back": "<b>Answer:</b> About $7.79 at wealth 100. Price grows slowly with wealth: about $10.95 at 1000, $14.24 at 10,000.<br><b>Structure:</b> s_convexity_jensen and s_kelly_log_utility: concave utility caps the price even when expected value is infinite.<br><b>Key move:</b> Solve \\(\\sum_k 2^{-k}\\ln(W-c+2^k)=\\ln W\\) for \\(c\\).<br><b>Working:</b> Bisection on \\(c\\) with \\(W=100\\) gives \\(c=7.79\\). Monte Carlo of \\(10^6\\) draws of the payoff gives \\(E[\\ln(W-c+X)]-\\ln W=0.0002\\pm0.0002\\), i.e. zero within error.<br><b>Sanity check:</b> The price is far below the infinite expected value, and grows roughly like \\(\\ln W\\).<br><b>Transfer:</b> Replacing log utility with \\(\\sqrt{\\cdot}\\) gives a different, larger price.",
+  "tags": [
+   "s_convexity_jensen",
+   "s_kelly_log_utility",
+   "market_making",
+   "expected_utility",
+   "betting",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Same St. Petersburg game, but payoffs are capped at \\(2^{20}\\) (so \\(k\\le20\\)). What happens to the expected value?",
+  "back": "<b>What breaks:</b> The infinite sum is now finite. Each term contributes \\(\\tfrac12\\) per \\(k\\), so the expected value is linear in the cap index.<br><b>Fix:</b> The expected value is \\(\\sum_{k=1}^{20}1=20\\). Price the cap as \\(20\\) under risk-neutral pricing, then apply utility.<br><b>New answer:</b> Expected value \\(=20\\). The log-utility price is much lower than 20.",
+  "tags": [
+   "s_convexity_jensen",
+   "market_making",
+   "expected_utility",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Double-or-nothing, \\(p=0.6\\), 10 flips, bankroll 100, bet everything each flip. Expected final wealth? Probability of surviving all 10? Median?",
+  "back": "<b>Answer:</b> EV \\(\\approx619\\). P(all 10 wins) \\(=0.006\\). Median wealth is 0.<br><b>Structure:</b> s_convexity_jensen and s_kelly_log_utility: expected value and median come apart under a multiplicative bet.<br><b>Key move:</b> EV multiplies by \\(2p=1.2\\) per flip. Median requires surviving the whole path.<br><b>Working:</b> \\(100\\cdot1.2^{10}=619\\). \\(0.6^{10}=0.00605\\). The median is 0 because \\(P(W=0)=0.994>1/2\\).<br><b>Sanity check:</b> A positive expected value does not imply a positive median. Full bet maximises mean and kills the median.<br><b>Transfer:</b> A bet with a 10% chance of a 10x win and a 90% chance of 0 has the same pattern.",
+  "tags": [
+   "s_convexity_jensen",
+   "s_kelly_log_utility",
+   "market_making",
+   "expected_utility",
+   "betting",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Pay-to-play: win $3 or lose $1 on a fair coin (EV \\(+$1\\)). Bankroll $100, log utility. What is the most you would pay to play?",
+  "back": "<b>Answer:</b> About $0.98, just under the expected value of $1.<br><b>Structure:</b> s_kelly_log_utility: certainty equivalent under concave utility.<br><b>Key move:</b> Solve \\(\\tfrac12\\ln(103-c)+\\tfrac12\\ln(99-c)=\\ln100\\), i.e. \\((103-c)(99-c)=10^4\\).<br><b>Working:</b> \\(c^2-202c+197=0\\), so \\(c=(202-\\sqrt{40016})/2=0.980\\).<br><b>Sanity check:</b> As wealth grows the price tends to the expected value \\(1\\). At wealth 100 the risk premium is about 2 cents.<br><b>Transfer:</b> The same method gives a price below EV for any game with a concave utility.",
+  "tags": [
+   "s_kelly_log_utility",
+   "market_making",
+   "expected_utility",
+   "betting",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A deck of 26 red and 26 black cards is shuffled. Before each card you guess its colour: +1 if right, -1 if wrong. You play all 52 cards. What is the optimal expected score?",
+  "back": "<b>Answer:</b> About 8.08 (expected correct guesses about 30.04 of 52).<br><b>Structure:</b> s_dynamic_programming: value depends on the remaining composition \\((r,b)\\).<br><b>Key move:</b> \\(V(r,b)=\\max\\{r-b,b-r\\}/(r+b)+\\frac{rV(r-1,b)+bV(r,b-1)}{r+b}\\). Guess the majority colour.<br><b>Working:</b> Dynamic programme in exact fractions gives \\(V(26,26)=8.0813\\). Monte Carlo of \\(10^6\\) greedy plays gave \\(8.0813\\pm0.005\\).<br><b>Sanity check:</b> A fair bet on each card would total 0, so the positive value is due to the information in the composition.<br><b>Transfer:</b> Small deck: \\(V(2,2)=5/3\\). With replacement the value is 0.",
+  "tags": [
+   "s_dynamic_programming",
+   "market_making",
+   "cards",
+   "betting",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 2-red, 2-black deck, shuffled. Same game: +1 for each right colour guess, -1 for each wrong, play all four cards. Optimal expected score?",
+  "back": "<b>Answer:</b> \\(5/3\\).<br><b>Structure:</b> s_dynamic_programming: recursion over remaining composition.<br><b>Key move:</b> Immediate guess has expected value 0 for a balanced deck. The continuation carries all the value.<br><b>Working:</b> \\(V(2,2)=\\tfrac12(V(1,2)+V(2,1))\\). \\(V(1,2)=\\tfrac13+\\tfrac{2V(1,1)+V(0,2)}{3}=\\tfrac13+\\tfrac{2+2}{3}=\\tfrac53\\).<br><b>Sanity check:</b> Four cards give a maximum of 4, so 5/3 is a plausible fraction of that.<br><b>Transfer:</b> Three-card deck with 1 red and 2 black: the same value \\(5/3\\).",
+  "tags": [
+   "s_dynamic_programming",
+   "market_making",
+   "cards",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A deck of 26 red and 26 black is shuffled. You must bet on every card, with no passing. Why is the optimal total strictly positive, even though each bet at the start is fair?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_dynamic_programming: the state changes, so each later bet can be favourable.<br><b>Trigger:</b> Sampling without replacement, so the remaining composition reveals information.<br><b>Key move:</b> Guess the majority colour of the remaining deck at each step. The conditional edge is positive whenever \\(r\\neq b\\).<br><b>Answer:</b> Optimal total is about 8.08, not 0.",
+  "tags": [
+   "s_dynamic_programming",
+   "s_martingale",
+   "market_making",
+   "cards",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Same red/black game, but the deck is reshuffled with replacement before each card. What breaks?",
+  "back": "<b>What breaks:</b> Each card is an independent fair coin, so the composition carries no information and every guess is a fair bet.<br><b>Fix:</b> Drop the state-dependent recursion. The value is the sum of fair bets.<br><b>New answer:</b> Expected score \\(=0\\).",
+  "tags": [
+   "s_dynamic_programming",
+   "s_martingale",
+   "market_making",
+   "cards",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair ±1 walk. You bet on every step and stop the first time you reach +3, with no time limit. What is the expected payoff? What breaks?",
+  "back": "<b>What breaks:</b> Expected payoff \\(=+3\\), but this uses an unbounded stopping time and unbounded losses. Optional stopping needs bounded time or bounded losses.<br><b>Fix:</b> Cap the loss at \\(N\\). \\(P(\\text{hit }+3\\text{ before }-N)=N/(N+3)\\), so EV \\(=3\\cdot\\tfrac{N}{N+3}-N\\cdot\\tfrac{3}{N+3}=0\\).<br><b>New answer:</b> With cap \\(N\\), EV \\(=0\\). The \\(+3\\) only appears when the bankroll is infinite.",
+  "tags": [
+   "s_optional_stopping",
+   "market_making",
+   "betting",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair ±1 walk over 10 flips. You choose when to stop, from any of the 10 flips. What is the maximal expected payoff?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_optional_stopping: a martingale stopped at a bounded time.<br><b>Trigger:</b> A martingale with a bounded horizon. The stopping rule cannot change the mean.<br><b>Key move:</b> \\(E[X_\\tau]=E[X_0]=0\\) for any bounded stopping time \\(\\tau\\le 10\\).<br><b>Answer:</b> 0.",
+  "tags": [
+   "s_optional_stopping",
+   "s_martingale",
+   "market_making",
+   "betting",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Each round multiplies your bankroll by \\(1+f\\) with probability 0.6 and by \\(1-f\\) with probability 0.4. You want the best median bankroll after 1000 rounds. Which \\(f\\)?",
+  "back": "<b>Classic:</b> Kelly criterion (Kelly 1956, Breiman): maximising the median of a multiplicative bankroll is maximising expected log growth.<br><b>Mapping:</b> Median of \\(\\prod(1+fX_i)\\) equals \\(\\exp(\\sum\\ln(1+fX_i))\\) in the limit, so maximise \\(E\\ln(1+fX)\\).<br><b>Answer:</b> \\(f^*=p-q=0.2\\), with growth \\(0.0201\\) per round.",
+  "tags": [
+   "s_kelly_log_utility",
+   "kelly",
+   "betting",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Start at 0. Each fair flip moves you +1 or -1. What is the probability you reach +3 before -1?",
+  "back": "<b>Classic:</b> Gambler's ruin: the probability of hitting an upper barrier before a lower barrier is linear in the start.<br><b>Mapping:</b> Start at 0, barriers at +3 and -1, so the probability of reaching +3 first is \\((0-(-1))/(3-(-1))\\).<br><b>Answer:</b> \\(1/4\\).",
+  "tags": [
+   "s_martingale",
+   "s_optional_stopping",
+   "betting",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When does Kelly fail, and what do you do instead?",
+  "back": "<b>Triggers:</b> Edge is estimated and uncertain, bets are fat-tailed or correlated, or a single loss can end the game.<br><b>Move:</b> Use fractional Kelly (\\(\\lambda\\le\\tfrac12\\)) on the posterior mean of the edge. Size to drawdown tolerance, not to the peak.<br><b>Example:</b> The misestimated-edge card: Kelly sized to \\(p=0.6\\) when \\(p=0.5\\) loses 2% per flip.<br><b>Failure mode:</b> Kelly maximises long-run growth, not the chance of ruin over a finite horizon. With a small, uncertain edge it is too aggressive.",
+  "tags": [
+   "s_kelly_log_utility",
+   "kelly",
+   "betting",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A bet has expected value +5% of stake, but a loss wipes out the whole bankroll. The win probability is 0.51 at even money. Do you bet all?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_convexity_jensen: the expected log of wealth, not expected wealth, governs the long run.<br><b>Trigger:</b> A loss that takes wealth to zero makes expected log utility \\(-\\infty\\), however small the chance.<br><b>Key move:</b> \\(E[\\ln W]=0.51\\ln2+0.49\\ln0=-\\infty\\). Choose \\(f<1\\), with Kelly \\(f^*=0.02\\).<br><b>Answer:</b> No. Bet the Kelly fraction, \\(0.51-0.49=0.02\\).",
+  "tags": [
+   "s_convexity_jensen",
+   "s_kelly_log_utility",
+   "expected_utility",
+   "betting",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Market on the sum of two fair dice. A buyer lifts your 8 and says the first die shows 5. What is the new fair value?",
+  "back": "<b>Answer:</b> 8.5.<br><b>Structure:</b> s_conditional_expectation_tower: a partial reveal changes the conditional mean.<br><b>Key move:</b> Condition on \\(d_1=5\\). The second die is still uniform.<br><b>Working:</b> \\(E[S\\mid d_1=5]=5+3.5=8.5\\).<br><b>Sanity check:</b> Your ask at 8 is now 0.5 below fair. A buyer who knows the first die loses you 0.5 per fill.<br><b>Transfer:</b> \\(E[S\\mid d_1=1]=4.5\\).",
+  "tags": [
+   "s_conditional_expectation_tower",
+   "market_making",
+   "dice",
+   "adverse_selection",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How should you update a market after each trade? Information in being lifted.",
+  "back": "<b>Triggers:</b> Counterparties may know more than you. A fill is evidence about the true value, and the direction of the fill matters.<br><b>Move:</b> Move the mid to \\(E[V\\mid\\text{direction of fill}]\\). Widen the spread when fills look informed. Do not move if flow looks random.<br><b>Example:</b> Ask fill on \\(U[0,100]\\) at 50 moves the mid to 75 (the lifted-fill card). Dice fill at 8 with \\(d_1=5\\) moves the mid to 8.5.<br><b>Failure mode:</b> Moving on uninformed flow loses edge. Failing to move on informed flow loses money. Detect toxicity from order-flow patterns.",
+  "tags": [
+   "s_information_design",
+   "s_bayes",
+   "market_making",
+   "adverse_selection",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A standard deck. Expected number of aces in a 5-card hand?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_indicators: a sum of indicator variables.<br><b>Trigger:</b> A count of a fixed-probability event over a finite draw, where linearity applies even though draws are dependent.<br><b>Key move:</b> \\(E=5\\cdot P(\\text{ace on one card})=5\\cdot\\tfrac{4}{52}\\).<br><b>Answer:</b> \\(5/13\\approx0.385\\).",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "market_making",
+   "cards",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Quote bid 6 and ask 8 on the sum of two fair dice (fair value 7). One uninformed buyer and one uninformed seller trade with you once each. Expected P&amp;L?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_linearity_expectation: per-fill edges add over independent round trips.<br><b>Trigger:</b> A round trip with uninformed flow captures the full quoted spread.<br><b>Key move:</b> P&amp;L = ask minus bid = 2 per round trip, which is 1 per side relative to fair.<br><b>Answer:</b> +2 per round trip.",
+  "tags": [
+   "s_linearity_expectation",
+   "market_making",
+   "market_making",
+   "dice",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A market on the number of sixes in three fair rolls. Mid and sd?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_indicators with s_clt_normal_approx: sum of independent Bernoulli(1/6) indicators.<br><b>Trigger:</b> A count of a rare event over a fixed number of independent trials.<br><b>Key move:</b> Mean \\(3/6\\). Variance \\(3\\cdot\\tfrac16\\cdot\\tfrac56=5/12\\).<br><b>Answer:</b> Mid 0.5, variance 0.417, sd 0.645.",
+  "tags": [
+   "s_indicators",
+   "s_clt_normal_approx",
+   "market_making",
+   "dice",
+   "fmt_recognise"
+  ]
+ }
+]

@@ -120,7 +120,7 @@
  },
  {
   "type": "basic",
-  "front": "Two dice rolled. Let \\(X\\) and \\(Y\\) be i.i.d. with any continuous distribution on \\((0,\\infty)\\). Find \\(E\\!\\left[\\frac{X}{X+Y}\\right]\\).<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "front": "Let \\(X\\) and \\(Y\\) be i.i.d. with any continuous distribution on \\((0,\\infty)\\). Find \\(E\\!\\left[\\frac{X}{X+Y}\\right]\\).<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
   "back": "<b>Structure:</b> symmetry (exchangeability).<br><b>Trigger:</b> The ratio is a function of the two draws, and swapping them maps it to its complement.<br><b>Key move:</b> By symmetry \\(E[\\frac{X}{X+Y}]=E[\\frac{Y}{X+Y}]\\), and these sum to 1.<br><b>Answer:</b> \\(\\frac12\\), whatever the common distribution.",
   "tags": [
    "s_symmetry",
@@ -247,7 +247,7 @@
  {
   "type": "basic",
   "front": "A uniform random permutation of 4 items. Let \\(C\\) be the number of cycles. Find \\(E[C]\\) and \\(\\mathrm{Var}(C)\\).",
-  "back": "<b>Answer:</b> \\(E[C]=\\frac{25}{12}\\approx 2.0833\\); \\(\\mathrm{Var}(C)=\\frac{95}{144}\\approx 0.6597\\).<br><b>Structure:</b> indicators from the Feller coupling (independent events 'item \\(i\\) is the largest in its cycle').<br><b>Key move:</b> Under the coupling, \\(I_i\\sim\\mathrm{Ber}(1/i)\\) independently. So \\(E=\\sum\\frac1i\\) and \\(\\mathrm{Var}=\\sum\\frac1i(1-\\frac1i)=H_4-H_4^{(2)}\\).<br><b>Working:</b> \\(H_4=\\frac{25}{12}\\), \\(H^{(2)}_4=\\frac{205}{144}\\), so \\(\\mathrm{Var}=\\frac{300-205}{144}=\\frac{95}{144}\\). Checked by enumerating all 24 permutations.<br><b>Sanity check:</b> Each value is within \\(\\frac{1}{4}\\) of the mean at \\(n=4\\); \\(E[C]\\approx\\ln 4+\\gamma\\).<br><b>Transfer:</b> Left-to-right maxima of a random permutation have the same law (see twin card).",
+  "back": "<b>Answer:</b> \\(E[C]=\\frac{25}{12}\\approx 2.0833\\); \\(\\mathrm{Var}(C)=\\frac{95}{144}\\approx 0.6597\\).<br><b>Structure:</b> indicators from the Feller coupling (independent events 'item \\(i\\) is the largest in its cycle').<br><b>Key move:</b> Under the coupling, \\(I_i\\sim\\mathrm{Ber}(1/i)\\) independently. So \\(E=\\sum\\frac1i\\) and \\(\\mathrm{Var}=\\sum\\frac1i(1-\\frac1i)=H_4-H_4^{(2)}\\).<br><b>Working:</b> \\(H_4=\\frac{25}{12}\\), \\(H^{(2)}_4=\\frac{205}{144}\\), so \\(\\mathrm{Var}=\\frac{300-205}{144}=\\frac{95}{144}\\). Checked by enumerating all 24 permutations.<br><b>Sanity check:</b> The harmonic approximation \\(\\ln n+\\gamma\\) gives about 1.96 at \\(n=4\\), close to 2.08. The variance is below the mean.<br><b>Transfer:</b> Left-to-right maxima of a random permutation have the same law (see twin card).",
   "tags": [
    "s_indicators",
    "s_bijection",
@@ -259,7 +259,7 @@
  {
   "type": "basic",
   "front": "A uniform random permutation of 4 distinct numbers. Let \\(A\\) be the number of ascents (positions where the next value is larger). Find \\(E[A]\\) and \\(\\mathrm{Var}(A)\\).",
-  "back": "<b>Answer:</b> \\(E[A]=\\frac32\\); \\(\\mathrm{Var}(A)=\\frac5{12}\\approx 0.4167\\).<br><b>Structure:</b> indicators with neighbour dependence: each ascent event is one comparison.<br><b>Key move:</b> Each adjacent pair is an ascent with probability \\(\\frac12\\). Two consecutive ascents need \\(\\pi_1<\\pi_2<\\pi_3\\), probability \\(\\frac16\\), so neighbour covariance is \\(-\\frac1{12}\\).<br><b>Working:</b> \\(\\mathrm{Var}=3\\cdot\\frac14+2\\cdot 2\\cdot\\left(-\\frac1{12}\\right)=\\frac34-\\frac13=\\frac5{12}\\). Checked by enumeration.<br><b>Sanity check:</b> Mean ascents \\(\\frac{n-1}2\\) holds for any \\(n\\), with no independence needed.<br><b>Transfer:</b> Count of peaks in the middle of a permutation (has the same local-dependence structure).",
+  "back": "<b>Answer:</b> \\(E[A]=\\frac32\\); \\(\\mathrm{Var}(A)=\\frac5{12}\\approx 0.4167\\).<br><b>Structure:</b> indicators with neighbour dependence: each ascent event is one comparison.<br><b>Key move:</b> Each adjacent pair is an ascent with probability \\(\\frac12\\). Two consecutive ascents need \\(\\pi_1<\\pi_2<\\pi_3\\), probability \\(\\frac16\\), so neighbour covariance is \\(-\\frac1{12}\\).<br><b>Working:</b> \\(\\mathrm{Var}=3\\cdot\\frac14+2\\cdot 2\\cdot\\left(-\\frac1{12}\\right)=\\frac34-\\frac13=\\frac5{12}\\). Checked by enumeration.<br><b>Sanity check:</b> Mean ascents \\(\\frac{n-1}2\\) holds for any \\(n\\), with no independence needed.<br><b>Transfer:</b> Peaks of a permutation, which also depend only on neighbouring comparisons (mean \\(\\frac{n-2}{3}\\)).",
   "tags": [
    "s_indicators",
    "s_linearity_expectation",
@@ -271,7 +271,7 @@
  {
   "type": "basic",
   "front": "A fair six-sided die is rolled until all six faces have appeared. Find the mean and the variance of the number of rolls.",
-  "back": "<b>Answer:</b> \\(E=\\frac{147}{10}=14.7\\); \\(\\mathrm{Var}=\\frac{3899}{100}=38.99\\) (standard deviation about 6.24).<br><b>Structure:</b> memorylessness: the total time is a sum of independent geometric phases.<br><b>Key move:</b> Phase \\(j\\) (from \\(j-1\\) to \\(j\\) distinct faces) is geometric with success \\(\\frac{7-j}{6}\\)... set \\(p_j=\\frac{6-(j-1)}{6}\\). Sum means \\(\\sum\\frac1{p_j}\\) and variances \\(\\sum\\frac{1-p_j}{p_j^2}\\).<br><b>Working:</b> Mean \\(=6\\sum_{j=1}^{6}\\frac1j\\). Variance \\(=\\sum_{j=1}^{6}\\frac{6(6-j)}{j^2}=\\frac{3899}{100}\\).<br><b>Sanity check:</b> Mean is \\(\\approx 14.7\\), and the standard deviation is about 6.24, so the time is spread out.<br><b>Transfer:</b> Expected number of boxes to collect all toy types (same mean as a die).",
+  "back": "<b>Answer:</b> \\(E=\\frac{147}{10}=14.7\\); \\(\\mathrm{Var}=\\frac{3899}{100}=38.99\\) (standard deviation about 6.24).<br><b>Structure:</b> memorylessness: the total time is a sum of independent geometric phases.<br><b>Key move:</b> Phase \\(j\\) (after \\(j-1\\) distinct faces) is geometric with success \\(p_j=\\frac{7-j}{6}\\). Its mean is \\(\\frac1{p_j}\\) and its variance \\(\\frac{1-p_j}{p_j^2}\\). Phases are independent.<br><b>Working:</b> Mean \\(=6\\sum_{j=1}^{6}\\frac1j\\). Variance \\(=\\sum_{j=1}^{6}\\frac{6(6-j)}{j^2}=\\frac{3899}{100}\\).<br><b>Sanity check:</b> Mean is \\(\\approx 14.7\\), and the standard deviation is about 6.24, so the time is spread out.<br><b>Transfer:</b> Expected number of boxes to collect all toy types (same mean as a die).",
   "tags": [
    "s_memorylessness",
    "s_linearity_expectation",
@@ -283,7 +283,7 @@
  {
   "type": "basic",
   "front": "Three types of draw: type 1 with probability \\(\\frac12\\), type 2 with probability \\(\\frac13\\), type 3 with probability \\(\\frac16\\). Find the expected number of draws to see all three types.",
-  "back": "<b>Answer:</b> \\(\\frac{73}{10}=7.3\\).<br><b>Structure:</b> inclusion-exclusion over subsets of types, using memorylessness.<br><b>Key move:</b> For a subset \\(S\\), the wait until any type in \\(S\\) appears is geometric with mean \\(\\frac{1}{p_S}\\), where \\(p_S=\\sum_{i\\in S}p_i\\). Then \\(E[T]=\\sum_{S\\ne\\emptyset}(-1)^{|S|+1}/p_S\\).<br><b>Working:</b> Singles: \\(2+3+6=11\\). Pairs: \\(\\frac65+\\frac32+2=\\frac{47}{10}\\). Triple: \\(1\\). So \\(11-\\frac{47}{10}+1=\\frac{73}{10}\\).<br><b>Sanity check:</b> Equal probabilities give \\(\\frac{14.7}{}\\) for 6 types. Uneven types lower the mean for 3 types, here 7.3 versus 5.5 for three equal types.<br><b>Transfer:</b> Equal-probability version with 3 types: \\(3H_3=5.5\\).",
+  "back": "<b>Answer:</b> \\(\\frac{73}{10}=7.3\\).<br><b>Structure:</b> inclusion-exclusion over subsets of types, using memorylessness.<br><b>Key move:</b> For a subset \\(S\\), the wait until any type in \\(S\\) appears is geometric with mean \\(\\frac{1}{p_S}\\), where \\(p_S=\\sum_{i\\in S}p_i\\). Then \\(E[T]=\\sum_{S\\ne\\emptyset}(-1)^{|S|+1}/p_S\\).<br><b>Working:</b> Singles: \\(2+3+6=11\\). Pairs: \\(\\frac65+\\frac32+2=\\frac{47}{10}\\). Triple: \\(1\\). So \\(11-\\frac{47}{10}+1=\\frac{73}{10}\\).<br><b>Sanity check:</b> Skewed probabilities slow the search: three equal types give 5.5, and this skewed draw gives 7.3.<br><b>Transfer:</b> Equal-probability version with 3 types: \\(3H_3=5.5\\).",
   "tags": [
    "s_inclusion_exclusion",
    "s_memorylessness",
@@ -306,7 +306,7 @@
  {
   "type": "basic",
   "front": "Five independent uniform draws from \\(\\{1,\\dots,6\\}\\). Let \\(D\\) be the number of distinct values. Find \\(E[D]\\) and \\(\\mathrm{Var}(D)\\).",
-  "back": "<b>Answer:</b> \\(E[D]=\\frac{4651}{1296}\\approx 3.5887\\); \\(\\mathrm{Var}(D)=\\frac{919895}{1679616}\\approx 0.5477\\).<br><b>Structure:</b> indicators for the absence of each value, plus complement.<br><b>Key move:</b> \\(A_v=1\\) if value \\(v\\) is absent. \\(P(A_v)=(\\frac56)^5\\), and for \\(u\\ne v\\), \\(P(A_uA_v)=(\\frac46)^5\\). Then \\(D=6-\\sum A_v\\).<br><b>Working:</b> \\(E[D]=6\\left(1-(\\tfrac56)^5\\right)\\). Variance is \\(\\sum\\mathrm{Var}(A_v)+\\sum_{u\\ne v}\\mathrm{Cov}(A_u,A_v)\\). Checked by enumerating all \\(6^5\\) sequences.<br><b>Sanity check:</b> Five draws from six values almost always show at least 3 distinct values; the mean is below 4.<br><b>Transfer:</b> Birthdays: distinct days among a group (same indicator method).",
+  "back": "<b>Answer:</b> \\(E[D]=\\frac{4651}{1296}\\approx 3.5887\\); \\(\\mathrm{Var}(D)=\\frac{919895}{1679616}\\approx 0.5477\\).<br><b>Structure:</b> indicators for the absence of each value, plus complement.<br><b>Key move:</b> \\(A_v=1\\) if value \\(v\\) is absent. \\(P(A_v)=(\\frac56)^5\\), and for \\(u\\ne v\\), \\(P(A_uA_v)=(\\frac46)^5\\). Then \\(D=6-\\sum A_v\\).<br><b>Working:</b> \\(E[D]=6\\left(1-(\\tfrac56)^5\\right)\\). Variance is \\(\\sum\\mathrm{Var}(A_v)+\\sum_{u\\ne v}\\mathrm{Cov}(A_u,A_v)\\). Checked by enumerating all \\(6^5\\) sequences.<br><b>Sanity check:</b> Five draws from six values usually show at least 3 distinct values (about 94 percent); the mean is below 4.<br><b>Transfer:</b> Birthdays: distinct days among a group (same indicator method).",
   "tags": [
    "s_indicators",
    "s_complement",
@@ -330,7 +330,7 @@
  {
   "type": "basic",
   "front": "A stick of length 1 is broken at two independent uniform points into three pieces. Find the probability the three pieces can form a triangle.",
-  "back": "<b>Answer:</b> \\(\\frac14\\).<br><b>Structure:</b> geometric probability with complement: the three events 'piece \\(i\\ge\frac12\\)' are disjoint.<br><b>Key move:</b> A triangle needs every piece below \\(\\frac12\\). At most one piece can exceed \\(\\frac12\\), so \\(P(\\text{no triangle})=3\\cdot P(L_1\\ge\\frac12)\\). Each has probability \\((\\frac12)^2=\\frac14\\).<br><b>Working:</b> \\(1-3\\cdot\\frac14=\\frac14\\approx 0.25\\). Monte Carlo \\(0.2522\\).<br><b>Sanity check:</b> Two-cut stick with each piece uniformly distributed; the probability is the same for a rope cut at two random points.<br><b>Transfer:</b> Probability that a random point split into 3 pieces forms a triangle.",
+  "back": "<b>Answer:</b> \\(\\frac14\\).<br><b>Structure:</b> geometric probability with complement: the three events 'piece \\(i\\ge\frac12\\)' are disjoint.<br><b>Key move:</b> A triangle needs every piece below \\(\\frac12\\). At most one piece can exceed \\(\\frac12\\), so \\(P(\\text{no triangle})=3\\cdot P(L_1\\ge\\frac12)\\). Each has probability \\((\\frac12)^2=\\frac14\\).<br><b>Working:</b> \\(1-3\\cdot\\frac14=\\frac14\\approx 0.25\\). Monte Carlo \\(0.2522\\).<br><b>Sanity check:</b> The 'at most one piece above half' argument is the same for any two i.i.d. uniform cuts. Only the threshold changes with more pieces.<br><b>Transfer:</b> Probability that a random point split into 3 pieces forms a triangle.",
   "tags": [
    "s_geometric_probability",
    "s_complement",
@@ -366,7 +366,7 @@
  {
   "type": "basic",
   "front": "Roll a fair die. You may keep the current value or reroll. You have at most three rolls in total and must keep the last roll if you reach it. Maximise your expected payoff. What is it?",
-  "back": "<b>Answer:</b> \\(\\frac{14}{3}\\approx 4.6667\\).<br><b>Structure:</b> dynamic programming (backward induction over the number of rolls left).<br><b>Key move:</b> With one roll left, the continuation value is \\(3.5\\). With two left, \\(E[\\max(X,3.5)]=\\frac{17}{4}\\)... the first roll uses \\(E[\\max(X,\\frac{17}{4})]=\\frac{14}{3}\\). Policy: keep 5 or 6 on roll 1, keep 4 or more on roll 2, keep anything on roll 3.<br><b>Working:</b> \\(E[\\max(X,3.5)]=\\frac{4+4+4+4+5+6}{...}\\): values 1–3 give 3.5, 4 gives 4, 5 and 6 keep: \\(\\frac{3.5\\cdot3+4+5+6}{6}\\)... see the working. Final: \\(\\frac{14}{3}\\). Monte Carlo under the optimal rule gives 4.668.<br><b>Sanity check:</b> Each extra roll adds value. Without rolls, the expectation is \\(3.5\\).<br><b>Transfer:</b> A quote with three attempts (dealer offers) has the same structure (see twin card).",
+  "back": "<b>Answer:</b> \\(\\frac{14}{3}\\approx 4.6667\\).<br><b>Structure:</b> dynamic programming (backward induction over the number of rolls left).<br><b>Key move:</b> One roll left: continuation value \\(3.5\\). Two left: \\(E[\\max(X,3.5)]=\\frac{3.5\\cdot3+4+5+6}{6}=\\frac{17}{4}\\). Three left: \\(E[\\max(X,\\frac{17}{4})]=\\frac{4.25\\cdot4+5+6}{6}=\\frac{14}{3}\\). Policy: keep 5 or 6 on roll 1, keep 4 or more on roll 2, keep anything on roll 3.<br><b>Working:</b> Monte Carlo under the optimal rule gives 4.668, matching \\(\\frac{14}{3}\\).<br><b>Sanity check:</b> Each extra roll adds value. Without rolls, the expectation is \\(3.5\\).<br><b>Transfer:</b> A quote with three attempts (dealer offers) has the same structure (see twin card).",
   "tags": [
    "s_dynamic_programming",
    "s_backward_induction",
@@ -495,7 +495,7 @@
  {
   "type": "basic",
   "front": "A fair coin is flipped until the first time a head is immediately followed by a tail. Find the expected number of flips.",
-  "back": "<b>Answer:</b> \\(4\\).<br><b>Structure:</b> Conway's leading-number method for patterns; or first-step conditioning on the last flip.<br><b>Key move:</b> For pattern HT, the first flip matching the first letter creates a new state; the wait for the complete HT has mean \\(2^2=4\\), since HT cannot overlap with itself.<br><b>Working:</b> Monte Carlo \\(3.995\\).<br><b>Sanity check:</b> HH has self-overlap and gives 6 (see solve card above). The overlap is what lengthens it.<br><b>Transfer:</b> Any two-letter pattern with no self-overlap has expected waiting time \\(2^2=4\\) for a fair coin.",
+  "back": "<b>Answer:</b> \\(4\\).<br><b>Structure:</b> Conway's leading-number method for patterns; or first-step conditioning on the last flip.<br><b>Key move:</b> States: start, and 'after H'. From 'after H', a T finishes and an H stays. Let \\(a\\) be the expected flips from start and \\(b\\) from 'after H'. Then \\(b=1+\\frac12 b\\) so \\(b=2\\), and \\(a=1+\\frac12a+\\frac12b\\) so \\(a=4\\).<br><b>Working:</b> Monte Carlo \\(3.995\\).<br><b>Sanity check:</b> HH and TT overlap with themselves and give 6. HT and TH do not overlap and give 4.<br><b>Transfer:</b> Two-letter patterns with no self-overlap (HT, TH) have mean \\(2^2=4\\) for a fair coin.",
   "tags": [
    "s_first_step_conditioning",
    "s_markov_chain",
@@ -505,7 +505,7 @@
  },
  {
   "type": "basic",
-  "front": "A fair die is rolled 9 times... Nine i.i.d. uniform draws on \\((0,1)\\). Find the expected maximum.",
+  "front": "Nine i.i.d. uniform draws on \\((0,1)\\). Find the expected maximum.",
   "back": "<b>Answer:</b> \\(\\frac{9}{10}=0.9\\).<br><b>Structure:</b> order statistics: \\(P(\\max\\le x)=x^9\\).<br><b>Key move:</b> \\(E[M]=\\int_0^1 (1-x^9)\\,dx=1-\\frac1{10}\\).<br><b>Working:</b> Monte Carlo \\(0.8998\\). Generally \\(E[\\max_n]=\\frac{n}{n+1}\\).<br><b>Sanity check:</b> As \\(n\\to\\infty\\) the expected maximum approaches 1.<br><b>Transfer:</b> Expected minimum of \\(n\\) uniforms is \\(\\frac1{n+1}\\).",
   "tags": [
    "s_order_statistics",
@@ -517,7 +517,7 @@
  {
   "type": "basic",
   "front": "A die is rolled until both 1 and 2 have appeared at least once. Find the expected number of rolls.",
-  "back": "<b>Answer:</b> \\(9\\).<br><b>Structure:</b> order statistics: the time is the maximum of two waiting times.<br><b>Key move:</b> \\(T=\\max(T_1,T_2)\\), each \\(T_i\\) geometric with mean 6. \\(E[\\max]=E[T_1]+E[T_2]-E[\\min]\\), and \\(\\min\\) is geometric with mean \\(3\\).<br><b>Working:</b> \\(6+6-3=9\\). Monte Carlo \\(8.99\\).<br><b>Sanity check:</b> Collect 3 of 10 has a different structure (sum of phases).<br><b>Transfer:</b> Expected time for all \\(n\\) of \\(k\\) specific faces uses inclusion-exclusion over the same identity.",
+  "back": "<b>Answer:</b> \\(9\\).<br><b>Structure:</b> order statistics: the time is the maximum of two waiting times.<br><b>Key move:</b> \\(T=\\max(T_1,T_2)\\), each \\(T_i\\) geometric with mean 6. \\(E[\\max]=E[T_1]+E[T_2]-E[\\min]\\), and \\(\\min\\) is geometric with mean \\(3\\).<br><b>Working:</b> \\(6+6-3=9\\). Monte Carlo \\(8.99\\).<br><b>Sanity check:</b> Collect 3 of 10 has a different structure (sum of phases).<br><b>Transfer:</b> Three specific faces: \\(E[\\max]=3\\cdot6-3\\cdot3+2=11\\) (inclusion-exclusion over the minima).",
   "tags": [
    "s_order_statistics",
    "s_linearity_expectation",
@@ -816,7 +816,8 @@
   "tags": [
    "s_tail_sum",
    "s_order_statistics",
-   "toolkit"
+   "toolkit",
+   "fmt_toolkit"
   ]
  },
  {
@@ -850,13 +851,14 @@
   "tags": [
    "s_variance_decomposition",
    "s_conditional_expectation_tower",
-   "toolkit"
+   "toolkit",
+   "fmt_toolkit"
   ]
  },
  {
   "type": "basic",
   "front": "When do you reach for Jensen's inequality, and when does it fail as a sanity check?",
-  "back": "<b>Triggers:</b> a convex (or concave) function of a random variable, e.g. \\(E[1/X]\\) or \\(E[X^2]\\). Convex \\(f\\): \\(E[f(X)]\\ge f(E[X])\\).<br><b>Move:</b> Use it to bound a mean of \\(f(X)\\) from the mean of \\(X\\). Check that \\(f\\) is convex on the whole support.<br><b>Example:</b> \\(E[1/X]=\\frac{49}{120}\\approx0.408\\ge\\frac{2}{7}\\approx0.286\\) for \\(X\\) uniform on \\(\\{1,\\dots,6\\}\\).<br><b>Failure mode:</b> Jensen gives only a direction and a bound, not a value. It is tight only for constant \\(X\\). For non-convex \\(f\\), the inequality reverses or fails.",
+  "back": "<b>Triggers:</b> a convex (or concave) function of a random variable, e.g. \\(E[1/X]\\) or \\(E[X^2]\\). Convex \\(f\\): \\(E[f(X)]\\ge f(E[X])\\).<br><b>Move:</b> Use it to bound a mean of \\(f(X)\\) from the mean of \\(X\\). Check that \\(f\\) is convex on the whole support.<br><b>Example:</b> \\(E[1/X]=\\frac{49}{120}\\approx0.408\\ge\\frac{2}{7}\\approx0.286\\) for \\(X\\) uniform on \\(\\{1,\\dots,6\\}\\).<br><b>Failure mode:</b> Jensen gives only a direction and a bound, not a value. It is tight only for constant \\(X\\). For a function that is neither convex nor concave, no general inequality holds.",
   "tags": [
    "s_convexity_jensen",
    "inequalities",
@@ -872,7 +874,8 @@
    "s_memorylessness",
    "s_linearity_expectation",
    "coupon_collector",
-   "toolkit"
+   "toolkit",
+   "fmt_toolkit"
   ]
  },
  {

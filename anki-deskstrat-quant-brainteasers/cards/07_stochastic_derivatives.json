@@ -177,7 +177,7 @@
  },
  {
   "type": "basic",
-  "front": "Under the risk-neutral measure, \\(u(t,x)=E[W_T^2\\mid W_t=x]\\) for \\(t<T\\). Which PDE does \\(u\\) solve?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "front": "Under the risk-neutral measure, \\(u(t,x)=E[W_T^2\\mid W_t=x]\\) for \\(t\\lt T\\). Which PDE does \\(u\\) solve?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
   "back": "<b>Structure:</b> Feynman-Kac: a conditional expectation of a function of a diffusion solves a backward PDE.<br><b>Trigger:</b> Function of a diffusion at a future time, viewed as a function of the current state.<br><b>Key move:</b> Write \\(u=x^2+(T-t)\\) and check \\(u_t+\\tfrac12 u_{xx}=0\\).<br><b>Answer:</b> \\(u_t+\\tfrac12 u_{xx}=0\\) with \\(u(T,x)=x^2\\).",
   "tags": [
    "s_martingale",
@@ -266,7 +266,7 @@
  {
   "type": "basic",
   "front": "Driftless Brownian motion from 0. Compute \\(P(\\max_{0\\le s\\le 1}W_s\\ge 2)\\).",
-  "back": "<b>Answer:</b> \\(2(1-\\Phi(2))\\approx 0.0455\\)<br><b>Structure:</b> Reflection principle at the first passage time of level \\(2\\).<br><b>Key move:</b> Reflect the post-passage path: \\(P(M_1\\ge a,\\,W_1<a)=P(W_1>a)\\), so \\(P(M_1\\ge a)=2P(W_1\\ge a)\\).<br><b>Working:</b> \\(P(W_1\\ge 2)=1-\\Phi(2)=0.02275\\); double it to \\(0.0455\\).<br><b>Sanity check:</b> Probability is about twice the terminal tail, as the reflection principle requires.<br><b>Transfer:</b> Barrier options: knock-out prices are built from terminal Gaussian tails by reflection.",
+  "back": "<b>Answer:</b> \\(2(1-\\Phi(2))\\approx 0.0455\\)<br><b>Structure:</b> Reflection principle at the first passage time of level \\(2\\).<br><b>Key move:</b> Reflect the post-passage path: \\(P(M_1\\ge a,\\,W_1\\lt a)=P(W_1>a)\\), so \\(P(M_1\\ge a)=2P(W_1\\ge a)\\).<br><b>Working:</b> \\(P(W_1\\ge 2)=1-\\Phi(2)=0.02275\\); double it to \\(0.0455\\).<br><b>Sanity check:</b> Probability is about twice the terminal tail, as the reflection principle requires.<br><b>Transfer:</b> Barrier options: knock-out prices are built from terminal Gaussian tails by reflection.",
   "tags": [
    "s_reflection",
    "brownian_motion",
@@ -364,7 +364,7 @@
  },
  {
   "type": "basic",
-  "front": "Under the risk-neutral measure, \\(u(t,x)=E[W_T^2\\mid W_t=x]\\) for \\(t<T\\). Show it solves a PDE, and find \\(u(0,0)\\) when \\(T=2\\).",
+  "front": "Under the risk-neutral measure, \\(u(t,x)=E[W_T^2\\mid W_t=x]\\) for \\(t\\lt T\\). Show it solves a PDE, and find \\(u(0,0)\\) when \\(T=2\\).",
   "back": "<b>Answer:</b> \\(u_t+\\tfrac12u_{xx}=0\\) with \\(u=x^2+(T-t)\\); \\(u(0,0)=2\\).<br><b>Structure:</b> Feynman-Kac: a conditional expectation of a payoff of a diffusion is a backward PDE solution.<br><b>Key move:</b> Ito on \\(u(t,W_t)\\): the \\(dt\\) coefficient must vanish, giving the PDE.<br><b>Working:</b> \\(E[W_T^2\\mid W_t=x]=x^2+(T-t)\\). Then \\(u_t=-1\\), \\(\\tfrac12u_{xx}=1\\), sum \\(0\\).<br><b>Sanity check:</b> \\(u(0,0)=E[W_2^2]=2\\), matching \\(T=2\\).<br><b>Transfer:</b> Add discounting at rate \\(r\\) and the PDE gains a \\(-ru\\) term (see the perturbation card).",
   "tags": [
    "s_martingale",
@@ -486,7 +486,7 @@
  {
   "type": "basic",
   "front": "Price a log contract paying \\(\\ln S_T\\) at \\(T=1\\), with \\(S_0=100\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\).",
-  "back": "<b>Answer:</b> \\(\\approx 4.4091\\) (\\(=e^{-rT}(\\ln S_0+(r-\\sigma^2/2)T)\\)).<br><b>Structure:</b> Expectation under \\(Q\\) of a log: Jensen gives \\(E[\\ln S]<\\ln E[S]\\), and the Gaussian mean is explicit.<br><b>Key move:</b> Under \\(Q\\), \\(\\ln S_T\\sim N(\\ln S_0+(r-\\sigma^2/2)T,\\sigma^2T)\\). Discount: \\(e^{-rT}E[\\ln S_T]\\).<br><b>Working:</b> \\(E[\\ln S_T]=\\ln100+(0.05-0.02)=4.63517\\); times \\(e^{-0.05}\\) gives \\(4.4091\\).<br><b>Sanity check:</b> Above \\(e^{-rT}\\ln S_0=4.3807\\) because the drift \\(r-\\sigma^2/2=0.03\\) is positive. The Jensen gap \\(\\ln E[S_T]-E[\\ln S_T]=\\sigma^2T/2=0.02\\) is the volatility drag.<br><b>Transfer:</b> Static strip for \\(\\ln S\\) has weight \\(-1/K^2\\); it is the variance swap's building block.",
+  "back": "<b>Answer:</b> \\(\\approx 4.4091\\) (\\(=e^{-rT}(\\ln S_0+(r-\\sigma^2/2)T)\\)).<br><b>Structure:</b> Expectation under \\(Q\\) of a log: Jensen gives \\(E[\\ln S]\\lt \\ln E[S]\\), and the Gaussian mean is explicit.<br><b>Key move:</b> Under \\(Q\\), \\(\\ln S_T\\sim N(\\ln S_0+(r-\\sigma^2/2)T,\\sigma^2T)\\). Discount: \\(e^{-rT}E[\\ln S_T]\\).<br><b>Working:</b> \\(E[\\ln S_T]=\\ln100+(0.05-0.02)=4.63517\\); times \\(e^{-0.05}\\) gives \\(4.4091\\).<br><b>Sanity check:</b> Above \\(e^{-rT}\\ln S_0=4.3807\\) because the drift \\(r-\\sigma^2/2=0.03\\) is positive. The Jensen gap \\(\\ln E[S_T]-E[\\ln S_T]=\\sigma^2T/2=0.02\\) is the volatility drag.<br><b>Transfer:</b> Static strip for \\(\\ln S\\) has weight \\(-1/K^2\\); it is the variance swap's building block.",
   "tags": [
    "s_convexity_jensen",
    "s_replication",
@@ -694,7 +694,7 @@
  },
  {
   "type": "basic",
-  "front": "Feynman-Kac with discounting: \\(u(t,x)=E[e^{-r(T-t)}W_T^2\\mid W_t=x]\\) for \\(t<T\\). Which PDE does \\(u\\) solve, and what is \\(u(0,0)\\) at \\(r=5\\%\\), \\(T=2\\)?",
+  "front": "Feynman-Kac with discounting: \\(u(t,x)=E[e^{-r(T-t)}W_T^2\\mid W_t=x]\\) for \\(t\\lt T\\). Which PDE does \\(u\\) solve, and what is \\(u(0,0)\\) at \\(r=5\\%\\), \\(T=2\\)?",
   "back": "<b>What breaks:</b> The undiscounted PDE \\(u_t+\\tfrac12u_{xx}=0\\) misses the killing term: discounting adds \\(-ru\\).<br><b>Fix:</b> Ito on \\(e^{-rt}u(t,W_t)\\): the \\(dt\\) coefficient must vanish, so \\(u_t+\\tfrac12u_{xx}-ru=0\\).<br><b>New answer:</b> \\(u=e^{-r(T-t)}(x^2+T-t)\\) solves \\(u_t+\\tfrac12u_{xx}-ru=0\\). \\(u(0,0)=e^{-0.1}\\cdot2\\approx1.8097\\) (undiscounted value was \\(2\\)).",
   "tags": [
    "s_martingale",
@@ -882,7 +882,7 @@
  {
   "type": "basic",
   "front": "When can you apply optional stopping to a Brownian motion, and when does it fail?",
-  "back": "<b>Triggers:</b> A stopping time \\(\\tau\\) with \\(E\\tau<\\infty\\) or a bounded stopped path, for example the first exit from a bounded interval.<br><b>Move:</b> \\(E[W_\\tau]=0\\) and \\(E[W_\\tau^2-\\tau]=0\\), giving exit probabilities and expected exit times.<br><b>Example:</b> Exit from \\((-3,2)\\): \\(E[\\tau]=E[W_\\tau^2]=6\\).<br><b>Failure mode:</b> Fails for \\(\\tau=\\)first hit of \\(+1\\) with no lower barrier: \\(W_\\tau=1\\), so \\(E[W_\\tau]=1\\neq 0\\). Unbounded stopping without integrability breaks the martingale identity.",
+  "back": "<b>Triggers:</b> A stopping time \\(\\tau\\) with \\(E\\tau\\lt \\infty\\) or a bounded stopped path, for example the first exit from a bounded interval.<br><b>Move:</b> \\(E[W_\\tau]=0\\) and \\(E[W_\\tau^2-\\tau]=0\\), giving exit probabilities and expected exit times.<br><b>Example:</b> Exit from \\((-3,2)\\): \\(E[\\tau]=E[W_\\tau^2]=6\\).<br><b>Failure mode:</b> Fails for \\(\\tau=\\)first hit of \\(+1\\) with no lower barrier: \\(W_\\tau=1\\), so \\(E[W_\\tau]=1\\neq 0\\). Unbounded stopping without integrability breaks the martingale identity.",
   "tags": [
    "s_optional_stopping",
    "s_martingale",
