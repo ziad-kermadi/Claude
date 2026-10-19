@@ -1,0 +1,240 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CLO IC 1/4]</b> A CLO holds 400 of performing par, all floating at S+350 and unhedged. Senior notes are 320 at S+160. Senior fees are 0.15% of the pool a year and rank ahead of the notes. With SOFR at 4.00%, compute the senior interest coverage (IC) ratio on the standard definition (net interest proceeds over senior interest due). The senior IC trigger is 120%. How far can net interest proceeds fall before the test fails?",
+  "back": "Interest proceeds: \\(400\\times(4.00\\%+3.50\\%)=30.00\\). Senior fees: \\(0.15\\%\\times400=0.60\\), so net proceeds \\(=29.40\\).<br>\nSenior coupon: \\(320\\times(4.00\\%+1.60\\%)=17.92\\).<br>\n\\(\\mathrm{IC}=29.40/17.92=164\\%\\) (167% before fees).<br>\nFailure point: \\(1.20\\times17.92=21.50\\) of net proceeds. The cushion is \\(29.40-21.50=7.90\\) a year, about 27% of net proceeds.<br>\nInterviewer follow-up: why are senior fees netted before the IC, but the mezzanine and equity coupons are not? Because the IC test sits in the interest waterfall above the junior classes, and the fees rank ahead of all notes.",
+  "tags": [
+   "chain_clo_ic",
+   "clo",
+   "ic_test",
+   "interest_waterfall",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CLO IC 2/4]</b> Same CLO as the previous card, but now with no fees and no hedge. Assets earn \\(S+m_a\\) with \\(m_a=3.50\\%\\). Senior notes pay \\(S+m_l\\) with \\(m_l=1.60\\%\\). Derive how the senior IC ratio depends on SOFR \\(S\\), and give its limit as \\(S\\to\\infty\\).",
+  "back": "Write \\(\\mathrm{IC}(S)=\\dfrac{A(S+m_a)}{L(S+m_l)}\\) with \\(A=400\\), \\(L=320\\).<br>\nDifferentiate: \\(\\partial_S\\mathrm{IC}=\\dfrac{A}{L}\\cdot\\dfrac{(S+m_l)-(S+m_a)}{(S+m_l)^2}=-\\dfrac{A}{L}\\cdot\\dfrac{m_a-m_l}{(S+m_l)^2}<0\\). IC falls as SOFR rises, because the asset margin exceeds the liability margin.<br>\nThe limit is \\(A/L=125\\%\\): the collateral-to-senior par ratio.<br>\nValues: \\(S=0\\): 273%. \\(S=4\\%\\): 167%. \\(S=8\\%\\): 150%.<br>\nUsed in the deck for: the rate-up path of IC headroom in the CLO equity chain.<br>\nWhere it breaks: floors on the loans or the notes make the derivative zero below the floor on the floored side; a fixed-rate swap on the loans removes the asset-side SOFR sensitivity altogether.",
+  "tags": [
+   "chain_clo_ic",
+   "clo",
+   "ic_test",
+   "derivation",
+   "sofr",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CLO IC 3/4]</b> Same CLO as card 1 (senior 320 at S+160, fees 0.15%, trigger 120%). Defaults have cut net interest proceeds to 19.00 a year at SOFR 4.00%. The IC test has failed. What is the IC ratio now, and what one-off redemption of senior notes would restore it to exactly 120%? Then say why interest alone cannot cure the breach in one step.",
+  "back": "IC now \\(=19.00/17.92=106.0\\%\\).<br>\nCure: need \\(\\dfrac{19.00}{L'\\times0.056}\\ge1.20\\), so \\(L'\\le19.00/(1.20\\times0.056)=282.7\\). Redemption \\(=320-282.7\\approx37.3\\) of senior notes.<br>\nInterest left after the senior coupon is only \\(19.00-17.92=1.08\\) a year. The breach is far larger than that surplus, so a one-step cure is not possible from interest. In practice the cure is run through the waterfall. Residual interest is diverted to senior paydown over time, and many indentures also let principal proceeds pay the senior notes. The IC and OC tests are then both tracked for the cure.<br>\nInterviewer follow-up: why does the cure amount grow when the senior coupon rises? Because the required \\(L'\\) is \\(I/(1.20\\,r_L)\\), so a higher \\(r_L\\) lowers the allowed notional and increases the paydown.",
+  "tags": [
+   "chain_clo_ic",
+   "clo",
+   "ic_test",
+   "cure",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CLO IC 4/4]</b> Case study. Same deal: 400 pool, senior 320 at S+160, fees 0.15%, IC trigger 120%. Non-accruing loans (defaulted or non-paying) stop producing interest. (a) At SOFR 4.00%, how much non-accruing par takes the senior IC to 120%? (b) At SOFR 8.00%, with no non-accruing par, does the test pass?",
+  "back": "(a) Net proceeds needed \\(=1.20\\times17.92=21.50\\). With performing par \\(P\\): \\(P\\times(0.075-0.0015)=21.50\\), so \\(P=292.6\\). Non-accruing par \\(=400-292.6=107.4\\), i.e. 26.9% of the pool. Recovery cash is not counted in interest proceeds until received.<br>\n(b) Senior coupon \\(=320\\times(8.00\\%+1.60\\%)=30.72\\). Net proceeds \\(=400\\times11.50\\%-0.60=45.40\\). IC \\(=45.40/30.72=147.8\\%\\). The test passes, since IC falls only from 164% to 148% when base rates rise (see card 2).<br>\nSanity check: a 27% non-accruing share is a severe stress for senior IC alone. In a default cycle the OC test usually binds first, because it counts par, not interest.<br>\nInterviewer follow-up: which test binds earlier for a CLO with mostly CCC loans, and why?",
+  "tags": [
+   "chain_clo_ic",
+   "clo",
+   "ic_test",
+   "case_study",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CLO BDR 1/3]</b> A CLO has 500 of collateral at par, with senior 400, mezzanine 50 and equity 50 (first loss). Recovery on defaulted loans is 40%. Ignoring excess spread, timing and reinvestment, what cumulative default rate (as a share of the original pool) first wipes out equity principal? Give the formula and the number.",
+  "back": "Losses to the pool are \\(D(1-R)\\), where \\(D\\) is cumulative defaulted par. Equity is first hit when \\(D(1-R)=E\\), so \\(\\mathrm{BDR}_E=\\dfrac{E}{(1-R)P}\\).<br>\nNumbers: \\(D^*=50/0.6=83.3\\), i.e. \\(83.3/500=16.7\\%\\) of the pool.<br>\nWhere it breaks: excess spread (interest above the debt cost) absorbs losses before equity principal is touched (card 2). Defaulted loans also stop earning, so the answer is a first-order estimate. Timing matters too: an early default is absorbed by a larger cash cushion than a late one.<br>\nInterviewer follow-up: where does the mezzanine attach and detach in loss terms? Attachment at 50/500 = 10% of pool loss, detachment at 100/500 = 20%.",
+  "tags": [
+   "chain_clo_bdr",
+   "clo",
+   "tranche_risk",
+   "loss_absorption",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CLO BDR 2/3]</b> Same deal: pool 500 at S+350, senior 400 at S+150, mezzanine 50 at S+500, equity 50, senior fees 0.50% of the pool, SOFR flat at 4.00%. Compute the annual excess spread as a share of the pool. Then add 4 years of excess spread as extra loss capacity and find the cumulative default rate at which equity principal is lost.",
+  "back": "Derivation of the cushion. Pool interest \\(500\\times7.50\\%=37.50\\). Senior \\(400\\times5.50\\%=22.00\\). Mezzanine \\(50\\times9.00\\%=4.50\\). Fees \\(0.50\\%\\times500=2.50\\).<br>\nExcess spread \\(=37.50-22.00-4.50-2.50=8.50\\) a year, \\(1.70\\%\\) of pool a year. Over 4 years that is \\(34.0\\) of extra capacity.<br>\nEquity is lost when \\((1-R)D=50+34=84\\), so \\(D^*=84/0.6=140\\), or 28.0% of the pool. This compares with 16.7% from card 1.<br>\nWhere it breaks: this is an upper bound. (i) Defaulted loans stop paying the 7.50% coupon, which erodes the excess spread. (ii) Excess spread is diverted to senior paydown under the IC and OC cures, so equity may not receive it. (iii) Timing: early losses cut the pool's income for longer.<br>\nInterviewer follow-up: why does the excess spread shrink as defaults rise? Each defaulted par loses its coupon, so the cushion falls at the same rate the losses rise.",
+  "tags": [
+   "chain_clo_bdr",
+   "clo",
+   "excess_spread",
+   "derivation",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CLO BDR 3/3]</b> Same deal, ignoring excess spread. Recovery is 40%. For the mezzanine tranche (50 of a 500 pool, attachment 10%, detachment 20% of pool loss), find the range of cumulative default rates over which mezzanine principal is impaired. Then compare the mezzanine's sensitivity per unit of pool loss with the senior's.",
+  "back": "Mezzanine first impaired when \\(D(1-R)=50\\), so \\(D=83.3\\) (16.7% of pool). Wiped out when \\(D(1-R)=100\\), so \\(D=166.7\\) (33.3%).<br>\nSenior attaches at pool loss 100 (\\(D=166.7\\), 33.3%) and is impaired only past that point.<br>\nSensitivity: one par of pool loss takes \\(1/50=2.0\\%\\) of mezzanine principal, but only \\(1/400=0.25\\%\\) of senior. Mezzanine is 8 times more sensitive per unit of loss, and its spread moves more than proportionally to the default rate.<br>\nInterviewer follow-up: which tranche carries more spread duration to the default-rate assumption, and why? The mezzanine, since its impairment window is narrow and its expected loss is convex in the default rate.",
+  "tags": [
+   "chain_clo_bdr",
+   "clo",
+   "tranche_risk",
+   "mezzanine",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: convert Greeks 1/3]</b> A 4-year convertible on a non-dividend stock. Face 1,000, conversion ratio 12.5 (conversion price 80). Stock 80, vol 30%, flat rate 4%. No credit risk, no call, no put. Decompose the value into bond and option parts, then give the convertible's delta per bond in shares.",
+  "back": "Decomposition: convertible \\(=\\) straight bond \\(+\\) 12.5 calls struck at \\(F/\\text{ratio}=80\\). With no credit, the bond part has no equity delta.<br>\n\\(d_1=\\dfrac{\\ln(80/80)+(0.04+\\tfrac12\\cdot0.09)\\cdot4}{0.30\\cdot2}=0.567\\), so \\(N(d_1)=0.7145\\).<br>\nDelta per bond \\(=12.5\\times0.7145=8.93\\) shares, or 893 shares per 100 bonds (notional 71,440 at 80).<br>\nInterviewer follow-up: why is delta below the ratio 12.5 at the money? The option delta is \\(N(d_1)<1\\). The convertible reaches delta 12.5 only deep in the money, where the bond part is negligible relative to the equity.",
+  "tags": [
+   "chain_convert_greeks",
+   "convertibles",
+   "greeks",
+   "delta",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: convert Greeks 2/3]</b> Same convertible as the previous card: 4 years, ratio 12.5, stock 80, vol 30%, rate 4%, zero credit. Derive the gamma of the option part, then give the convertible's gamma per bond at stock 60, 80 and 100. Say where gamma peaks for these inputs.",
+  "back": "Option gamma \\(\\Gamma=\\dfrac{\\phi(d_1)}{S\\sigma\\sqrt T}\\). Convertible gamma per bond \\(=12.5\\,\\Gamma\\).<br>\nAt \\(S=80\\): \\(\\phi(0.567)=0.340\\), \\(\\Gamma=0.340/(80\\times0.6)=0.00708\\), so gamma per bond \\(=0.0885\\) shares per $1.<br>\nAt \\(S=60\\): \\(d_1=0.087\\), gamma per bond \\(=0.138\\). At \\(S=100\\): gamma per bond \\(=0.0535\\).<br>\nPeak: since gamma \\(\\propto\\phi(d_1)/S\\), the per-share gamma is largest below the strike. Numerically it peaks near \\(S\\approx40\\) for these inputs, at about 0.175 per bond.<br>\nWhere it breaks: these are pure option-part numbers. Credit and the stock-credit correlation add terms that change the observed gamma profile near the bond floor.<br>\nInterviewer follow-up: a 1% move in the stock at \\(S=80\\) gives a P&amp;L of about \\(\\tfrac12\\times0.0885\\times1^2=0.044\\) per bond per move, before theta and vega.",
+  "tags": [
+   "chain_convert_greeks",
+   "convertibles",
+   "gamma",
+   "derivation",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: convert Greeks 3/3]</b> Case study. Long 100 of the convertible above (face 1,000, coupon 2.00% a year), delta-hedged with 893 shares short at 80 (the hedge from card 1, sized ignoring dividends). The stock has a 3.00% dividend yield. Compute the annual dividend cost on the short, and the net coupon-minus-dividend carry per bond. Ignore financing, borrow and rebate.",
+  "back": "Dividend per share \\(=3.00\\%\\times80=2.40\\). Short dividend cost \\(=893\\times2.40=2{,}143\\) a year, or 21.4 per bond.<br>\nCoupon: \\(100\\times1{,}000\\times2.00\\%=2{,}000\\) a year, or 20.0 per bond.<br>\nNet carry \\(=2{,}000-2{,}143=-143\\) a year, or \\(-1.4\\) per bond (about \\(-0.14\\%\\) of face).<br>\nSanity check: the model price already reflects dividends (they lower the forward and the call value). The desk still pays the cash dividend on the delta it holds, so this is a real carry cost that must be set against the coupon, not double-counted in the price.<br>\nInterviewer follow-up: how would a dividend-adjusted delta change the hedge? The delta falls slightly, and the 893-share hedge is then too big. The hedge should be re-sized from the dividend-adjusted model.",
+  "tags": [
+   "chain_convert_greeks",
+   "convertibles",
+   "carry",
+   "dividends",
+   "case_study",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the price of a SOFR floorlet that fixes at \\(T\\), pays \\(\\tau\\) at \\(T+\\tau\\), and has strike \\(K\\). Use the normal (Bachelier) model with forward \\(F\\), normal vol \\(\\sigma\\), and discount factor \\(P(0,T+\\tau)\\). Then state the floor-cap relation at a common strike.",
+  "back": "Payoff \\(\\tau\\,(K-F_T)^+\\), paid at \\(T+\\tau\\). Under the forward measure for the payment date, \\(F_T\\) is normal with mean \\(F\\) and variance \\(\\sigma^2T\\).<br>\n\\(\\mathbb{E}[(K-F_T)^+]=(K-F)\\,\\Phi(-d)+\\sigma\\sqrt{T}\\,\\phi(d)\\), with \\(d=\\dfrac{F-K}{\\sigma\\sqrt T}\\).<br>\nPrice \\(=\\tau P(0,T+\\tau)\\left[(K-F)\\Phi(-d)+\\sigma\\sqrt T\\,\\phi(d)\\right]\\).<br>\nFloor-cap relation: \\(\\mathrm{Cap}(K)-\\mathrm{Floor}(K)=\\) a payer swap at \\(K\\) (receive floating, pay \\(K\\)), with no model needed.<br>\nWhere it breaks: compounded SOFR is not a simple forward fixing. The floorlet on the compounded rate needs a convexity and lookback adjustment, and the normal model is the right baseline only in the low-rate regime where negative rates are plausible.<br>\nUsed in the deck for: the loan floor value in the next card.",
+  "tags": [
+   "sofr_floor",
+   "normal_model",
+   "derivation",
+   "options",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Case study. A 3-year SOFR loan pays \\(\\max(\\text{SOFR},0.50\\%)+3.50\\%\\) quarterly on 100 notional. Assume the forward SOFR curve is flat at 1.00%, normal vol 1.00% a year, and discounting at a flat 4.00% (continuous, for simplicity). Value the borrower's floor per 100 notional over 3 years, and express it as an annual margin equivalent. Repeat at a flat 2.00% and 4.00% forward.",
+  "back": "Twelve quarterly floorlets with \\(K=0.50\\%\\), \\(\\sigma=1.00\\%\\), \\(\\tau=0.25\\), \\(F=1.00\\%\\). Summing the Bachelier formula from the previous card gives a 3-year value of about 0.67 per 100 notional.<br>\nAnnuity \\(\\sum\\tau\\,DF\\approx2.81\\). Margin equivalent \\(\\approx0.67/2.81=0.24\\%\\), so about 24bp a year.<br>\nForward 2.00%: about 0.18 per 100. Forward 4.00%: about 0.01 per 100, so the floor is nearly worthless.<br>\nSanity check: the lender is short the floor, so the floor value is the margin the lender should demand for a 1% forward scenario. The floor is cheap at today's forward and expensive if the curve collapses.<br>\nInterviewer follow-up: why is the floor worth more in the normal model than in lognormal at the same vol? Because a normal vol of 1% at a 1% forward is a large relative move, so the lognormal price would be far more sensitive to the strike.",
+  "tags": [
+   "sofr_floor",
+   "loans",
+   "case_study",
+   "normal_model",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A CLO has principal cash of 98 and collateral par of 400, with senior notes of 320. Cash counts at par in the OC numerator. The deal buys 100 of par loans at a price of 98, paid from that cash. Compute the OC ratio before and after the trade. What does the trade add to the numerator, and what can reverse it?",
+  "back": "Before: numerator \\(=400+98=498\\), OC \\(=498/320=155.6\\%\\).<br>\nAfter: numerator \\(=(400+100)+0=500\\), OC \\(=500/320=156.3\\%\\).<br>\nPar build \\(=500-498=2\\), the 2-point discount per 100 bought, worth 0.6 points of OC.<br>\nWhat reverses it: a default or downgrade of the loan. A defaulted or CCC asset above the bucket is counted at market value, not par, so the discount is given back. The par build is only as good as the loan's recovery view.<br>\nInterviewer follow-up: why do managers buy at discounts in a tight OC cushion? Each 100 bought at 98 adds 2 of par, which pushes the OC ratio up without new equity. That is the origin of the \"par build\" arbitrage.",
+  "tags": [
+   "clo",
+   "oc_test",
+   "par_build",
+   "loans",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A CLO pool is 400, with 40 of CCC-rated loans. Assume the indenture caps CCC at 7.5% of the pool (30 here), and that excess CCC above the cap counts in the OC numerator at market value of 70 (not par). Senior notes are 320, with an OC trigger of 125%. Compute the numerator, the OC ratio and whether the test passes.",
+  "back": "Excess CCC \\(=40-30=10\\). Counted at 70 per 100, so \\(10\\times0.70=7\\). Haircut \\(=3\\).<br>\nNumerator \\(=360\\) (non-CCC, at par) \\(+30\\) (CCC within the cap, at par) \\(+7\\) (excess CCC at market) \\(=397\\).<br>\nOC \\(=397/320=124.1\\%\\). Required numerator for 125% is \\(1.25\\times320=400\\), so the test fails by 3.<br>\nCure: sell CCC to bring the bucket within the cap, or divert interest to senior paydown. Each 1 of numerator is worth \\(1/320=0.31\\) points of OC.<br>\nCaveat: the 7.5% cap and the market-value rule are typical of US CLO indentures and differ by deal. Check the specific indenture before relying on the numbers.<br>\nInterviewer follow-up: why does a CCC bucket above the cap hurt equity more than a loan at 60? The CCC haircut is immediate in the test, while the loan at 60 is only a mark until it defaults.",
+  "tags": [
+   "clo",
+   "oc_test",
+   "ccc",
+   "loans",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Case study. A CLO's original collateral was 500, and it has amortised to 50 of par, which is the clean-up threshold (typically 10% of the original, approx.). Notes outstanding are 45 at par. The remaining loans are marked at 101.0. The call costs 0.50. The equity holder considers exercising the clean-up call. Compute the residual to equity, and the loan price below which the call is not worth exercising on this basis.",
+  "back": "Sale proceeds \\(=50\\times1.01=50.50\\). Repay notes at par \\(45.00\\). Call costs \\(0.50\\).<br>\nResidual to equity \\(=50.50-45.00-0.50=5.00\\).<br>\nBreak-even loan price \\(=(45.00+0.50)/50=91.0\\). Above 91.0 the call releases positive value to equity on this basis.<br>\nStretch point: exercising the call is an option the equity holds. The residual of 5.00 must beat the value of continuing: remaining excess spread, reinvestment optionality and the chance of spread tightening. Exercising early gives up that option, so the decision is not just the 5.00 residual.<br>\nWhere it breaks: the clean-up call usually requires redemption of all notes at par plus accrued interest, and the exact threshold varies by deal. Check the indenture.<br>\nInterviewer follow-up: why would the senior sponsor prefer a refinancing to a clean-up call? A refinancing resets the spread on the notes and keeps the equity invested.",
+  "tags": [
+   "clo",
+   "clean_up_call",
+   "equity",
+   "case_study",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a fully floating CLO with unhedged loans, as SOFR tends to infinity the senior IC ratio converges to {{c1::A/L, the collateral-to-senior par ratio}}, and it falls as SOFR rises when {{c2::the asset margin exceeds the liability margin}}.",
+  "back": "With \\(\\mathrm{IC}(S)=A(S+m_a)/[L(S+m_l)]\\), the limit is \\(A/L\\) (125% for 400/320). The sign of the derivative is set by \\(m_a-m_l\\).",
+  "tags": [
+   "clo",
+   "ic_test",
+   "cloze",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "With no excess spread, equity principal is first lost when cumulative defaults reach {{c1::\\(E/(1-R)\\)}} of the pool. For \\(E=50\\) and \\(R=40\\%\\) this is {{c2::83.3}} of par, or {{c3::16.7\\%}} of a 500 pool.",
+  "back": "Equity absorbs \\(D(1-R)\\) of loss up to \\(E\\). Excess spread and default timing move the answer (see the BDR chain).",
+  "tags": [
+   "clo",
+   "tranche_risk",
+   "cloze",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "To cure a senior IC breach by redemption alone, the senior notes must be reduced to \\(L'\\le\\) {{c1::\\(I/(1.20\\,r_L)\\)}}, where \\(I\\) is net interest proceeds and {{c2::\\(r_L\\)}} is the senior coupon. The redemption needed is \\(L-L'\\).",
+  "back": "With \\(I=19.00\\), \\(r_L=5.60\\%\\): \\(L'\\le282.7\\), redemption \\(\\approx37.3\\) on \\(L=320\\).",
+  "tags": [
+   "clo",
+   "ic_test",
+   "cure",
+   "cloze",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A clean-up call is typically available once collateral falls to about {{c1::10\\%}} of original collateral (approx.; set by the indenture). It lets equity redeem the notes at {{c2::par plus accrued interest}}, so equity captures the residual {{c3::market value of the collateral less the notes and costs}}.",
+  "back": "Threshold and call price are deal-specific. In the case study the residual is 50.50 - 45.00 - 0.50 = 5.00.",
+  "tags": [
+   "clo",
+   "clean_up_call",
+   "cloze",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Using the same convertible (4 years, ratio 12.5, stock 80, vol 30%, rate 4%, no credit), what is the convertible's vega per bond per 1 vol point, and what is the vega of 100 bonds? Give the formula used.",
+  "back": "Vega of the option part \\(=S\\,\\phi(d_1)\\sqrt T\\) per unit vol. Convertible vega \\(=12.5\\times S\\,\\phi(d_1)\\sqrt T\\).<br>\nAt \\(S=80\\): \\(S\\phi(d_1)\\sqrt T=80\\times0.340\\times2.00=54.4\\), times 12.5 is 679.5 per unit vol. Per 1 vol point: \\(6.80\\) per bond.<br>\n100 bonds: about 680 per vol point.<br>\nSanity check: vega at \\(S=60\\) is about 5.96 per bond per vol point, and at \\(S=100\\) about 6.42. Vega is largest near the money and only mildly stock-dependent in this range.<br>\nWhere it breaks: vega is a model quantity for the option part. The convertible's market vega is also affected by the bond floor and by any dependence of credit on volatility.",
+  "tags": [
+   "convertibles",
+   "vega",
+   "greeks",
+   "lvl_vp_core"
+  ]
+ }
+]
