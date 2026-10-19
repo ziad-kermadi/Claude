@@ -1,0 +1,939 @@
+[
+ {
+  "type": "basic",
+  "front": "A uniformly random permutation of 10 labelled items. Let \\(F\\) be the number of items left in their original position. Find \\(E[F]\\) and \\(\\mathrm{Var}(F)\\).<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> indicators and linearity of expectation.<br><b>Trigger:</b> \\(F\\) is a count of 'item \\(i\\) is in slot \\(i\\)' events, so it is a sum of indicators. The variance needs pairwise covariances, and they are all equal here.<br><b>Key move:</b> \\(I_i=1\\) if item \\(i\\) is fixed, \\(P(I_i=1)=\\frac1{10}\\). For \\(i\\ne j\\), \\(P(I_iI_j=1)=\\frac1{90}\\), so \\(\\mathrm{Cov}=\\frac1{90}-\\frac1{100}=\\frac1{900}\\).<br><b>Answer:</b> \\(E[F]=1\\), \\(\\mathrm{Var}(F)=1\\) (valid for \\(n\\ge 2\\)).",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "permutations",
+   "fixed_points",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Five i.i.d. continuous random draws arrive one at a time. A draw is a record if it exceeds every earlier draw (the first draw counts). Find the expected number of records.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> indicators and extremal structure (ranks).<br><b>Trigger:</b> Records are a count of 'running maximum' events. For i.i.d. continuous draws the relative ranks are uniform and independent across positions.<br><b>Key move:</b> Draw \\(i\\) is a record with probability \\(\\frac1i\\) (it must be the largest of the first \\(i\\)). Sum over \\(i\\).<br><b>Answer:</b> \\(H_5=\\frac{137}{60}\\approx 2.2833\\).",
+  "tags": [
+   "s_indicators",
+   "s_extremal",
+   "records",
+   "order_statistics",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair six-sided die is rolled until all six faces have appeared. Find the expected number of rolls.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> linearity over phases, with memorylessness.<br><b>Trigger:</b> Waiting for each new face after some have been seen. The waiting time for a new face is geometric, and it does not depend on the history.<br><b>Key move:</b> After \\(k\\) distinct faces, the wait is geometric with success \\(\\frac{6-k}{6}\\) and mean \\(\\frac{6}{6-k}\\). Add the six phases.<br><b>Answer:</b> \\(6H_6=\\frac{147}{10}=14.7\\).",
+  "tags": [
+   "s_memorylessness",
+   "s_linearity_expectation",
+   "coupon_collector",
+   "dice",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A uniformly random permutation of 10 items is split into disjoint cycles. Find the expected number of cycles.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> indicators with a bijection (cycle structure).<br><b>Trigger:</b> The cycle count is a sum over items, and each item contributes an event that depends on its position in the cycle structure.<br><b>Key move:</b> Feller coupling: item \\(i\\) is the largest in its cycle with probability \\(\\frac1i\\), and these events are independent. The cycle count has the law of \\(\\sum_i \\mathrm{Ber}(1/i)\\).<br><b>Answer:</b> \\(H_{10}=\\frac{7381}{2520}\\approx 2.9290\\).",
+  "tags": [
+   "s_indicators",
+   "s_bijection",
+   "permutations",
+   "cycles",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ten fair coin flips. A run is a maximal block of identical outcomes. Find the expected number of runs.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> indicators (changes between neighbours).<br><b>Trigger:</b> Number of blocks = 1 + number of positions where a flip differs from the next one. Each such position is a sum term.<br><b>Key move:</b> \\(P(\\text{flip } i \\neq \\text{flip } i+1)=\\frac12\\). Use \\(1+\\sum\\).<br><b>Answer:</b> \\(1+9\\cdot\\frac12=\\frac{11}{2}=5.5\\).",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "runs",
+   "coin_flips",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "23 people have independent birthdays uniform on 365 days. Find the expected number of unordered pairs of people who share a birthday.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> indicators over pairs.<br><b>Trigger:</b> The quantity is a sum over pairs. Linearity only needs each pair's marginal probability, so dependence between pairs does not matter.<br><b>Key move:</b> \\(P(\\text{pair shares})=\\frac1{365}\\). Multiply by \\(\\binom{23}{2}\\).<br><b>Answer:</b> \\(\\frac{253}{365}\\approx 0.6932\\). This is not \\(P(\\text{some pair shares})\\approx 0.507\\).",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "birthdays",
+   "pairs",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Five independent uniform draws from \\(\\{1,\\dots,6\\}\\). Find the expected number of distinct values seen.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> indicators and complement.<br><b>Trigger:</b> A 'distinct count' is a sum over values of 'value appears at least once', which is one minus 'value never appears'.<br><b>Key move:</b> \\(P(v\\text{ absent})=\\left(\\frac56\\right)^5\\). Then \\(E=6\\left(1-\\left(\\frac56\\right)^5\\right)\\).<br><b>Answer:</b> \\(\\frac{4651}{1296}\\approx 3.5887\\).",
+  "tags": [
+   "s_indicators",
+   "s_complement",
+   "distinct_values",
+   "dice",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A stick of length 1 is broken at two independent uniform points. Find the expected length of the shortest piece.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> order statistics and geometric probability.<br><b>Trigger:</b> Two i.i.d. uniform cuts give ordered cut points, so the three pieces are uniform spacings.<br><b>Key move:</b> For spacings \\((L_1,L_2,L_3)\\), \\(P(\\min L_i>t)=(1-3t)^2\\) for \\(0\\le t\\le\\frac13\\). Integrate the tail.<br><b>Answer:</b> \\(\\frac19\\approx 0.1111\\).",
+  "tags": [
+   "s_order_statistics",
+   "s_geometric_probability",
+   "broken_stick",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two fair dice are rolled. Find the expected value of the larger face.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> tail-sum formula with order statistics.<br><b>Trigger:</b> A maximum is awkward as a distribution, but \\(P(M\\ge k)\\) is simple.<br><b>Key move:</b> \\(E[M]=\\sum_{k\\ge1}P(M\\ge k)\\), with \\(P(M\\ge k)=1-\\left(\\frac{k-1}{6}\\right)^2\\) for \\(k=1,\\dots,6\\).<br><b>Answer:</b> \\(\\frac{161}{36}\\approx 4.4722\\).",
+  "tags": [
+   "s_tail_sum",
+   "s_order_statistics",
+   "dice",
+   "expected_max",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair coin is flipped until the first head appears on flip \\(K\\). The payoff is \\(2^K\\) dollars. Is the expected payoff finite? If so, give its value.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> linearity over levels (no finite value).<br><b>Trigger:</b> Each level \\(k\\) contributes the same amount to the expectation, so the series does not converge.<br><b>Key move:</b> \\(P(K=k)2^k=1\\) for every \\(k\\), so the sum diverges.<br><b>Answer:</b> Infinite. The uncapped St Petersburg game has no finite expectation. Any cap restores a finite value.",
+  "tags": [
+   "s_linearity_expectation",
+   "s_kelly_log_utility",
+   "st_petersburg",
+   "utility",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two dice rolled. Let \\(X\\) and \\(Y\\) be i.i.d. with any continuous distribution on \\((0,\\infty)\\). Find \\(E\\!\\left[\\frac{X}{X+Y}\\right]\\).<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> symmetry (exchangeability).<br><b>Trigger:</b> The ratio is a function of the two draws, and swapping them maps it to its complement.<br><b>Key move:</b> By symmetry \\(E[\\frac{X}{X+Y}]=E[\\frac{Y}{X+Y}]\\), and these sum to 1.<br><b>Answer:</b> \\(\\frac12\\), whatever the common distribution.",
+  "tags": [
+   "s_symmetry",
+   "ratios",
+   "exchangeability",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair coin is flipped until the pattern HHH first appears. Find the expected number of flips.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> first-step conditioning on a Markov chain with overlaps.<br><b>Trigger:</b> Pattern waiting times depend on self-overlap. HHH overlaps with itself on every prefix.<br><b>Key move:</b> Conway's leading-number method: \\(E=2+4+8\\) for a run of three heads.<br><b>Answer:</b> \\(14\\).",
+  "tags": [
+   "s_first_step_conditioning",
+   "s_markov_chain",
+   "coin_patterns",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Choose \\(p\\) uniformly from \\(\\{\\frac14,\\frac34\\}\\). Given \\(p\\), flip a \\(p\\)-coin 10 times and let \\(X\\) be the number of heads. Find \\(\\mathrm{Var}(X)\\).<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> variance decomposition (law of total variance).<br><b>Trigger:</b> A random parameter drives a random outcome, and the question asks for the total variance.<br><b>Key move:</b> \\(\\mathrm{Var}(X)=E[\\mathrm{Var}(X\\mid p)]+\\mathrm{Var}(E[X\\mid p])=10E[p(1-p)]+100\\,\\mathrm{Var}(p)\\).<br><b>Answer:</b> \\(\\frac{15}{8}+\\frac{25}{4}=\\frac{65}{8}=8.125\\).",
+  "tags": [
+   "s_variance_decomposition",
+   "s_conditional_expectation_tower",
+   "mixtures",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Roll a fair die repeatedly, keeping a running total. Stop the first time the total is at least 10. Find the expected final total.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> optional stopping (Wald's identity).<br><b>Trigger:</b> The number of rolls is a stopping time (the decision to stop depends only on the past), and the rolls are i.i.d. with finite mean.<br><b>Key move:</b> \\(E[S_N]=E[X]\\,E[N]\\), with \\(E[N]\\) from a first-step recursion over the running total.<br><b>Answer:</b> About \\(\\frac72\\cdot 3.3237\\approx 11.63\\).",
+  "tags": [
+   "s_optional_stopping",
+   "s_martingale",
+   "random_walk",
+   "dice",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ten balls are thrown independently and uniformly into ten bins. Find the expected number of empty bins.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> indicators and complement.<br><b>Trigger:</b> Empty bins are a sum over bins of 'this bin receives no ball'. Each bin is empty with the same probability.<br><b>Key move:</b> \\(P(\\text{bin empty})=(\\frac{9}{10})^{10}\\). Multiply by 10.<br><b>Answer:</b> \\(10\\left(\\frac9{10}\\right)^{10}\\approx 3.4868\\).",
+  "tags": [
+   "s_indicators",
+   "s_complement",
+   "occupancy",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ten fair die rolls. Let \\(N_1\\) and \\(N_2\\) be the counts of 1s and 2s. Find \\(\\mathrm{Var}(N_1-N_2)\\).<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> covariance of multinomial counts via indicators.<br><b>Trigger:</b> Both counts are sums of indicators over the same ten rolls. Each roll can show at most one value, so the cross terms are not zero for the same roll.<br><b>Key move:</b> \\(\\mathrm{Var}(N_1)=\\frac{25}{18}\\), \\(\\mathrm{Cov}(N_1,N_2)=-\\frac{5}{18}\\). Then \\(\\mathrm{Var}(N_1-N_2)=2\\cdot\\frac{25}{18}+2\\cdot\\frac{5}{18}\\).<br><b>Answer:</b> \\(\\frac{10}{3}\\approx 3.3333\\).",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "multinomial",
+   "dice",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Let \\(X\\) and \\(Y\\) be random variables with \\(E[X^2]=4\\) and \\(E[Y^2]=9\\). Find the largest possible value of \\(E[XY]\\).<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Cauchy-Schwarz bound (a sanity check on a second-moment inequality).<br><b>Trigger:</b> A bound on a mixed moment from two second moments. Equality holds when \\(Y\\) is a fixed multiple of \\(X\\).<br><b>Key move:</b> \\(|E[XY]|\\le\\sqrt{E[X^2]E[Y^2]}\\).<br><b>Answer:</b> \\(\\sqrt{4\\cdot 9}=6\\).",
+  "tags": [
+   "s_convexity_jensen",
+   "inequalities",
+   "sanity_bounds",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A uniform random permutation of 10 distinct numbers. An ascent is a position where the next number is larger. Find the variance of the number of ascents.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> indicators with local dependence (only neighbours covary).<br><b>Trigger:</b> Adjacent ascent indicators share one comparison, so they are correlated. Non-adjacent ones are independent.<br><b>Key move:</b> \\(P(\\text{ascent})=\\frac12\\), \\(P(\\text{two ascents in a row})=\\frac16\\), so neighbour covariance is \\(\\frac16-\\frac14=-\\frac1{12}\\).<br><b>Answer:</b> \\(\\frac{11}{12}\\approx 0.9167\\). The mean is \\(\\frac92\\).",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "permutations",
+   "ascents",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two independent uniform draws on \\((0,1)\\). Find the variance of their maximum.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> order statistics.<br><b>Trigger:</b> The maximum of i.i.d. continuous draws has a simple density.<br><b>Key move:</b> \\(M\\) has density \\(2x\\) on \\([0,1]\\). Compute \\(E[M]=\\frac23\\) and \\(E[M^2]=\\frac12\\).<br><b>Answer:</b> \\(\\frac12-\\frac49=\\frac1{18}\\approx 0.0556\\).",
+  "tags": [
+   "s_order_statistics",
+   "expected_max",
+   "variance",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A uniform random permutation of 6 items. Find the expected number of 3-cycles.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> bijection and counting (expected cycles of each length).<br><b>Trigger:</b> Cycle counts of a fixed length are sums over sets of items, and each set has a fixed chance of forming one cycle.<br><b>Key move:</b> Number of 3-cycles in \\(S_6\\): \\(\\binom63\\cdot 2\\cdot 3!=240\\). Divide by \\(6!=720\\).<br><b>Answer:</b> \\(\\frac13\\). In general the expected number of \\(k\\)-cycles is \\(\\frac1k\\).",
+  "tags": [
+   "s_bijection",
+   "s_indicators",
+   "permutations",
+   "cycles",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Four people return four hats at random (uniform permutation). Find \\(P(\\text{nobody gets their own hat})\\), \\(E[\\text{matches}]\\) and \\(\\mathrm{Var}(\\text{matches})\\).",
+  "back": "<b>Answer:</b> \\(\\frac38\\); \\(E=1\\); \\(\\mathrm{Var}=1\\).<br><b>Structure:</b> inclusion-exclusion for the 'no fixed point' event, and indicators for the moments.<br><b>Key move:</b> Matches are a sum of indicators with equal marginal and pairwise covariance.<br><b>Working:</b> \\(P=\\sum_{j=0}^{4}\\frac{(-1)^j}{j!}=1-1+\\frac12-\\frac16+\\frac1{24}=\\frac38\\). \\(E=4\\cdot\\frac14=1\\). Pairwise \\(\\mathrm{Cov}=\\frac1{12}-\\frac1{16}=\\frac1{48}\\). \\(\\mathrm{Var}=4\\cdot\\frac14\\cdot\\frac34+12\\cdot\\frac1{48}=1\\).<br><b>Sanity check:</b> Large \\(n\\): \\(P\\to\\frac1e\\approx0.3679\\). The value at \\(n=4\\) is already close.<br><b>Transfer:</b> Fixed points of a permutation of 10 (same mean and variance). Derangements count \\(P(\\text{no fixed point})\\) for any \\(n\\).",
+  "tags": [
+   "s_inclusion_exclusion",
+   "s_indicators",
+   "hat_check",
+   "derangements",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A uniform random permutation of 4 items. Let \\(C\\) be the number of cycles. Find \\(E[C]\\) and \\(\\mathrm{Var}(C)\\).",
+  "back": "<b>Answer:</b> \\(E[C]=\\frac{25}{12}\\approx 2.0833\\); \\(\\mathrm{Var}(C)=\\frac{95}{144}\\approx 0.6597\\).<br><b>Structure:</b> indicators from the Feller coupling (independent events 'item \\(i\\) is the largest in its cycle').<br><b>Key move:</b> Under the coupling, \\(I_i\\sim\\mathrm{Ber}(1/i)\\) independently. So \\(E=\\sum\\frac1i\\) and \\(\\mathrm{Var}=\\sum\\frac1i(1-\\frac1i)=H_4-H_4^{(2)}\\).<br><b>Working:</b> \\(H_4=\\frac{25}{12}\\), \\(H^{(2)}_4=\\frac{205}{144}\\), so \\(\\mathrm{Var}=\\frac{300-205}{144}=\\frac{95}{144}\\). Checked by enumerating all 24 permutations.<br><b>Sanity check:</b> Each value is within \\(\\frac{1}{4}\\) of the mean at \\(n=4\\); \\(E[C]\\approx\\ln 4+\\gamma\\).<br><b>Transfer:</b> Left-to-right maxima of a random permutation have the same law (see twin card).",
+  "tags": [
+   "s_indicators",
+   "s_bijection",
+   "s_linearity_expectation",
+   "cycles",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A uniform random permutation of 4 distinct numbers. Let \\(A\\) be the number of ascents (positions where the next value is larger). Find \\(E[A]\\) and \\(\\mathrm{Var}(A)\\).",
+  "back": "<b>Answer:</b> \\(E[A]=\\frac32\\); \\(\\mathrm{Var}(A)=\\frac5{12}\\approx 0.4167\\).<br><b>Structure:</b> indicators with neighbour dependence: each ascent event is one comparison.<br><b>Key move:</b> Each adjacent pair is an ascent with probability \\(\\frac12\\). Two consecutive ascents need \\(\\pi_1<\\pi_2<\\pi_3\\), probability \\(\\frac16\\), so neighbour covariance is \\(-\\frac1{12}\\).<br><b>Working:</b> \\(\\mathrm{Var}=3\\cdot\\frac14+2\\cdot 2\\cdot\\left(-\\frac1{12}\\right)=\\frac34-\\frac13=\\frac5{12}\\). Checked by enumeration.<br><b>Sanity check:</b> Mean ascents \\(\\frac{n-1}2\\) holds for any \\(n\\), with no independence needed.<br><b>Transfer:</b> Count of peaks in the middle of a permutation (has the same local-dependence structure).",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "permutations",
+   "ascents",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair six-sided die is rolled until all six faces have appeared. Find the mean and the variance of the number of rolls.",
+  "back": "<b>Answer:</b> \\(E=\\frac{147}{10}=14.7\\); \\(\\mathrm{Var}=\\frac{3899}{100}=38.99\\) (standard deviation about 6.24).<br><b>Structure:</b> memorylessness: the total time is a sum of independent geometric phases.<br><b>Key move:</b> Phase \\(j\\) (from \\(j-1\\) to \\(j\\) distinct faces) is geometric with success \\(\\frac{7-j}{6}\\)... set \\(p_j=\\frac{6-(j-1)}{6}\\). Sum means \\(\\sum\\frac1{p_j}\\) and variances \\(\\sum\\frac{1-p_j}{p_j^2}\\).<br><b>Working:</b> Mean \\(=6\\sum_{j=1}^{6}\\frac1j\\). Variance \\(=\\sum_{j=1}^{6}\\frac{6(6-j)}{j^2}=\\frac{3899}{100}\\).<br><b>Sanity check:</b> Mean is \\(\\approx 14.7\\), and the standard deviation is about 6.24, so the time is spread out.<br><b>Transfer:</b> Expected number of boxes to collect all toy types (same mean as a die).",
+  "tags": [
+   "s_memorylessness",
+   "s_linearity_expectation",
+   "coupon_collector",
+   "variance",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Three types of draw: type 1 with probability \\(\\frac12\\), type 2 with probability \\(\\frac13\\), type 3 with probability \\(\\frac16\\). Find the expected number of draws to see all three types.",
+  "back": "<b>Answer:</b> \\(\\frac{73}{10}=7.3\\).<br><b>Structure:</b> inclusion-exclusion over subsets of types, using memorylessness.<br><b>Key move:</b> For a subset \\(S\\), the wait until any type in \\(S\\) appears is geometric with mean \\(\\frac{1}{p_S}\\), where \\(p_S=\\sum_{i\\in S}p_i\\). Then \\(E[T]=\\sum_{S\\ne\\emptyset}(-1)^{|S|+1}/p_S\\).<br><b>Working:</b> Singles: \\(2+3+6=11\\). Pairs: \\(\\frac65+\\frac32+2=\\frac{47}{10}\\). Triple: \\(1\\). So \\(11-\\frac{47}{10}+1=\\frac{73}{10}\\).<br><b>Sanity check:</b> Equal probabilities give \\(\\frac{14.7}{}\\) for 6 types. Uneven types lower the mean for 3 types, here 7.3 versus 5.5 for three equal types.<br><b>Transfer:</b> Equal-probability version with 3 types: \\(3H_3=5.5\\).",
+  "tags": [
+   "s_inclusion_exclusion",
+   "s_memorylessness",
+   "coupon_collector",
+   "unequal_probabilities",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ten equally likely coupon types, drawn with replacement. Find the expected number of draws to collect 4 distinct types.",
+  "back": "<b>Answer:</b> \\(\\frac{1207}{252}\\approx 4.7897\\).<br><b>Structure:</b> memorylessness: each new distinct type is a geometric wait, and waits add by linearity.<br><b>Key move:</b> After \\(j\\) distinct types, the wait is geometric with success \\(\\frac{10-j}{10}\\), mean \\(\\frac{10}{10-j}\\). Sum over \\(j=0,1,2,3\\).<br><b>Working:</b> \\(1+\\frac{10}{9}+\\frac{10}{8}+\\frac{10}{7}=\\frac{1207}{252}\\).<br><b>Sanity check:</b> Collecting all 10 types gives \\(10H_{10}\\approx 29.29\\), so collecting 4 is much shorter.<br><b>Transfer:</b> Collect 3 of 10 equals \\(\frac{121}{36}\\).",
+  "tags": [
+   "s_memorylessness",
+   "s_linearity_expectation",
+   "coupon_collector",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Five independent uniform draws from \\(\\{1,\\dots,6\\}\\). Let \\(D\\) be the number of distinct values. Find \\(E[D]\\) and \\(\\mathrm{Var}(D)\\).",
+  "back": "<b>Answer:</b> \\(E[D]=\\frac{4651}{1296}\\approx 3.5887\\); \\(\\mathrm{Var}(D)=\\frac{919895}{1679616}\\approx 0.5477\\).<br><b>Structure:</b> indicators for the absence of each value, plus complement.<br><b>Key move:</b> \\(A_v=1\\) if value \\(v\\) is absent. \\(P(A_v)=(\\frac56)^5\\), and for \\(u\\ne v\\), \\(P(A_uA_v)=(\\frac46)^5\\). Then \\(D=6-\\sum A_v\\).<br><b>Working:</b> \\(E[D]=6\\left(1-(\\tfrac56)^5\\right)\\). Variance is \\(\\sum\\mathrm{Var}(A_v)+\\sum_{u\\ne v}\\mathrm{Cov}(A_u,A_v)\\). Checked by enumerating all \\(6^5\\) sequences.<br><b>Sanity check:</b> Five draws from six values almost always show at least 3 distinct values; the mean is below 4.<br><b>Transfer:</b> Birthdays: distinct days among a group (same indicator method).",
+  "tags": [
+   "s_indicators",
+   "s_complement",
+   "distinct_values",
+   "variance",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A stick of length 1 is broken at two independent uniform points into three pieces. Find the expected length of the shortest piece and of the longest piece.",
+  "back": "<b>Answer:</b> Shortest: \\(\\frac19\\approx 0.1111\\). Longest: \\(\\frac{11}{18}\\approx 0.6111\\).<br><b>Structure:</b> order statistics; the pieces are uniform spacings (Dirichlet(1,1,1)).<br><b>Key move:</b> For spacings, \\(P(\\min>t)=(1-3t)^2\\) on \\(0\\le t\\le\\frac13\\). For the longest, \\(E[\\max]=\\frac{1}{3}\\left(1+\\frac12+\\frac13\\right)\\).<br><b>Working:</b> \\(E[\\min]=\\int_0^{1/3}(1-3t)^2dt=\\frac19\\). Then \\(E[\\text{middle}]=1-\\frac19-\\frac{11}{18}=\\frac{5}{18}\\).<br><b>Sanity check:</b> Monte Carlo (\\(2\\times10^5\\) trials): shortest 0.1115, longest 0.6106.<br><b>Transfer:</b> Expected longest piece of \\(n\\) cuts is \\(\frac{H_{n+1}}{n+1}\\).",
+  "tags": [
+   "s_order_statistics",
+   "s_geometric_probability",
+   "broken_stick",
+   "spacings",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A stick of length 1 is broken at two independent uniform points into three pieces. Find the probability the three pieces can form a triangle.",
+  "back": "<b>Answer:</b> \\(\\frac14\\).<br><b>Structure:</b> geometric probability with complement: the three events 'piece \\(i\\ge\frac12\\)' are disjoint.<br><b>Key move:</b> A triangle needs every piece below \\(\\frac12\\). At most one piece can exceed \\(\\frac12\\), so \\(P(\\text{no triangle})=3\\cdot P(L_1\\ge\\frac12)\\). Each has probability \\((\\frac12)^2=\\frac14\\).<br><b>Working:</b> \\(1-3\\cdot\\frac14=\\frac14\\approx 0.25\\). Monte Carlo \\(0.2522\\).<br><b>Sanity check:</b> Two-cut stick with each piece uniformly distributed; the probability is the same for a rope cut at two random points.<br><b>Transfer:</b> Probability that a random point split into 3 pieces forms a triangle.",
+  "tags": [
+   "s_geometric_probability",
+   "s_complement",
+   "broken_stick",
+   "triangle",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two fair dice are rolled. Find the expected maximum, the expected minimum and \\(E[\\max-\\min]\\).",
+  "back": "<b>Answer:</b> \\(E[\\max]=\\frac{161}{36}\\approx 4.4722\\); \\(E[\\min]=\\frac{91}{36}\\approx 2.5278\\); \\(E[\\max-\\min]=\\frac{35}{18}\\approx 1.9444\\).<br><b>Structure:</b> tail-sum formula applied to order statistics.<br><b>Key move:</b> \\(E[\\max]=\\sum_{k=1}^6\\left(1-\\left(\\tfrac{k-1}{6}\\right)^2\\right)\\). \\(E[\\min]=\\sum_{k=1}^6 P(\\min\\ge k)=\\sum_{k=1}^6\\left(\\tfrac{7-k}{6}\\right)^2\\).<br><b>Working:</b> \\(6-\\frac{55}{36}=\\frac{161}{36}\\). \\(\\frac{91}{36}\\). Difference \\(\\frac{70}{36}=\\frac{35}{18}\\). Sum \\(\\max+\\min=7\\) gives \\(E[\\min]=7-\\frac{161}{36}=\\frac{91}{36}\\).<br><b>Sanity check:</b> Sum check: \\(E[\\max]+E[\\min]=E[X_1+X_2]=7\\).<br><b>Transfer:</b> Max of three dice (cube the terms).",
+  "tags": [
+   "s_tail_sum",
+   "s_order_statistics",
+   "s_linearity_expectation",
+   "dice",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Three fair dice are rolled. Find the expected maximum.",
+  "back": "<b>Answer:</b> \\(\\frac{119}{24}\\approx 4.9583\\).<br><b>Structure:</b> tail-sum formula with order statistics.<br><b>Key move:</b> \\(E[M]=\\sum_{k=1}^6\\left(1-\\left(\\tfrac{k-1}{6}\\right)^3\\right)\\).<br><b>Working:</b> \\(6-\\frac{0+1+8+27+64+125}{216}=6-\\frac{225}{216}=\\frac{119}{24}\\). Monte Carlo \\(4.963\\).<br><b>Sanity check:</b> Two dice: \\(\frac{161}{36}\u0007pprox 4.472\\). The extra die adds about half a point.<br><b>Transfer:</b> Expected minimum of three dice (use \\(P(\\min\\ge k)=((7-k)/6)^3\\)).",
+  "tags": [
+   "s_tail_sum",
+   "s_order_statistics",
+   "dice",
+   "expected_max",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Roll a fair die. You may keep the current value or reroll. You have at most three rolls in total and must keep the last roll if you reach it. Maximise your expected payoff. What is it?",
+  "back": "<b>Answer:</b> \\(\\frac{14}{3}\\approx 4.6667\\).<br><b>Structure:</b> dynamic programming (backward induction over the number of rolls left).<br><b>Key move:</b> With one roll left, the continuation value is \\(3.5\\). With two left, \\(E[\\max(X,3.5)]=\\frac{17}{4}\\)... the first roll uses \\(E[\\max(X,\\frac{17}{4})]=\\frac{14}{3}\\). Policy: keep 5 or 6 on roll 1, keep 4 or more on roll 2, keep anything on roll 3.<br><b>Working:</b> \\(E[\\max(X,3.5)]=\\frac{4+4+4+4+5+6}{...}\\): values 1–3 give 3.5, 4 gives 4, 5 and 6 keep: \\(\\frac{3.5\\cdot3+4+5+6}{6}\\)... see the working. Final: \\(\\frac{14}{3}\\). Monte Carlo under the optimal rule gives 4.668.<br><b>Sanity check:</b> Each extra roll adds value. Without rolls, the expectation is \\(3.5\\).<br><b>Transfer:</b> A quote with three attempts (dealer offers) has the same structure (see twin card).",
+  "tags": [
+   "s_dynamic_programming",
+   "s_backward_induction",
+   "optimal_stopping",
+   "dice",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Roll a fair die repeatedly, keeping a running total. Stop the first time the total is at least 10. Find the expected final total.",
+  "back": "<b>Answer:</b> About \\(11.63\\). Exactly \\(\\frac{234466225}{20155392}\\).<br><b>Structure:</b> optional stopping (Wald's identity).<br><b>Key move:</b> The stopping rule depends only on the past, so \\(E[S_N]=E[X]E[N]=\\frac72E[N]\\). Find \\(E[N]\\) by first-step recursion over the running total.<br><b>Working:</b> \\(E[N]=\\frac{33495175}{10077696}\\approx 3.3237\\). Then \\(\\frac72\\cdot 3.3237\\approx 11.63\\). Monte Carlo \\(11.635\\).<br><b>Sanity check:</b> Final total lies in \\(\\{10,\\dots,15\\}\\), so the mean must be between 10 and 15. It is 11.63.<br><b>Transfer:</b> Wald identity applied to any stopping time with finite \\(E[N]\\) (see toolkit card).",
+  "tags": [
+   "s_optional_stopping",
+   "s_martingale",
+   "s_first_step_conditioning",
+   "random_walk",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair coin is flipped until the first head on flip \\(K\\). The payoff is \\(2^K\\) dollars if \\(K\\le 20\\) and \\(2^{20}\\) dollars otherwise. Find the expected payoff.",
+  "back": "<b>Answer:</b> 21 dollars.<br><b>Structure:</b> linearity over levels; the cap makes each level contribute and the tail contributes one more.<br><b>Key move:</b> For \\(k\\le 20\\), \\(P(K=k)2^k=1\\). The tail gives \\(P(K>20)\\cdot2^{20}=2^{-20}\\cdot 2^{20}=1\\).<br><b>Working:</b> Sum \\(=20+1=21\\). With cap \\(2^m\\) the answer is \\(m+1\\). Monte Carlo with cap 10 gives 10.74 versus exact 11.<br><b>Sanity check:</b> The uncapped game is infinite. The expectation grows by 1 for each extra allowed level.<br><b>Transfer:</b> Any St Petersburg variant where each level has the same probability times payoff (see recognise card).",
+  "tags": [
+   "s_linearity_expectation",
+   "s_kelly_log_utility",
+   "st_petersburg",
+   "utility",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Your wealth is 1000 dollars and your utility is \\(\\log(\\text{wealth})\\). A game pays \\(2^K\\) dollars, where \\(K\\) is the flip on which the first head appears. What is the largest fee \\(c\\) you should pay to play, \\(E[\\log(1000-c+2^K)]=\\log 1000\\)?",
+  "back": "<b>Answer:</b> About \\(10.95\\) dollars.<br><b>Structure:</b> log utility (Kelly-style): the expected payoff is infinite, but the expected log is finite, so the bankroll sets the price.<br><b>Key move:</b> Solve \\(\\sum_{k\\ge1}2^{-k}\\log(w-c+2^k)=\\log w\\) numerically (bisection on \\(c\\)).<br><b>Working:</b> Wealth 100 gives about 7.79. Each 10x in wealth adds about 3.3 (\\(\\log_2 10\\)), so the price grows like \\(\\log_2(w)\\).<br><b>Sanity check:</b> Price for a 100-dollar bankroll \\(\\approx 7.79\\). Monte Carlo check: the expected log gap is within \\(3\\times10^{-4}\\) at the root.<br><b>Transfer:</b> A risk-neutral player would pay any amount. Log utility caps the fee to about \\(\\log_2\\) of the bankroll.",
+  "tags": [
+   "s_kelly_log_utility",
+   "st_petersburg",
+   "utility",
+   "bankroll",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Choose \\(p\\) uniformly from \\(\\{0.1,0.9\\}\\). Given \\(p\\), flip a \\(p\\)-coin five times and let \\(X\\) be the number of heads. Find \\(\\mathrm{Var}(X)\\).",
+  "back": "<b>Answer:</b> \\(\\frac{89}{20}=4.45\\).<br><b>Structure:</b> law of total variance: within-group noise plus between-group spread.<br><b>Key move:</b> \\(E[\\mathrm{Var}(X\\mid p)]=5E[p(1-p)]=5\\cdot0.09=0.45\\). \\(\\mathrm{Var}(E[X\\mid p])=25\\,\\mathrm{Var}(p)=25\\cdot0.16=4\\).<br><b>Working:</b> \\(0.45+4=4.45\\). Monte Carlo \\(4.4477\\).<br><b>Sanity check:</b> The between-group term dominates because \\(p\\) is far from \\(\frac12\\).<br><b>Transfer:</b> Same structure as the fair-versus-biased coin mixture (see recognise card).",
+  "tags": [
+   "s_variance_decomposition",
+   "s_conditional_expectation_tower",
+   "mixtures",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Roll a fair die \\(N\\) times, where \\(N\\) is uniform on \\(\\{1,\\dots,6\\}\\). Let \\(S\\) be the total. Find \\(E[S]\\) and \\(\\mathrm{Var}(S)\\).",
+  "back": "<b>Answer:</b> \\(E[S]=\\frac{49}{4}=12.25\\); \\(\\mathrm{Var}(S)=\\frac{735}{16}\\approx45.94\\).<br><b>Structure:</b> conditioning on \\(N\\) (tower property and random-sum variance).<br><b>Key move:</b> \\(E[S]=E[N]E[X]\\). \\(\\mathrm{Var}(S)=E[N]\\mathrm{Var}(X)+\\mathrm{Var}(N)E[X]^2\\).<br><b>Working:</b> \\(\\frac72\\cdot\\frac72\\); \\(\\frac72\\cdot\\frac{35}{12}+\\frac{35}{12}\\cdot\\frac{49}{4}=\\frac{735}{16}\\). Monte Carlo \\(12.245\\) and \\(45.95\\).<br><b>Sanity check:</b> If \\(N\\) is fixed at 6, the variance would be \\(6\\cdot\\frac{35}{12}=17.5\\): the randomness in \\(N\\) adds most of the spread.<br><b>Transfer:</b> Random number of claims times random claim size (compound sum).",
+  "tags": [
+   "s_conditional_expectation_tower",
+   "s_variance_decomposition",
+   "random_sum",
+   "dice",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X\\sim\\mathrm{Gamma}(2,1)\\) and \\(Y\\sim\\mathrm{Gamma}(3,1)\\) are independent. Find \\(E\\!\\left[\\frac{X}{X+Y}\\right]\\).",
+  "back": "<b>Answer:</b> \\(\\frac25=0.4\\).<br><b>Structure:</b> symmetry: \\(X/(X+Y)\\) is independent of \\(X+Y\\), so it has a Beta law.<br><b>Key move:</b> \\(\\frac{X}{X+Y}\\sim\\mathrm{Beta}(2,3)\\), with mean \\(\\frac{2}{2+3}\\).<br><b>Working:</b> Monte Carlo \\(0.3998\\). Shape 2 below shape 3 pushes the ratio below \\(\\frac12\\).<br><b>Sanity check:</b> With equal shapes, the answer is \\(\\frac12\\) (exchangeability).<br><b>Transfer:</b> Fraction of time spent by one of two independent tasks (see twin card).",
+  "tags": [
+   "s_symmetry",
+   "ratios",
+   "beta",
+   "gamma",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Draw 3 numbers without replacement from \\(\\{1,\\dots,10\\}\\). Find the variance of their sample mean.",
+  "back": "<b>Answer:</b> \\(\\frac{77}{36}\\approx 2.1389\\).<br><b>Structure:</b> finite-population correction (indicators with negative dependence).<br><b>Key move:</b> \\(\\mathrm{Var}(\\bar X)=\\frac{\\sigma^2}{n}\\cdot\\frac{N-n}{N-1}\\), with \\(\\sigma^2=\\frac1N\\sum(x-\\mu)^2=\\frac{33}{4}\\).<br><b>Working:</b> \\(\\frac{33/4}{3}\\cdot\\frac{7}{9}=\\frac{77}{36}\\). Enumeration of all 120 samples gives the same value.<br><b>Sanity check:</b> With replacement it would be \\(\\frac{11}{4}=2.75\\). The finite population reduces the variance.<br><b>Transfer:</b> Variance of a sample total from a finite population (scale by \\(n^2\\)).",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "sampling",
+   "finite_population",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ten rolls of a fair die. Let \\(N_1\\) and \\(N_2\\) be the counts of 1s and 2s. Find \\(\\mathrm{Cov}(N_1,N_2)\\) and \\(\\mathrm{Var}(N_1)\\).",
+  "back": "<b>Answer:</b> \\(\\mathrm{Cov}=-\\frac{5}{18}\\approx -0.2778\\); \\(\\mathrm{Var}(N_1)=\\frac{25}{18}\\approx1.3889\\).<br><b>Structure:</b> indicators over rolls; different values on the same roll are mutually exclusive.<br><b>Key move:</b> Rolls are independent, so cross-roll covariances are zero. For the same roll, \\(P(\\text{1 and 2})=0\\), so \\(\\mathrm{Cov}=0-\\frac16\\cdot\\frac16\\). Sum over 10 rolls.<br><b>Working:</b> \\(10\\cdot\\left(-\\frac1{36}\\right)=-\\frac5{18}\\). \\(\\mathrm{Var}(N_1)=10\\cdot\\frac16\\cdot\\frac56=\\frac{25}{18}\\). Monte Carlo gives \\(-0.2765\\).<br><b>Sanity check:</b> Negative covariance is expected: a larger count of 1s leaves fewer rolls for 2s.<br><b>Transfer:</b> Multinomial covariances are \\(-np_ip_j\\) for \\(i\ne j\\) (general form).",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "multinomial",
+   "dice",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X\\) is uniform on \\(\\{1,\\dots,6\\}\\). Find \\(E[1/X]\\) and compare it with \\(1/E[X]\\).",
+  "back": "<b>Answer:</b> \\(E[1/X]=\\frac{49}{120}\\approx 0.4083\\), which is larger than \\(\\frac{1}{E[X]}=\\frac27\\approx0.2857\\).<br><b>Structure:</b> Jensen's inequality for the convex function \\(1/x\\) on \\((0,\\infty)\\).<br><b>Key move:</b> \\(E[f(X)]\\ge f(E[X])\\) for convex \\(f\\). Here \\(f(x)=1/x\\).<br><b>Working:</b> \\(\\frac{1}{6}\\left(1+\\frac12+\\frac13+\\frac14+\\frac15+\\frac16\\right)=\\frac{49}{120}\\). Monte Carlo \\(0.4079\\).<br><b>Sanity check:</b> Equality would need \\(X\\) to be constant. The gap here is large because the die is spread out.<br><b>Transfer:</b> Jensen gives a bound on \\(E[1/X]\\) without computing it.",
+  "tags": [
+   "s_convexity_jensen",
+   "dice",
+   "inequalities",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair coin is flipped until the pattern HH first appears. Find the expected number of flips.",
+  "back": "<b>Answer:</b> \\(6\\).<br><b>Structure:</b> first-step conditioning on the last flip (Markov chain with states start, H, done).<br><b>Key move:</b> Let \\(a\\) be the expected remaining flips from start and \\(b\\) from H. \\(a=1+\\frac12a+\\frac12b\\), \\(b=1+\\frac12 \\cdot 0+\\frac12a\\). Solve: \\(a=6\\).<br><b>Working:</b> Monte Carlo \\(6.006\\).<br><b>Sanity check:</b> Pattern HT has no self-overlap and gives 4 (see twin card).<br><b>Transfer:</b> Biased coin with \\(P(H)=\\frac23\\): \\(\\frac{15}{4}\\) (see perturbation card).",
+  "tags": [
+   "s_first_step_conditioning",
+   "s_markov_chain",
+   "coin_patterns",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair coin is flipped until the first time a head is immediately followed by a tail. Find the expected number of flips.",
+  "back": "<b>Answer:</b> \\(4\\).<br><b>Structure:</b> Conway's leading-number method for patterns; or first-step conditioning on the last flip.<br><b>Key move:</b> For pattern HT, the first flip matching the first letter creates a new state; the wait for the complete HT has mean \\(2^2=4\\), since HT cannot overlap with itself.<br><b>Working:</b> Monte Carlo \\(3.995\\).<br><b>Sanity check:</b> HH has self-overlap and gives 6 (see solve card above). The overlap is what lengthens it.<br><b>Transfer:</b> Any two-letter pattern with no self-overlap has expected waiting time \\(2^2=4\\) for a fair coin.",
+  "tags": [
+   "s_first_step_conditioning",
+   "s_markov_chain",
+   "coin_patterns",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair die is rolled 9 times... Nine i.i.d. uniform draws on \\((0,1)\\). Find the expected maximum.",
+  "back": "<b>Answer:</b> \\(\\frac{9}{10}=0.9\\).<br><b>Structure:</b> order statistics: \\(P(\\max\\le x)=x^9\\).<br><b>Key move:</b> \\(E[M]=\\int_0^1 (1-x^9)\\,dx=1-\\frac1{10}\\).<br><b>Working:</b> Monte Carlo \\(0.8998\\). Generally \\(E[\\max_n]=\\frac{n}{n+1}\\).<br><b>Sanity check:</b> As \\(n\\to\\infty\\) the expected maximum approaches 1.<br><b>Transfer:</b> Expected minimum of \\(n\\) uniforms is \\(\\frac1{n+1}\\).",
+  "tags": [
+   "s_order_statistics",
+   "s_tail_sum",
+   "expected_max",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A die is rolled until both 1 and 2 have appeared at least once. Find the expected number of rolls.",
+  "back": "<b>Answer:</b> \\(9\\).<br><b>Structure:</b> order statistics: the time is the maximum of two waiting times.<br><b>Key move:</b> \\(T=\\max(T_1,T_2)\\), each \\(T_i\\) geometric with mean 6. \\(E[\\max]=E[T_1]+E[T_2]-E[\\min]\\), and \\(\\min\\) is geometric with mean \\(3\\).<br><b>Working:</b> \\(6+6-3=9\\). Monte Carlo \\(8.99\\).<br><b>Sanity check:</b> Collect 3 of 10 has a different structure (sum of phases).<br><b>Transfer:</b> Expected time for all \\(n\\) of \\(k\\) specific faces uses inclusion-exclusion over the same identity.",
+  "tags": [
+   "s_order_statistics",
+   "s_linearity_expectation",
+   "dice",
+   "coupon_collector",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A uniform random permutation of 10 items. Find the expected number of 2-cycles (cycles of length 2).",
+  "back": "<b>Answer:</b> \\(\\frac12\\).<br><b>Structure:</b> bijection and counting: expected number of \\(k\\)-cycles is \\(\\frac1k\\).<br><b>Key move:</b> Total number of 2-cycles over all permutations is \\(\\binom{10}{2}\\cdot 8!=45\\cdot 40320\\). Divide by \\(10!\\).<br><b>Working:</b> \\(\\frac{45\\cdot40320}{3628800}=\\frac12\\). Monte Carlo \\(0.4984\\).<br><b>Sanity check:</b> Same argument for any \\(k\\le n\\): the expected number of \\(k\\)-cycles is \\(\\frac1k\\).<br><b>Transfer:</b> Expected 3-cycles in \\(S_6\\) is \\(\\frac13\\) (see recognise card).",
+  "tags": [
+   "s_bijection",
+   "s_indicators",
+   "permutations",
+   "cycles",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A uniform random permutation of 6 distinct numbers. A peak is an interior position \\(i\\) with \\(\\pi(i-1)<\\pi(i)>\\pi(i+1)\\). Find the expected number of peaks.",
+  "back": "<b>Answer:</b> \\(\\frac43\\approx 1.3333\\).<br><b>Structure:</b> indicators with a three-value comparison.<br><b>Key move:</b> For each interior \\(i\\), \\(P(\\text{peak})=\\frac13\\) (the middle of three values is largest with probability \\(\\frac13\\)). There are 4 interior positions.<br><b>Working:</b> \\(4\\cdot\\frac13=\\frac43\\). Monte Carlo \\(1.3328\\).<br><b>Sanity check:</b> Peaks and ascents are different counts with different means (\\(\\frac43\\) versus \\(\\frac{n-1}{2}\\)).<br><b>Transfer:</b> Valleys have the same expectation by symmetry.",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "permutations",
+   "peaks",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Five rolls of a fair die. Find the expected number of unordered pairs of rolls that show the same face.",
+  "back": "<b>Answer:</b> \\(\\frac53\\approx 1.6667\\).<br><b>Structure:</b> indicators over pairs of rolls.<br><b>Key move:</b> Each pair matches with probability \\(\\frac16\\). There are \\(\\binom52\\) pairs.<br><b>Working:</b> \\(10\\cdot\\frac16=\\frac53\\). Monte Carlo \\(1.6662\\).<br><b>Sanity check:</b> The pair count is not the number of distinct faces; use the distinct-faces card for that.<br><b>Transfer:</b> Birthday pairs use the same argument with 365 days.",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "dice",
+   "pairs",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair die is rolled until two consecutive rolls show the same face. Find the expected number of rolls.",
+  "back": "<b>Answer:</b> \\(7\\).<br><b>Structure:</b> first-step conditioning, with memorylessness: each new roll matches the previous one with probability \\(\\frac16\\), whatever came before.<br><b>Key move:</b> After the first roll, each further roll is a success with probability \\(\\frac16\\), independently of history. Extra rolls are geometric with mean 6.<br><b>Working:</b> Total \\(=1+6=7\\). Monte Carlo \\(7.01\\).<br><b>Sanity check:</b> The same argument gives \\(1+\\frac{1}{p}\\) for any event repeated with fixed success probability \\(p\\).<br><b>Transfer:</b> Pattern waiting times (HH, HT) need a longer chain because the state depends on the last flip.",
+  "tags": [
+   "s_first_step_conditioning",
+   "s_memorylessness",
+   "dice",
+   "fmt_solve"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A uniform random permutation of 10 items. Let \\(F\\) be the number of fixed points. \\(E[F]=1\\) and \\(\\mathrm{Var}(F)=1\\).<br><br><b>Now change one assumption:</b> instead of a permutation, let \\(f:\\{1,\\dots,10\\}\\to\\{1,\\dots,10\\}\\) be a uniformly random function (each item independently assigned a target). Find \\(\\mathrm{Var}(F)\\).",
+  "back": "<b>What breaks:</b> the variance argument used \\(\\mathrm{Cov}(I_i,I_j)=\\frac1{900}>0\\) from the no-replacement structure. For independent targets, the indicators are independent, so the covariance is zero.<br><b>Fix:</b> Variance is the sum of marginal variances only: \\(10\\cdot\\frac1{10}\\cdot\\frac9{10}\\).<br><b>New answer:</b> \\(\\mathrm{Var}(F)=\\frac{9}{10}\\). The mean is still 1 (linearity needs no independence).",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "fixed_points",
+   "random_function",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A uniform random permutation of 4 items. Its cycle count \\(C\\) has \\(E[C]=\\frac{25}{12}\\), via the Feller coupling.<br><br><b>Now change one assumption:</b> restrict the permutation to be uniform over EVEN permutations (the 12 permutations of \\(A_4\\)). Find \\(E[C]\\).",
+  "back": "<b>What breaks:</b> the Feller independence of the events 'item \\(i\\) is largest in its cycle' fails under the parity constraint. The mean changes because the distribution of cycle types changes.<br><b>Fix:</b> Enumerate the even permutations: identity (4 cycles), eight 3-cycles (2 cycles each), three double transpositions (2 cycles each).<br><b>New answer:</b> \\(E[C]=\\frac{4+16+6}{12}=\\frac{13}{6}\\approx 2.1667\\), versus \\(\\frac{25}{12}\\approx 2.0833\\) for all permutations.",
+  "tags": [
+   "s_indicators",
+   "s_bijection",
+   "cycles",
+   "parity",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ten flips of a fair coin. A run is a maximal block of identical outcomes. \\(E[\\text{runs}]=\\frac{11}{2}\\).<br><br><b>Now change one assumption:</b> the coin has \\(P(H)=\\frac13\\) instead of \\(\\frac12\\). Find \\(E[\\text{runs}]\\).",
+  "back": "<b>What breaks:</b> The per-position change probability was \\(\\frac12\\), which assumed a fair coin. It is now \\(2pq=\\frac{4}{9}\\). The linearity argument still holds, only the marginal changes.<br><b>Fix:</b> \\(P(\\text{change})=2\\cdot\\frac13\\cdot\\frac23=\\frac49\\). Runs \\(=1+9\\cdot\\frac49\\).<br><b>New answer:</b> \\(E[\\text{runs}]=5\\) (versus \\(5.5\\) for the fair coin). Monte Carlo \\(5.0007\\).",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "runs",
+   "biased_coin",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Six equally likely coupon types; \\(E[\\text{draws to collect all}]=6H_6=14.7\\).<br><br><b>Now change one assumption:</b> type 1 has probability \\(\\frac12\\) and each of the other five types has probability \\(\\frac1{10}\\). Find the expected draws to collect all six.",
+  "back": "<b>What breaks:</b> The phases are no longer symmetric: waiting for each new type is not a single geometric with the same mean. The formula \\(nH_n\\) fails.<br><b>Fix:</b> Inclusion-exclusion over subsets: \\(E[T]=\\sum_{S\\ne\\emptyset}(-1)^{|S|+1}/p_S\\), where \\(p_S\\) is the sum of probabilities in \\(S\\).<br><b>New answer:</b> \\(E[T]=\\frac{1439}{63}\\approx 22.84\\) (versus 14.7). Monte Carlo \\(22.87\\).",
+  "tags": [
+   "s_inclusion_exclusion",
+   "s_memorylessness",
+   "coupon_collector",
+   "unequal_probabilities",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Sample 3 numbers from \\(\\{1,\\dots,10\\}\\) without replacement. Population variance (divisor \\(N\\)) is \\(\\sigma^2=\\frac{33}{4}\\). The variance of the sample mean is \\(\\frac{77}{36}\\).<br><br><b>Now change one assumption:</b> sample WITH replacement instead. Find \\(\\mathrm{Var}(\\bar X)\\).",
+  "back": "<b>What breaks:</b> The factor \\(\\frac{N-n}{N-1}\\) came from negative dependence between draws without replacement. With replacement the draws are i.i.d., so the factor is 1.<br><b>Fix:</b> \\(\\mathrm{Var}(\\bar X)=\\frac{\\sigma^2}{n}\\).<br><b>New answer:</b> \\(\\frac{33/4}{3}=\\frac{11}{4}=2.75\\) (versus \\(\\frac{77}{36}\\approx 2.139\\)).",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "sampling",
+   "finite_population",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X\\sim U(0,1)\\) and \\(Y\\sim U(0,1)\\) independent. \\(E\\left[\\frac{X}{X+Y}\\right]=\\frac12\\) by symmetry.<br><br><b>Now change one assumption:</b> \\(X\\sim U(0,1)\\) and \\(Y\\sim U(0,2)\\), independent. Find \\(E\\left[\\frac{X}{X+Y}\\right]\\).",
+  "back": "<b>What breaks:</b> Symmetry needs \\(X\\) and \\(Y\\) to have the same distribution. Here \\(Y\\) tends to be larger, so the ratio is smaller on average.<br><b>Fix:</b> Integrate directly: \\(E=\\int_0^1\\int_0^2\\frac{x}{x+y}\\cdot\\frac12\\,dy\\,dx=\\frac12\\int_0^1 x\\ln\\frac{x+2}{x}\\,dx\\).<br><b>New answer:</b> \\(\\frac12+\\ln 2-\\frac34\\ln 3\\approx 0.3692\\) (Monte Carlo \\(0.3690\\)).",
+  "tags": [
+   "s_symmetry",
+   "ratios",
+   "beta",
+   "exchangeability",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair coin. The expected number of flips until HH appears is 6.<br><br><b>Now change one assumption:</b> the coin has \\(P(H)=\\frac23\\). Find the expected flips until HH.",
+  "back": "<b>What breaks:</b> The fair-coin first-step equations used \\(p=\\frac12\\). With general \\(p=P(H)\\), the chain has the same states but different transition probabilities.<br><b>Fix:</b> With \\(a\\) from start and \\(b\\) after H: \\(a=1+pb+(1-p)a\\), \\(b=1+(1-p)a\\). Solving gives \\(E=\\frac1p+\\frac1{p^2}\\).<br><b>New answer:</b> \\(\\frac32+\\frac94=\\frac{15}{4}=3.75\\) (Monte Carlo \\(3.757\\)).",
+  "tags": [
+   "s_first_step_conditioning",
+   "s_markov_chain",
+   "coin_patterns",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Roll a fair die, up to three rolls in total. You may keep the current value or reroll. Optimal expected payoff is \\(\\frac{14}{3}\\).<br><br><b>Now change one assumption:</b> each reroll costs \\(\\frac12\\) (paid when you reroll). Find the optimal expected payoff.",
+  "back": "<b>What breaks:</b> The continuation value now carries a \\(-\\frac12\\) penalty at each decision, so the thresholds move. Using the no-cost policy would undercount the cost.<br><b>Fix:</b> Backward induction: \\(V(x,r)=\\max\\left(x,\\,-\\frac12+E[V(Y,r-1)]\\right)\\), with \\(V(x,0)=x\\). Start with \\(E[V(X,2)]\\).<br><b>New answer:</b> \\(\\frac{17}{4}=4.25\\) (versus \\(\\frac{14}{3}\\approx4.67\\)). Monte Carlo under the optimal rule \\(4.253\\).",
+  "tags": [
+   "s_dynamic_programming",
+   "s_backward_induction",
+   "optimal_stopping",
+   "dice",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Records in five i.i.d. continuous draws: \\(E[\\text{records}]=H_5\\approx2.2833\\).<br><br><b>Now change one assumption:</b> draws are rolls of a fair die (ties possible). A record must be strictly larger than all earlier draws. Find \\(E[\\text{records}]\\).",
+  "back": "<b>What breaks:</b> Ties break the rank argument: \\(P(\\text{draw } i \\text{ is a record})\\) is no longer \\(\\frac1i\\), because a tie with the previous maximum does not count.<br><b>Fix:</b> \\(P(X_i>\\max_{j<i}X_j)=\\sum_k P(\\max_{j<i}X_j=k)\\cdot\\frac{6-k}{6}\\). Sum over \\(i\\).<br><b>New answer:</b> \\(\\frac{15325}{7776}\\approx 1.9708\\) (Monte Carlo \\(1.9712\\)).",
+  "tags": [
+   "s_indicators",
+   "s_extremal",
+   "records",
+   "ties",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ascents of a uniform random permutation of 4 numbers: \\(E=\\frac32\\), since each adjacent pair is an ascent with probability \\(\\frac12\\).<br><br><b>Now change one assumption:</b> instead, the 4 values are rolls of a fair die, and an ascent means the next roll is strictly larger. Find \\(E[\\text{ascents}]\\).",
+  "back": "<b>What breaks:</b> Ties are neither ascents nor descents, so the probability of an ascent is no longer \\(\\frac12\\).<br><b>Fix:</b> \\(P(X_{i+1}>X_i)=\\frac{15}{36}\\) (count pairs \\(a<b\\) on \\(\\{1..6\\}\\)). Use linearity over the three adjacent pairs.<br><b>New answer:</b> \\(3\\cdot\\frac{15}{36}=\\frac54=1.25\\) (Monte Carlo \\(1.2521\\)).",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "ties",
+   "ascents",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A uniform random permutation of 4 people with hats. \\(P(\\text{nobody gets own hat})=\\frac38\\) and \\(E[\\text{matches}]=1\\).<br><br><b>Now change one assumption:</b> condition on at least one person getting their own hat. Find \\(E[\\text{matches}\\mid\\text{at least one match}]\\).",
+  "back": "<b>What breaks:</b> Conditioning changes the marginal of the count. \\(E[F\\mid F\\ge1]=E[F]/P(F\\ge1)\\) only holds because \\(F=0\\) on the complement.<br><b>Fix:</b> \\(P(F\\ge1)=1-\\frac38=\\frac58\\). Then \\(E[F\\mid F\\ge1]=\\frac{1}{5/8}\\).<br><b>New answer:</b> \\(\\frac85=1.6\\) (Monte Carlo \\(1.5945\\)).",
+  "tags": [
+   "s_complement",
+   "s_indicators",
+   "conditional_expectation",
+   "hat_check",
+   "fmt_perturb"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Five people line up in a random order. A person is 'visible' if they are taller than everyone standing in front of them (the first person is always visible). Find the expected number of visible people.",
+  "back": "<b>Classic:</b> the number of left-to-right maxima of a uniform random permutation.<br><b>Mapping:</b> a visible person is a record (a new running maximum). The record count has the same law as the number of cycles of a random permutation (Feller coupling). Expected value \\(H_n\\).<br><b>Answer:</b> \\(H_5=\\frac{137}{60}\\approx 2.2833\\).",
+  "tags": [
+   "s_indicators",
+   "s_extremal",
+   "records",
+   "twin",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ten guests leave a party. Each picks up one coat at random from the cloakroom, one coat per guest, with all coats distinct. Find the expected number of guests who get their own coat, and its variance.",
+  "back": "<b>Classic:</b> the hat-check problem (fixed points of a random permutation).<br><b>Mapping:</b> a guest matching their own coat is a fixed point. Mean 1 and variance 1 for \\(n\\ge2\\).<br><b>Answer:</b> \\(E=1\\), \\(\\mathrm{Var}=1\\). \\(P(\\text{none})\\approx 0.3679\\).",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "hat_check",
+   "permutations",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A cereal box holds one of six equally likely monsters, independent of other boxes. Find the expected number of boxes to collect all six monsters, and its variance.",
+  "back": "<b>Classic:</b> the coupon collector problem.<br><b>Mapping:</b> phases between new monsters are geometric and independent (memorylessness).<br><b>Answer:</b> \\(E=6H_6=14.7\\); \\(\\mathrm{Var}=\\frac{3899}{100}=38.99\\).",
+  "tags": [
+   "s_memorylessness",
+   "s_linearity_expectation",
+   "coupon_collector",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A rope is cut at two independent uniform points into three pieces. What is the probability the three pieces can be tied into a closed triangle?",
+  "back": "<b>Classic:</b> the broken-stick triangle problem.<br><b>Mapping:</b> a triangle needs each piece shorter than half the rope. At most one piece can be longer than half, so the complement is a disjoint union.<br><b>Answer:</b> \\(\\frac14\\).",
+  "tags": [
+   "s_geometric_probability",
+   "s_complement",
+   "broken_stick",
+   "triangle",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair coin is tossed repeatedly. Find the expected number of tosses until the first time a head is immediately followed by a tail.",
+  "back": "<b>Classic:</b> the waiting time for the pattern HT.<br><b>Mapping:</b> HT cannot overlap with itself, so the mean is \\(2^2\\) (Conway's leading-number formula).<br><b>Answer:</b> \\(4\\).",
+  "tags": [
+   "s_first_step_conditioning",
+   "s_markov_chain",
+   "coin_patterns",
+   "twin",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A dealer offers you a used-car price each morning, uniform on \\(\\{1,\\dots,6\\}\\) (thousands), independently. You may accept any offer. You get at most three offers, and you must accept the third if you reach it. Maximise the expected price you accept.",
+  "back": "<b>Classic:</b> optimal stopping with re-rolls (the dice game with three rolls).<br><b>Mapping:</b> backward induction over offers left. The thresholds are: accept 5 or 6 at the first offer, 4 or more at the second, anything at the third.<br><b>Answer:</b> \\(\\frac{14}{3}\\approx 4.67\\) thousand.",
+  "tags": [
+   "s_dynamic_programming",
+   "s_backward_induction",
+   "optimal_stopping",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Five independent exponential service times with rate 2. Find the expected fraction of the total service time that comes from service 1.",
+  "back": "<b>Classic:</b> symmetry for ratios of i.i.d. positive variables, \\(E[X_1/S_n]=\\frac1n\\).<br><b>Mapping:</b> the exponential distribution plays no role; only exchangeability matters.<br><b>Answer:</b> \\(\\frac15=0.2\\).",
+  "tags": [
+   "s_symmetry",
+   "ratios",
+   "exchangeability",
+   "twin",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A collector wants 3 different stickers from 10 kinds. Each pack gives one uniform random kind, independently, and packs are not reused. Find the expected packs to buy.",
+  "back": "<b>Classic:</b> the collect-k-of-n coupon problem.<br><b>Mapping:</b> waiting for each new kind is geometric with mean \\(\\frac{10}{10-j}\\), and the phases add.<br><b>Answer:</b> \\(1+\\frac{10}{9}+\\frac{10}{8}=\\frac{121}{36}\\approx 3.3611\\).",
+  "tags": [
+   "s_memorylessness",
+   "s_linearity_expectation",
+   "coupon_collector",
+   "twin",
+   "fmt_twin"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for indicators and linearity of expectation, and when does it fail?",
+  "back": "<b>Triggers:</b> the quantity is a sum or count of events, and you need its mean. Variance also works, but you then need covariances.<br><b>Move:</b> Write \\(X=\\sum I_i\\). Then \\(E[X]=\\sum P(I_i)\\), with no independence required. For variance, \\(\\mathrm{Var}(X)=\\sum\\mathrm{Var}(I_i)+2\\sum_{i<j}\\mathrm{Cov}(I_i,I_j)\\).<br><b>Example:</b> fixed points of a permutation have mean 1 with no independence.<br><b>Failure mode:</b> it gives only moments, not a distribution or \\(P(X\\ge k)\\). For variance, the covariance terms are the whole difficulty (ascents: only neighbours covary).",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Tail-sum formula for a nonnegative integer variable: \\(E[X]=\\sum_{k\\ge1}\\){{c1::\\(P(X\\ge k)\\)}}. Use it when \\(\\{X\\ge k\\}\\) is easier than the probability mass at \\(k\\).",
+  "back": "Example: max of two dice, \\(P(M\\ge k)=1-\\left(\\frac{k-1}{6}\\right)^2\\), giving \\(\\frac{161}{36}\\). Failure: the formula needs \\(X\\ge0\\) (shift if not).",
+  "tags": [
+   "s_tail_sum",
+   "s_order_statistics",
+   "toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When is \\(E[X_1/S_n]=\\frac1n\\) valid, where \\(S_n=\\sum X_i\\)? When does it fail?",
+  "back": "<b>Triggers:</b> \\(X_1,\\dots,X_n\\) are identically distributed (exchangeable) and positive. Only the joint law being symmetric matters.<br><b>Move:</b> Swap labels: \\(E[X_1/S_n]=E[X_k/S_n]\\) for every \\(k\\), and these sum to 1.<br><b>Example:</b> Five i.i.d. exponentials: each share is \\(\\frac15\\) (see twin card).<br><b>Failure mode:</b> Not identically distributed: \\(X\\sim U(0,1)\\), \\(Y\\sim U(0,2)\\) gives \\(E[X/(X+Y)]\\approx0.369\\), not \\(\\frac12\\).",
+  "tags": [
+   "s_symmetry",
+   "ratios",
+   "exchangeability",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When can you use Wald's identity \\(E[S_N]=E[N]\\,E[X]\\), and when does it fail?",
+  "back": "<b>Triggers:</b> the \\(X_i\\) are i.i.d. with finite mean, and \\(N\\) is a stopping time (the decision to stop depends only on past values), with \\(E[N]<\\infty\\).<br><b>Move:</b> \\(E[S_N]=E[X]\\,E[N]\\). Find \\(E[N]\\) separately, by first-step recursion.<br><b>Example:</b> Roll a die until the total reaches 10: \\(E[S_N]=\\frac72\\cdot 3.3237\\approx 11.63\\).<br><b>Failure mode:</b> if \\(N\\) looks ahead (e.g. stop just before a large value), Wald fails. Also fails if \\(E[N]=\\infty\\) in some settings.",
+  "tags": [
+   "s_optional_stopping",
+   "s_martingale",
+   "random_walk",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Law of total variance: \\(\\mathrm{Var}(Y)=\\){{c1::\\(E[\\mathrm{Var}(Y\\mid X)]\\)}}\\(+\\){{c2::\\(\\mathrm{Var}(E[Y\\mid X])\\)}}. Use it when a random parameter drives the outcome.",
+  "back": "Example: random bias \\(p\\in\\{\\frac14,\\frac34\\}\\), ten flips: \\(\\frac{15}{8}+\\frac{25}{4}=\\frac{65}{8}\\). Both terms are needed; using only the conditional variance undercounts.",
+  "tags": [
+   "s_variance_decomposition",
+   "s_conditional_expectation_tower",
+   "toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When do you reach for Jensen's inequality, and when does it fail as a sanity check?",
+  "back": "<b>Triggers:</b> a convex (or concave) function of a random variable, e.g. \\(E[1/X]\\) or \\(E[X^2]\\). Convex \\(f\\): \\(E[f(X)]\\ge f(E[X])\\).<br><b>Move:</b> Use it to bound a mean of \\(f(X)\\) from the mean of \\(X\\). Check that \\(f\\) is convex on the whole support.<br><b>Example:</b> \\(E[1/X]=\\frac{49}{120}\\approx0.408\\ge\\frac{2}{7}\\approx0.286\\) for \\(X\\) uniform on \\(\\{1,\\dots,6\\}\\).<br><b>Failure mode:</b> Jensen gives only a direction and a bound, not a value. It is tight only for constant \\(X\\). For non-convex \\(f\\), the inequality reverses or fails.",
+  "tags": [
+   "s_convexity_jensen",
+   "inequalities",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Coupon collector with \\(n\\) equally likely types: \\(E[\\text{draws}]=\\){{c1::\\(nH_n=n\\sum_{k=1}^n\\frac1k\\)}}. Phase \\(j\\to j+1\\) distinct types has mean {{c2::\\(\\frac{n}{n-j}\\)}}.",
+  "back": "Variance is \\(n^2H_n^{(2)}-nH_n\\). Phases are independent by memorylessness, so means and variances add.",
+  "tags": [
+   "s_memorylessness",
+   "s_linearity_expectation",
+   "coupon_collector",
+   "toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When do you apply the finite-population correction to a sample mean, and when do you not?",
+  "back": "<b>Triggers:</b> draws are without replacement from a finite population of size \\(N\\). The correction is \\(\\frac{N-n}{N-1}\\).<br><b>Move:</b> \\(\\mathrm{Var}(\\bar X)=\\frac{\\sigma^2}{n}\\cdot\\frac{N-n}{N-1}\\), with \\(\\sigma^2\\) using divisor \\(N\\).<br><b>Example:</b> \\(N=10,\\ n=3\\): \\(\\frac{77}{36}\\) versus \\(\\frac{11}{4}\\) with replacement.<br><b>Failure mode:</b> with replacement, or when \\(n/N\\) is negligible, the factor is about 1 and can be dropped. Using it for with-replacement draws underestimates the variance.",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "sampling",
+   "finite_population",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: HATS 1/4]</b> Four people take back four hats uniformly at random.<br><br>Find \\(P(\\text{nobody gets their own hat})\\).",
+  "back": "<b>Answer:</b> \\(\\frac38\\)<br><b>Structure:</b> inclusion-exclusion.<br><b>Working:</b> \\(\\sum_{j=0}^{4}\\frac{(-1)^j}{j!}=\\frac38\\).",
+  "tags": [
+   "s_inclusion_exclusion",
+   "hat_check",
+   "chain",
+   "fmt_chain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: HATS 2/4]</b> Same four people and hats as card 1/4.<br><br>Find \\(P(\\text{exactly one person gets their own hat})\\).",
+  "back": "<b>Answer:</b> \\(\\frac13\\)<br><b>Structure:</b> choose the fixed person, then derange the other three.<br><b>Working:</b> \\(4\\cdot\\frac{D_3}{4!}=4\\cdot\\frac{2}{24}=\\frac13\\).",
+  "tags": [
+   "s_inclusion_exclusion",
+   "s_complement",
+   "hat_check",
+   "chain",
+   "fmt_chain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: HATS 3/4]</b> Now \\(n\\) people, uniform hat permutation.<br><br>Find \\(P(\\text{nobody gets their own hat})\\) for \\(n=10\\), and its limit as \\(n\\to\\infty\\).",
+  "back": "<b>Answer:</b> \\(\\frac{16481}{44800}\\approx0.3679\\) for \\(n=10\\); limit \\(\\frac1e\\approx0.3679\\).<br><b>Structure:</b> inclusion-exclusion with the limit of the alternating series.<br><b>Working:</b> \\(D_{10}/10!=\\sum_{j=0}^{10}\\frac{(-1)^j}{j!}\\). The limit is \\(\\sum_{j\\ge0}\\frac{(-1)^j}{j!}=e^{-1}\\). Monte Carlo \\(0.3689\\).",
+  "tags": [
+   "s_inclusion_exclusion",
+   "s_taylor",
+   "hat_check",
+   "chain",
+   "fmt_chain"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: HATS 4/4]</b> Edge cases for the hat problem: \\(n=1\\) and \\(n=2\\).<br><br>For \\(n=1\\), find \\(E[\\text{matches}]\\) and \\(\\mathrm{Var}(\\text{matches})\\). Does the formula \\(\\mathrm{Var}=1\\) still hold? Check \\(n=2\\) too.",
+  "back": "<b>Answer:</b> \\(E=1\\), \\(\\mathrm{Var}=0\\) for \\(n=1\\). For \\(n=2\\), \\(\\mathrm{Var}=1\\).<br><b>Structure:</b> the variance argument needs pairs of distinct people; with one person there are no covariance terms.<br><b>Working:</b> For \\(n=1\\), \\(F\\equiv1\\), so \\(\\mathrm{Var}=0\\). For \\(n=2\\), \\(F\\in\\{0,2\\}\\) with probability \\(\\frac12\\) each, \\(\\mathrm{Var}=E[F^2]-1=2-1=1\\).",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "hat_check",
+   "edge_case",
+   "chain",
+   "fmt_chain"
+  ]
+ }
+]
