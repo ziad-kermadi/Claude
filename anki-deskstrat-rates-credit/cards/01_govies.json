@@ -13,7 +13,7 @@
  {
   "type": "basic",
   "front": "A 4% semi-annual gilt (face 100) has 61 days elapsed in a 182-day coupon period and a clean price of 98.50. What are accrued and dirty price?",
-  "back": "<b>Headline:</b> accrued \\(\\approx 0.67\\), dirty \\(\\approx 99.17\\).<br>\n\\[AI = \\frac{4}{2}\\times\\frac{61}{182} = 2\\times 0.3352 = 0.670\\]\n\\[P_{dirty} = 98.50 + 0.67 = 99.17\\]\n<b>Interviewer follow-up:</b> If settlement slips by one day, accrued rises by \\(2/182 \\approx 0.011\\) per day. This is why dirty drifts up between coupons while the clean quote is unchanged in the absence of market moves.",
+  "back": "<b>Headline:</b> accrued \\(\\approx 0.67\\), dirty \\(\\approx 99.17\\).<br>\n\\[AI = \\frac{4}{2}\\times\\frac{61}{182} = 2\\times 0.3352 = 0.670\\]\n\\[P_{dirty} = 98.50 + 0.67 = 99.17\\]\n<b>Interviewer follow-up:</b> If settlement slips by one day, accrued rises by \\(2/182 \\approx 0.011\\) per day. This is why dirty drifts up between coupons while the clean quote is unchanged in the absence of market moves.<div class=\"fig\"><img src=\"01_govies_1_accrued_interest_timeline.png\"><div class=\"cap\">Accrued interest within the 182-day coupon period: 0.67, dirty price 99.17</div></div>",
   "tags": [
    "gilts",
    "mental_math",
@@ -330,7 +330,7 @@
  {
   "type": "basic",
   "front": "A bond is trading special in repo, at 3.20% against 4.00% general collateral. Explain specialness, who pays it, and how much a short seller saves.",
-  "back": "<b>Specialness</b> is GC rate minus special repo rate: here \\(4.00\\%-3.20\\%=80\\)bp.<br>\nA short seller who needs the bond does a reverse repo: they lend cash and receive the bond as collateral, at the special rate, which is below GC. On that cash they forgo the 80bp difference against GC, and that foregone interest is the price of borrowing the bond. The spread reflects scarcity in the bond, not a credit view.<br>\n<b>Interviewer follow-up:</b> What causes specialness to spike? A short squeeze, a bond with low free float, or a bond that is the CTD of a future and is in high demand for delivery.",
+  "back": "<b>Specialness</b> is GC rate minus special repo rate: here \\(4.00\\%-3.20\\%=80\\)bp.<br>\nA short seller who needs the bond does a reverse repo: they lend cash and receive the bond as collateral, at the special rate, which is below GC. On that cash they forgo the 80bp difference against GC, and that foregone interest is the price of borrowing the bond. The spread reflects scarcity in the bond, not a credit view.<br>\n<b>Interviewer follow-up:</b> What causes specialness to spike? A short squeeze, a bond with low free float, or a bond that is the CTD of a future and is in high demand for delivery.<div class=\"fig\"><img src=\"01_govies_29_specialness_repo_flow.png\"><div class=\"cap\">Specialness: GC 4.00% vs special repo 3.20%, an 80 bp cost of borrowing the bond</div></div>",
   "tags": [
    "repo",
    "specials",
@@ -461,7 +461,7 @@
  {
   "type": "cloze",
   "front": "A DV01-neutral 2s10s steepener, long £43m of 2y and short £10m of 10y (DV01s £8,170 and £8,180 per bp), earns about {{c1::£8,180}} for a 10y move of +1bp with the 2y unchanged, and about {{c2::£10}} for a parallel +1bp move.",
-  "back": "Steepening is long 2y and short 10y, so the short 10y gains when its yield rises. The DV01 match cancels the parallel move to within about £10 per bp, leaving the spread exposure. Weighting by DV01 rather than notional is what removes the hidden duration bet.",
+  "back": "Steepening is long 2y and short 10y, so the short 10y gains when its yield rises. The DV01 match cancels the parallel move to within about £10 per bp, leaving the spread exposure. Weighting by DV01 rather than notional is what removes the hidden duration bet.<div class=\"fig\"><img src=\"01_govies_40_steepener_pnl_bars.png\"><div class=\"cap\">Steepener P&amp;L per +1 bp: 10y-only move vs parallel move, net about GBP 10 for parallel</div></div>",
   "tags": [
    "curve_trades",
    "dv01",
