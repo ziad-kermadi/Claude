@@ -1,0 +1,248 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: JPY_BASIS 1/3]</b> Context: a USD borrower raises dollars synthetically through a JPY/USD cross-currency basis swap. The JPY leg pays TONA plus a spread \\(b\\); the USD leg pays SOFR flat. The quoted basis is \\(b=-25\\)bp. Which way does the synthetic USD borrowing cost move, and what is the approximate all-in USD rate with SOFR at 4.00%?",
+  "back": "<b>Headline:</b> the synthetic USD borrowing cost is about SOFR + 25bp, i.e. about 4.25%.<br>\n<b>Reasoning:</b> the borrower gives JPY at inception, receives USD, pays SOFR on the USD notional and receives \\(\\text{TONA}+b\\) on the JPY notional. With \\(b<0\\) the JPY leg pays less than TONA, and that shortfall is the cost of USD. To first order the spread on the non-USD leg is a USD-equivalent spread, so the all-in USD cost is \\(\\text{SOFR}-b = 4.00\\%+0.25\\%=4.25\\%\\).<br>\n<b>Why the sign matters:</b> a negative basis means the scarce currency (USD) costs more than its OIS rate when obtained through the swap market. This is the standard market sign for JPY and EUR against USD.<br>\n<b>Interviewer follow-up:</b> \"Which side is paying the basis?\" The party that receives USD and gives JPY bears the spread; it is not an additional cash flow you can see in the USD leg.",
+  "tags": [
+   "xccy",
+   "basis",
+   "jpy",
+   "chain_jpy_basis",
+   "lvl_vp_core",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: JPY_BASIS 2/3]</b> Context: spot USDJPY 150.00 (JPY per USD), 3m tenor \\(\\tau=0.25\\), JPY 3m rate 0.50%, USD 3m SOFR 4.00%. Covered interest parity holds with no basis. The basis is then \\(-25\\)bp, so the FX-implied USD rate is 4.25%. What is the 3m forward in each case, and what does the difference say?",
+  "back": "<b>No basis (CIP):</b> \\(F=S\\dfrac{1+i_{JPY}\\tau}{1+i_{USD}\\tau}=150\\times\\dfrac{1.00125}{1.01}=148.7005\\).<br>\n<b>With basis \\(-25\\)bp (FX-implied USD 4.25%):</b> \\(F=150\\times\\dfrac{1.00125}{1.010625}=148.6085\\).<br>\n<b>Difference:</b> about 0.092 yen on the 3m forward. The forward for USD is cheaper, which is the price signal of the negative basis.<br>\n<b>Mechanism:</b> a Japanese investor holding USD bonds hedges them by selling USD forward for JPY. That selling pressure lowers the forward USD price (\\(F\\) falls). Solving CIP backwards, a lower \\(F\\) implies a higher USD rate, so the synthetic USD rate rises above SOFR.<br>\n<b>Interviewer follow-up:</b> \"Why is the effect on the forward and not on the spot?\" Spot is set by the spot market; the hedging imbalance sits in the forward leg, and the basis is the residual that CIP does not explain.",
+  "tags": [
+   "xccy",
+   "basis",
+   "fx_forward",
+   "chain_jpy_basis",
+   "lvl_vp_core",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: JPY_BASIS 3/3]</b> Context: a 5y JPY/USD basis of \\(-25\\)bp on 500m USD notional. A bank could receive the spread by lending synthetic USD, earning about 25bp a year over SOFR. Why does this not get arbitraged away to zero, and what are the two cost lines a senior desk would put on it?",
+  "back": "<b>Gross carry:</b> \\(500\\text{m}\\times 0.25\\% = 1.25\\text{m}\\) per year.<br>\n<b>Capital line:</b> the position is a full-notional exposure to the bank's balance sheet. Under the leverage ratio the exposure counts at gross notional regardless of hedges. Illustratively (approx.; not a bank's actual parameters), a 3–5% leverage-ratio capital requirement at a 10–12% cost of equity costs \\(500\\text{m}\\times 0.03\\text{–}0.05\\times 0.10\\text{–}0.12\\), i.e. about 1.5–3.0m a year. That is at or above the 1.25m gross carry.<br>\n<b>Other lines:</b> funding of the JPY leg, the credit line on the counterparty, and the cost of the balance sheet in the bank's own currency pair.<br>\n<b>Conclusion:</b> the basis persists because the return is less than the capital charge, not because a mispricing is unavailable. The residual is a return on balance sheet.<br>\n<b>Where it breaks:</b> if the leverage constraint is relaxed (for example an exemption on central bank reserves or a leverage ratio change) the trade becomes more economic and the basis narrows.",
+  "tags": [
+   "xccy",
+   "basis",
+   "leverage_ratio",
+   "chain_jpy_basis",
+   "lvl_stretch",
+   "case_study"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: basis cash flows on a mark-to-market (MtM) resetting EURUSD basis swap.</b> The USD principal is fixed at 110m (EUR 100m at inception, spot 1.10). At a reset date spot moves to 1.12 USD per EUR. Show how the EUR notional adjusts, what the reset cash flow is, and what the basis is paid on afterwards.",
+  "back": "<b>Setup:</b> the USD notional \\(N_U=110\\text{m}\\) is fixed. The EUR notional is re-marked so its USD value stays at \\(N_U\\): \\(N_E(t_k)=N_U/S_k\\).<br>\n<b>Step 1:</b> \\(N_E=110/1.12=98.2143\\)m. The EUR notional falls by \\(1.7857\\)m.<br>\n<b>Step 2:</b> the reset exchange is the EUR cash returned, worth \\(1.7857\\times1.12=2.00\\)m USD. Because it is marked at spot, its present value under the USD measure is zero at reset, which is why the PV of principal resets is zero at each reset.<br>\n<b>Step 3:</b> the spread \\(b=-20\\)bp is paid on the new EUR-equivalent notional. Quarterly: \\(98.2143\\text{m}\\times(-0.0020)\\times0.25=-\\text{€}49{,}107\\).<br>\n<b>Where it breaks:</b> the zero-PV statement holds for the principal resets at market spot. The basis is still a running cost, so an MtM swap with a basis spread is not zero-PV at inception; the spread is calibrated so that the total PV equals zero.",
+  "tags": [
+   "xccy",
+   "mtm",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: discount rate for a multi-currency CSA.</b> Eligible cash currencies \\(k=1,\\dots,K\\) pay collateral rates \\(r_k(t)\\), hedged to the base currency. The poster delivers the cheapest currency at each date, so the effective collateral rate is \\(r_{\\min}(t)=\\min_k r_k(t)\\). Show that the collateral discount factor dominates each single-currency discount factor pathwise, and say what this implies for pricing.",
+  "back": "<b>Step 1:</b> the collateral discount factor is \\(D_c(0,T)=\\mathbb E\\big[\\exp(-\\int_0^T r_{\\min}(s)\\,ds)\\big]\\).<br>\n<b>Step 2:</b> \\(r_{\\min}(s)\\le r_k(s)\\) for every \\(k\\) and every path, so \\(\\exp(-\\int r_{\\min})\\ge\\exp(-\\int r_k)\\). Taking expectations, \\(D_c\\ge D_k\\) for each \\(k\\). The collateral discount factor is at least the largest single-currency discount factor.<br>\n<b>Step 3 (numbers):</b> flat 5y rates, USD collateral 4.00%, EUR collateral 2.40% hedged to USD. \\(D_{USD}=e^{-0.20}=0.81873\\), and \\(D_{EUR}=e^{-0.12}=0.88692\\). The cheapest rate gives the larger factor, 0.88692.<br>\n<b>Step 4:</b> the difference between \\(D_c\\) and the cheapest single-currency curve is the value of the option to switch, which is a spread option on the collateral rates.<br>\n<b>Interviewer follow-up:</b> \"Why is discounting at the min not just a convexity fudge?\" It is the pathwise min; it is exact in a model, and the only approximation is the option value.<br>\n<b>Where it breaks:</b> haircuts, FX-hedge costs and delivery frictions move each currency's effective rate, so the eligible set and the hedged rates must be computed for each CSA, not assumed.",
+  "tags": [
+   "csa",
+   "collateral",
+   "discounting",
+   "derivation",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: value of the collateral-currency option.</b> A CSA lets the poster post USD or EUR. Assume the EUR collateral rate, hedged to USD, is below the USD rate, so the poster always posts EUR. Model the spread between the two hedged collateral rates as normal with \\(\\sigma_N=0.50\\%\\) p.a. Estimate the value of a 1y at-the-money option to switch on 100m notional, and sanity check it.",
+  "back": "<b>Setup:</b> the switch value is an at-the-money option on a rate spread with forward 0. For a normal model with annuity \\(A\\approx1\\) for 1y, the ATM value is \\(A\\,\\sigma_N\\sqrt T/\\sqrt{2\\pi}\\).<br>\n<b>Calculation:</b> \\(0.0050\\times1/\\sqrt{2\\pi}=0.001995\\), i.e. about 0.20% of notional. On 100m: about \\(199{,}500\\), so about 0.2m.<br>\n<b>Sanity check:</b> the ATM rule of thumb is \\(0.4\\,\\sigma\\sqrt T\\) per unit notional, which gives \\(0.4\\times0.005=0.20\\%\\), the same answer.<br>\n<b>Answer:</b> roughly 0.2m for one year. The option is priced as a cost reduction for the poster, and the counterparty charges for it in the CSA terms.<br>\n<b>Where it breaks:</b> the normal model assumes the spread is Gaussian and that the annuity is about 1 over one year. For longer tenors use the annuity, and check the spread's skew, since basis moves are fat-tailed around funding stress.",
+  "tags": [
+   "csa",
+   "collateral",
+   "option",
+   "case_study",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Describe the EURIBOR hybrid methodology: the three levels, what each uses, the minimum transaction size at Level 1, and what the 2024 enhancement changed. Why does the level mix matter for a EURIBOR-€STR basis?",
+  "back": "<b>Level 1:</b> contributions based solely on eligible transactions in the unsecured euro money market. The minimum notional for a transaction to count is 10m euro (raised from 20m in 2021, per the EMMI methodology page).<br>\n<b>Level 2:</b> transactions in other maturities and from recent TARGET days where Level 1 data is insufficient.<br>\n<b>Level 3:</b> expert judgement by panel banks, documented and applied consistently. This is the level the enhancement aims to remove.<br>\n<b>2024 enhancement:</b> EMMI started phasing in the enhanced methodology on 31 May 2024. During the phase-in, Level 3, current Level 2.3 and enhanced Level 2.3 are reported together as \"Level 2.3*\". The May 2024 transparency indicators show Level 1 usage falling from about 63% at 1 week to about 13% at 12 months. I could not confirm that the phase-in is complete, so check EMMI's current documents before relying on the final mix.<br>\n<b>Why the mix matters:</b> EURIBOR is partly model and judgement based at long tenors, while \\(\\text{€STR}\\) is a transaction-based overnight rate. The EURIBOR-€STR basis therefore carries bank credit and term-liquidity premia, and a change in the level mix moves the basis without any change in market rates.",
+  "tags": [
+   "euribor",
+   "estr",
+   "benchmark",
+   "lvl_vp_core",
+   "convention"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "EURIBOR Level 1 uses only eligible transactions in the unsecured euro money market, with a minimal notional of {{c1::10 million euro}}; that threshold was raised from {{c2::20 million}} in {{c3::2021}}. Level 3 is where {{c4::panel-bank expert judgement}} enters.",
+  "back": "Source: EMMI EURIBOR methodology page (threshold history). The Level 3 point is the reason the 2024 phase-in targets a higher transaction share.",
+  "tags": [
+   "euribor",
+   "estr",
+   "benchmark",
+   "lvl_vp_core",
+   "cloze"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "€STR is published at {{c1::08:00 CET}} on each TARGET2 business day and reflects trading on the {{c2::previous}} business day. If an error above {{c3::2 basis points}} is found, the ECB republishes once the same day at {{c4::09:00 CET}}, and no changes are made after that.",
+  "back": "Source: ECB €STR overview page. If the 09:00 CET deadline is missed on all three channels, the previous TARGET2 business day's rate applies, adjusted for any policy change effective that day. This is the fallback an accrual will use.",
+  "tags": [
+   "estr",
+   "fixing",
+   "convention",
+   "lvl_vp_core",
+   "cloze"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: EURIBOR 6M against €STR basis on a 5y swap.</b> Assume a flat 6M EURIBOR forward of 2.60% and a flat €STR OIS curve of 2.40%, both Act/360 with 6m periods of \\(\\tau\\approx182/360\\). The €STR leg is at par. (a) What spread on the EURIBOR leg makes the swap fair? (b) What is the PV of that spread on 100m, and what is the PV01? (c) How much of the 6M basis does compounding €STR explain?",
+  "back": "<b>(a)</b> The EURIBOR leg must pay 20bp less than its forward to equal the €STR OIS leg, so the spread is \\(-20\\)bp on the EURIBOR leg (equivalently, the EURIBOR leg carries +20bp of basis relative to €STR OIS).<br>\n<b>(b)</b> Annuity: \\(A=\\sum_i\\tau\\,DF_i\\), with 10 semi-annual periods discounted at the 2.40% €STR curve, gives \\(A\\approx4.7391\\) (approx.; annual compounding of the discount, flat curve). PV01 on 100m: \\(100\\text{m}\\times0.0001\\times4.7391=\\)**47,391** per bp. PV of 20bp: \\(20\\times47{,}391=\\)**947,820**, about 0.95m.<br>\n<b>(c)</b> Compounded 6M €STR at 2.40% (Act/360, 182 days) is 1.2207%, against simple 1.2133%, so compounding adds 0.74bp over the period. This is a small share of the 20bp, so most of the basis is the EURIBOR-€STR credit and term content, not the compounding convention.<br>\n<b>Sanity check:</b> 20bp of PV on a 4.7-annuity is about 0.95m, which is 20bp times 47k per bp, so the arithmetic is consistent.<br>\n<b>Interviewer follow-up:</b> \"Where in the bootstrap does this spread go?\" On the EURIBOR projection curve, not the discount curve.",
+  "tags": [
+   "euribor",
+   "estr",
+   "basis",
+   "case_study",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 1-month OIS spans 31 December. The overnight €STR fixing for 31 December alone is 50bp above trend and nothing else changes. What does this cost in PV on 100m, and how should a curve builder handle a single-day spike at year-end? Give the trade-off between an explicit turn node and smoothing.",
+  "back": "<b>Cost:</b> one day at 50bp extra on 100m, Act/360: \\(100\\text{m}\\times0.005\\times1/360=\\)**1,388.89**. The effect on the 1m compounded rate is \\(0.005/31\\approx1.61\\)bp.<br>\n<b>Curve treatment:</b> an explicit one-day node for the turn lets the 31 December forward carry the spike without moving the forwards on the adjacent days. Smoothing spreads the spike over neighbouring forwards and mis-prices every OIS straddling the turn.<br>\n<b>Trade-off:</b> a turn node adds a parameter that only the year-end quotes inform, so it can overfit; smoothing keeps the curve stable but moves other instruments' PV. A common choice is an explicit node when the turn is quoted (for example a year-end fixing or a 1m straddling quote) and smoothing otherwise.<br>\n<b>Where it breaks:</b> a turn on the funding leg (repo or deposit) is not the same as a turn in the OIS fixing; check which one the instrument references.",
+  "tags": [
+   "turn",
+   "year_end",
+   "curve_building",
+   "lvl_vp_core",
+   "scenario"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: how a one-day turn enters a compounded period rate.</b> A compounded OIS period of length \\(\\tau\\) with daily rates \\(r_i\\) and day counts \\(d_i\\) has rate \\(R=\\frac{1}{\\tau}\\big[\\prod_i(1+r_i d_i)-1\\big]\\) to first order. Let one day \\(d_t\\) carry an extra spread \\(\\delta\\). Show that the change in \\(R\\) is \\(\\delta\\,d_t/\\tau\\) to first order, and compute it for a 1m and a 3m period with \\(\\delta=50\\)bp and \\(d_t=1/360\\).",
+  "back": "<b>Step 1:</b> \\(\\partial R/\\partial r_t=\\frac{d_t}{\\tau}\\cdot\\frac{\\prod_{i\\ne t}(1+r_id_i)}{\\prod_i(1+r_i d_i)}\\cdot\\frac{\\tau}{\\tau}\\), and to first order the product ratio is 1, so \\(\\Delta R\\approx\\delta\\,d_t/\\tau\\).<br>\n<b>Step 2 (1m, \\(\\tau=31/360\\)):</b> \\(\\Delta R\\approx0.005\\times(1/360)/(31/360)=0.005/31=1.61\\)bp.<br>\n<b>Step 3 (3m, \\(\\tau=91/360\\)):</b> \\(0.005/91=0.55\\)bp.<br>\n<b>Interpretation:</b> the turn is diluted by the number of days in the period, which is why a 1m OIS is far more sensitive to year-end than a 3m.<br>\n<b>Where it breaks:</b> this is first order; for very large spikes the product term and compounding matter. The exact result is the difference of the two compounded products.",
+  "tags": [
+   "turn",
+   "year_end",
+   "derivation",
+   "compounding",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: MEETING 1/3]</b> Context: the market path has the policy rate at 4.00% until a meeting at \\(t=0.25\\)y, 3.75% from 0.25 to 0.5, and 3.50% from 0.5 to 1.0. Under this path the discount factors are \\(D(0.25)=0.990099\\), \\(D(0.5)=0.980903\\), \\(D(1.0)=0.964032\\) (simple within each period). What does the instantaneous forward look like, and where must curve nodes sit?",
+  "back": "<b>Answer:</b> the forward is a step function that jumps at each meeting date, so it is flat between meetings and discontinuous at them.<br>\n<b>Node rule:</b> place a node at each meeting date that has an OIS or futures quote, and interpolate only within the segments between them. Log-linear interpolation of discount factors then gives piecewise-constant forwards exactly on those segments, which matches the step.<br>\n<b>Check:</b> with the nodes at 0.25, 0.5 and 1.0, the forwards reproduce 4.00%, 3.75% and 3.50% on their segments.<br>\n<b>Interviewer follow-up:</b> \"What happens if you drop the 0.5 node?\" Next card.",
+  "tags": [
+   "meeting",
+   "curve_building",
+   "step_curve",
+   "chain_meeting",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: MEETING 2/3]</b> Context: same path, \\(D(0.25)=0.990099\\), \\(D(1.0)=0.964032\\). A curve builder has only a 3m node and a 1y node, with log-linear discount factors between them, so the 0.5 meeting is not a node. What forward rate does this assign to the 1m period \\([0.25,\\,0.333]\\), and what is the PV error on 100m relative to the true 3.75%?",
+  "back": "<b>Implied forward on \\([0.25,1.0]\\):</b> \\(\\big[\\ln D(0.25)-\\ln D(1.0)\\big]/0.75=3.5573\\%\\), a constant across the segment.<br>\n<b>1m rate on \\([0.25,0.333]\\):</b> \\((e^{0.035573/12}-1)\\times12=3.5626\\%\\) (compounded), versus the true 3.75% on that period.<br>\n<b>PV error:</b> the difference in the simple period rate is about \\(-0.016\\%\\) over 1m; on 100m with a discount factor near 0.98 this is about \\(-15{,}000\\) (approx.).<br>\n<b>Lesson:</b> the 1m OIS, the 3m OIS and any meeting-date futures straddling the decision are all mis-priced by the smoothed curve, and a hedge built on it carries that error.<br>\n<b>Where it breaks:</b> the error is larger if the meeting is close to the 1y node and the policy step is large; the fix is a node at the meeting date, not a more flexible interpolant.",
+  "tags": [
+   "meeting",
+   "curve_building",
+   "step_curve",
+   "chain_meeting",
+   "lvl_stretch",
+   "case_study"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: MEETING 3/3]</b> Context: a 25bp cut at the 0.25 meeting has market probability \\(p\\). Under the risk-neutral measure, the 1m OIS over \\([0.25,0.333]\\) has expected rate \\(4.00\\%-0.25\\%\\,p\\). Given a quoted 1m OIS at 3.875%, what is the implied \\(p\\), and what is the PV sensitivity to a one-percentage-point change in \\(p\\) on 100m?",
+  "back": "<b>Implied probability:</b> \\(p=(4.00\\%-3.875\\%)/0.25\\%=0.50\\).<br>\n<b>Sensitivity:</b> \\(\\partial R/\\partial p=-0.25\\%\\). On the 1m period, \\(\\partial\\text{PV}/\\partial p\\approx-100\\text{m}\\times0.0025\\times\\tfrac1{12}\\times0.99=-20{,}600\\) per unit of \\(p\\), so a 1pp change in \\(p\\) is about \\(-206\\) on 100m.<br>\n<b>Caution:</b> this treats the expected rate as the risk-neutral one; a term premium or a meeting-date skew in the quote changes \\(p\\) without changing the policy view. A desk would separate the two with a second instrument, typically a meeting-date futures or a 2m OIS, before quoting a probability as a fact.<br>\n<b>Where it breaks:</b> the probability is only the risk-neutral one under the pricing measure; calibrating it to a survey or a policy-rate forecast is a different exercise.",
+  "tags": [
+   "meeting",
+   "scenario",
+   "step_curve",
+   "chain_meeting",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SOFR_FUT 1/3]</b> Context: CME one-month SOFR futures (SR1) and three-month SOFR futures. Question: how does each contract settle, and at a flat 4.00% with Act/360, what is the difference in rate between the averaging rule and the compounding rule for a 91-day quarter?",
+  "back": "<b>SR1 settlement:</b> arithmetic average of daily SOFR over the delivery month, to four decimal places, quoted as \\(100-\\text{average}\\). Weekends and holidays take the last published value.<br>\n<b>Three-month settlement:</b> daily compounding of overnight SOFR over the quarterly IMM interval, with actual day count.<br>\n<b>Numbers (91 days, flat 4.00%, Act/360):</b> simple rate \\(0.04\\times91/360=1.0111\\%\\); compounded \\(\\big(1+0.04/360\\big)^{91}-1=1.0162\\%\\). The difference is about 0.51bp.<br>\n<b>Why it matters:</b> a futures-implied forward built from the averaging rule and a compounded OIS forward differ by a fraction of a basis point at this rate, but the difference is systematic and grows with the rate level, so it must be on the curve builder's list.<br>\n<b>Interviewer follow-up:</b> \"What is the DV01 of one 3m SOFR contract?\" $25 per bp per contract (the contract is $1m notional on a quarter).",
+  "tags": [
+   "sofr",
+   "futures",
+   "settlement",
+   "chain_sofr_futures",
+   "lvl_vp_core",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SOFR_FUT 2/3]</b> Context: a three-month SOFR future whose rate is set at \\(T_1=3.00\\)y and settled at \\(T_2=3.25\\)y. Normal volatility of the short rate \\(\\sigma=1.0\\%\\) p.a. The futures rate is 4.00%. What is the convexity adjustment, and what is the forward rate that feeds the curve?",
+  "back": "<b>Formula:</b> the futures rate exceeds the forward by \\(\\text{CA}\\approx\\tfrac12\\sigma^2T_1T_2\\), because daily margining pays the futures holder when rates rise, so the futures rate is the forward plus the value of that option.<br>\n<b>Numbers:</b> \\(\\tfrac12\\times(0.01)^2\\times3.00\\times3.25=0.000488\\), i.e. 4.875bp.<br>\n<b>Forward:</b> \\(4.00\\%-0.0488\\%=3.9512\\%\\).<br>\n<b>Sanity check:</b> the convexity grows with \\(T_1T_2\\), so the adjustment is about 1bp per year of maturity at this vol, and it is the first-order term of the Hull–White result.<br>\n<b>Where it breaks:</b> the approximation assumes a Gaussian short rate and small \\(T_2-T_1\\). For a 3m contract at long maturities, use the model formula, not the rule of thumb.",
+  "tags": [
+   "sofr",
+   "futures",
+   "convexity",
+   "chain_sofr_futures",
+   "lvl_stretch",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SOFR_FUT 3/3]</b> Context: a 3M SOFR strip with futures prices 96.00, 96.05, 96.10, 96.15 at \\(T_1=3.00, 3.25, 3.50, 3.75\\)y, normal vol 1.0%, convexity \\(\\tfrac12\\sigma^2T_1T_2\\). Compute the forward rates for the curve, and say what happens to the curve if convexity is ignored.",
+  "back": "<b>Futures rates:</b> 4.00%, 3.95%, 3.90%, 3.85%.<br>\n<b>Convexity (bp):</b> 4.88, 5.69, 6.56, 7.50.<br>\n<b>Forwards:</b> 3.9512%, 3.8931%, 3.8344%, 3.7750%.<br>\n<b>Consequence:</b> ignoring convexity overstates each forward by 4.9 to 7.5bp. On a 3-year strip the forward curve is 0.5 to 1bp per year too high, and a swap priced off it is biased in proportion to its annuity.<br>\n<b>Interviewer follow-up:</b> \"Why does the bias grow along the strip?\" Because \\(T_1T_2\\) grows, and the variance of the rate to the settlement date grows with it.<br>\n<b>Where it breaks:</b> if a strip has a gap (for example a missing quarter) the convexity shape interpolates across the gap, and a fitted model is needed for the forward between contracts.",
+  "tags": [
+   "sofr",
+   "futures",
+   "convexity",
+   "chain_sofr_futures",
+   "lvl_stretch",
+   "case_study"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "SR1 settles at {{c1::100 minus the arithmetic average}} of daily SOFR over the delivery month, to {{c2::four}} decimal places. Three-month SOFR futures settle on {{c3::daily compounding}} of overnight SOFR over the IMM quarter, and each basis point is worth {{c4::$25}} per contract.",
+  "back": "Source: CME SOFR futures settlement methodology (SR1 average; three-month daily compounding; $25 per bp for the three-month contract). Check the live CME contract specification before trading.",
+  "tags": [
+   "sofr",
+   "futures",
+   "settlement",
+   "lvl_vp_core",
+   "cloze"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Because the poster can deliver the cheapest of several currencies, the collateral rate is \\(r_{\\min}(t)=\\min_k r_k(t)\\). This makes \\(\\exp(-\\int r_{\\min})\\) {{c1::at least as large}} as each single-currency discount factor, pathwise, and the difference from the cheapest curve is the value of the {{c2::option to switch}}.",
+  "back": "The pathwise inequality holds because \\(r_{\\min}\\le r_k\\) for every \\(k\\) and every path, so the discount factor using \\(r_{\\min}\\) is never below any single-currency one.",
+  "tags": [
+   "csa",
+   "collateral",
+   "option",
+   "lvl_stretch",
+   "cloze"
+  ]
+ }
+]
