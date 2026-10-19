@@ -2,7 +2,7 @@
  {
   "type": "basic",
   "front": "\\(X_1,\\dots,X_5\\) are i.i.d. \\(\\mathrm{Uniform}(0,\\theta)\\), \\(\\theta\\) unknown. Let \\(M=\\max_i X_i\\) (the MLE). (a) Find \\(E[M]\\) and the bias of \\(M\\). (b) Build the unbiased estimator from \\(M\\). (c) Compare the MSEs in units of \\(\\theta^2\\).",
-  "back": "<b>Answer:</b> \\(E[M]=\\tfrac56\\theta\\), bias \\(-\\tfrac{\\theta}{6}\\). Unbiased: \\(\\hat\\theta=\\tfrac65M\\). \\(\\mathrm{MSE}(M)=\\tfrac{\\theta^2}{21}\\approx0.0476\\theta^2\\); \\(\\mathrm{MSE}(\\hat\\theta)=\\tfrac{\\theta^2}{35}\\approx0.0286\\theta^2\\).<br><b>Structure:</b> s_extremal and s_order_statistics. Trigger: the parameter is the endpoint of the support and the estimator is the sample maximum.<br><b>Key move:</b> \\(P(M\\le m)=(m/\\theta)^n\\), so \\(M\\) has density \\(n m^{n-1}/\\theta^n\\) on \\((0,\\theta)\\).<br><b>Working:</b> \\(E[M]=\\tfrac{n}{n+1}\\theta\\), bias \\(=-\\tfrac{\\theta}{n+1}\\). \\(\\mathrm{Var}(M)=\\tfrac{n\\theta^2}{(n+1)^2(n+2)}\\), so \\(\\mathrm{MSE}(M)=\\mathrm{Var}+\\mathrm{bias}^2=\\tfrac{2\\theta^2}{(n+1)(n+2)}\\). Scaling by \\(\\tfrac{n+1}{n}\\) removes the bias and gives \\(\\mathrm{MSE}=\\tfrac{\\theta^2}{n(n+2)}\\). At \\(n=5\\): \\(\\tfrac{2}{42}=\\tfrac1{21}\\) and \\(\\tfrac1{35}\\).<br><b>Sanity check:</b> the MSE falls like \\(1/n^2\\), not \\(1/n\\). A \\(10^6\\)-draw simulation gives 0.0477 and 0.0286.<br><b>Transfer:</b> the discrete version (A9); any \"largest of n draws\" estimate of a range limit.",
+  "back": "<b>Answer:</b> \\(E[M]=\\tfrac56\\theta\\), bias \\(-\\tfrac{\\theta}{6}\\). Unbiased: \\(\\hat\\theta=\\tfrac65M\\). \\(\\mathrm{MSE}(M)=\\tfrac{\\theta^2}{21}\\approx0.0476\\theta^2\\); \\(\\mathrm{MSE}(\\hat\\theta)=\\tfrac{\\theta^2}{35}\\approx0.0286\\theta^2\\).<br><b>Structure:</b> s_extremal and s_order_statistics. Trigger: the parameter is the endpoint of the support and the estimator is the sample maximum.<br><b>Key move:</b> \\(P(M\\le m)=(m/\\theta)^n\\), so \\(M\\) has density \\(n m^{n-1}/\\theta^n\\) on \\((0,\\theta)\\).<br><b>Working:</b> \\(E[M]=\\tfrac{n}{n+1}\\theta\\), bias \\(=-\\tfrac{\\theta}{n+1}\\). \\(\\mathrm{Var}(M)=\\tfrac{n\\theta^2}{(n+1)^2(n+2)}\\), so \\(\\mathrm{MSE}(M)=\\mathrm{Var}+\\mathrm{bias}^2=\\tfrac{2\\theta^2}{(n+1)(n+2)}\\). Scaling by \\(\\tfrac{n+1}{n}\\) removes the bias and gives \\(\\mathrm{MSE}=\\tfrac{\\theta^2}{n(n+2)}\\). At \\(n=5\\): \\(\\tfrac{2}{42}=\\tfrac1{21}\\) and \\(\\tfrac1{35}\\).<br><b>Sanity check:</b> the MSE falls like \\(1/n^2\\), not \\(1/n\\). A \\(10^6\\)-draw simulation gives 0.0476 and 0.0285.<br><b>Transfer:</b> the discrete version (A9); any \"largest of n draws\" estimate of a range limit.",
   "tags": [
    "s_extremal",
    "s_order_statistics",
@@ -40,7 +40,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: UNIF 3/4]</b> Now \\(X_i\\) i.i.d. \\(\\mathrm{Uniform}(a,b)\\) with both endpoints unknown. Sample minimum \\(m\\), maximum \\(M\\), range \\(R=M-m\\). Find unbiased estimators of \\(b\\) and \\(a\\) using only \\(M\\), \\(m\\) and \\(R\\).",
-  "back": "<b>Answer:</b> \\(\\hat b=M+\\tfrac{R}{n-1}\\), \\(\\hat a=m-\\tfrac{R}{n-1}\\).<br><b>Structure:</b> s_order_statistics (range statistic). Trigger: two unknown endpoints, so one extremal statistic cannot identify both.<br><b>Key move:</b> \\(E[m]=a+\\tfrac{b-a}{n+1}\\), \\(E[M]=b-\\tfrac{b-a}{n+1}\\), \\(E[R]=\\tfrac{(n-1)(b-a)}{n+1}\\).<br><b>Working:</b> \\(E[R/(n-1)]=\\tfrac{b-a}{n+1}\\), so \\(E[M+R/(n-1)]=b-\\tfrac{b-a}{n+1}+\\tfrac{b-a}{n+1}=b\\). Symmetric for \\(a\\).<br><b>Sanity check:</b> \\(n=5\\), \\((a,b)=(2,7)\\): simulation gives \\(E[\\hat b]=7.004\\) and \\(E[\\hat a]=1.999\\).<br><b>Transfer:</b> bounding a process's window from its first and last event times.",
+  "back": "<b>Answer:</b> \\(\\hat b=M+\\tfrac{R}{n-1}\\), \\(\\hat a=m-\\tfrac{R}{n-1}\\).<br><b>Structure:</b> s_order_statistics (range statistic). Trigger: two unknown endpoints, so one extremal statistic cannot identify both.<br><b>Key move:</b> \\(E[m]=a+\\tfrac{b-a}{n+1}\\), \\(E[M]=b-\\tfrac{b-a}{n+1}\\), \\(E[R]=\\tfrac{(n-1)(b-a)}{n+1}\\).<br><b>Working:</b> \\(E[R/(n-1)]=\\tfrac{b-a}{n+1}\\), so \\(E[M+R/(n-1)]=b-\\tfrac{b-a}{n+1}+\\tfrac{b-a}{n+1}=b\\). Symmetric for \\(a\\).<br><b>Sanity check:</b> \\(n=5\\), \\((a,b)=(2,7)\\): simulation gives \\(E[\\hat b]=7.000\\) and \\(E[\\hat a]=2.000\\).<br><b>Transfer:</b> bounding a process's window from its first and last event times.",
   "tags": [
    "s_order_statistics",
    "uniform",
@@ -51,7 +51,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: UNIF 4/4]</b> Edge case: \\(X\\sim\\mathrm{Uniform}(0,\\theta)\\), a single observation (\\(n=1\\)). The MLE is \\(X\\); \\(2X\\) is unbiased (it is also the method-of-moments estimate). Which has smaller MSE?",
-  "back": "<b>Answer:</b> a tie. Both have MSE \\(\\theta^2/3\\).<br><b>Structure:</b> s_extremal (the \\(n=1\\) case of the power law). Trigger: a single draw is both the MLE and the sample maximum.<br><b>Key move:</b> plug \\(n=1\\) into the general formulas: \\(\\tfrac{2}{(n+1)(n+2)}=\\tfrac13\\) and \\(\\tfrac{1}{n(n+2)}=\\tfrac13\\).<br><b>Working:</b> \\(\\mathrm{MSE}(X)=\\tfrac{\\theta^2}{12}+\\tfrac{\\theta^2}{4}=\\tfrac{\\theta^2}{3}\\). \\(\\mathrm{MSE}(2X)=4\\cdot\\tfrac{\\theta^2}{12}=\\tfrac{\\theta^2}{3}\\).<br><b>Sanity check:</b> simulation: 0.3337 and 0.3341.<br><b>Transfer:</b> unbiasedness is not the same as minimum error. The bias-variance trade-off also appears in B1.",
+  "back": "<b>Answer:</b> a tie. Both have MSE \\(\\theta^2/3\\).<br><b>Structure:</b> s_extremal (the \\(n=1\\) case of the power law). Trigger: a single draw is both the MLE and the sample maximum.<br><b>Key move:</b> plug \\(n=1\\) into the general formulas: \\(\\tfrac{2}{(n+1)(n+2)}=\\tfrac13\\) and \\(\\tfrac{1}{n(n+2)}=\\tfrac13\\).<br><b>Working:</b> \\(\\mathrm{MSE}(X)=\\tfrac{\\theta^2}{12}+\\tfrac{\\theta^2}{4}=\\tfrac{\\theta^2}{3}\\). \\(\\mathrm{MSE}(2X)=4\\cdot\\tfrac{\\theta^2}{12}=\\tfrac{\\theta^2}{3}\\).<br><b>Sanity check:</b> simulation: 0.3336 and 0.3330, both \\(\\theta^2/3\\).<br><b>Transfer:</b> unbiasedness is not the same as minimum error. The bias-variance trade-off also appears in B1.",
   "tags": [
    "s_extremal",
    "uniform",
@@ -63,7 +63,7 @@
  {
   "type": "basic",
   "front": "Known problem: \\(X_i\\) i.i.d. \\(\\mathrm{Uniform}(0,\\theta)\\), and \\((n+1)\\max/n\\) is unbiased for \\(\\theta\\). <b>Perturb:</b> \\(X_i\\) i.i.d. \\(\\mathrm{Uniform}(\\theta,\\theta+1)\\): the location is unknown and the width is now 1. Find an unbiased estimator of \\(\\theta\\).",
-  "back": "<b>What breaks:</b> the sample maximum now estimates \\(\\theta+1\\), not \\(\\theta\\), so the one-sided rescaling fails. The likelihood is flat: every \\(\\theta\\in[M-1,\\,m]\\) is an MLE, so the MLE is not a single extremal value.<br><b>Fix:</b> use both endpoints. \\(E[m]=\\theta+\\tfrac{1}{n+1}\\), \\(E[M]=\\theta+\\tfrac{n}{n+1}\\), so \\(E[m+M-1]=2\\theta\\).<br><b>New answer:</b> \\(\\hat\\theta=\\tfrac{m+M-1}{2}\\), exactly unbiased. Simulation with \\(\\theta=3\\), \\(n=5\\): mean 2.9999.<br><b>Structure of the fix:</b> s_order_statistics (two extremes together).",
+  "back": "<b>What breaks:</b> the sample maximum now has mean \\(\\theta+\\tfrac{n}{n+1}\\), so the one-sided rescaling \\(\\tfrac{n+1}{n}M\\) no longer has mean \\(\\theta\\). The likelihood is flat: every \\(\\theta\\in[M-1,\\,m]\\) is an MLE, so the MLE is not a single extremal value.<br><b>Fix:</b> use both endpoints. \\(E[m]=\\theta+\\tfrac{1}{n+1}\\), \\(E[M]=\\theta+\\tfrac{n}{n+1}\\), so \\(E[m+M-1]=2\\theta\\).<br><b>New answer:</b> \\(\\hat\\theta=\\tfrac{m+M-1}{2}\\), exactly unbiased. Simulation with \\(\\theta=3\\), \\(n=5\\): mean 2.9999.<br><b>Structure of the fix:</b> s_order_statistics (two extremes together).",
   "tags": [
    "s_order_statistics",
    "s_extremal",
@@ -213,7 +213,7 @@
  {
   "type": "basic",
   "front": "\\(X_1,\\dots,X_n\\) i.i.d. standard Cauchy, density \\(\\frac{1}{\\pi(1+x^2)}\\). Find the law of \\(\\bar X\\) and compute \\(P(|\\bar X|>1)\\) for \\(n=100\\).",
-  "back": "<b>Answer:</b> \\(\\bar X\\) is standard Cauchy for every \\(n\\); \\(P(|\\bar X|>1)=\\tfrac12\\).<br><b>Structure:</b> s_generating_function (characteristic function); s_clt_normal_approx fails.<br><b>Key move:</b> \\(\\varphi_X(t)=e^{-|t|}\\), and independence multiplies characteristic functions.<br><b>Working:</b> \\(\\varphi_{\\bar X}(t)=\\varphi_X(t/n)^n=e^{-|t|}\\). \\(P(|X|>1)=1-\\tfrac2\\pi\\arctan1=\\tfrac12\\).<br><b>Sanity check:</b> simulation at \\(n=100\\): 0.496 (\\(10^6\\) draws).<br><b>Transfer:</b> averaging more measurements of a Cauchy-distributed quantity never sharpens the estimate of its centre.",
+  "back": "<b>Answer:</b> \\(\\bar X\\) is standard Cauchy for every \\(n\\); \\(P(|\\bar X|>1)=\\tfrac12\\).<br><b>Structure:</b> s_generating_function (characteristic function); s_clt_normal_approx fails.<br><b>Key move:</b> \\(\\varphi_X(t)=e^{-|t|}\\), and independence multiplies characteristic functions.<br><b>Working:</b> \\(\\varphi_{\\bar X}(t)=\\varphi_X(t/n)^n=e^{-|t|}\\). \\(P(|X|>1)=1-\\tfrac2\\pi\\arctan1=\\tfrac12\\).<br><b>Sanity check:</b> simulation at \\(n=100\\): 0.4995 (\\(10^6\\) draws; exact \\(\\tfrac12\\)).<br><b>Transfer:</b> averaging more measurements of a Cauchy-distributed quantity never sharpens the estimate of its centre.",
   "tags": [
    "s_generating_function",
    "s_clt_normal_approx",
@@ -225,7 +225,7 @@
  {
   "type": "basic",
   "front": "\\(Z_1\\) and \\(Z_2\\) are independent \\(N(0,1)\\). Let \\(R_i=Z_{1,i}/Z_{2,i}\\) for \\(i=1,\\dots,n\\), with all pairs independent. Describe the distribution of \\(\\bar R\\) and give \\(P(|\\bar R|>1)\\).",
-  "back": "<b>Classic:</b> the ratio of two independent standard normals is standard Cauchy, so this is the Cauchy average (D2).<br><b>Mapping:</b> \\(R_i\\) has no finite mean, because the denominator puts mass near zero. \\(\\bar R\\) inherits D2's law.<br><b>Answer:</b> \\(\\bar R\\) is standard Cauchy for every \\(n\\); \\(P(|\\bar R|>1)=\\tfrac12\\). Simulation: 0.51.",
+  "back": "<b>Classic:</b> the ratio of two independent standard normals is standard Cauchy, so this is the Cauchy average (D2).<br><b>Mapping:</b> \\(R_i\\) has no finite mean, because the denominator puts mass near zero. \\(\\bar R\\) inherits D2's law.<br><b>Answer:</b> \\(\\bar R\\) is standard Cauchy for every \\(n\\); \\(P(|\\bar R|>1)=\\tfrac12\\). Simulation: 0.50.",
   "tags": [
    "s_clt_normal_approx",
    "cauchy",
@@ -270,7 +270,7 @@
  {
   "type": "basic",
   "front": "Known problem: 10 trials, 0 successes. The nominal 95% Wald interval for \\(p\\) is \\([0,0]\\). <b>Perturb:</b> adopt a \\(\\mathrm{Beta}(1,1)\\) prior and report the equal-tailed 95% credible interval. What is the upper limit?",
-  "back": "<b>What breaks:</b> the Wald SE is \\(\\sqrt{\\hat p(1-\\hat p)/n}=0\\) at \\(\\hat p=0\\), giving a zero-width interval that excludes every \\(p>0\\). The normal approximation fails at the boundary.<br><b>Fix:</b> conjugate posterior \\(\\mathrm{Beta}(1+0,\\,1+10)=\\mathrm{Beta}(1,11)\\), with CDF \\(1-(1-u)^{11}\\).<br><b>New answer:</b> the upper limit solves \\(1-(1-u)^{11}=0.975\\), so \\(u=1-0.025^{1/11}\\approx0.285\\). Interval \\([0,\\,0.285]\\); posterior mean \\(1/12\\approx0.083\\).<br><b>Structure of the fix:</b> s_bayes (conjugate update).",
+  "back": "<b>What breaks:</b> the Wald SE is \\(\\sqrt{\\hat p(1-\\hat p)/n}=0\\) at \\(\\hat p=0\\), giving a zero-width interval that excludes every \\(p>0\\). The normal approximation fails at the boundary.<br><b>Fix:</b> conjugate posterior \\(\\mathrm{Beta}(1+0,\\,1+10)=\\mathrm{Beta}(1,11)\\), with CDF \\(1-(1-u)^{11}\\).<br><b>New answer:</b> the upper limit solves \\(1-(1-u)^{11}=0.975\\), so \\(u=1-0.025^{1/11}\\approx0.285\\). Equal-tailed interval \\([0.002,\\,0.285]\\), with lower limit \\(1-0.975^{1/11}\\approx0.0023\\); posterior mean \\(1/12\\approx0.083\\).<br><b>Structure of the fix:</b> s_bayes (conjugate update).",
   "tags": [
    "s_bayes",
    "confidence_intervals",
@@ -282,7 +282,7 @@
  {
   "type": "basic",
   "front": "A backtest gives \\(p=0.03\\). A colleague says there is a 97% chance the strategy works, because \\(1-p\\) is the probability it is real. Which structure applies, and what is the correct reading?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
-  "back": "<b>Structure:</b> s_bayes (inverting a conditional probability).<br><b>Trigger:</b> the p-value is \\(P(\\text{data}\\mid H_0)\\), but the claim asks for \\(P(H_0\\mid\\text{data})\\), which needs a prior and a base rate.<br><b>Key move:</b> Bayes' rule with the prior probability of an edge and the power (F2).<br><b>Answer:</b> \\(p=0.03\\) is not a 97% chance. With a 10% prior of real edges and 80% power, the posterior probability of a real edge is about 64% (F2).",
+  "back": "<b>Structure:</b> s_bayes (inverting a conditional probability).<br><b>Trigger:</b> the p-value is \\(P(\\text{data}\\mid H_0)\\), but the claim asks for \\(P(H_0\\mid\\text{data})\\), which needs a prior and a base rate.<br><b>Key move:</b> Bayes' rule with the prior probability of an edge and the power (F2).<br><b>Answer:</b> \\(p=0.03\\) is not a 97% chance. With a 10% prior of real edges and 80% power, the posterior probability of a real edge given a significant result (\\(p\\lt 0.05\\)) is about 64% (F2). The 64% is for that event, not for the exact value \\(p=0.03\\), which would need the alternative\\'s p-value distribution.",
   "tags": [
    "s_bayes",
    "p_values",
@@ -383,7 +383,7 @@
  {
   "type": "basic",
   "front": "100 strategies have true Sharpe 0. Each annualised Sharpe estimate over \\(T=4\\) years has standard error 0.5 (normal, independent across strategies). You report the best one. Estimate its expected value.",
-  "back": "<b>Answer:</b> about \\(1.25\\) (\\(0.5\\times2.508\\)).<br><b>Structure:</b> s_extremal (expected maximum of i.i.d. normals).<br><b>Key move:</b> \\(E[\\max]=\\int x\\,d\\big(\\Phi(x)^{100}\\big)=\\int 100\\,x\\,\\phi(x)\\Phi(x)^{99}\\,dx\\approx2.508\\) for standard normals; scale by 0.5.<br><b>Working:</b> numerical integration gives 2.5076; \\(0.5\\times2.5076=1.254\\).<br><b>Sanity check:</b> the simulation of \\(10^6\\) draws of 100 gives 2.514, or about 1.26 annualised. The asymptotic \\(\\sqrt{2\\ln100}=3.03\\) is too large at this N.<br><b>Transfer:</b> a naive backtester's best Sharpe is biased upward by about 1.25 before any real skill.",
+  "back": "<b>Answer:</b> about \\(1.25\\) (\\(0.5\\times2.508\\)).<br><b>Structure:</b> s_extremal (expected maximum of i.i.d. normals).<br><b>Key move:</b> \\(E[\\max]=\\int x\\,d\\big(\\Phi(x)^{100}\\big)=\\int 100\\,x\\,\\phi(x)\\Phi(x)^{99}\\,dx\\approx2.508\\) for standard normals; scale by 0.5.<br><b>Working:</b> numerical integration gives 2.5076; \\(0.5\\times2.5076=1.254\\).<br><b>Sanity check:</b> a simulation of \\(10^5\\) draws of 100 normals gives 2.508, or about 1.25 annualised. The asymptotic \\(\\sqrt{2\\ln100}=3.03\\) is too large at this N.<br><b>Transfer:</b> a naive backtester's best Sharpe is biased upward by about 1.25 before any real skill.",
   "tags": [
    "s_extremal",
    "multiple_testing",
@@ -477,7 +477,7 @@
  {
   "type": "basic",
   "front": "Known problem: \\(y_i=\\beta x_i+\\varepsilon_i\\) with homoskedastic errors; OLS through the origin. <b>Perturb:</b> \\(\\mathrm{Var}(\\varepsilon_i\\mid x_i)=\\sigma^2x_i^2\\), with \\(x\\in\\{1,2,3\\}\\). Compare the variance of the OLS slope with the variance of the best linear estimator (WLS), in units of \\(\\sigma^2\\).",
-  "back": "<b>What breaks:</b> \\(\\mathrm{Var}(\\hat\\beta)=\\sigma^2(X^\\top X)^{-1}\\) assumes constant variance. Here \\(\\mathrm{Var}(\\hat\\beta_{OLS})=\\dfrac{\\sum x_i^2\\cdot\\sigma^2x_i^2}{(\\sum x_i^2)^2}=\\dfrac{98}{196}\\sigma^2=\\tfrac12\\sigma^2\\).<br><b>Fix:</b> WLS with weights \\(1/x_i^2\\): \\(y_i/x_i=\\beta+\\varepsilon_i/x_i\\) is homoskedastic, so the best estimator is the mean of \\(y_i/x_i\\), with variance \\(\\sigma^2/3\\).<br><b>New answer:</b> \\(\\mathrm{Var}_{OLS}=\\tfrac12\\sigma^2\\) versus \\(\\mathrm{Var}_{WLS}=\\tfrac13\\sigma^2\\); the OLS SE is \\(\\sqrt{1.5}\\approx1.22\\times\\) larger. Simulation: 0.499 vs 0.5.<br><b>Structure of the fix:</b> s_variance_decomposition (weights from the variance function).",
+  "back": "<b>What breaks:</b> \\(\\mathrm{Var}(\\hat\\beta)=\\sigma^2(X^\\top X)^{-1}\\) assumes constant variance. Here \\(\\mathrm{Var}(\\hat\\beta_{OLS})=\\dfrac{\\sum x_i^2\\cdot\\sigma^2x_i^2}{(\\sum x_i^2)^2}=\\dfrac{98}{196}\\sigma^2=\\tfrac12\\sigma^2\\).<br><b>Fix:</b> WLS with weights \\(1/x_i^2\\): \\(y_i/x_i=\\beta+\\varepsilon_i/x_i\\) is homoskedastic, so the best estimator is the mean of \\(y_i/x_i\\), with variance \\(\\sigma^2/3\\).<br><b>New answer:</b> \\(\\mathrm{Var}_{OLS}=\\tfrac12\\sigma^2\\) versus \\(\\mathrm{Var}_{WLS}=\\tfrac13\\sigma^2\\); the OLS SE is \\(\\sqrt{1.5}\\approx1.22\\times\\) larger. Simulation: 0.499 vs 0.332 (the WLS variance is \\(\\sigma^2/3\\)).<br><b>Structure of the fix:</b> s_variance_decomposition (weights from the variance function).",
   "tags": [
    "s_variance_decomposition",
    "ols",
@@ -678,7 +678,7 @@
  {
   "type": "basic",
   "front": "You run PCA on standardised daily returns of 500 stocks over 250 days. The top eigenvalues look large. Is there a common structure?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
-  "back": "<b>Structure:</b> s_eigen (random-matrix bulk of the sample correlation matrix).<br><b>Trigger:</b> \\(p/n=2\\) is not small. Pure noise then produces eigenvalues spread over roughly \\([(1-\\sqrt{p/n})^2,(1+\\sqrt{p/n})^2]=[0.17,\\,5.83]\\) (Marchenko–Pastur).<br><b>Key move:</b> compare each eigenvalue with the random-matrix bulk, or with a shuffled-returns benchmark; the Kaiser rule (eigenvalue above 1) is not enough.<br><b>Answer:</b> the top eigenvalues may be noise. A simulation of pure noise with \\(p=500\\), \\(n=250\\) produced a top eigenvalue of 5.6.",
+  "back": "<b>Structure:</b> s_eigen (random-matrix bulk of the sample correlation matrix).<br><b>Trigger:</b> \\(p/n=2\\) is not small. Pure noise then produces eigenvalues spread over roughly \\([(1-\\sqrt{p/n})^2,(1+\\sqrt{p/n})^2]=[0.17,\\,5.83]\\) (Marchenko–Pastur).<br><b>Key move:</b> compare each eigenvalue with the random-matrix bulk, or with a shuffled-returns benchmark; the Kaiser rule (eigenvalue above 1) is not enough.<br><b>Answer:</b> the top eigenvalues may be noise. A simulation of pure noise with \\(p=500\\), \\(n=250\\) produced a top eigenvalue of about 5.7 (the bulk edge is 5.83).",
   "tags": [
    "s_eigen",
    "pca",

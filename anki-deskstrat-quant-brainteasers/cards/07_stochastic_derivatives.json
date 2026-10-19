@@ -232,7 +232,7 @@
  },
  {
   "type": "basic",
-  "front": "You are long an at-the-money call, delta-hedged daily. Realised vol is 25% and the option was bought at 20% implied vol. What is the sign of the expected P&L, and roughly how big is it per unit time at inception?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "front": "You are long a 1-year at-the-money call, delta-hedged daily. Realised vol is 25% and the option was bought at 20% implied vol. What is the sign of the expected P&L, and roughly how big is it per unit time at inception?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
   "back": "<b>Structure:</b> Second-order Taylor expansion of the option value (gamma P&L).<br><b>Trigger:</b> Delta-hedged option P&L is a gamma term times the difference of realised and implied variance.<br><b>Key move:</b> P&L per unit time \\(\\approx \\tfrac12\\Gamma S^2(\\sigma_r^2-\\sigma_i^2)\\).<br><b>Answer:</b> Positive. At \\(r=0\\), \\(\\Gamma\\approx 0.01985\\), so about \\(0.5\\cdot 0.01985\\cdot 10^4\\cdot 0.0225\\approx 2.2\\) per year.",
   "tags": [
    "s_taylor",
@@ -409,7 +409,7 @@
  {
   "type": "basic",
   "front": "Cash-or-nothing digital pays 1 if \\(S_T>K\\). With \\(S=K=100\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\), \\(T=1\\), what is its delta, and how does it compare with the call gamma?",
-  "back": "<b>Answer:</b> Digital delta \\(=0.01876\\), equal to the call gamma at \\(S=K\\).<br><b>Structure:</b> The digital is \\(-\\partial_KC\\), so its delta is \\(-\\partial_K\\) of the call's delta-derivative: a third-derivative identity.<br><b>Key move:</b> Digital \\(=e^{-rT}N(d_2)\\). \\(\\partial_S[e^{-rT}N(d_2)]=e^{-rT}\\varphi(d_2)/(S\\sigma\\sqrt T)\\). Use \\(S\\varphi(d_1)=Ke^{-rT}\\varphi(d_2)\\) to get \\(\\varphi(d_1)/(K\\sigma\\sqrt T)\\).<br><b>Working:</b> At \\(S=K\\) the expression equals \\(\\varphi(d_1)/(S\\sigma\\sqrt T)=\\Gamma_{call}\\).<br><b>Sanity check:</b> Numerically \\(0.018762\\) on both sides.<br><b>Transfer:</b> Digital delta peaks at the strike and grows as \\(T\\to 0\\); its gamma changes sign around the strike.",
+  "back": "<b>Answer:</b> Digital delta \\(=0.01876\\), equal to the call gamma at \\(S=K\\).<br><b>Structure:</b> The digital is \\(-\\partial_KC\\), so its delta is \\(-\\partial_S\\partial_K C\\), the mixed second derivative of the call.<br><b>Key move:</b> Digital \\(=e^{-rT}N(d_2)\\). \\(\\partial_S[e^{-rT}N(d_2)]=e^{-rT}\\varphi(d_2)/(S\\sigma\\sqrt T)\\). Use \\(S\\varphi(d_1)=Ke^{-rT}\\varphi(d_2)\\) to get \\(\\varphi(d_1)/(K\\sigma\\sqrt T)\\).<br><b>Working:</b> At \\(S=K\\) the expression equals \\(\\varphi(d_1)/(S\\sigma\\sqrt T)=\\Gamma_{call}\\).<br><b>Sanity check:</b> Numerically \\(0.018762\\) on both sides.<br><b>Transfer:</b> Digital delta peaks at the strike and grows as \\(T\\to 0\\); its gamma changes sign around the strike.",
   "tags": [
    "s_replication",
    "digital",
@@ -419,8 +419,8 @@
  },
  {
   "type": "basic",
-  "front": "You are long an ATM call (\\(S=K=100\\), \\(r=0\\)) bought at 20% implied vol, delta-hedged daily, and realised vol is 25% over 3 months. What is the expected P&L, approximately?",
-  "back": "<b>Answer:</b> About \\(+1.00\\) (MC \\(0.996\\pm0.002\\)).<br><b>Structure:</b> Gamma P&L: delta-hedged option P&L equals the integral of \\(\\tfrac12\\Gamma S^2(\\sigma_r^2-\\sigma_i^2)\\,dt\\).<br><b>Key move:</b> Ito on the option value with delta hedge removes the first-order terms. Left with \\(\\tfrac12\\Gamma S^2(\\sigma_r^2-\\sigma_i^2)dt\\) per unit time, then integrate over the path.<br><b>Working:</b> At inception \\(\\Gamma=\\varphi(0.1)/20=0.01985\\), so \\(\\tfrac12\\Gamma S^2(0.0225)\\approx 2.2\\) per year. Gamma rises as expiry approaches, and the 3-month integral is about \\(1.0\\).<br><b>Sanity check:</b> Sign is positive because realised exceeds implied; the expected P&L is zero when the two vols are equal.<br><b>Transfer:</b> Short the same option at 25% implied and realised 20%: the P&L flips sign and is roughly \\(-1.0\\).",
+  "front": "You are long a 1-year ATM call (\\(S=K=100\\), \\(r=0\\)) bought at 20% implied vol, delta-hedged daily, and realised vol is 25% over the first 3 months (mark the option at 20% implied at that point). What is the expected P&L, approximately?",
+  "back": "<b>Answer:</b> About \\(+0.55\\) (daily-hedged MC \\(0.54\\pm0.002\\); gamma integral \\(0.60\\)).<br><b>Structure:</b> Gamma P&L: delta-hedged option P&L equals the integral of \\(\\tfrac12\\Gamma S^2(\\sigma_r^2-\\sigma_i^2)\\,dt\\).<br><b>Key move:</b> Ito on the option value with delta hedge removes the first-order terms. Left with \\(\\tfrac12\\Gamma S^2(\\sigma_r^2-\\sigma_i^2)dt\\) per unit time, then integrate over the path.<br><b>Working:</b> At inception \\(\\Gamma=\\varphi(0.1)/20=0.01985\\), so \\(\\tfrac12\\Gamma S^2(0.0225)\\approx 2.2\\) per year. Gamma rises as expiry approaches (the rate is about 2.2 to 2.6 per year over the window), so the 3-month integral is about \\(0.6\\).<br><b>Sanity check:</b> Sign is positive because realised exceeds implied; the expected P&L is zero when the two vols are equal.<br><b>Transfer:</b> Sell the option at 25% implied with realised 20%: the short gains, roughly \\(+0.5\\) over 3 months (gamma now evaluated at 25% vol).",
   "tags": [
    "s_taylor",
    "greeks",
@@ -497,7 +497,7 @@
  {
   "type": "basic",
   "front": "A chooser: at \\(t=0.5\\) the holder picks either a call or a put, both with strike \\(K=100\\) and expiry \\(T=1\\). \\(S_0=100\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\). What is the value at time 0?",
-  "back": "<b>Answer:</b> \\(\\approx 13.851\\).<br><b>Structure:</b> Put-call parity at time \\(t\\) turns the max of a call and a put into a call plus a put with a discounted strike.<br><b>Key move:</b> \\(\\max(C_t,P_t)=C_t+(Ke^{-r(T-t)}-S_t)^+\\) because \\(C_t-P_t=S_t-Ke^{-r(T-t)}\\). Price \\(=C_0(K,T)+P_0(Ke^{-r(T-t)},t)\\).<br><b>Working:</b> \\(C_0=10.4506\\); the put with strike \\(97.531\\), expiry \\(0.5\\), has value \\(3.4007\\). Sum \\(13.8513\\).<br><b>Sanity check:</b> Monte Carlo with \\(4\\times10^5\\) paths gives 13.858 (within one standard error of 0.01).<br><b>Transfer:</b> With different call and put strikes the parity step fails, and you must price the max directly.",
+  "back": "<b>Answer:</b> \\(\\approx 13.851\\).<br><b>Structure:</b> Put-call parity at time \\(t\\) turns the max of a call and a put into a call plus a put with a discounted strike.<br><b>Key move:</b> \\(\\max(C_t,P_t)=C_t+(Ke^{-r(T-t)}-S_t)^+\\) because \\(C_t-P_t=S_t-Ke^{-r(T-t)}\\). Price \\(=C_0(K,T)+P_0(Ke^{-r(T-t)},t)\\).<br><b>Working:</b> \\(C_0=10.4506\\); the put with strike \\(97.531\\), expiry \\(0.5\\), has value \\(3.4007\\). Sum \\(13.8513\\).<br><b>Sanity check:</b> Monte Carlo with \\(4\\times10^5\\) paths gives 13.846 \\(\\pm 0.013\\), consistent with 13.851.<br><b>Transfer:</b> With different call and put strikes the parity step fails, and you must price the max directly.",
   "tags": [
    "s_replication",
    "options",
@@ -628,7 +628,7 @@
  },
  {
   "type": "basic",
-  "front": "Stock at 100 with a random short rate: \\(P(0,1)=E[e^{-\\bar R}]\\), with \\(\\bar R\\) equal to 3% or 7% with probability \\(1/2\\). Vol 20%, ATM call, one year. Price the call.",
+  "front": "Stock at 100 with a random short rate: \\(P(0,1)=E[e^{-\\bar R}]\\), with \\(\\bar R\\) equal to 3% or 7% with probability \\(1/2\\). Forward-price vol 20% (lognormal under the one-year forward measure), ATM call. Price the call.",
   "back": "<b>What breaks:</b> The naive price uses one rate \\(r=E[\\bar R]=5\\%\\) and forward \\(S_0e^{rT}\\). The true forward is \\(S_0/P(0,1)\\), and the discount is \\(P(0,1)\\), not \\(e^{-rT}\\).<br><b>Fix:</b> Black-76 with \\(F=S_0/P(0,1)\\) and discount \\(P(0,1)\\); assumes the forward is lognormal with vol 20% under the forward measure.<br><b>New answer:</b> \\(P=0.95142\\), \\(F=105.106\\), \\(d_1=0.349\\), \\(d_2=0.149\\): \\(C=0.95142(105.106\\cdot0.6365-100\\cdot0.5592)\\approx 10.4399\\) (naive \\(10.4506\\)).",
   "tags": [
    "s_change_of_measure",
@@ -662,7 +662,7 @@
  {
   "type": "basic",
   "front": "A chooser: at \\(t=0.5\\) you pick a call with strike \\(110\\) or a put with strike \\(90\\), both expiring at \\(T=1\\). Stock 100, \\(r=5\\%\\), \\(\\sigma=20\\%\\). Price it.",
-  "back": "<b>What breaks:</b> Put-call parity needs a common strike. With different strikes, \\(\\max(C_t(110),P_t(90))\\) cannot be turned into a single put plus call.<br><b>Fix:</b> Price directly as an expectation of a max; the payoff depends on the joint law of the two option values at \\(t\\), which is a bivariate normal problem.<br><b>New answer:</b> No closed form from parity. Numerically: \\(\\mathbb E\\big[e^{-rt}\\max(C_t(110),P_t(90))\\big]\\), evaluated with a bivariate normal integral or Monte Carlo.",
+  "back": "<b>What breaks:</b> Put-call parity needs a common strike. With different strikes, \\(\\max(C_t(110),P_t(90))\\) cannot be turned into a single put plus call.<br><b>Fix:</b> Price directly as an expectation of a max; the payoff depends on the joint law of the two option values at \\(t\\), which is a bivariate normal problem.<br><b>New answer:</b> No closed form from parity. Monte Carlo (\\(4\\times10^5\\) paths) of \\(e^{-rt}\\max(C_t(110),P_t(90))\\) gives \\(\\approx 7.72\\) (s.e. 0.01).",
   "tags": [
    "s_replication",
    "options",
@@ -673,7 +673,7 @@
  {
   "type": "basic",
   "front": "Variance swap on a stock with an unknown crash: at some time the stock drops \\(20\\%\\) in one jump. Does the static strip still give the fair variance strike, and what does the hedge lose?",
-  "back": "<b>What breaks:</b> The strip replication uses a dynamic hedge with a \\(\\int dS/S\\) leg, which assumes continuous paths. A jump breaks the self-financing hedge.<br><b>Fix:</b> Keep the price: the strip identity is model-free and still prices the expectation under \\(Q\\). Price the hedge risk separately as gap exposure.<br><b>New answer:</b> Fair strike is still the strip value (price unchanged in form). The hedge error from a 20% gap is of order \\(\\tfrac12\\Gamma S^2\\cdot(0.2)^2\\), not zero.",
+  "back": "<b>What breaks:</b> The strip replication uses a dynamic hedge with a \\(\\int dS/S\\) leg, which assumes continuous paths. A jump breaks the self-financing hedge.<br><b>Fix:</b> Keep the price: the strip identity is model-free and still prices the expectation under \\(Q\\). Price the hedge risk separately as gap exposure.<br><b>New answer:</b> Not exactly. The strip prices \\(E^Q[-2\\ln(S_T/F)]=E^Q[\\int\\sigma^2dt-2\\sum(\\ln(1+J)-J)]\\), whereas the swap pays \\(E^Q[\\int\\sigma^2dt+\\sum\\ln(1+J)^2]\\). For a 20% gap (\\(J=-0.2\\)) the difference is \\(\\ln(0.8)^2+2(\\ln 0.8+0.2)\\approx 0.0035\\) in variance units (about 0.9 vol point at 20%), a third-order term in \\(J\\). The hedge error from the gap is of order \\(\\tfrac12\\Gamma S^2\\cdot(0.2)^2\\), not zero.",
   "tags": [
    "s_replication",
    "variance_swap",
@@ -970,7 +970,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: Variance swap 2/3]</b> Same swap, but the smile is skewed: market OTM put vols are 25% and OTM call vols 18%. The strip \\(K_{var}=\\frac{2e^{rT}}{T}\\Big[\\int_0^F\\frac{P(K)}{K^2}dK+\\int_F^\\infty\\frac{C(K)}{K^2}dK\\Big]\\) is priced from these quotes. Which strikes dominate, and is the fair variance above or below \\(0.04\\)?",
-  "back": "<b>Answer:</b> Above \\(0.04\\). Low strikes dominate because their weight is \\(1/K^2\\) and they carry high put-wing variance.<br><b>Structure:</b> Fair variance is a weighted average of option prices with weights \\(\\propto 1/K^2\\), which reads as an average of the implied variances across strikes.<br><b>Key move:</b> Weights \\(2e^{rT}/(TK^2)\\) on OTM options. The weight per unit price is largest for low \\(K\\), so the 25% put wing pushes the strike above the ATM 20% level.<br><b>Working:</b> Flat smile at 20% gives exactly \\(0.04\\) by numerical integration (checked to \\(10^{-10}\\)). A linear wing interpolation to 25% (puts) and 18% (calls) gives \\(\\approx 0.0446\\), above \\(0.04\\).<br><b>Sanity check:</b> Model-free: the strip gives the expectation under \\(Q\\) for any smile, as long as quotes exist for all strikes.<br><b>Transfer:</b> Skew in the wings is priced by the strip; the ATM vol alone does not determine the fair variance.",
+  "back": "<b>Answer:</b> Above \\(0.04\\). Low strikes dominate because their weight is \\(1/K^2\\) and they carry high put-wing variance.<br><b>Structure:</b> Fair variance is a weighted average of option prices with weights \\(\\propto 1/K^2\\), which reads as an average of the implied variances across strikes.<br><b>Key move:</b> Weights \\(2e^{rT}/(TK^2)\\) on OTM options. The weight per unit price is largest for low \\(K\\), so the 25% put wing pushes the strike above the ATM 20% level.<br><b>Working:</b> Flat smile at 20% gives exactly \\(0.04\\) by numerical integration (checked to \\(10^{-10}\\)). Interpolating vol linearly in strike from 20% at \\(K=100\\) to 25% at \\(K=60\\) (puts) and 18% at \\(K=140\\) (calls) gives \\(\\approx 0.0418\\), above \\(0.04\\).<br><b>Sanity check:</b> Model-free: the strip gives the expectation under \\(Q\\) for any smile, as long as quotes exist for all strikes.<br><b>Transfer:</b> Skew in the wings is priced by the strip; the ATM vol alone does not determine the fair variance.",
   "tags": [
    "s_replication",
    "variance_swap",
@@ -981,7 +981,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: Variance swap 3/3]</b> Same swap, but the stock can drop 20% in one jump at an unknown time. Is the strip price still the fair strike, and what does a static strip not cover?",
-  "back": "<b>Answer:</b> Strip price is still the fair value under \\(Q\\). What is not covered is the dynamic hedge: the delta leg has gap risk.<br><b>Structure:</b> Static replication with a log contract is model-free for continuous paths; with jumps the realised variance includes the squared jump, which the strip still prices.<br><b>Key move:</b> Price: \\(e^{-rT}E^Q[\\text{realised variance}]\\) computed from the strip with jump-inclusive option prices. Hedge: the \\(\\int dS/S\\) leg is not self-financing across a gap.<br><b>Working:</b> A 20% drop is a log-return of \\(\\ln 0.8=-0.2231\\), squared \\(0.0498\\); this adds \\(0.0498/T\\) to realised variance over one year, which the strip prices in expectation.<br><b>Sanity check:</b> Gap risk is of order \\(\\tfrac12\\Gamma S^2(0.2)^2\\) per jump for the dynamic leg; the static strip price itself does not change form.<br><b>Transfer:</b> Crash-risk premium shows up as a steeper put wing in the strip, which raises the fair strike.",
+  "back": "<b>Answer:</b> Only approximately. The strip gives the \\(Q\\)-expectation of \\(-2\\ln(S_T/F)\\), which differs from the swap's realised variance by the jump term \\(\\ln(1+J)^2+2(\\ln(1+J)-J)\\approx -J^3/3\\), about 0.0035 (variance units) for a 20% drop. What is not covered is the dynamic hedge: the delta leg has gap risk.<br><b>Structure:</b> Static replication with a log contract is model-free for continuous paths; with jumps the realised variance includes the squared jump, which the strip prices only to third order.<br><b>Key move:</b> Price: the strip with jump-inclusive option prices gives \\(E^Q[-2\\ln(S_T/F)]\\), a close approximation to the fair strike. Hedge: the \\(\\int dS/S\\) leg is not self-financing across a gap.<br><b>Working:</b> A 20% drop is a log-return of \\(\\ln 0.8=-0.2231\\), squared \\(0.0498\\); this adds \\(0.0498/T\\) to realised variance over one year; the strip recovers only \\(-2(\\ln 0.8+0.2)\\approx 0.0463\\) of it.<br><b>Sanity check:</b> Gap risk is of order \\(\\tfrac12\\Gamma S^2(0.2)^2\\) per jump for the dynamic leg; the static strip price itself does not change form.<br><b>Transfer:</b> Crash-risk premium shows up as a steeper put wing in the strip, which raises the fair strike.",
   "tags": [
    "s_replication",
    "variance_swap",
