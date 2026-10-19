@@ -1,0 +1,1025 @@
+[
+ {
+  "type": "basic",
+  "front": "A covariance matrix for \\(n\\) assets has unit variances and every pairwise correlation equal to \\(\\rho\\). Find its eigenvalues.<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_eigen (rank-one update of a scalar matrix).<br><b>Trigger:</b> all off-diagonal entries equal, so \\(C=(1-\\rho)I+\\rho J\\), \\(J\\) all-ones.<br><b>Key move:</b> \\(J\\mathbf 1=n\\mathbf 1\\) and \\(Jv=0\\) when \\(\\sum v_i=0\\).<br><b>Answer:</b> \\(1+(n-1)\\rho\\) once (eigenvector \\(\\mathbf 1\\)); \\(1-\\rho\\) with multiplicity \\(n-1\\). Valid iff \\(-\\tfrac{1}{n-1}\\le\\rho\\le1\\).",
+  "tags": [
+   "s_eigen",
+   "correlation_matrix",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Five assets, unit variances, every pairwise correlation equal to \\(\\rho\\). What is the smallest \\(\\rho\\) for which this is a valid correlation matrix?",
+  "back": "<b>Answer:</b> \\(\\rho_{\\min}=-\\tfrac14\\).<br><b>Structure:</b> s_eigen (equal off-diagonals, rank-one plus identity).<br><b>Key move:</b> eigenvalues are \\(1+4\\rho\\) (once) and \\(1-\\rho\\) (four times); PSD needs \\(1+4\\rho\\ge0\\).<br><b>Working:</b> \\(C=(1-\\rho)I+\\rho J\\). \\(\\det C=(1+4\\rho)(1-\\rho)^4\\), zero at \\(\\rho=-\\tfrac14\\).<br><b>Sanity check:</b> at \\(\\rho=-\\tfrac14\\) the five vectors behind \\(C\\) sum to zero (a regular simplex), so the bound is attained. At \\(\\rho=-\\tfrac12\\) the eigenvalue is \\(-1\\).<br><b>Transfer:</b> \\(n\\) unit vectors with equal pairwise cosines: the bound is \\(-1/(n-1)\\) for any \\(n\\).",
+  "tags": [
+   "s_eigen",
+   "correlation_matrix",
+   "psd",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Write the 5 by 5 correlation matrix with 1 on the diagonal and rho everywhere else. Which property must every valid correlation matrix have, and how would you test it for a one-parameter family?",
+   "Matrices of the form (scalar) times I plus (scalar) times J, with J the all-ones matrix, have eigenvalues you can read off by hand: check what J does to the all-ones vector and to vectors whose entries sum to zero.",
+   "Set \\(C=(1-\\rho)I+\\rho J\\) and apply \\(C\\) to \\(\\mathbf 1\\), and separately to a vector \\(v\\) with \\(\\sum v_i=0\\). Write each eigenvalue equation \\(Cv=\\lambda v\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: three standard normals with all pairwise correlations \\(0.5\\) form a valid joint law (eigenvalues \\(2,0.5,0.5\\)). Now change only two pairs: \\(\\rho_{12}=\\rho_{13}=0.9\\) and \\(\\rho_{23}=-0.9\\). Is this still a valid joint distribution?",
+  "back": "<b>What breaks:</b> checking each pairwise correlation lies in \\([-1,1]\\) is necessary but not sufficient. The full matrix must be PSD, a joint condition on all three numbers.<br><b>Working:</b> \\(\\det C=1-\\rho_{12}^2-\\rho_{13}^2-\\rho_{23}^2+2\\rho_{12}\\rho_{13}\\rho_{23}=1-2.43-1.458=-2.888<0\\), so an eigenvalue is negative.<br><b>Answer:</b> not valid; no joint law exists.<br><b>Fix:</b> with \\(\\rho_{12}=\\rho_{13}=0.9\\), the valid range is \\(\\rho_{23}\\in[0.62,1]\\).",
+  "tags": [
+   "s_eigen",
+   "correlation_matrix",
+   "psd",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "A matrix with 1s on the diagonal and entries in \\([-1,1]\\) off it can still fail to be a covariance matrix. Which property does a covariance matrix need that the pairwise bounds do not guarantee, and how would you test it on a 3 by 3 matrix?",
+   "For a symmetric matrix, the determinant is the product of the eigenvalues. Compute the determinant of the new matrix; if it is negative, at least one eigenvalue must be negative.",
+   "Write \\(C=\\begin{pmatrix}1&0.9&0.9\\\\0.9&1&-0.9\\\\0.9&-0.9&1\\end{pmatrix}\\) and expand \\(\\det C\\) with the 3 by 3 formula."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You must simulate \\((X_1,X_2)\\) with unit variances and correlation \\(0.6\\) from independent standard normals \\(Z_1,Z_2\\). Give the lower-triangular Cholesky factor and the recipe.",
+  "back": "<b>Answer:</b> \\(L=\\begin{pmatrix}1&0\\\\0.6&0.8\\end{pmatrix}\\); \\(X_1=Z_1\\), \\(X_2=0.6Z_1+0.8Z_2\\).<br><b>Structure:</b> s_eigen (factorisation \\(\\Sigma=LL^\\top\\) of a symmetric positive-definite matrix).<br><b>Key move:</b> match entries: \\(l_{11}=1\\), \\(l_{21}=\\rho\\), \\(l_{22}=\\sqrt{1-\\rho^2}\\).<br><b>Working:</b> \\(LL^\\top=\\begin{pmatrix}1&\\rho\\\\\\rho&\\rho^2+1-\\rho^2\\end{pmatrix}=\\Sigma\\).<br><b>Sanity check:</b> \\(\\rho=0\\) gives \\(L=I\\); \\(\\rho\\to1\\) gives \\(l_{22}\\to0\\) (degenerate). \\(10^5\\) simulated draws give sample correlation within 0.01 of 0.6.<br><b>Transfer:</b> any Gaussian vector with a given covariance (basket options, scenario generation).",
+  "tags": [
+   "s_eigen",
+   "cholesky",
+   "simulation",
+   "fmt_solve"
+  ],
+  "hints": [
+   "You need a matrix \\(L\\) that turns independent normals into correlated ones. If \\(L\\) has zeros above the diagonal, which matrix product must equal the covariance, and how many unknown entries are left?",
+   "Write \\(\\Sigma=LL^\\top\\) with \\(L\\) lower triangular and match entries position by position, starting from the top-left.",
+   "\\(\\begin{pmatrix}1&0.6\\\\0.6&1\\end{pmatrix}=\\begin{pmatrix}l_{11}&0\\\\l_{21}&l_{22}\\end{pmatrix}\\begin{pmatrix}l_{11}&l_{21}\\\\0&l_{22}\\end{pmatrix}\\). Multiply out the right side and compare entries."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for a Cholesky factor to generate correlated normals, and when does it fail?",
+  "back": "<b>Triggers:</b> a target covariance \\(\\Sigma\\) and independent standard normals; you need \\(X=LZ\\) with \\(LL^\\top=\\Sigma\\).<br><b>Move:</b> factor once (\\(O(n^3/3)\\)), then each draw costs \\(O(n^2)\\).<br><b>Canonical example:</b> \\(\\Sigma=\\begin{pmatrix}1&\\rho\\\\\\rho&1\\end{pmatrix}\\), \\(L=\\begin{pmatrix}1&0\\\\\\rho&\\sqrt{1-\\rho^2}\\end{pmatrix}\\).<br><b>Failure mode:</b> needs \\(\\Sigma\\) positive definite. A singular \\(\\Sigma\\) (two assets with \\(\\rho=1\\), or a basket that sums to a constant) gives a zero pivot; an estimated matrix with a tiny negative eigenvalue crashes it. Fix: \\(\\Sigma=V\\Lambda V^\\top\\) and \\(X=V\\Lambda^{1/2}Z\\), which works for any PSD matrix.",
+  "tags": [
+   "s_eigen",
+   "cholesky",
+   "psd",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A \\(3\\times3\\) matrix has trace 6, determinant 6, and its three principal \\(2\\times2\\) minors sum to 11. Find its eigenvalues.",
+  "back": "<b>Answer:</b> \\(\\lambda=1,2,3\\).<br><b>Structure:</b> s_eigen (characteristic polynomial from the three invariants).<br><b>Key move:</b> \\(\\det(\\lambda I-A)=\\lambda^3-(\\operatorname{tr}A)\\lambda^2+(\\textstyle\\sum\\text{minors})\\lambda-\\det A\\).<br><b>Working:</b> \\(\\lambda^3-6\\lambda^2+11\\lambda-6=(\\lambda-1)(\\lambda-2)(\\lambda-3)\\).<br><b>Sanity check:</b> \\(1+2+3=6\\) and \\(1\\cdot2\\cdot3=6\\).<br><b>Transfer:</b> \\(\\operatorname{tr}A^2=36-2\\cdot11=14=\\sum\\lambda_i^2\\), with no eigenvectors needed.",
+  "tags": [
+   "s_eigen",
+   "determinant",
+   "trace",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Three invariants of a 3 by 3 matrix (trace, sum of principal minors, determinant) fix a polynomial. Which polynomial, and what do its roots tell you about the matrix?",
+   "Use the characteristic polynomial \\(\\det(\\lambda I-A)\\). Its coefficients are the trace, the sum of the 2 by 2 principal minors and the determinant, with alternating signs. Then factor the cubic by testing small integers.",
+   "Write \\(\\det(\\lambda I-A)=\\lambda^3-6\\lambda^2+11\\lambda-\\det A\\) and substitute the stated value of \\(\\det A\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You already know \\(A^{-1}\\). You need \\((A+uv^\\top)^{-1}\\), a change to \\(A\\) of rank one. Which structure, and what triggers it?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_eigen (rank-one update; Sherman-Morrison).<br><b>Trigger:</b> the change is an outer product \\(uv^\\top\\), living in a one-dimensional subspace.<br><b>Key move:</b> \\((A+uv^\\top)^{-1}=A^{-1}-\\dfrac{A^{-1}uv^\\top A^{-1}}{1+v^\\top A^{-1}u}\\); also \\(\\det(A+uv^\\top)=\\det A\\,(1+v^\\top A^{-1}u)\\).<br><b>Answer:</b> the formula above, costing \\(O(n^2)\\) rather than a fresh \\(O(n^3)\\) inverse.",
+  "tags": [
+   "s_eigen",
+   "sherman_morrison",
+   "matrix_inverse",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "For \\(n=4\\), let \\(J\\) be the all-ones matrix. Compute \\(\\det(I+J)\\) and \\((I+J)^{-1}\\).",
+  "back": "<b>Answer:</b> \\(\\det(I+J)=5\\); \\((I+J)^{-1}=I-\\tfrac15J\\).<br><b>Structure:</b> s_eigen (rank-one update of \\(I\\)).<br><b>Key move:</b> determinant lemma \\(\\det(I+\\mathbf1\\mathbf1^\\top)=1+n\\); Sherman-Morrison with \\(A=I\\).<br><b>Working:</b> \\(J^2=4J\\), so \\((I+J)(I-\\tfrac15J)=I+J-\\tfrac15J-\\tfrac45J=I\\).<br><b>Sanity check:</b> eigenvalues of \\(I+J\\) are \\(5\\) (once) and \\(1\\) (three times); product \\(5\\).<br><b>Transfer:</b> \\(I+\\sigma^2\\mathbf1\\mathbf1^\\top\\), a one-factor covariance and its inverse.",
+  "tags": [
+   "s_eigen",
+   "determinant",
+   "matrix_inverse",
+   "sherman_morrison",
+   "fmt_solve"
+  ],
+  "hints": [
+   "The matrix is the identity plus a matrix of rank one. Which structure lets you invert and take the determinant of such a matrix without a full elimination?",
+   "Write \\(J=\\mathbf 1\\mathbf 1^\\top\\). A rank-one update of \\(I\\) has a closed-form inverse and determinant (Sherman-Morrison and the matrix determinant lemma), with a scalar that involves \\(\\mathbf 1^\\top\\mathbf 1\\).",
+   "Set \\(u=v=\\mathbf 1\\) in \\((I+uv^\\top)^{-1}=I-\\dfrac{uv^\\top}{1+v^\\top u}\\) and write the scalar \\(1+v^\\top u\\) in terms of \\(n\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X=\\begin{pmatrix}1&0\\\\1&1\\\\1&2\\end{pmatrix}\\) and \\(P=X(X^\\top X)^{-1}X^\\top\\). Find the diagonal of \\(P\\), and \\(\\operatorname{tr}P\\).",
+  "back": "<b>Answer:</b> \\(\\operatorname{diag}P=(\\tfrac56,\\tfrac13,\\tfrac56)\\); \\(\\operatorname{tr}P=2\\).<br><b>Structure:</b> s_eigen (projection: symmetric and idempotent, eigenvalues 0 or 1).<br><b>Key move:</b> \\(P_{ii}=x_i^\\top(X^\\top X)^{-1}x_i\\) (leverage), and \\(\\operatorname{tr}P=\\operatorname{rank}P=2\\).<br><b>Working:</b> \\(X^\\top X=\\begin{pmatrix}3&3\\\\3&5\\end{pmatrix}\\), inverse \\(\\tfrac16\\begin{pmatrix}5&-3\\\\-3&3\\end{pmatrix}\\); rows \\((1,0)\\to\\tfrac56\\), \\((1,1)\\to\\tfrac13\\), \\((1,2)\\to\\tfrac56\\).<br><b>Sanity check:</b> diagonal sums to \\(p=2\\); each entry in \\([0,1]\\).<br><b>Transfer:</b> regression leverages (hat-matrix diagonal).",
+  "tags": [
+   "s_eigen",
+   "projection",
+   "regression",
+   "fmt_solve"
+  ],
+  "hints": [
+   "\\(P\\) maps every vector onto the column space of \\(X\\). Which two properties of such a matrix let you read its diagonal and trace without multiplying out \\(P\\)?",
+   "Each diagonal entry is \\(P_{ii}=x_i^\\top(X^\\top X)^{-1}x_i\\), where \\(x_i^\\top\\) is row \\(i\\) of \\(X\\). The inverse of \\(X^\\top X\\) is the only nontrivial step.",
+   "First compute \\(X^\\top X\\) entry by entry, then write \\(P_{11}=(1,0)\\,(X^\\top X)^{-1}(1,0)^\\top\\)."
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The 2-norm condition number of an invertible matrix is {{c1::\\(\\kappa(A)=\\sigma_{\\max}/\\sigma_{\\min}\\)}}, from the SVD \\(A=U\\Sigma V^\\top\\). A relative error \\(\\delta\\) in \\(b\\) can change \\(x=A^{-1}b\\) by a relative amount up to {{c2::\\(\\kappa(A)\\,\\delta\\)}}.",
+  "back": "The SVD gives directions and stretches; \\(\\kappa\\) large means near-singular, so solving amplifies noise. Fails for exact singularity (\\(\\kappa=\\infty\\)), for non-normal matrices where eigenvalues mislead (use singular values), and for badly scaled columns (rescale first).",
+  "tags": [
+   "s_eigen",
+   "svd",
+   "condition_number",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compute the 2-norm condition number of \\(A=\\begin{pmatrix}1&1\\\\1&1+\\varepsilon\\end{pmatrix}\\) for \\(\\varepsilon=10^{-4}\\), to one significant figure, and say what it means for solving \\(Ax=b\\).",
+  "back": "<b>Answer:</b> \\(\\kappa\\approx4\\times10^4\\).<br><b>Structure:</b> s_eigen (symmetric positive definite, so singular values equal eigenvalues).<br><b>Key move:</b> trace \\(2+\\varepsilon\\), determinant \\(\\varepsilon\\); \\(\\lambda_\\pm=\\tfrac{2+\\varepsilon\\pm\\sqrt{4+\\varepsilon^2}}{2}\\).<br><b>Working:</b> \\(\\lambda_+\\approx2\\), \\(\\lambda_-\\approx\\varepsilon/2\\), so \\(\\kappa\\approx4/\\varepsilon\\).<br><b>Sanity check:</b> \\(\\lambda_+\\lambda_-=\\varepsilon\\). A relative error of \\(10^{-6}\\) in \\(b\\) can become about \\(4\\%\\) in \\(x\\).<br><b>Transfer:</b> nearly collinear regressors in OLS.",
+  "tags": [
+   "s_eigen",
+   "condition_number",
+   "ill_conditioned",
+   "fmt_solve"
+  ],
+  "hints": [
+   "For a symmetric positive-definite matrix, the 2-norm condition number is a ratio of two numbers attached to the matrix. Which two numbers, and how can you get them cheaply for a 2 by 2 matrix?",
+   "For a symmetric positive-definite matrix the singular values equal the eigenvalues. For a 2 by 2 matrix, the sum and product of the eigenvalues come from the trace and determinant, so a quadratic gives both.",
+   "Write \\(\\lambda^2-(\\operatorname{tr}A)\\lambda+\\det A=0\\) with \\(\\operatorname{tr}A=2+\\varepsilon\\), and compute \\(\\det A\\) for the given matrix."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Do there exist three vectors \\(u,v,w\\) in some \\(\\mathbb R^n\\), each of length 1, with \\(u\\cdot v=u\\cdot w=v\\cdot w=-0.6\\)?",
+  "back": "<b>Reveals the classic:</b> the valid-correlation-matrix bound for three equicorrelated variables.<br><b>Mapping:</b> the Gram matrix of the vectors is a correlation matrix with \\(\\rho=-0.6\\); vectors exist iff the Gram matrix is PSD.<br><b>Key move:</b> eigenvalues of \\((1-\\rho)I+\\rho J\\) for \\(n=3\\) are \\(1+2\\rho\\) and \\(1-\\rho\\) (twice). \\(1+2(-0.6)=-0.2<0\\).<br><b>Answer:</b> No. The bound is \\(\\rho\\ge-\\tfrac12\\).",
+  "tags": [
+   "s_eigen",
+   "psd",
+   "gram_matrix",
+   "twin",
+   "fmt_twin"
+  ],
+  "hints": [
+   "Can three unit vectors be placed so that every pair has the same inner product? Which common values are compatible with that, and how would you test them all at once?",
+   "Structural feature: the pairwise inner products form a symmetric table with ones on the diagonal. Check how that table acts on the vector of all ones, and whether the result can be negative.",
+   "Setup: write the table of inner products as a 3-by-3 symmetric matrix and compute its quadratic form at the all-ones vector to test whether it can be valid."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Find the point \\(x\\in\\mathbb R^3\\) of smallest Euclidean length satisfying \\(x_1+2x_2+3x_3=1\\). Give \\(\\lVert x\\rVert^2\\).",
+  "back": "<b>Reveals the classic:</b> minimum-variance portfolio with identity covariance, \\(\\min w^\\top\\Sigma w\\) s.t. \\(\\mathbf1^\\top w=1\\), with \\(\\Sigma=I\\) and \\(\\mathbf1\\) replaced by \\(a=(1,2,3)\\).<br><b>Mapping:</b> \\(\\Sigma\\to I\\), \\(\\mathbf1\\to a\\), \\(w\\to x\\); closed form \\(x^*=\\Sigma^{-1}a/(a^\\top\\Sigma^{-1}a)\\).<br><b>Key move:</b> Lagrange: \\(2x=\\lambda a\\), so \\(x\\propto a\\), then impose the constraint.<br><b>Answer:</b> \\(x^*=\\tfrac1{14}(1,2,3)\\); \\(\\lVert x^*\\rVert^2=\\tfrac1{14}\\approx0.0714\\).<br><b>Sanity check:</b> Cauchy-Schwarz gives \\(\\lVert x\\rVert^2\\ge1/\\lVert a\\rVert^2=1/14\\), with equality at \\(x^*\\).",
+  "tags": [
+   "s_lagrange",
+   "min_norm",
+   "linear_constraint",
+   "twin",
+   "fmt_twin"
+  ],
+  "hints": [
+   "You want to minimise a length subject to one linear equation. At a minimiser, how must the gradient of the length relate to the gradient of the constraint, and what does that say about the direction of \\(x\\)?",
+   "Introduce a multiplier \\(\\lambda\\) for the constraint \\(a^\\top x=1\\) with \\(a=(1,2,3)\\), and differentiate \\(\\lVert x\\rVert^2-\\lambda(a^\\top x-1)\\) with respect to \\(x\\).",
+   "Stationarity gives \\(2x=\\lambda a\\). Substitute this into \\(a^\\top x=1\\) and solve for \\(\\lambda\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Minimise \\(w^\\top\\Sigma w\\) over \\(w\\in\\mathbb R^n\\) subject to \\(\\mathbf1^\\top w=1\\), with \\(\\Sigma\\) positive definite. Which structure, and what triggers it?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_lagrange.<br><b>Trigger:</b> quadratic objective, one linear equality constraint, convex objective (PD), so the stationary point is the global minimum.<br><b>Key move:</b> stationarity gives \\(\\Sigma w=\\lambda\\mathbf1\\).<br><b>Answer:</b> \\(w^*=\\dfrac{\\Sigma^{-1}\\mathbf1}{\\mathbf1^\\top\\Sigma^{-1}\\mathbf1}\\); minimum variance \\(\\dfrac1{\\mathbf1^\\top\\Sigma^{-1}\\mathbf1}\\). With \\(\\Sigma=I\\), \\(w^*=\\mathbf1/n\\).",
+  "tags": [
+   "s_lagrange",
+   "portfolio",
+   "min_variance",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: two assets with \\(\\sigma_1=0.2\\), \\(\\sigma_2=0.5\\), \\(\\rho=0.5\\). The unconstrained minimum-variance weights are \\((\\tfrac{20}{19},-\\tfrac1{19})\\). Now impose \\(w_i\\ge0\\). What is the new minimum-variance portfolio?",
+  "back": "<b>What breaks:</b> the Lagrange solution assumes an interior stationary point. Here \\(w_2<0\\), so the bound is active and the answer sits on the boundary.<br><b>Fix:</b> on \\(w=(t,1-t)\\), \\(V(t)\\) has derivative \\(-0.02\\) at \\(t=1\\), so variance falls as \\(t\\to1\\). Check the corners, or add the KKT multiplier for \\(w_2\\ge0\\).<br><b>Answer:</b> \\(w=(1,0)\\); variance \\(0.04\\), volatility \\(0.2\\). The constraint costs volatility from \\(0.1987\\) to \\(0.2\\).",
+  "tags": [
+   "s_lagrange",
+   "portfolio",
+   "min_variance",
+   "long_only",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "The unconstrained answer has a negative weight. Which inequality constraint is violated, and where on the line \\(w_1+w_2=1\\) must the minimum then sit?",
+   "Parametrise the feasible set as \\(w=(t,1-t)\\) with both weights nonnegative, and study the variance as a function of \\(t\\) on that interval. Check its derivative at the endpoints.",
+   "Write \\(V(t)=\\sigma_1^2t^2+\\sigma_2^2(1-t)^2+2\\rho\\sigma_1\\sigma_2\\,t(1-t)\\) with the given values, and differentiate it at \\(t=1\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: MINVAR 1/3]</b> Two assets, \\(\\sigma_1=0.2\\), \\(\\sigma_2=0.3\\), \\(\\rho=0.5\\), weights summing to 1, shorting allowed. Find the minimum-variance weights and the minimum volatility.",
+  "back": "<b>Answer:</b> \\(w=(\\tfrac67,\\tfrac17)\\); \\(\\sigma_{\\min}=\\sqrt{27/700}\\approx0.1964\\).<br><b>Structure:</b> s_lagrange; key move \\(\\Sigma^{-1}\\mathbf1\\propto(6,1)\\).<br><b>Working:</b> \\(\\Sigma=\\begin{pmatrix}0.04&0.03\\\\0.03&0.09\\end{pmatrix}\\), \\(\\det\\Sigma=0.0027\\), \\(\\Sigma^{-1}\\mathbf1=\\tfrac1{0.0027}(0.06,0.01)\\); \\(\\sigma^2_{\\min}=0.0027/0.07=27/700\\).<br><b>Sanity check:</b> \\(0.196<0.2\\), below both asset volatilities.",
+  "tags": [
+   "s_lagrange",
+   "portfolio",
+   "min_variance",
+   "chain",
+   "fmt_chain"
+  ],
+  "hints": [
+   "Minimise a quadratic form over weights that sum to one. Given that the sum-to-one constraint only fixes the scale of the weights, what is the natural direction for them?",
+   "Stationarity gives \\(\\Sigma w=\\lambda\\mathbf 1\\), so \\(w\\) is proportional to \\(\\Sigma^{-1}\\mathbf 1\\). Solve \\(\\Sigma y=\\mathbf 1\\), then normalise \\(y\\) so its entries sum to one.",
+   "Write \\(\\Sigma=\\begin{pmatrix}0.04&0.03\\\\0.03&0.09\\end{pmatrix}\\) and solve \\(\\Sigma y=\\mathbf 1\\) as two linear equations in \\(y_1,y_2\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: MINVAR 2/3]</b> Same two assets (\\(\\sigma_1=0.2\\), \\(\\sigma_2=0.3\\)), now with \\(\\rho\\) varying. Give the weight on asset 1 at \\(\\rho=0\\), and its limit as \\(\\rho\\to1\\).",
+  "back": "<b>Answer:</b> \\(w_1(0)=\\tfrac9{13}\\approx0.692\\); \\(w_1(\\rho\\to1)=3\\), so \\(w_2=-2\\).<br><b>Structure:</b> s_lagrange; \\(w_1=\\dfrac{\\sigma_2^2-\\rho\\sigma_1\\sigma_2}{\\sigma_1^2+\\sigma_2^2-2\\rho\\sigma_1\\sigma_2}\\).<br><b>Working:</b> at \\(\\rho=0\\), \\(0.09/0.13\\). At \\(\\rho=1\\), numerator \\(0.03\\), denominator \\(0.01\\).<br><b>Sanity check:</b> at \\(\\rho=1\\) a zero-variance long-short combination \\((\\sigma_2,-\\sigma_1)/(\\sigma_2-\\sigma_1)=(3,-2)\\) exists, so weights blow up as \\(\\rho\\to1\\).",
+  "tags": [
+   "s_lagrange",
+   "portfolio",
+   "correlation",
+   "chain",
+   "fmt_chain"
+  ],
+  "hints": [
+   "How does the optimal weight depend on the covariance between the two assets? Consider the two extreme cases \\(\\rho=0\\) and \\(\\rho\\to1\\) separately.",
+   "Use the two-asset minimum-variance formula \\(w_1=\\dfrac{\\sigma_2^2-\\rho\\sigma_1\\sigma_2}{\\sigma_1^2+\\sigma_2^2-2\\rho\\sigma_1\\sigma_2}\\), which comes from \\(\\Sigma w\\propto\\mathbf 1\\), and evaluate it at each extreme.",
+   "Start with \\(\\rho=0\\): substitute \\(\\sigma_1=0.2\\) and \\(\\sigma_2=0.3\\) into the numerator and denominator of the formula."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: MINVAR 3/3]</b> Generalise to \\(n\\) assets with covariance \\(\\Sigma\\). Give the minimum-variance weights and variance. Then apply to uncorrelated assets with volatilities \\(0.1,0.2,0.4\\).",
+  "back": "<b>Answer:</b> \\(w^*=\\dfrac{\\Sigma^{-1}\\mathbf1}{\\mathbf1^\\top\\Sigma^{-1}\\mathbf1}\\), \\(\\sigma^2_{\\min}=\\dfrac1{\\mathbf1^\\top\\Sigma^{-1}\\mathbf1}\\). Diagonal case: \\(w_i\\propto1/\\sigma_i^2\\). Example: \\(w=(0.762,0.190,0.048)\\), \\(\\sigma_{\\min}\\approx0.0873\\).<br><b>Structure:</b> s_lagrange.<br><b>Key move:</b> solve \\(\\Sigma y=\\mathbf1\\), then normalise \\(y\\); do not invert \\(\\Sigma\\) for large \\(n\\).<br><b>Sanity check:</b> \\(0.0873<0.1\\), below the smallest asset volatility. Adding assets cannot raise the minimum (zero weight recovers the old set).",
+  "tags": [
+   "s_lagrange",
+   "portfolio",
+   "min_variance",
+   "chain",
+   "fmt_chain"
+  ],
+  "hints": [
+   "Now there are \\(n\\) assets and the covariance is a matrix. What does the solution look like when the covariance is diagonal, and what combination of \\(\\Sigma\\) and \\(\\mathbf 1\\) gives the general answer?",
+   "Use the Lagrangian for \\(\\min w^\\top\\Sigma w\\) subject to \\(\\mathbf 1^\\top w=1\\). Stationarity gives \\(\\Sigma w=\\lambda\\mathbf 1\\), so solve \\(\\Sigma y=\\mathbf 1\\) and normalise.",
+   "Write \\(L=w^\\top\\Sigma w-\\lambda(\\mathbf 1^\\top w-1)\\) and set \\(\\nabla_w L=0\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: GAUSS 1/4]</b> Base: compute \\(I=\\int_{-\\infty}^{\\infty}e^{-x^2/2}\\,dx\\).",
+  "back": "<b>Answer:</b> \\(I=\\sqrt{2\\pi}\\approx2.5066\\).<br><b>Structure:</b> s_change_of_measure (product of two independent Gaussians is rotation-invariant).<br><b>Key move:</b> square the integral, change to polar coordinates.<br><b>Working:</b> \\(I^2=\\iint e^{-(x^2+y^2)/2}dx\\,dy=\\int_0^{2\\pi}\\!\\!\\int_0^\\infty e^{-r^2/2}r\\,dr\\,d\\theta=2\\pi\\).<br><b>Sanity check:</b> \\(\\tfrac1{\\sqrt{2\\pi}}e^{-x^2/2}\\) then integrates to 1.",
+  "tags": [
+   "s_change_of_measure",
+   "gaussian_integral",
+   "polar_coordinates",
+   "chain",
+   "fmt_chain"
+  ],
+  "hints": [
+   "The integrand has no elementary antiderivative, so direct substitution fails. What trick turns a one-dimensional integral into a two-dimensional one that is easier to evaluate?",
+   "Square the integral and write it as a double integral over the plane. The integrand depends only on \\(x^2+y^2\\), so switch to polar coordinates.",
+   "Write \\(I^2=\\iint e^{-(x^2+y^2)/2}\\,dx\\,dy\\) and substitute \\(x=r\\cos\\theta,\\ y=r\\sin\\theta\\), including the Jacobian."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: GAUSS 2/4]</b> Follow-up: compute \\(\\int_{-\\infty}^{\\infty}x^2e^{-x^2/2}\\,dx\\) from the base result, without a table.",
+  "back": "<b>Answer:</b> \\(\\sqrt{2\\pi}\\).<br><b>Structure:</b> s_recursion (integration by parts lowers the power).<br><b>Key move:</b> \\(x^2e^{-x^2/2}=x\\cdot(xe^{-x^2/2})\\), and \\(\\tfrac{d}{dx}e^{-x^2/2}=-xe^{-x^2/2}\\).<br><b>Working:</b> \\(\\int x\\cdot(xe^{-x^2/2})dx=[-xe^{-x^2/2}]_{-\\infty}^{\\infty}+\\int e^{-x^2/2}dx=\\sqrt{2\\pi}\\).<br><b>Sanity check:</b> \\(E[Z^2]=1\\) for a standard normal.",
+  "tags": [
+   "s_recursion",
+   "gaussian_integral",
+   "moments",
+   "chain",
+   "fmt_chain"
+  ],
+  "hints": [
+   "The base integral is known. Can you split \\(x^2e^{-x^2/2}\\) into a product in which one factor is the derivative of something simple?",
+   "Use integration by parts with \\(u=x\\) and \\(dv=x e^{-x^2/2}dx\\), together with \\(\\tfrac{d}{dx}e^{-x^2/2}=-xe^{-x^2/2}\\).",
+   "Write \\(\\int x^2e^{-x^2/2}dx=\\int x\\cdot(xe^{-x^2/2})\\,dx\\) and use the antiderivative \\(-e^{-x^2/2}\\) of \\(xe^{-x^2/2}\\) in the parts formula."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: GAUSS 3/4]</b> Generalise: for \\(Z\\sim N(0,1)\\), find \\(E[Z^{2n}]\\) and relate it to \\(\\int x^{2n}e^{-x^2/2}\\,dx\\).",
+  "back": "<b>Answer:</b> \\(E[Z^{2n}]=(2n-1)!!=\\dfrac{(2n)!}{2^nn!}\\); \\(\\int x^{2n}e^{-x^2/2}dx=(2n-1)!!\\sqrt{2\\pi}\\).<br><b>Structure:</b> s_recursion.<br><b>Key move:</b> the same parts step: \\(\\int x^{2n}e^{-x^2/2}=(2n-1)\\int x^{2n-2}e^{-x^2/2}\\).<br><b>Working:</b> \\(E[Z^{2n}]=(2n-1)E[Z^{2n-2}]\\), \\(E[Z^0]=1\\); \\(n=2\\) gives \\(E[Z^4]=3\\).<br><b>Sanity check:</b> \\(E[Z^4]=3\\) is the normal kurtosis; fatter tails give more.",
+  "tags": [
+   "s_recursion",
+   "gaussian_integral",
+   "moments",
+   "chain",
+   "fmt_chain"
+  ],
+  "hints": [
+   "Each even power should reduce to a lower one by the same mechanism as before. What does repeating that step produce, and what is the base case?",
+   "Integration by parts with \\(u=x^{2n-1}\\) and \\(dv=x\\,e^{-x^2/2}dx\\) gives a recursion between consecutive even powers.",
+   "Write \\(J_n=\\int x^{2n}e^{-x^2/2}dx\\) and apply parts to \\(x^{2n-1}\\cdot xe^{-x^2/2}\\) to relate \\(J_n\\) to \\(J_{n-1}\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: GAUSS 4/4]</b> Edge case: for \\(a>0\\), compute \\(\\int_{-\\infty}^{\\infty}e^{-ax^2+bx}\\,dx\\). Evaluate at \\(a=1,b=2\\).",
+  "back": "<b>Answer:</b> \\(\\sqrt{\\pi/a}\\,e^{b^2/(4a)}\\); at \\(a=1,b=2\\): \\(\\sqrt\\pi\\,e\\approx4.8180\\).<br><b>Structure:</b> s_change_of_measure (shift to complete the square).<br><b>Key move:</b> \\(-ax^2+bx=-a\\big(x-\\tfrac b{2a}\\big)^2+\\tfrac{b^2}{4a}\\), then the base integral.<br><b>Sanity check:</b> \\(b=0\\) returns \\(\\sqrt{\\pi/a}\\). With \\(a=\\tfrac12\\), the formula gives \\(\\sqrt{2\\pi}e^{b^2/2}\\), the standard normal MGF.",
+  "tags": [
+   "s_change_of_measure",
+   "gaussian_integral",
+   "completing_square",
+   "chain",
+   "fmt_chain"
+  ],
+  "hints": [
+   "The exponent is a quadratic in \\(x\\) with a linear term. Can you rewrite it so that the base Gaussian integral appears after a shift?",
+   "Complete the square in the exponent, then shift the variable so the squared term is centred at zero.",
+   "Write \\(-ax^2+bx=-a\\big(x-\\tfrac{b}{2a}\\big)^2+\\text{(remainder)}\\) and identify the remainder."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Evaluate \\(\\int_0^\\infty x^n e^{-x}\\,dx\\) for integer \\(n\\ge0\\). Which structure, and what triggers it?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_recursion (integration by parts lowers \\(n\\) by one).<br><b>Trigger:</b> a polynomial times \\(e^{-x}\\) on a half-line: the Gamma integral.<br><b>Key move:</b> \\(I_n=n\\,I_{n-1}\\) with \\(I_0=1\\).<br><b>Answer:</b> \\(I_n=n!\\); \\(I_5=120\\).",
+  "tags": [
+   "s_recursion",
+   "gamma_function",
+   "moments",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A component's lifetime is exponential with rate 1. What is \\(E[X^5]\\)?",
+  "back": "<b>Reveals the classic:</b> \\(\\int_0^\\infty x^ne^{-x}dx=n!\\), since the Exp(1) density is \\(e^{-x}\\).<br><b>Mapping:</b> \\(E[X^n]=\\int_0^\\infty x^ne^{-x}dx\\).<br><b>Key move:</b> integration by parts, \\(I_n=nI_{n-1}\\).<br><b>Answer:</b> \\(E[X^5]=5!=120\\).<br><b>Sanity check:</b> \\(E[X]=1=1!\\), \\(E[X^2]=2\\) gives variance \\(1\\).",
+  "tags": [
+   "s_recursion",
+   "gamma_function",
+   "exponential_distribution",
+   "twin",
+   "fmt_twin"
+  ],
+  "hints": [
+   "Write \\(E[X^5]\\) as an integral against the density. What is the integrand's form, and over which range is it taken?",
+   "Structural feature: the density is a single exponential, so the moment of each power can be related to the moment of the next lower power. Find that relation from the density.",
+   "Setup: write \\(E[X^5]\\) as an integral of \\(x^5\\) against the density, and relate it to the same integral with power 4."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Compute \\(\\Gamma(\\tfrac12)=\\int_0^\\infty x^{-1/2}e^{-x}\\,dx\\) and check it against the Gaussian integral.",
+  "back": "<b>Answer:</b> \\(\\Gamma(\\tfrac12)=\\sqrt\\pi\\approx1.7725\\).<br><b>Structure:</b> s_change_of_measure (substitute \\(x=t^2\\)).<br><b>Key move:</b> \\(x=t^2\\), \\(dx=2t\\,dt\\), so \\(x^{-1/2}dx=2\\,dt\\).<br><b>Working:</b> \\(\\Gamma(\\tfrac12)=2\\int_0^\\infty e^{-t^2}dt=\\int_{-\\infty}^\\infty e^{-t^2}dt=\\sqrt\\pi\\), by the Gaussian integral with \\(a=1\\).<br><b>Sanity check:</b> \\(\\Gamma(\\tfrac32)=\\tfrac12\\sqrt\\pi\\) via \\(\\Gamma(x+1)=x\\Gamma(x)\\).<br><b>Transfer:</b> \\(\\Gamma(n+\\tfrac12)\\) for any integer \\(n\\) follows by the same recursion.",
+  "tags": [
+   "s_change_of_measure",
+   "gamma_function",
+   "gaussian_integral",
+   "fmt_solve"
+  ],
+  "hints": [
+   "The Gamma integral at a half-integer looks unfamiliar. Is there a change of variable that turns \\(x^{-1/2}\\) into something you already know?",
+   "Substitute \\(x=t^2\\) to remove the fractional power. The integral then becomes a Gaussian integral, which you have already evaluated.",
+   "Write \\(x=t^2\\), so \\(dx=2t\\,dt\\), and rewrite \\(x^{-1/2}e^{-x}\\,dx\\) entirely in terms of \\(t\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Evaluate \\(\\int_0^1\\ln x\\,dx\\), then \\(\\int_0^1x^n\\ln x\\,dx\\) for integer \\(n\\ge0\\).",
+  "back": "<b>Answer:</b> \\(-1\\); and \\(\\int_0^1x^n\\ln x\\,dx=-\\dfrac1{(n+1)^2}\\).<br><b>Structure:</b> s_recursion (integration by parts with \\(u=\\ln x\\)).<br><b>Key move:</b> \\(u=\\ln x\\), \\(dv=x^ndx\\); the boundary term vanishes at 0.<br><b>Working:</b> \\(\\big[\\tfrac{x^{n+1}}{n+1}\\ln x\\big]_0^1-\\tfrac1{n+1}\\int_0^1x^ndx=-\\tfrac1{(n+1)^2}\\).<br><b>Sanity check:</b> \\(\\ln x<0\\) on \\((0,1)\\); \\(n=0\\) matches \\([x\\ln x-x]_0^1=-1\\).<br><b>Transfer:</b> \\(\\int_0^1 x^n(\\ln x)^k\\,dx\\) by repeated parts.",
+  "tags": [
+   "s_recursion",
+   "integration_by_parts",
+   "logarithm",
+   "fmt_solve"
+  ],
+  "hints": [
+   "The integrand is a logarithm times a power. Which standard technique handles a product of two different function types?",
+   "Integration by parts with \\(u=\\ln x\\), whose derivative is simpler, and \\(dv=x^n\\,dx\\). Check the boundary term at \\(x=0\\) separately.",
+   "Write \\(\\int_0^1x^n\\ln x\\,dx=\\big[\\tfrac{x^{n+1}}{n+1}\\ln x\\big]_0^1-\\int_0^1\\tfrac{x^{n+1}}{n+1}\\cdot\\tfrac1x\\,dx\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for integration by parts, and when does it fail to simplify?",
+  "back": "<b>Triggers:</b> the integrand is a product of two different function types. Use LIATE to choose \\(u\\): log, inverse trig, algebraic, trig, exponential. Differentiate \\(u\\), integrate \\(dv\\).<br><b>Move:</b> \\(\\int u\\,dv=uv-\\int v\\,du\\).<br><b>Canonical example:</b> \\(\\int xe^x\\,dx=(x-1)e^x+C\\); \\(\\int_0^1xe^x\\,dx=1\\).<br><b>Failure mode:</b> each step returns a same-type integral, e.g. \\(\\int e^x\\sin x\\,dx\\) cycles back to itself. Apply parts twice and solve the resulting linear equation for the unknown integral.",
+  "tags": [
+   "s_recursion",
+   "integration_by_parts",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Which is larger, \\(e^{\\pi}\\) or \\(\\pi^{e}\\)? Decide without a calculator.<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_extremal (the function \\(f(x)=\\ln x/x\\) and where it peaks).<br><b>Trigger:</b> two powers with variable base and exponent; logs reduce it to comparing \\(\\ln x/x\\) at two points.<br><b>Key move:</b> \\(e^\\pi>\\pi^e\\iff f(\\pi)<f(e)\\); \\(f'(x)=(1-\\ln x)/x^2\\), so \\(f\\) peaks at \\(e\\).<br><b>Answer:</b> \\(e^\\pi\\) is larger (\\(23.14\\) vs \\(22.46\\)). The same rule gives \\(e^3>3^e\\).",
+  "tags": [
+   "s_extremal",
+   "comparison",
+   "logarithm",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Find the minimum value of \\(x^x\\) for \\(x>0\\).",
+  "back": "<b>Answer:</b> \\(\\min x^x=e^{-1/e}\\approx0.6922\\), at \\(x=1/e\\).<br><b>Structure:</b> s_extremal (variable base and exponent; take logs).<br><b>Key move:</b> \\(\\ln y=x\\ln x\\), and \\(\\tfrac{d}{dx}(x\\ln x)=\\ln x+1=0\\).<br><b>Working:</b> second derivative \\(1/x>0\\), so a minimum; \\(y=e^{x\\ln x}=e^{-1/e}\\).<br><b>Sanity check:</b> \\(x^x\\to1\\) as \\(x\\to0^+\\) and \\(x^x=1\\) at \\(x=1\\); \\(0.5^{0.5}=0.707>0.692\\).<br><b>Transfer:</b> \\(x^{1/x}\\) peaks at \\(x=e\\).",
+  "tags": [
+   "s_extremal",
+   "calculus",
+   "logarithm",
+   "fmt_solve"
+  ],
+  "hints": [
+   "The variable is both base and exponent. What transformation would turn it into something you can differentiate easily?",
+   "Take logarithms: let \\(y=x^x\\) and minimise \\(\\ln y\\) instead, which has the same minimiser. Then set the derivative to zero.",
+   "Write \\(\\ln y=x\\ln x\\) and compute \\(\\dfrac{d}{dx}(x\\ln x)\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Which is larger, \\(2^{100}\\) or \\(3^{63}\\)? Estimate by how much.<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_fermi (order-of-magnitude comparison via logs).<br><b>Trigger:</b> two huge powers with different bases.<br><b>Key move:</b> compare \\(100\\log_{10}2\\) with \\(63\\log_{10}3\\), using \\(\\log_{10}2\\approx0.30103\\), \\(\\log_{10}3\\approx0.47712\\).<br><b>Answer:</b> \\(2^{100}\\) is larger, by about \\(1.1\\times\\) (\\(30.103\\) vs \\(30.059\\) in \\(\\log_{10}\\)). Exact: \\(1.27\\times10^{30}\\) vs \\(1.14\\times10^{30}\\).",
+  "tags": [
+   "s_fermi",
+   "mental_math",
+   "logarithm",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Find \\(\\lim_{n\\to\\infty}(1+\\tfrac1n)^n\\), and estimate \\((1+\\tfrac1{1000})^{1000}\\) to two decimal places.<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_taylor (expand \\(\\ln(1+x)\\) near 0).<br><b>Trigger:</b> \\((1+a_n)^{m_n}\\) with \\(a_n\\to0\\) and \\(m_na_n\\) finite.<br><b>Key move:</b> \\(n\\ln(1+\\tfrac1n)=1-\\tfrac1{2n}+O(n^{-2})\\).<br><b>Answer:</b> the limit is \\(e\\); \\((1.001)^{1000}\\approx2.72\\) (more precisely \\(e(1-\\tfrac1{2000})=2.71692\\)).",
+  "tags": [
+   "s_taylor",
+   "limits",
+   "compound_interest",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: \\((1+\\tfrac1n)^n\\to e\\). Now consider \\((1+\\tfrac1n)^{n^2}\\). Find the limit as \\(n\\to\\infty\\), and say what in the argument breaks.",
+  "back": "<b>What breaks:</b> the limit \\(e\\) relies on the exponent \\(n\\) cancelling the \\(1/n\\) in \\(\\ln(1+\\tfrac1n)\\approx\\tfrac1n\\). With exponent \\(n^2\\), \\(n^2\\ln(1+\\tfrac1n)\\approx n\\to\\infty\\).<br><b>Answer:</b> \\(\\infty\\). Check: \\(n=10\\) gives \\(1.1^{100}\\approx1.4\\times10^4\\).<br><b>Fix:</b> \\((1+\\tfrac{a}{n^2})^{n^2}\\to e^a\\); in general \\((1+\\tfrac an)^{bn}\\to e^{ab}\\).",
+  "tags": [
+   "s_taylor",
+   "limits",
+   "growth_rate",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "Here the exponent grows with \\(n\\) at a different rate than before. What happens to the product of the exponent and \\(\\ln(1+1/n)\\) as \\(n\\) grows?",
+   "Take logs and use \\(\\ln(1+x)\\approx x\\) for small \\(x\\) to estimate \\(n^2\\ln(1+\\tfrac1n)\\).",
+   "Write \\(\\ln L_n=n^2\\ln\\!\\left(1+\\tfrac1n\\right)\\) and expand the logarithm to first order in \\(1/n\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Use Stirling's formula \\(n!\\approx\\sqrt{2\\pi n}\\,(n/e)^n\\) to estimate \\(\\binom{100}{50}/2^{100}\\), the probability of exactly 50 heads in 100 fair flips. Compare with the exact value.",
+  "back": "<b>Answer:</b> \\(\\approx\\dfrac1{\\sqrt{50\\pi}}\\approx0.0798\\). Exact: \\(0.0796\\).<br><b>Structure:</b> s_clt_normal_approx (central binomial mass equals the normal peak height).<br><b>Key move:</b> \\(\\binom{2n}{n}\\approx\\dfrac{4^n}{\\sqrt{\\pi n}}\\), from \\(\\dfrac{\\sqrt{4\\pi n}}{2\\pi n}\\cdot4^n\\).<br><b>Working:</b> with \\(n=50\\), \\(1/\\sqrt{50\\pi}=0.07979\\).<br><b>Sanity check:</b> normal peak \\(1/\\sqrt{2\\pi\\cdot25}\\) with variance 25 is the same number. The Stirling estimate is 0.2% high.<br><b>Transfer:</b> the probability of a random walk returning to 0 after \\(2n\\) steps.",
+  "tags": [
+   "s_clt_normal_approx",
+   "stirling",
+   "binomial",
+   "fmt_solve"
+  ],
+  "hints": [
+   "The probability is a ratio of factorials. Which asymptotic formula applies to factorials of large numbers, and which factorials cancel?",
+   "Substitute Stirling's formula for \\(100!\\), \\(50!\\) and the second \\(50!\\) in \\(\\binom{100}{50}/2^{100}\\). Many factors \\(\\sqrt{2\\pi n}\\) and \\((n/e)^n\\) cancel or combine.",
+   "Write \\(\\dfrac{\\binom{100}{50}}{2^{100}}=\\dfrac{100!}{(50!)^2\\,2^{100}}\\) and substitute \\(n!\\approx\\sqrt{2\\pi n}\\,(n/e)^n\\) for each factorial."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Estimate \\(\\sqrt{101}\\) to four decimal places.<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_taylor (expansion about a nearby perfect square).<br><b>Trigger:</b> \\(a+\\varepsilon\\) with a known root \\(\\sqrt a\\) and \\(\\varepsilon/a\\) small.<br><b>Key move:</b> \\(\\sqrt{100+1}=10\\sqrt{1+0.01}\\approx10(1+0.005-0.0000125)\\).<br><b>Answer:</b> \\(\\sqrt{101}\\approx10.0499\\). The first-order \\(10.05\\) overshoots, as \\(\\sqrt{\\cdot}\\) is concave.",
+  "tags": [
+   "s_taylor",
+   "sqrt",
+   "approximation",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Estimate \\(\\ln1.05\\) to four significant figures, and say which side the estimate lies on.<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_taylor (series of \\(\\ln(1+x)\\) at 0).<br><b>Trigger:</b> \\(\\ln\\) of a number close to 1.<br><b>Key move:</b> \\(\\ln(1+x)=x-\\tfrac{x^2}2+\\tfrac{x^3}3-\\dots\\), \\(x=0.05\\); the series alternates, so partial sums bracket the value.<br><b>Answer:</b> \\(\\ln1.05\\approx0.04879\\). The two-term sum \\(0.04875\\) is below; adding \\(x^3/3\\) gives \\(0.04879\\) above.",
+  "tags": [
+   "s_taylor",
+   "logarithm",
+   "approximation",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: \\(e^{0.1}\\approx1+0.1+0.005=1.105\\). Now estimate \\(e^{-0.1}\\) the same way. What changes?",
+  "back": "<b>What breaks:</b> the structure is the same, but the cubic term \\(x^3/6\\) is negative for \\(x<0\\), so the error changes sign.<br><b>Working:</b> \\(1-0.1+0.005=0.905\\). Exact \\(e^{-0.1}=0.904837\\); the estimate is high by \\(1.6\\times10^{-4}\\). For \\(e^{0.1}\\), \\(1.105\\) was low by \\(1.7\\times10^{-4}\\).<br><b>Answer:</b> \\(e^{-0.1}\\approx0.905\\).",
+  "tags": [
+   "s_taylor",
+   "exponential",
+   "approximation",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "The Taylor polynomial of \\(e^x\\) about 0 is known. How does changing the sign of \\(x\\) affect each term of the series?",
+   "Keep the same truncated series but track the sign of each term: odd powers of \\(x\\) flip sign, even powers do not.",
+   "Write \\(e^{-0.1}\\approx1+(-0.1)+\\tfrac{(-0.1)^2}{2}+\\tfrac{(-0.1)^3}{6}\\) and evaluate each term."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Estimate \\(e^{0.1}\\) to within \\(10^{-5}\\) by Taylor's theorem. How many terms are needed?",
+  "back": "<b>Answer:</b> 4 terms (through \\(x^3/6\\)): \\(e^{0.1}\\approx1.105167\\).<br><b>Structure:</b> s_taylor.<br><b>Key move:</b> the remainder after degree \\(n\\) is \\(\\dfrac{|x|^{n+1}}{(n+1)!}e^{\\xi}\\), with \\(\\xi\\) between 0 and \\(x\\).<br><b>Working:</b> with \\(x=0.1\\), \\(n=3\\): \\(\\dfrac{10^{-4}}{24}e^{0.1}\\approx4.6\\times10^{-6}<10^{-5}\\). Exact \\(e^{0.1}=1.1051709\\); the partial sum \\(1.1051667\\) is off by \\(4\\times10^{-6}\\).<br><b>Sanity check:</b> each term shrinks by about \\(x/(n+1)\\approx0.03\\), so each extra term adds about 1.5 digits.<br><b>Transfer:</b> \\(e^{x}\\) for \\(|x|\\le0.2\\) to \\(10^{-4}\\) needs 4 terms: remainder \\(\\le\\frac{0.2^4}{24}e^{0.2}\\approx8\\times10^{-5}\\). Three terms leave about \\(1.6\\times10^{-3}\\).",
+  "tags": [
+   "s_taylor",
+   "exponential",
+   "error_bound",
+   "fmt_solve"
+  ],
+  "hints": [
+   "What bounds the error when a Taylor series is stopped after finitely many terms? Which term dominates the size of that error?",
+   "Use the Lagrange remainder \\(R_n=\\dfrac{x^{n+1}}{(n+1)!}e^{\\xi}\\) with \\(0<\\xi<x\\), and bound \\(e^{\\xi}\\) by its value at the right endpoint.",
+   "With \\(x=0.1\\), write the inequality \\(\\dfrac{(0.1)^{n+1}}{(n+1)!}\\,e^{0.1}<10^{-5}\\) and test successive values of \\(n\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When does a first- or second-order Taylor estimate work for mental maths, and when does it fail?",
+  "back": "<b>Triggers:</b> a smooth function near a point you know exactly (\\(\\sqrt{100}\\), \\(\\ln1\\), \\(e^0\\)), and a small \\(\\varepsilon\\).<br><b>Move:</b> \\(f(a+\\varepsilon)\\approx f(a)+f'(a)\\varepsilon+\\tfrac12f''(a)\\varepsilon^2\\); error about \\(f'''\\varepsilon^3/6\\).<br><b>Canonical example:</b> \\(\\sqrt{101}\\), \\(\\ln1.05\\), \\(e^{0.1}\\).<br><b>Failure mode:</b> the target is far from the expansion point (\\(\\sqrt2\\) from \\(\\sqrt1\\) is not small), a singularity or kink nearby (\\(\\ln x\\) near 0, \\(|x|\\) at 0), or fast-growing derivatives (\\(e^x\\) for large \\(x\\)). The sign of \\(f''\\) tells you whether the first-order estimate over- or undershoots.",
+  "tags": [
+   "s_taylor",
+   "toolkit",
+   "approximation",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Iteration \\(x_{k+1}=\\tfrac12(x_k+a/x_k)\\), \\(a>0\\). Which structure, and what triggers it?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_taylor (local linearisation; the error squares each step).<br><b>Trigger:</b> a root-finding step \\(x_{k+1}=x_k-f/f'\\) with \\(f(x)=x^2-a\\).<br><b>Key move:</b> \\(e_{k+1}\\approx\\dfrac{f''}{2f'}e_k^2=\\dfrac{e_k^2}{2\\sqrt a}\\); correct digits roughly double each step.<br><b>Answer:</b> converges to \\(\\sqrt a\\), quadratically (Babylonian method).",
+  "tags": [
+   "s_taylor",
+   "newton_method",
+   "root_finding",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Apply Newton's method to \\(f(x)=x^2-2\\) from \\(x_0=1\\). Give \\(x_1,x_2,x_3\\) exactly and the error pattern.",
+  "back": "<b>Answer:</b> \\(x_1=\\tfrac32\\), \\(x_2=\\tfrac{17}{12}\\), \\(x_3=\\tfrac{577}{408}\\). Errors: \\(0.0858\\), \\(0.00245\\), \\(2.1\\times10^{-6}\\).<br><b>Structure:</b> s_taylor.<br><b>Key move:</b> \\(x_{k+1}=x_k-\\dfrac{x_k^2-2}{2x_k}=\\tfrac12(x_k+\\tfrac2{x_k})\\).<br><b>Working:</b> \\(1\\to\\tfrac12(1+2)=\\tfrac32\\to\\tfrac12(\\tfrac32+\\tfrac43)=\\tfrac{17}{12}\\to\\tfrac{577}{408}\\).<br><b>Sanity check:</b> \\(e_2^2/(2\\sqrt2)\\approx2.1\\times10^{-6}=e_3\\). Also \\(x_3^2-2=1/408^2\\).<br><b>Transfer:</b> Newton for \\(\\sqrt a\\) with any \\(a>0\\).",
+  "tags": [
+   "s_taylor",
+   "newton_method",
+   "root_finding",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Newton's method replaces the function by its tangent line at the current point. Where does the tangent line to \\(x^2-2\\) at a given \\(x_k\\) cross zero?",
+   "Use \\(x_{k+1}=x_k-f(x_k)/f'(x_k)\\) with \\(f(x)=x^2-2\\), and simplify the update to an average of \\(x_k\\) and \\(2/x_k\\).",
+   "Compute \\(x_1=x_0-\\dfrac{x_0^2-2}{2x_0}\\) at \\(x_0=1\\), then repeat the same substitution for \\(x_2\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Same iteration \\(x_{k+1}=\\tfrac12(x_k+a/x_k)\\) for \\(a=2\\), but starting from \\(x_0=0\\), or from \\(x_0=-1\\). What happens?",
+  "back": "<b>What breaks:</b> \\(x_0=0\\) divides by zero, so the first step is undefined; Newton needs \\(f'(x_0)\\ne0\\). For \\(x_0<0\\) the iteration is well defined and keeps its sign.<br><b>Answer:</b> from \\(x_0=-1\\): \\(x_1=-\\tfrac32\\), converging to \\(-\\sqrt2\\). From \\(x_0=0\\): undefined.<br><b>Fix:</b> start with \\(x_0>0\\). Newton finds whichever root is in the basin of the start.",
+  "tags": [
+   "s_taylor",
+   "newton_method",
+   "root_finding",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "Newton's update divides by the current iterate. Which starting values make that division impossible, and what sign does the iteration preserve?",
+   "Check whether \\(f'(x_0)=2x_0\\) vanishes for your start, and track the sign of \\(x_k\\) through one step of the update.",
+   "Write one step \\(x_1=\\tfrac12\\big(x_0+\\tfrac{2}{x_0}\\big)\\) and substitute \\(x_0=-1\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Iteration \\(x_{k+1}=x_k(2-a\\,x_k)\\), using only multiplications, starting from a small positive \\(x_0\\). What does it converge to, and how fast?",
+  "back": "<b>Reveals the classic:</b> Newton's method for \\(f(x)=\\tfrac1x-a\\), which computes a reciprocal without division.<br><b>Mapping:</b> \\(x-f/f'=x-(\\tfrac1x-a)(-x^2)=x(2-ax)\\).<br><b>Answer:</b> converges to \\(1/a\\), quadratically. With \\(u_k=ax_k\\): \\(1-u_{k+1}=(1-u_k)^2\\).<br><b>Condition:</b> \\(0<ax_0<2\\).",
+  "tags": [
+   "s_taylor",
+   "newton_method",
+   "reciprocal",
+   "twin",
+   "fmt_twin"
+  ],
+  "hints": [
+   "The update uses only products and no division. Look for a function whose zero is \\(1/a\\), and ask which iterative step based on its slope gives a formula with only products.",
+   "Structural feature: the fixed point of the update is where a certain function vanishes, and the step uses that function's slope. Find the function whose zero is \\(1/a\\), and write its slope.",
+   "Setup: write the update as the current value minus the function divided by its slope, evaluated at the current value, and simplify the fraction."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\(X\\) equals 1 or 3 with probability \\(\\tfrac12\\) each. Is \\(E[1/X]\\) bigger or smaller than \\(1/E[X]\\)?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_convexity_jensen.<br><b>Trigger:</b> expectation of a function of a random variable, with the function convex (\\(1/x\\) on \\(x>0\\)).<br><b>Key move:</b> Jensen: \\(E[g(X)]\\ge g(E[X])\\) for convex \\(g\\).<br><b>Answer:</b> \\(E[1/X]=\\tfrac23>\\tfrac12=1/E[X]\\). Equality only when \\(X\\) is constant.",
+  "tags": [
+   "s_convexity_jensen",
+   "expectation",
+   "convexity",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A position returns \\(+50\\%\\) or \\(-40\\%\\) per period, each with probability \\(\\tfrac12\\). Give the expected arithmetic return per period and the geometric growth rate per period.",
+  "back": "<b>Answer:</b> arithmetic \\(+5\\%\\); geometric \\(\\sqrt{1.5\\cdot0.6}-1=\\sqrt{0.9}-1\\approx-5.1\\%\\).<br><b>Structure:</b> s_convexity_jensen with s_kelly_log_utility (geometric growth is \\(E[\\log(1+r)]\\)).<br><b>Key move:</b> compounding multiplies, so growth is \\(E[\\log]\\), and \\(\\log\\) is concave: \\(E[\\log(1+r)]\\le\\log E[1+r]\\).<br><b>Working:</b> \\(\\tfrac12(1.5)+\\tfrac12(0.6)=1.05\\); \\(\\exp(\\tfrac12\\ln1.5+\\tfrac12\\ln0.6)=\\sqrt{0.9}\\).<br><b>Sanity check:</b> drag \\(\\approx\\operatorname{Var}(r)/2=0.2025/2\\approx0.10\\), giving \\(5\\%-10\\%\\approx-5\\%\\).<br><b>Transfer:</b> leveraged ETF decay; Kelly sizing.",
+  "tags": [
+   "s_convexity_jensen",
+   "s_kelly_log_utility",
+   "volatility_drag",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Two different averages of the period returns are asked for. Which one compounds over time, and what function of the gross return does it average?",
+   "Geometric growth is the expectation of the log of the gross return, so the growth rate per period is \\(\\exp(E[\\ln(1+r)])-1\\).",
+   "Write the two-state geometric growth as \\(\\exp\\!\\big(\\tfrac12\\ln(1+r_u)+\\tfrac12\\ln(1+r_d)\\big)-1\\) with \\(r_u=0.5\\), \\(r_d=-0.4\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: returns \\(+50\\%\\) or \\(-40\\%\\), each with probability \\(\\tfrac12\\), give arithmetic mean \\(+5\\%\\) and geometric growth \\(-5.1\\%\\). Now the up-move probability is \\(0.6\\). Recompute both, and find where the geometric growth changes sign.",
+  "back": "<b>What breaks:</b> nothing in the method breaks, but the geometric rate is not linear in \\(p\\) and can change sign, while the arithmetic mean is linear.<br><b>Working:</b> arithmetic \\(0.6(0.5)+0.4(-0.4)=+14\\%\\). Geometric \\(1.5^{0.6}\\,0.6^{0.4}-1\\approx+4.0\\%\\).<br><b>Answer:</b> arithmetic \\(+14\\%\\); geometric \\(+4.0\\%\\). Sign flip at \\(p=\\dfrac{\\ln(1/0.6)}{\\ln1.5+\\ln(1/0.6)}\\approx0.5575\\).",
+  "tags": [
+   "s_convexity_jensen",
+   "volatility_drag",
+   "probability",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "Which quantity changed when the probabilities changed? Which of the two averages is linear in the probability, and does the geometric one stay linear?",
+   "The arithmetic mean is \\(p(1+r_u)+(1-p)(1+r_d)\\), linear in \\(p\\). The geometric rate is \\(\\exp\\big(p\\ln(1+r_u)+(1-p)\\ln(1+r_d)\\big)-1\\), which is not linear in \\(p\\).",
+   "Write the geometric rate as \\(\\exp\\big(p\\ln1.5+(1-p)\\ln0.6\\big)-1\\) and evaluate it at \\(p=0.6\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A process satisfies \\(dX_t=-\\kappa(X_t-\\mu)\\,dt+\\sigma\\,dW_t\\), \\(\\kappa>0\\). Which structure, and what triggers it?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_markov_chain (continuous-state Markov process, linear mean reversion).<br><b>Trigger:</b> drift linear in the state and pulling toward a fixed level, so expectations close.<br><b>Key move:</b> take expectations: \\(\\tfrac{d}{dt}E[X_t]=-\\kappa(E[X_t]-\\mu)\\), a linear ODE; the noise drops out.<br><b>Answer:</b> \\(E[X_t]=\\mu+(X_0-\\mu)e^{-\\kappa t}\\); half-life \\(\\ln2/\\kappa\\); stationary variance \\(\\sigma^2/(2\\kappa)\\).",
+  "tags": [
+   "s_markov_chain",
+   "ornstein_uhlenbeck",
+   "ode",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "An OU process has \\(\\kappa=0.2\\) per year. Starting from \\(X_0=\\mu+1\\), how long until the expected deviation from \\(\\mu\\) halves? Does \\(\\sigma\\) matter?",
+  "back": "<b>Answer:</b> \\(t_{1/2}=\\ln2/\\kappa=\\ln2/0.2\\approx3.47\\) years. \\(\\sigma\\) does not affect the mean.<br><b>Structure:</b> s_markov_chain (topic ode).<br><b>Key move:</b> \\(E[X_t]-\\mu=(X_0-\\mu)e^{-\\kappa t}\\).<br><b>Working:</b> \\(e^{-\\kappa t}=\\tfrac12\\Rightarrow t=\\ln2/\\kappa\\).<br><b>Sanity check:</b> \\(\\kappa=\\ln2\\) gives half-life exactly 1; doubling \\(\\kappa\\) halves the half-life.<br><b>Transfer:</b> spread mean reversion in pairs trading.",
+  "tags": [
+   "s_markov_chain",
+   "ornstein_uhlenbeck",
+   "half_life",
+   "fmt_solve"
+  ],
+  "hints": [
+   "The expected deviation from the long-run level obeys a simple first-order rule. What function of time describes how a deviation decays, and which parameter sets its rate?",
+   "Take expectations in the SDE: the stochastic term has mean zero, so \\(m(t)=E[X_t]\\) satisfies a linear ODE.",
+   "Write \\(\\dfrac{d}{dt}(m-\\mu)=-\\kappa(m-\\mu)\\) with \\(m(0)=\\mu+1\\), and find the time at which \\(m(t)-\\mu\\) is half its initial value."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: \\(dX=-\\kappa X\\,dt+\\sigma\\,dW\\), \\(X_0=0\\), has \\(\\operatorname{Var}X_t=\\dfrac{\\sigma^2(1-e^{-2\\kappa t})}{2\\kappa}\\). What is the variance as \\(\\kappa\\to0\\), and which part of the mean-reversion story fails?",
+  "back": "<b>What breaks:</b> the pull back to the mean disappears. The stationary variance \\(\\sigma^2/(2\\kappa)\\) blows up, and no stationary law exists.<br><b>Limit:</b> \\(\\dfrac{1-e^{-2\\kappa t}}{2\\kappa}\\to t\\) (since \\(1-e^{-x}\\approx x\\)).<br><b>Answer:</b> \\(\\operatorname{Var}X_t\\to\\sigma^2t\\), the Brownian motion variance. Mean reversion bounds the variance only once \\(\\kappa t\\gg1\\).",
+  "tags": [
+   "s_markov_chain",
+   "ornstein_uhlenbeck",
+   "variance",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "The variance formula has a factor \\(1-e^{-2\\kappa t}\\) divided by \\(\\kappa\\). What does a ratio of this form look like when \\(\\kappa\\) is very small?",
+   "Expand \\(e^{-2\\kappa t}\\) to first order in \\(\\kappa t\\) and simplify the ratio.",
+   "Write \\(e^{-2\\kappa t}\\approx 1-2\\kappa t\\) and substitute into \\(\\operatorname{Var}X_t\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Solve \\(y'(t)+2y(t)=e^{-t}\\), \\(y(0)=0\\).",
+  "back": "<b>Answer:</b> \\(y(t)=e^{-t}-e^{-2t}\\).<br><b>Structure:</b> s_eigen (characteristic root \\(-2\\) of the homogeneous part; forcing decays at rate 1).<br><b>Key move:</b> integrating factor \\(e^{2t}\\): \\(\\tfrac{d}{dt}(e^{2t}y)=e^t\\).<br><b>Working:</b> \\(e^{2t}y=e^t+C\\), so \\(y=e^{-t}+Ce^{-2t}\\); \\(y(0)=0\\) gives \\(C=-1\\).<br><b>Sanity check:</b> \\(y'+2y=-e^{-t}+2e^{-2t}+2e^{-t}-2e^{-2t}=e^{-t}\\). For large \\(t\\), \\(y\\approx e^{-t}\\), the forcing's own decay.<br><b>Transfer:</b> any first-order linear ODE with constant coefficients.",
+  "tags": [
+   "s_eigen",
+   "linear_ode",
+   "integrating_factor",
+   "fmt_solve"
+  ],
+  "hints": [
+   "This is a first-order linear ODE with constant coefficients. Which multiplying function turns the left side into an exact derivative?",
+   "Use the integrating factor \\(\\mu(t)=e^{2t}\\), so that \\((e^{2t}y)'=e^{2t}(y'+2y)\\).",
+   "Multiply through by \\(e^{2t}\\) to get \\(\\dfrac{d}{dt}\\big(e^{2t}y\\big)=e^{t}\\), then integrate both sides."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "The heat equation \\(u_t=Du_{xx}\\) on \\(\\mathbb R\\) with initial data a unit point mass at 0. Which structure, and what triggers it?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_sqrt_time_scaling (diffusive spread grows like \\(\\sqrt{Dt}\\)).<br><b>Trigger:</b> point source for linear diffusion on the whole line; scaling \\(u=t^{-1/2}F(x/\\sqrt t)\\) and mass conservation fix the form.<br><b>Key move:</b> a Gaussian with variance \\(2Dt\\).<br><b>Answer:</b> \\(u(x,t)=\\dfrac{1}{\\sqrt{4\\pi Dt}}\\exp\\!\\left(-\\dfrac{x^2}{4Dt}\\right)\\).",
+  "tags": [
+   "s_sqrt_time_scaling",
+   "heat_equation",
+   "fundamental_solution",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Show that \\(u(x,t)=\\dfrac{1}{\\sqrt{4\\pi Dt}}e^{-x^2/(4Dt)}\\) solves \\(u_t=Du_{xx}\\) for \\(t>0\\), has total mass 1 for every \\(t\\), and give the variance of the associated distribution.",
+  "back": "<b>Answer:</b> the PDE holds, \\(\\int u\\,dx=1\\), variance \\(2Dt\\).<br><b>Structure:</b> s_sqrt_time_scaling.<br><b>Key move:</b> direct substitution; mass from \\(\\int e^{-x^2/(4Dt)}dx=\\sqrt{4\\pi Dt}\\).<br><b>Working:</b> the density is \\(N(0,\\sigma^2)\\) with \\(2\\sigma^2=4Dt\\), so \\(\\sigma^2=2Dt\\).<br><b>Sanity check:</b> \\(D=\\tfrac12\\) gives variance \\(t\\), standard Brownian motion.<br><b>Transfer:</b> variances add over time, so diffusing for \\(t_1\\) then \\(t_2\\) equals diffusing for \\(t_1+t_2\\).",
+  "tags": [
+   "s_sqrt_time_scaling",
+   "heat_equation",
+   "fundamental_solution",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Verifying a PDE solution is a direct computation. Which two derivatives must you compare, and which identity do you need for the total mass?",
+   "Differentiate once in \\(t\\) and twice in \\(x\\) and compare. For the mass, use the Gaussian integral \\(\\int e^{-s^2}ds\\) after a substitution that makes the exponent \\(-s^2\\).",
+   "Write \\(u=(4\\pi Dt)^{-1/2}e^{-x^2/(4Dt)}\\), compute \\(u_t\\) and \\(u_{xx}\\) separately, then compare \\(u_t\\) with \\(Du_{xx}\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Solve \\(u_t=u_{xx}\\) on \\(0<x<\\pi\\) with \\(u(0,t)=u(\\pi,t)=0\\) and \\(u(x,0)=\\sin x+3\\sin3x\\).",
+  "back": "<b>Answer:</b> \\(u(x,t)=e^{-t}\\sin x+3e^{-9t}\\sin3x\\).<br><b>Structure:</b> s_eigen (sine modes are eigenfunctions with eigenvalues \\(-n^2\\)).<br><b>Key move:</b> separation \\(u=T(t)X(x)\\), \\(X=\\sin nx\\), \\(T=e^{-n^2t}\\).<br><b>Working:</b> \\(n=1\\) decays as \\(e^{-t}\\), \\(n=3\\) as \\(e^{-9t}\\); coefficients 1 and 3 match the data.<br><b>Sanity check:</b> at \\(t=0\\) the data is recovered; higher modes decay faster, so the solution smooths.<br><b>Transfer:</b> long-time behaviour is dominated by the first mode.",
+  "tags": [
+   "s_eigen",
+   "heat_equation",
+   "separation_of_variables",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Dirichlet conditions on an interval suggest a family of functions that vanish at both ends. Which family, and how does the time dependence separate from space?",
+   "Separate variables \\(u=T(t)X(x)\\). The spatial part must satisfy \\(X''=\\lambda X\\) with \\(X(0)=X(\\pi)=0\\), which fixes \\(X=\\sin nx\\) for integers \\(n\\).",
+   "Write the general solution as \\(u=\\sum_n b_n e^{-n^2t}\\sin nx\\) and match \\(t=0\\) against the initial data."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: \\(u_t=u_{xx}\\) on \\((0,\\pi)\\), \\(u(x,0)=\\sin x\\), Dirichlet conditions, giving \\(u=e^{-t}\\sin x\\). Now use Neumann conditions \\(u_x(0,t)=u_x(\\pi,t)=0\\). What is \\(\\lim_{t\\to\\infty}u\\)?",
+  "back": "<b>What breaks:</b> sine eigenfunctions no longer satisfy the boundary conditions. Neumann eigenfunctions are \\(\\cos nx\\) with eigenvalues \\(n^2\\ge0\\); the zero mode (constant) does not decay.<br><b>Working:</b> the constant equals the mean of the initial data, \\(\\tfrac1\\pi\\int_0^\\pi\\sin x\\,dx=\\tfrac2\\pi\\). Mass \\(\\int u\\,dx\\) is conserved.<br><b>Answer:</b> \\(\\lim u=2/\\pi\\approx0.6366\\), not 0.",
+  "tags": [
+   "s_eigen",
+   "heat_equation",
+   "neumann",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "Which functions satisfy the new boundary conditions and are eigenfunctions of \\(d^2/dx^2\\)? Check whether \\(\\sin x\\) still qualifies at \\(x=0\\) when you differentiate.",
+   "For Neumann conditions the eigenfunctions are cosines. Expand the initial data in them, and note which eigenvalue is zero: that mode does not decay.",
+   "Write \\(u(x,t)=\\sum_{n\\ge0}b_n e^{-n^2t}\\cos nx\\) and identify the \\(n=0\\) coefficient from the average of the initial data over \\((0,\\pi)\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Explicit (FTCS) scheme for \\(u_t=Du_{xx}\\) with \\(D=0.5\\) and \\(\\Delta x=0.1\\). What is the largest stable time step?",
+  "back": "<b>Answer:</b> \\(\\Delta t\\le\\dfrac{\\Delta x^2}{2D}=0.01\\).<br><b>Structure:</b> s_eigen (stability via the amplification factor on each Fourier mode).<br><b>Key move:</b> von Neumann analysis with \\(r=D\\Delta t/\\Delta x^2\\): \\(G(\\theta)=1-4r\\sin^2(\\theta/2)\\).<br><b>Working:</b> \\(G\\in[1-4r,1]\\); need \\(1-4r\\ge-1\\), i.e. \\(r\\le\\tfrac12\\).<br><b>Sanity check:</b> at \\(r=\\tfrac12\\) the highest mode has \\(G=-1\\): sign flip, no decay, the marginal case.<br><b>Transfer:</b> the same bound for any explicit diffusion step.",
+  "tags": [
+   "s_eigen",
+   "finite_difference",
+   "stability",
+   "fmt_solve"
+  ],
+  "hints": [
+   "A stability bound for an explicit scheme relates the time step to the grid spacing. Which dimensionless combination of \\(D\\), \\(\\Delta t\\) and \\(\\Delta x\\) controls it?",
+   "Do a von Neumann analysis: substitute a Fourier mode and find the amplification factor \\(G(\\theta)\\). Stability needs \\(|G|\\le1\\) for every \\(\\theta\\).",
+   "Write the FTCS update \\(u_j^{n+1}=u_j^n+r\\,(u_{j+1}^n-2u_j^n+u_{j-1}^n)\\) with \\(r=D\\Delta t/\\Delta x^2\\), and substitute \\(u_j^n=G^n e^{ij\\theta}\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: the explicit scheme for \\(u_t=Du_{xx}\\) is stable for \\(r=D\\Delta t/\\Delta x^2\\le\\tfrac12\\). Now take \\(r=0.6\\). What breaks, and what is the amplification at the highest mode?",
+  "back": "<b>What breaks:</b> the highest grid mode \\(\\theta=\\pi\\) gets \\(G=1-4r=-1.4\\). Its amplitude grows by 1.4 each step and alternates sign: grid-scale oscillation, then blow-up.<br><b>Answer:</b> \\(|G|=1.4>1\\), unstable; smooth modes are fine, the highest mode kills the scheme.<br><b>Fix:</b> reduce \\(\\Delta t\\) to \\(r\\le\\tfrac12\\), or use backward Euler, \\(G=1/(1+4r\\sin^2(\\theta/2))\\), stable for any \\(r\\).",
+  "tags": [
+   "s_eigen",
+   "finite_difference",
+   "stability",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "What changes in the amplification factor when \\(r\\) grows past the stability threshold? Which Fourier mode is most dangerous, and where is it on the \\(\\theta\\)-axis?",
+   "Use the amplification factor \\(G(\\theta)=1-4r\\sin^2(\\theta/2)\\) from the stable case, and evaluate it at the mode with the largest \\(\\sin^2(\\theta/2)\\).",
+   "Write \\(G(\\pi)=1-4r\\sin^2(\\pi/2)\\) and insert \\(r=0.6\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should a finite-difference heat solver be explicit, and when implicit?",
+  "back": "<b>Triggers:</b> explicit (FTCS) when steps are cheap and the stability step is affordable; implicit (backward Euler, Crank-Nicolson) for stiff problems, large steps or long horizons.<br><b>Move:</b> explicit: \\(u^{n+1}=u^n+r\\,\\delta^2u^n\\), no solve. Implicit: a tridiagonal system each step (Thomas algorithm, \\(O(N)\\)).<br><b>Canonical example:</b> \\(r=0.6\\): explicit blows up, implicit is stable.<br><b>Failure mode:</b> backward Euler is only first order in time and damps accuracy. Crank-Nicolson is second order and stable but does not damp the highest modes, so oscillations can persist at large steps.",
+  "tags": [
+   "s_eigen",
+   "finite_difference",
+   "implicit_schemes",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You estimate \\(p=P(A)\\) by averaging \\(N\\) i.i.d. indicators \\(\\mathbf1_A\\). Which structure, and what triggers it?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_indicators with s_clt_normal_approx.<br><b>Trigger:</b> a probability written as the expectation of an indicator; the sample mean is the Monte Carlo estimator.<br><b>Key move:</b> \\(\\operatorname{Var}(\\mathbf1_A)=p(1-p)\\); CLT gives a 95% interval \\(\\pm1.96\\,\\mathrm{SE}\\).<br><b>Answer:</b> \\(\\mathrm{SE}=\\sqrt{p(1-p)/N}\\). Halving the error needs 4 times the samples.",
+  "tags": [
+   "s_indicators",
+   "s_clt_normal_approx",
+   "monte_carlo",
+   "standard_error",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Monte Carlo estimate of \\(p=0.5\\) from \\(N=10^4\\) samples. Give the standard error and the 95% half-width. How many samples give a 95% half-width of \\(0.001\\)?",
+  "back": "<b>Answer:</b> SE \\(=0.005\\); half-width \\(0.0098\\); \\(N\\approx9.6\\times10^5\\).<br><b>Structure:</b> s_clt_normal_approx, s_indicators.<br><b>Key move:</b> worst case \\(p(1-p)=\\tfrac14\\) at \\(p=\\tfrac12\\).<br><b>Working:</b> \\(\\sqrt{0.25/10^4}=0.005\\); \\(N=z^2p(1-p)/h^2=3.8416\\cdot0.25/10^{-6}=960{,}400\\).<br><b>Sanity check:</b> \\(10^4\\) samples give about \\(\\pm1\\%\\); \\(\\pm0.1\\%\\) costs 100 times more.<br><b>Transfer:</b> the \\(1/\\sqrt N\\) rule for any Monte Carlo average.",
+  "tags": [
+   "s_clt_normal_approx",
+   "s_indicators",
+   "monte_carlo",
+   "standard_error",
+   "fmt_solve"
+  ],
+  "hints": [
+   "The estimator is an average of i.i.d. indicator values. What is the variance of one indicator, and how does the standard error of an average scale with the number of samples?",
+   "Use the CLT: the standard error of a sample mean is \\(\\sigma/\\sqrt N\\), and for an indicator \\(\\sigma^2=p(1-p)\\). A 95% half-width multiplies the standard error by \\(1.96\\).",
+   "Write \\(\\mathrm{SE}=\\sqrt{p(1-p)/N}\\) with \\(p=0.5\\), \\(N=10^4\\). For the sample size, solve \\(1.96\\sqrt{p(1-p)/N}=0.001\\) for \\(N\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Estimate \\(E[e^U]\\), \\(U\\sim\\text{Unif}(0,1)\\). Compare the variance per unit budget (two function evaluations) of plain Monte Carlo with antithetic pairs \\((U,1-U)\\). Give the efficiency gain.",
+  "back": "<b>Answer:</b> antithetic is about \\(31\\times\\) more efficient.<br><b>Structure:</b> s_variance_decomposition (variance of a sum splits into variances and a covariance).<br><b>Key move:</b> \\(\\operatorname{Var}\\big(\\tfrac{f(U)+f(1-U)}2\\big)=\\tfrac12(V+C)\\), \\(V=\\operatorname{Var}f(U)\\), \\(C=\\operatorname{Cov}(f(U),f(1-U))\\).<br><b>Working:</b> \\(E[e^U]=e-1\\); \\(V=\\tfrac{e^2-1}{2}-(e-1)^2\\approx0.2420\\); \\(C=e-(e-1)^2\\approx-0.2342\\). Two plain samples have variance \\(V/2\\); a pair has \\((V+C)/2\\approx0.0039\\). Gain \\(V/(V+C)\\approx30.9\\).<br><b>Sanity check:</b> \\(e^u\\) is monotone, so \\(C<0\\); \\(10^5\\) simulated pairs agree with 31.<br><b>Transfer:</b> any monotone response of a symmetric noise.",
+  "tags": [
+   "s_variance_decomposition",
+   "monte_carlo",
+   "antithetic_variates",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Antithetic pairs help when two draws are negatively correlated. What is the covariance between \\(f(U)\\) and \\(f(1-U)\\) for a monotone \\(f\\), and what does it do to the variance of their average?",
+   "The variance of a pair average is \\(\\tfrac14\\big(\\operatorname{Var}f(U)+\\operatorname{Var}f(1-U)+2\\operatorname{Cov}\\big)\\). Compute the two variances and the covariance for \\(f(u)=e^u\\).",
+   "Write \\(\\operatorname{Var}\\big(\\tfrac{f(U)+f(1-U)}2\\big)=\\tfrac12(V+C)\\) with \\(V=\\operatorname{Var}f(U)\\) and \\(C=\\operatorname{Cov}(f(U),f(1-U))\\), and compute \\(E[f(U)^2]\\) for \\(f=e^u\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: antithetic pairs \\((U,1-U)\\) reduce variance for monotone \\(f\\). Now estimate \\(E[(U-\\tfrac12)^2]\\) with antithetic pairs. What happens to efficiency?",
+  "back": "<b>What breaks:</b> \\(f(u)=(u-\\tfrac12)^2\\) is symmetric about \\(\\tfrac12\\), so \\(f(1-U)=f(U)\\) exactly; \\(C=V\\).<br><b>Working:</b> pair variance \\(\\tfrac12(V+C)=V\\), while two plain samples have variance \\(V/2\\). Efficiency ratio \\(V/(V+C)=\\tfrac12\\).<br><b>Answer:</b> antithetic is 2 times worse; the second evaluation adds no information. Use independent samples.<br><b>Fix:</b> check \\(\\operatorname{Cov}(f(U),f(1-U))<0\\) before using antithetic pairs.",
+  "tags": [
+   "s_variance_decomposition",
+   "monte_carlo",
+   "antithetic_variates",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "Check the sign of the covariance between \\(f(U)\\) and \\(f(1-U)\\) when \\(f\\) has a symmetry about \\(\\tfrac12\\). What does a symmetry of that kind do to the second evaluation?",
+   "If \\(f(1-u)=f(u)\\) for all \\(u\\), the partner adds no new information. Compare \\(\\operatorname{Cov}(f(U),f(1-U))\\) with \\(\\operatorname{Var}f(U)\\).",
+   "For \\(f(u)=(u-\\tfrac12)^2\\), write \\(f(1-U)\\) and simplify it in terms of \\(f(U)\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Estimate \\(E[e^U]\\), \\(U\\sim\\text{Unif}(0,1)\\), using the control \\(U\\) with known mean \\(\\tfrac12\\). Give the optimal coefficient \\(c^*\\) and the variance reduction factor.",
+  "back": "<b>Answer:</b> \\(c^*=-\\operatorname{Cov}(e^U,U)/\\operatorname{Var}U\\approx-1.690\\); residual variance factor \\(1-\\rho^2\\approx0.0163\\), about \\(61\\times\\) reduction.<br><b>Structure:</b> s_variance_decomposition (residual variance after regressing on a correlated control).<br><b>Key move:</b> \\(\\hat\\mu=\\overline{e^U}+c(\\overline U-\\tfrac12)\\).<br><b>Working:</b> \\(\\operatorname{Cov}(e^U,U)=\\int_0^1ue^udu-\\tfrac{e-1}2=1-\\tfrac{e-1}2\\approx0.1409\\); \\(\\operatorname{Var}U=\\tfrac1{12}\\); \\(c^*=-12\\cdot0.1409\\).<br><b>Sanity check:</b> \\(\\rho^2\\approx0.984\\) because \\(e^u\\) is nearly linear on \\([0,1]\\). Simulation of \\(10^5\\) draws gives the same factor.<br><b>Transfer:</b> any Monte Carlo average with a correlated control of known mean, e.g. the discounted underlying in an option price (known mean \\(S_0\\)).",
+  "tags": [
+   "s_variance_decomposition",
+   "monte_carlo",
+   "control_variates",
+   "fmt_solve"
+  ],
+  "hints": [
+   "A quantity correlated with the target and with a known mean can reduce variance by subtracting its fluctuation. Which coefficient minimises the variance of the adjusted estimate?",
+   "Use \\(\\hat\\mu=\\overline X+c(\\overline Y-EY)\\) with \\(X=e^U\\) and \\(Y=U\\), and choose \\(c\\) to minimise the variance: \\(c^*=-\\operatorname{Cov}(X,Y)/\\operatorname{Var}Y\\).",
+   "Compute \\(\\operatorname{Cov}(e^U,U)=E[Ue^U]-E[e^U]E[U]\\) as integrals over \\((0,1)\\), and \\(\\operatorname{Var}U=E[U^2]-\\tfrac14\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for antithetic variates, and when for control variates? When does each fail?",
+  "back": "<b>Antithetic triggers:</b> the response is monotone in the driving noise (a call payoff in a Brownian path, \\(e^U\\)); the partner \\(1-U\\) or \\(-W\\) is free. <b>Fails</b> when the response is symmetric about the centre, so pairs carry no new information.<br><b>Control variate triggers:</b> a quantity \\(Y\\) correlated with the target \\(X\\), with known mean (the underlying in an option, \\(E[U]=\\tfrac12\\) above). <b>Move:</b> \\(\\hat\\mu=\\overline X+c(\\overline Y-EY)\\), \\(c^*=-\\operatorname{Cov}(X,Y)/\\operatorname{Var}Y\\); reduction \\(1-\\rho^2\\).<br><b>Fails</b> when the control is uncorrelated, when its mean is unknown, or when \\(c^*\\) is estimated on the same paths (use a pilot sample).",
+  "tags": [
+   "s_variance_decomposition",
+   "monte_carlo",
+   "variance_reduction",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Maximise \\(x^\\top Ax\\) subject to \\(\\lVert x\\rVert=1\\), for \\(A=\\begin{pmatrix}2&1\\\\1&2\\end{pmatrix}\\). Which structure, and what triggers it?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_lagrange with s_eigen (Rayleigh quotient).<br><b>Trigger:</b> a quadratic form on a sphere: quadratic objective, quadratic equality constraint.<br><b>Key move:</b> Lagrange gives \\(Ax=\\lambda x\\), so the value at any critical point is an eigenvalue.<br><b>Answer:</b> maximum \\(3\\) at \\(x=(1,1)/\\sqrt2\\), the top eigenvector.",
+  "tags": [
+   "s_eigen",
+   "rayleigh_quotient",
+   "eigenvalues",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: \\(\\max x^\\top Ax\\) over \\(\\lVert x\\rVert=1\\) for \\(A=\\begin{pmatrix}2&1\\\\1&2\\end{pmatrix}\\) is 3. Now add the constraint \\(x_1+x_2=0\\). What is the new maximum?",
+  "back": "<b>What breaks:</b> the top eigenvector \\((1,1)\\) violates \\(x_1+x_2=0\\). The feasible set is the line spanned by \\((1,-1)\\).<br><b>Working:</b> \\(x=(1,-1)/\\sqrt2\\): \\(Ax=(1,-1)/\\sqrt2\\), so \\(x^\\top Ax=1\\).<br><b>Answer:</b> maximum \\(1\\). The restricted value is an eigenvalue of \\(PAP\\), with \\(P\\) the projection orthogonal to \\(\\mathbf1\\). It lies between the full eigenvalues (\\(1\\in[1,3]\\)).",
+  "tags": [
+   "s_eigen",
+   "rayleigh_quotient",
+   "constraint",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "The top eigenvector no longer satisfies the new linear constraint. Which subspace is now available, and how does the Rayleigh quotient restrict to it?",
+   "Restrict to unit vectors orthogonal to \\((1,1)\\). That subspace is one-dimensional, so the maximum is the Rayleigh quotient of \\(A\\) at its single unit direction.",
+   "Write the constraint as \\(x\\perp(1,1)\\), parametrise \\(x=t(1,-1)\\) with \\(\\lVert x\\rVert=1\\), and compute \\(x^\\top Ax\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A \\(3\\times3\\) covariance matrix has \\(\\Sigma_{ij}=\\rho^{|i-j|}\\) (AR(1) structure). Find \\(\\det\\Sigma\\) and \\(\\operatorname{tr}\\Sigma\\) for \\(\\rho=0.5\\).",
+  "back": "<b>Answer:</b> \\(\\det\\Sigma=(1-\\rho^2)^2=0.5625\\); \\(\\operatorname{tr}\\Sigma=3\\).<br><b>Structure:</b> s_eigen (Toeplitz determinant via sequential conditioning).<br><b>Key move:</b> each new variable adds conditional variance \\(1-\\rho^2\\) given its predecessor (Markov structure).<br><b>Working:</b> \\(\\det\\Sigma=1\\cdot(1-\\rho^2)\\cdot(1-\\rho^2)\\).<br><b>Sanity check:</b> \\(\\rho=0\\) gives \\(\\det=1\\); \\(\\rho\\to1\\) gives 0.<br><b>Transfer:</b> the inverse is tridiagonal; the Cholesky factor is bidiagonal with entries \\(\\rho\\), \\(\\sqrt{1-\\rho^2}\\).",
+  "tags": [
+   "s_eigen",
+   "determinant",
+   "toeplitz",
+   "fmt_solve"
+  ],
+  "hints": [
+   "A covariance matrix whose entries decay with distance has a Markov-type structure. What does each new variable add to the variance once you condition on the previous one?",
+   "Use the sequential factorisation: \\(\\det\\Sigma\\) is the product of conditional variances, each obtained by conditioning on the earlier variables. For a stationary AR(1) process the steps are alike.",
+   "Write \\(\\Sigma=\\begin{pmatrix}1&\\rho&\\rho^2\\\\\\rho&1&\\rho\\\\\\rho^2&\\rho&1\\end{pmatrix}\\) and compute the conditional variance of \\(X_2\\) given \\(X_1\\) as \\(\\Sigma_{22}-\\Sigma_{21}^2/\\Sigma_{11}\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "\\((X,Y)\\) bivariate normal, standard margins, correlation \\(0.6\\). Find \\(E[X\\mid Y=2]\\) and \\(\\operatorname{Var}(X\\mid Y)\\).<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_conditional_expectation_tower (Gaussian conditioning is linear regression with constant residual variance).<br><b>Trigger:</b> jointly normal variables; asked for a conditional mean and variance.<br><b>Key move:</b> \\(E[X\\mid Y]=\\rho Y\\), \\(\\operatorname{Var}(X\\mid Y)=1-\\rho^2\\).<br><b>Answer:</b> \\(E[X\\mid Y=2]=1.2\\); \\(\\operatorname{Var}(X\\mid Y)=0.64\\).",
+  "tags": [
+   "s_conditional_expectation_tower",
+   "gaussian_conditioning",
+   "regression",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: a standard bivariate normal with \\(\\rho=0.6\\) gives \\(E[X\\mid Y=2]=1.2\\). Now \\(X\\sim N(0,1)\\), \\(Y\\sim N(0,4)\\), \\(\\operatorname{Cov}(X,Y)=1.2\\). Find \\(E[X\\mid Y=2]\\) and say what changed.",
+  "back": "<b>What breaks:</b> the slope \\(\\rho\\) assumed \\(\\operatorname{Var}Y=1\\). The correct slope is \\(\\operatorname{Cov}(X,Y)/\\operatorname{Var}Y=1.2/4=0.3\\).<br><b>Answer:</b> \\(E[X\\mid Y=2]=0.6\\). The correlation is still \\(0.6\\), so \\(\\operatorname{Var}(X\\mid Y)=1-1.44/4=0.64\\) is unchanged; only the slope in \\(y\\)-units halves.",
+  "tags": [
+   "s_conditional_expectation_tower",
+   "gaussian_conditioning",
+   "regression",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "The slope in a Gaussian regression is a covariance divided by a variance. Which variance changed here, and does the slope still come from the same ratio?",
+   "Write \\(E[X\\mid Y]=\\dfrac{\\operatorname{Cov}(X,Y)}{\\operatorname{Var}Y}\\,Y\\) and \\(\\operatorname{Var}(X\\mid Y)=\\operatorname{Var}X-\\dfrac{\\operatorname{Cov}(X,Y)^2}{\\operatorname{Var}Y}\\).",
+   "Insert \\(\\operatorname{Var}X=1\\), \\(\\operatorname{Var}Y=4\\), \\(\\operatorname{Cov}(X,Y)=1.2\\) into the slope formula and evaluate it at \\(Y=2\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When does Newton's method converge quickly, and when does it fail?",
+  "back": "<b>Triggers:</b> a smooth root-finding problem with a good start and \\(f'\\) bounded away from zero near the root (\\(\\sqrt a\\), \\(1/a\\), implied volatility).<br><b>Move:</b> \\(x_{k+1}=x_k-f/f'\\); \\(e_{k+1}\\approx\\tfrac{f''}{2f'}e_k^2\\).<br><b>Canonical example:</b> \\(\\sqrt a\\) with \\(f=x^2-a\\).<br><b>Failure mode:</b> \\(f'\\approx0\\) (the step explodes), a start in another basin (\\(x_0<0\\) for \\(\\sqrt a\\)), oscillation for non-convex \\(f\\) far from the root, or non-smooth \\(f\\). Safeguard: bracket with bisection, or damp the step.",
+  "tags": [
+   "s_taylor",
+   "newton_method",
+   "root_finding",
+   "toolkit",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A simple symmetric \\(\\pm1\\) random walk takes 100 independent steps. What is the probability that it ends exactly where it started?",
+  "back": "<b>Reveals the classic:</b> the central binomial probability, 50 heads in 100 fair flips. Mapping: \\(+1\\) is heads; end at 0 iff exactly 50 heads.<br><b>Key move:</b> \\(\\binom{2n}{n}4^{-n}\\approx1/\\sqrt{\\pi n}\\), the normal peak height with variance \\(n\\).<br><b>Answer:</b> \\(\\binom{100}{50}2^{-100}\\approx0.0796\\); Stirling gives \\(1/\\sqrt{50\\pi}\\approx0.0798\\).<br><b>Sanity check:</b> the probability falls like \\(n^{-1/2}\\); for 10,000 steps it is about \\(0.008\\).",
+  "tags": [
+   "s_clt_normal_approx",
+   "random_walk",
+   "binomial",
+   "twin",
+   "fmt_twin"
+  ],
+  "hints": [
+   "What must be true of the number of up-steps for the walk to end where it started, and how likely is that count among 100 independent steps?",
+   "Structural feature: each step is an independent fair choice, so the endpoint is determined by the number of up-steps. Ask which count of up-steps puts the endpoint back at the start, and what its chance is.",
+   "Setup: each specific sequence of 100 steps has probability \\(2^{-100}\\). Count how many sequences end at zero, then multiply."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "For \\(Z\\sim N(0,1)\\), find \\(E|Z|\\).",
+  "back": "<b>Answer:</b> \\(E|Z|=\\sqrt{2/\\pi}\\approx0.7979\\).<br><b>Structure:</b> s_symmetry (even integrand; fold onto \\((0,\\infty)\\)).<br><b>Key move:</b> \\(x\\varphi(x)=-\\varphi'(x)\\) with \\(\\varphi\\) the standard normal density.<br><b>Working:</b> \\(E|Z|=2\\int_0^\\infty x\\varphi(x)dx=\\tfrac{2}{\\sqrt{2\\pi}}\\big[-e^{-x^2/2}\\big]_0^\\infty=\\sqrt{2/\\pi}\\).<br><b>Sanity check:</b> Jensen gives \\(E|Z|\\le\\sqrt{EZ^2}=1\\); \\(0.798<1\\). Simulation of \\(10^5\\) draws agrees.<br><b>Transfer:</b> the mean absolute deviation of \\(N(\\mu,\\sigma^2)\\) is \\(\\sigma\\sqrt{2/\\pi}\\).",
+  "tags": [
+   "s_symmetry",
+   "normal_distribution",
+   "absolute_moment",
+   "fmt_solve"
+  ],
+  "hints": [
+   "The absolute value makes the integrand non-smooth at zero. Does the symmetry of the density let you fold the integral onto half the line?",
+   "Use symmetry: \\(E|Z|=2\\int_0^\\infty x\\varphi(x)\\,dx\\), where \\(\\varphi\\) is the standard normal density. The factor \\(x\\varphi(x)\\) is the derivative of a simple function.",
+   "Write \\(E|Z|=2\\int_0^\\infty x\\,\\tfrac{1}{\\sqrt{2\\pi}}e^{-x^2/2}\\,dx\\) and find an antiderivative of \\(xe^{-x^2/2}\\)."
+  ]
+ }
+]

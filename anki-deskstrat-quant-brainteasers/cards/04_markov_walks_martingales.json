@@ -1,0 +1,1112 @@
+[
+ {
+  "type": "basic",
+  "front": "A player with \\(3\\) units bets \\(1\\) unit on each toss of a fair coin. Play stops when the player reaches \\(0\\) or \\(10\\). What is the probability of reaching \\(10\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_martingale with s_optional_stopping (the walk \\(S_n\\) is a martingale, stopped at two barriers)<br><b>Trigger:</b> symmetric \\(\\pm1\\) steps between two absorbing barriers<br><b>Key move:</b> \\(E[S_T]=S_0\\) with \\(S_T\\in\\{0,10\\}\\)<br><b>Answer:</b> \\(3/10\\)",
+  "tags": [
+   "s_martingale",
+   "s_optional_stopping",
+   "random_walk",
+   "coin",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair coin is tossed until two heads appear in a row. What is the expected number of tosses?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_markov_chain (run-length states: no head yet, one head)<br><b>Trigger:</b> the target pattern overlaps itself (HH), so the wait depends on the current run<br><b>Key move:</b> \\(E_0=1+\\tfrac12E_0+\\tfrac12E_1\\), \\(E_1=1+\\tfrac12E_0\\)<br><b>Answer:</b> \\(6\\)",
+  "tags": [
+   "s_markov_chain",
+   "coin",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A simple symmetric random walk on a ring of \\(10\\) vertices starts \\(3\\) steps from vertex \\(0\\). What is the expected number of steps to first reach vertex \\(0\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_markov_chain (hitting time on a cycle, by unwrapping)<br><b>Trigger:</b> a symmetric graph and a target vertex on a ring<br><b>Key move:</b> cut the ring at the target into the segment \\(\\{0,\\dots,10\\}\\) with absorbing ends; hitting time from \\(i\\) is \\(i(n-i)\\)<br><b>Answer:</b> \\(3\\cdot7=21\\)",
+  "tags": [
+   "s_markov_chain",
+   "random_walk",
+   "cycle",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A simple symmetric random walk takes \\(10\\) steps of \\(\\pm1\\) from \\(0\\). What is the probability that its maximum over those steps is at least \\(4\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_reflection<br><b>Trigger:</b> symmetric walk, and the question is about the running maximum rather than the endpoint<br><b>Key move:</b> reflect the path after its first visit to \\(4\\): \\(P(M_n\\ge a)=P(S_n\\ge a)+P(S_n>a)\\)<br><b>Answer:</b> \\(\\dfrac{29}{128}\\approx0.2266\\)",
+  "tags": [
+   "s_reflection",
+   "random_walk",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A simple random walk on \\(\\mathbb Z^3\\) (six neighbours, equal probability) starts at the origin. Does it return to the origin with probability \\(1\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_generating_function (Polya recurrence; Green's function)<br><b>Trigger:</b> lattice of dimension three or more, and a return-probability question<br><b>Key move:</b> return probability is \\(1-1/G(0)\\), where \\(G(0)\\) is the lattice Green's function at the origin<br><b>Answer:</b> No. The return probability is \\(\\approx0.3405\\) (Watson integral \\(G(0)\\approx1.5164\\))",
+  "tags": [
+   "s_generating_function",
+   "random_walk",
+   "lattice",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair die is rolled repeatedly and a running total is kept. What is the expected number of rolls until the total first exceeds \\(6\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_tail_sum with s_recursion (renewal)<br><b>Trigger:</b> the stopping time is the first time a running sum passes a level<br><b>Key move:</b> \\(E[N]=\\sum_{k\\ge0}P(N>k)=\\sum_{k=0}^{6}u_k\\), where \\(u_k=P(\\text{some partial sum}=k)\\)<br><b>Answer:</b> \\(\\dfrac{117649}{46656}\\approx2.5216\\)",
+  "tags": [
+   "s_tail_sum",
+   "s_recursion",
+   "dice",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Your opponent picks HHT. You then pick a three-flip sequence, and a fair coin is flipped until one of the two sequences appears. Which should you pick, and at what odds?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_game_theory_equilibrium (second mover in a Penney race)<br><b>Trigger:</b> two patterns of equal length on one coin, with the second mover choosing after seeing the first<br><b>Key move:</b> pick the sequence that beats the opponent's self-overlap structure: THH<br><b>Answer:</b> THH, \\(P=3/4\\), odds \\(3:1\\)",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "penney",
+   "coin",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Each individual has \\(0\\) children with probability \\(1/4\\), \\(1\\) child with probability \\(1/4\\) and \\(2\\) children with probability \\(1/2\\), independently. What is the probability that the lineage eventually dies out?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_generating_function (branching process extinction)<br><b>Trigger:</b> independent identical offspring, mean above one, and a question about eventual extinction<br><b>Key move:</b> extinction probability is the smallest root in \\([0,1]\\) of \\(G(s)=s\\), with \\(G(s)=\\tfrac14+\\tfrac14s+\\tfrac12s^2\\)<br><b>Answer:</b> \\(\\tfrac12\\)",
+  "tags": [
+   "s_generating_function",
+   "branching",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "An urn starts with one red and one blue ball. Draw a ball, return it, and add one more ball of the same colour. What is the probability that the first three draws are all red?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_martingale (Polya urn)<br><b>Trigger:</b> reinforcement: the drawn colour is added back<br><b>Key move:</b> \\(P(\\text{first }n\\text{ red})=\\prod_{k=0}^{n-1}\\frac{1+k}{2+k}=\\frac{1}{n+1}\\)<br><b>Answer:</b> \\(\\dfrac14\\)",
+  "tags": [
+   "s_martingale",
+   "urn",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A knight moves uniformly at random among its legal moves on an \\(8\\times8\\) board. What is the expected number of moves to return to a corner square?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_markov_chain (random walk on a graph; stationary law proportional to degree)<br><b>Trigger:</b> random walk on a graph with a return-time question<br><b>Key move:</b> \\(\\pi(v)=\\deg(v)/2m\\), so \\(E[\\text{return to }v]=1/\\pi(v)=2m/\\deg(v)\\)<br><b>Answer:</b> \\(168\\) (\\(2m=336\\), corner degree \\(2\\))",
+  "tags": [
+   "s_markov_chain",
+   "random_walk_graph",
+   "knight",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A particle moves on states \\(0,\\dots,4\\). From \\(0\\) it always moves to \\(1\\); from \\(4\\) it always moves to \\(3\\). From \\(1,2,3\\) it moves up with probability \\(2/3\\) and down with probability \\(1/3\\). What is the long-run fraction of time in state \\(4\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_markov_chain (birth-death chain; detailed balance)<br><b>Trigger:</b> nearest-neighbour moves on a line, so detailed balance gives the stationary law directly<br><b>Key move:</b> \\(\\pi_kP(k\\to k+1)=\\pi_{k+1}P(k+1\\to k)\\), giving \\(\\pi\\propto(1,3,6,12,8)\\)<br><b>Answer:</b> \\(\\dfrac{4}{15}\\approx0.2667\\)",
+  "tags": [
+   "s_markov_chain",
+   "random_walk",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair coin is tossed. You bet \\(1\\), double after each loss, and stop at the first win. Your bankroll is \\(31\\), which covers bets \\(1,2,4,8,16\\). What is your expected profit?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_optional_stopping (doubling strategy under a bankroll limit)<br><b>Trigger:</b> a betting rule that is a stopping time, with a finite budget so the stopped wealth is bounded<br><b>Key move:</b> a win at any round pays net \\(+1\\); losing all five rounds costs \\(31\\)<br><b>Answer:</b> \\(0\\)",
+  "tags": [
+   "s_optional_stopping",
+   "betting",
+   "coin",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair coin is flipped repeatedly. Alice wins if HT appears before HH. What is Alice's probability of winning?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_markov_chain with s_game_theory_equilibrium (Penney race between two length-two patterns)<br><b>Trigger:</b> one pattern has a self-overlap (HH) and the other does not (HT)<br><b>Key move:</b> after the first H, the next toss decides: H gives HH (Bob), T gives HT (Alice)<br><b>Answer:</b> \\(\\tfrac12\\)",
+  "tags": [
+   "s_markov_chain",
+   "s_game_theory_equilibrium",
+   "penney",
+   "coin",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair six-sided die is rolled repeatedly. What is the expected number of rolls until a \\(6\\) is immediately followed by a \\(5\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_markov_chain (pattern waiting time, no self-overlap)<br><b>Trigger:</b> a two-symbol pattern whose prefix and suffix never agree<br><b>Key move:</b> a pattern with no proper self-overlap has \\(E=1/P(\\text{pattern})\\)<br><b>Answer:</b> \\(36\\)",
+  "tags": [
+   "s_markov_chain",
+   "dice",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A simple symmetric walk on \\(\\mathbb Z\\) starts at \\(0\\) and takes \\(10\\) steps of \\(\\pm1\\). What is the probability that it never returns to \\(0\\) during steps \\(1\\) to \\(10\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_reflection (Sparre Andersen: no zero in \\(2n\\) steps)<br><b>Trigger:</b> symmetric walk and an event about returns to the origin<br><b>Key move:</b> \\(P(S_1\\ne0,\\dots,S_{2n}\\ne0)=P(S_{2n}=0)=\\binom{2n}{n}4^{-n}\\)<br><b>Answer:</b> \\(\\dfrac{63}{256}\\approx0.2461\\)",
+  "tags": [
+   "s_reflection",
+   "random_walk",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A walk moves to a uniformly random other vertex of the complete graph \\(K_{10}\\) at each step. What is the expected number of steps to return to its starting vertex?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_markov_chain (return time via stationary law)<br><b>Trigger:</b> random walk on a vertex-transitive graph and a return-time question<br><b>Key move:</b> stationary law is uniform, \\(\\pi=1/10\\), so return time \\(=1/\\pi\\)<br><b>Answer:</b> \\(10\\)",
+  "tags": [
+   "s_markov_chain",
+   "random_walk_graph",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A simple symmetric walk starts at \\(0\\). What is the probability that its first visit to \\(+1\\) occurs exactly at step \\(5\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_reflection (first passage)<br><b>Trigger:</b> a question about the time of first hitting a level<br><b>Key move:</b> \\(P(T_a=n)=\\dfrac{a}{n}P(S_n=a)\\)<br><b>Answer:</b> \\(\\dfrac15\\cdot\\dfrac{10}{32}=\\dfrac1{16}\\)",
+  "tags": [
+   "s_reflection",
+   "random_walk",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A two-state weather chain: if today is sunny, tomorrow is rainy with probability \\(0.1\\); if today is rainy, tomorrow is rainy with probability \\(0.5\\). What is the long-run fraction of rainy days?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_markov_chain (stationary distribution)<br><b>Trigger:</b> finite irreducible chain and a question about long-run frequencies<br><b>Key move:</b> balance \\(\\pi_S\\cdot0.1=\\pi_R\\cdot0.5\\), with \\(\\pi_S+\\pi_R=1\\)<br><b>Answer:</b> \\(\\dfrac16\\)",
+  "tags": [
+   "s_markov_chain",
+   "stationary",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair six-sided die is rolled until every face has appeared at least once. What is the expected number of rolls?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_indicators with s_linearity_expectation (coupon collector, sum of geometric phases)<br><b>Trigger:</b> the goal is to see all \\(n\\) equally likely types<br><b>Key move:</b> phase with \\(k\\) faces seen waits a geometric time with mean \\(6/(6-k)\\); add the phases<br><b>Answer:</b> \\(6H_6=\\dfrac{147}{10}=14.7\\)",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "dice",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A coin has unknown bias \\(p\\) with a uniform prior on \\([0,1]\\). The first three tosses are all heads. What is the probability the fourth toss is heads?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_bayes (uniform prior, Beta posterior; the same rule as the Polya urn)<br><b>Trigger:</b> an unknown probability with a uniform prior and sequential data<br><b>Key move:</b> posterior is \\(\\mathrm{Beta}(4,1)\\) with mean \\(4/5\\) (Laplace's rule of succession)<br><b>Answer:</b> \\(\\dfrac45\\)",
+  "tags": [
+   "s_bayes",
+   "coin",
+   "fmt_recognise"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair coin is tossed and you start with \\(2\\) units, betting \\(1\\) per toss. You stop when you reach \\(0\\) or \\(7\\). What are the probability of reaching \\(7\\) and the expected number of tosses?",
+  "back": "<b>Answer:</b> \\(P=\\dfrac27\\); \\(E[T]=10\\)<br><b>Structure:</b> s_martingale, s_optional_stopping (symmetric \\(\\pm1\\) walk between two absorbing barriers)<br><b>Key move:</b> \\(S_n\\) and \\(S_n^2-n\\) are martingales; optional stopping on both<br><b>Working:</b> \\(E[S_T]=2\\) with \\(S_T\\in\\{0,7\\}\\) gives \\(7P=2\\). Then \\(E[(S_T-2)^2]=E[T]\\), so \\(5^2P+2^2(1-P)=E[T]\\), giving \\(E[T]=2\\cdot5=10\\).<br><b>Sanity check:</b> \\(i(N-i)\\) is symmetric in \\(i\\) and \\(N-i\\) and is maximal at the midpoint \\(12.25\\), so \\(10\\) is below that bound<br><b>Transfer:</b> the same identity gives the expected length of a streak game between two players with fixed stakes",
+  "tags": [
+   "s_martingale",
+   "s_optional_stopping",
+   "random_walk",
+   "coin",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Once the walk has taken one step, is the remaining problem the same problem with a different starting fortune?",
+   "Look at \\(S_n\\) itself: it is a martingale, so stopping it at the two barriers lets you use optional stopping. Find a second martingale built from \\(S_n\\) that involves \\(n\\).",
+   "Optional stopping on \\(S_n\\): \\(E[S_T]=S_0\\) with \\(S_T\\in\\{0,7\\}\\) and \\(P=P(S_T=7)\\). Write this as one equation in \\(P\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair coin is tossed. You keep doubling your bet and stop at the first head, with no bankroll limit. Is the expected profit \\(0\\)?",
+  "back": "<b>Answer:</b> No. The expected profit is \\(1\\), so the optional stopping identity \\(E[S_T]=S_0=0\\) fails.<br><b>Structure:</b> s_optional_stopping (unbounded stake, so the stopped wealth is not bounded)<br><b>Key move:</b> \\(S_T=1\\) almost surely, but \\(E[\\text{max stake}]=\\infty\\)<br><b>Working:</b> \\(P(T=k)=2^{-k}\\), and the stake at round \\(k\\) is \\(2^{k-1}\\), so \\(E[\\text{stake}]=\\sum_k2^{k-1}2^{-k}=\\infty\\)<br><b>Sanity check:</b> with a bankroll of \\(31\\) the same strategy has expected profit \\(0\\), so the failure comes entirely from the unbounded stake<br><b>Transfer:</b> the St Petersburg game has infinite expected payoff for the same reason, unbounded payouts",
+  "tags": [
+   "s_optional_stopping",
+   "betting",
+   "coin",
+   "fmt_solve"
+  ],
+  "hints": [
+   "What is the largest single bet you might have to place before the first head? Does the fair-game argument still apply when that bet has no ceiling?",
+   "This is an optional stopping question. Check whether the stopping rule is bounded before trusting \\(E[S_T]=S_0\\), and compute the expected stake directly.",
+   "\\(E[\\text{stake at stop}]=\\sum_k \\text{stake}_k\\cdot P(T=k)\\), where \\(\\text{stake}_k\\) is the bet on round \\(k\\) and \\(P(T=k)\\) is the chance the first head comes on toss \\(k\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A simple symmetric walk starts at \\(0\\) and stops at the first visit to \\(+1\\). Compute \\(E[T]\\) and check whether \\(E[S_T]=E[S_0]\\).",
+  "back": "<b>Answer:</b> \\(E[T]=\\infty\\). \\(S_T=1\\) always, so \\(E[S_T]=1\\neq0=E[S_0]\\).<br><b>Structure:</b> s_optional_stopping (a stopping time with infinite mean)<br><b>Key move:</b> optional stopping needs a bounded stopping time or \\(E[T]<\\infty\\) with bounded increments; neither holds<br><b>Working:</b> \\(P(T>k)\\sim c/\\sqrt{k}\\), so \\(\\sum_k P(T>k)=\\infty\\)<br><b>Sanity check:</b> the walk is recurrent so \\(T<\\infty\\) almost surely, but its mean is infinite, and the identity breaks exactly there<br><b>Transfer:</b> the doubling strategy with no bankroll cap is the same failure in betting dress",
+  "tags": [
+   "s_optional_stopping",
+   "random_walk",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Before any algebra: is the stopping time guaranteed to be finite, and roughly how long does the walk take to reach \\(+1\\)?",
+   "Optional stopping needs either a bounded stopping time or a finite mean with bounded steps. Compute \\(E[T]\\) from the tail sum \\(\\sum_k P(T\\gt k)\\).",
+   "\\(E[T]=\\sum_{k\\ge0}P(T\\gt k)\\), and \\(P(T\\gt k)\\) is the probability that the walk has stayed at or below \\(0\\) for the first \\(k\\) steps. How fast does that decay?"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair coin is tossed repeatedly. What is the expected number of tosses until HT appears? Compare with HH.",
+  "back": "<b>Answer:</b> HT: \\(4\\). HH: \\(6\\).<br><b>Structure:</b> s_markov_chain (Conway leading numbers; patterns with different self-overlap)<br><b>Key move:</b> \\(E[\\text{pattern}]=\\sum2^k\\) over lengths \\(k\\) where the length-\\(k\\) prefix equals the length-\\(k\\) suffix<br><b>Working:</b> HT has no proper overlap, so only the full length \\(k=2\\): \\(2^2=4\\). HH overlaps at \\(k=1\\) and \\(k=2\\): \\(2+4=6\\).<br><b>Sanity check:</b> a tail after a head ends HT at once, while HH must restart after a tail; the first-step equations give \\(6\\) for HH<br><b>Transfer:</b> the same rule gives HHH \\(=14\\)",
+  "tags": [
+   "s_markov_chain",
+   "coin",
+   "fmt_solve"
+  ],
+  "hints": [
+   "When a pattern ends in a tail after a head, what happens to the progress you have made if the next toss is a head instead of a tail? Compare that with HH.",
+   "Conway's leading-number rule: each length \\(k\\) at which the length-\\(k\\) prefix matches the length-\\(k\\) suffix adds \\(2^k\\) to the expected wait.",
+   "\\(E_{\\text{pattern}}=\\sum_{k\\in O}2^k\\), where \\(O\\) is the set of self-overlap lengths. Write \\(O\\) for HH and for HT before adding anything."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair coin is tossed until HTH appears. Is that faster or slower than HHT, and by how much in expectation?",
+  "back": "<b>Answer:</b> HTH: \\(10\\). HHT: \\(8\\). HTH is slower by \\(2\\).<br><b>Structure:</b> s_markov_chain (Conway's leading-number rule; self-overlap of the target)<br><b>Key move:</b> \\(E=\\sum_{k\\in O}2^k\\), with \\(O\\) the set of lengths where prefix equals suffix<br><b>Working:</b> HTH overlaps at \\(k=1\\) (H) and \\(k=3\\) (full): \\(2+8=10\\). HHT overlaps only at full length: \\(8\\).<br><b>Sanity check:</b> a pattern with a self-overlap is slower, and HTH has one<br><b>Transfer:</b> the same rule gives ABRACADABRA on the next card with \\(26\\) letters",
+  "tags": [
+   "s_markov_chain",
+   "coin",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Does the target have a partial match with itself at its start? Which of the two patterns could restart partway through after a failure?",
+   "Use Conway's leading-number rule: \\(E=\\sum 2^k\\) over the self-overlap lengths \\(k\\) of the pattern.",
+   "\\(E[\\text{HTH}]=\\sum_{k\\in O_{\\text{HTH}}}2^k\\) and \\(E[\\text{HHT}]=\\sum_{k\\in O_{\\text{HHT}}}2^k\\). List \\(O\\) for each pattern, then compare."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair coin is tossed until HHH appears. What is the expected number of tosses?",
+  "back": "<b>Answer:</b> \\(14\\)<br><b>Structure:</b> s_markov_chain (Conway leading numbers; maximal self-overlap)<br><b>Key move:</b> the pattern overlaps at every length \\(k=1,2,3\\), so \\(E=2+4+8\\)<br><b>Working:</b> \\(2+4+8=14\\), confirmed by the exact first-step solve.<br><b>Sanity check:</b> one more head in a row adds \\(8=2^3\\) to the expected wait of HH (\\(6\\))<br><b>Transfer:</b> the expected wait for \\(n\\) heads in a row is \\(2^{n+1}-2\\)",
+  "tags": [
+   "s_markov_chain",
+   "coin",
+   "fmt_solve"
+  ],
+  "hints": [
+   "For each length \\(k\\), does the prefix of HHH of that length match the suffix of the same length? Is there any length where they fail to match?",
+   "Apply the leading-number rule: every self-overlap length \\(k\\) contributes \\(2^k\\) to the expected wait.",
+   "Write the sum over the self-overlap lengths of HHH, one term \\(2^k\\) per length, before evaluating it."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Letters are drawn uniformly and independently from a \\(26\\)-letter alphabet. What is the expected number of letters until ABRACADABRA first appears?",
+  "back": "<b>Answer:</b> \\(26+26^4+26^{11}=3\\,670\\,344\\,487\\,444\\,778\\approx3.67\\times10^{15}\\)<br><b>Structure:</b> s_markov_chain with s_martingale (Conway's casino argument; overlaps at lengths \\(1,4,11\\))<br><b>Key move:</b> each overlap of length \\(k\\) adds \\(26^k\\)<br><b>Working:</b> overlaps: \\(A\\) (length 1), \\(ABRA\\) (length 4), the full word (length 11). Sum \\(26+26^4+26^{11}\\). The same rule was checked exactly against the linear system for ABAB (\\(90\\)), ABRA (\\(84\\)) and ABCAB (\\(252\\)) over 3-letter alphabets.<br><b>Sanity check:</b> the answer is dominated by the full-length term \\(26^{11}\\)<br><b>Transfer:</b> the same rule gives the expected wait for any word over any alphabet",
+  "tags": [
+   "s_markov_chain",
+   "s_martingale",
+   "letters",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Which prefixes of ABRACADABRA also appear as its suffix of the same length? Look for the short ones first, then check the longer ones.",
+   "Conway's leading numbers over a 26-letter alphabet: each length at which the word overlaps itself adds \\(26^k\\) to the expected wait.",
+   "\\(E=\\sum_{k\\in O}26^k\\), with \\(O=\\{k : \\text{length-}k\\text{ prefix}=\\text{length-}k\\text{ suffix}\\}\\). Write \\(O\\) as a set before evaluating any power."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Opponent picks THH. You pick a three-flip sequence, and the first of the two to appear in a fair coin sequence wins. Which should you pick, and at what odds?",
+  "back": "<b>Answer:</b> TTH, odds \\(2:1\\), \\(P=\\tfrac23\\)<br><b>Structure:</b> s_game_theory_equilibrium (Penney's game; second mover)<br><b>Key move:</b> Conway's odds \\(P(A\\text{ before }B)\\) : \\(P(B\\text{ before }A)=(c_{BB}-c_{BA}):(c_{AA}-c_{AB})\\), where \\(c_{XY}=\\sum2^{k-1}\\) over \\(k\\) with suffix of \\(X\\) equal to prefix of \\(Y\\)<br><b>Working:</b> for \\(A=\\text{TTH}\\), \\(B=\\text{THH}\\): \\(c_{AA}=4\\), \\(c_{BB}=4\\), \\(c_{AB}=2\\) (suffix \\(TH\\) matches prefix \\(TH\\)), \\(c_{BA}=0\\). Odds \\((4-0):(4-2)=2:1\\).<br><b>Sanity check:</b> exhaustive exact solve over all 3-flip pairs gives \\(\\tfrac23\\) for TTH against THH<br><b>Transfer:</b> the best reply to THH is not the same as the best reply to HHT, which is the cycle point",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "penney",
+   "coin",
+   "fmt_solve"
+  ],
+  "hints": [
+   "The second mover has an edge in a race between two patterns. What would you need to know about how each pattern overlaps itself and the other to decide which one tends to appear first?",
+   "Use Conway's odds for a race between your pattern \\(A\\) and the opponent's \\(B\\): correlations \\(c_{XY}\\) sum \\(2^{k-1}\\) over lengths where a suffix of \\(X\\) equals a prefix of \\(Y\\). Compare candidate \\(A\\)'s against \\(B\\).",
+   "\\(P(A\\text{ first}):P(B\\text{ first})=(c_{BB}-c_{BA}):(c_{AA}-c_{AB})\\). Pick a candidate \\(A\\) and list its four correlations against \\(B=\\)THH before comparing candidates."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair coin is flipped until HHT or HTT appears; you hold HHT and your opponent holds HTT. What is your probability of winning, and the odds?",
+  "back": "<b>Answer:</b> \\(\\tfrac23\\), odds \\(2:1\\)<br><b>Structure:</b> s_game_theory_equilibrium (Penney's game with a fixed opponent pattern)<br><b>Key move:</b> Conway's odds rule with the correlations of HHT and HTT<br><b>Working:</b> for \\(A=\\text{HHT}\\), \\(B=\\text{HTT}\\): \\(c_{AA}=4\\), \\(c_{BB}=4\\). \\(c_{AB}\\): suffix \\(HT\\) of HHT equals prefix \\(HT\\) of HTT, giving \\(2\\). \\(c_{BA}=0\\) (no suffix of HTT equals a prefix of HHT). Odds \\((4-0):(4-2)=2:1\\). Monte Carlo \\(0.665\\).<br><b>Sanity check:</b> \\(\\tfrac23\\) lies between \\(\\tfrac12\\) and \\(1\\), as expected for a pattern race with one overlap difference<br><b>Transfer:</b> the same odds apply to any pair of length-three patterns with the same correlations",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "penney",
+   "coin",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Look at how the ending of each of your patterns lines up with the beginning of the other. Does that asymmetry tilt the race?",
+   "Conway's odds: \\(P(A\\text{ first}):P(B\\text{ first})=(c_{BB}-c_{BA}):(c_{AA}-c_{AB})\\), with \\(c_{XY}=\\sum 2^{k-1}\\) over lengths \\(k\\) where a suffix of \\(X\\) equals a prefix of \\(Y\\).",
+   "Write \\(c_{AA},c_{BB},c_{AB},c_{BA}\\) as four separate lines for \\(A=\\)HHT and \\(B=\\)HTT, one line per correlation, before combining them."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A simple symmetric walk on a ring of \\(10\\) vertices starts at \\(0\\). What is its expected cover time, the number of steps until every vertex has been visited?",
+  "back": "<b>Answer:</b> \\(45=\\binom{10}{2}\\)<br><b>Structure:</b> s_markov_chain (cycle; the visited set is always an arc)<br><b>Key move:</b> the visited set is an arc, and the expected time for it to grow to length \\(n\\) is \\(n(n-1)/2\\)<br><b>Working:</b> unwrapped on \\(\\mathbb Z\\), the range of the walk must reach \\(n-1\\), with expected time \\(n(n-1)/2\\). Monte Carlo \\(44.96\\).<br><b>Sanity check:</b> for \\(n=3\\) the formula gives \\(3\\): one step to a neighbour, then an expected \\(2\\) steps to reach the last vertex<br><b>Transfer:</b> the cover time of a path starting from one end is \\((n-1)^2\\), the perturbed version of this card",
+  "tags": [
+   "s_markov_chain",
+   "random_walk",
+   "cycle",
+   "fmt_solve"
+  ],
+  "hints": [
+   "After the walk has visited some vertices, what shape does the set of visited vertices always have on a ring? How many new vertices can the next step add?",
+   "The visited set is always a contiguous arc. Split the total time into stages, one for each growth of the arc, find the expected time of each stage, and add them.",
+   "Unwrap the walk onto \\(\\mathbb Z\\). Covering the ring means the range \\(\\max S-\\min S\\) reaches \\(n-1\\); set up the expected hitting time of that range."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A walk on the complete graph \\(K_{10}\\) moves to a uniformly random other vertex each step. What is the expected number of steps to hit a fixed vertex, starting from a different vertex?",
+  "back": "<b>Answer:</b> \\(9\\)<br><b>Structure:</b> s_markov_chain (complete graph; geometric hitting time)<br><b>Key move:</b> from any other vertex the walk steps onto the target with probability \\(1/9\\) each step<br><b>Working:</b> \\(E=1/(1/9)=9=n-1\\). Monte Carlo \\(9.03\\).<br><b>Sanity check:</b> the return time to the start vertex is \\(10\\), from \\(1/\\pi\\)<br><b>Transfer:</b> the expected number of random calls to reach a specific colleague in a fully connected office is the same number",
+  "tags": [
+   "s_markov_chain",
+   "random_walk_graph",
+   "fmt_solve"
+  ],
+  "hints": [
+   "From a vertex other than the target, what is the chance that the next step lands on the target? Does that chance depend on which vertex you are at?",
+   "Each step from a non-target vertex is a trial with the same success probability, so the hitting time is geometric.",
+   "\\(E[\\tau]=1/p\\), where \\(p\\) is the probability that one step from a non-target vertex lands on the target. Write \\(p\\) in terms of \\(n\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "On the complete graph \\(K_{10}\\), a walk moves to a uniformly random other vertex each step. What is the expected number of steps to visit all \\(10\\) vertices, starting from one of them?",
+  "back": "<b>Answer:</b> \\(\\dfrac{7129}{280}\\approx25.46\\)<br><b>Structure:</b> s_markov_chain with s_linearity_expectation (coupon-collector phases on the complete graph)<br><b>Key move:</b> with \\(k\\) vertices visited, the next new one arrives after a geometric time with success probability \\((n-k)/(n-1)\\); add the phases<br><b>Working:</b> \\(E=\\sum_{k=1}^{9}\\frac{9}{10-k}=9H_9=\\tfrac{7129}{280}\\). Monte Carlo \\(25.50\\).<br><b>Sanity check:</b> the answer is near \\(n\\log n\\), the coupon-collector scaling<br><b>Transfer:</b> the coupon collector on \\(6\\) faces is \\(6H_6\\), a special case of the same phase sum",
+  "tags": [
+   "s_markov_chain",
+   "s_linearity_expectation",
+   "random_walk_graph",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Once you have visited \\(k\\) distinct vertices, does the wait for the next new one depend on anything except \\(k\\)? How does that wait change as \\(k\\) grows?",
+   "Split the total time into phases indexed by the number of visited vertices. Each phase is a geometric wait, and linearity of expectation lets you add them.",
+   "\\(E=\\sum_{k=1}^{n-1}\\frac{1}{p_k}\\), where \\(p_k\\) is the chance that the next step reaches a new vertex when \\(k\\) vertices are visited. Write \\(p_k\\) as a function of \\(k\\) and \\(n\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A knight moves uniformly at random among its legal moves on an \\(8\\times8\\) board. What is the expected number of moves to return to the centre square \\((3,3)\\) (zero-indexed), which has \\(8\\) legal moves?",
+  "back": "<b>Answer:</b> \\(42\\)<br><b>Structure:</b> s_markov_chain (random walk on a graph; return time from degree)<br><b>Key move:</b> \\(\\pi(v)=\\deg(v)/2m\\) with \\(2m=336\\), so return time \\(=336/8\\)<br><b>Working:</b> the total degree of the knight graph is \\(336\\) (by enumeration). Return time \\(=336/8=42\\). Monte Carlo \\(41.8\\).<br><b>Sanity check:</b> corner squares have degree \\(2\\), so return time \\(168\\): the walk spends more time where the degree is high<br><b>Transfer:</b> the same formula gives the return time for any connected graph",
+  "tags": [
+   "s_markov_chain",
+   "random_walk_graph",
+   "knight",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Think about the long-run share of time the walk spends at each square. Is that share related to how many moves are available from each square?",
+   "Return time to a square equals \\(1/\\pi(v)\\), where \\(\\pi(v)=\\deg(v)/\\sum_u\\deg(u)\\) is the stationary probability of a random walk on a graph.",
+   "Write \\(\\sum_u\\deg(u)\\) as a sum over all \\(64\\) squares of the board, then divide by the degree of the centre square."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A walk on \\(\\{0,\\dots,4\\}\\) moves from \\(0\\) to \\(1\\) and from \\(4\\) to \\(3\\) with probability \\(1\\). From \\(1,2,3\\) it moves up with probability \\(2/3\\). Find the stationary distribution and the expected return time to \\(0\\).",
+  "back": "<b>Answer:</b> \\(\\pi=(1,3,6,12,8)/30\\); return time to \\(0\\) is \\(30\\)<br><b>Structure:</b> s_markov_chain (birth-death chain with reflecting ends)<br><b>Key move:</b> detailed balance \\(\\pi_kp_{k,k+1}=\\pi_{k+1}p_{k+1,k}\\) along the line<br><b>Working:</b> \\(\\pi_1=3\\pi_0\\) (from \\(0\\to1\\) and \\(1\\to0\\) at rate \\(1/3\\)); \\(\\pi_2=2\\pi_1\\); \\(\\pi_3=2\\pi_2\\); \\(\\pi_4=\\tfrac23\\pi_3\\). Sum \\(=30\\pi_0\\), so \\(\\pi_0=1/30\\), return time \\(1/\\pi_0=30\\). Monte Carlo \\(30.00\\).<br><b>Sanity check:</b> the chain has period two, so plain power iteration from a uniform start does not converge; detailed balance is the reliable check<br><b>Transfer:</b> the same line-by-line balance gives the stationary law of a finite-capacity queue",
+  "tags": [
+   "s_markov_chain",
+   "random_walk",
+   "stationary",
+   "fmt_solve"
+  ],
+  "hints": [
+   "On a line, is there a simpler balance condition between neighbouring states than the full set of equations? What probability flow crosses each edge?",
+   "Detailed balance on each edge: \\(\\pi_k p_{k,k+1}=\\pi_{k+1}p_{k+1,k}\\). Then the return time to \\(0\\) is \\(1/\\pi_0\\).",
+   "Write the detailed-balance equation for the edge between \\(0\\) and \\(1\\): \\(\\pi_0\\cdot p_{01}=\\pi_1\\cdot p_{10}\\). Fill in \\(p_{01}\\) and \\(p_{10}\\) from the statement."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A weather chain has \\(P(\\text{sunny}\\to\\text{rainy})=0.2\\) and \\(P(\\text{rainy}\\to\\text{sunny})=0.4\\). Find the stationary distribution.",
+  "back": "<b>Answer:</b> \\(\\pi_S=\\tfrac23\\), \\(\\pi_R=\\tfrac13\\)<br><b>Structure:</b> s_eigen (stationary vector is the left eigenvector with eigenvalue \\(1\\))<br><b>Key move:</b> balance \\(\\pi_S\\cdot0.2=\\pi_R\\cdot0.4\\), then normalise<br><b>Working:</b> \\(\\pi_S/\\pi_R=2\\), so \\(\\pi=(\\tfrac23,\\tfrac13)\\). Check: \\(\\tfrac23\\cdot0.2=\\tfrac13\\cdot0.4=\\tfrac2{15}\\).<br><b>Sanity check:</b> for \\(P=\\begin{pmatrix}1-a&a\\\\b&1-b\\end{pmatrix}\\), \\(\\pi=(b,a)/(a+b)\\), which gives the same answer<br><b>Transfer:</b> the long-run share of time in each state is the stationary probability, not the one-step rate",
+  "tags": [
+   "s_eigen",
+   "s_markov_chain",
+   "stationary",
+   "fmt_solve"
+  ],
+  "hints": [
+   "In the long run, what must hold for the flow of probability between the two states? Is there a balance condition that avoids solving a full matrix?",
+   "The stationary vector is the left eigenvector with eigenvalue \\(1\\). For two states this is a balance between the two cross-flows, followed by normalisation.",
+   "Balance: \\(\\pi_S\\cdot P(S\\to R)=\\pi_R\\cdot P(R\\to S)\\), together with \\(\\pi_S+\\pi_R=1\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A simple symmetric walk takes \\(8\\) steps of \\(\\pm1\\) from \\(0\\). What is the probability that its maximum over those steps is at least \\(3\\)?",
+  "back": "<b>Answer:</b> \\(\\dfrac{37}{128}\\approx0.2891\\)<br><b>Structure:</b> s_reflection (running maximum of a symmetric walk)<br><b>Key move:</b> \\(P(M_n\\ge a)=2P(S_n>a)+P(S_n=a)\\); \\(S_8\\) is even, so \\(P(S_8=3)=0\\)<br><b>Working:</b> \\(P(S_8>3)=P(S_8\\ge4)=(28+8+1)/256=37/256\\). So \\(P(M_8\\ge3)=2\\cdot37/256=37/128\\). Monte Carlo \\(0.2897\\).<br><b>Sanity check:</b> the endpoint probability \\(P(S_8\\ge3)=37/256\\) is below \\(P(M_8\\ge3)\\), as it must be<br><b>Transfer:</b> the same identity with \\(a=4,n=10\\) gives \\(29/128\\)",
+  "tags": [
+   "s_reflection",
+   "random_walk",
+   "fmt_solve"
+  ],
+  "hints": [
+   "How does the chance that the walk ever reaches level \\(3\\) compare with the chance that it ends at or above \\(3\\)? Think about what happens after the first time it touches \\(3\\).",
+   "Reflection principle: \\(P(M_n\\ge a)=2P(S_n\\gt a)+P(S_n=a)\\). Check whether \\(S_n=a\\) is even possible for the given \\(n\\) and \\(a\\).",
+   "\\(P(M_8\\ge3)=2P(S_8\\gt3)+P(S_8=3)\\). Before computing, state the parity of \\(S_8\\) and check which values it can take."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A simple symmetric walk starts at \\(0\\). What is the probability that its first visit to \\(+2\\) occurs at step \\(4\\)?",
+  "back": "<b>Answer:</b> \\(\\dfrac18\\)<br><b>Structure:</b> s_reflection (first passage)<br><b>Key move:</b> \\(P(T_a=n)=\\dfrac{a}{n}P(S_n=a)\\)<br><b>Working:</b> \\(\\tfrac24\\cdot P(S_4=2)=\\tfrac12\\cdot\\tfrac4{16}=\\tfrac18\\). Enumeration: the only paths are \\(UDUU\\) and \\(DUUU\\), i.e. \\(2\\) of \\(16\\). Monte Carlo \\(0.126\\).<br><b>Sanity check:</b> the walk hits \\(+2\\) with probability \\(1\\), so the time distribution is the only interesting part, with a heavy tail<br><b>Transfer:</b> the same formula gives first visit to \\(+1\\) at step \\(5\\) as \\(1/16\\)",
+  "tags": [
+   "s_reflection",
+   "random_walk",
+   "fmt_solve"
+  ],
+  "hints": [
+   "For the walk to be at \\(+2\\) for the first time at step \\(4\\), what must the walk have done at step \\(3\\)? Which earlier paths are excluded?",
+   "First-passage formula: \\(P(T_a=n)=\\frac{a}{n}P(S_n=a)\\) (the hitting-time theorem).",
+   "\\(P(T_2=4)=\\frac{2}{4}P(S_4=2)\\). Write \\(P(S_4=2)\\) as \\(\\binom{4}{k}/2^4\\) for the number \\(k\\) of up-steps, and find \\(k\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A simple symmetric walk takes \\(10\\) steps of \\(\\pm1\\) from \\(0\\). What is the probability that it ends at \\(4\\) and stays strictly positive at every step \\(1,\\dots,10\\)?",
+  "back": "<b>Answer:</b> \\(\\dfrac{3}{64}\\approx0.0469\\)<br><b>Structure:</b> s_reflection (ballot theorem; path must stay on one side and end at a fixed level)<br><b>Key move:</b> ballot count \\(\\frac{a}{n}\\binom{n}{(n+a)/2}\\) with \\(a=4\\), \\(n=10\\)<br><b>Working:</b> \\(\\frac{4}{10}\\binom{10}{7}=48\\) paths out of \\(2^{10}=1024\\), so \\(48/1024=3/64\\). Monte Carlo \\(0.0470\\).<br><b>Sanity check:</b> conditional on ending at \\(4\\), the chance is \\(48/120=2/5\\), the ballot probability<br><b>Transfer:</b> the same count gives paths that never return to zero",
+  "tags": [
+   "s_reflection",
+   "random_walk",
+   "fmt_solve"
+  ],
+  "hints": [
+   "If the walk must end at a positive level and never touch zero, is there a standard counting result for paths that stay on one side of the axis?",
+   "Ballot theorem: the number of paths from \\(0\\) to \\(a\\) in \\(n\\) steps that stay strictly positive is given by a ballot count with \\(a\\) and \\(n\\).",
+   "Count the paths \\(=\\frac{a}{n}\\binom{n}{(n+a)/2}\\) with \\(a\\) the end level and \\(n\\) the number of steps, then divide by the total number of paths \\(2^n\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A walk takes \\(+1\\) with probability \\(0.6\\) and \\(-1\\) with probability \\(0.4\\) each step, starting at \\(0\\). What are the probabilities that it ever reaches \\(+1\\), and that it ever reaches \\(-1\\)?",
+  "back": "<b>Answer:</b> Reaching \\(+1\\): \\(1\\). Reaching \\(-1\\): \\(\\tfrac23\\).<br><b>Structure:</b> s_martingale (exponential martingale \\((q/p)^{S_n}\\)); drift in one direction<br><b>Key move:</b> \\((q/p)^{S_n}\\) is a martingale; stop at \\(-1\\) or let the walk drift to \\(+\\infty\\)<br><b>Working:</b> with \\(q/p=\\tfrac23\\): if the walk hits \\(-1\\) then \\((q/p)^{S_T}=(3/2)\\); otherwise it tends to \\(0\\). So \\(\\tfrac32P=1\\), \\(P=\\tfrac23\\). Monte Carlo \\(0.666\\).<br><b>Sanity check:</b> a symmetric walk gives \\(1\\) for both events, so the drift is what lowers the probability of \\(-1\\)<br><b>Transfer:</b> the same argument gives the ruin probability for any barrier distance",
+  "tags": [
+   "s_martingale",
+   "random_walk",
+   "fmt_solve"
+  ],
+  "hints": [
+   "With upward drift, is it certain that the walk reaches \\(+1\\)? For \\(-1\\), what does a function like \\((q/p)^{S_n}\\) do on average?",
+   "Use the exponential martingale \\((q/p)^{S_n}\\) with optional stopping at \\(-1\\), and handle the case where the walk drifts away to \\(+\\infty\\).",
+   "\\(E[(q/p)^{S_T}]=(q/p)^{S_0}\\) where \\(T\\) is the first hit of \\(-1\\). Write this as a two-term expectation, one term for hitting \\(-1\\) and one for escaping."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A simple symmetric walk takes \\(\\pm1\\) steps. Given that the first four steps are \\(+1,-1,+1,-1\\), what is \\(E[S_{20}]\\)?",
+  "back": "<b>Answer:</b> \\(E[S_{20}\\mid\\mathcal F_4]=S_4=0\\)<br><b>Structure:</b> s_conditional_expectation_tower with s_martingale (\\(S_n\\) is a martingale)<br><b>Key move:</b> the conditional expectation of a future value of a martingale is its current value<br><b>Working:</b> \\(E[S_{20}\\mid\\mathcal F_4]=S_4=0\\). Also \\(E[S_{20}^2-20\\mid\\mathcal F_4]=S_4^2-4=-4\\), by the same tower step.<br><b>Sanity check:</b> unconditionally \\(E[S_{20}]=0\\) by symmetry, so the conditioning only changes the second moment<br><b>Transfer:</b> the same tower step gives conditional variance-type martingales such as \\(S_n^2-n\\)",
+  "tags": [
+   "s_conditional_expectation_tower",
+   "s_martingale",
+   "random_walk",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Given the first four steps, which part of \\(S_{20}\\) is still random? What is the best prediction of a future value of a process with no drift?",
+   "Tower property: the conditional expectation of a future value of a martingale equals its current value, and \\(S_n\\) is a martingale.",
+   "Setup: split \\(S_{20}\\) into the known sum of the first four steps and the sum of the sixteen future steps, then take the conditional expectation of each part given the first four."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair coin is flipped until HTHT appears. What is the expected number of tosses?",
+  "back": "<b>Answer:</b> \\(20\\)<br><b>Structure:</b> s_markov_chain (Conway leading numbers; two self-overlaps)<br><b>Key move:</b> overlaps at lengths \\(2\\) (HT) and \\(4\\) (full): \\(E=2^2+2^4\\)<br><b>Working:</b> \\(4+16=20\\), confirmed by the exact first-step solve.<br><b>Sanity check:</b> HTHT is longer than HTH (\\(10\\)) because its overlaps are longer<br><b>Transfer:</b> the same rule gives ABAB \\(=90\\) over three letters",
+  "tags": [
+   "s_markov_chain",
+   "coin",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Does the target's beginning reappear inside the target at more than one place? Check each shorter prefix of HTHT against the matching suffix.",
+   "Leading-number rule: \\(E=\\sum_{k\\in O}2^k\\) over the self-overlap lengths of the pattern, including the full length.",
+   "Write \\(O\\) for HTHT as a set of lengths, then write the sum \\(\\sum_{k\\in O}2^k\\) before evaluating it."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Starting with one red and one blue ball, each draw returns the ball and adds one more of the drawn colour. After \\(10\\) draws, what is the expected number of red balls?",
+  "back": "<b>Answer:</b> \\(E[R_{10}]=6\\)<br><b>Structure:</b> s_martingale (Polya urn: \\(R_n/(n+2)\\) is a martingale)<br><b>Key move:</b> \\(E[R_n/(n+2)]=R_0/(R_0+B_0)=\\tfrac12\\) for every \\(n\\)<br><b>Working:</b> \\(E[R_{10}]=\\tfrac12\\cdot(10+2)=6\\). Monte Carlo \\(6.006\\).<br><b>Sanity check:</b> after one draw \\(E[R_1]=\\tfrac12\\cdot2+\\tfrac12\\cdot1=\\tfrac32=\\tfrac12\\cdot3\\), consistent<br><b>Transfer:</b> the same martingale gives the limiting expected fraction \\(\\tfrac12\\) without knowing the limit law",
+  "tags": [
+   "s_martingale",
+   "urn",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Is there a quantity built from the red count and the total count whose expected value does not change from draw to draw?",
+   "Look for a function of the red count and the total count whose expected value is unchanged by each draw, and see what that implies at draw 10.",
+   "Setup: let \\(X_n=R_n/(n+2)\\). Show that the expected change of \\(X_n\\) in one draw is zero given the current composition, and conclude what \\(E[X_{10}]\\) equals."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A branching process: each individual has \\(0\\) children with probability \\(1/4\\), and \\(2\\) children with probability \\(3/4\\). What is the probability that the lineage eventually dies out?",
+  "back": "<b>Answer:</b> \\(\\dfrac13\\)<br><b>Structure:</b> s_generating_function (branching extinction; mean above one)<br><b>Key move:</b> extinction \\(q\\) is the smallest root of \\(G(s)=s\\), with \\(G(s)=\\tfrac14+\\tfrac34s^2\\)<br><b>Working:</b> \\(\\tfrac14+\\tfrac34q^2=q\\) gives \\(3q^2-4q+1=0\\), roots \\(\\tfrac13\\) and \\(1\\). The smaller root is the extinction probability. Monte Carlo \\(0.328\\).<br><b>Sanity check:</b> the mean is \\(3/2>1\\), so the process is supercritical and extinction is less than certain<br><b>Transfer:</b> a surname passed through a line with the same offspring law has the same answer (twin card)",
+  "tags": [
+   "s_generating_function",
+   "branching",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Does the population grow or shrink on average each generation? How does that decide whether extinction is certain?",
+   "Extinction probability \\(q\\) satisfies \\(G(q)=q\\) for the offspring generating function \\(G\\), and is the smallest root in \\([0,1]\\).",
+   "\\(G(s)=\\sum_k p_k s^k\\). Write \\(G(s)\\) from the offspring law, then set \\(G(q)=q\\) and collect terms."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair die is rolled. What is the expected number of rolls until a face repeats an earlier face?",
+  "back": "<b>Answer:</b> \\(\\dfrac{1223}{324}\\approx3.7747\\)<br><b>Structure:</b> s_tail_sum (first repeat among i.i.d. draws from a finite set)<br><b>Key move:</b> \\(E[N]=\\sum_{k\\ge0}P(\\text{no repeat in first }k)\\)<br><b>Working:</b> \\(P(\\text{no repeat in first }k)=\\prod_{j\\lt k}\\frac{6-j}{6}\\). Summing over \\(k=0,\\dots,6\\): \\(1+1+\\tfrac56+\\tfrac59+\\tfrac5{18}+\\tfrac5{54}+\\tfrac5{324}=\\tfrac{1223}{324}\\). Monte Carlo \\(3.770\\).<br><b>Sanity check:</b> a 2-faced die gives \\(2.5\\): roll 1, then a repeat with probability \\(\\tfrac12\\), and a sure repeat by roll 3<br><b>Transfer:</b> the general \\(n\\)-face formula is \\(\\sum_{k=0}^{n}\\frac{n!}{(n-k)!\\,n^k}\\)",
+  "tags": [
+   "s_tail_sum",
+   "dice",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Instead of the time of the first repeat, think about the probability that the first \\(k\\) rolls are all different. How does that relate to the expected number of rolls?",
+   "Tail-sum formula: \\(E[N]=\\sum_{k\\ge0}P(N\\gt k)\\), where \\(P(N\\gt k)\\) is the chance that the first \\(k\\) rolls are all distinct.",
+   "\\(E[N]=\\sum_{k\\ge0}\\prod_{j=0}^{k-1}\\frac{6-j}{6}\\). Write out the first few terms, starting with \\(k=0\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair die is rolled and a running total is kept. What is the expected number of rolls until the running total first exceeds \\(10\\)?",
+  "back": "<b>Answer:</b> \\(\\dfrac{218463217}{60466176}\\approx3.6130\\)<br><b>Structure:</b> s_recursion (renewal) with s_tail_sum<br><b>Key move:</b> \\(E[N]=\\sum_{k=0}^{10}u_k\\), with \\(u_0=1\\) and \\(u_k=\\tfrac16\\sum_{j=1}^{6}u_{k-j}\\)<br><b>Working:</b> solve the recursion exactly for \\(u_0,\\dots,u_{10}\\) and sum. Monte Carlo \\(3.611\\).<br><b>Sanity check:</b> \\(u_k\\to1/3.5\\), so \\(E[N]\\) grows roughly like \\(n/3.5\\)<br><b>Transfer:</b> the same recursion gives the expected number of rolls for any stopping level, with a different face set changing only the weights",
+  "tags": [
+   "s_recursion",
+   "s_tail_sum",
+   "dice",
+   "fmt_solve"
+  ],
+  "hints": [
+   "After the first roll, does the remaining problem look like the original one with a smaller target? Can you write an equation for the probability that the running total hits each value?",
+   "Renewal recursion: let \\(u_k\\) be the probability that the running total ever equals \\(k\\). Then \\(E[N]=\\sum_{k=0}^{10}u_k\\).",
+   "\\(u_k=\\frac16\\sum_{j=1}^{6}u_{k-j}\\) for \\(k\\ge1\\), with \\(u_0=1\\) and \\(u_m=0\\) for \\(m\\lt0\\). Evaluate the first few \\(u_k\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A simple symmetric walk on \\(\\mathbb Z\\) starts at \\(0\\) and stops at the first visit to \\(-2\\) or \\(5\\). What is the expected number of steps?",
+  "back": "<b>Answer:</b> \\(E[T]=ab=2\\cdot5=10\\)<br><b>Structure:</b> s_martingale (\\(S_n^2-n\\) for symmetric walks between barriers)<br><b>Key move:</b> \\(E[T]=E[S_T^2]\\) with \\(S_T\\in\\{-2,5\\}\\) and \\(P(S_T=5)=\\tfrac27\\)<br><b>Working:</b> \\(E[S_T^2]=4\\cdot\\tfrac57+25\\cdot\\tfrac27=\\tfrac{20+50}{7}=10\\).<br><b>Sanity check:</b> the general form \\(ab\\) with \\(a=2,b=5\\) gives \\(10\\)<br><b>Transfer:</b> the expected duration of a symmetric game between two players with fixed stakes",
+  "tags": [
+   "s_martingale",
+   "random_walk",
+   "fmt_solve"
+  ],
+  "hints": [
+   "Is there a quantity built from the square of the position that, after compensating for time, has zero expected drift?",
+   "Use \\(S_n^2-n\\) as a martingale and optional stopping: the expectation of \\(S_T^2\\) at the stopping time equals \\(E[T]\\).",
+   "\\(E[S_T^2]=E[T]\\) with \\(S_T\\in\\{-2,5\\}\\). Write \\(P(S_T=5)=p\\), and use \\(E[S_T]=0\\) to set up an equation for \\(p\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Symmetric walk on \\(\\{0,\\dots,5\\}\\) with absorption at \\(5\\). The state \\(0\\) is now reflecting (always moves to \\(1\\)). Starting from \\(0\\), what is the expected number of steps to hit \\(5\\)?",
+  "back": "<b>What breaks:</b> The martingale \\(S_n^2-n\\) assumed absorbing barriers at both ends. At a reflecting end the step is deterministic, so the optional stopping formula with \\(i(N-i)\\) no longer applies from \\(0\\).<br><b>Fix:</b> first-step analysis: \\(E_i=1+\\tfrac12(E_{i-1}+E_{i+1})\\) for \\(1\\le i\\le4\\), \\(E_0=1+E_1\\), \\(E_5=0\\). The solution is \\(E_i=25-i^2\\).<br><b>New answer:</b> \\(E_0=25\\)",
+  "tags": [
+   "s_first_step_conditioning",
+   "random_walk",
+   "reflecting_barrier",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "The earlier formula used absorbing barriers at both ends. What changes at a reflecting end, and what happens to the walk on each step there?",
+   "Use first-step analysis: write the expected time from each state in terms of its neighbours, with the reflecting end as a special equation.",
+   "Write the first-step equation for an interior state \\(i\\), and separately the equation for state \\(0\\), where the step is deterministic."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Biased coin with \\(P(H)=3/5\\). What is the expected number of tosses until HH?",
+  "back": "<b>What breaks:</b> The fair-coin weights \\(2^k\\) assume each toss has probability \\(1/2\\). With bias, each self-overlap of length \\(k\\) contributes \\(1/P(\\text{prefix of length }k)\\), not \\(2^k\\).<br><b>Fix:</b> \\(E=\\sum_{k\\in O}1/P(\\text{prefix of length }k)\\), with \\(O\\) the self-overlap lengths of HH.<br><b>New answer:</b> \\(\\dfrac1{0.6}+\\dfrac1{0.36}=\\dfrac{40}{9}\\approx4.444\\). Monte Carlo \\(4.44\\).",
+  "tags": [
+   "s_markov_chain",
+   "coin",
+   "biased_coin",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "The fair-coin weights are powers of \\(2\\). With unequal probabilities, what should each self-overlap weight become?",
+   "With bias, each self-overlap of length \\(k\\) contributes \\(1/P(\\text{prefix of length }k)\\) rather than \\(2^k\\).",
+   "\\(E[\\text{HH}]=\\sum_{k\\in O}\\frac{1}{P(\\text{prefix}_k)}\\), with \\(O\\) the self-overlap lengths of HH. Write each \\(P(\\text{prefix}_k)\\) in terms of \\(p=P(H)\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Penney's game with a biased coin, \\(P(H)=3/5\\). Opponent picks HHT. If you pick THH, what is \\(P(\\text{THH appears before HHT})\\)?",
+  "back": "<b>What breaks:</b> Under a fair coin this is \\(3/4\\). With \\(P(H)\\ne\\tfrac12\\) the odds depend on the letter probabilities, not just counts of overlaps.<br><b>Fix:</b> compute the win probability by first-step equations on the Aho-Corasick states, with weights \\(p\\) and \\(q\\).<br><b>New answer:</b> \\(\\dfrac{16}{25}=0.64\\). Monte Carlo \\(0.640\\).",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "penney",
+   "biased_coin",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "With a biased coin, does the race depend only on how the patterns overlap, or do the individual letter probabilities matter too?",
+   "Track progress with a small Markov chain on the states given by the longest suffix that matches a prefix of either pattern, and solve first-step equations with weights \\(p\\) and \\(q\\).",
+   "Let \\(w_s\\) be the probability that THH appears first from state \\(s\\). Write the equation for \\(w_{\\varnothing}\\) (no progress yet) in terms of \\(p\\) and \\(q\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A Polya urn starts with one red and one blue. Each draw returns the drawn ball and adds \\(2\\) balls of the drawn colour. What is the probability the first two draws are both red, and what is the limiting law of the red fraction?",
+  "back": "<b>What breaks:</b> The fair urn gives \\(P(\\text{first two red})=\\tfrac13\\). Adding \\(2\\) per draw changes the weights, so the limit law is no longer uniform. The martingale property of the red fraction is unchanged.<br><b>Fix:</b> after one red draw the urn holds \\(3\\) red and \\(1\\) blue, so the second draw is red with probability \\(3/4\\). The limit is \\(\\mathrm{Beta}(a/c,b/c)=\\mathrm{Beta}(\\tfrac12,\\tfrac12)\\), with \\(c=2\\).<br><b>New answer:</b> \\(P=\\tfrac12\\cdot\\tfrac34=\\tfrac38\\). The limit is \\(\\mathrm{Beta}(\\tfrac12,\\tfrac12)\\), the arcsine law, with mean \\(\\tfrac12\\). Monte Carlo \\(0.375\\).",
+  "tags": [
+   "s_martingale",
+   "urn",
+   "s_bayes",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "After one red draw, the urn composition changes. Does the chance of a second red depend on the first draw? What distribution does the red fraction settle into?",
+   "Compute the first two draws directly from the urn composition. The limiting law is a Beta distribution; find its parameters from the starting counts and the number of balls added per draw.",
+   "\\(P(R_1R_2)=\\frac{R_0}{R_0+B_0}\\cdot\\frac{R_0+c}{R_0+B_0+c}\\), where \\(c\\) is the number of balls added per draw. Substitute \\(c\\) from the statement."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Branching process with \\(p_0=\\tfrac12\\) and \\(p_2=\\tfrac12\\). What is the extinction probability?",
+  "back": "<b>What breaks:</b> The mean offspring is now \\(1\\), so the process is critical, not supercritical. The root \\(q=\\tfrac13\\) of the earlier card is no longer the smallest root in \\([0,1]\\).<br><b>Fix:</b> solve \\(G(q)=q\\) for \\(G(s)=\\tfrac12+\\tfrac12s^2\\) and take the smallest root in \\([0,1]\\).<br><b>New answer:</b> \\(q=1\\). Extinction is certain, although the expected population stays at \\(1\\) each generation.",
+  "tags": [
+   "s_generating_function",
+   "branching",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "Compute the mean number of children per individual. Does the population grow on average, and does that change which root of the extinction equation to choose?",
+   "Extinction probability is the smallest root of \\(G(q)=q\\) in \\([0,1]\\). Check whether the mean is above one before choosing a root.",
+   "\\(G(s)=\\sum_k p_k s^k\\). Write \\(G(q)=q\\) for this offspring law as an equation in \\(q\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A die with faces \\(2,3,4,5,6\\) only (no \\(1\\)) is rolled and a running total is kept. What is the expected number of rolls until the total first exceeds \\(6\\)?",
+  "back": "<b>What breaks:</b> The mean step is now \\(4\\), not \\(3.5\\), and the renewal probabilities \\(u_k\\) depend on the new face set.<br><b>Fix:</b> recompute \\(u_k=\\tfrac15\\sum_{j=2}^{6}u_{k-j}\\) with \\(u_0=1\\), then sum \\(u_0,\\dots,u_6\\).<br><b>New answer:</b> \\(\\dfrac{281}{125}=2.248\\). Monte Carlo \\(2.248\\).",
+  "tags": [
+   "s_recursion",
+   "s_tail_sum",
+   "dice",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "The running-total argument did not depend on the faces being \\(1\\) to \\(6\\) specifically. What changes in the step distribution, and does the renewal recursion still apply?",
+   "Renewal recursion: \\(u_k\\) is the probability the running total ever equals \\(k\\), and the expected number of rolls is the sum of the \\(u_k\\) up to the threshold. Only the face set changes the weights.",
+   "\\(u_k=\\frac{1}{|F|}\\sum_{j\\in F}u_{k-j}\\), where \\(F\\) is the set of faces, with \\(u_0=1\\). Write \\(F\\) explicitly and evaluate for the first few \\(k\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair die is rolled repeatedly. What is the expected number of rolls until a roll equals the roll immediately before it?",
+  "back": "<b>What breaks:</b> The earlier problem asked for any repeat of any earlier face. Here the target is a consecutive repeat, a fresh chance \\(1/6\\) at each step with no memory of earlier rolls.<br><b>Fix:</b> after the first roll, each later roll repeats with probability \\(1/6\\), a geometric wait with mean \\(6\\).<br><b>New answer:</b> \\(1+6=7\\). Monte Carlo \\(6.998\\) extra rolls plus the first gives \\(7.00\\).",
+  "tags": [
+   "s_markov_chain",
+   "dice",
+   "s_first_step_conditioning",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "Does the chance of a repeat depend on anything beyond the previous roll? Is each new roll a fresh trial, and what is its success probability?",
+   "After the first roll, each later roll succeeds independently with the same chance, so the wait is geometric and the first roll is free.",
+   "\\(E=1+E[\\text{geometric wait}]\\), where the success probability \\(p\\) is the chance that a roll equals the one before it. Write \\(p\\) in terms of the number of faces."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A simple symmetric walk on \\(\\mathbb Z^2\\) gets a drift: east with probability \\(0.3\\), west \\(0.2\\), north and south \\(0.25\\) each. Does it return to the origin with probability \\(1\\)?",
+  "back": "<b>What breaks:</b> Symmetric \\(\\mathbb Z^2\\) walks are recurrent. With drift the \\(x\\)-coordinate is a biased one-dimensional walk, which is transient, so the 2D recurrence argument fails.<br><b>Fix:</b> the \\(x\\)-coordinate is a biased 1D walk, which visits the origin only finitely often, so the 2D walk does too.<br><b>New answer:</b> No. It is transient, and the return probability is less than \\(1\\).",
+  "tags": [
+   "s_generating_function",
+   "random_walk",
+   "drift",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "In the symmetric plane walk, the return happens because each coordinate is recurrent. Does a drift in one coordinate change that?",
+   "Project onto one coordinate. The \\(x\\)-coordinate is a one-dimensional walk; if it has a drift it is transient, so the plane walk visits the origin only finitely often.",
+   "Write the \\(x\\)-increment distribution: \\(+1\\) with probability \\(0.3\\), \\(-1\\) with probability \\(0.2\\), and \\(0\\) otherwise. Check whether it has zero mean."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Doubling strategy: bets \\(1,2,4,8,16\\), stop at the first win, at most five rounds, but the coin now lands heads with probability \\(0.6\\) and you win on heads. What is the expected profit?",
+  "back": "<b>What breaks:</b> The fair-coin answer \\(0\\) used \\(P(\\text{win})=\\tfrac{31}{32}\\). With \\(P(H)=\\tfrac35\\) the all-loss probability is \\(0.4^5\\), so the expectation is no longer zero: the stopped wealth has a drift.<br><b>Fix:</b> a win at any round nets \\(+1\\); losing all five costs \\(31\\). Expected profit \\(=(1-q^5)-31q^5=1-32q^5\\) with \\(q=0.4\\).<br><b>New answer:</b> \\(1-0.8^5=0.67232\\) units. The strategy is favourable because the bias favours heads.",
+  "tags": [
+   "s_optional_stopping",
+   "betting",
+   "biased_coin",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "With a fair coin the stopped wealth had zero mean. Which probability changes when the coin is biased, and what does that do to the all-losses outcome?",
+   "Compute the expected profit from the stopping outcomes: a win at some round gives a fixed net gain, and losing every round gives a fixed net loss with a small probability.",
+   "\\(E[\\text{profit}]=P(\\text{win})\\cdot(\\text{net gain on a win})+P(\\text{all lose})\\cdot(\\text{net loss})\\). Write each factor in terms of \\(q\\), the probability of tails."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Symmetric walk on \\(\\{0,\\dots,5\\}\\) with both ends reflecting (from \\(0\\) always to \\(1\\), from \\(5\\) always to \\(4\\)). What is the expected return time to \\(0\\)?",
+  "back": "<b>What breaks:</b> With absorbing ends there is no stationary law and the return question is meaningless. Reflection makes the chain irreducible and positive recurrent, so the return time is finite and equals \\(1/\\pi_0\\).<br><b>Fix:</b> stationary weights are proportional to degree: \\(\\pi\\propto(1,2,2,2,2,1)\\).<br><b>New answer:</b> \\(\\pi_0=1/10\\), so the return time is \\(10\\). Monte Carlo \\(10.008\\).",
+  "tags": [
+   "s_markov_chain",
+   "random_walk",
+   "reflecting_barrier",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "With both ends reflecting, is there still a simple long-run share of time at each state? What property of the chain determines it?",
+   "Return time equals \\(1/\\pi_0\\), and for a random walk on a graph the stationary distribution is proportional to degree.",
+   "\\(\\pi_v=\\deg(v)/\\sum_u\\deg(u)\\). Write the degree of each state along the line, counting each reflecting end as having one neighbour."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Cycle of \\(10\\) vertices, but each step the walker stays put with probability \\(1/2\\) and otherwise moves to a uniform neighbour. What is the expected hitting time from distance \\(3\\) to a fixed vertex?",
+  "back": "<b>What breaks:</b> Laziness changes the time scale, not the geometry. Each move takes a geometric number of time units with mean \\(2\\).<br><b>Fix:</b> the lazy hitting time is \\(2\\times\\) the non-lazy one.<br><b>New answer:</b> \\(2\\cdot21=42\\). Monte Carlo \\(41.9\\).",
+  "tags": [
+   "s_markov_chain",
+   "random_walk",
+   "cycle",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "If the walker sometimes stays put, does the geometry of the walk change, or only how fast it moves?",
+   "Laziness only changes the time scale: each move takes a geometric number of time units, so the expected hitting time is a constant multiple of the non-lazy one.",
+   "Let \\(h\\) be the non-lazy hitting time from distance \\(d\\) on the cycle. Write \\(h\\) from the cycle formula for distance \\(d\\) on \\(n\\) vertices, and find the multiplier from the stay probability."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Biased coin with \\(P(H)=0.6\\). Alice wins if HT appears before HH. What is her probability of winning?",
+  "back": "<b>What breaks:</b> With a fair coin the race is a tie at \\(\\tfrac12\\). With bias, the toss after the first H decides with probability \\(p\\) for H and \\(q\\) for T.<br><b>Fix:</b> after the first H, the next toss gives HH with probability \\(p\\) and HT with probability \\(q\\). Tails before the first H do not matter.<br><b>New answer:</b> \\(q=0.4\\). Monte Carlo \\(0.399\\).",
+  "tags": [
+   "s_markov_chain",
+   "penney",
+   "biased_coin",
+   "fmt_perturb"
+  ],
+  "hints": [
+   "With a fair coin the race between HT and HH is symmetric. What decides it once the first head appears, and do tails before the first head matter?",
+   "Condition on the first H. From that point the race is decided by one-step outcomes, so set up a first-step equation for the win probability.",
+   "Let \\(W\\) be the win probability from the state just after an H. Write \\(W=p\\cdot(\\text{value after H})+q\\cdot(\\text{value after T})\\) and fill in what each outcome leads to."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ann has \\(3\\) coins and Ben has \\(7\\). Each round a fair coin is tossed: heads means Ben pays Ann one coin, tails means Ann pays Ben. The game ends when one player has no coins. What is the probability that Ann takes everything?",
+  "back": "<b>Classic:</b> gambler's ruin on \\(\\{0,\\dots,10\\}\\), start \\(3\\), fair walk.<br><b>Mapping:</b> Ann's coin count is the walk; absorbing at \\(0\\) and \\(10\\). The probability of ending at \\(10\\) is \\(i/N\\).<br><b>Answer:</b> \\(3/10\\). Ann is ruined with probability \\(7/10\\).",
+  "tags": [
+   "s_martingale",
+   "s_optional_stopping",
+   "random_walk",
+   "fmt_twin"
+  ],
+  "hints": [
+   "Track only one player's holdings from round to round. Is the change each round symmetric, and what must be true when the game ends?",
+   "Structural feature: each round moves exactly one coin, so the change in Ann's holdings has zero average every round. Think about what that average must equal when the game ends at 0 or at the total.",
+   "\\(E[X_T]=X_0\\) with \\(X_T\\in\\{0,\\text{total}\\}\\) and \\(P=P(X_T=\\text{total})\\). Write this as one equation in \\(P\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A robot starts at one end of a corridor of \\(10\\) shelves. Each step it moves to an adjacent shelf with equal probability; at an end it must step inward. What is the expected number of steps until it reaches the far end?",
+  "back": "<b>Classic:</b> reflecting walk on \\(\\{0,\\dots,N\\}\\): expected time from \\(0\\) to \\(N\\) is \\(N^2\\).<br><b>Mapping:</b> the end shelves are reflecting, which is the perturbed version of the absorbing ruin problem.<br><b>Answer:</b> \\(N=9\\), so \\(81\\). Monte Carlo \\(80.9\\).",
+  "tags": [
+   "s_first_step_conditioning",
+   "random_walk",
+   "reflecting_barrier",
+   "fmt_twin"
+  ],
+  "hints": [
+   "Suppose the robot is at shelf \\(k\\) and the far end is at some distance ahead. Can you write the expected time from each shelf in terms of its neighbours, including what happens at the near wall?",
+   "First-step analysis with a boundary condition: the far end is the target, and the near end sends the robot inward with certainty.",
+   "Let \\(E_k\\) be the expected time from shelf \\(k\\). Write \\(E_k=1+\\tfrac12(E_{k-1}+E_{k+1})\\) for interior shelves and the separate equation for the wall shelf."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "An unknown coin has bias \\(p\\), uniform on \\([0,1]\\). What is the probability that the first three tosses all land heads?",
+  "back": "<b>Classic:</b> Polya urn with one red and one blue ball: the probability the first \\(n\\) draws are red is \\(1/(n+1)\\) (Laplace's rule of succession).<br><b>Mapping:</b> the uniform prior on \\(p\\) is the limiting law of the Polya urn's red fraction. \\(\\int_0^1p^3\\,dp=\\tfrac14\\).<br><b>Answer:</b> \\(\\tfrac14\\).",
+  "tags": [
+   "s_bayes",
+   "s_martingale",
+   "urn",
+   "coin",
+   "fmt_twin"
+  ],
+  "hints": [
+   "The chance of three heads depends on an unknown bias \\(p\\). How do you compute a probability when it depends on a quantity with a known distribution?",
+   "Condition on \\(p\\): \\(P(\\text{three heads}\\mid p)=p^3\\). Then average over the prior by integrating.",
+   "\\(P=\\int_0^1 p^3\\,f(p)\\,dp\\), where \\(f\\) is the prior density. Write the integrand explicitly."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A council has \\(10\\) votes counted in random order. Candidate A gets \\(7\\) and B gets \\(3\\). Given this final tally, what is the probability that A is strictly ahead at every point of the count?",
+  "back": "<b>Classic:</b> the ballot theorem: \\(P(\\text{A strictly ahead throughout}\\mid\\text{final tally})=(a-b)/(a+b)\\).<br><b>Mapping:</b> the count is a \\(\\pm1\\) walk with final level \\(a-b=4\\), which must stay positive.<br><b>Answer:</b> \\((7-3)/(7+3)=\\tfrac25\\), equal to \\(48/120\\) from the ballot count.",
+  "tags": [
+   "s_reflection",
+   "random_walk",
+   "fmt_twin"
+  ],
+  "hints": [
+   "Given the final tally, every ordering of the votes is equally likely. How many orderings are there in total, and which of them keep A in front throughout?",
+   "Structural feature: a count where one candidate stays strictly ahead is a walk that never returns to the axis. Count the orderings that avoid a return to the axis, and divide by the total number of orderings.",
+   "Setup: the total is \\(\\binom{a+b}{a}\\). Write the favourable count as a difference of two binomials, one for all orderings and one for orderings that touch the tie, and evaluate for \\(a=7\\), \\(b=3\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two balls sit in two urns. Each step, pick one of the two balls uniformly at random and move it to the other urn. Starting with both balls in urn A, what is the expected number of steps until both balls are back in urn A?",
+  "back": "<b>Classic:</b> Ehrenfest model with \\(N=2\\) balls: return time to the all-in-A state is \\(2^N\\).<br><b>Mapping:</b> the number of balls in A is a birth-death chain with stationary law \\(\\pi_k=\\binom Nk2^{-N}\\).<br><b>Answer:</b> \\(\\pi_2=1/4\\), return time \\(=1/\\pi_2=4\\). Monte Carlo \\(4.00\\).",
+  "tags": [
+   "s_markov_chain",
+   "random_walk",
+   "fmt_twin"
+  ],
+  "hints": [
+   "How many balls are in urn A after each step, and does that count on its own form a Markov chain? What share of time does the chain spend in the all-in-A state?",
+   "The return time to a state equals the reciprocal of its stationary probability, so find the stationary law of the count in urn A.",
+   "\\(E[\\text{return}]=1/\\pi_2\\), where \\(\\pi_k\\) is the stationary probability of having \\(k\\) balls in A. Write \\(\\pi_k\\) as a binomial expression in \\(k\\) and \\(N\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A die is rolled until two sixes appear in a row. What is the expected number of rolls?",
+  "back": "<b>Classic:</b> pattern waiting time for HH with \\(p=1/2\\) replaced by \\(p=1/6\\).<br><b>Mapping:</b> the same first-step recursion with \\(p\\) the chance of a six: \\(E=\\tfrac1p+\\tfrac1{p^2}\\).<br><b>Answer:</b> \\(6+36=42\\). Monte Carlo \\(41.9\\).",
+  "tags": [
+   "s_markov_chain",
+   "dice",
+   "fmt_twin"
+  ],
+  "hints": [
+   "Consider how much progress you keep when a roll goes the wrong way. Does a failure reset everything, or only part of the progress?",
+   "Use a two-state first-step recursion: one state for no progress, and one for having just made the first step toward the goal.",
+   "\\(E_0=1+(1-p)E_0+pE_1\\), with \\(p\\) the chance of the relevant face. Define \\(E_1\\) in terms of \\(E_0\\) and write it as a second equation."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "In a family line, each person independently has \\(0\\) sons with probability \\(1/4\\) and \\(2\\) sons with probability \\(3/4\\). What is the probability that the surname eventually dies out?",
+  "back": "<b>Classic:</b> branching process extinction with offspring generating function \\(G(s)=\\tfrac14+\\tfrac34s^2\\).<br><b>Mapping:</b> each generation's carriers are the individuals and the offspring law is the number of sons.<br><b>Answer:</b> smallest root of \\(q=\\tfrac14+\\tfrac34q^2\\) is \\(q=\\tfrac13\\).",
+  "tags": [
+   "s_generating_function",
+   "branching",
+   "fmt_twin"
+  ],
+  "hints": [
+   "What is the average number of sons per man, and does that average tell you anything about whether the line can persist?",
+   "Let \\(q\\) be the probability that the line ends. Condition on the number of sons of the first man: each son's line must end independently.",
+   "\\(q=\\sum_k p_k q^k\\). Write this equation for \\(q\\) using the probabilities \\(p_0\\) and \\(p_2\\) from the statement, and collect terms."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A casino balance starts at \\(0\\) and changes by \\(\\pm1\\) on each of \\(10\\) fair bets. What is the probability the balance reaches \\(+4\\) at some point during the \\(10\\) bets?",
+  "back": "<b>Classic:</b> the reflection principle for the running maximum of a symmetric walk.<br><b>Mapping:</b> reflect at the first hit of level \\(4\\): \\(P(M_n\\ge a)=P(S_n\\ge a)+P(S_n>a)\\).<br><b>Answer:</b> \\(\\tfrac{29}{128}\\approx0.2266\\).",
+  "tags": [
+   "s_reflection",
+   "random_walk",
+   "fmt_twin"
+  ],
+  "hints": [
+   "Split the event by where the balance ends after the 10 bets. Which endings are easy to compute directly?",
+   "Structural feature: paths that reach level 4 and then finish lower can be paired with other paths by flipping their remainder after the first arrival. Count the endpoints of the paired paths.",
+   "Setup: write \\(P(M_{10}\\ge 4)\\) as \\(P(S_{10}\\ge 4)\\) plus the probability of paths that touched 4 and end below it, and count those endpoints after the flip."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for optional stopping, and when does it fail?",
+  "back": "<b>Triggers:</b> a martingale \\(M_n\\) and a stopping time \\(T\\), with a question about \\(E[M_T]\\).<br><b>Move:</b> \\(E[M_T]=M_0\\) if \\(T\\) is bounded, or if \\(E[T]<\\infty\\) with bounded increments, or if \\(M\\) is uniformly integrable.<br><b>Canonical example:</b> fair walk between two barriers, \\(E[S_T]=0\\).<br><b>Failure:</b> doubling with no bankroll cap (increments unbounded, \\(E[S_T]=1\\)); a fair walk to \\(+1\\) with \\(E[T]=\\infty\\).",
+  "tags": [
+   "s_optional_stopping",
+   "s_martingale",
+   "betting",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for a martingale in a random walk problem, and when does it fail?",
+  "back": "<b>Triggers:</b> a walk with steps \\(\\pm1\\).<br><b>Move:</b> \\(S_n\\) (mean zero) for endpoint expectations; \\(S_n^2-n\\) for expected exit times of a symmetric walk; \\((q/p)^{S_n}\\) for biased walks and hitting probabilities.<br><b>Canonical example:</b> \\(i(N-i)\\) from \\(S_n^2-n\\); \\(\\tfrac{1-r^i}{1-r^N}\\) from \\((q/p)^{S_n}\\).<br><b>Failure:</b> a martingale is useful only if the stopped process is bounded or uniformly integrable.",
+  "tags": [
+   "s_martingale",
+   "random_walk",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When does a best reply exist in Penney's game, and when does it not?",
+  "back": "<b>Triggers:</b> a two-player pattern race where the second mover picks after seeing the first.<br><b>Move:</b> pick the pattern that beats the opponent's pattern; odds from Conway's correlation rule.<br><b>Canonical example:</b> against HHT reply THH (\\(3:1\\)); against THH reply TTH (\\(2:1\\)); against TTH reply HTT (\\(3:1\\)); against HTT reply HHT (\\(2:1\\)).<br><b>Failure:</b> the beats relation is cyclic, HHT is beaten by THH, THH by TTH, TTH by HTT and HTT by HHT. No sequence is best against everything.",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "penney",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Detailed balance: \\(\\pi_iP_{ij}=\\pi_jP_{ji}\\). When does it give the stationary law, and when does it fail?",
+  "back": "<b>Triggers:</b> a candidate stationary law from reversibility, for example nearest-neighbour walks on a line.<br><b>Move:</b> solve \\(\\pi_{k+1}/\\pi_k=P_{k,k+1}/P_{k+1,k}\\) along the line.<br><b>Canonical example:</b> \\(\\pi\\propto(1,3,6,12,8)\\) for the reflecting chain on \\(\\{0,\\dots,4\\}\\).<br><b>Failure:</b> a cyclic chain (rotation on three states) has a uniform stationary law but breaks detailed balance, so check global balance.",
+  "tags": [
+   "s_markov_chain",
+   "stationary",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Tail-sum identity for a nonnegative integer \\(N\\): {{c1::\\(E[N]=\\sum_{k\\ge0}P(N>k)\\)}}. Use it when the stopping time is {{c2::the first time a running sum exceeds a level}}; then \\(E[N]=\\sum_{k=0}^{n}u_k\\), where \\(u_k\\to1/E[\\text{step}]\\).",
+  "back": "Renewal: \\(E[\\text{rolls until the running sum exceeds }n]=\\sum_{k=0}^{n}u_k\\), where \\(u_k\\) is the probability that some partial sum equals \\(k\\).",
+  "tags": [
+   "s_tail_sum",
+   "s_recursion",
+   "dice",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A simple symmetric random walk on \\(\\mathbb Z^d\\) is {{c1::recurrent}} for \\(d\\le2\\) and {{c2::transient}} for \\(d\\ge3\\). The return probability for \\(d=3\\) is {{c3::\\(1-1/G(0)\\approx0.3405\\)}}.",
+  "back": "Polya's theorem. The Green's function \\(G(0)\\) diverges for \\(d\\le2\\) and is finite for \\(d\\ge3\\).",
+  "tags": [
+   "s_generating_function",
+   "random_walk",
+   "lattice",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When does reflection give the probability of a path, and when does it fail?",
+  "back": "<b>Triggers:</b> a symmetric walk and a question about the running maximum or a first passage.<br><b>Move:</b> reflect the path after the first hit of level \\(a\\), so \\(P(M_n\\ge a)=P(S_n\\ge a)+P(S_n>a)\\).<br><b>Canonical example:</b> \\(P(M_{10}\\ge4)=29/128\\).<br><b>Failure:</b> with drift (\\(p\\ne q\\)) the reflection symmetry breaks, so use the martingale \\((q/p)^{S_n}\\) instead.",
+  "tags": [
+   "s_reflection",
+   "random_walk",
+   "drift",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "On a connected graph the stationary law is {{c1::proportional to degree}}, so the expected return time to \\(v\\) is {{c2::\\(2m/\\deg(v)\\)}}.",
+  "back": "Use this for knight-on-board, cycle and complete-graph return questions. Reversibility gives \\(\\pi(v)P_{vw}=\\pi(w)P_{wv}\\) with \\(P_{vw}=1/\\deg(v)\\).",
+  "tags": [
+   "s_markov_chain",
+   "random_walk_graph",
+   "stationary",
+   "fmt_toolkit"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: RUIN 1/3]</b> A fair coin walk on \\(\\{0,\\dots,12\\}\\) started at \\(4\\) reaches \\(12\\) with probability \\(\\tfrac13\\).<br>Now the coin is biased, \\(P(H)=0.6\\). Find \\(P(\\text{reach }12\\text{ before }0)\\) from \\(4\\).",
+  "back": "<b>Answer:</b> \\(\\dfrac{6561}{8113}\\approx0.8087\\).<br><b>Structure:</b> s_martingale (gambler's ruin with bias).<br><b>Key move:</b> \\(r=q/p=\\tfrac23\\), and \\(P=\\dfrac{1-r^i}{1-r^N}\\).<br><b>Working:</b> \\(\\dfrac{1-(2/3)^4}{1-(2/3)^{12}}=\\dfrac{65/81}{527345/531441}=\\dfrac{6561}{8113}\\). Monte Carlo \\(0.8087\\).<br><b>Sanity check:</b> the bias towards the top barrier lifts the probability well above \\(1/3\\).",
+  "tags": [
+   "s_martingale",
+   "s_optional_stopping",
+   "random_walk",
+   "fmt_chain"
+  ],
+  "hints": [
+   "The coin is now biased. Is there a function of the position that stays unchanged on average each step, so that you can stop at both boundaries?",
+   "Use the exponential martingale \\(r^{X_n}\\) with \\(r=q/p\\), and apply optional stopping at the two barriers.",
+   "\\(E[r^{X_T}]=r^{X_0}\\) with \\(X_T\\in\\{0,12\\}\\). Write this as \\(r^4=P\\cdot r^{12}+(1-P)\\cdot r^{0}\\) and solve for \\(P\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: RUIN 2/3]</b> A fair coin walk on \\(\\{0,\\dots,12\\}\\) started at \\(4\\) reaches \\(12\\) with probability \\(\\tfrac13\\). With \\(P(H)=0.6\\) it reaches \\(12\\) with probability \\(6561/8113\\).<br>For the biased walk, what is the expected number of steps until absorption from \\(4\\)?",
+  "back": "<b>Answer:</b> \\(E[T]=5(12P-4)\\) with \\(P=\\tfrac{6561}{8113}\\), so \\(E[T]\\approx28.5\\).<br><b>Structure:</b> s_martingale (linear martingale \\(X_n-(p-q)n\\)).<br><b>Key move:</b> \\(X_n-(p-q)n\\) is a martingale, so \\(E[X_T]-X_0=(p-q)E[T]\\).<br><b>Working:</b> \\(X_T\\in\\{0,12\\}\\), so \\(E[X_T]=12P\\). With \\(p-q=\\tfrac15\\) and \\(X_0=4\\): \\(12P-4=\\tfrac15E[T]\\).<br><b>Sanity check:</b> \\(12\\cdot0.8087-4=5.704\\), times \\(5\\) gives \\(28.5\\).<br><b>Transfer:</b> the same identity gives the expected duration of a biased random walk between a profit target and a loss limit.",
+  "tags": [
+   "s_martingale",
+   "s_optional_stopping",
+   "random_walk",
+   "fmt_chain"
+  ],
+  "hints": [
+   "Is there a linear function of the position that stays constant on average apart from a drift term? How would that drift relate to the expected stopping time?",
+   "Use the martingale \\(X_n-(p-q)n\\) and optional stopping, so the expected stopping time follows from the expectation of the endpoint.",
+   "\\(E[X_T]-X_0=(p-q)E[T]\\). Write \\(E[X_T]\\) as a weighted average of the two barriers, using the probability from the previous card."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: RUIN 3/3]</b> A fair coin walk on \\(\\{0,\\dots,12\\}\\) started at \\(4\\) reaches \\(12\\) with probability \\(\\tfrac13\\). The biased version with \\(P(H)=0.6\\) gives \\(6561/8113\\) and expected duration about \\(28.5\\).<br>Generalise: for \\(p\\ne\\tfrac12\\) and \\(r=q/p\\), write the probability of reaching \\(N\\) from \\(i\\). What happens as \\(p\\to\\tfrac12\\)?",
+  "back": "<b>Answer:</b> \\(P_i=\\dfrac{1-r^i}{1-r^N}\\). As \\(p\\to\\tfrac12\\), \\(r\\to1\\) and \\(P_i\\to i/N\\).<br><b>Structure:</b> s_martingale (exponential martingale \\((q/p)^{S_n}\\)).<br><b>Key move:</b> \\(E[r^{X_T}]=r^{X_0}\\) with \\(X_T\\in\\{0,N\\}\\).<br><b>Working:</b> \\(P_Nr^N+(1-P_N)=r^i\\), so \\(P_N=\\dfrac{1-r^i}{1-r^N}\\).<br><b>Sanity check:</b> \\(i=0\\) gives \\(0\\), \\(i=N\\) gives \\(1\\), and \\(p=\\tfrac12\\) gives \\(i/N\\).<br><b>Transfer:</b> the same formula gives the probability that a biased strategy reaches a profit target before a loss limit.",
+  "tags": [
+   "s_martingale",
+   "s_optional_stopping",
+   "random_walk",
+   "fmt_chain"
+  ],
+  "hints": [
+   "For a general bias, is there a function of the form \\(c^{x}\\) for a suitable constant \\(c\\) that is a martingale? What happens to that constant as the bias disappears?",
+   "Use the exponential martingale with \\(r=q/p\\) and optional stopping at \\(0\\) and \\(N\\), which gives a linear equation for the exit probability.",
+   "Write \\(E[r^{X_T}]=r^{X_0}\\) with \\(r=q/p\\) and \\(X_T\\in\\{0,N\\}\\), and let \\(P_N\\) be the exit probability at \\(N\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PENNEY 1/3]</b> Opponent picks HHT. You pick THH. A fair coin is flipped until one of these two sequences appears.<br>What is \\(P(\\text{THH first})\\), and at what odds?",
+  "back": "<b>Answer:</b> \\(P=\\tfrac34\\), odds \\(3:1\\).<br><b>Structure:</b> s_game_theory_equilibrium (Penney's game).<br><b>Key move:</b> Conway's odds \\((c_{BB}-c_{BA}):(c_{AA}-c_{AB})\\), with \\(c_{XY}=\\sum2^{k-1}\\) over lengths \\(k\\) where the suffix of \\(X\\) equals the prefix of \\(Y\\).<br><b>Working:</b> \\(A=\\text{THH}\\), \\(B=\\text{HHT}\\): \\(c_{AA}=4\\), \\(c_{BB}=4\\), \\(c_{AB}=1+2=3\\), \\(c_{BA}=1\\). Odds \\((4-1):(4-3)=3:1\\).<br><b>Sanity check:</b> the exact Markov chain gives \\(0.75\\); Monte Carlo \\(0.748\\).<br><b>Transfer:</b> the same formula gives the best reply to any opponent pattern.",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "penney",
+   "coin",
+   "fmt_chain"
+  ],
+  "hints": [
+   "The two patterns start and end with different letters. Which parts of one pattern can match the start of the other, and how does that affect the race?",
+   "Conway's odds rule: the correlations between suffixes and prefixes decide the odds of \\(P(A)\\) against \\(P(B)\\).",
+   "Write the four correlations \\(c_{AA},c_{BB},c_{AB},c_{BA}\\) for \\(A=\\)THH and \\(B=\\)HHT as a list, then write the odds \\((c_{BB}-c_{BA}):(c_{AA}-c_{AB})\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PENNEY 2/3]</b> Your opponent now picks THH instead of HHT.<br>What is your best reply, and at what odds?",
+  "back": "<b>Answer:</b> TTH, odds \\(2:1\\), \\(P=\\tfrac23\\).<br><b>Structure:</b> s_game_theory_equilibrium (Penney's game; the beats relation is not transitive).<br><b>Key move:</b> compute Conway's odds for each candidate reply \\(A\\) against \\(B=\\text{THH}\\) and pick the largest.<br><b>Working:</b> \\(A=\\text{TTH}\\): \\(c_{AA}=4\\), \\(c_{BB}=4\\), \\(c_{AB}=2\\) (suffix \\(TH\\) equals prefix \\(TH\\)), \\(c_{BA}=0\\). Odds \\((4-0):(4-2)=2:1\\).<br><b>Sanity check:</b> the exhaustive exact solve over all pairs gives \\(\\tfrac23\\) for TTH against THH.<br><b>Transfer:</b> this is the cycle card: THH beats HHT, TTH beats THH, HTT beats TTH, and HHT beats HTT.",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "penney",
+   "coin",
+   "fmt_chain"
+  ],
+  "hints": [
+   "Your opponent has switched patterns. Which candidate reply is most likely to appear first against THH? Can you compare candidates using the same rule?",
+   "Compare the candidates pairwise with the odds rule, and choose the one that gives the best odds against THH.",
+   "Pick one candidate \\(A\\) and write its four correlations against \\(B=\\)THH, then the odds \\((c_{BB}-c_{BA}):(c_{AA}-c_{AB})\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PENNEY 3/3]</b> The best replies form a cycle: THH beats HHT (\\(3:1\\)), TTH beats THH (\\(2:1\\)), HTT beats TTH (\\(3:1\\)), and HHT beats HTT (\\(2:1\\)).<br>Why is no single sequence best, and what structure does this create?",
+  "back": "<b>Answer:</b> no sequence beats all the others; each is beaten by another, so the beats relation has a cycle.<br><b>Structure:</b> s_game_theory_equilibrium (non-transitive games).<br><b>Key move:</b> check the pure best-reply graph; a cycle means no pure reply dominates.<br><b>Working:</b> \\(P(\\text{THH before HHT})=\\tfrac34\\), \\(P(\\text{TTH before THH})=\\tfrac23\\), \\(P(\\text{HTT before TTH})=\\tfrac34\\), \\(P(\\text{HHT before HTT})=\\tfrac23\\). Each is above \\(\\tfrac12\\), and they form a cycle.<br><b>Sanity check:</b> a transitive ordering would give a best pattern, and the cycle rules that out.<br><b>Transfer:</b> the same cycle structure appears in rock-paper-scissors and in non-transitive dice.",
+  "tags": [
+   "s_game_theory_equilibrium",
+   "penney",
+   "coin",
+   "fmt_chain"
+  ],
+  "hints": [
+   "If every sequence can be beaten by another, what does that say about a single best sequence? Try following which pattern beats which, starting from any one of them.",
+   "The beats relation is not transitive, so the best-reply graph has a cycle, and no pure reply is optimal against everything.",
+   "Build a directed graph on the four sequences with an edge from each pattern to the one that beats it. Write out the edges and look for a closed loop."
+  ]
+ }
+]

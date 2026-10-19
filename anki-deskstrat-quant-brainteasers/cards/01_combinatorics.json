@@ -1,0 +1,1165 @@
+[
+ {
+  "type": "basic",
+  "front": "How many non-negative integer solutions are there to \\( x_1+x_2+x_3+x_4+x_5 = 20 \\)?",
+  "back": "<b>Answer:</b> \\(\\binom{24}{4}=10626\\)<br><b>Structure:</b> s_stars_bars: identical units into labelled bins, empty bins allowed.<br><b>Key move:</b> Write 20 stars and 4 bars in a row of 24 slots; the bars mark the bin boundaries, so choose the 4 bar positions.<br><b>Working:</b> \\(\\binom{20+5-1}{5-1}=\\binom{24}{4}=\\dfrac{24\\cdot 23\\cdot 22\\cdot 21}{24}=10626\\).<br><b>Sanity check:</b> Continuous estimate \\((20+\\tfrac52)^4/4!\\approx 10{,}700\\), consistent with 10626.<br><b>Transfer:</b> Sweets to five children (a child may get none); multisets of size 20 from 5 flavours.",
+  "tags": [
+   "fmt_solve",
+   "s_stars_bars",
+   "counting",
+   "stars_bars"
+  ],
+  "hints": [
+   "The units are identical and the five variables are labelled. How would you write one solution as a single row of symbols, and what do the symbols stand for?",
+   "Names the move: stars and bars. Each solution is a row of 20 identical units and 4 separators, so count the ways to place the separators.",
+   "Setup: \\( \\binom{20+5-1}{5-1} \\). Identify what the top and bottom entries count before evaluating."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> How many integer solutions are there to \\( x_1+x_2+x_3+x_4+x_5=20 \\) with \\(0\\le x_i\\le 5\\) for each \\(i\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Bounded compositions: stars and bars with an upper bound on each part, or a complement symmetry.<br><b>Trigger:</b> Non-negative integers with a fixed sum and a cap on every variable.<br><b>Key move:</b> Substitute \\(y_i=5-x_i\\), so \\(\\sum y_i=25-20=5\\) with \\(y_i\\ge 0\\), then stars and bars.<br><b>Answer:</b> \\(\\binom{9}{4}=126\\) (inclusion-exclusion gives the same: \\(10626-15300+4950-150=126\\)).",
+  "tags": [
+   "fmt_recognise",
+   "s_stars_bars",
+   "s_inclusion_exclusion",
+   "counting",
+   "stars_bars"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> 10 identical balls go into 4 distinct boxes so that every box gets at least 2 balls. How many distributions are there?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_stars_bars with a lower bound: subtract the forced units first.<br><b>Trigger:</b> Identical objects, labelled bins, and a minimum per bin.<br><b>Key move:</b> Set \\(y_i=x_i-2\\ge 0\\). Then \\(\\sum y_i=10-8=2\\) over 4 bins.<br><b>Answer:</b> \\(\\binom{2+3}{3}=\\binom{5}{3}=10\\).",
+  "tags": [
+   "fmt_recognise",
+   "s_stars_bars",
+   "counting",
+   "stars_bars"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Twenty seats stand in a straight row. Four people each take one seat so that no two of them sit next to each other. How many ways are there to choose the four seats?",
+  "back": "<b>Classic:</b> placing \\(k\\) items in \\(n\\) slots with no two adjacent, solved by the stars-and-bars gap argument.<br><b>Mapping:</b> seats \\(p_1<p_2<p_3<p_4\\) with \\(p_{i+1}\\ge p_i+2\\). Set \\(q_i=p_i-(i-1)\\). Then \\(1\\le q_1<q_2<q_3<q_4\\le 17\\), a bijection onto 4-subsets of 17.<br><b>Answer:</b> \\(\\binom{17}{4}=2380\\). General form \\(\\binom{n-k+1}{k}\\).",
+  "tags": [
+   "fmt_twin",
+   "s_bijection",
+   "s_stars_bars",
+   "counting",
+   "combinatorics"
+  ],
+  "hints": [
+   "Each chosen seat must have an empty seat between it and the next chosen seat. How many seats are forced to stay empty once the four people are placed, and which seats are still free to choose?",
+   "Structural feature: the forbidden event is about adjacent positions. Treat the people and the empty seats as one row of symbols, so the constraint becomes a condition on how the empty seats are split into gaps.",
+   "Setup: let \\(g_0,\\dots,g_4\\) be the numbers of empty seats before, between and after the people, with \\(g_1,g_2,g_3\\ge 1\\). Write \\(\\sum g_i\\) in terms of the 20 seats and count the solutions."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How many subsets of \\(\\{1,2,\\dots,10\\}\\) contain no two consecutive integers?",
+  "back": "<b>Answer:</b> \\(144=F_{12}\\)<br><b>Structure:</b> s_bijection to binary strings with no two adjacent 1s; the count obeys a Fibonacci recursion.<br><b>Key move:</b> Let \\(a_n\\) count valid strings of length \\(n\\). If the last bit is 0, the rest is any valid string of length \\(n-1\\). If it is 1, the bit before must be 0, leaving length \\(n-2\\). So \\(a_n=a_{n-1}+a_{n-2}\\).<br><b>Working:</b> \\(a_0=1,\\ a_1=2,\\ a_2=3,\\ a_3=5,\\dots,\\ a_{10}=144\\), the Fibonacci number \\(F_{12}\\).<br><b>Sanity check:</b> Brute force over \\(2^{10}=1024\\) subsets gives 144; about 14% of subsets qualify, which is plausible as the density decays like \\((\\varphi/2)^n\\).<br><b>Transfer:</b> Non-adjacent seating; no two consecutive heads in a coin string; codes with no adjacent 1s.",
+  "tags": [
+   "fmt_solve",
+   "s_bijection",
+   "s_recursion",
+   "counting",
+   "binary_strings"
+  ],
+  "hints": [
+   "Encode each subset as a string of ten bits. Which pairs of adjacent bits are forbidden, and how does the last bit restrict the bits before it?",
+   "Names the move: a recursion on the length of the string, splitting on the last bit, which gives a linear recurrence.",
+   "Setup: let \\(a_n\\) count valid strings of length \\(n\\). Write \\(a_n\\) in terms of \\(a_{n-1}\\) and \\(a_{n-2}\\), and state \\(a_0\\) and \\(a_1\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for stars and bars, and when does it fail?",
+  "back": "<b>Triggers:</b> integer solutions to \\(x_1+\\dots+x_k=n\\) (or \\(\\le n\\)) with non-negative or positive parts; identical items into labelled bins; choosing with repetition.<br><b>Move:</b> place \\(k-1\\) bars among \\(n\\) stars: \\(\\binom{n+k-1}{k-1}\\). Lower bounds subtract forced units; slack variables turn \\(\\le\\) into \\(=\\).<br><b>Canonical example:</b> \\(x+y+z\\le 10\\) becomes \\(x+y+z+w=10\\), giving \\(\\binom{13}{3}=286\\).<br><b>Failure mode:</b> upper bounds (inclusion-exclusion needed), or distinguishable items (then it is a multinomial or surjection count, not stars and bars).",
+  "tags": [
+   "fmt_toolkit",
+   "s_stars_bars",
+   "counting",
+   "stars_bars"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ten people check their hats at random, one each, and receive a uniformly random hat. What is the probability that nobody gets their own hat?",
+  "back": "<b>Answer:</b> \\(\\dfrac{D_{10}}{10!}=\\dfrac{1334961}{3628800}=\\dfrac{16481}{44800}\\approx 0.36788\\)<br><b>Structure:</b> s_inclusion_exclusion for derangements, with a complement step.<br><b>Key move:</b> Let \\(A_i\\) be 'person \\(i\\) gets own hat'. \\(|A_S|=(n-|S|)!\\), so \\(D_n=\\sum_{k}(-1)^k\\binom{n}{k}(n-k)!\\).<br><b>Working:</b> \\(D_{10}=10!\\sum_{k=0}^{10}\\frac{(-1)^k}{k!}=1334961\\), and \\(D_n/n!\\to e^{-1}\\).<br><b>Sanity check:</b> \\(1/e=0.367879\\) is the limit, and \\(D_{10}/10!\\) matches to five digits.<br><b>Transfer:</b> Shuffled exam scripts with none returned to its owner; a random mapping with no fixed point.",
+  "tags": [
+   "fmt_solve",
+   "s_inclusion_exclusion",
+   "s_complement",
+   "derangements",
+   "permutations"
+  ],
+  "hints": [
+   "Pick any set S of people and ask for the event that exactly those people get their own hats. Does the count depend on which people are in S, or only on how many?",
+   "Names the move: inclusion-exclusion over the events 'person i gets own hat', then the complement, since the intersections of these events are simple to count.",
+   "Setup: \\( \\dfrac{D_{10}}{10!}=\\sum_{k=0}^{10}\\dfrac{(-1)^k\\binom{10}{k}(10-k)!}{10!}\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> Six students each write their name on a paper. The six papers are shuffled and handed back at random, one per student. What is the probability that nobody receives their own paper?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Derangement: a permutation with no fixed point, counted by inclusion-exclusion.<br><b>Trigger:</b> A random reassignment of labelled items to their owners, asking that no item lands on its original owner.<br><b>Key move:</b> \\(D_6=\\sum_k(-1)^k\\binom{6}{k}(6-k)!=265\\), then divide by \\(6!\\).<br><b>Answer:</b> \\(265/720=53/144\\approx 0.3681\\).",
+  "tags": [
+   "fmt_recognise",
+   "s_inclusion_exclusion",
+   "derangements",
+   "permutations"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: the ten-person hat check, probability that nobody gets their own hat (\\(\\approx 0.36788\\)). Change: the question becomes 'at most one person gets their own hat'. What is the new probability?",
+  "back": "<b>What breaks:</b> the derangement formula counts zero fixed points. 'At most one' adds the event 'exactly one fixed point', which is not a derangement count.<br><b>Fix:</b> exactly one fixed point: choose the fixed person (10 ways) and derange the other 9, so \\(P(\\text{exactly }1)=D_9/9!\\). Add \\(P(0)=D_{10}/10!\\).<br><b>New answer:</b> \\(\\dfrac{2669921}{3628800}\\approx 0.73576\\).",
+  "tags": [
+   "fmt_perturb",
+   "s_inclusion_exclusion",
+   "derangements",
+   "permutations"
+  ],
+  "hints": [
+   "The original argument counted outcomes with zero matches. Which outcomes does the new event add, and how many matches do they have?",
+   "Names the move: split by the number of matches. The exactly-one case is a choice of the matched person followed by a smaller derangement count.",
+   "Setup: \\( P(\\text{at most one}) = \\dfrac{D_{10}}{10!} + \\dfrac{(\\text{choices of matched person})\\cdot D_{9}}{10!}\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A uniformly random permutation of \\(\\{1,2,3,4\\}\\) has exactly one fixed point (an element sent to itself). What is the probability?",
+  "back": "<b>Answer:</b> \\(\\dfrac{4\\cdot D_3}{4!}=\\dfrac{4\\cdot 2}{24}=\\dfrac13\\)<br><b>Structure:</b> s_inclusion_exclusion: exact fixed-point counts from derangements of the remaining elements.<br><b>Key move:</b> Choose the fixed element (4 ways), then derange the other three (\\(D_3=2\\)).<br><b>Working:</b> \\(D_3=2\\) (the two 3-cycles). Total \\(4\\cdot 2=8\\) of \\(24\\) permutations.<br><b>Sanity check:</b> Exactly one fixed point is near \\(1/e\\) for large \\(n\\); at \\(n=4\\) the value \\(1/3\\) is close to 0.37.<br><b>Transfer:</b> Exactly \\(k\\) matches in a random matching; the general formula \\(\\binom{n}{k}D_{n-k}/n!\\).",
+  "tags": [
+   "fmt_solve",
+   "s_inclusion_exclusion",
+   "fixed_points",
+   "permutations"
+  ],
+  "hints": [
+   "Pick the one element that is sent to itself. What is left to arrange on the other elements, and what restriction applies to them?",
+   "Names the move: choose the fixed element, then count derangements of the remaining elements.",
+   "Setup: \\( \\Pr = \\dfrac{4\\cdot D_3}{4!}\\). Work out \\(D_3\\) by listing the permutations of three elements with no fixed point."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Five distinguishable balls are thrown independently and uniformly into three distinguishable boxes. What is the probability that every box ends up non-empty?",
+  "back": "<b>Answer:</b> \\(\\dfrac{150}{243}=\\dfrac{50}{81}\\approx 0.6173\\)<br><b>Structure:</b> s_inclusion_exclusion for surjections, counting maps that hit every target.<br><b>Key move:</b> Let \\(A_j\\) be 'box \\(j\\) is empty'. \\(|A_S|=(3-|S|)^5\\). Surjections \\(=3^5-3\\cdot 2^5+3\\cdot 1^5=243-96+3=150\\).<br><b>Working:</b> Total outcomes \\(3^5=243\\), so the probability is \\(150/243\\).<br><b>Sanity check:</b> Union bound: \\(\\Pr(\\text{box }j\\text{ empty})=(2/3)^5\\approx 0.132\\), so \\(\\Pr(\\text{some box empty})\\le 0.395\\); exact value \\(0.383\\) fits.<br><b>Transfer:</b> Hashing 5 keys into 3 buckets with no empty bucket; covering problems with all targets hit.",
+  "tags": [
+   "fmt_solve",
+   "s_inclusion_exclusion",
+   "surjections",
+   "counting"
+  ],
+  "hints": [
+   "Each outcome is a function from balls to boxes. Which functions are excluded, and can you describe the excluded set by which boxes they miss?",
+   "Names the move: inclusion-exclusion over the set of empty boxes, since the number of functions avoiding any given set of boxes is easy to count.",
+   "Setup: \\( \\#\\text{surjections} = \\sum_{j=0}^{3}(-1)^j\\binom{3}{j}(3-j)^{5}\\), and the probability divides by \\(3^5\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Six different prizes are handed to four different children, and every child must receive at least one prize. How many distributions are possible?",
+  "back": "<b>Classic:</b> surjections \\([6]\\to[4]\\), counted by inclusion-exclusion over empty children.<br><b>Mapping:</b> prizes are balls, children are boxes, 'every child gets one' is 'no box empty'.<br><b>Answer:</b> \\(4^6-4\\cdot 3^6+6\\cdot 2^6-4=1560=4!\\,S(6,4)\\).",
+  "tags": [
+   "fmt_twin",
+   "s_inclusion_exclusion",
+   "surjections",
+   "counting"
+  ],
+  "hints": [
+   "Each prize chooses one child. What must be true of the children's lists for every child to be covered, and how would you count the assignments that miss some children?",
+   "Structural feature: every child needs at least one prize, so the failures are 'child j gets nothing'. Count the assignments in which a chosen set of children gets nothing.",
+   "Setup: with a fixed set of \\(m\\) children left empty, each prize chooses among the remaining children. Write that count as a power, then combine the sets of empty children with alternating signs."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for inclusion-exclusion, and when does it fail?",
+  "back": "<b>Triggers:</b> 'at least one' or 'none of' conditions; several bad events whose intersections are easy to count; exact counts of configurations with no violation.<br><b>Move:</b> \\(|\\bigcup A_i|=\\sum|A_i|-\\sum|A_i\\cap A_j|+\\cdots\\). Often easier as the complement of the count of good configurations.<br><b>Canonical example:</b> \\(D_n=\\sum_k(-1)^k\\binom{n}{k}(n-k)!\\), derangements.<br><b>Failure mode:</b> intersections depend on which events are chosen, not only how many, so the symmetric sum does not simplify. With many events the alternating sum cancels heavily and is error-prone.",
+  "tags": [
+   "fmt_toolkit",
+   "s_inclusion_exclusion",
+   "s_complement",
+   "counting",
+   "derangements"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "In how many ways can 6 distinct balls be split into 3 identical non-empty boxes?",
+  "back": "<b>Answer:</b> \\(S(6,3)=90\\)<br><b>Structure:</b> s_recursion: Stirling numbers of the second kind, set partitions into k blocks.<br><b>Key move:</b> Element 6 either joins one of the 3 blocks of a partition of \\(\\{1..5\\}\\) into 3 blocks, or forms a new block from a partition into 2 blocks.<br><b>Working:</b> \\(S(6,3)=3S(5,3)+S(5,2)=3\\cdot 25+15=90\\).<br><b>Sanity check:</b> Among all \\(B_6=203\\) partitions of 6 items, the 3-block class (90) is the largest, which matches the peak of the row.<br><b>Transfer:</b> Teams of 6 people into 3 unlabelled groups; splitting a deck into 3 unordered piles.",
+  "tags": [
+   "fmt_solve",
+   "s_recursion",
+   "stirling",
+   "partitions"
+  ],
+  "hints": [
+   "The boxes are identical, so only the partition into blocks matters. If you know the count for five balls, how could the sixth ball change it?",
+   "Names the move: a recursion on set partitions into k blocks: the new element joins an existing block or starts a new one.",
+   "Setup: \\( S(6,3)=3\\,S(5,3)+S(5,2)\\). Find \\(S(5,3)\\) and \\(S(5,2)\\) by the same recursion."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> Five distinct people are split into any number of unlabelled non-empty teams. How many splits are there?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_recursion: Bell numbers, the sum of Stirling numbers over all k.<br><b>Trigger:</b> Set partitions of a small labelled set with no bound on the number of blocks.<br><b>Key move:</b> Sum over the number of teams: \\(B_5=\\sum_k S(5,k)\\), with \\(S(5,k)=1,15,25,10,1\\).<br><b>Answer:</b> \\(B_5=52\\).",
+  "tags": [
+   "fmt_recognise",
+   "s_recursion",
+   "bell_numbers",
+   "partitions"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Stirling recurrence for set partitions: \\(S(n,k)={{c1::\\(k\\,S(n-1,k)+S(n-1,k-1)\\)}}\\). Why does this hold, and what are the boundary values?",
+  "back": "<b>Why:</b> element \\(n\\) either joins one of the \\(k\\) blocks of a partition of \\(n-1\\) elements into \\(k\\) blocks, or forms a singleton block added to a partition of \\(n-1\\) elements into \\(k-1\\) blocks.<br><b>Boundary:</b> \\(S(n,1)=S(n,n)=1\\), \\(S(0,0)=1\\).<br><b>Failure mode:</b> this counts unlabelled blocks. Labelled boxes multiply by \\(k!\\); identical balls turn it into partitions of an integer.",
+  "tags": [
+   "fmt_toolkit",
+   "s_recursion",
+   "stirling",
+   "partitions"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> A uniformly random permutation of \\(\\{1,2,3,4\\}\\) is written as a product of disjoint cycles. What is the probability that it has exactly two cycles?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Unsigned Stirling numbers of the first kind: cycle counts of permutations.<br><b>Trigger:</b> Permutation questions about the number of cycles under the uniform distribution on \\(S_n\\).<br><b>Key move:</b> \\(\\Pr(k\\text{ cycles})=c(n,k)/n!\\), with \\(c(4,k)=6,11,6,1\\) for \\(k=1..4\\).<br><b>Answer:</b> \\(11/24\\approx 0.4583\\).",
+  "tags": [
+   "fmt_recognise",
+   "s_recursion",
+   "permutations",
+   "cycles",
+   "stirling"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How many distinct arrangements are there of the letters of MISSISSIPPI?",
+  "back": "<b>Answer:</b> \\(\\dfrac{11!}{4!\\,4!\\,2!\\,1!}=34650\\)<br><b>Structure:</b> s_bijection: words with repeated letters correspond to choosing position sets for each letter.<br><b>Key move:</b> Choose positions for each letter among the 11 slots: a multinomial coefficient.<br><b>Working:</b> \\(\\dfrac{11!}{4!\\,4!\\,2!\\,1!}=\\dfrac{39916800}{24\\cdot 24\\cdot 2}=34650\\).<br><b>Sanity check:</b> The count is far below \\(11!\\) because repeated letters are indistinguishable.<br><b>Transfer:</b> Anagrams of BANANA (60); arrangements of tiles with repeated colours.",
+  "tags": [
+   "fmt_solve",
+   "s_bijection",
+   "multinomial",
+   "counting"
+  ],
+  "hints": [
+   "Two copies of the same letter can be swapped without making a new word. How does that change the count compared with all eleven letters being distinct?",
+   "Names the move: choose the positions for each letter in turn, which gives a multinomial coefficient.",
+   "Setup: \\( \\dfrac{11!}{n_M!\\,n_I!\\,n_S!\\,n_P!} \\), with the four letter multiplicities substituted."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: arrangements of MISSISSIPPI (34650). Change: no two S's may be adjacent. How many arrangements now?",
+  "back": "<b>What breaks:</b> the multinomial lets the four S's sit anywhere, so adjacency is not controlled by the formula.<br><b>Fix:</b> arrange the other seven letters first, \\(7!/(4!\\,2!)=105\\) ways. Place the four S's into distinct gaps among the 8 gaps (including the ends): \\(\\binom{8}{4}=70\\).<br><b>New answer:</b> \\(105\\cdot 70=7350\\), probability \\(7350/34650=7/33\\approx 0.2121\\).",
+  "tags": [
+   "fmt_perturb",
+   "s_bijection",
+   "s_stars_bars",
+   "multinomial",
+   "counting"
+  ],
+  "hints": [
+   "Which constraint cannot be enforced by the multinomial alone, and what would the four S's need around the other letters?",
+   "Names the move: arrange the other seven letters, then place the four S's into distinct gaps so that no two share a gap.",
+   "Setup: \\( N=(\\text{arrangements of the 7 non-S letters})\\times\\binom{g}{4}\\), where \\(g\\) is the number of gaps including both ends."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ten people are assigned to three labelled rooms that hold 4, 3 and 3 people. How many assignments are possible?",
+  "back": "<b>Classic:</b> the multinomial coefficient, arrangements of a word with repeated letters (MISSISSIPPI-type).<br><b>Mapping:</b> room labels are letters A, B, C; the word has four A's, three B's and three C's; people are positions.<br><b>Answer:</b> \\(\\dfrac{10!}{4!\\,3!\\,3!}=4200\\).",
+  "tags": [
+   "fmt_twin",
+   "s_bijection",
+   "multinomial",
+   "counting"
+  ],
+  "hints": [
+   "The room sizes are fixed, so each room's head-count is known in advance. What distinguishes two assignments, and does the order in which people are listed matter?",
+   "Structural feature: the people are distinct, each room has a fixed head-count, and the rooms are labelled. Count by choosing which people go to the first room, then which go to the next from those left.",
+   "Setup: the number of ways is a product of three choose-counts, one per room, taken from the people still unplaced. Fill in the three binomials."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A fair six-sided die is rolled 10 times. What is the probability of exactly two 1s, three 2s, and five rolls showing 3 to 6?",
+  "back": "<b>Answer:</b> \\(\\dfrac{10!}{2!\\,3!\\,5!}\\left(\\tfrac16\\right)^{2}\\left(\\tfrac16\\right)^{3}\\left(\\tfrac46\\right)^{5}=\\dfrac{2520}{59049}\\approx 0.04267\\)<br><b>Structure:</b> s_bijection: sequences with fixed counts per category, a multinomial probability.<br><b>Key move:</b> Count the positions of each category, then multiply by the probability of one specific sequence with those counts.<br><b>Working:</b> \\(\\frac{10!}{2!3!5!}=2520\\). Also \\((\\tfrac16)^5(\\tfrac46)^5=4^5/6^{10}=1/3^{10}\\), so the answer is \\(2520/3^{10}\\).<br><b>Sanity check:</b> Expected counts are about 1.7, 1.7 and 6.7, so a pattern with 2, 3 and 5 is a typical outcome; 0.043 is plausible.<br><b>Transfer:</b> Card-suit counts in 10 draws with replacement; a fixed-total category count in exam scoring.",
+  "tags": [
+   "fmt_solve",
+   "s_bijection",
+   "multinomial",
+   "dice"
+  ],
+  "hints": [
+   "Each roll falls into one of three categories. For a fixed sequence, what matters is how many rolls fall in each category, and how many sequences share those counts?",
+   "Names the move: a multinomial count of positions for each category, times the probability of one specific sequence.",
+   "Setup: \\( \\Pr=\\dfrac{10!}{2!\\,3!\\,5!}\\,\\left(\\tfrac16\\right)^{2}\\left(\\tfrac16\\right)^{3}\\left(\\text{P of a roll from 3 to 6}\\right)^{5}\\), with the category probabilities substituted."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> Twelve distinct cards are dealt to four distinguishable players, three cards each. How many ways are there to make the deal?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Multinomial coefficient: ordered partition of a set into labelled blocks of fixed sizes.<br><b>Trigger:</b> Labelled groups with fixed sizes, all objects distinct, and the groups are distinguishable players.<br><b>Key move:</b> \\(\\dfrac{12!}{(3!)^4}\\).<br><b>Answer:</b> \\(369600\\).",
+  "tags": [
+   "fmt_recognise",
+   "s_bijection",
+   "multinomial",
+   "cards"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How many Dyck paths of semilength 5 are there, that is, lattice paths of 5 up-steps and 5 down-steps that never go below the starting level?",
+  "back": "<b>Answer:</b> \\(C_5=\\dfrac{1}{6}\\binom{10}{5}=42\\)<br><b>Structure:</b> s_bijection and s_recursion: Dyck paths are counted by Catalan numbers, with first-return decomposition.<br><b>Key move:</b> Split a Dyck path at its first return to 0: \\(C_n=\\sum_{k=0}^{n-1}C_kC_{n-1-k}\\). Equivalently, reflect the bad paths.<br><b>Working:</b> \\(C_0,\\dots,C_5=1,1,2,5,14,42\\); \\(C_5=\\frac16\\binom{10}{5}=\\frac{252}{6}=42\\).<br><b>Sanity check:</b> 42 is well below \\(\\binom{10}{5}=252\\), the unconstrained count, and about one sixth of it.<br><b>Transfer:</b> Bracket sequences, triangulations of a polygon, binary trees with 5 internal nodes, stack-sortable permutations.",
+  "tags": [
+   "fmt_solve",
+   "s_bijection",
+   "s_recursion",
+   "catalan",
+   "dyck_paths"
+  ],
+  "hints": [
+   "Is there a point on the path where it could be cut into two shorter paths of the same kind? Which points qualify?",
+   "Names the move: first-return decomposition, which gives a Catalan recursion \\(C_n=\\sum_k C_kC_{n-1-k}\\).",
+   "Setup: \\( C_5=\\sum_{k=0}^{4} C_k\\,C_{4-k}\\), with \\(C_0=1\\). Fill in \\(C_0,\\dots,C_4\\) first."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "In a count, candidate A receives 6 votes and candidate B receives 4 votes, in a uniformly random order of the 10 votes. What is the probability that A is strictly ahead after every vote is counted?",
+  "back": "<b>Answer:</b> \\(\\dfrac{42}{210}=\\dfrac15=0.2\\), matching \\(\\dfrac{6-4}{6+4}\\)<br><b>Structure:</b> s_reflection: the ballot theorem, a strict lead at every prefix.<br><b>Key move:</b> The first vote must be A, leaving 5 A's and 4 B's. The lead must stay at least 1, that is, the walk from 0 with +1 for A and -1 for B stays non-negative. Reflecting the first touch of \\(-1\\) gives bad paths.<br><b>Working:</b> Good paths \\(=\\binom{9}{4}-\\binom{9}{3}=126-84=42\\), out of \\(\\binom{10}{4}=210\\).<br><b>Sanity check:</b> Limits: if B has 0 votes the answer is 1; as \\(b\\to a\\) the answer tends to 0.<br><b>Transfer:</b> A race with a lead that never ties; sales counts; the answer depends only on the difference \\(a-b\\) and the total.",
+  "tags": [
+   "fmt_solve",
+   "s_reflection",
+   "ballot",
+   "random_walk"
+  ],
+  "hints": [
+   "Map each vote to a step of a walk. What must the walk avoid for A to stay strictly ahead after every vote?",
+   "Names the move: reflection, with the bad paths (those that touch the barrier) mapped to paths with a reflected endpoint.",
+   "Setup: the first vote must be A, leaving 5 A's and 4 B's. Write \\(\\#\\text{good}=\\binom{9}{4}-\\#\\text{bad}\\), and find \\(\\#\\text{bad}\\) by reflecting after the first touch."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: the ballot problem with A on 6 votes and B on 4, probability A is strictly ahead at every count (\\(1/5\\)). Change: A only needs to be weakly ahead, so ties are allowed. What is the new probability?",
+  "back": "<b>What breaks:</b> the strict argument reflects at the first touch of a tie. Once ties are allowed, the forbidden event is going below 0 (the barrier moves by one), so the reflected endpoint changes.<br><b>Fix:</b> for weak ballots, reflect the paths that touch \\(-1\\); the probability is \\((a-b+1)/(a+1)\\).<br><b>New answer:</b> \\((6-4+1)/(6+1)=3/7\\approx 0.4286\\).",
+  "tags": [
+   "fmt_perturb",
+   "s_reflection",
+   "ballot",
+   "random_walk"
+  ],
+  "hints": [
+   "Which event is now forbidden, and is the barrier in the same place as in the strict version?",
+   "Names the move: reflection, with the barrier moved by one step compared with the strict version.",
+   "Setup: count the bad paths as paths from the reflected starting point \\(-2\\) to the same endpoint, and subtract them from \\(\\binom{10}{4}\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Five matrices \\(M_1M_2M_3M_4M_5\\) are multiplied in sequence. Only the order of the parentheses can change, and products are not commutative. How many distinct full parenthesisations are there?",
+  "back": "<b>Classic:</b> Catalan numbers, the number of binary trees or Dyck paths of semilength 4.<br><b>Mapping:</b> a full parenthesisation of 5 factors is a binary tree with 5 leaves, which corresponds to a Dyck path of semilength 4.<br><b>Answer:</b> \\(C_4=\\frac15\\binom84=14\\).",
+  "tags": [
+   "fmt_twin",
+   "s_bijection",
+   "catalan",
+   "bracketing"
+  ],
+  "hints": [
+   "Each full parenthesisation fixes which product is performed last. How many choices of that last split are there, and what does each side look like?",
+   "Structural feature: a full parenthesisation is built by repeatedly splitting a product of adjacent factors into two non-empty blocks. Write the count for n factors as a sum over the size of the left block.",
+   "Setup: let \\(T_n\\) count the parenthesisations of n factors, with \\(T_1=1\\). Write \\(T_n=\\sum_{k=1}^{n-1}T_kT_{n-k}\\) and evaluate \\(T_5\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> How many permutations of \\(\\{1,2,3,4,5\\}\\) can be sorted into increasing order by one stack, where the input is read left to right and the stack is popped in order?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Stack-sortable permutations, which avoid the pattern 231 and are counted by Catalan numbers.<br><b>Trigger:</b> A stack sorting question with a sortability condition: a pattern-avoidance class.<br><b>Key move:</b> Stack-sortable permutations of \\(n\\) are 231-avoiding, counted by \\(C_n\\).<br><b>Answer:</b> \\(C_5=42\\).",
+  "tags": [
+   "fmt_recognise",
+   "s_bijection",
+   "catalan",
+   "permutations"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: Dyck paths of semilength 5 (42). Change: the path may never reach height 3 or more. How many such paths are there?",
+  "back": "<b>What breaks:</b> the Catalan recurrence uses unrestricted first returns. A height cap forbids large excursions, so the first-return sum no longer applies.<br><b>Fix:</b> a height-at-most-2 Dyck path is a concatenation of prime blocks \\(U(UD)^{m-1}D\\), one for each semilength \\(m\\). So paths of semilength \\(n\\) are compositions of \\(n\\), giving \\(2^{n-1}\\).<br><b>New answer:</b> \\(2^{4}=16\\).",
+  "tags": [
+   "fmt_perturb",
+   "s_recursion",
+   "catalan",
+   "dyck_paths"
+  ],
+  "hints": [
+   "A path that never reaches height 3 is built from short pieces. What does an excursion look like if it returns to the axis and its height may be at most 2?",
+   "Names the move: decompose the path into prime blocks that touch the axis only at their ends, then count sequences of blocks.",
+   "Setup: a prime block of semilength \\(m\\) is \\(U(UD)^{m-1}D\\); a path of semilength \\(n\\) is a sequence of blocks whose semilengths sum to \\(n\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for the reflection principle on a ballot or random walk, and when does it fail?",
+  "back": "<b>Triggers:</b> a \\(\\pm 1\\) walk or ballot that must stay on one side of a single line (level or diagonal), with fixed endpoints.<br><b>Move:</b> reflect the path after its first touch of the barrier; bad paths biject with paths to the reflected endpoint, so the count is a difference of binomials.<br><b>Canonical example:</b> paths from \\((0,0)\\) to \\((n,n)\\) that stay weakly below the diagonal: \\(C_n\\).<br><b>Failure mode:</b> two barriers (alternating reflections, an infinite sum), steps larger than \\(\\pm 1\\), or a curved barrier. Weak and strict versions differ by a shift of the barrier.",
+  "tags": [
+   "fmt_toolkit",
+   "s_reflection",
+   "ballot",
+   "random_walk"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Catalan closed form: \\(C_n={{c1::\\(\\dfrac{1}{n+1}\\dbinom{2n}{n}\\)}}\\). What does this formula count, and where does it not apply?",
+  "back": "<b>Counts:</b> Dyck paths, bracket sequences, full binary trees with \\(n\\) internal nodes, triangulations of a convex \\((n+2)\\)-gon, stack-sortable permutations.<br><b>Derivation:</b> reflect the bad paths that touch \\(-1\\): \\(\\binom{2n}{n}-\\binom{2n}{n+1}=C_n\\), which simplifies to \\(\\frac{1}{n+1}\\binom{2n}{n}\\).<br><b>Does not apply:</b> bracket sequences with two bracket types, or any count with a second barrier.",
+  "tags": [
+   "fmt_toolkit",
+   "s_bijection",
+   "catalan",
+   "counting"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How many monotone lattice paths go from \\((0,0)\\) to \\((5,5)\\) using unit steps right and up, avoiding the lattice point \\((2,3)\\)?",
+  "back": "<b>Answer:</b> \\(\\binom{10}{5}-\\binom{5}{2}\\binom{5}{3}=252-100=152\\)<br><b>Structure:</b> s_complement: total paths minus paths through the obstacle.<br><b>Key move:</b> Paths through \\((2,3)\\) factor into paths \\((0,0)\\to(2,3)\\) and \\((2,3)\\to(5,5)\\).<br><b>Working:</b> \\(\\binom{5}{2}\\cdot\\binom{5}{2}=10\\cdot 10=100\\), so \\(252-100=152\\).<br><b>Sanity check:</b> About 40% of paths are blocked (\\(100/252\\approx 0.40\\)), plausible for a point near the middle.<br><b>Transfer:</b> A robot path avoiding a pothole; a path avoiding a fixed grid vertex.",
+  "tags": [
+   "fmt_solve",
+   "s_complement",
+   "lattice_paths",
+   "obstacles"
+  ],
+  "hints": [
+   "Which paths are the bad ones? What property of a path decides whether it is bad, and how many paths share that property?",
+   "Names the move: complement. Count paths through the obstacle by splitting at it into two legs and multiplying.",
+   "Setup: \\( \\#\\text{total}=\\binom{10}{5}\\), and \\(\\#\\text{through obstacle}=\\binom{a}{b}\\binom{c}{d}\\) with the step counts of the two legs filled in."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: monotone paths \\((0,0)\\to(5,5)\\) avoiding \\((2,3)\\) (152). Change: they must also avoid \\((3,2)\\). How many paths now?",
+  "back": "<b>What breaks:</b> inclusion-exclusion needs the count of paths through both obstacles. Here a path through \\((2,3)\\) can never reach \\((3,2)\\), because it would have to go down in height.<br><b>Fix:</b> paths through \\((2,3)\\): 100; through \\((3,2)\\): 100; through both: 0.<br><b>New answer:</b> \\(252-100-100+0=52\\).",
+  "tags": [
+   "fmt_perturb",
+   "s_inclusion_exclusion",
+   "lattice_paths",
+   "obstacles"
+  ],
+  "hints": [
+   "Can a single monotone path pass through both obstacle points? Compare their coordinates.",
+   "Names the move: inclusion-exclusion over the two obstacles, with the intersection of the two bad events computed separately.",
+   "Setup: \\( \\#\\text{good}=\\binom{10}{5}-\\#(\\text{through }A)-\\#(\\text{through }B)+\\#(\\text{through both})\\), where \\(A\\) and \\(B\\) are the two obstacle points."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> How many monotone lattice paths from \\((0,0)\\) to \\((4,4)\\) with unit steps right and up stay weakly below the diagonal \\(y=x\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Catalan lattice path: ballot-type paths weakly below the diagonal, counted by \\(C_n\\).<br><b>Trigger:</b> Monotone paths between opposite corners of a square with a barrier along the diagonal.<br><b>Key move:</b> Reflect the paths that touch \\(y=x+1\\): the endpoint \\((4,4)\\) reflects to \\((3,5)\\), so bad paths number \\(\\binom{8}{3}\\).<br><b>Answer:</b> \\(\\binom{8}{4}-\\binom{8}{3}=70-56=14=C_4\\).",
+  "tags": [
+   "fmt_recognise",
+   "s_bijection",
+   "s_reflection",
+   "catalan",
+   "lattice_paths"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A simple symmetric random walk starts at 0 and steps \\(\\pm 1\\) with probability \\(1/2\\) each, independently. What is the probability that it is back at 0 exactly at step 10?",
+  "back": "<b>Answer:</b> \\(\\dfrac{\\binom{10}{5}}{2^{10}}=\\dfrac{252}{1024}=\\dfrac{63}{256}\\approx 0.2461\\)<br><b>Structure:</b> s_bijection: step sequences with a fixed number of up and down steps, a binomial count.<br><b>Key move:</b> Being at 0 at step 10 requires 5 up-steps and 5 down-steps; each sequence has probability \\(2^{-10}\\).<br><b>Working:</b> \\(\\binom{10}{5}=252\\), and \\(252/1024=63/256\\).<br><b>Sanity check:</b> Large-\\(n\\) estimate \\(\\Pr(S_{2n}=0)\\approx 1/\\sqrt{\\pi n}=1/\\sqrt{5\\pi}\\approx 0.25\\), consistent with 0.246.<br><b>Transfer:</b> Lattice-path bridges; equal heads and tails in an even number of tosses.",
+  "tags": [
+   "fmt_solve",
+   "s_bijection",
+   "random_walk",
+   "binomial"
+  ],
+  "hints": [
+   "For the walk to be at 0 at step 10, how many up-steps and down-steps must it take? Does each specific sequence of steps have the same probability?",
+   "Names the move: every step sequence has probability \\(2^{-10}\\), so count the sequences with the right number of up-steps.",
+   "Setup: \\( \\Pr = \\binom{10}{k}\\,2^{-10}\\), with \\(k\\) the number of up-steps needed to end at 0."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: the probability the simple symmetric random walk is at 0 at step 10 (\\(63/256\\)). Change: the question asks for the first time it returns to 0 at step 10. What is the new probability?",
+  "back": "<b>What breaks:</b> the binomial counts all paths at 0 at step 10, including those that returned earlier.<br><b>Fix:</b> first-return decomposition, \\(f_{2n}=C_{n-1}/2^{2n-1}\\), since the walk before the first return is a Dyck-type excursion.<br><b>New answer:</b> \\(C_4/2^9=14/512=7/256\\approx 0.02734\\).",
+  "tags": [
+   "fmt_perturb",
+   "s_recursion",
+   "random_walk",
+   "first_return"
+  ],
+  "hints": [
+   "The binomial counted all paths at zero at step 10, including ones that had already returned. Which of those should you exclude, and how does the first visit split the path?",
+   "Names the move: first-return decomposition. Before the first return the path is an excursion, which is counted by the Catalan numbers.",
+   "Setup: \\( f_{2n} = 2\\cdot\\dfrac{(\\text{number of positive excursions of length }2n)}{2^{2n}}\\), with the excursion count matched to a Catalan number of index \\(n-1\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> Monotone lattice paths from \\((0,0)\\) to \\((6,4)\\) use unit steps right and up. What is the probability that a uniformly random such path passes through \\((3,2)\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Waypoint factorisation: split the path at the required point and multiply the two legs.<br><b>Trigger:</b> A fixed intermediate point on a monotone path between two corners.<br><b>Key move:</b> Count legs \\((0,0)\\to(3,2)\\) and \\((3,2)\\to(6,4)\\), each \\(\\binom{5}{2}\\), then divide by the total \\(\\binom{10}{4}\\).<br><b>Answer:</b> \\(100/210=10/21\\approx 0.4762\\).",
+  "tags": [
+   "fmt_recognise",
+   "s_complement",
+   "s_bijection",
+   "lattice_paths",
+   "waypoints"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 5-card hand is dealt from a standard 52-card deck. What is the probability that all five cards are of the same suit (a flush, including straight flushes)?",
+  "back": "<b>Answer:</b> \\(\\dfrac{4\\binom{13}{5}}{\\binom{52}{5}}=\\dfrac{5148}{2598960}=\\dfrac{33}{16660}\\approx 0.001981\\)<br><b>Structure:</b> s_complement and counting by hand type.<br><b>Key move:</b> Choose the suit (4 ways), then 5 of its 13 cards.<br><b>Working:</b> \\(4\\cdot 1287=5148\\); \\(\\binom{52}{5}=2598960\\).<br><b>Sanity check:</b> About 1 in 500. Flushes are rarer than one pair (about 42%) by a factor of around 200.<br><b>Transfer:</b> The probability of any five-card poker category; a suit-count question on a 5-card deal.",
+  "tags": [
+   "fmt_solve",
+   "s_complement",
+   "poker",
+   "cards"
+  ],
+  "hints": [
+   "Choose the suit first. Once the suit is fixed, which cards are allowed, and does that choice depend on which suit you picked?",
+   "Names the move: count hands by a single suit: choose the suit, then five of its cards, and divide by all five-card hands.",
+   "Setup: \\( \\Pr = \\dfrac{(\\text{number of suits})\\cdot\\binom{13}{5}}{\\binom{52}{5}}\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 5-card hand is dealt from a standard 52-card deck. What is the probability of four of a kind?",
+  "back": "<b>Answer:</b> \\(\\dfrac{13\\cdot 48}{\\binom{52}{5}}=\\dfrac{624}{2598960}=\\dfrac{1}{4165}\\approx 0.00024\\)<br><b>Structure:</b> s_bijection: hands are counted by their rank structure.<br><b>Key move:</b> Choose the rank with four copies (13 ways), then the fifth card from the other 48.<br><b>Working:</b> \\(13\\cdot 48=624\\); \\(\\binom{52}{5}=2598960\\).<br><b>Sanity check:</b> Four of a kind (1 in 4165) is far rarer than a flush (about 1 in 500).<br><b>Transfer:</b> Four of a kind in 7-card hold'em (same rank-count argument, different hand size).",
+  "tags": [
+   "fmt_solve",
+   "s_bijection",
+   "poker",
+   "cards"
+  ],
+  "hints": [
+   "Four of a kind uses all four cards of one rank. Which of the five cards are forced, and which one is free?",
+   "Names the move: choose the rank with four copies, then the fifth card from the cards of other ranks.",
+   "Setup: \\( \\Pr = \\dfrac{(\\text{choices of the four-of-a-kind rank})\\cdot(\\text{choices of the fifth card})}{\\binom{52}{5}}\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: the probability that 5 cards dealt from a 52-card deck without replacement have five different ranks (no pair, \\(\\approx 0.50708\\)). Change: each card is drawn, its rank recorded, and it is returned before the next draw. What is the probability all five ranks differ now?",
+  "back": "<b>What breaks:</b> without replacement the ranks come from 52 distinct cards with 4 per rank, a hypergeometric structure. With replacement each draw is an independent uniform card, so repeats are more likely.<br><b>Fix:</b> each draw has a rank uniform on 13 values, independently. So \\(\\Pr=\\dfrac{13\\cdot 12\\cdot 11\\cdot 10\\cdot 9}{13^5}\\).<br><b>New answer:</b> \\(11880/28561\\approx 0.41595\\).",
+  "tags": [
+   "fmt_perturb",
+   "s_bijection",
+   "poker",
+   "replacement"
+  ],
+  "hints": [
+   "With replacement, do the five draws still depend on each other? What is the chance that each new draw has a rank different from all the earlier ones?",
+   "Names the move: draws are independent and uniform over the 13 ranks, so count the ordered rank sequences with no repeats.",
+   "Setup: \\( \\Pr=\\prod_{j=0}^{4}\\Pr(\\text{draw } j+1 \\text{ avoids the } j \\text{ earlier ranks})\\). Evaluate each factor."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> A 5-card hand is dealt from a standard deck. What is the probability that it contains exactly one pair?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Hand-type counting: choose the rank of the pair, then the other ranks, then suits.<br><b>Trigger:</b> Counting by a category defined by the rank multiset of the hand.<br><b>Key move:</b> Pair rank 13 ways, its suits \\(\\binom{4}{2}\\); three other distinct ranks \\(\\binom{12}{3}\\), their suits \\(4^3\\).<br><b>Answer:</b> \\(\\dfrac{13\\cdot 6\\cdot 220\\cdot 64}{2598960}=\\dfrac{1098240}{2598960}\\approx 0.42257\\).",
+  "tags": [
+   "fmt_recognise",
+   "s_bijection",
+   "poker",
+   "cards"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: POKER 1/4]</b> A 5-card hand from a standard 52-card deck. What is the probability of exactly two pairs (two different ranks, each appearing twice, plus one other card)?",
+  "back": "<b>Answer:</b> \\(\\dfrac{\\binom{13}{2}\\binom{4}{2}^2\\cdot 44}{\\binom{52}{5}}=\\dfrac{123552}{2598960}\\approx 0.04754\\)<br><b>Structure:</b> s_bijection: hand-type counting, pairs of ranks times suit choices times the fifth card.<br><b>Key move:</b> Choose the 2 pair ranks, their suits, then a fifth card from the 44 cards of the other 11 ranks.<br><b>Working:</b> \\(\\binom{13}{2}\\cdot 36\\cdot 44=78\\cdot 36\\cdot 44=123552\\).<br><b>Sanity check:</b> Under one in twenty: between one pair (0.42) and full house (0.0014).<br><b>Transfer:</b> Two pair in a 5-card draw; pair structure in a 7-card deal.",
+  "tags": [
+   "fmt_chain",
+   "s_bijection",
+   "poker",
+   "cards"
+  ],
+  "hints": [
+   "Two pair needs two ranks, each appearing twice, and then one more card. Which choices are free before any suits are picked, and what may the fifth card be?",
+   "Names the move: choose the two pair ranks, then their suits, then the fifth card from the ranks that are not paired.",
+   "Setup: \\( \\Pr = \\dfrac{\\binom{13}{2}\\binom{4}{2}^{2}\\cdot(\\text{cards of the other ranks})}{\\binom{52}{5}}\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: POKER 2/4]</b> A 5-card hand dealt from a standard 52-card deck. Follow-up: what is the probability of a full house (three cards of one rank and two of another)?",
+  "back": "<b>Answer:</b> \\(\\dfrac{13\\cdot 12\\cdot\\binom{4}{3}\\binom{4}{2}}{\\binom{52}{5}}=\\dfrac{3744}{2598960}=\\dfrac{6}{4165}\\approx 0.00144\\)<br><b>Structure:</b> s_bijection: the triple rank and the pair rank are ordered (they differ), then suits.<br><b>Key move:</b> Ranks must be ordered: the triple rank (13 ways) and the pair rank (12 ways).<br><b>Working:</b> \\(13\\cdot 12\\cdot 4\\cdot 6=3744\\).<br><b>Sanity check:</b> About 3% of the two-pair rate, which is plausible since it needs three of a kind.<br><b>Transfer:</b> Full house in 7-card poker; the structure of a three-plus-two count.",
+  "tags": [
+   "fmt_chain",
+   "s_bijection",
+   "poker",
+   "cards"
+  ],
+  "hints": [
+   "A full house uses two different ranks with different multiplicities. Does it matter which rank you pick first, or must the two roles be assigned?",
+   "Names the move: assign a role to each of two distinct ranks (the triple and the pair), then choose the suits.",
+   "Setup: \\( \\Pr=\\dfrac{(\\text{ordered choice of triple rank and pair rank})\\cdot\\binom{4}{3}\\binom{4}{2}}{\\binom{52}{5}}\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: POKER 3/4]</b> A 5-card hand dealt from a standard 52-card deck. Follow-up: what is the probability that the hand contains at least one pair, of any kind (pair, two pair, trips, full house, quads)?",
+  "back": "<b>Answer:</b> \\(1-\\dfrac{\\binom{13}{5}4^5}{\\binom{52}{5}}=1-\\dfrac{1317888}{2598960}\\approx 0.49292\\)<br><b>Structure:</b> s_complement: 'at least one' is one minus 'all ranks distinct'.<br><b>Key move:</b> The complement, all five ranks different, counts \\(\\binom{13}{5}\\) rank sets times \\(4^5\\) suit choices.<br><b>Working:</b> \\(1317888/2598960\\approx 0.50708\\); subtracting gives 0.49292.<br><b>Sanity check:</b> Check by category: one pair 0.4226 + two pair 0.0475 + trips 0.0211 + full house 0.0014 + quads 0.0002 = 0.4929.<br><b>Transfer:</b> 'At least one repeat' questions for a fixed number of draws from 13 categories with 4 copies each.",
+  "tags": [
+   "fmt_chain",
+   "s_complement",
+   "poker",
+   "cards"
+  ],
+  "hints": [
+   "What does a hand with no pair look like in terms of its five ranks?",
+   "Names the move: complement. Count hands with five distinct ranks by choosing the ranks and then a suit for each card.",
+   "Setup: \\( \\Pr = 1-\\dfrac{(\\text{rank sets of size }5)\\cdot(\\text{suit choices per card})^{5}}{\\binom{52}{5}}\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: POKER 4/4]</b> Generalise: a 7-card hand dealt from a standard 52-card deck. What is the probability that all seven cards have different ranks (no pair at all)?",
+  "back": "<b>Answer:</b> \\(\\dfrac{\\binom{13}{7}4^7}{\\binom{52}{7}}=\\dfrac{28114944}{133784560}\\approx 0.21015\\)<br><b>Structure:</b> s_complement and s_bijection: no repeated rank means choosing 7 distinct ranks and one suit for each.<br><b>Key move:</b> Choose 7 distinct ranks (\\(\\binom{13}{7}\\)), then one of 4 suits for each card.<br><b>Working:</b> \\(\\binom{13}{7}=1716\\), \\(4^7=16384\\), product \\(28114944\\); \\(\\binom{52}{7}=133784560\\).<br><b>Sanity check:</b> Down from about 0.51 for 5 cards: the pair-free fraction falls quickly as the hand grows.<br><b>Transfer:</b> Birthday-type repeats for 7 draws from 13 categories.",
+  "tags": [
+   "fmt_chain",
+   "s_complement",
+   "s_bijection",
+   "poker",
+   "cards",
+   "generalisation"
+  ],
+  "hints": [
+   "With seven cards and thirteen ranks, what does a hand with all seven ranks different require, and how many ranks does such a hand use?",
+   "Names the move: choose the set of seven distinct ranks, then assign a suit to each card.",
+   "Setup: \\( \\Pr = \\dfrac{\\binom{13}{7}\\cdot(\\text{suit choices per card})^{7}}{\\binom{52}{7}}\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Thirteen colours each come in four shades. A bag holds one ball of each shade for every colour, 52 balls in total. Five balls are drawn without replacement; a draw is the set of 5 balls, order ignored. How many draws have five different colours?",
+  "back": "<b>Classic:</b> a 5-card hand with five different ranks (no pair).<br><b>Mapping:</b> colours are ranks, shades are suits. Choose 5 colours \\(\\binom{13}{5}\\), then one shade of each \\(4^5\\).<br><b>Answer:</b> \\(\\binom{13}{5}4^5=1317888\\), probability \\(\\approx 0.50708\\).",
+  "tags": [
+   "fmt_twin",
+   "s_bijection",
+   "poker",
+   "cards"
+  ],
+  "hints": [
+   "Each ball is a colour and a shade. For five balls to show five different colours, how many colours must be chosen, and how many shade choices does each one allow?",
+   "Names the move: choose the set of colours first, then one shade for each chosen colour.",
+   "Setup: \\( N=\\binom{13}{5}\\cdot(\\text{shades per colour})^{5}\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "In bridge, 52 cards are dealt into four hands of 13. What is the probability that a given hand has suit distribution 4-4-3-2 (in any order across the suits)?",
+  "back": "<b>Answer:</b> \\(\\dfrac{12\\cdot\\binom{13}{4}^2\\binom{13}{3}\\binom{13}{2}}{\\binom{52}{13}}\\approx 0.21551\\)<br><b>Structure:</b> s_bijection: suit-length patterns, counted by assigning sizes to suits.<br><b>Key move:</b> Assign the sizes 4, 4, 3, 2 to the four suits: \\(4!/2!=12\\) distinct assignments. Then choose the specific cards in each suit.<br><b>Working:</b> \\(\\binom{13}{4}^2\\binom{13}{3}\\binom{13}{2}=715\\cdot 715\\cdot 286\\cdot 78\\); times 12; over \\(\\binom{52}{13}\\).<br><b>Sanity check:</b> About 21.5%, the most common bridge shape, which matches known tables.<br><b>Transfer:</b> The 5-3-3-2 or 6-3-2-2 shape counts; hypergeometric counts of suit lengths.",
+  "tags": [
+   "fmt_solve",
+   "s_bijection",
+   "bridge",
+   "cards"
+  ],
+  "hints": [
+   "Each suit's length is a number from 0 to 13, and the four lengths form a multiset. Does it matter which suit gets which length, and how many ways are there to assign them?",
+   "Names the move: count the assignments of the lengths to the four suits, then count the specific cards in each suit.",
+   "Setup: \\( \\Pr=\\dfrac{(\\text{distinct assignments of lengths }4,4,3,2\\text{ to suits})\\cdot\\binom{13}{4}^{2}\\binom{13}{3}\\binom{13}{2}}{\\binom{52}{13}}\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> In a 52-card deck dealt to four players, 13 cards each, you hold the Ace of Spades. What is the probability that the Ace of Hearts is also in your hand?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Symmetry: the 12 remaining cards in your hand are a uniform subset of the other 51 cards.<br><b>Trigger:</b> Two specified cards and a random deal: the chance they share a hand.<br><b>Key move:</b> Your remaining 12 cards are a uniform 12-subset of the other 51, so a given card is among them with probability 12/51.<br><b>Answer:</b> \\(12/51=4/17\\approx 0.2353\\).",
+  "tags": [
+   "fmt_recognise",
+   "s_symmetry",
+   "bridge",
+   "cards"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "In a 13-card bridge hand, what is the probability that the hand holds all four aces?",
+  "back": "<b>Answer:</b> \\(\\dfrac{\\binom{48}{9}}{\\binom{52}{13}}=\\dfrac{11}{4165}\\approx 0.00264\\)<br><b>Structure:</b> s_complement: fix the four aces, then choose the remaining 9 cards from the 48 others.<br><b>Key move:</b> The hands containing all four aces are counted by choosing the other 9 cards; divide by all 13-card hands.<br><b>Working:</b> \\(\\binom{48}{9}/\\binom{52}{13}\\), which simplifies to \\(11/4165\\).<br><b>Sanity check:</b> About 1 in 380. The chance a hand has no ace at all is about 0.30, so this smaller value is right.<br><b>Transfer:</b> The chance a 13-card hand holds a fixed set of four cards.",
+  "tags": [
+   "fmt_solve",
+   "s_complement",
+   "bridge",
+   "cards"
+  ],
+  "hints": [
+   "Once the four aces are in the hand, how many cards remain to fill it, and from which pool are they drawn?",
+   "Names the move: fix the required cards, choose the rest from the others, then divide by all possible hands.",
+   "Setup: \\( \\Pr=\\dfrac{\\binom{a}{b}}{\\binom{52}{13}}\\), with \\(a\\) the size of the remaining pool and \\(b\\) the number of cards still to draw."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> A 5-card hand is dealt from a standard deck. What is the probability that the hand contains at least one ace?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_complement: 'at least one' equals one minus 'none'.<br><b>Trigger:</b> A 'contains at least one' event whose complement, no aces, is a simple count.<br><b>Key move:</b> No aces means choosing 5 cards from the 48 non-aces.<br><b>Answer:</b> \\(1-\\binom{48}{5}/\\binom{52}{5}\\approx 0.34116\\).",
+  "tags": [
+   "fmt_recognise",
+   "s_complement",
+   "poker",
+   "cards"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Twenty-three people are in a room, birthdays independent and uniform over 365 days, no leap days. What is the probability that at least two share a birthday?",
+  "back": "<b>Answer:</b> \\(1-\\dfrac{365!}{342!\\,365^{23}}\\approx 0.50730\\)<br><b>Structure:</b> s_complement: compute the probability that all birthdays are distinct, then subtract from 1.<br><b>Key move:</b> Person \\(k\\) must avoid the \\(k-1\\) earlier birthdays, so the ratio is \\(\\prod_{i=0}^{22}(365-i)/365\\).<br><b>Working:</b> \\(\\prod_{i=0}^{22}\\frac{365-i}{365}\\approx 0.49270\\), so the answer is \\(0.50730\\).<br><b>Sanity check:</b> Quick check: \\(\\exp(-\\binom{23}{2}/365)=\\exp(-0.693)\\approx 0.500\\).<br><b>Transfer:</b> Hash table of 23 keys into 365 buckets with no collision; any 'some two match' question on uniform draws.",
+  "tags": [
+   "fmt_solve",
+   "s_complement",
+   "birthday",
+   "collisions"
+  ],
+  "hints": [
+   "When would every birthday be different? Think about what the newest person has to avoid.",
+   "Names the move: complement, using a sequential product of the probabilities that each person avoids all earlier birthdays.",
+   "Setup: \\( \\Pr(\\text{all distinct}) = \\prod_{i=0}^{n-1}\\dfrac{365-i}{365}\\), with \\(n\\) the number of people."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: 23 people, probability that some two share a birthday (\\(\\approx 0.5073\\)). Change: you are one of the 23, your birthday is fixed to 1 January, and you ask whether anyone else shares it. What is the probability among the other 22?",
+  "back": "<b>What breaks:</b> the birthday count compares all \\(\\binom{23}{2}=253\\) pairs. Now only the 22 pairs involving you matter, and they all compare with one fixed day.<br><b>Fix:</b> each other person independently avoids your day with probability \\(364/365\\).<br><b>New answer:</b> \\(1-(364/365)^{22}\\approx 0.05857\\).",
+  "tags": [
+   "fmt_perturb",
+   "s_complement",
+   "birthday",
+   "collisions"
+  ],
+  "hints": [
+   "Only some pairs matter now. Which pairs involve you, and does the relationship among the other 22 people still affect the answer?",
+   "Names the move: independence. Each other person must avoid your fixed day, so the answer is a single power.",
+   "Setup: \\( \\Pr(\\text{no match}) = q^{\\,k}\\), where \\(k\\) is the number of other people and \\(q\\) is the probability that one of them avoids your day."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Birthdays of \\(n\\) people are independent and uniform over 365 days. Find the smallest \\(n\\) such that the probability that some day has at least three people is at least \\(1/2\\).",
+  "back": "<b>Answer:</b> \\(n=88\\): \\(\\Pr(\\text{some day has}\\ge 3)\\approx 0.5111\\); at \\(n=87\\) it is \\(0.4995\\).<br><b>Structure:</b> s_generating_function for capped occupancy, plus s_complement.<br><b>Key move:</b> Probability that each day holds at most 2 people is \\(\\dfrac{n!\\,[x^n](1+x+x^2/2)^{365}}{365^n}\\), a generating-function coefficient.<br><b>Working:</b> Exact integer computation gives the values above. A pair is a coin toss at \\(n=23\\), but a triple needs roughly four times as many people.<br><b>Sanity check:</b> The expected number of triples \\(\\binom{88}{3}/365^2\\approx 0.82\\) is the right order of magnitude for a probability near one half.<br><b>Transfer:</b> k-way collisions in hashing (bucket overflow); birthday problems with three matching people.",
+  "tags": [
+   "fmt_solve",
+   "s_generating_function",
+   "s_complement",
+   "birthday",
+   "collisions",
+   "triples"
+  ],
+  "hints": [
+   "Triples are rarer than pairs. What is the chance that every day holds at most two people, and how could you count arrangements under a per-day cap?",
+   "Names the move: a generating function for occupancy with at most two people per day, then a search over \\(n\\) for the first value that crosses one half.",
+   "Setup: \\( \\Pr(\\text{max}\\le 2)=\\dfrac{n!\\,[x^{n}]\\,(1+x+x^{2}/2)^{365}}{365^{n}}\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When can you approximate the birthday no-collision probability by \\(\\exp(-n(n-1)/(2N))\\), and when does it fail?",
+  "back": "<b>Triggers:</b> a no-collision question with \\(N\\) uniform bins and \\(n\\) items, where you need a quick closed-form estimate.<br><b>Move:</b> \\(\\ln\\prod(1-i/N)\\approx -\\sum i/N=-\\binom{n}{2}/N\\), so the probability is about \\(e^{-n^2/2N}\\).<br><b>Canonical example:</b> \\(n=23,\\ N=365\\): approximation 0.5000 against exact 0.4927.<br><b>Failure mode:</b> the second-order term \\(\\sum i^2/(2N^2)\\approx n^3/(6N^2)\\) matters once \\(n\\) is comparable to \\(N^{2/3}\\). It also fails for k-way collisions, where the Poisson shape changes.",
+  "tags": [
+   "fmt_toolkit",
+   "s_complement",
+   "birthday",
+   "approximation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ten people's birthdays are independent and uniform over 365 days in a non-leap year, with no wrap-around (1 January and 31 December are not neighbours). What is the probability that no two birthdays are within one day of each other?",
+  "back": "<b>Answer:</b> \\(\\dfrac{\\binom{356}{10}\\cdot 10!}{365^{10}}\\approx 0.68577\\), so the near-miss probability is \\(\\approx 0.31423\\).<br><b>Structure:</b> s_complement: a near-miss is a gap condition, handled by counting subsets with no two adjacent days.<br><b>Key move:</b> Choose 10 days with no two consecutive from 365: \\(\\binom{365-10+1}{10}=\\binom{356}{10}\\). Assign the 10 distinct people to them in \\(10!\\) ways.<br><b>Working:</b> \\(\\binom{356}{10}\\cdot 10!/365^{10}\\approx 0.68577\\).<br><b>Sanity check:</b> Exact collision among 10 people is about 0.117, so near-misses are far more likely than exact matches.<br><b>Transfer:</b> Non-adjacent seating and spacing questions reuse the same subset count.",
+  "tags": [
+   "fmt_solve",
+   "s_complement",
+   "birthday",
+   "near_miss"
+  ],
+  "hints": [
+   "Think of the birthdays as a set of chosen days. How do you count sets of days with no two consecutive, when the first and last day are not joined?",
+   "Names the move: count subsets of days with a forbidden adjacency (a gap condition), then assign the people to the chosen days.",
+   "Setup: \\( \\Pr = \\dfrac{N_{\\text{gap}}\\cdot 10!}{365^{10}}\\), where \\(N_{\\text{gap}}\\) is the number of 10-subsets of the 365 days with no two consecutive days."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> Forty people have independent birthdays, uniform over 365 days. What is the probability that at least two of them share a birthday?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Birthday problem with \\(n=40\\): complement of all birthdays distinct.<br><b>Trigger:</b> Any 'some two share a day' question with uniform independent draws.<br><b>Key move:</b> \\(1-\\prod_{i=0}^{39}\\frac{365-i}{365}\\).<br><b>Answer:</b> \\(\\approx 0.89123\\).",
+  "tags": [
+   "fmt_recognise",
+   "s_complement",
+   "birthday",
+   "collisions"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Twenty-three people have independent birthdays, uniform over 365 days. What is the expected number of unordered pairs of people who share a birthday?",
+  "back": "<b>Answer:</b> \\(\\binom{23}{2}\\cdot\\frac{1}{365}=\\dfrac{253}{365}\\approx 0.6932\\)<br><b>Structure:</b> s_linearity_expectation with an indicator for each pair.<br><b>Key move:</b> Indicator \\(I_{ij}=1\\) if \\(i\\) and \\(j\\) share a birthday, with \\(\\Pr=1/365\\). Sum over the 253 pairs.<br><b>Working:</b> \\(E=253/365\\approx 0.6932\\).<br><b>Sanity check:</b> The expected count is 0.69 while the probability of at least one pair is 0.51: one collision can cover several pairs.<br><b>Transfer:</b> Expected number of matching pairs in a random hash table; expected number of edges in a random graph.",
+  "tags": [
+   "fmt_solve",
+   "s_linearity_expectation",
+   "s_indicators",
+   "birthday",
+   "expectation"
+  ],
+  "hints": [
+   "Forget whether any collision happens at all. What does one particular pair of people contribute, and how many such pairs are there?",
+   "Names the move: an indicator for each pair, then linearity of expectation.",
+   "Setup: \\( E=\\sum_{i<j}\\Pr(I_{ij}=1)\\), where \\(I_{ij}=1\\) if persons \\(i\\) and \\(j\\) share a birthday."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Twenty-three people have independent birthdays, uniform over 365 days. What is the expected number of distinct birthdays represented in the room?",
+  "back": "<b>Answer:</b> \\(365\\left(1-(364/365)^{23}\\right)\\approx 22.32\\)<br><b>Structure:</b> s_indicators: one indicator per day, linearity over days.<br><b>Key move:</b> For each day \\(d\\), \\(\\Pr(\\text{someone has birthday }d)=1-(364/365)^{23}\\). Sum over the 365 days.<br><b>Working:</b> \\(365(1-(364/365)^{23})\\approx 22.3200\\).<br><b>Sanity check:</b> Just under 23, so about 0.68 collisions on average, consistent with 253/365.<br><b>Transfer:</b> Expected number of distinct values in an i.i.d. sample.",
+  "tags": [
+   "fmt_solve",
+   "s_indicators",
+   "s_linearity_expectation",
+   "birthday",
+   "expectation"
+  ],
+  "hints": [
+   "Instead of counting people or pairs, count days. Which days contribute to the number of distinct birthdays?",
+   "Names the move: an indicator for each day that someone has it, then linearity of expectation over the days.",
+   "Setup: \\( E=\\sum_{d=1}^{365}\\Pr(\\text{some person has day }d)\\), and \\(\\Pr(\\text{some person has }d)=1-\\Pr(\\text{nobody has }d)\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> Any six distinct integers are chosen from \\(\\{1,2,\\dots,10\\}\\). Prove that some two of them have one dividing the other.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Pigeonhole on the odd part: each positive integer is \\(2^a\\cdot o\\) with \\(o\\) odd.<br><b>Trigger:</b> Each integer up to 10 has an odd part in \\(\\{1,3,5,7,9\\}\\): five boxes. Six numbers force two into the same box.<br><b>Key move:</b> Two numbers with the same odd part \\(o\\) are \\(2^a o\\) and \\(2^b o\\); the smaller divides the larger.<br><b>Answer:</b> Always true: pigeonhole gives two with the same odd part.",
+  "tags": [
+   "fmt_recognise",
+   "s_pigeonhole",
+   "pigeonhole",
+   "divisibility"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: any six integers from \\(\\{1,\\dots,10\\}\\) contain a pair where one divides the other. Change: choose only five integers. Must a divisible pair exist?",
+  "back": "<b>What breaks:</b> pigeonhole needs more numbers than boxes. Five numbers can occupy the five odd-part boxes one each, so no repeat is forced.<br><b>Fix:</b> give a counterexample. \\(\\{6,7,8,9,10\\}\\) has no pair with one dividing the other. The general extremal family is \\(\\{n+1,\\dots,2n\\}\\).<br><b>New answer:</b> No, five numbers can avoid divisibility.",
+  "tags": [
+   "fmt_perturb",
+   "s_pigeonhole",
+   "s_extremal",
+   "pigeonhole",
+   "divisibility"
+  ],
+  "hints": [
+   "Could five numbers avoid every divisibility relation? Try picking them from a range where no number divides another.",
+   "Names the move: look for a counterexample from a construction that avoids divisibility, because the pigeonhole bound no longer applies at this size.",
+   "Setup: a valid set has no pair \\(a\\neq b\\) with \\(a\\mid b\\). Test a candidate by checking every ratio \\(b/a\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "At a party of ten people, a person may shake hands with any number of others, including zero. Prove that at least two people shook hands with the same number of people.",
+  "back": "<b>Answer:</b> Yes, always.<br><b>Structure:</b> s_pigeonhole with an extremal constraint: 0 and 9 cannot both occur.<br><b>Key move:</b> Each person's count lies in \\(\\{0,\\dots,9\\}\\). If someone shook 9 hands, nobody has 0, so counts lie in \\(\\{1,\\dots,9\\}\\). Either way there are 9 possible values for 10 people.<br><b>Working:</b> Nine values, ten people, so two share a value.<br><b>Sanity check:</b> Check with 4 people: the same argument gives 3 possible values for 4 people, which forces a repeat.<br><b>Transfer:</b> Any degree-sequence argument in a simple graph.",
+  "tags": [
+   "fmt_solve",
+   "s_pigeonhole",
+   "pigeonhole",
+   "parties"
+  ],
+  "hints": [
+   "Each person's count lies in a fixed range of integers. How many distinct values can the counts take, and how does that compare with the number of people?",
+   "Names the move: pigeonhole on the handshake counts, after checking which values can occur together.",
+   "Setup: let \\(d_i\\) be the number of handshakes of person \\(i\\). Show that the values \\(d_i\\) lie in a set with one fewer value than there are people."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How many labelled trees are there on 5 vertices (spanning trees of \\(K_5\\))?",
+  "back": "<b>Answer:</b> \\(5^{3}=125\\)<br><b>Structure:</b> s_bijection: Cayley's formula via Prüfer sequences.<br><b>Key move:</b> Prüfer codes are sequences of length \\(n-2\\) over \\(n\\) labels, a bijection with labelled trees.<br><b>Working:</b> \\(n^{n-2}=5^3=125\\).<br><b>Sanity check:</b> Brute force over the 210 four-edge subsets of \\(K_5\\) gives 125 trees.<br><b>Transfer:</b> Spanning trees of \\(K_4\\) are 16; acyclic communication networks on 5 nodes.",
+  "tags": [
+   "fmt_solve",
+   "s_bijection",
+   "trees",
+   "graphs"
+  ],
+  "hints": [
+   "A labelled tree on \\(n\\) vertices can be encoded by a sequence. How long is that sequence, and how many labels can each position take?",
+   "Names the move: a Prüfer-code bijection between labelled trees and sequences over the vertex labels.",
+   "Setup: the number of labelled trees on \\(n\\) vertices is \\(n^{\\,n-2}\\). Substitute the vertex count."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: labelled simple graphs on 5 vertices number \\(2^{10}=1024\\). Change: every vertex must have even degree (zero is even). How many such graphs are there?",
+  "back": "<b>What breaks:</b> the edge-subset count ignores parity. Each vertex gives one linear constraint over \\(\\mathbb{F}_2\\) on the edge indicators.<br><b>Fix:</b> the 5 constraints have one dependency (the handshake lemma: degrees sum to an even number), so the solution space has dimension \\(10-5+1=6\\), the cycle space of \\(K_5\\).<br><b>New answer:</b> \\(2^6=64\\).",
+  "tags": [
+   "fmt_perturb",
+   "s_parity",
+   "graphs",
+   "parity"
+  ],
+  "hints": [
+   "Each vertex gives a parity condition on the edges. Are these conditions independent, or does one of them follow from the rest?",
+   "Names the move: treat the edge set as a vector over the field with two elements; the count is a power of two set by the rank of the parity system.",
+   "Setup: the constraints are \\(\\sum_{e\\ni v}x_e\\equiv 0 \\pmod 2\\) for each vertex \\(v\\). The answer is \\(2^{\\,|E|-\\mathrm{rank}}\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> Eight people are split into four unordered pairs. How many ways are there to do this?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Perfect matchings: recursion on the partner of the first person.<br><b>Trigger:</b> Partition into unordered pairs of an even-sized set.<br><b>Key move:</b> Person 1 has 7 partners; recurse on 6 people: \\(m_n=(n-1)m_{n-2}\\), so \\(m_8=7\\cdot 5\\cdot 3\\cdot 1\\).<br><b>Answer:</b> \\(105\\).",
+  "tags": [
+   "fmt_recognise",
+   "s_recursion",
+   "matchings",
+   "pairing"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> At any party of finitely many people, some pairs shake hands. Prove that the number of people who shook an odd number of hands is even.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> s_parity: the handshake lemma, double counting of the degree sum.<br><b>Trigger:</b> A count of vertices with a property (odd degree) in a graph, asked for its parity.<br><b>Key move:</b> The sum of degrees is twice the number of handshakes, so it is even. Odd-degree vertices contribute odd terms, so there must be an even number of them.<br><b>Answer:</b> Always even.",
+  "tags": [
+   "fmt_recognise",
+   "s_parity",
+   "graphs",
+   "parity"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Four cities can be linked by any of the six possible roads. How many ways are there to choose exactly three roads so that all four cities are connected and no loop forms?",
+  "back": "<b>Classic:</b> spanning trees of \\(K_4\\), counted by Cayley's formula.<br><b>Mapping:</b> a set of 3 roads on 4 cities that connects everything and has no cycle is a spanning tree.<br><b>Answer:</b> \\(4^{2}=16\\).",
+  "tags": [
+   "fmt_twin",
+   "s_bijection",
+   "trees",
+   "graphs"
+  ],
+  "hints": [
+   "Which sets of three roads on four cities connect everything with no loop? What shape must such a set have?",
+   "Structural feature: three edges on four vertices connect everything exactly when they form no cycle. Sort the valid sets by their shape, and count each shape separately.",
+   "Setup: write the count as a sum over the possible shapes of the number of ways to label each shape on the four cities. List the shapes first."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "100 prisoners each find their own number in one of 100 boxes (a uniform random permutation). Each prisoner may open 50 boxes, following the cycle from their own box. All must succeed. What is the probability that all succeed?",
+  "back": "<b>Answer:</b> \\(1-\\sum_{k=51}^{100}\\dfrac{1}{k}=1-(H_{100}-H_{50})\\approx 0.31183\\)<br><b>Structure:</b> s_complement: success means no cycle longer than 50, and a cycle of length k > n/2 appears with probability 1/k.<br><b>Key move:</b> Following cycles from your own box finds your number within the cycle length. All succeed iff every cycle has length at most 50. At most one cycle can exceed 50, and a length-\\(k\\) cycle appears with probability \\(1/k\\).<br><b>Working:</b> \\(\\sum_{k=51}^{100}1/k=H_{100}-H_{50}\\approx 0.68817\\), so success is \\(0.31183\\).<br><b>Sanity check:</b> The limit as \\(n\\to\\infty\\) is \\(1-\\ln 2\\approx 0.3069\\), close to the exact value.<br><b>Transfer:</b> Any cycle-structure question with a threshold; the longest cycle exceeding a fraction of n.",
+  "tags": [
+   "fmt_solve",
+   "s_complement",
+   "prisoners",
+   "permutations",
+   "cycles"
+  ],
+  "hints": [
+   "Follow the cycle through your own box. When does every prisoner succeed? Think about the cycle lengths of the permutation.",
+   "Names the move: success means every cycle has length at most the open limit. Count the complement, the permutations with a long cycle.",
+   "Setup: the failure events are indexed by \\(k=51,\\dots,100\\). Argue that at most one cycle can exceed 50, then count permutations with a fixed \\(k\\)-cycle: choose the \\(k\\) elements, arrange them in a cycle, and divide by the total."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> A uniform random permutation of 10 objects is written as disjoint cycles. What is the probability that some cycle has length greater than 5?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Long-cycle probability: at most one cycle exceeds \\(n/2\\), and a length-\\(k\\) cycle appears with probability \\(1/k\\).<br><b>Trigger:</b> Permutation cycle lengths with a threshold above half of \\(n\\).<br><b>Key move:</b> For \\(k>n/2\\), \\(\\Pr(\\text{a }k\\text{-cycle exists})=1/k\\), and these events are disjoint. Sum over \\(k=6,\\dots,10\\).<br><b>Answer:</b> \\(H_{10}-H_5=1627/2520\\approx 0.64563\\).",
+  "tags": [
+   "fmt_recognise",
+   "s_indicators",
+   "permutations",
+   "cycles",
+   "prisoners"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: 100 prisoners, 100 boxes, each prisoner may open 50 boxes (success \\(\\approx 0.31183\\)). Change: each prisoner may open only 40 boxes. What is the probability that all succeed?",
+  "back": "<b>What breaks:</b> the 'one cycle over half' shortcut needs the cutoff \\(n/2\\). With cutoff 40, two cycles longer than 40 are possible, so the single-event sum fails.<br><b>Fix:</b> count permutations with all cycles at most \\(k\\) by a recursion on the cycle of element \\(n\\): \\(a_n=\\sum_{j=1}^{\\min(k,n)}\\frac{(n-1)!}{(n-j)!}\\,a_{n-j}\\), then divide by \\(n!\\).<br><b>New answer:</b> \\(\\approx 0.13477\\) for \\(n=100,\\ k=40\\).",
+  "tags": [
+   "fmt_perturb",
+   "s_recursion",
+   "prisoners",
+   "permutations",
+   "cycles"
+  ],
+  "hints": [
+   "With a limit of 40 boxes, can two cycles both exceed the limit? What does that do to the single-event sum?",
+   "Names the move: count permutations whose cycles all have length at most the limit, using a recursion on the cycle containing one fixed element.",
+   "Setup: \\( a_n=\\sum_{j=1}^{k}\\dfrac{(n-1)!}{(n-j)!}\\,a_{n-j}\\), with \\(a_0=1\\), and the probability is \\(a_n/n!\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Ten people each have one hat, and each hat has a name tag. Hats are reassigned by a uniformly random bijection. Starting from person 1 and following 'whose hat is this?' from one person to the next, what is the probability that the chain returns to person 1 after exactly 4 steps?",
+  "back": "<b>Classic:</b> the length of the cycle containing a given element of a uniform random permutation.<br><b>Mapping:</b> the chain from person 1 is the cycle of 1; its length is uniform on \\(\\{1,\\dots,10\\}\\) because every length is equally likely.<br><b>Answer:</b> \\(1/10\\), for every length.",
+  "tags": [
+   "fmt_twin",
+   "s_symmetry",
+   "permutations",
+   "cycles"
+  ],
+  "hints": [
+   "Following the chain from person 1 visits a new person at each step until it returns. At each step, how many people are still unvisited, and what must the chain do next?",
+   "Structural feature: the 'whose hat is this' map is a bijection, so the chain either returns to person 1 or runs through new people. Count the sequences of new people that end back at person 1 after four steps.",
+   "Setup: \\( \\Pr=\\Pr(\\text{first three steps visit three new people})\\times\\Pr(\\text{fourth step returns to person 1}\\mid\\text{that})\\). Write each factor as a conditional probability."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A uniform random permutation of 10 objects is written as disjoint cycles. What is the expected number of cycles, counting fixed points as 1-cycles?",
+  "back": "<b>Answer:</b> \\(H_{10}=\\sum_{k=1}^{10}\\dfrac1k=\\dfrac{7381}{2520}\\approx 2.9290\\)<br><b>Structure:</b> s_linearity_expectation with indicators: the cycle closing at each element.<br><b>Key move:</b> Feller coupling: for each \\(k\\), the event 'the cycle through \\(k\\) has its largest element \\(\\le k\\) at \\(k\\)' has probability \\(1/k\\), and these events are independent across \\(k\\). Each marks one cycle.<br><b>Working:</b> \\(E=\\sum_{k=1}^{n}\\frac{1}{k}=H_n\\).<br><b>Sanity check:</b> The \\(k=1\\) term is always 1, and \\(H_{10}\\approx 2.93\\) is a plausible total.<br><b>Transfer:</b> Expected number of records in a random sequence; expected number of distinct values in a random function.",
+  "tags": [
+   "fmt_solve",
+   "s_linearity_expectation",
+   "s_indicators",
+   "permutations",
+   "cycles",
+   "expectation"
+  ],
+  "hints": [
+   "Each cycle can be marked by one of its elements, such as the largest. Which elements mark a cycle, and how likely is each one to do so?",
+   "Names the move: indicators for the elements that close a cycle, then linearity of expectation.",
+   "Setup: \\( E[\\#\\text{cycles}]=\\sum_{k=1}^{10}\\Pr(\\text{element }k\\text{ closes a cycle})\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How many distinct necklaces can be made from 6 beads, each bead red, green or blue, where rotations of the necklace are considered identical?",
+  "back": "<b>Answer:</b> \\(130\\)<br><b>Structure:</b> s_symmetry: Burnside's lemma over the cyclic group of rotations.<br><b>Key move:</b> Average number of fixed colourings over the rotations: \\(\\frac{1}{6}\\sum_{d\\mid 6}\\varphi(d)\\,3^{6/d}\\).<br><b>Working:</b> \\(\\frac{1}{6}(3^6+3^3+2\\cdot 3^2+2\\cdot 3)=\\frac{729+27+18+6}{6}=130\\).<br><b>Sanity check:</b> Lower bound \\(3^6/6=121.5\\), so 130 is just above it, as expected from symmetric fixed points.<br><b>Transfer:</b> Colourings of a ring of 6 beads; distinct cyclic arrangements of a 6-letter code.",
+  "tags": [
+   "fmt_solve",
+   "s_symmetry",
+   "necklaces",
+   "burnside"
+  ],
+  "hints": [
+   "Two colourings count as the same when one rotates into the other. Which colourings are fixed by a given rotation, and how does that depend on the cycle structure of the rotation on the beads?",
+   "Names the move: Burnside's lemma. Average the number of fixed colourings over all rotations.",
+   "Setup: \\( N=\\dfrac{1}{6}\\sum_{g}3^{c(g)}\\), where \\(c(g)\\) is the number of cycles of the rotation \\(g\\) acting on the 6 beads."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Known: necklaces of 6 beads in 3 colours, up to rotation (130). Change: the necklace may also be flipped over, so reflections are identified too. What is the new count?",
+  "back": "<b>What breaks:</b> the rotation group has order 6; the full dihedral group has order 12, and Burnside must average over it.<br><b>Fix:</b> add the 6 reflections. Three reflections through opposite beads fix \\(3^4\\) colourings each; three through edge midpoints fix \\(3^3\\). Total \\((780+3\\cdot 81+3\\cdot 27)/12\\).<br><b>New answer:</b> \\(1104/12=92\\) bracelets.",
+  "tags": [
+   "fmt_perturb",
+   "s_symmetry",
+   "necklaces",
+   "burnside"
+  ],
+  "hints": [
+   "What changes when the necklace may also be flipped over? How many new symmetries does that add, and what do their cycles look like on the beads?",
+   "Names the move: Burnside again, now averaged over the full group of rotations and reflections.",
+   "Setup: \\( N=\\dfrac{1}{12}\\Bigl(\\sum_{\\text{rotations }g}3^{c(g)}+\\sum_{\\text{reflections }h}3^{c(h)}\\Bigr)\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> The six faces of a cube are each painted one of three colours. Two colourings are identical if one can be rotated into the other. How many distinct colourings are there?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Burnside's lemma on the 24 rotations of the cube.<br><b>Trigger:</b> Colouring of a symmetric solid, counted up to its rotation group.<br><b>Key move:</b> Identity fixes \\(3^6=729\\); 90 and 270 degree face turns (6) fix \\(3^3\\); 180 degree face turns (3) fix \\(3^4\\); 120 degree vertex turns (8) fix \\(3^2\\); 180 degree edge turns (6) fix \\(3^3\\). Sum \\(=1368\\), and \\(1368/24=57\\).<br><b>Answer:</b> 57 distinct colourings.",
+  "tags": [
+   "fmt_recognise",
+   "s_symmetry",
+   "cube",
+   "burnside",
+   "colourings"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Eight seats are placed around a round, rotatable table. Four guests take red chips and four take blue chips, all chips of one colour identical. Two seatings are the same if the table can be turned to match. How many distinct seatings are there?",
+  "back": "<b>Classic:</b> binary necklaces of length 8 with four 1s, up to rotation, counted by Burnside.<br><b>Mapping:</b> seats are beads, chip colours are bead colours, turning the table is cyclic rotation.<br><b>Answer:</b> \\(10\\).",
+  "tags": [
+   "fmt_twin",
+   "s_symmetry",
+   "necklaces",
+   "burnside"
+  ],
+  "hints": [
+   "The table can turn, so two seatings that are rotations of each other are the same. How many seatings are there in total, and how many of them does each class contain?",
+   "Structural feature: a seating that looks the same after a partial turn has a repeating pattern around the table. Ask which turns can leave a seating unchanged, and how many seatings are left by each.",
+   "Setup: let \\(f_k\\) be the number of seatings unchanged by a turn of \\(k\\) seats. Find \\(f_k\\) in terms of the number of red chips in each cycle of that turn."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "When should you reach for Burnside's lemma, and when does it fail?",
+  "back": "<b>Triggers:</b> counting objects up to a symmetry group (rotations, reflections, relabellings), where direct orbit counting is messy.<br><b>Move:</b> number of orbits \\(=\\frac{1}{|G|}\\sum_{g\\in G}|\\mathrm{Fix}(g)|\\). Count fixed colourings per group element, usually from its cycle structure.<br><b>Canonical example:</b> 6-bead necklaces in 3 colours: 130 orbits.<br><b>Failure mode:</b> leaving out group elements (for example reflections when flipping is allowed), or using the wrong cycle structure for a fixed-point count.",
+  "tags": [
+   "fmt_toolkit",
+   "s_symmetry",
+   "burnside",
+   "counting"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> Evaluate \\(\\sum_{k=0}^{10} k\\binom{10}{k}\\) by a combinatorial argument.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Double counting: committees with a chair, counted two ways.<br><b>Trigger:</b> A sum of \\(k\\binom{n}{k}\\), which counts (committee, chair) pairs with the committee of size \\(k\\).<br><b>Key move:</b> Choose the chair first (\\(n\\) ways), then any subset of the other \\(n-1\\) members to join: \\(n\\,2^{n-1}\\).<br><b>Answer:</b> \\(10\\cdot 2^{9}=5120\\).",
+  "tags": [
+   "fmt_recognise",
+   "s_bijection",
+   "identities",
+   "double_counting"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Evaluate \\(\\sum_{k=0}^{6}\\binom{6}{k}^2\\) by a counting argument.",
+  "back": "<b>Answer:</b> \\(\\binom{12}{6}=924\\)<br><b>Structure:</b> s_bijection: double counting of committees of 6 chosen from two groups of 6.<br><b>Key move:</b> Choose 6 people from 12 (6 men and 6 women). Split by the number \\(k\\) of men chosen: \\(\\binom{6}{k}\\binom{6}{6-k}=\\binom{6}{k}^2\\).<br><b>Working:</b> \\(\\sum_k\\binom{6}{k}^2=\\binom{12}{6}=924\\).<br><b>Sanity check:</b> Matches the direct count \\(\\binom{12}{6}=924\\).<br><b>Transfer:</b> Vandermonde's identity with \\(m=n=r\\).",
+  "tags": [
+   "fmt_solve",
+   "s_bijection",
+   "identities",
+   "double_counting"
+  ],
+  "hints": [
+   "Picture two groups of six people. How can you choose a committee of six from the twelve, and how does splitting by the number of men from the first group reveal the sum?",
+   "Names the move: double counting. Count the same selection of six people from twelve in two ways.",
+   "Setup: \\( \\sum_{k}\\binom{6}{k}\\binom{6}{6-k}\\) equals the number of ways to choose 6 people from 12."
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Vandermonde identity: \\(\\sum_k\\binom{m}{k}\\binom{n}{r-k}={{c1::\\(\\binom{m+n}{r}\\)}}\\). When do you reach for a double-counting identity like this, and when does it fail?",
+  "back": "<b>Triggers:</b> a sum of products of binomials whose indices add; a 'choose from two groups' setting; a count of subsets with a split.<br><b>Move:</b> count the same selection from \\(m+n\\) objects in two ways, splitting by how many come from each group.<br><b>Canonical example:</b> \\(\\sum_k\\binom{7}{k}\\binom{5}{4-k}=\\binom{12}{4}=495\\).<br><b>Failure mode:</b> alternating signs (these need a generating function), or indices that do not match the total, which breaks the split.",
+  "tags": [
+   "fmt_toolkit",
+   "s_bijection",
+   "identities",
+   "vandermonde"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Evaluate \\(\\sum_{k=3}^{10}\\binom{k}{3}\\) by a counting argument.",
+  "back": "<b>Answer:</b> \\(\\binom{11}{4}=330\\)<br><b>Structure:</b> s_bijection: hockey-stick identity, counting 4-subsets of \\(\\{1,\\dots,11\\}\\) by their largest element.<br><b>Key move:</b> Look at the largest element \\(m\\) of a 4-subset: the other three lie in \\(\\{1,\\dots,m-1\\}\\), giving \\(\\binom{m-1}{3}\\) subsets. Sum over \\(m=4,\\dots,11\\).<br><b>Working:</b> \\(\\sum_{k=3}^{10}\\binom{k}{3}=\\binom{11}{4}=330\\).<br><b>Sanity check:</b> Direct check: \\(1+4+10+20+35+56+84+120=330\\).<br><b>Transfer:</b> Sums of triangular-type counts; the hockey-stick identity in any row sum of Pascal's triangle.",
+  "tags": [
+   "fmt_solve",
+   "s_bijection",
+   "identities",
+   "double_counting"
+  ],
+  "hints": [
+   "Consider the largest element of a chosen 4-subset. What does that tell you about the other three elements?",
+   "Names the move: the hockey-stick identity, counting 4-subsets of a larger set by their largest element.",
+   "Setup: \\( \\sum_{k=3}^{10}\\binom{k}{3}=\\#\\{4\\text{-subsets of }\\{1,\\dots,m\\}\\}\\) for a suitable \\(m\\). Find \\(m\\)."
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Problem:</b> Evaluate \\(\\sum_{k=0}^{5}\\binom{5}{k}2^{k}\\) by a counting argument.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> Double counting: give each element one of three states, with the weight 2 for the states that are in exactly one set.<br><b>Trigger:</b> A sum over subsets with weight 2 per chosen element, so each element has three options.<br><b>Key move:</b> Each element is in neither (weight 1), in exactly one of two sets (weight 2), or in both: a total weight of \\(1+2=3\\) per element.<br><b>Answer:</b> \\(3^5=243\\).",
+  "tags": [
+   "fmt_recognise",
+   "s_bijection",
+   "identities",
+   "generating_function"
+  ]
+ }
+]

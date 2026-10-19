@@ -1,0 +1,851 @@
+[
+ {
+  "type": "basic",
+  "front": "Write the minimal numpy to estimate \\(P(U_1+U_2+U_3&lt;1)\\) for i.i.d. \\(U_i\\sim\\text{Unif}(0,1)\\) by Monte Carlo, and report the standard error and a 95% CI. What exact value should it be near?",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(0)\nn = 10**6\ns = rng.random((n, 3)).sum(axis=1)\np = (s &lt; 1).mean()\nse = np.sqrt(p*(1-p)/n)\nprint(f\"p={p:.5f} se={se:.5f} 95%CI=({p-1.96*se:.5f},{p+1.96*se:.5f}) exact={1/6:.5f}\")</pre><b>Why it works:</b> The sample mean of i.i.d. indicators is unbiased for \\(p\\). By the CLT the standard error of a proportion is \\(\\sqrt{p(1-p)/n}\\), so the interval is \\(\\hat p\\pm1.96\\,\\text{se}\\).<br><b>Error/complexity:</b> Output p=0.16620, se=0.00037, CI (0.16547, 0.16693); exact \\(1/6=0.16667\\), 1.3 se away. Cost O(n) time and O(3n) memory. The error falls as \\(1/\\sqrt n\\): 4x the draws halves the se.<br><b>Pitfall:</b> The se uses the sample \\(\\hat p\\), not the true \\(p\\). The interval is valid for the CLT regime only, and says nothing about bias from a bad generator or a wrong model.",
+  "tags": [
+   "monte_carlo",
+   "standard_error",
+   "probability",
+   "s_clt_normal_approx",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write vectorised numpy to estimate the probability that a fair \\(\\pm1\\) simple random walk started at 0 ever reaches \\(+3\\) within 10 steps, with its standard error. Give the exact value you check against.",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(1)\nn, m = 200_000, 10\npaths = rng.choice([-1, 1], size=(n, m)).cumsum(axis=1)\np = (paths.max(axis=1) &gt;= 3).mean()\nse = np.sqrt(p*(1-p)/n)\nprint(f\"p={p:.5f} se={se:.5f} exact=0.34375\")</pre><b>Why it works:</b> All \\(n\\) paths are one \\((n,m)\\) array; a hit is \\(\\max_k S_k\\ge 3\\), computed along axis 1. The reflection principle gives \\(P(M_m\\ge a)=P(S_m\\ge a)+P(S_m&gt;a)\\).<br><b>Error/complexity:</b> Output p=0.34164, se=0.00106. Exact 0.34375 = 352/1024 (enumerating all 1024 paths confirms it). The MC sits 2 se low, which is within normal sampling noise. Cost O(nm) time and memory.<br><b>Pitfall:</b> Checking only the endpoint, \\(P(S_{10}\\ge 3)=176/1024\\approx0.172\\), undercounts by half. Missing the path maximum is the classic error here.",
+  "tags": [
+   "monte_carlo",
+   "random_walk",
+   "vectorisation",
+   "s_reflection",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write vectorised numpy to estimate \\(P(\\max_{t\\le1} S_t\\ge110)\\) for GBM with \\(S_0=100\\), \\(\\mu=0\\), \\(\\sigma=0.2\\), using 100 000 paths of 252 daily steps. Then say how you would check the result against a loop-based version.",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(2)\nn, m = 100_000, 252\nsig, mu, dt = 0.2, 0.0, 1/252\nZ = rng.standard_normal((n, m))\nlogS = np.log(100) + np.cumsum((mu - 0.5*sig**2)*dt + sig*np.sqrt(dt)*Z, axis=1)\nhit = np.exp(logS).max(axis=1) &gt;= 110\np = hit.mean(); se = np.sqrt(p*(1-p)/n)\nloop_hits = 0\nfor i in range(500):\n    s = 100.0\n    for z in Z[i]:\n        s *= np.exp((mu - 0.5*sig**2)*dt + sig*np.sqrt(dt)*z)\n        if s &gt;= 110:\n            loop_hits += 1\n            break\nprint(f\"vectorised p={p:.4f} se={se:.4f}\")\nprint(\"loop agrees on first 500 paths:\", loop_hits == hit[:500].sum())</pre><b>Why it works:</b> Generate all normals at once, cumsum along axis 1 to get the log-path, and take the max along axis 1. There is no Python-level loop over paths or steps, and NumPy runs the arithmetic in C.<br><b>Error/complexity:</b> Output p=0.5782, se=0.0016. A loop over the first 500 paths, using the same normals, matches the vectorised hits exactly. Cost O(nm) flops. A Python loop over the \\(nm\\) scalar steps is much slower, because of interpreter overhead on each scalar operation (not timed here).<br><b>Pitfall:</b> The \\((n,m)\\) float64 array is \\(8nm\\) bytes: about 200 MB here, and 2 GB at \\(10^6\\times252\\). Chunk the paths in blocks. The check only means something if the loop uses the same normals.",
+  "tags": [
+   "monte_carlo",
+   "vectorisation",
+   "gbm",
+   "path_maximum",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is slow in this code, and what is the vectorised fix? Give the one-line replacement and say how you verify it gives the same numbers.<pre>import numpy as np\nrng = np.random.default_rng(3)\nout = np.array([])\nfor i in range(20_000):\n    out = np.append(out, rng.standard_normal())</pre>",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(3)\nout = np.array([])\nfor i in range(20_000):\n    out = np.append(out, rng.standard_normal())\nrng2 = np.random.default_rng(3)\nfast = rng2.standard_normal(20_000)\nprint(out.shape, round(out.mean(), 6), round(fast.mean(), 6), \"equal:\", np.array_equal(out, fast))</pre><b>Why it works:</b> np.append returns a new array, copying all existing elements every call. Filling n entries therefore copies \\(0+1+\\dots+(n-1)\\approx n^2/2\\) elements. One vectorised draw of size n costs O(n) and consumes the generator in the same order.<br><b>Error/complexity:</b> Verified: both give shape (20000,), the same mean 0.004067, and np.array_equal is True. Naive cost \\(\\Theta(n^2)\\) copies, here \\(2\\times10^8\\), against \\(2\\times10^4\\) draws for the vector call.<br><b>Pitfall:</b> Python lists with append are amortised O(1), so build a list and convert once. Growing numpy arrays inside a loop is the common trap.",
+  "tags": [
+   "vectorisation",
+   "numpy",
+   "performance",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "The analyst computes the mean of 100 normals in each of 1000 batches and reports a standard error of about \\(10^{-19}\\). Find the flaw.<pre>import numpy as np\ndef run_buggy(n_paths):\n    means = []\n    for _ in range(n_paths):\n        rng = np.random.default_rng(42)\n        means.append(rng.standard_normal(100).mean())\n    means = np.array(means)\n    return means.mean(), means.std(ddof=1)/np.sqrt(n_paths)</pre>",
+  "back": "<b>Code:</b><pre>import numpy as np\ndef run_buggy(n_paths):\n    means = []\n    for _ in range(n_paths):\n        rng = np.random.default_rng(42)\n        means.append(rng.standard_normal(100).mean())\n    means = np.array(means)\n    return means.mean(), means.std(ddof=1)/np.sqrt(n_paths)\ndef run_fixed(n_paths):\n    rng = np.random.default_rng(42)\n    means = np.array([rng.standard_normal(100).mean() for _ in range(n_paths)])\n    return means.mean(), means.std(ddof=1)/np.sqrt(n_paths)\nprint(\"buggy\", run_buggy(1000))\nprint(\"fixed\", run_fixed(1000))</pre><b>Why it works:</b> The fixed version creates one generator, then draws every batch from it. Each batch is then a fresh, independent draw, so the sd of the batch means estimates the sampling error of the mean.<br><b>Error/complexity:</b> Buggy output: mean -0.05027 with se 6.6e-19. Fixed output: mean -0.00423 with se 0.00326. Cost is the same for both.<br><b>Pitfall:</b> The faulty line is default_rng(42) inside the loop: every batch re-seeds and reproduces the same 100 numbers. <b>Smell:</b> a standard error or p-value near zero from a simulation means the replications are not independent. Check that the generator is created once.",
+  "tags": [
+   "seed",
+   "reproducibility",
+   "monte_carlo",
+   "standard_error",
+   "fmt_debug"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal numpy so that a Monte Carlo is exactly reproducible from one master seed, and four parallel workers draw statistically independent streams.",
+  "back": "<b>Code:</b><pre>import numpy as np\ndef streams(seed):\n    ss = np.random.SeedSequence(seed)\n    return [np.random.default_rng(s) for s in ss.spawn(4)]\na = [r.standard_normal(3) for r in streams(2026)]\nb = [r.standard_normal(3) for r in streams(2026)]\nprint(np.round(a[0], 4), np.round(a[1], 4))\nprint(\"rerun identical:\", all(np.array_equal(x, y) for x, y in zip(a, b)))\nprint(\"streams differ:\", not np.array_equal(a[0], a[1]))</pre><b>Why it works:</b> SeedSequence hashes the master seed into a tree of entropy. spawn() returns child sequences that are designed to be independent, and each child seeds its own PCG64 generator. Reruns with the same master seed therefore give identical streams.<br><b>Error/complexity:</b> Reproducibility is checked by exact equality (rerun identical: True). The streams differ (True). This check is about reproducibility, not about estimating a quantity.<br><b>Pitfall:</b> np.random.seed sets global state that every library call shares, which breaks under threads. Re-seeding each worker with the same integer gives identical streams (see the seed debug card). Passing one generator around, or spawning from a SeedSequence, avoids both.",
+  "tags": [
+   "seed",
+   "reproducibility",
+   "parallel_streams",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal Python to simulate the number of draws until all \\(n=6\\) equally likely coupons have been seen. Report the mean with its standard error and the exact value.",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(3)\ndef draws_to_collect_all(n, rng):\n    seen, t = set(), 0\n    while len(seen) &lt; n:\n        seen.add(int(rng.integers(n)))\n        t += 1\n    return t\nT = np.array([draws_to_collect_all(6, rng) for _ in range(100_000)])\nprint(f\"mean={T.mean():.3f} se={T.std(ddof=1)/np.sqrt(len(T)):.3f} exact=6*H6=14.7\")</pre><b>Why it works:</b> While k coupons are still missing, each draw is a geometric wait with success probability \\((n-k)/n\\). Linearity of expectation sums these waits: \\(E[T]=n\\sum_{k=1}^n 1/k=nH_n\\).<br><b>Error/complexity:</b> Output mean 14.727, se 0.020; exact \\(6H_6=14.7\\), 1.4 se. Cost is O(T) draws per trial and about \\(n\\ln n\\) on average, so O(N n log n) overall.<br><b>Pitfall:</b> The answer is \\(nH_n\\approx n(\\ln n+\\gamma)\\), not \\(n\\ln n\\) (which gives 10.75 here). Also, use int() on draws so the set holds plain ints.",
+  "tags": [
+   "coupon_collector",
+   "simulation",
+   "s_linearity_expectation",
+   "s_geometric_probability",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal Python for the expected number of draws to see every coupon when coupon i has probability \\(p=(0.4,0.3,0.2,0.1)\\). Compute it exactly, then check by simulation.",
+  "back": "<b>Code:</b><pre>import numpy as np\nfrom itertools import combinations\np = np.array([0.4, 0.3, 0.2, 0.1])\nn = len(p)\nE = 0.0\nfor k in range(1, n+1):\n    for S in combinations(range(n), k):\n        E += (-1)**(k+1) / p[list(S)].sum()\nrng = np.random.default_rng(7)\ndef T_once():\n    seen, t = set(), 0\n    while len(seen) &lt; n:\n        seen.add(int(rng.choice(n, p=p)))\n        t += 1\n    return t\nts = np.array([T_once() for _ in range(50_000)])\nprint(f\"exact={E:.4f} mc={ts.mean():.4f} se={ts.std(ddof=1)/np.sqrt(len(ts)):.4f}\")</pre><b>Why it works:</b> The time to see everything is the maximum of the coupon arrival times. Poissonisation (total rate 1) and inclusion–exclusion give \\(E[T]=\\sum_{\\emptyset\\ne S}(-1)^{|S|+1}/P(S)\\) with \\(P(S)=\\sum_{i\\in S}p_i\\).<br><b>Error/complexity:</b> Exact 12.3611 (a Markov chain on the set of seen coupons gives 12.361111, the same). MC 12.429 with se 0.0385, 1.8 se away. The sum has \\(2^n-1\\) terms, so it is exponential in n. For large n use simulation or a smaller chain.<br><b>Pitfall:</b> The equal-probability formula \\(nH_n\\) does not hold here. Dropping the sign \\((-1)^{|S|+1}\\) or summing over only the singletons gives a wrong answer.",
+  "tags": [
+   "coupon_collector",
+   "inclusion_exclusion",
+   "unequal_probabilities",
+   "s_inclusion_exclusion",
+   "s_linearity_expectation",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal Python that simulates the number of fair coin tosses until the pattern HTH first appears, and the same for HHH. Report means with standard errors against the exact values.",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(4)\ndef wait(pattern):\n    buf, t, L = '', 0, len(pattern)\n    while not buf.endswith(pattern):\n        buf = (buf + ('H' if rng.random() &lt; 0.5 else 'T'))[-L:]\n        t += 1\n    return t\nts = np.array([wait('HTH') for _ in range(100_000)])\nts2 = np.array([wait('HHH') for _ in range(100_000)])\nprint(f\"HTH mean={ts.mean():.3f} se={ts.std(ddof=1)/np.sqrt(len(ts)):.3f} exact=10\")\nprint(f\"HHH mean={ts2.mean():.3f} se={ts2.std(ddof=1)/np.sqrt(len(ts2)):.3f} exact=14\")</pre><b>Why it works:</b> Keep only the last L characters as a rolling buffer. The pattern is complete exactly when the buffer equals it, so this simulates the chain on the longest matched prefix. The expected waiting time is \\(\\sum 2^k\\) over k such that the length-k prefix equals the length-k suffix.<br><b>Error/complexity:</b> HTH: mean 10.006, se 0.024 (exact 10 = 2+8). HHH: mean 13.990, se 0.038 (exact 14 = 2+4+8). Cost O(L) per toss.<br><b>Pitfall:</b> Using the whole history with a growing string makes memory and the endswith checks grow with T. Also, HTH is not the same as first counting its occurrences; overlapping occurrences matter.",
+  "tags": [
+   "pattern_waiting_time",
+   "markov_chain",
+   "s_markov_chain",
+   "s_first_step_conditioning",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write numpy that gives the expected number of fair tosses until HTH appears, exactly, by solving a linear system on the transient states (longest suffix that is a prefix of HTH). Return the expected time from each state too.",
+  "back": "<b>Code:</b><pre>import numpy as np\n# transient states: 0 = no useful suffix, 1 = 'H', 2 = 'HT'; 'HTH' absorbs\nQ = np.array([[0.5, 0.5, 0.0],\n              [0.0, 0.5, 0.5],\n              [0.5, 0.0, 0.0]])\nE = np.linalg.solve(np.eye(3) - Q, np.ones(3))\nprint(E)</pre><b>Why it works:</b> First-step analysis gives \\(E_s=1+\\sum_t P(s,t)E_t\\) over transient states, so \\((I-Q)E=\\mathbf 1\\). Here Q is the transient-to-transient block of the transition matrix.<br><b>Error/complexity:</b> Output \\(E=(10,8,6)\\) for states '', 'H', 'HT'. This matches the simulation (10.006). Cost \\(O(k^3)\\) for k transient states, and it is exact to machine precision.<br><b>Pitfall:</b> From state 'H', a further H stays in state 'H' (not ''), and from 'HT' a T returns to ''. Mixing these up gives a wrong Q. Check that every row of Q plus the absorbing column sums to 1.",
+  "tags": [
+   "pattern_waiting_time",
+   "markov_chain",
+   "linear_system",
+   "s_markov_chain",
+   "s_first_step_conditioning",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal Python with lru_cache and exact Fractions for this game: a fair die is rolled up to three times, you may stop after any roll and receive that face, and you maximise expected payoff. Report the exact value.",
+  "back": "<b>Code:</b><pre>from functools import lru_cache\nfrom fractions import Fraction\n@lru_cache(maxsize=None)\ndef value(rerolls, last):\n    if rerolls == 0:\n        return Fraction(last)\n    cont = sum(value(rerolls - 1, y) for y in range(1, 7)) / 6\n    return max(Fraction(last), cont)\ndef start_value(rolls):\n    return sum(value(rolls - 1, x) for x in range(1, 7)) / 6\nprint(start_value(3), float(start_value(3)))\nprint(start_value(1), float(start_value(2)))</pre><b>Why it works:</b> Bellman recursion: \\(V(r,x)=\\max\\bigl(x,\\ \\tfrac16\\sum_y V(r-1,y)\\bigr)\\), with \\(V(0,x)=x\\) (r = rerolls left). Memoising on (rerolls, last face) collapses the \\(6^3\\) decision paths to \\(3\\cdot6\\) states.<br><b>Error/complexity:</b> Exact start value \\(14/3\\approx4.6667\\) for three rolls. One roll gives 7/2. Two rolls give 17/4. Thresholds: with two rerolls left stop iff \\(x\\ge5\\), with one left stop iff \\(x\\ge4\\). Cost O(R·6·6) with the memo.<br><b>Pitfall:</b> Using floats can flip ties at the decision boundary, so keep Fractions when the answer is exact. The max compares stopping (x) with continuing the expected value of the next state.",
+  "tags": [
+   "dice",
+   "optimal_stopping",
+   "dynamic_programming",
+   "lru_cache",
+   "s_dynamic_programming",
+   "s_backward_induction",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Find the flaw. The author wants the expected maximum of three fair dice, memoised with lru_cache. The first call fails.<pre>from functools import lru_cache\n@lru_cache(maxsize=None)\ndef best(rolls_left, kept):\n    if rolls_left == 0:\n        return max(kept)\n    return sum(best(rolls_left - 1, kept + [x]) for x in range(1, 7)) / 6\nprint(best(3, []))</pre>",
+  "back": "<b>Code:</b><pre>from functools import lru_cache\n@lru_cache(maxsize=None)\ndef best(rolls_left, kept):\n    if rolls_left == 0:\n        return max(kept)\n    return sum(best(rolls_left - 1, kept + (x,)) for x in range(1, 7)) / 6\nprint(float(best(3, ())))</pre><b>Why it works:</b> lru_cache builds a dictionary keyed by the arguments, so every argument must be hashable. A list is not, so the call raises TypeError before any computation. A tuple is hashable, and kept + (x,) builds a new immutable key.<br><b>Error/complexity:</b> Fixed output 4.9583 = 119/24, the expected maximum of three dice. Starting with best(2, ()) would give two rolls, the expected maximum of two dice (161/36 = 4.4722). The memo table holds at most \\(\\sum_k 6^k\\) keys.<br><b>Pitfall:</b> The faulty line is kept + [x]. <b>Smell:</b> any argument to a cached function must be hashable: tuple not list, frozenset not set, never dict. A TypeError on the very first call points at argument types.",
+  "tags": [
+   "dice",
+   "lru_cache",
+   "memoisation",
+   "python_pitfall",
+   "s_dynamic_programming",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal numpy to estimate, by Monte Carlo with 10^6 paths and a standard error, the value of this policy: roll a fair die; stop if the face is at least 5; otherwise roll again and stop if the face is at least 4; otherwise take a third roll. Compare with the exact DP value.",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(5)\nn = 10**6\nx = rng.integers(1, 7, size=(n, 3))\nx1, x2, x3 = x.T\npay = np.where(x1 &gt;= 5, x1, np.where(x2 &gt;= 4, x2, x3))\nm = pay.mean(); se = pay.std(ddof=1)/np.sqrt(n)\nprint(f\"MC={m:.5f} se={se:.5f} exact=14/3={14/3:.5f}\")</pre><b>Why it works:</b> Draw all three rolls at once, then apply the threshold rule with np.where. The rule is the one from the DP: stop if it beats the continuation value.<br><b>Error/complexity:</b> MC 4.66604 with se 0.00141; exact 14/3 = 4.66667 (0.45 se). Cost O(n).<br><b>Pitfall:</b> Agreement with the DP only shows the arithmetic is right, not that the policy is optimal. To test optimality, compare with other thresholds: any threshold that differs from the DP should give a lower MC value.",
+  "tags": [
+   "dice",
+   "optimal_stopping",
+   "monte_carlo",
+   "s_dynamic_programming",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write numpy to compute the probability that a gambler starting with i reaches N before 0, when each bet wins with probability \\(p\\). Solve it as a linear system and check against the closed form.",
+  "back": "<b>Code:</b><pre>import numpy as np\ndef win_prob(p, N, i0):\n    q = 1 - p\n    A = np.eye(N+1); b = np.zeros(N+1)\n    b[N] = 1.0\n    for i in range(1, N):\n        A[i, i-1] = -q\n        A[i, i+1] = -p\n    return np.linalg.solve(A, b)[i0]\np, N, i0 = 0.4, 10, 3\nr = (1-p)/p\nprint(win_prob(p, N, i0), (1 - r**i0)/(1 - r**N))</pre><b>Why it works:</b> First-step analysis gives \\(P_i=pP_{i+1}+qP_{i-1}\\) with \\(P_0=0\\), \\(P_N=1\\). That is a tridiagonal linear system. The closed form is \\((1-r^i)/(1-r^N)\\) with \\(r=q/p\\).<br><b>Error/complexity:</b> Both give 0.0419130 for \\(p=0.4\\), \\(N=10\\), \\(i=3\\). Cost O(N^3) dense; use scipy.linalg.solve_banded for O(N).<br><b>Pitfall:</b> Forgetting the boundary rows makes the matrix singular. For \\(p=1/2\\) the closed form has 0/0, so use \\(i/N\\) there.",
+  "tags": [
+   "gamblers_ruin",
+   "linear_system",
+   "s_markov_chain",
+   "s_first_step_conditioning",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write numpy to compute the expected number of bets until the gambler's ruin game ends, with \\(p=0.45\\), \\(N=10\\), start \\(i=3\\). Check against the closed form.",
+  "back": "<b>Code:</b><pre>import numpy as np\np, N, i0 = 0.45, 10, 3\nq = 1 - p\nA = np.zeros((N+1, N+1)); b = np.zeros(N+1)\nA[0, 0] = 1; A[N, N] = 1\nfor i in range(1, N):\n    A[i, i] = 1; A[i, i-1] = -q; A[i, i+1] = -p; b[i] = 1\nD = np.linalg.solve(A, b)\nr = q/p\nclosed = i0/(q-p) - (N/(q-p))*(1 - r**i0)/(1 - r**N)\nprint(D[i0], closed)</pre><b>Why it works:</b> \\(D_i=1+pD_{i+1}+qD_{i-1}\\) with \\(D_0=D_N=0\\) is linear in the \\(D_i\\). The closed form is \\(D_i=\\frac{i}{q-p}-\\frac{N}{q-p}\\frac{1-r^i}{1-r^N}\\), \\(r=q/p\\).<br><b>Error/complexity:</b> Both give 17.174765. Cost O(N^3) dense.<br><b>Pitfall:</b> For \\(p=1/2\\) use the separate formula \\(i(N-i)\\). The sign of \\(q-p\\) matters: the closed form is singular at \\(p=q\\).",
+  "tags": [
+   "gamblers_ruin",
+   "linear_system",
+   "s_first_step_conditioning",
+   "s_recursion",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write numpy to compute the stationary distribution of a 3-state transition matrix \\(P\\), by an eigenvector and by a linear solve. Which should you use, and why?",
+  "back": "<b>Code:</b><pre>import numpy as np\nP = np.array([[0.9, 0.1, 0.0],\n              [0.2, 0.5, 0.3],\n              [0.0, 0.4, 0.6]])\nw, V = np.linalg.eig(P.T)\npi_eig = np.real(V[:, np.argmin(np.abs(w - 1))]); pi_eig /= pi_eig.sum()\nA = np.vstack([(P.T - np.eye(3))[:-1], np.ones(3)])\npi_lin = np.linalg.solve(A, np.array([0, 0, 1.0]))\nprint(pi_eig.round(6), pi_lin.round(6))\nprint(\"pi P = pi residual:\", np.abs(pi_lin @ P - pi_lin).max())</pre><b>Why it works:</b> \\(\\pi P=\\pi\\) is \\((P^\\top-I)\\pi=0\\). The eigenvector route finds a null vector up to scale, which then needs normalising and sign-fixing. The linear route replaces one redundant balance equation with \\(\\sum\\pi_i=1\\).<br><b>Error/complexity:</b> Both give \\(\\pi=(0.533333,0.266667,0.2)\\), with residual \\(2.8\\times10^{-17}\\). Cost is O(n^3) for both, but the solve has no sign or complex-part issues.<br><b>Pitfall:</b> eig(P) gives right eigenvectors, not the stationary one (see the debug card). The stationary distribution is unique only for irreducible chains; for reducible ones the system is singular.",
+  "tags": [
+   "stationary_distribution",
+   "eigen",
+   "linear_system",
+   "markov_chain",
+   "s_markov_chain",
+   "s_eigen",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Find the flaw. The author wants the stationary distribution of \\(P\\) from its eigen-decomposition, and reads off the eigenvector for eigenvalue 1.<pre>import numpy as np\nP = np.array([[0.9, 0.1, 0.0],\n              [0.2, 0.5, 0.3],\n              [0.0, 0.4, 0.6]])\nvals, vecs = np.linalg.eig(P)\nk = np.argmax(vals.real)\npi = vecs[:, k].real\nprint(vals.round(4), pi.round(4))</pre>",
+  "back": "<b>Code:</b><pre>import numpy as np\nP = np.array([[0.9, 0.1, 0.0],\n              [0.2, 0.5, 0.3],\n              [0.0, 0.4, 0.6]])\nw, V = np.linalg.eig(P.T)\npi_eig = np.real(V[:, np.argmin(np.abs(w - 1))]); pi_eig /= pi_eig.sum()\nA = np.vstack([(P.T - np.eye(3))[:-1], np.ones(3)])\npi_lin = np.linalg.solve(A, np.array([0, 0, 1.0]))\nprint(pi_eig.round(6), pi_lin.round(6))\nprint(\"pi P = pi residual:\", np.abs(pi_lin @ P - pi_lin).max())</pre><b>Why it works:</b> np.linalg.eig(P) returns right eigenvectors, \\(Pv=\\lambda v\\). The eigenvalue-1 right eigenvector is the all-ones vector. The stationary distribution is a left eigenvector, so the fix uses \\(P^\\top\\) and normalises to sum 1 (the fixed code is the eigen route in the card above).<br><b>Error/complexity:</b> Buggy output: eigenvalues 0.1838, 1, 0.8162 and the vector (-0.5774, -0.5774, -0.5774). That is not a distribution: it is negative and sums to -1.73. The fixed output is (0.533333, 0.266667, 0.2).<br><b>Pitfall:</b> The faulty line is eig(P) applied without a transpose. <b>Smell:</b> stationary is a left eigenvector, so a column of identical entries means you took the right one. Also watch for complex parts and the sign of the vector.",
+  "tags": [
+   "stationary_distribution",
+   "eigen",
+   "markov_chain",
+   "s_eigen",
+   "s_markov_chain",
+   "fmt_debug"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write numpy for the absorption probabilities and the mean time to absorption of a fair gambler's ruin on \\(\\{0,\\dots,4\\}\\), starting from 1, 2 or 3, using the fundamental matrix \\(N=(I-Q)^{-1}\\).",
+  "back": "<b>Code:</b><pre>import numpy as np\nQ = np.array([[0, 0.5, 0],\n              [0.5, 0, 0.5],\n              [0, 0.5, 0]])\nR = np.array([[0.5, 0],\n              [0, 0],\n              [0, 0.5]])\nNf = np.linalg.inv(np.eye(3) - Q)\nB = Nf @ R\nt = Nf @ np.ones(3)\nprint(np.round(B, 4).tolist())\nprint(np.round(t, 4).tolist())</pre><b>Why it works:</b> Order states as transient then absorbing: \\(P=\\begin{pmatrix}Q&amp;R\\\\0&amp;I\\end{pmatrix}\\). Then \\(N=(I-Q)^{-1}\\) counts expected visits, \\(B=NR\\) gives absorption probabilities, and \\(t=N\\mathbf 1\\) gives mean steps.<br><b>Error/complexity:</b> B rows: from 1 gives 0.75 at 0 and 0.25 at 4; from 2 gives 0.5 and 0.5; from 3 gives 0.25 and 0.75. Mean steps \\(t=(3,4,3)=i(4-i)\\). Use np.linalg.solve(I-Q, R) rather than the explicit inverse, for accuracy.<br><b>Pitfall:</b> Each row of B must sum to 1 across absorbing states; if not, R is wrong. Explicit inverses lose accuracy on larger chains.",
+  "tags": [
+   "absorbing_chain",
+   "fundamental_matrix",
+   "markov_chain",
+   "s_markov_chain",
+   "s_first_step_conditioning",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write vectorised numpy to simulate 10^5 standard Brownian paths on \\([0,1]\\) with 500 steps. Check \\(\\text{Var}(W_1)\\), and estimate \\(P(\\max_t W_t\\ge1)\\) with its standard error. What is the continuous-time answer?",
+  "back": "<b>Code:</b><pre>import numpy as np\nfrom math import erf, sqrt\nrng = np.random.default_rng(8)\nn, m, T = 100_000, 500, 1.0\ndt = T/m\nW = np.cumsum(np.sqrt(dt)*rng.standard_normal((n, m)), axis=1)\nWT = W[:, -1]\nprint(\"Var(W_T)=\", round(WT.var(ddof=1), 4), \" E[W_T^2]/T=\", round((WT**2).mean()/T, 4))\nprint(\"P(discrete max &gt;= 1)=\", round((W.max(axis=1) &gt;= 1).mean(), 4), \" continuous exact=\", round(2*(1-0.5*(1+erf(1/sqrt(2)))), 5))</pre><b>Why it works:</b> Each increment is \\(\\mathcal N(0,\\Delta t)\\), so \\(\\sqrt{\\Delta t}\\,Z\\). The cumulative sum is a discrete Brownian path with variance \\(t\\). The reflection principle gives \\(P(\\max_{t\\le T}W_t\\ge a)=2P(W_T\\ge a)=2(1-\\Phi(a/\\sqrt T))\\).<br><b>Error/complexity:</b> Var(W_1) = 1.0035 (se about 0.0045). The discrete-max estimate 0.3069 is below the continuous 0.31731, as expected. The known fix shifts the barrier by \\(0.5826\\sqrt{\\Delta t}\\approx0.026\\), which gives \\(2(1-\\Phi(1.026))\\approx0.305\\), consistent with the MC. Cost O(nm) memory.<br><b>Pitfall:</b> Discrete grids miss excursions between steps, so the discrete maximum is biased low. Writing dt*Z instead of sqrt(dt)*Z is the scaling error in the debug card.",
+  "tags": [
+   "brownian_motion",
+   "simulation",
+   "s_sqrt_time_scaling",
+   "s_reflection",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write numpy that simulates GBM terminal values \\(S_T\\) exactly (\\(S_0=100,\\mu=0.5,\\sigma=0.3,T=1\\)), and the Euler multiplicative scheme with m steps on the same Brownian increments. Which one is biased in \\(E[S_T]\\), and by how much for m=5 and m=50?",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(9)\nS0, mu, sig, T, n = 100.0, 0.5, 0.3, 1.0, 200_000\ndef run(m):\n    dW = np.sqrt(T/m)*rng.standard_normal((n, m))\n    S = np.full(n, S0)\n    for j in range(m):\n        S = S*(1 + mu*(T/m) + sig*dW[:, j])\n    exact = S0*np.exp((mu - 0.5*sig**2)*T + sig*dW.sum(axis=1))\n    d = S - exact\n    return round(d.mean(), 4), round(d.std(ddof=1)/np.sqrt(n), 4), round(exact.mean(), 3), round(S0*(1+mu*T/m)**m, 3)\nfor m in (5, 50):\n    print(\"m=\", m, \"paired Euler-exact mean, se, exact E[S_T], Euler E[S_T]:\", run(m))\nprint(\"S0*exp(mu*T)=\", round(S0*np.exp(mu*T), 3))</pre><b>Why it works:</b> The exact solution is \\(S_T=S_0\\exp\\bigl((\\mu-\\tfrac12\\sigma^2)T+\\sigma W_T\\bigr)\\), which needs only the terminal Brownian value. The Euler step \\(S_{k+1}=S_k(1+\\mu\\Delta t+\\sigma\\Delta W_k)\\) has \\(E[S_T]=S_0(1+\\mu\\Delta t)^m\\), which differs from \\(S_0e^{\\mu T}\\) at order \\(\\Delta t\\).<br><b>Error/complexity:</b> Paired Euler-minus-exact mean: -3.82 (se 0.017) at m=5, -0.405 (se 0.004) at m=50. Analytically \\(S_0(1+\\mu/m)^m=161.05\\) and \\(164.46\\), against \\(S_0e^{\\mu}=164.87\\). Cost is O(n) exact and O(nm) Euler.<br><b>Pitfall:</b> Pairing on the same draws shrinks the se of the bias estimate by a large factor. Euler's weak error is O(Δt), so for expectations, refine the grid or use the exact sampler.",
+  "tags": [
+   "gbm",
+   "euler",
+   "weak_error",
+   "discretisation",
+   "s_sqrt_time_scaling",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write numpy that measures the mean absolute pathwise error (strong error) of the Euler and Milstein schemes for GBM against the exact solution on the same Brownian path, with m=10 and m=100 steps. What orders do you expect?",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(10)\nS0, mu, sig, T, n = 1.0, 0.1, 0.5, 1.0, 100_000\nfor m in (10, 100):\n    dt = T/m\n    dW = np.sqrt(dt)*rng.standard_normal((n, m))\n    S_e = np.full(n, S0); S_m = np.full(n, S0)\n    for j in range(m):\n        dw = dW[:, j]\n        S_e = S_e + mu*S_e*dt + sig*S_e*dw\n        S_m = S_m + mu*S_m*dt + sig*S_m*dw + 0.5*sig**2*S_m*(dw**2 - dt)\n    exact = S0*np.exp((mu - 0.5*sig**2)*T + sig*dW.sum(axis=1))\n    print(m, \"Euler\", round(np.mean(np.abs(S_e-exact)), 4), \"Milstein\", round(np.mean(np.abs(S_m-exact)), 4))</pre><b>Why it works:</b> Milstein adds the Itô correction \\(\\tfrac12\\sigma^2S(\\Delta W^2-\\Delta t)\\) to the Euler step. That term comes from the second-order Taylor expansion of the diffusion, which Euler omits.<br><b>Error/complexity:</b> Output: Euler 0.0484 (m=10) and 0.0155 (m=100), ratio 3.1, about \\(\\sqrt{10}\\), so strong order 1/2. Milstein 0.0053 and 0.0006, ratio about 9, so strong order 1. Cost O(nm).<br><b>Pitfall:</b> Euler has weak order 1 but strong order 1/2. Hedging errors need pathwise accuracy, so the strong order is what matters there. Note the Milstein term uses \\(\\Delta W^2-\\Delta t\\), not \\(\\Delta W^2\\).",
+  "tags": [
+   "gbm",
+   "milstein",
+   "strong_error",
+   "discretisation",
+   "s_taylor",
+   "s_sqrt_time_scaling",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write vectorised numpy to price an up-and-out call (\\(S_0=100\\), \\(K=100\\), barrier 120, \\(T=1\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\)) by Monte Carlo monitored at 52 weekly dates. Then correct the discrete-monitoring bias with the Broadie–Glasserman–Kou shift.",
+  "back": "<b>Code:</b><pre>import numpy as np\ndef up_out_call(S0, K, B, T, r, sig, m, n, seed=0, shift=False):\n    rng = np.random.default_rng(seed)\n    dt = T/m\n    Bk = B*np.exp(-0.5826*sig*np.sqrt(dt)) if shift else B\n    Z = rng.standard_normal((n, m))\n    S = S0*np.exp(np.cumsum((r - 0.5*sig**2)*dt + sig*np.sqrt(dt)*Z, axis=1))\n    alive = S.max(axis=1) &lt; Bk\n    disc = np.exp(-r*T)*np.where(alive, np.maximum(S[:, -1] - K, 0), 0.0)\n    return round(disc.mean(), 4), round(disc.std(ddof=1)/np.sqrt(n), 4)\nargs = (100, 100, 120, 1.0, 0.05, 0.2)\nprint(\"m=52 discrete, no shift     \", up_out_call(*args, 52, 200_000))\nprint(\"m=52 discrete, BGK shift    \", up_out_call(*args, 52, 200_000, shift=True))\nprint(\"m=250 discrete, BGK shift   \", up_out_call(*args, 250, 50_000, seed=1, shift=True))</pre><b>Why it works:</b> Monitoring at discrete dates misses excursions above the barrier between dates, so it knocks out too rarely and overprices an up-and-out call. BGK: a discretely monitored up barrier H behaves like a continuous one at \\(H e^{0.5826\\sigma\\sqrt{\\Delta t}}\\). To estimate the continuous price with discrete steps, run the discrete monitor at \\(He^{-0.5826\\sigma\\sqrt{\\Delta t}}\\).<br><b>Error/complexity:</b> Output: no shift 1.4958 (se 0.0082); BGK shift 1.1508 (se 0.0069); m=250 with shift 1.1924 (se 0.0141). The shifted 52-step value sits about 2.6 se from the finer reference, the residual O(Δt) error of the shift. Cost O(nm).<br><b>Pitfall:</b> The direction matters. Shifting the barrier up gives 1.8948, which is wrong by about 0.7. For a down barrier the sign flips. The shift is only first-order accurate, so refine the grid to check.",
+  "tags": [
+   "barrier",
+   "discrete_monitoring",
+   "broadie_glasserman",
+   "options",
+   "s_reflection",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Find the flaw. The author prices an up-and-out call with barrier 120 by Monte Carlo over 52 monitoring steps, using the path simulated as usual.<pre>import numpy as np\ndef up_out_call(S0, K, B, T, r, sig, m, n, seed=0):\n    rng = np.random.default_rng(seed)\n    dt = T/m\n    Z = rng.standard_normal((n, m))\n    S = S0*np.exp(np.cumsum((r - 0.5*sig**2)*dt + sig*np.sqrt(dt)*Z, axis=1))\n    alive = S[:, -1] &lt; B\n    payoff = np.where(alive, np.maximum(S[:, -1] - K, 0), 0.0)\n    return round(np.exp(-r*T)*payoff.mean(), 4)\nprint(up_out_call(100, 100, 120, 1.0, 0.05, 0.2, 52, 200_000))</pre>",
+  "back": "<b>Code:</b><pre>import numpy as np\ndef up_out_call(S0, K, B, T, r, sig, m, n, seed=0):\n    rng = np.random.default_rng(seed)\n    dt = T/m\n    Z = rng.standard_normal((n, m))\n    S = S0*np.exp(np.cumsum((r - 0.5*sig**2)*dt + sig*np.sqrt(dt)*Z, axis=1))\n    alive = S.max(axis=1) &lt; B\n    payoff = np.where(alive, np.maximum(S[:, -1] - K, 0), 0.0)\n    return round(np.exp(-r*T)*payoff.mean(), 4)\nprint(up_out_call(100, 100, 120, 1.0, 0.05, 0.2, 52, 200_000))</pre><b>Why it works:</b> The knock-out must test the maximum of the whole path, not only the final value. The fixed line alive = S.max(axis=1) &lt; B removes any path that touched 120 at any monitoring date.<br><b>Error/complexity:</b> Buggy output 2.9464 against the correct 1.4958. The buggy price is about twice the right value, because it keeps every path that crossed the barrier and then fell back.<br><b>Pitfall:</b> The faulty line is alive = S[:, -1] &lt; B. <b>Smell:</b> a barrier checked only at maturity is a European option with a filter on \\(S_T\\). Any knock-out or knock-in needs the path maximum or minimum.",
+  "tags": [
+   "barrier",
+   "discrete_monitoring",
+   "options",
+   "s_reflection",
+   "fmt_debug"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal Python using scipy.stats.norm to price a European call and put with Black–Scholes (\\(S=100\\), \\(K=100\\), \\(T=1\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\)). What values should you get?",
+  "back": "<b>Code:</b><pre>import numpy as np\nfrom scipy.stats import norm\ndef bs_call(S, K, T, r, sig):\n    d1 = (np.log(S/K) + (r + 0.5*sig**2)*T) / (sig*np.sqrt(T))\n    d2 = d1 - sig*np.sqrt(T)\n    return S*norm.cdf(d1) - K*np.exp(-r*T)*norm.cdf(d2)\ndef bs_put(S, K, T, r, sig):\n    return bs_call(S, K, T, r, sig) - S + K*np.exp(-r*T)\nprint(round(float(bs_call(100, 100, 1, 0.05, 0.2)), 4), round(float(bs_put(100, 100, 1, 0.05, 0.2)), 4))</pre><b>Why it works:</b> The call is \\(S\\,N(d_1)-Ke^{-rT}N(d_2)\\), the discounted expected payoff under the risk-neutral lognormal. The put follows from put–call parity: \\(P=C-S+Ke^{-rT}\\).<br><b>Error/complexity:</b> Call 10.4506, put 5.5735. Cost O(1) per option.<br><b>Pitfall:</b> The scale \\(\\sigma\\sqrt T\\) must appear in both \\(d_1\\) and \\(d_2\\) (see the debug card). Parity here assumes no dividends.",
+  "tags": [
+   "black_scholes",
+   "options",
+   "scipy",
+   "s_replication",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Find the flaw. This Black–Scholes call price is used at \\(S=100\\), \\(K=100\\), \\(T=0.25\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\).<pre>import numpy as np\nfrom scipy.stats import norm\ndef bs_call(S, K, T, r, sig):\n    d1 = (np.log(S/K) + (r + 0.5*sig**2)*T) / sig\n    d2 = d1 - sig\n    return S*norm.cdf(d1) - K*np.exp(-r*T)*norm.cdf(d2)\nprint(round(float(bs_call(100, 100, 0.25, 0.05, 0.2)), 4))</pre>",
+  "back": "<b>Code:</b><pre>import numpy as np\nfrom scipy.stats import norm\ndef bs_call(S, K, T, r, sig):\n    d1 = (np.log(S/K) + (r + 0.5*sig**2)*T) / (sig*np.sqrt(T))\n    d2 = d1 - sig*np.sqrt(T)\n    return S*norm.cdf(d1) - K*np.exp(-r*T)*norm.cdf(d2)\nprint(round(float(bs_call(100, 100, 0.25, 0.05, 0.2)), 4))</pre><b>Why it works:</b> Both \\(d_1\\) and \\(d_2\\) are standardised by \\(\\sigma\\sqrt T\\). The buggy code divides by \\(\\sigma\\) alone and subtracts \\(\\sigma\\) from \\(d_1\\), so it treats \\(T\\) as 1. With \\(T=0.25\\) the \\(d\\) values are wrong and the price is too high.<br><b>Error/complexity:</b> Buggy output 8.5304 against the correct 4.6150. The two agree only at \\(T=1\\), where \\(\\sqrt T=1\\).<br><b>Pitfall:</b> The faulty lines are d1 = ... / sig and d2 = d1 - sig. <b>Smell:</b> the \\(\\sqrt T\\) cancels at \\(T=1\\), so a test at \\(T=1\\) passes. Always test at a second maturity.",
+  "tags": [
+   "black_scholes",
+   "options",
+   "debug_formula",
+   "s_replication",
+   "fmt_debug"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal Python to compute the Black–Scholes call delta by a central finite difference with step \\(h\\). Which \\(h\\) should you use, and why? Check against \\(N(d_1)\\).",
+  "back": "<b>Code:</b><pre>import numpy as np\nfrom scipy.stats import norm\ndef bs_call(S, K, T, r, sig):\n    d1 = (np.log(S/K) + (r + 0.5*sig**2)*T) / (sig*np.sqrt(T))\n    d2 = d1 - sig*np.sqrt(T)\n    return S*norm.cdf(d1) - K*np.exp(-r*T)*norm.cdf(d2)\nS, K, T, r, sig = 100.0, 100.0, 1.0, 0.05, 0.2\nd1 = (np.log(S/K) + (r + 0.5*sig**2)*T) / (sig*np.sqrt(T))\nexact = norm.cdf(d1)\nfor h in [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-8, 1e-10, 1e-12]:\n    fd = (bs_call(S+h, K, T, r, sig) - bs_call(S-h, K, T, r, sig))/(2*h)\n    print(f\"h={h:.0e} central delta err={fd-exact:+.2e}\")</pre><b>Why it works:</b> The central difference \\((C(S+h)-C(S-h))/2h\\) cancels the odd Taylor terms, so its truncation error is \\(O(h^2)\\). Its roundoff error is about \\(\\varepsilon C/h\\) with \\(\\varepsilon\\approx2.2\\times10^{-16}\\). The sum is minimised at \\(h\\sim\\varepsilon^{1/3}S\\), about \\(6\\times10^{-4}\\) for \\(S=100\\).<br><b>Error/complexity:</b> Errors by h: 1e-3 gives -8.3e-11; 1e-4 gives +6.1e-12 (best); 1e-5 gives -3.9e-10; 1e-8 gives -3.3e-7; 1e-10 gives +2.9e-5; 1e-12 gives -4.5e-3. Two pricings per delta.<br><b>Pitfall:</b> The rule of thumb \\(\\sqrt\\varepsilon\\) is for forward differences. For a central difference use \\(\\varepsilon^{1/3}\\), scaled by S. Tiny h gives a confident, wrong delta.",
+  "tags": [
+   "greeks",
+   "finite_difference",
+   "delta",
+   "options",
+   "s_taylor",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal Python for gamma of a European call by a second central difference with step \\(h\\). Explain the step-size trade-off and the scale of the best \\(h\\).",
+  "back": "<b>Code:</b><pre>import numpy as np\nfrom scipy.stats import norm\ndef bs_call(S, K, T, r, sig):\n    d1 = (np.log(S/K) + (r + 0.5*sig**2)*T) / (sig*np.sqrt(T))\n    d2 = d1 - sig*np.sqrt(T)\n    return S*norm.cdf(d1) - K*np.exp(-r*T)*norm.cdf(d2)\nS, K, T, r, sig = 100.0, 100.0, 1.0, 0.05, 0.2\nd1 = (np.log(S/K) + (r + 0.5*sig**2)*T) / (sig*np.sqrt(T))\nexact = norm.pdf(d1)/(S*sig*np.sqrt(T))\nC0 = bs_call(S, K, T, r, sig)\nfor h in [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7]:\n    g = (bs_call(S+h, K, T, r, sig) - 2*C0 + bs_call(S-h, K, T, r, sig))/h**2\n    print(f\"h={h:.0e} gamma={g:.6f} err={g-exact:+.2e}\")\nprint(\"exact gamma\", round(exact, 6))</pre><b>Why it works:</b> \\((C(S+h)-2C(S)+C(S-h))/h^2 = C''(S)+O(h^2)\\). The roundoff term is about \\(\\varepsilon C/h^2\\), so the optimum is \\(h\\sim\\varepsilon^{1/4}\\) times S, about \\(10^{-2}\\) for \\(S=100\\) (\\(\\varepsilon^{1/4}S\\approx0.012\\)), where the error is about \\(3\\times10^{-10}\\).<br><b>Error/complexity:</b> Exact gamma 0.018762. Errors: h=1e-4 gives -1.4e-7; h=1e-5 gives -3.7e-6; h=1e-6 gives +9.7e-3; h=1e-7 returns exactly 0. Three pricings.<br><b>Pitfall:</b> A gamma of exactly 0 at h=1e-7 is roundoff, not a flat gamma. Check the answer at two step sizes before trusting it.",
+  "tags": [
+   "greeks",
+   "finite_difference",
+   "gamma",
+   "options",
+   "s_taylor",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with this delta calculation if you want it correct to six decimals? The step is \\(h=10^{-12}\\), with a forward difference.<pre>import numpy as np\nfrom scipy.stats import norm\ndef bs_call(S, K, T, r, sig):\n    d1 = (np.log(S/K) + (r + 0.5*sig**2)*T) / (sig*np.sqrt(T))\n    d2 = d1 - sig*np.sqrt(T)\n    return S*norm.cdf(d1) - K*np.exp(-r*T)*norm.cdf(d2)\nK, T, r, sig = 100.0, 1.0, 0.05, 0.2\nS, h = 100.0, 1e-12\ndelta_fd = (bs_call(S + h, K, T, r, sig) - bs_call(S, K, T, r, sig)) / h</pre>",
+  "back": "<b>Code:</b><pre>import numpy as np\nfrom scipy.stats import norm\ndef bs_call(S, K, T, r, sig):\n    d1 = (np.log(S/K) + (r + 0.5*sig**2)*T) / (sig*np.sqrt(T))\n    d2 = d1 - sig*np.sqrt(T)\n    return S*norm.cdf(d1) - K*np.exp(-r*T)*norm.cdf(d2)\nS, K, T, r, sig = 100.0, 100.0, 1.0, 0.05, 0.2\nd1 = (np.log(S/K) + (r + 0.5*sig**2)*T) / (sig*np.sqrt(T))\nexact = norm.cdf(d1)\nfor h in [1e-2, 1e-6, 1e-10, 1e-12]:\n    fd = (bs_call(S+h, K, T, r, sig) - bs_call(S, K, T, r, sig))/h\n    print(f\"h={h:.0e} forward delta={fd:.6f} err={fd-exact:+.2e}\")</pre><b>Why it works:</b> A forward difference has truncation error about \\(h\\cdot\\Gamma/2\\) (first order), and roundoff about \\(\\varepsilon C/h\\). At \\(h=10^{-12}\\) the roundoff term dominates. The central difference (previous card) has second-order truncation and is the better default.<br><b>Error/complexity:</b> Forward errors: h=1e-2 gives +9.4e-5; h=1e-6 gives +1.2e-8 (best); h=1e-10 gives +2.9e-5; h=1e-12 gives -4.5e-3.<br><b>Pitfall:</b> Forward differences are first order and need a step near \\(\\sqrt\\varepsilon\\). Going much smaller for \"accuracy\" makes the answer worse.",
+  "tags": [
+   "greeks",
+   "finite_difference",
+   "roundoff",
+   "options",
+   "s_taylor",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal Python for Newton's method to recover the implied volatility of a European call from its market price, using vega. Test it on a price generated with \\(\\sigma=25\\%\\), \\(S=100\\), \\(K=110\\), \\(T=0.5\\), \\(r=1\\%\\).",
+  "back": "<b>Code:</b><pre>import numpy as np\nfrom scipy.stats import norm\ndef bs_call(S, K, T, r, sig):\n    d1 = (np.log(S/K) + (r + 0.5*sig**2)*T) / (sig*np.sqrt(T))\n    d2 = d1 - sig*np.sqrt(T)\n    return S*norm.cdf(d1) - K*np.exp(-r*T)*norm.cdf(d2)\ndef vega(S, K, T, r, sig):\n    d1 = (np.log(S/K) + (r + 0.5*sig**2)*T) / (sig*np.sqrt(T))\n    return S*norm.pdf(d1)*np.sqrt(T)\ndef iv_newton(price, S, K, T, r, sig=0.2, tol=1e-10, maxit=50):\n    for k in range(maxit):\n        diff = bs_call(S, K, T, r, sig) - price\n        if abs(diff) &lt; tol:\n            return sig, k\n        sig -= diff/vega(S, K, T, r, sig)\n    raise RuntimeError(\"no convergence\")\nprice = bs_call(100, 110, 0.5, 0.01, 0.25)\nprint(round(price, 6), iv_newton(price, 100, 110, 0.5, 0.01))</pre><b>Why it works:</b> Let \\(f(\\sigma)=C_{BS}(\\sigma)-P\\). Its derivative is vega, \\(S\\varphi(d_1)\\sqrt T\\). The first-order Taylor step \\(\\sigma\\leftarrow\\sigma-f/f'\\) converges quadratically when the start is close to the root.<br><b>Error/complexity:</b> Price 3.589239 gives \\(\\sigma=0.2500000000\\) in 3 iterations. Cost O(k) pricings, k about 3 to 6.<br><b>Pitfall:</b> When vega is tiny (deep in or out of the money, short expiry) the step explodes. See the next card.",
+  "tags": [
+   "implied_vol",
+   "newton",
+   "options",
+   "vega",
+   "s_taylor",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal Python for bisection to recover the same call's implied volatility on \\([10^{-6},5]\\) to a 1e-10 tolerance in \\(\\sigma\\). How many iterations, and why is it robust?",
+  "back": "<b>Code:</b><pre>import numpy as np\nfrom scipy.stats import norm\ndef bs_call(S, K, T, r, sig):\n    d1 = (np.log(S/K) + (r + 0.5*sig**2)*T) / (sig*np.sqrt(T))\n    d2 = d1 - sig*np.sqrt(T)\n    return S*norm.cdf(d1) - K*np.exp(-r*T)*norm.cdf(d2)\ndef vega(S, K, T, r, sig):\n    d1 = (np.log(S/K) + (r + 0.5*sig**2)*T) / (sig*np.sqrt(T))\n    return S*norm.pdf(d1)*np.sqrt(T)\ndef iv_bisect(price, S, K, T, r, lo=1e-6, hi=5.0, tol=1e-10):\n    f = lambda s: bs_call(S, K, T, r, s) - price\n    assert f(lo) &lt; 0 &lt; f(hi)\n    k = 0\n    while hi - lo &gt; tol:\n        mid = 0.5*(lo + hi); k += 1\n        if f(mid) &gt; 0: hi = mid\n        else: lo = mid\n    return 0.5*(lo + hi), k\nprice = bs_call(100, 110, 0.5, 0.01, 0.25)\nprint(iv_bisect(price, 100, 110, 0.5, 0.01))</pre><b>Why it works:</b> Call price is strictly increasing in \\(\\sigma\\), so the sign of \\(C(\\sigma)-P\\) brackets the root. Each step halves the interval, and the bracket is never lost.<br><b>Error/complexity:</b> Output \\(\\sigma=0.25000000003\\) in 36 iterations, close to \\(\\log_2(5/10^{-10})\\approx35.5\\). No derivatives are needed.<br><b>Pitfall:</b> Bisection needs \\(C(\\text{lo})&lt;P&lt;C(\\text{hi})\\), which fails if P is outside the no-arbitrage range. The tolerance is on \\(\\sigma\\), not on price, so a price tolerance can mislead.",
+  "tags": [
+   "implied_vol",
+   "bisection",
+   "options",
+   "no_arbitrage",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with this implied-vol routine? The market price comes from a 30% vol option with \\(S=100\\), \\(K=160\\), \\(T=0.02\\), \\(r=0\\), and the routine starts at 20%.<pre>import numpy as np\nfrom scipy.stats import norm\ndef bs_call(S, K, T, r, sig):\n    d1 = (np.log(S/K) + (r + 0.5*sig**2)*T) / (sig*np.sqrt(T))\n    d2 = d1 - sig*np.sqrt(T)\n    return S*norm.cdf(d1) - K*np.exp(-r*T)*norm.cdf(d2)\ndef vega(S, K, T, r, sig):\n    d1 = (np.log(S/K) + (r + 0.5*sig**2)*T) / (sig*np.sqrt(T))\n    return S*norm.pdf(d1)*np.sqrt(T)\ndef iv_newton_bug(price, S, K, T, r, sig=0.2):\n    for k in range(50):\n        diff = bs_call(S, K, T, r, sig) - price\n        if abs(diff) &lt; 1e-10:\n            return sig, k\n        sig -= diff/vega(S, K, T, r, sig)\n    return sig, k\nprice = bs_call(100, 160, 0.02, 0.0, 0.30)\nprint(iv_newton_bug(price, 100, 160, 0.02, 0.0))</pre>",
+  "back": "<b>Code:</b><pre>import numpy as np\nfrom scipy.stats import norm\ndef bs_call(S, K, T, r, sig):\n    d1 = (np.log(S/K) + (r + 0.5*sig**2)*T) / (sig*np.sqrt(T))\n    d2 = d1 - sig*np.sqrt(T)\n    return S*norm.cdf(d1) - K*np.exp(-r*T)*norm.cdf(d2)\ndef iv_bisect(price, S, K, T, r, lo=1e-6, hi=5.0, tol=1e-10):\n    f = lambda s: bs_call(S, K, T, r, s) - price\n    assert f(lo) &lt; 0 &lt; f(hi)\n    k = 0\n    while hi - lo &gt; tol:\n        mid = 0.5*(lo + hi); k += 1\n        if f(mid) &gt; 0: hi = mid\n        else: lo = mid\n    return 0.5*(lo + hi), k\nprice = bs_call(100, 160, 0.02, 0.0, 0.30)\nprint(iv_bisect(price, 100, 160, 0.02, 0.0))</pre><b>Why it works:</b> The stopping test is on the price error, \\(|C-P|&lt;10^{-10}\\), not on \\(\\sigma\\). With vega almost zero, every \\(\\sigma\\) near 0.2 gives a price within 10^-10 of the market, so the test passes at the first guess.<br><b>Error/complexity:</b> Market price is 3.8e-29, and the routine returns (0.2, 0): an answer after zero iterations, and wrong (the true vol is 0.30). The bracketed bisection in the code uses only the sign of the price error, and returns 0.3 in 36 steps.<br><b>Pitfall:</b> <b>Smell:</b> a root found in zero iterations is a stopping-rule bug. Quote in vol units, test the step size, and check the answer against a bracketed bisection. Deep out-of-the-money short-dated options have almost no information about \\(\\sigma\\).",
+  "tags": [
+   "implied_vol",
+   "vega",
+   "options",
+   "newton",
+   "stopping_rule",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal numpy for a CRR binomial tree with n steps that prices a European and an American put (\\(S=100\\), \\(K=100\\), \\(T=1\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\), n=500). Give the values and the bias you expect.",
+  "back": "<b>Code:</b><pre>import numpy as np\ndef crr(S, K, T, r, sig, n, kind='put', american=False):\n    dt = T/n; u = np.exp(sig*np.sqrt(dt)); d = 1/u\n    p = (np.exp(r*dt) - d)/(u - d); disc = np.exp(-r*dt)\n    j = np.arange(n+1)\n    ST = S*u**(n-j)*d**j\n    V = np.maximum(K-ST, 0) if kind == 'put' else np.maximum(ST-K, 0)\n    for step in range(n-1, -1, -1):\n        V = disc*(p*V[:-1] + (1-p)*V[1:])\n        if american:\n            j = np.arange(step+1)\n            Sn = S*u**(step-j)*d**j\n            ex = np.maximum(K-Sn, 0) if kind == 'put' else np.maximum(Sn-K, 0)\n            V = np.maximum(V, ex)\n    return V[0]\nprint(round(crr(100, 100, 1, 0.05, 0.2, 500, 'put'), 4), round(crr(100, 100, 1, 0.05, 0.2, 500, 'put', True), 4))</pre><b>Why it works:</b> \\(u=e^{\\sigma\\sqrt{\\Delta t}}\\), \\(d=1/u\\), \\(p=(e^{r\\Delta t}-d)/(u-d)\\). Backward induction gives \\(V=e^{-r\\Delta t}(pV_{\\text{up}}+(1-p)V_{\\text{down}})\\). The American version takes the max with the exercise value at every node.<br><b>Error/complexity:</b> European 5.5695 (Black–Scholes 5.5735, error about 0.004 with O(1/n) oscillation). American 6.0888. Cost O(n^2) time, O(n) memory with vectors.<br><b>Pitfall:</b> Check \\(d&lt;e^{r\\Delta t}&lt;u\\) for \\(p\\in(0,1)\\). Forgetting the max at each node gives the European value (see the next card). Index j counts down moves.",
+  "tags": [
+   "binomial_tree",
+   "american_option",
+   "options",
+   "s_backward_induction",
+   "s_replication",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Find the flaw. The author intends to price an American put with a CRR tree, but the output equals the Black–Scholes European put price.<pre>import numpy as np\ndef crr_bug(S, K, T, r, sig, n):\n    dt = T/n; u = np.exp(sig*np.sqrt(dt)); d = 1/u\n    p = (np.exp(r*dt) - d)/(u - d); disc = np.exp(-r*dt)\n    j = np.arange(n+1)\n    V = np.maximum(K - S*u**(n-j)*d**j, 0)\n    for step in range(n-1, -1, -1):\n        V = disc*(p*V[:-1] + (1-p)*V[1:])\n    j = np.arange(1)\n    return V[0]\nprint(round(crr_bug(100, 100, 1, 0.05, 0.2, 500), 4))</pre>",
+  "back": "<b>Code:</b><pre>import numpy as np\ndef crr(S, K, T, r, sig, n, kind='put', american=False):\n    dt = T/n; u = np.exp(sig*np.sqrt(dt)); d = 1/u\n    p = (np.exp(r*dt) - d)/(u - d); disc = np.exp(-r*dt)\n    j = np.arange(n+1)\n    ST = S*u**(n-j)*d**j\n    V = np.maximum(K-ST, 0) if kind == 'put' else np.maximum(ST-K, 0)\n    for step in range(n-1, -1, -1):\n        V = disc*(p*V[:-1] + (1-p)*V[1:])\n        if american:\n            j = np.arange(step+1)\n            Sn = S*u**(step-j)*d**j\n            ex = np.maximum(K-Sn, 0) if kind == 'put' else np.maximum(Sn-K, 0)\n            V = np.maximum(V, ex)\n    return V[0]\nprint(round(crr(100, 100, 1, 0.05, 0.2, 500, 'put'), 4), round(crr(100, 100, 1, 0.05, 0.2, 500, 'put', True), 4))</pre><b>Why it works:</b> The buggy loop never compares the continuation value with the exercise value, so the result is the European price. The fix sits inside the backward loop, applying max(V, exercise) at each level, which gives the American value.<br><b>Error/complexity:</b> Buggy output 5.5695, the European value. The fixed American put gives 6.0888.<br><b>Pitfall:</b> <b>Smell:</b> if an American put with \\(r&gt;0\\) matches its European price, early exercise was never applied. The max belongs inside the backward loop at every level, not after it.",
+  "tags": [
+   "binomial_tree",
+   "american_option",
+   "early_exercise",
+   "options",
+   "s_backward_induction",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal numpy for a Monte Carlo European call (\\(S=100\\), \\(K=100\\), \\(T=1\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\)) using antithetic variates, with the same number of function evaluations as the plain estimator. Compare the standard errors.",
+  "back": "<b>Code:</b><pre>import numpy as np\nfrom scipy.stats import norm\nrng = np.random.default_rng(11)\nS0, K, T, r, sig, n = 100, 100, 1, 0.05, 0.2, 200_000\ndef price(Z):\n    ST = S0*np.exp((r - 0.5*sig**2)*T + sig*np.sqrt(T)*Z)\n    return np.exp(-r*T)*np.maximum(ST - K, 0)\nZh = rng.standard_normal(n//2)\nnaive = price(np.concatenate([Zh, rng.standard_normal(n//2)]))\nanti = 0.5*(price(Zh) + price(-Zh))\nprint(\"naive \", round(naive.mean(), 4), round(naive.std(ddof=1)/np.sqrt(n), 4))\nprint(\"anti  \", round(anti.mean(), 4), round(anti.std(ddof=1)/np.sqrt(n//2), 4))</pre><b>Why it works:</b> For a monotone payoff, \\(f(Z)\\) and \\(f(-Z)\\) are negatively correlated, so the pair average has variance \\((\\text{Var}f+\\text{Cov})/2\\), which is below \\(\\text{Var}f/2\\). Using the same budget, the pair average beats two independent draws.<br><b>Error/complexity:</b> Plain: 10.40 (se 0.0328). Antithetic: 10.459 (se 0.0232, with n/2 pairs). The se ratio is 0.71, about half the variance. BS value 10.4506. Cost is unchanged.<br><b>Pitfall:</b> Antithetic helps only when the integrand is roughly monotone in the normal driver. For a function even in Z, such as a straddle symmetric about the strike, each pair is identical and the estimator loses half its effective sample.",
+  "tags": [
+   "variance_reduction",
+   "antithetic",
+   "options",
+   "s_symmetry",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal numpy for a control-variate estimate of the European call price, using the discounted terminal price as control. Its mean is known to be \\(S_0\\). Report the variance reduction.",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(12)\nS0, K, T, r, sig, n = 100, 100, 1, 0.05, 0.2, 200_000\nZ = rng.standard_normal(n)\nST = S0*np.exp((r - 0.5*sig**2)*T + sig*np.sqrt(T)*Z)\nY = np.exp(-r*T)*np.maximum(ST - K, 0)\nX = np.exp(-r*T)*ST\nbeta = np.cov(Y, X)[0, 1]/np.var(X, ddof=1)\nYcv = Y - beta*(X - S0)\nprint(\"plain\", round(Y.mean(), 4), round(Y.std(ddof=1)/np.sqrt(n), 4))\nprint(\"cv   \", round(Ycv.mean(), 4), round(Ycv.std(ddof=1)/np.sqrt(n), 4), \"beta\", round(beta, 4))</pre><b>Why it works:</b> \\(\\hat Y=Y-\\beta(X-E[X])\\) has the same mean as \\(Y\\), because \\(E[X]\\) is known. Its variance is \\(\\text{Var}(Y)(1-\\rho^2)\\) at the optimal \\(\\beta=\\text{Cov}(Y,X)/\\text{Var}(X)\\).<br><b>Error/complexity:</b> Plain 10.4422 (se 0.0329); control variate 10.4539 (se 0.0125); \\(\\beta=0.6728\\). The se ratio is 0.38, a variance reduction of about 7. Cost O(n) extra.<br><b>Pitfall:</b> The control's mean must be known under the same measure, here the risk-neutral one. Estimating \\(\\beta\\) on the same sample adds a small O(1/n) bias.",
+  "tags": [
+   "variance_reduction",
+   "control_variate",
+   "options",
+   "s_linearity_expectation",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal numpy to simulate three standard normals with correlation matrix \\(C=\\begin{pmatrix}1&amp;0.6&amp;0.3\\\\0.6&amp;1&amp;0.2\\\\0.3&amp;0.2&amp;1\\end{pmatrix}\\), then check the sample correlation.",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(13)\nC = np.array([[1.0, 0.6, 0.3],\n              [0.6, 1.0, 0.2],\n              [0.3, 0.2, 1.0]])\nL = np.linalg.cholesky(C)\nX = rng.standard_normal((200_000, 3)) @ L.T\nprint(np.round(np.corrcoef(X, rowvar=False), 3))</pre><b>Why it works:</b> If \\(C=LL^\\top\\) and \\(Z\\sim\\mathcal N(0,I)\\), then \\(X=ZL^\\top\\) (row by row) has covariance \\(LL^\\top=C\\).<br><b>Error/complexity:</b> Sample correlations agree with C to about 0.003 at \\(2\\times10^5\\) draws (0.303 for the (1,3) pair). Cost: Cholesky O(d^3) once, sampling O(nd^2).<br><b>Pitfall:</b> Write \\(X=ZL^\\top\\), not \\(ZL\\). The debug card shows \\(ZL\\) gives covariance \\(L^\\top L\\).",
+  "tags": [
+   "cholesky",
+   "correlated_normals",
+   "simulation",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A \"correlation matrix\" has pairwise correlations \\(\\rho_{12}=0.9\\), \\(\\rho_{13}=0.9\\), \\(\\rho_{23}=-0.9\\). Show with numpy why Cholesky fails, and give a quick repair to a valid correlation matrix.",
+  "back": "<b>Code:</b><pre>import numpy as np\nC = np.array([[1.0, 0.9, 0.9],\n              [0.9, 1.0, -0.9],\n              [0.9, -0.9, 1.0]])\nprint(\"eigs\", np.linalg.eigvalsh(C).round(4))\ntry:\n    np.linalg.cholesky(C)\nexcept np.linalg.LinAlgError as e:\n    print(\"cholesky fails:\", e)\nw, V = np.linalg.eigh(C)\nB = V*np.sqrt(np.clip(w, 0, None))\nCp = B @ B.T\nd = np.sqrt(np.diag(Cp))\nCfix = Cp/np.outer(d, d)\nL = np.linalg.cholesky(Cfix)\nprint(np.round(Cfix, 3))</pre><b>Why it works:</b> A correlation matrix must be PSD, because variances of linear combinations are nonnegative. Eigenvalues are -0.8, 1.9, 1.9, so it is not PSD. Clipping negative eigenvalues to zero and rescaling the diagonal gives a valid matrix.<br><b>Error/complexity:</b> Cholesky raises \"Matrix is not positive definite\". The repaired matrix has correlations \\(\\rho_{12}=\\rho_{13}=0.5\\), \\(\\rho_{23}=-0.5\\). The input is inconsistent: any valid \\(\\rho_{23}\\) must be at least \\(0.62\\).<br><b>Pitfall:</b> Clipping is not the nearest matrix in Frobenius norm (use Higham's alternating projections for that). A non-PSD input usually means a data error, so repair with caution and never add noise silently.",
+  "tags": [
+   "cholesky",
+   "correlation_matrix",
+   "psd",
+   "eigen",
+   "s_eigen",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with this correlated-normal sampler, if the target is the correlation matrix from the Cholesky card?<pre>import numpy as np\nrng = np.random.default_rng(13)\nC = np.array([[1.0, 0.6, 0.3],\n              [0.6, 1.0, 0.2],\n              [0.3, 0.2, 1.0]])\nL = np.linalg.cholesky(C)\nX = rng.standard_normal((200_000, 3)) @ L\nprint(np.round(np.corrcoef(X, rowvar=False), 3))</pre>",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(13)\nC = np.array([[1.0, 0.6, 0.3],\n              [0.6, 1.0, 0.2],\n              [0.3, 0.2, 1.0]])\nL = np.linalg.cholesky(C)\nX = rng.standard_normal((200_000, 3)) @ L.T\nprint(np.round(np.corrcoef(X, rowvar=False), 3))</pre><b>Why it works:</b> With \\(X=ZL\\), each row is \\(z^\\top L\\), so the covariance is \\(L^\\top L\\), not \\(LL^\\top=C\\). The fix is \\(X=ZL^\\top\\).<br><b>Error/complexity:</b> Buggy output: 0.504, 0.25, 0.029, versus targets 0.6, 0.3, 0.2. Cost unchanged.<br><b>Pitfall:</b> <b>Smell:</b> with row-vector samples, the transpose belongs on L. Check the output correlation against C, not only the shape.",
+  "tags": [
+   "cholesky",
+   "correlated_normals",
+   "debug_transpose",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal numpy to fit OLS of y on [1, x1, x2] in a numerically sound way. Then explain why inverting \\(X^\\top X\\) is a poor choice when \\(x_2\\approx x_1\\) (differing by \\(10^{-6}\\) noise).",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(14)\nn = 200\nx1 = rng.standard_normal(n)\nx2 = x1 + 1e-6*rng.standard_normal(n)\nX = np.column_stack([np.ones(n), x1, x2])\ny = X @ np.array([1.0, 2.0, 3.0]) + 0.1*rng.standard_normal(n)\nb_lstsq = np.linalg.lstsq(X, y, rcond=None)[0]\nb_inv = np.linalg.inv(X.T @ X) @ X.T @ y\nprint(\"cond(X)\", f\"{np.linalg.cond(X):.2e}\", \"cond(X'X)\", f\"{np.linalg.cond(X.T @ X):.2e}\")\nprint(\"lstsq\", b_lstsq.round(3))\nprint(\"inv  \", b_inv.round(3))</pre><b>Why it works:</b> lstsq solves the least-squares problem through an SVD or QR factorisation, which works with \\(\\kappa(X)\\). Forming \\(X^\\top X\\) squares the condition number: \\(\\kappa(X^\\top X)=\\kappa(X)^2\\).<br><b>Error/complexity:</b> Output cond(X)=2.12e6, cond(X'X)=4.51e12. The coefficients on x1 and x2 are not identified: lstsq gives -3654.36 and 3659.36, inv gives -3655.74 and 3660.74. The sum \\(\\beta_1+\\beta_2\\approx5\\) is well determined. Cost O(np^2).<br><b>Pitfall:</b> Losing about 12.7 digits in the normal equations leaves roughly 3 digits. The fix is to drop one collinear column, use a ridge penalty, or rescale. Regularise rather than invert.",
+  "tags": [
+   "ols",
+   "lstsq",
+   "conditioning",
+   "regression",
+   "numerical_linear_algebra",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write vectorised numpy for a 60-observation rolling OLS slope of y on x (intercept included, so demean each window), and check it against a loop.",
+  "back": "<b>Code:</b><pre>import numpy as np\nfrom numpy.lib.stride_tricks import sliding_window_view as swv\nrng = np.random.default_rng(15)\nx = rng.standard_normal(500)\ny = 0.5*x + rng.standard_normal(500)\nw = 60\nXw, Yw = swv(x, w), swv(y, w)\nxc = Xw - Xw.mean(axis=1, keepdims=True)\nyc = Yw - Yw.mean(axis=1, keepdims=True)\nbeta = (xc*yc).sum(axis=1)/(xc**2).sum(axis=1)\nb_loop = np.array([np.polyfit(x[i:i+w], y[i:i+w], 1)[0] for i in range(len(x)-w+1)])\nprint(beta.shape, float(np.max(np.abs(beta - b_loop))), beta[:3].round(4))</pre><b>Why it works:</b> sliding_window_view gives a \\((T-w+1,w)\\) view with no copy. Demeaning each row and taking \\(\\sum x_cy_c/\\sum x_c^2\\) gives every window's slope in one pass.<br><b>Error/complexity:</b> Output shape (441,); maximum difference from the polyfit loop 5.55e-16, which is round-off. Cost O(Tw) time, with no extra memory beyond the view.<br><b>Pitfall:</b> The views are read-only, so writing into them raises an error. Forgetting the demeaning gives the regression-through-origin slope, which is wrong with a nonzero mean.",
+  "tags": [
+   "rolling_regression",
+   "regression",
+   "sliding_window",
+   "vectorisation",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write vectorised numpy for a 95% percentile bootstrap CI for the mean of 250 daily returns, using 10 000 resamples. Name one case where it fails.",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(16)\ndata = rng.standard_t(4, size=250)*0.01\nB = 10_000\nidx = rng.integers(0, len(data), size=(B, len(data)))\nmeans = data[idx].mean(axis=1)\nlo, hi = np.percentile(means, [2.5, 97.5])\nprint(f\"mean={data.mean():.5f} CI=({lo:.5f},{hi:.5f}) se_boot={means.std(ddof=1):.5f}\")</pre><b>Why it works:</b> Resampling with replacement approximates the sampling distribution of the mean. The 2.5% and 97.5% percentiles of the resampled means give the interval.<br><b>Error/complexity:</b> Output mean -0.00070, CI (-0.00223, 0.00085), bootstrap se 0.00078, of the same order as s/√n. Cost O(Bn) time and memory (2.5 million indices here).<br><b>Pitfall:</b> Serially dependent returns need a block bootstrap, since resampling single days destroys autocorrelation. It also struggles with heavy tails and with statistics like the max.",
+  "tags": [
+   "bootstrap",
+   "confidence_interval",
+   "resampling",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with this bootstrap? The author expects a 95% CI for the mean of 250 returns, using 2000 resamples. The reported CI is a single point.",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(16)\ndata = rng.standard_t(4, size=250)*0.01\nmeans = np.array([rng.choice(data, size=len(data), replace=False).mean() for _ in range(2000)])\nlo, hi = np.percentile(means, [2.5, 97.5])\nprint(f\"CI=({lo:.6f},{hi:.6f}) width={hi-lo:.2e} mean={data.mean():.6f}\")</pre><b>Why it works:</b> The fix is replace=True. Without replacement, a resample of size n from n points is a permutation of the data, so the mean is the same every time.<br><b>Error/complexity:</b> Output CI width 5.4e-19 around the sample mean -0.000695. The correct bootstrap (previous card) gives a width of about 0.003.<br><b>Pitfall:</b> The faulty call is rng.choice(data, size=len(data), replace=False). <b>Smell:</b> a bootstrap CI with near-zero width means the resampling is not random.",
+  "tags": [
+   "bootstrap",
+   "confidence_interval",
+   "resampling",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal numpy for PCA of a 3-asset return sample: eigenpairs of the covariance matrix, sorted by variance, with each component's share of total variance. Use an algorithm for symmetric matrices.",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(17)\nA = np.array([[2.0, 0, 0],\n              [0.5, 1.0, 0],\n              [0.3, 0.2, 0.5]])\nR = rng.standard_normal((5000, 3)) @ A.T\nC = np.cov(R, rowvar=False)\nw, V = np.linalg.eigh(C)\norder = np.argsort(w)[::-1]\nw, V = w[order], V[:, order]\nprint(w.round(4), (w/w.sum()).round(4))\nprint(\"pc1 loadings\", (V[:, 0]*np.sign(V[0, 0])).round(3))</pre><b>Why it works:</b> A covariance matrix is symmetric and PSD, so eigh returns real, orthonormal eigenvectors. Sorting the eigenvalues in descending order gives components ranked by variance.<br><b>Error/complexity:</b> Eigenvalues 4.4494, 0.9457, 0.2391; shares 0.790, 0.168, 0.042. First-component loadings (0.942, 0.295, 0.160) up to sign. Cost O(nd^2) for the covariance, O(d^3) for the eigen step.<br><b>Pitfall:</b> eigh returns ascending order, so sort explicitly. Signs of eigenvectors are arbitrary. For many assets, use the SVD of the centred data for better accuracy.",
+  "tags": [
+   "pca",
+   "eigen",
+   "covariance",
+   "s_eigen",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with this PCA snippet? It uses the first column of eigh's output as the leading component. Compute the variance share it reports.<pre>import numpy as np\nrng = np.random.default_rng(17)\nA = np.array([[2.0, 0, 0], [0.5, 1.0, 0], [0.3, 0.2, 0.5]])\nR = rng.standard_normal((5000, 3)) @ A.T\nC = np.cov(R, rowvar=False)\nw, V = np.linalg.eigh(C)\npc1 = V[:, 0]\nprint(\"share claimed for pc1:\", round(w[0]/w.sum(), 4))</pre>",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(17)\nA = np.array([[2.0, 0, 0],\n              [0.5, 1.0, 0],\n              [0.3, 0.2, 0.5]])\nR = rng.standard_normal((5000, 3)) @ A.T\nC = np.cov(R, rowvar=False)\nw, V = np.linalg.eigh(C)\norder = np.argsort(w)[::-1]\nw, V = w[order], V[:, order]\nprint(w.round(4), (w/w.sum()).round(4))\nprint(\"pc1 loadings\", (V[:, 0]*np.sign(V[0, 0])).round(3))</pre><b>Why it works:</b> eigh returns eigenvalues in ascending order, so column 0 is the least-variance direction. The fix sorts in descending order (the previous PCA card).<br><b>Error/complexity:</b> Output: the reported share is 0.0424, the smallest. The true leading share is 0.790.<br><b>Pitfall:</b> The faulty line is pc1 = V[:, 0]. <b>Smell:</b> eigh and eigvalsh are ascending; eig is unordered. The first column is the leading component only after sorting.",
+  "tags": [
+   "pca",
+   "eigen",
+   "covariance",
+   "s_eigen",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal numpy for the explicit FTCS scheme for \\(u_t=\\alpha u_{xx}\\) on \\([0,1]\\), with zero boundaries and \\(u(x,0)=\\sin(\\pi x)\\). Include a stability check, and test at \\(T=0.1\\) against the exact solution.",
+  "back": "<b>Code:</b><pre>import numpy as np\ndef ftcs(nx, T, alpha=1.0, r=0.4):\n    x = np.linspace(0, 1, nx+1); dx = x[1]-x[0]\n    dt = r*dx*dx/alpha\n    assert r &lt;= 0.5, \"unstable\"\n    nt = int(round(T/dt)); dt = T/nt; r = alpha*dt/dx**2\n    u = np.sin(np.pi*x)\n    for _ in range(nt):\n        u[1:-1] = u[1:-1] + r*(u[2:] - 2*u[1:-1] + u[:-2])\n    exact = np.exp(-np.pi**2*alpha*T)*np.sin(np.pi*x)\n    return float(np.max(np.abs(u-exact))), round(r, 4), nt\nprint(ftcs(50, 0.1))\nprint(ftcs(100, 0.1))</pre><b>Why it works:</b> \\(u_i^{n+1}=u_i^n+r(u_{i+1}^n-2u_i^n+u_{i-1}^n)\\) with \\(r=\\alpha\\Delta t/\\Delta x^2\\). Von Neumann analysis gives stability iff \\(r\\le\\tfrac12\\). Choosing \\(\\Delta t\\) from \\(r\\) keeps \\(r\\) fixed as the grid is refined.<br><b>Error/complexity:</b> nx=50 gives max error 1.70e-4 (625 steps); nx=100 gives 4.24e-5 (2500 steps). Halving \\(\\Delta x\\) cuts the error by 4, so the scheme is second order in space and first order in time, with \\(\\Delta t\\propto\\Delta x^2\\). Cost O(nx^3) overall.<br><b>Pitfall:</b> Forgetting the factor \\(\\alpha\\) in \\(r\\), or leaving the boundary entries unset, gives a wrong answer. Stability is a bound on \\(r\\), not on \\(\\Delta t\\) alone.",
+  "tags": [
+   "heat_equation",
+   "pde",
+   "stability",
+   "fdm",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with this explicit heat-equation solver? It runs 200 steps on 50 intervals with \\(r=0.6\\).<pre>import numpy as np\nnx = 50; dx = 1/nx; r = 0.6\nu = np.sin(np.pi*np.linspace(0, 1, nx+1))\nfor _ in range(200):\n    u[1:-1] += r*(u[2:] - 2*u[1:-1] + u[:-2])\nprint(np.abs(u).max())</pre>",
+  "back": "<b>Code:</b><pre>import numpy as np\ndef ftcs(nx, T, alpha=1.0, r=0.4):\n    x = np.linspace(0, 1, nx+1); dx = x[1]-x[0]\n    dt = r*dx*dx/alpha\n    assert r &lt;= 0.5, \"unstable\"\n    nt = int(round(T/dt)); dt = T/nt; r = alpha*dt/dx**2\n    u = np.sin(np.pi*x)\n    for _ in range(nt):\n        u[1:-1] = u[1:-1] + r*(u[2:] - 2*u[1:-1] + u[:-2])\n    exact = np.exp(-np.pi**2*alpha*T)*np.sin(np.pi*x)\n    return float(np.max(np.abs(u-exact))), round(r, 4), nt\nprint(ftcs(50, 0.1))\nprint(ftcs(100, 0.1))</pre><b>Why it works:</b> The explicit scheme is stable only for \\(r\\le\\tfrac12\\). For \\(r=0.6\\) the amplification factor of the highest mode is \\(1-4r=-1.4\\), in absolute value greater than 1, so the error grows geometrically.<br><b>Error/complexity:</b> Output max |u| = 1.7e12 after 200 steps. Fix: pick \\(\\Delta t\\) with \\(r\\le1/2\\), or use Crank–Nicolson or backward Euler, which are unconditionally stable.<br><b>Pitfall:</b> <b>Smell:</b> an explicit diffusion scheme that explodes almost always means \\(r=\\alpha\\Delta t/\\Delta x^2&gt;1/2\\). Print r before the loop.",
+  "tags": [
+   "heat_equation",
+   "pde",
+   "stability",
+   "fdm",
+   "debug_stability",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal numpy for \\(\\int_0^1 e^x\\,dx\\) by the composite trapezoid rule and by Simpson's rule with n intervals. State the error order of each, and check the ratio of errors when n doubles.",
+  "back": "<b>Code:</b><pre>import numpy as np\nf = np.exp; exact = np.e - 1\ndef trap(n):\n    x = np.linspace(0, 1, n+1); y = f(x); h = 1/n\n    return h*(y.sum() - 0.5*(y[0] + y[-1]))\ndef simp(n):\n    x = np.linspace(0, 1, n+1); y = f(x); h = 1/n\n    return h/3*(y[0] + y[-1] + 4*y[1:-1:2].sum() + 2*y[2:-1:2].sum())\nprev_t = prev_s = None\nfor n in (8, 16, 32, 64):\n    et, es = abs(trap(n)-exact), abs(simp(n)-exact)\n    print(n, f\"trap err={et:.3e} simp err={es:.3e}\", \"\" if prev_t is None else f\"ratios {prev_t/et:.2f} {prev_s/es:.2f}\")\n    prev_t, prev_s = et, es</pre><b>Why it works:</b> Trapezoid error is \\(-\\tfrac{h^2}{12}(f'(1)-f'(0))+O(h^4)\\) by Euler–Maclaurin. Simpson weights the trapezoid estimates so the \\(h^2\\) term cancels, leaving \\(O(h^4)\\).<br><b>Error/complexity:</b> n=8: trapezoid error 2.24e-3, Simpson 2.33e-6. Doubling n gives ratios 4.00 for trapezoid and 15.98 to 16.00 for Simpson. Cost O(n) evaluations.<br><b>Pitfall:</b> Simpson needs an even number of intervals. For smooth periodic integrands the trapezoid rule converges much faster than \\(h^2\\), so the rule of thumb does not always apply.",
+  "tags": [
+   "numerical_integration",
+   "quadrature",
+   "trapezoid",
+   "simpson",
+   "s_taylor",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal Python for \\(\\sqrt2\\) by (a) bisection and (b) Newton on \\(f(x)=x^2-2\\) starting at 1, both to 1e-12. Count the steps. Which is faster, and when can Newton fail?",
+  "back": "<b>Code:</b><pre>def f(x): return x*x - 2\ndef df(x): return 2*x\ndef bisect(a, b, tol=1e-12):\n    k = 0\n    while b - a &gt; tol:\n        m = (a+b)/2; k += 1\n        if f(a)*f(m) &lt;= 0: b = m\n        else: a = m\n    return (a+b)/2, k\ndef newton(x, tol=1e-12):\n    k = 0\n    while True:\n        x_new = x - f(x)/df(x); k += 1\n        if abs(x_new - x) &lt; tol:\n            return x_new, k\n        x = x_new\nr1, k1 = bisect(1.0, 2.0)\nr2, k2 = newton(1.0)\nprint(f\"bisect {r1:.12f} in {k1} steps; newton {r2:.12f} in {k2} steps; sqrt2 {2**0.5:.12f}\")</pre><b>Why it works:</b> Bisection halves a bracket that contains a sign change, so it always converges. Newton uses the tangent: \\(e_{k+1}\\approx(f''/2f')e_k^2\\), quadratic convergence near a simple root.<br><b>Error/complexity:</b> Bisection: 40 steps. Newton: 6 steps. Both give 1.414213562373. Cost: bisection O(log(1/tol)), Newton about O(log log(1/tol)) near the root.<br><b>Pitfall:</b> Newton fails when \\(f'\\) is near zero or the start is poor (oscillation, divergence, or jumping to another root). Bisection cannot fail once it is bracketed.",
+  "tags": [
+   "root_finding",
+   "newton",
+   "bisection",
+   "s_taylor",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with this bisection? It should return \\(\\sqrt2\\) for \\(f(x)=x^2-2\\) on \\([1,2]\\), but returns something else.<pre>def f(x): return x*x - 2\na, b = 1.0, 2.0\nfor _ in range(60):\n    m = (a+b)/2\n    if f(a)*f(m) &gt; 0: b = m\n    else: a = m\nprint(a, b)</pre>",
+  "back": "<b>Code:</b><pre>def f(x): return x*x - 2\na, b = 1.0, 2.0\nfor _ in range(60):\n    m = (a+b)/2\n    if f(a)*f(m) &gt; 0: a = m\n    else: b = m\nprint(round(a, 10), round(b, 10))</pre><b>Why it works:</b> If \\(f(a)f(m)&lt;0\\), the root lies in \\([a,m]\\), so b should become m. The flipped branch sets a=m, which discards the sign change. The fix is if f(a)*f(m) &gt; 0: a = m, else b = m.<br><b>Error/complexity:</b> Output: 1.5 and 1.5, not 1.41421. After the first step the bracket no longer contains a sign change, so the bisection converges to the wrong point.<br><b>Pitfall:</b> The faulty branch is if f(a)*f(m) &gt; 0: b = m. <b>Smell:</b> after every update check that f(a)f(b) ≤ 0. A bisection that returns a plausible number without an error may have lost its bracket.",
+  "tags": [
+   "root_finding",
+   "bisection",
+   "debug_bracket",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write vectorised numpy that simulates uniformly random permutations of 10 items and estimates \\(P(\\text{no fixed point})\\) and \\(E[\\text{fixed points}]\\), with standard errors. Compare with the exact values.",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(18)\nn, N = 10, 200_000\nperms = np.argsort(rng.random((N, n)), axis=1)\nfixed = (perms == np.arange(n)).sum(axis=1)\np0 = (fixed == 0).mean(); se = np.sqrt(p0*(1-p0)/N)\nprint(f\"P(no fixed point)={p0:.5f} se={se:.5f} exact D10/10!={1334961/3628800:.5f}\")\nprint(f\"E[fixed points]={fixed.mean():.4f} se={fixed.std(ddof=1)/np.sqrt(N):.4f} exact=1\")</pre><b>Why it works:</b> Sorting i.i.d. uniforms gives a uniform permutation, since ties have probability zero. Fixed points are indicator sums, so \\(E=1\\) by linearity. The no-fixed-point probability is \\(D_n/n!\\), with \\(D_{10}=1334961\\).<br><b>Error/complexity:</b> P(no fixed point) = 0.36710 (se 0.00108) against 1334961/3628800 = 0.36788 (0.7 se). E[fixed] = 0.9995 (se 0.0022) against 1. Cost O(Nn log n).<br><b>Pitfall:</b> Building permutations by rejection from integer draws is slow. For large n the no-fixed-point probability tends to \\(1/e\\) quickly, so the sample need not be large for big n.",
+  "tags": [
+   "permutations",
+   "fixed_points",
+   "derangement",
+   "s_inclusion_exclusion",
+   "s_indicators",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Find the flaw. The author shuffles a list of three items with a \"naive\" swap loop and checks that all 3! orders are equally likely.<pre>import random\nfrom collections import Counter\ndef naive_shuffle(a, rng):\n    a = list(a); n = len(a)\n    for i in range(n):\n        j = rng.randrange(n)\n        a[i], a[j] = a[j], a[i]\n    return tuple(a)\nrng = random.Random(19)\ncnt = Counter(naive_shuffle((1, 2, 3), rng) for _ in range(60000))\nprint(sorted((k, round(v/60000, 4)) for k, v in cnt.items()))</pre>",
+  "back": "<b>Code:</b><pre>import random\nfrom collections import Counter\ndef fy_shuffle(a, rng):\n    a = list(a); n = len(a)\n    for i in range(n):\n        j = rng.randrange(i, n)\n        a[i], a[j] = a[j], a[i]\n    return tuple(a)\nrng = random.Random(19)\ncnt = Counter(fy_shuffle((1, 2, 3), rng) for _ in range(60000))\nprint(sorted((k, round(v/60000, 4)) for k, v in cnt.items()))</pre><b>Why it works:</b> Fisher–Yates draws j from the not-yet-fixed suffix, \\(j\\in[i,n)\\), so the number of swap sequences is \\(n(n-1)\\cdots1=n!\\) and each permutation has probability \\(1/n!\\). The naive version draws j from all n positions every step, giving \\(n^n\\) equally likely sequences, and \\(27\\) is not divisible by \\(6\\).<br><b>Error/complexity:</b> Naive output: the six orders have probabilities 0.146 to 0.189 (not 1/6). Fisher–Yates output: 0.164 to 0.169.<br><b>Pitfall:</b> The faulty line is j = rng.randrange(n). <b>Smell:</b> the number of random choices must multiply to n!, so the draw range must shrink each step. A shuffle that passes a quick n=2 test may still be biased.",
+  "tags": [
+   "permutations",
+   "shuffle",
+   "uniform",
+   "s_symmetry",
+   "debug_shuffle",
+   "fmt_debug"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal Python to pick one item uniformly at random from a stream of unknown length, in one pass (reservoir sampling). Show that each of 10 items is chosen with probability 1/10.",
+  "back": "<b>Code:</b><pre>import numpy as np\nfrom collections import Counter\ndef reservoir_one(stream, rng):\n    chosen = None\n    for i, x in enumerate(stream, start=1):\n        if rng.integers(1, i+1) == 1:\n            chosen = x\n    return chosen\nrng = np.random.default_rng(20)\ncounts = Counter(reservoir_one(range(10), rng) for _ in range(100_000))\nprint(sorted((k, round(v/100_000, 4)) for k, v in counts.items()))</pre><b>Why it works:</b> Replace the current choice with item i (1-indexed) with probability \\(1/i\\). Item i survives to the end with probability \\(\\tfrac1i\\prod_{j=i+1}^n(1-\\tfrac1j)=\\tfrac1i\\cdot\\tfrac in=\\tfrac1n\\).<br><b>Error/complexity:</b> Each frequency lies in 0.098 to 0.102, against 0.1. Cost O(n) time, O(1) memory.<br><b>Pitfall:</b> Using 1/i with a 0-indexed loop shifts every probability (see the next card). Telescoping the product is what makes it uniform.",
+  "tags": [
+   "reservoir_sampling",
+   "uniform",
+   "s_symmetry",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with this reservoir sampler? It should pick each item of range(10) with probability 0.1, but the frequencies are off.<pre>import numpy as np\nfrom collections import Counter\ndef reservoir_one(stream, rng):\n    chosen = stream[0]\n    for i in range(1, len(stream)):\n        if rng.integers(0, i) == 0:\n            chosen = stream[i]\n    return chosen\nrng = np.random.default_rng(20)\ncounts = Counter(reservoir_one(list(range(10)), rng) for _ in range(100_000))\nprint(sorted((k, round(v/100_000, 4)) for k, v in counts.items()))</pre>",
+  "back": "<b>Code:</b><pre>import numpy as np\nfrom collections import Counter\ndef reservoir_one(stream, rng):\n    chosen = stream[0]\n    for i in range(1, len(stream)):\n        if rng.integers(0, i+1) == 0:\n            chosen = stream[i]\n    return chosen\nrng = np.random.default_rng(20)\ncounts = Counter(reservoir_one(list(range(10)), rng) for _ in range(100_000))\nprint(sorted((k, round(v/100_000, 4)) for k, v in counts.items()))</pre><b>Why it works:</b> With a 0-indexed loop at position i, there are i+1 items seen so far, so the replacement probability must be \\(1/(i+1)\\), which is integers(0, i+1) == 0. The code uses 1/i, so item 1 is always replaced at step 1 and item 0 is never chosen.<br><b>Error/complexity:</b> Output: item 0 frequency 0; items 1 to 9 each about 0.111 instead of 0.1. The correct version gives 0.1 for each.<br><b>Pitfall:</b> Here i is 0-indexed, so the count seen is i+1. <b>Smell:</b> a reservoir frequency with an impossible zero means the first item is treated wrongly; check the count-seen convention.",
+  "tags": [
+   "reservoir_sampling",
+   "off_by_one",
+   "debug_probability",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write vectorised numpy to estimate the probability that at least two of 23 people share a birthday (365 equally likely days), with a standard error. Give the exact value.",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(21)\nn_trials, k = 200_000, 23\nx = np.sort(rng.integers(0, 365, size=(n_trials, k)), axis=1)\ncollide = (np.diff(x, axis=1) == 0).any(axis=1)\np = collide.mean(); se = np.sqrt(p*(1-p)/n_trials)\nexact = 1 - np.prod(1 - np.arange(k)/365)\nprint(f\"p={p:.5f} se={se:.5f} exact={exact:.5f}\")</pre><b>Why it works:</b> Sort each row. Any shared birthday then shows as two equal neighbours, so collision is \\((\\text{diff}=0)\\) somewhere. The exact answer is the complement: \\(1-\\prod_{k=0}^{22}(1-k/365)\\).<br><b>Error/complexity:</b> p = 0.50624 (se 0.00112) against exact 0.50730 (0.9 se). Cost O(N k log k) time, O(Nk) memory.<br><b>Pitfall:</b> Pairwise comparison costs O(k^2) per trial. Use the complement for the exact value rather than summing collisions.",
+  "tags": [
+   "birthday",
+   "collision",
+   "s_complement",
+   "s_inclusion_exclusion",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with this birthday simulation? It sorts each row and then tests for collisions, but the estimate is 1.0 whatever k is.<pre>import numpy as np\nrng = np.random.default_rng(21)\nn_trials, k = 200_000, 23\nx = np.sort(rng.integers(0, 365, size=(n_trials, k)), axis=1)\ncollide = np.diff(x, axis=1).any(axis=1)\nprint(collide.mean())</pre>",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(21)\nn_trials, k = 200_000, 23\nx = np.sort(rng.integers(0, 365, size=(n_trials, k)), axis=1)\ncollide = (np.diff(x, axis=1) == 0).any(axis=1)\nprint(collide.mean())</pre><b>Why it works:</b> The collision test must check whether a difference is zero, so (diff==0).any(axis=1). The buggy code calls .any() on the differences, which is True whenever any gap is nonzero, which is almost always.<br><b>Error/complexity:</b> Output 1.0. The corrected version gives 0.506245 for k=23 (exact 0.50730).<br><b>Pitfall:</b> The faulty line is np.diff(x, axis=1).any(axis=1). <b>Smell:</b> a probability estimate of exactly 1 or 0 for an event with a moderate chance is a logic error in the indicator, not a sampling fluke.",
+  "tags": [
+   "birthday",
+   "collision",
+   "debug_collision",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write numpy-free Python to add 0.1 to itself \\(10^7\\) times in a plain loop, then compare with numpy's pairwise sum and with math.fsum. What is the exact answer, and why do the results differ?",
+  "back": "<b>Code:</b><pre>import math\nimport numpy as np\nx = [0.1]*10**7\ns = 0.0\nfor v in x:\n    s += v\nprint(repr(s), repr(float(np.sum(np.array(x)))), repr(math.fsum(x)))</pre><b>Why it works:</b> Each addition rounds to 53 bits, and 0.1 is not exact in binary. Naive accumulation carries the rounding error of every step. Pairwise summation keeps the partial sums similar in size, and fsum tracks exact partial sums, so it returns the correctly rounded total.<br><b>Error/complexity:</b> Naive 999999.9998389754, an error of 1.6e-4 (relative 1.6e-10). numpy pairwise 1000000.0 and fsum 1000000.0. Costs: naive O(n), numpy pairwise O(n) time with an O(log n) error bound, fsum O(n) time.<br><b>Pitfall:</b> Summing many small numbers into a large running total loses low-order bits. This matters for long P&amp;L or cash-flow sums. Sort ascending, use pairwise or compensated summation.",
+  "tags": [
+   "float_precision",
+   "summation",
+   "round_off",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write numpy for \\(\\log(e^{1000}+e^{1001})\\) without overflow, and explain why the naive formula fails.",
+  "back": "<b>Code:</b><pre>import numpy as np\nx = np.array([1000.0, 1001.0])\nwith np.errstate(over='ignore'):\n    naive = np.log(np.sum(np.exp(x)))\nm = x.max()\nstable = m + np.log(np.sum(np.exp(x - m)))\nprint(naive, stable)</pre><b>Why it works:</b> Factor out the maximum: \\(\\log\\sum e^{x_i}=m+\\log\\sum e^{x_i-m}\\). Every exponent is at most 0, so nothing overflows, and the sum is at least 1, so the log is safe.<br><b>Error/complexity:</b> Naive gives inf, silently under errstate(over='ignore'). Stable gives 1001.3133, which equals \\(1001+\\log(1+e^{-1})\\). Cost O(n).<br><b>Pitfall:</b> Log-likelihoods, partition functions and HMM forward passes need this. Subtracting the max also handles the case where every \\(x_i\\) is very negative (underflow).",
+  "tags": [
+   "float_precision",
+   "log_sum_exp",
+   "likelihood",
+   "s_kelly_log_utility",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal Python to compute the sample variance of \\(10^6\\) values \\(10^9+N(0,1)\\) in a numerically stable way. Show why \\(E[x^2]-E[x]^2\\) fails.",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(22)\nx = 1e9 + rng.standard_normal(1_000_000)\nnaive = (x**2).mean() - x.mean()**2\ndef welford(a):\n    n = 0; mean = 0.0; M2 = 0.0\n    for v in a:\n        n += 1; d = v - mean; mean += d/n; M2 += d*(v - mean)\n    return M2/(n-1)\nprint(round(naive, 4), round(np.var(x, ddof=1), 4), round(welford(x), 4))</pre><b>Why it works:</b> \\(E[x^2]\\approx10^{18}\\) carries absolute round-off of about \\(10^2\\), which swamps the true variance of 1. Welford's update keeps deviations from the running mean, so the cancellation never occurs. A two-pass method (subtract the mean first) also works.<br><b>Error/complexity:</b> Naive gives -128.0, a negative variance. np.var(ddof=1) gives 1.0008 and Welford gives 1.0008. Cost O(n) for both.<br><b>Pitfall:</b> A negative variance gives NaN from sqrt. Shifting by a known constant, or using two passes, also avoids the cancellation.",
+  "tags": [
+   "float_precision",
+   "variance",
+   "catastrophic_cancellation",
+   "welford",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with this die simulation? It should give faces 1 to 6 with equal probability and a mean of 3.5.<pre>import numpy as np\nrng = np.random.default_rng(23)\nrolls = rng.integers(1, 6, size=100_000)\nprint(rolls.min(), rolls.max(), rolls.mean())</pre>",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(23)\nrolls = rng.integers(1, 7, size=100_000)\nprint(rolls.min(), rolls.max(), rolls.mean())</pre><b>Why it works:</b> numpy's integers(low, high) excludes high, so rng.integers(1, 6) returns 1 to 5 only. The fix is integers(1, 7). Python's random.randint is inclusive, which is why mixing conventions causes this.<br><b>Error/complexity:</b> Output: min 1, max 5, mean 2.993. The fixed version gives min 1, max 6, mean 3.491.<br><b>Pitfall:</b> <b>Smell:</b> numpy high bounds are exclusive; random.randint is inclusive. Test the maximum of a simulated die: a 5 instead of a 6 is the signature.",
+  "tags": [
+   "off_by_one",
+   "random_integers",
+   "dice",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal numpy to estimate the probability that two fair dice sum to 7, from \\(10^6\\) rolls, with a standard error. Give the exact value.",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(24)\nn = 10**6\ns = rng.integers(1, 7, size=(n, 2)).sum(axis=1)\np = (s == 7).mean(); se = np.sqrt(p*(1-p)/n)\nprint(f\"p={p:.5f} se={se:.5f} exact=1/6={1/6:.5f}\")</pre><b>Why it works:</b> The estimate is the mean of an indicator, and the se is \\(\\sqrt{p(1-p)/n}\\). Exact value \\(6/36=1/6\\), from six of 36 equally likely pairs.<br><b>Error/complexity:</b> Output p=0.16625, se=0.00037, exact 0.16667 (1.1 se). Cost O(n).<br><b>Pitfall:</b> Use integers(1, 7), not integers(1, 6). See the off-by-one card.",
+  "tags": [
+   "dice",
+   "monte_carlo",
+   "standard_error",
+   "s_indicators",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Find the flaw. The author wants each day's cross-sectional mean removed from a 4×4 array of returns (rows = days, columns = assets), so every row should have mean 0.<pre>import numpy as np\nrng = np.random.default_rng(25)\nR = rng.standard_normal((4, 4))\ndemeaned = R - R.mean(axis=1)\nprint(\"row means:\", demeaned.mean(axis=1).round(4))\nprint(\"col means:\", demeaned.mean(axis=0).round(4))</pre>",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(25)\nR = rng.standard_normal((4, 4))\ndemeaned = R - R.mean(axis=1, keepdims=True)\nprint(\"row means:\", demeaned.mean(axis=1).round(4))</pre><b>Why it works:</b> R.mean(axis=1) has shape (4,). Broadcasting aligns that with the last axis, so it subtracts the mean of row j from column j, not the mean of row i from row i. keepdims=True gives shape (4,1), which broadcasts across columns as intended.<br><b>Error/complexity:</b> Buggy output: row means -0.92, 0.06, 0.64, 0.23 and column means nonzero. Fixed: every row mean is 0.<br><b>Pitfall:</b> The faulty line is demeaned = R - R.mean(axis=1). <b>Smell:</b> square shapes broadcast silently. With a non-square array the same bug raises an error, so square test data hides it. Test that row means are exactly zero.",
+  "tags": [
+   "broadcasting",
+   "numpy_pitfall",
+   "debug_broadcast",
+   "demeaning",
+   "fmt_debug"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Find the flaw. The author writes a path simulator that appends to a list, and calls it twice expecting two independent 3-step paths.<pre>import numpy as np\nrng = np.random.default_rng(26)\ndef simulate_path(n_steps, path=[]):\n    x = 0.0\n    for z in rng.standard_normal(n_steps):\n        x += z\n        path.append(x)\n    return path\np1 = simulate_path(3)\np2 = simulate_path(3)\nprint(len(p1), len(p2), p1 is p2)</pre>",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(26)\ndef simulate_path(n_steps, path=None):\n    if path is None:\n        path = []\n    x = 0.0\n    for z in rng.standard_normal(n_steps):\n        x += z\n        path.append(x)\n    return path\np1 = simulate_path(3)\np2 = simulate_path(3)\nprint(len(p1), len(p2), p1 is p2)</pre><b>Why it works:</b> A default value is evaluated once, at definition time. The list [] is shared by every call that omits the argument, so the second call appends to the first call's list. The fix is path=None, then create the list inside.<br><b>Error/complexity:</b> Output: lengths 6 and 6 (expected 3 and 3), and p1 is p2 is True. Both calls return the same object. The fixed version prints 3 3 False.<br><b>Pitfall:</b> The faulty line is def simulate_path(n_steps, path=[]). <b>Smell:</b> never use a mutable default ([], {}, np.array) in a function that accumulates state. In a parallel Monte Carlo this silently mixes paths.",
+  "tags": [
+   "mutable_default",
+   "python_pitfall",
+   "debug_default_argument",
+   "fmt_debug"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with this probability estimate? \\(\\hat p\\) for a coin with \\(P(\\text{heads})=1/2\\) over 1000 tosses comes out as 0.<pre>import numpy as np\nrng = np.random.default_rng(27)\nhits = rng.integers(0, 2, size=1000)\np = hits.sum() // len(hits)\nprint(p, hits.sum()/len(hits))</pre>",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(27)\nhits = rng.integers(0, 2, size=1000)\np = hits.sum() // len(hits)\nprint(p, hits.sum()/len(hits))</pre><b>Why it works:</b> // is floor division, and with integer counts it returns 0 for any value below 1. The fix is / (true division) or .mean() on the indicator array.<br><b>Error/complexity:</b> Output: 0 with the floor division, and 0.551 with true division.<br><b>Pitfall:</b> <b>Smell:</b> a probability printing as exactly 0 or 1 usually means integer division. Use / or .mean().",
+  "tags": [
+   "integer_division",
+   "python_pitfall",
+   "probability_estimate",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal scipy/numpy to estimate \\(\\int_{[0,1]^5}e^{x_1+\\dots+x_5}\\,dx\\) by plain Monte Carlo and by a scrambled Sobol sequence, both with \\(2^{14}\\) points. Compare mean absolute errors over 20 seeds. The exact value is \\((e-1)^5\\).",
+  "back": "<b>Code:</b><pre>import numpy as np\nfrom scipy.stats import qmc\nd, m = 5, 14\nexact = (np.e - 1)**d\nf = lambda x: np.exp(x.sum(axis=1))\nmc_err, qmc_err = [], []\nfor s in range(20):\n    rng = np.random.default_rng(s)\n    mc_err.append(abs(f(rng.random((2**m, d))).mean() - exact))\n    q = qmc.Sobol(d=d, scramble=True, seed=s).random_base2(m)\n    qmc_err.append(abs(f(q).mean() - exact))\nprint(f\"mean abs error MC={np.mean(mc_err):.2e} Sobol={np.mean(qmc_err):.2e} exact={exact:.4f}\")</pre><b>Why it works:</b> Plain MC has error \\(\\sigma/\\sqrt N\\). A scrambled Sobol set is low-discrepancy, so for smooth integrands the error is much smaller, and random scrambling makes each estimate unbiased with a usable spread.<br><b>Error/complexity:</b> MC mean absolute error 5.84e-2; Sobol 9.19e-5, about 600 times smaller. Exact 14.9786. Cost O(Nd) for both.<br><b>Pitfall:</b> An unscrambled Sobol gives one deterministic answer with no error bar. QMC loses its advantage on non-smooth integrands such as digital payoffs, and in high dimensions it degrades.",
+  "tags": [
+   "monte_carlo",
+   "quasi_monte_carlo",
+   "sobol",
+   "numerical_integration",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal numpy to simulate the number of Poisson(\\(\\lambda=3\\)) arrivals in \\([0,2]\\) using exponential inter-arrival times. Check the count has mean and variance \\(\\lambda T=6\\).",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(28)\nlam, T, N = 3.0, 2.0, 100_000\nt = rng.exponential(1/lam, size=(N, 30)).cumsum(axis=1)\ncounts = (t &lt;= T).sum(axis=1)\nprint(counts.mean(), counts.var(ddof=1), lam*T)</pre><b>Why it works:</b> Arrival times are cumulative sums of i.i.d. Exp(λ) gaps. Memorylessness is what makes the gaps independent and identically distributed, so the count is Poisson.<br><b>Error/complexity:</b> Output mean 6.003, variance 6.016 (both 6). Cost O(N times the number of gaps).<br><b>Pitfall:</b> If too few gaps are drawn, the count is silently truncated. Check that the last arrival exceeds T in the sample, or draw extra gaps as a safeguard.",
+  "tags": [
+   "poisson_process",
+   "exponential",
+   "s_memorylessness",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write minimal numpy to estimate \\(\\pi\\) by Monte Carlo from uniform points in the unit square, with a standard error.",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(29)\nn = 10**6\nxy = rng.random((n, 2))\np = ((xy**2).sum(axis=1) &lt;= 1).mean()\nse = 4*np.sqrt(p*(1-p)/n)\nprint(f\"pi_hat={4*p:.5f} se={se:.5f} true={np.pi:.5f}\")</pre><b>Why it works:</b> The probability that a point falls in the quarter disk is \\(\\pi/4\\). The estimate of \\(\\pi\\) is \\(4\\hat p\\), so its standard error is \\(4\\sqrt{p(1-p)/n}\\).<br><b>Error/complexity:</b> Output \\(\\hat\\pi=3.14098\\), se 0.00164, true 3.14159 (0.4 se). Error falls as \\(1/\\sqrt n\\): 100 times the points gains one decimal place.<br><b>Pitfall:</b> The factor 4 belongs in the standard error as well as the estimate. Quoting \\(\\sqrt{p(1-p)/n}\\) without it understates the error by a factor 4.",
+  "tags": [
+   "monte_carlo",
+   "pi",
+   "standard_error",
+   "s_geometric_probability",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Write numpy for the discretely monitored arithmetic-average (Asian) call with \\(S_0=K=100\\), \\(r=5\\%\\), \\(\\sigma=20\\%\\), \\(T=1\\), 50 monitoring dates. Use the geometric-average Asian, which has a closed form, as a control variate. Report the variance reduction.",
+  "back": "<b>Code:</b><pre>import numpy as np\nfrom scipy.stats import norm\nrng = np.random.default_rng(30)\nS0, K, r, sig, T, m, n = 100., 100., 0.05, 0.2, 1.0, 50, 200_000\ndt = T/m; t = np.arange(1, m+1)*dt\nlogS = np.log(S0) + np.cumsum((r - 0.5*sig**2)*dt + sig*np.sqrt(dt)*rng.standard_normal((n, m)), axis=1)\nS = np.exp(logS)\narith = S.mean(axis=1); geo = np.exp(np.log(S).mean(axis=1))\nYar = np.exp(-r*T)*np.maximum(arith - K, 0)\nYgeo = np.exp(-r*T)*np.maximum(geo - K, 0)\nmu_g = np.log(S0) + (r - 0.5*sig**2)*np.mean(t)\nvar_g = sig**2*np.sum(np.minimum.outer(t, t))/m**2\nd1 = (mu_g - np.log(K) + var_g)/np.sqrt(var_g); d2 = d1 - np.sqrt(var_g)\ngeo_exact = np.exp(-r*T)*(np.exp(mu_g + 0.5*var_g)*norm.cdf(d1) - K*norm.cdf(d2))\nbeta = np.cov(Yar, Ygeo)[0, 1]/np.var(Ygeo, ddof=1)\nYcv = Yar - beta*(Ygeo - geo_exact)\nprint(\"plain\", round(Yar.mean(), 4), round(Yar.std(ddof=1)/np.sqrt(n), 4))\nprint(\"cv   \", round(Ycv.mean(), 4), round(Ycv.std(ddof=1)/np.sqrt(n), 4), \"geo exact\", round(geo_exact, 4))</pre><b>Why it works:</b> The geometric average of a lognormal path is lognormal, so its option has a closed form. The arithmetic and geometric payoffs are highly correlated on the same paths, so subtracting the control's error removes most of the noise.<br><b>Error/complexity:</b> Plain 5.8579 (se 0.0181); control variate 5.8574 (se 0.0005), a se ratio of 0.03 and roughly 1300 times the variance reduction. Closed-form geometric value 5.6411 is the control mean. Cost O(nm).<br><b>Pitfall:</b> The closed form must match the monitoring dates: the variance is \\(\\sigma^2\\sum_{i,j}\\min(t_i,t_j)/m^2\\), not the continuous \\(\\sigma^2T/3\\). Using the continuous formula biases the answer.",
+  "tags": [
+   "asian_option",
+   "control_variate",
+   "monte_carlo",
+   "variance_reduction",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with this standard error? It estimates \\(\\pi\\) from \\(10^6\\) points, and the reported se is about \\(10^{-6}\\).<pre>import numpy as np\nrng = np.random.default_rng(31)\nn = 10**6\nx = rng.random((n, 2))\nind = (x**2).sum(axis=1) &lt;= 1\np = ind.mean()\nse_bug = 4*np.std(ind)/n\nse_true = 4*np.sqrt(p*(1-p)/n)\nprint(4*p, se_bug, se_true)</pre>",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(31)\nn = 10**6\nx = rng.random((n, 2))\nind = (x**2).sum(axis=1) &lt;= 1\np = ind.mean()\nse_bug = 4*np.std(ind)/n\nse_true = 4*np.sqrt(p*(1-p)/n)\nprint(4*p, se_bug, se_true)</pre><b>Why it works:</b> The standard error of a mean is \\(\\sqrt{p(1-p)/n}\\), so the \\(\\sqrt n\\) scale matters. The buggy line divides the sample sd by n. The fix is 4·sqrt(p(1-p)/n) for the π estimator.<br><b>Error/complexity:</b> Buggy se 1.64e-6; correct se 1.64e-3. The factor is \\(\\sqrt n=1000\\).<br><b>Pitfall:</b> <b>Smell:</b> an se much smaller than \\(1/\\sqrt n\\) for a 0-1 indicator is an arithmetic error. The variance of the mean falls like 1/n, so the se falls like \\(1/\\sqrt n\\).",
+  "tags": [
+   "standard_error",
+   "monte_carlo",
+   "debug_se",
+   "fmt_code"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Find the flaw. The author simulates Brownian paths on [0,1] with 252 steps and checks that the variance of \\(W_1\\) is 1.<pre>import numpy as np\nrng = np.random.default_rng(32)\nn, m, T = 100_000, 252, 1.0\ndt = T/m\nZ = rng.standard_normal((n, m))\nW = np.cumsum(dt*Z, axis=1)\nprint(\"Var(W_T)=\", round(W[:, -1].var(ddof=1), 6), \"expected T*dt =\", round(T*dt, 6))</pre>",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(32)\nn, m, T = 100_000, 252, 1.0\ndt = T/m\nZ = rng.standard_normal((n, m))\nW = np.cumsum(np.sqrt(dt)*Z, axis=1)\nprint(\"Var(W_T)=\", round(W[:, -1].var(ddof=1), 4), \"expected T =\", T)</pre><b>Why it works:</b> Brownian increments have standard deviation \\(\\sqrt{\\Delta t}\\). The buggy code uses \\(\\Delta t\\), so each step has variance \\(\\Delta t^2\\) and the terminal variance is \\(m\\Delta t^2=T\\Delta t\\). The fix is sqrt(dt)*Z.<br><b>Error/complexity:</b> Buggy Var(W_1) = 0.00397 (equal to \\(\\Delta t\\)). Corrected Var(W_1) = 0.9991 (exact 1).<br><b>Pitfall:</b> <b>Smell:</b> the variance of a Brownian value must equal its time. If it equals a time times dt, the scaling is linear in dt when it should be linear in T.",
+  "tags": [
+   "brownian_motion",
+   "debug_scaling",
+   "s_sqrt_time_scaling",
+   "fmt_debug"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with this first-passage computation? It finds the first time a walk of 250 steps reaches 10. Check the reported share of paths that hit 10 at all.<pre>import numpy as np\nrng = np.random.default_rng(33)\nn, m = 100_000, 250\nS = rng.choice([-1, 1], size=(n, m)).cumsum(axis=1)\nhit_time = np.argmax(S &gt;= 10, axis=1) + 1\nprint(\"mean hit time\", round(hit_time.mean(), 3), \"share with hit_time==1\", round((hit_time == 1).mean(), 4), \"share that ever hit 10\", round((S.max(axis=1) &gt;= 10).mean(), 4))</pre>",
+  "back": "<b>Code:</b><pre>import numpy as np\nrng = np.random.default_rng(33)\nn, m = 100_000, 250\nS = rng.choice([-1, 1], size=(n, m)).cumsum(axis=1)\nhit = S.max(axis=1) &gt;= 10\nfirst = np.where(hit, np.argmax(S &gt;= 10, axis=1) + 1, np.nan)\nprint(\"share hitting 10:\", round(hit.mean(), 4), \"mean hit time among hitters:\", round(np.nanmean(first), 3))</pre><b>Why it works:</b> np.argmax of a boolean array returns the first True, but returns 0 when there are none. Paths that never reach 10 therefore get a hit time of 1. The fix is to test with .any() first, and set those paths to NaN or infinity.<br><b>Error/complexity:</b> Output: 47.0% of paths show hit time 1. Only 53.0% of paths hit 10 at all, so the first-passage mean 51.6 mixes real and spurious times. Corrected: the mean among true hitters is 96.5.<br><b>Pitfall:</b> <b>Smell:</b> argmax has no \"not found\" signal. Always combine it with an any() check before using the index.",
+  "tags": [
+   "first_passage",
+   "argmax",
+   "numpy_pitfall",
+   "random_walk",
+   "fmt_code"
+  ]
+ }
+]

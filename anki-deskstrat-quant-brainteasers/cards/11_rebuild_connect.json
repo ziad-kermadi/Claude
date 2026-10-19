@@ -1,0 +1,1482 @@
+[
+ {
+  "type": "basic",
+  "front": "From the definition of probability on a finite sample space and the fact that events are sets only, rebuild \\(P(\\bigcup_i A_i)\\) by inclusion-exclusion.",
+  "back": "<ol><li><b>Complement the union.</b> \\(\\mathbf 1_{\\cup A_i}=1-\\prod_i(1-\\mathbf 1_{A_i})\\).</li><li><b>Expand the product.</b> Sum over nonempty index sets \\(S\\): \\(\\prod_{i\\in S}\\mathbf 1_{A_i}\\) enters with sign \\((-1)^{|S|+1}\\).</li><li><b>Take expectations.</b> \\(E[\\mathbf 1_{A_S}]=P(\\bigcap_{i\\in S}A_i)\\).</li><li><b>Read off the result.</b> \\(P(\\bigcup A_i)=\\sum_{S\\neq\\emptyset}(-1)^{|S|+1}P(A_S)\\).</li></ol><b>If you get stuck:</b> Which events does one product term count, and with what sign does it enter?<br><b>Minimal memory:</b> Complement the union, then expand a product of indicators; every term is an intersection.",
+  "tags": [
+   "s_inclusion_exclusion",
+   "s_complement",
+   "inclusion_exclusion",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From uniform random permutations of \\(n\\) objects and inclusion-exclusion only, rebuild the derangement probability \\(D_n/n!=\\sum_{k=0}^n(-1)^k/k!\\), and its limit \\(1/e\\).",
+  "back": "<ol><li><b>Define bad events.</b> \\(A_i=\\{\\sigma(i)=i\\}\\). A derangement is a permutation outside \\(\\bigcup A_i\\).</li><li><b>Symmetry on intersections.</b> For \\(|S|=k\\), \\(P(A_S)=(n-k)!/n!\\), since the \\(k\\) fixed points are forced and the rest is uniform.</li><li><b>Count the sets.</b> There are \\(\\binom nk\\) index sets of size \\(k\\).</li><li><b>Apply inclusion-exclusion.</b> \\(P(\\bigcup A_i)=\\sum_{k\\ge1}(-1)^{k+1}\\binom nk\\frac{(n-k)!}{n!}=\\sum_{k\\ge1}(-1)^{k+1}/k!\\).</li><li><b>Complement.</b> \\(D_n/n!=\\sum_{k=0}^n(-1)^k/k!\\). Check: \\(n=2\\) gives \\(1/2\\), \\(n=3\\) gives \\(1/3\\).</li><li><b>Let \\(n\\to\\infty\\).</b> The series is the Taylor series of \\(e^{-1}\\), so \\(D_n/n!\\to 1/e\\).</li></ol><b>If you get stuck:</b> Given that a set \\(S\\) of positions is fixed, how many permutations fix all of \\(S\\), and what fraction of all permutations is that?<br><b>Minimal memory:</b> Complement 'at least one fixed point' and run inclusion-exclusion over sets of positions; fixing a set of positions is a symmetry count.",
+  "tags": [
+   "s_inclusion_exclusion",
+   "s_complement",
+   "s_symmetry",
+   "derangements",
+   "permutations",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From counting: the number of ways to place identical objects in identical-type boxes is a bijection with strings only, rebuild the number of non-negative integer solutions of \\(x_1+\\dots+x_k=n\\), namely \\(\\binom{n+k-1}{k-1}\\).",
+  "back": "<ol><li><b>Encode as a string.</b> Write \\(n\\) stars and \\(k-1\\) bars in a row; let \\(x_i\\) be the number of stars before the \\(i\\)-th bar.</li><li><b>Bijection.</b> Every solution gives exactly one string, and every string gives exactly one solution.</li><li><b>Count strings.</b> A string has \\(n+k-1\\) positions; choose the \\(k-1\\) bar positions: \\(\\binom{n+k-1}{k-1}\\).</li><li><b>Positive version.</b> If every \\(x_i\\ge1\\), remove one star from each block: \\(\\binom{n-1}{k-1}\\).</li></ol><b>If you get stuck:</b> What does the gap between two consecutive bars represent?<br><b>Minimal memory:</b> Solutions are bar positions in a string (a bijection), so count placements, not sums.",
+  "tags": [
+   "s_stars_bars",
+   "s_bijection",
+   "combinatorics",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From simple \\(\\pm1\\) paths and the reflection of an initial segment about a level only, rebuild the Catalan number \\(C_n=\\binom{2n}{n}/(n+1)\\) as the number of Dyck paths of length \\(2n\\).",
+  "back": "<ol><li><b>Total paths.</b> Paths from 0 to 0 with \\(n\\) up and \\(n\\) down steps: \\(\\binom{2n}{n}\\).</li><li><b>Bad paths.</b> A bad path touches \\(-1\\). Let \\(\\tau\\) be the first touch of \\(-1\\).</li><li><b>Reflect.</b> Reflect the initial segment up to \\(\\tau\\) about \\(-1\\). The start \\(0\\) goes to \\(-2\\); the endpoint is unchanged. This is a bijection onto paths from \\(-2\\) to \\(0\\).</li><li><b>Count reflected paths.</b> Paths from \\(-2\\) to \\(0\\) in \\(2n\\) steps: \\(n+1\\) up, \\(n-1\\) down, so \\(\\binom{2n}{n-1}\\).</li><li><b>Subtract.</b> \\(C_n=\\binom{2n}{n}-\\binom{2n}{n-1}=\\binom{2n}{n}/(n+1)\\). Check: \\(C_5=42\\).</li></ol><b>If you get stuck:</b> Where does the path first touch the forbidden level, and where does reflecting the segment before that point send its starting point?<br><b>Minimal memory:</b> Reflect the part before the first touch; the start moves to \\(-2\\), and the bad paths are counted by endpoints.",
+  "tags": [
+   "s_reflection",
+   "s_bijection",
+   "s_complement",
+   "catalan",
+   "random_walk",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From independent uniform birthdays on \\(N\\) days and the inequality \\(1-x\\le e^{-x}\\) only, rebuild a bound \\(P(\\text{some shared birthday})\\ge 1-\\exp\\!\\big(-n(n-1)/(2N)\\big)\\), and the \\(n\\approx\\sqrt{2N\\ln 2}\\) rule.",
+  "back": "<ol><li><b>Complement via a sequential product.</b> \\(P(\\text{all distinct})=\\prod_{i=0}^{n-1}(1-i/N)\\).</li><li><b>Apply the inequality factorwise.</b> \\(1-x\\le e^{-x}\\) for all real \\(x\\), so each factor is at most \\(e^{-i/N}\\).</li><li><b>Sum the exponents.</b> \\(\\sum_{i=0}^{n-1} i/N=n(n-1)/(2N)\\).</li><li><b>Complement back.</b> \\(P(\\text{match})\\ge1-\\exp(-n(n-1)/(2N))\\). Check at \\(n=23\\), \\(N=365\\): bound \\(0.500\\), exact \\(0.507\\).</li><li><b>Invert for a half.</b> Setting the bound to \\(1/2\\) gives \\(n(n-1)\\approx 2N\\ln2\\), so \\(n\\approx\\sqrt{2N\\ln 2}\\approx 22.5\\).</li></ol><b>If you get stuck:</b> In which direction does the inequality bound the no-collision product, and so which way does it bound the match probability?<br><b>Minimal memory:</b> A sequential product of survival factors, each bounded by an exponential, gives a lower bound on the collision probability.",
+  "tags": [
+   "s_complement",
+   "s_taylor",
+   "birthday",
+   "approximation",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the definition \\(P(A\\mid B)=P(A\\cap B)/P(B)\\) and the law of total probability only, rebuild Bayes' rule \\(P(A\\mid B)=P(B\\mid A)P(A)/P(B)\\).",
+  "back": "<ol><li><b>Definition, one order.</b> \\(P(A\\cap B)=P(A\\mid B)P(B)\\).</li><li><b>Definition, other order.</b> \\(P(A\\cap B)=P(B\\mid A)P(A)\\).</li><li><b>Equate the two products.</b> \\(P(A\\mid B)P(B)=P(B\\mid A)P(A)\\).</li><li><b>Divide by \\(P(B)\\).</b> Valid when \\(P(B)>0\\). Expand \\(P(B)\\) over the partition \\(\\{A,A^c\\}\\) for the denominator.</li><li><b>Example.</b> Prior \\(1/100\\), sensitivity \\(0.99\\), false positive \\(0.05\\): \\(P(A\\mid B)=\\frac{0.99\\cdot0.01}{0.99\\cdot0.01+0.05\\cdot0.99}=1/6\\).</li></ol><b>If you get stuck:</b> Which product of two probabilities equals \\(P(A\\cap B)\\) in two different ways?<br><b>Minimal memory:</b> \\(P(A\\cap B)\\) computed in two orders; the rest is the partition for the denominator.",
+  "tags": [
+   "s_bayes",
+   "bayes_update",
+   "conditional",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From a uniform prize door, a uniform first pick, and a host who opens a non-picked, non-prize door uniformly when he has a choice only, rebuild the Monty Hall win probability \\(2/3\\) for switching, via an explicit list of equally likely cases.",
+  "back": "<ol><li><b>List the cases.</b> Prize door \\(C\\) and first pick \\(P\\) are independent and uniform: 9 equally likely pairs.</li><li><b>Split by whether the pick is right.</b> If \\(C=P\\) (3 pairs), the host picks one of the 2 other doors; each outcome has probability \\(1/9\\cdot1/2=1/18\\). If \\(C\\ne P\\) (6 pairs), the host's door is forced; each has probability \\(1/9\\).</li><li><b>Check the total.</b> \\(6\\cdot\\frac1{18}+6\\cdot\\frac19=1\\).</li><li><b>Switching wins exactly when \\(C\\ne P\\).</b> After the host opens a door, the remaining unopened door is the prize exactly when the first pick was wrong.</li><li><b>Probability.</b> \\(P(C\\neq P)=6/9=2/3\\).</li></ol><b>If you get stuck:</b> In how many of the 9 equally likely cases is the first pick wrong?<br><b>Minimal memory:</b> Switching wins exactly when the first pick is wrong, which happens in 6 of 9 equally likely cases.",
+  "tags": [
+   "s_bayes",
+   "s_complement",
+   "monty_hall",
+   "conditional",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From linearity of expectation and \\(P(\\sigma(i)=i)=1/n\\) for a uniform random permutation only, rebuild the expected number of fixed points, which equals \\(1\\) for every \\(n\\).",
+  "back": "<ol><li><b>Indicator sum.</b> Let \\(F=\\sum_{i=1}^n\\mathbf 1_{\\{\\sigma(i)=i\\}}\\).</li><li><b>Linearity.</b> \\(E F=\\sum_i P(\\sigma(i)=i)\\). No independence is needed.</li><li><b>Symmetry.</b> \\(\\sigma(i)\\) is uniform on \\(\\{1,\\dots,n\\}\\), so each probability is \\(1/n\\).</li><li><b>Sum.</b> \\(n\\cdot\\frac1n=1\\).</li></ol><b>If you get stuck:</b> Does the expectation need the indicators to be independent?<br><b>Minimal memory:</b> Put an indicator on each position and use symmetry; linearity needs no independence.",
+  "tags": [
+   "s_linearity_expectation",
+   "s_indicators",
+   "s_symmetry",
+   "fixed_points",
+   "permutations",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the variance decomposition \\(\\operatorname{Var}\\sum I_i=\\sum\\operatorname{Var}I_i+\\sum_{i\\ne j}\\operatorname{Cov}\\) and the joint law of two fixed points only, rebuild \\(\\operatorname{Var}(F)=1\\) for the number of fixed points of a uniform permutation.",
+  "back": "<ol><li><b>Expand the variance.</b> \\(\\operatorname{Var}F=\\sum_i\\operatorname{Var}I_i+\\sum_{i\\ne j}\\operatorname{Cov}(I_i,I_j)\\).</li><li><b>Diagonal terms.</b> \\(\\operatorname{Var}I_i=\\frac1n(1-\\frac1n)\\).</li><li><b>Joint probability.</b> For \\(i\\ne j\\): \\(P(\\sigma(i)=i,\\sigma(j)=j)=\\frac1{n(n-1)}\\), since \\(\\sigma(j)\\) is then uniform on the remaining \\(n-1\\) values.</li><li><b>Covariance.</b> \\(\\operatorname{Cov}=\\frac1{n(n-1)}-\\frac1{n^2}=\\frac1{n^2(n-1)}\\).</li><li><b>Sum.</b> \\(n\\cdot\\frac1n\\cdot\\frac{n-1}n+n(n-1)\\cdot\\frac1{n^2(n-1)}=\\frac{n-1}n+\\frac1n=1\\).</li></ol><b>If you get stuck:</b> What is the joint probability that two specified positions are both fixed?<br><b>Minimal memory:</b> Pairs of indicators are slightly negatively correlated; the diagonal and off-diagonal terms exactly sum to 1.",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "fixed_points",
+   "variance",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From linearity of expectation and the geometric distribution's mean \\(1/p\\) only, rebuild the coupon-collector mean \\(E[T]=nH_n\\), where \\(H_n=\\sum_{j=1}^n 1/j\\).",
+  "back": "<ol><li><b>Stages.</b> Let \\(T_k\\) be the draws made while holding \\(k-1\\) distinct coupons, so \\(T=\\sum_{k=1}^n T_k\\).</li><li><b>Stage success probability.</b> \\(p_k=(n-k+1)/n\\), so \\(T_k\\sim\\text{Geom}(p_k)\\).</li><li><b>Geometric mean.</b> \\(E T_k=1/p_k=n/(n-k+1)\\).</li><li><b>Linearity.</b> \\(E T=\\sum_{k=1}^n \\frac n{n-k+1}=n\\sum_{j=1}^n\\frac1j=nH_n\\).</li><li><b>Check.</b> \\(n=2\\): \\(1+2=3=2H_2\\). For \\(n=10\\), \\(E T\\approx 29.29\\).</li></ol><b>If you get stuck:</b> What is the success probability per draw in stage \\(k\\)?<br><b>Minimal memory:</b> Coupon collection is a sum of geometric waiting stages; linearity then does the rest.",
+  "tags": [
+   "s_linearity_expectation",
+   "s_recursion",
+   "coupon_collector",
+   "geometric",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the stage decomposition of the coupon collector and the variance \\((1-p)/p^2\\) of a geometric variable with independent stages only, rebuild \\(\\operatorname{Var}T=n^2\\sum_{j=1}^n 1/j^2-nH_n\\).",
+  "back": "<ol><li><b>Independent stages.</b> Stage \\(k\\) depends only on how many coupons are held, and draws are independent, so the \\(T_k\\) are independent.</li><li><b>Stage variance.</b> \\(\\operatorname{Var}T_k=(1-p_k)/p_k^2\\) with \\(1-p_k=(k-1)/n\\) and \\(p_k=(n-k+1)/n\\). So \\(\\operatorname{Var}T_k=\\frac{n(k-1)}{(n-k+1)^2}\\).</li><li><b>Add variances.</b> \\(\\operatorname{Var}T=\\sum_k\\frac{n(k-1)}{(n-k+1)^2}\\).</li><li><b>Substitute \\(j=n-k+1\\).</b> \\(k-1=n-j\\), so the sum is \\(\\sum_j \\frac{n(n-j)}{j^2}=n^2\\sum_j\\frac1{j^2}-n\\sum_j\\frac1j\\).</li><li><b>Check.</b> \\(n=10\\): \\(\\operatorname{Var}T\\approx125.7\\), matching simulation.</li></ol><b>If you get stuck:</b> After substituting \\(j=n-k+1\\), what does \\(k-1\\) become?<br><b>Minimal memory:</b> Independent geometric stages add variances; substitute the number of coupons still missing.",
+  "tags": [
+   "s_linearity_expectation",
+   "s_recursion",
+   "coupon_collector",
+   "variance",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the identity \\(X=\\sum_{k\\ge1}\\mathbf 1\\{X\\ge k\\}\\) for a non-negative integer \\(X\\) only, rebuild the tail-sum formula \\(E X=\\sum_{k\\ge1}P(X\\ge k)\\), and the geometric mean \\(1/p\\) from it.",
+  "back": "<ol><li><b>Pointwise identity.</b> If \\(X=m\\), exactly the thresholds \\(k=1,\\dots,m\\) are passed, so \\(X=\\sum_{k\\ge1}\\mathbf 1\\{X\\ge k\\}\\).</li><li><b>Expectation.</b> Take expectations. The terms are non-negative, so the interchange of sum and expectation is allowed.</li><li><b>Tail sum.</b> \\(E X=\\sum_{k\\ge1}P(X\\ge k)\\).</li><li><b>Geometric example.</b> For trials to first success (support \\(1,2,\\dots\\)), \\(P(X\\ge k)=q^{k-1}\\), and \\(\\sum_{k\\ge1}q^{k-1}=1/p\\).</li></ol><b>If you get stuck:</b> How many thresholds does \\(X\\) pass, and what does that count give in expectation?<br><b>Minimal memory:</b> X counts the thresholds it reaches; sum the probability of reaching each one.",
+  "tags": [
+   "s_tail_sum",
+   "s_indicators",
+   "geometric",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the defining property \\(E[X\\mathbf 1_A]=E[E[X\\mid\\mathcal G]\\mathbf 1_A]\\) for \\(A\\in\\mathcal G\\), and nested information sets \\(\\mathcal H\\subseteq\\mathcal G\\) only, rebuild the tower property \\(E[E[X\\mid\\mathcal G]\\mid\\mathcal H]=E[X\\mid\\mathcal H]\\), and \\(E[E[X\\mid\\mathcal G]]=E[X]\\).",
+  "back": "<ol><li><b>Let \\(Z=E[X\\mid\\mathcal G]\\).</b> \\(Z\\) is \\(\\mathcal G\\)-measurable and \\(E[Z\\mathbf 1_A]=E[X\\mathbf 1_A]\\) for all \\(A\\in\\mathcal G\\).</li><li><b>Let \\(W=E[Z\\mid\\mathcal H]\\).</b> \\(W\\) is \\(\\mathcal H\\)-measurable and \\(E[W\\mathbf 1_B]=E[Z\\mathbf 1_B]\\) for \\(B\\in\\mathcal H\\).</li><li><b>Use \\(\\mathcal H\\subseteq\\mathcal G\\).</b> Since \\(B\\in\\mathcal G\\), \\(E[Z\\mathbf 1_B]=E[X\\mathbf 1_B]\\). So \\(E[W\\mathbf 1_B]=E[X\\mathbf 1_B]\\) for all \\(B\\in\\mathcal H\\).</li><li><b>Uniqueness.</b> \\(W\\) has the defining property of \\(E[X\\mid\\mathcal H]\\), so \\(W=E[X\\mid\\mathcal H]\\) almost surely.</li><li><b>Trivial case.</b> With \\(\\mathcal H=\\{\\emptyset,\\Omega\\}\\), \\(E[E[X\\mid\\mathcal G]]=E[X]\\).</li></ol><b>If you get stuck:</b> What does the defining identity give when the test event \\(A\\) already lies in the smaller information set?<br><b>Minimal memory:</b> Averaging over a larger information set and then a smaller one equals averaging over the smaller one directly.",
+  "tags": [
+   "s_conditional_expectation_tower",
+   "s_linearity_expectation",
+   "conditional_expectation",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the tower property and \\(\\operatorname{Var}X=E[X^2]-(EX)^2\\) only, rebuild the law of total variance \\(\\operatorname{Var}X=E[\\operatorname{Var}(X\\mid Y)]+\\operatorname{Var}(E[X\\mid Y])\\).",
+  "back": "<ol><li><b>Start from the second moment.</b> \\(\\operatorname{Var}X=E[X^2]-(EX)^2\\).</li><li><b>Condition the second moment.</b> \\(E[X^2]=E[E[X^2\\mid Y]]\\) by the tower property.</li><li><b>Expand the conditional second moment.</b> \\(E[X^2\\mid Y]=\\operatorname{Var}(X\\mid Y)+(E[X\\mid Y])^2\\).</li><li><b>Take expectations.</b> \\(E[X^2]=E[\\operatorname{Var}(X\\mid Y)]+E[(E[X\\mid Y])^2]\\).</li><li><b>Subtract \\((EX)^2\\).</b> Since \\(EX=E[E[X\\mid Y]]\\), \\(E[(E[X\\mid Y])^2]-(EX)^2=\\operatorname{Var}(E[X\\mid Y])\\).</li></ol><b>If you get stuck:</b> Which term of \\(\\operatorname{Var}(X\\mid Y)\\) produces the squared conditional mean?<br><b>Minimal memory:</b> Expand the second moment conditionally, then the tower property does the rest.",
+  "tags": [
+   "s_variance_decomposition",
+   "s_conditional_expectation_tower",
+   "variance",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From i.i.d. steps \\(X_i\\) with mean \\(\\mu\\), and a stopping time \\(N\\) with \\(E N<\\infty\\) only, rebuild Wald's identity \\(E[S_N]=\\mu E[N]\\), where \\(S_N=\\sum_{i\\le N}X_i\\).",
+  "back": "<ol><li><b>Indicator form.</b> \\(S_N=\\sum_{i\\ge1}X_i\\mathbf 1\\{N\\ge i\\}\\).</li><li><b>Stopping time.</b> \\(\\{N\\ge i\\}=\\{N\\le i-1\\}^c\\) is determined by \\(X_1,\\dots,X_{i-1}\\), so it is independent of \\(X_i\\).</li><li><b>Factor the expectation.</b> \\(E[X_i\\mathbf 1\\{N\\ge i\\}]=\\mu P(N\\ge i)\\).</li><li><b>Tail sum.</b> \\(E S_N=\\mu\\sum_{i\\ge1}P(N\\ge i)=\\mu E[N]\\).</li><li><b>Justify the interchange.</b> \\(\\sum_i E|X_i|\\mathbf 1\\{N\\ge i\\}=E|X|\\,E N<\\infty\\), so Fubini applies.</li></ol><b>If you get stuck:</b> Is the event \\(\\{N\\ge i\\}\\) allowed to depend on \\(X_i\\)?<br><b>Minimal memory:</b> A stopping time decides 'continue' before seeing the next step, so the indicator is independent of it; then use the tail sum.",
+  "tags": [
+   "s_optional_stopping",
+   "s_indicators",
+   "s_tail_sum",
+   "wald",
+   "random_sum",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the symmetric walk on \\(\\{0,\\dots,N\\}\\) with absorbing ends, and first-step conditioning only, rebuild the fair gambler's-ruin probability \\(P_i(\\text{hit }N\\text{ before }0)=i/N\\).",
+  "back": "<ol><li><b>Unknown and boundaries.</b> Let \\(p_i\\) be the probability; \\(p_0=0\\), \\(p_N=1\\).</li><li><b>First-step conditioning.</b> \\(p_i=\\tfrac12p_{i-1}+\\tfrac12p_{i+1}\\) for \\(0<i<N\\).</li><li><b>Constant differences.</b> Rearranged, \\(p_{i+1}-p_i=p_i-p_{i-1}\\): the increments are constant, equal to \\(d\\).</li><li><b>Telescope.</b> \\(p_i=p_0+id=id\\). Boundary \\(p_N=1\\) gives \\(d=1/N\\).</li><li><b>Answer.</b> \\(p_i=i/N\\). Check: \\(i=N/2\\) gives \\(1/2\\).</li></ol><b>If you get stuck:</b> What is the second difference of \\(p_i\\) for a symmetric step?<br><b>Minimal memory:</b> Fair steps make the win probability linear in the position.",
+  "tags": [
+   "s_first_step_conditioning",
+   "s_recursion",
+   "s_martingale",
+   "gamblers_ruin",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the walk with up probability \\(p\\neq1/2\\), \\(q=1-p\\), absorbing at \\(0\\) and \\(N\\), and first-step conditioning only, rebuild the biased gambler's-ruin probability \\(P_i(\\text{hit }N)=\\dfrac{1-r^i}{1-r^N}\\) with \\(r=q/p\\).",
+  "back": "<ol><li><b>Recursion.</b> \\(h_i=p\\,h_{i+1}+q\\,h_{i-1}\\), with \\(h_0=0\\), \\(h_N=1\\).</li><li><b>Try a power.</b> Put \\(h_i=r^i\\): \\(r=pr^2+q\\), so \\(r=1\\) or \\(r=q/p\\).</li><li><b>General solution.</b> \\(h_i=A+B r^i\\) (two independent solutions).</li><li><b>Boundary conditions.</b> \\(h_0=0\\) gives \\(A=-B\\); \\(h_N=1\\) gives \\(B(r^N-1)=1\\).</li><li><b>Substitute.</b> \\(h_i=\\dfrac{r^i-1}{r^N-1}=\\dfrac{1-r^i}{1-r^N}\\). Check: \\(p=2/3\\), \\(i=3\\), \\(N=10\\) gives \\(0.8759\\), matching simulation.</li></ol><b>If you get stuck:</b> Which power \\(r^i\\) is harmonic for the walk: what equation must \\(r\\) satisfy?<br><b>Minimal memory:</b> Try geometric powers \\(r^i\\) in the harmonic equation; the two boundary values fix the two constants.",
+  "tags": [
+   "s_first_step_conditioning",
+   "s_recursion",
+   "s_geometric_probability",
+   "gamblers_ruin",
+   "biased_coin",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the simple symmetric walk and the optional stopping theorem for bounded stopped martingales only, rebuild the fair gambler's-ruin probability \\(i/N\\) via a martingale.",
+  "back": "<ol><li><b>Martingale.</b> \\(S_n\\) (the position) is a martingale: increments have mean zero and are independent of the past.</li><li><b>Stop.</b> Let \\(\\tau\\) be the exit time from \\(\\{0,\\dots,N\\}\\).</li><li><b>Bounded stopped process.</b> \\(S_{n\\wedge\\tau}\\in[0,N]\\). Also \\(\\tau<\\infty\\) a.s.: from any state the walk exits within \\(N\\) steps with probability at least \\(2^{-N}\\), so \\(P(\\tau>kN)\\le(1-2^{-N})^k\\to0\\). Bounded convergence then gives \\(E S_\\tau=E S_0=i\\).</li><li><b>Two values.</b> \\(S_\\tau\\in\\{0,N\\}\\), so \\(E S_\\tau=N\\cdot P(\\text{hit }N)\\).</li><li><b>Solve.</b> \\(P(\\text{hit }N)=i/N\\).</li></ol><b>If you get stuck:</b> Which quantity is a martingale here, and why is the stopped process bounded?<br><b>Minimal memory:</b> The position is a martingale; bounded stopping gives its expected exit value.",
+  "tags": [
+   "s_martingale",
+   "s_optional_stopping",
+   "gamblers_ruin",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the biased walk and the exponential martingale \\(M_n=\\rho^{S_n}\\) with \\(\\rho\\) chosen so that \\(E[\\rho^{\\text{step}}]=1\\) only, rebuild the biased gambler's-ruin probability via optional stopping.",
+  "back": "<ol><li><b>Choose the base.</b> Let \\(\\rho=q/p\\). Then \\(E[\\rho^{\\xi}]=p\\rho+q\\rho^{-1}=q+p=1\\) for a step \\(\\xi=\\pm1\\).</li><li><b>Martingale.</b> \\(M_n=\\rho^{S_n}\\) satisfies \\(E[M_{n+1}\\mid\\mathcal F_n]=M_n\\).</li><li><b>Stop and bound.</b> \\(\\rho^{S_{n\\wedge\\tau}}\\) lies between \\(1\\) and \\(\\rho^N\\) (in whichever order), and \\(\\tau<\\infty\\) a.s. (exit within \\(N\\) steps with probability at least \\(2^{-N}\\) from any state), so bounded convergence gives \\(E M_\\tau=M_0=\\rho^i\\).</li><li><b>Two values.</b> \\(M_\\tau=\\rho^N\\) on hitting \\(N\\), and \\(1\\) on hitting \\(0\\): \\(h\\rho^N+(1-h)=\\rho^i\\).</li><li><b>Solve.</b> \\(h=\\dfrac{\\rho^i-1}{\\rho^N-1}=\\dfrac{1-\\rho^i}{1-\\rho^N}\\).</li></ol><b>If you get stuck:</b> Which exponential of the walk has conditional mean equal to its current value?<br><b>Minimal memory:</b> Choose the base \\(\\rho\\) so that the one-step mean of \\(\\rho^{\\text{step}}\\) is 1.",
+  "tags": [
+   "s_martingale",
+   "s_optional_stopping",
+   "s_change_of_measure",
+   "gamblers_ruin",
+   "biased_coin",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the fair walk \\(S_n\\), the martingale \\(S_n^2-n\\), and optional stopping only, rebuild the expected exit time \\(E[\\tau]=i(N-i)\\) of the fair gambler's ruin.",
+  "back": "<ol><li><b>Quadratic martingale.</b> \\(E[S_{n+1}^2\\mid\\mathcal F_n]=S_n^2+1\\), so \\(M_n=S_n^2-n\\) is a martingale.</li><li><b>Stop.</b> Let \\(\\tau\\) be the exit time. From any state exit happens within \\(N\\) steps with probability at least \\(2^{-N}\\), so \\(\\tau\\) has a geometric tail and \\(E\\tau<\\infty\\). Before exit the increments of \\(S_n^2-n\\) are bounded, so optional stopping holds: \\(E[S_\\tau^2-\\tau]=i^2\\).</li><li><b>Terminal square.</b> \\(E[S_\\tau^2]=N^2\\cdot\\frac iN=iN\\).</li><li><b>Solve.</b> \\(E\\tau=E[S_\\tau^2]-i^2=iN-i^2=i(N-i)\\).</li><li><b>Check.</b> Maximum at \\(i=N/2\\), value \\(N^2/4\\).</li></ol><b>If you get stuck:</b> What must be subtracted from \\(S_n^2\\) to make a martingale, and what is its increment?<br><b>Minimal memory:</b> The compensator of \\(S^2\\) is the elapsed time \\(n\\).",
+  "tags": [
+   "s_martingale",
+   "s_optional_stopping",
+   "s_invariant",
+   "gamblers_ruin",
+   "duration",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From a fair coin, the Markov chain of 'longest suffix that is a prefix of HH', and first-step equations only, rebuild \\(E[T_{HH}]=6\\).",
+  "back": "<ol><li><b>States.</b> \\(S_0\\) (no progress), \\(S_1\\) (last flip H), \\(S_2\\) (done).</li><li><b>Unknowns.</b> Let \\(a\\) and \\(b\\) be the expected remaining flips from \\(S_0\\) and \\(S_1\\).</li><li><b>From \\(S_0\\).</b> \\(a=1+\\tfrac12a+\\tfrac12b\\) (H goes to \\(S_1\\), T stays).</li><li><b>From \\(S_1\\).</b> \\(b=1+\\tfrac12\\cdot0+\\tfrac12a\\) (H finishes, T returns to \\(S_0\\)).</li><li><b>Solve.</b> From the first equation \\(a=2+b\\); the second gives \\(b=1+a/2\\). Substituting, \\(b=4\\) and \\(a=6\\).</li></ol><b>If you get stuck:</b> After a T, which state is the chain in, given that the pattern can still start afresh?<br><b>Minimal memory:</b> Track the longest suffix that is still a prefix of the target pattern.",
+  "tags": [
+   "s_markov_chain",
+   "s_first_step_conditioning",
+   "pattern_waiting",
+   "coin_patterns",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the chain of states 'longest suffix matching a prefix of HTH' and first-step equations only, rebuild \\(E[T_{HTH}]=10\\).",
+  "back": "<ol><li><b>States.</b> \\(S_0\\) (no progress), \\(S_1\\) (suffix H), \\(S_2\\) (suffix HT).</li><li><b>Unknowns.</b> Let \\(a,b,c\\) be the expected remaining flips from \\(S_0,S_1,S_2\\).</li><li><b>Transitions.</b> From \\(S_0\\): H to \\(S_1\\), T stays. From \\(S_1\\): H stays in \\(S_1\\), T to \\(S_2\\). From \\(S_2\\): H finishes, T falls back to \\(S_0\\).</li><li><b>Equations.</b> \\(a=1+\\tfrac12a+\\tfrac12b\\), \\(b=1+\\tfrac12b+\\tfrac12c\\), \\(c=1+\\tfrac12a\\).</li><li><b>Solve.</b> \\(a=2+b\\), \\(b=2+c\\), \\(c=1+a/2\\), so \\(a=5+a/2\\) and \\(a=10\\).</li></ol><b>If you get stuck:</b> After an H then a T, which suffix survives?<br><b>Minimal memory:</b> A pattern that overlaps itself keeps part of its progress after a failure.",
+  "tags": [
+   "s_markov_chain",
+   "s_first_step_conditioning",
+   "pattern_waiting",
+   "coin_patterns",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From a fair-odds casino in which each flip starts a new gambler who bets their whole bankroll on the pattern's next letter only, rebuild \\(E[T_{HH}]=6\\) by the martingale (casino) argument.",
+  "back": "<ol><li><b>Fair bets.</b> Every bet is at even odds, so the casino's total wealth is a martingale.</li><li><b>Gambler \\(t\\).</b> The gambler who starts on flip \\(t\\) bets \\$1 on H at flip \\(t\\); a win doubles the stake onto the next H.</li><li><b>Stop at the pattern.</b> At the first HH (time \\(T\\)), the gamblers still alive are the one who started at \\(T-1\\) (holding 4) and the one who started at \\(T\\) (holding 2). Every other gambler has lost everything.</li><li><b>Total stake.</b> Total money at \\(T\\) is \\(4+2=6\\); total money put in is \\(T\\).</li><li><b>Optional stopping.</b> Before \\(T\\) there is no HH, so at most one gambler is alive, holding at most 2; the stopped total has bounded increments. With \\(E T<\\infty\\) (geometric tail), optional stopping gives \\(E[6-T]=0\\), so \\(E[T]=6\\).</li></ol><b>If you get stuck:</b> Which gamblers are still holding money at the moment the pattern completes?<br><b>Minimal memory:</b> Each flip launches a fair bet on the pattern's next letter; at completion, the bankroll is the sum over the alive gamblers.",
+  "tags": [
+   "s_martingale",
+   "s_optional_stopping",
+   "s_invariant",
+   "pattern_waiting",
+   "coin_patterns",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the same fair-odds casino, with the pattern HTH only, rebuild \\(E[T_{HTH}]=10\\) by the martingale argument.",
+  "back": "<ol><li><b>Fair bets.</b> Every bet is at even odds, so total wealth is a martingale.</li><li><b>Gamblers.</b> A gambler starting at each flip bets the whole bankroll on the next letter of HTH; each correct call doubles the stake.</li><li><b>Who holds money at \\(T\\).</b> At the first HTH (time \\(T\\)): the gambler who started at \\(T-2\\) holds 8 (three correct calls), and the gambler who started at \\(T\\) holds 2 (one correct call, the final H).</li><li><b>Total.</b> \\(8+2=10\\) against \\(T\\) put in.</li><li><b>Optional stopping.</b> Before \\(T\\) no HTH has occurred, so at most two gamblers are alive, each holding at most 4; the stopped total has bounded increments. With \\(E T<\\infty\\) (geometric tail), optional stopping gives \\(E[10-T]=0\\), so \\(E[T]=10\\).</li></ol><b>If you get stuck:</b> Which gamblers are holding a stake at completion, and what does each hold?<br><b>Minimal memory:</b> The completion bankroll is \\(\\sum 2^k\\) over the overlaps of the pattern with itself.",
+  "tags": [
+   "s_martingale",
+   "s_optional_stopping",
+   "pattern_waiting",
+   "coin_patterns",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From a two-state chain with flow balance across a cut only, rebuild the stationary distribution \\(\\pi=\\big(\\tfrac b{a+b},\\tfrac a{a+b}\\big)\\) of \\(P=\\begin{pmatrix}1-a&a\\\\ b&1-b\\end{pmatrix}\\).",
+  "back": "<ol><li><b>Balance.</b> \\(\\pi P=\\pi\\) says inflow equals outflow for each state.</li><li><b>Cut.</b> Across the single cut between the states, flow out of state 1 is \\(\\pi_1a\\); flow into it is \\(\\pi_2b\\).</li><li><b>Equate.</b> \\(\\pi_1a=\\pi_2b\\), so \\(\\pi_1/\\pi_2=b/a\\).</li><li><b>Normalise.</b> \\(\\pi_1=\\frac b{a+b}\\), \\(\\pi_2=\\frac a{a+b}\\).</li><li><b>Generalisation.</b> For any finite irreducible chain the solution of \\(\\pi P=\\pi\\) with total mass 1 is unique (Perron-Frobenius).</li></ol><b>If you get stuck:</b> In equilibrium, what is the net flow across the cut between the two states?<br><b>Minimal memory:</b> Cut balance: flow out of a set equals flow in; it pins the ratio of masses.",
+  "tags": [
+   "s_markov_chain",
+   "s_eigen",
+   "stationary",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From an ergodic chain, the occupation fraction of state \\(i\\), and a renewal argument only, rebuild the expected return time \\(E_i[T_i^+]=1/\\pi_i\\).",
+  "back": "<ol><li><b>Visits are a renewal process.</b> Starting at \\(i\\), the successive returns to \\(i\\) split time into i.i.d. cycles with mean \\(m_i=E_i[T_i^+]\\).</li><li><b>Renewal-reward.</b> By the renewal-reward theorem, the long-run fraction of time at \\(i\\) is \\(1/m_i\\).</li><li><b>Ergodic theorem.</b> The same fraction is \\(\\pi_i\\) by the ergodic theorem for the chain.</li><li><b>Equate.</b> \\(\\pi_i=1/m_i\\), so \\(m_i=1/\\pi_i\\).</li><li><b>Check.</b> Two-state chain with \\(a=1/2\\), \\(b=1/4\\): \\(\\pi_1=1/3\\), and \\(E_1T_1=1+\\tfrac12\\cdot4=3\\).</li></ol><b>If you get stuck:</b> Over a long run, what fraction of time is spent in state \\(i\\), and how long is one cycle on average?<br><b>Minimal memory:</b> Long-run occupation equals the reciprocal of the mean cycle length.",
+  "tags": [
+   "s_markov_chain",
+   "s_extremal",
+   "stationary",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From a simple random walk on a connected undirected graph (move to a uniform neighbour) and the balance equation only, rebuild the stationary distribution \\(\\pi_v=\\deg(v)/(2|E|)\\).",
+  "back": "<ol><li><b>Transition probabilities.</b> \\(P(v,u)=1/\\deg(v)\\) for neighbours \\(u\\) of \\(v\\).</li><li><b>Guess.</b> Try \\(\\pi_v=\\deg(v)/\\sum_u\\deg(u)\\), with \\(\\sum_u\\deg(u)=2|E|\\).</li><li><b>Balance at \\(v\\).</b> \\(\\sum_u\\pi_uP(u,v)=\\sum_{u\\sim v}\\frac{\\deg u}{2|E|}\\cdot\\frac1{\\deg u}=\\frac{\\deg v}{2|E|}=\\pi_v\\).</li><li><b>Uniqueness.</b> Connectedness makes the chain irreducible, so this is the stationary law.</li></ol><b>If you get stuck:</b> What does the inflow into \\(v\\) look like, in terms of the degrees of its neighbours?<br><b>Minimal memory:</b> Each edge carries flow \\(1/(2|E|)\\) in each direction; degree is the number of edges.",
+  "tags": [
+   "s_markov_chain",
+   "s_symmetry",
+   "s_eigen",
+   "random_walk_graph",
+   "stationary",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the continuous reflection principle: reflect the path after its first hitting time of \\(a\\) only, rebuild \\(P(\\max_{s\\le t}W_s\\ge a)=2P(W_t\\ge a)\\) for \\(a>0\\).",
+  "back": "<ol><li><b>First hit.</b> Let \\(\\tau\\) be the first time \\(W\\) hits \\(a\\); on \\(\\{\\tau\\le t\\}\\), \\(W_\\tau=a\\).</li><li><b>Strong Markov.</b> \\(W_{\\tau+s}-a\\) is a Brownian motion independent of the path up to \\(\\tau\\).</li><li><b>Reflect.</b> Define \\(\\tilde W_s=W_s\\) for \\(s\\le\\tau\\) and \\(2a-W_s\\) for \\(s>\\tau\\). \\(\\tilde W\\) is a Brownian motion.</li><li><b>Swap the events.</b> \\(\\{\\max\\ge a,\\ W_t<a\\}\\) is in bijection with \\(\\{\\tilde W_t>a\\}\\), so its probability is \\(P(W_t>a)\\).</li><li><b>Add.</b> \\(P(\\max\\ge a)=P(W_t\\ge a)+P(W_t>a)=2P(W_t\\ge a)\\) (continuous law).</li></ol><b>If you get stuck:</b> Which part of the path does the reflection swap, and which endpoint goes to which side of \\(a\\)?<br><b>Minimal memory:</b> Reflect after the first hit; endpoints below \\(a\\) map above it.",
+  "tags": [
+   "s_reflection",
+   "brownian_motion",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From a vote count with \\(a\\) votes for A and \\(b\\) for B in uniformly random order, and the first-vote decomposition only, rebuild the ballot probability \\(P(\\text{A strictly ahead at every prefix})=\\dfrac{a-b}{a+b}\\).",
+  "back": "<ol><li><b>Condition on the first vote.</b> If the first vote is B the event fails. So the first vote must be A, leaving \\(a-1\\) A's and \\(b\\) B's.</li><li><b>Total.</b> Paths starting with A: \\(\\binom{a+b-1}{a-1}\\).</li><li><b>Bad paths.</b> Among them, bad ones return to a tie at some time \\(t\\ge2\\). Let \\(\\tau\\) be the first such tie.</li><li><b>Reflect.</b> Reflect the segment from time 1 to \\(\\tau\\) about level 0. The start 1 goes to \\(-1\\); the endpoint \\(a-b\\) is unchanged.</li><li><b>Count reflected paths.</b> Paths from \\(-1\\) to \\(a-b\\) with \\(a+b-1\\) steps: \\(\\binom{a+b-1}{a}\\).</li><li><b>Combine.</b> \\(\\binom{a+b-1}{a-1}-\\binom{a+b-1}{a}=\\frac{a-b}{a+b}\\binom{a+b}{a}\\). Divide by \\(\\binom{a+b}{a}\\). Check: \\(a=2,b=1\\) gives \\(1/3\\).</li></ol><b>If you get stuck:</b> After the first vote, what is the first moment the count ties, and what does reflecting the start of the path do?<br><b>Minimal memory:</b> Ballot is reflection: bad paths are counted by reflected endpoints, and the first-vote condition removes one case.",
+  "tags": [
+   "s_reflection",
+   "s_bijection",
+   "s_complement",
+   "ballot",
+   "random_walk",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From an integrable martingale \\(X_n\\) with \\(X_0=0\\) and a doubling betting rule on a fair coin only, rebuild the paradox \\(E[X_\\tau]=1\\neq0=E[X_0]\\) for the stop-at-first-win doubling rule, and the failed condition.",
+  "back": "<ol><li><b>Martingale.</b> Fair even-odds bets with predictable stakes make the winnings \\(X_n\\) a martingale, \\(E X_0=0\\).</li><li><b>Stopping rule.</b> Bet 1, then double after each loss, and stop at the first win: \\(\\tau\\).</li><li><b>Law of \\(\\tau\\).</b> \\(P(\\tau=n)=2^{-n}\\), so \\(\\tau<\\infty\\) a.s. and \\(E\\tau=2\\).</li><li><b>Net winnings at \\(\\tau\\).</b> After \\(n-1\\) losses the total lost is \\(2^{n-1}-1\\); the winning stake \\(2^{n-1}\\) pays off. Net \\(+1\\) always.</li><li><b>Conclusion.</b> \\(E X_\\tau=1\\neq0\\). Optional stopping fails.</li><li><b>Which condition fails.</b> \\(E X_{n\\wedge\\tau}=0\\) for every \\(n\\), yet the limit is 1: the mass \\(2^{-n}\\) sits at \\(-(2^n-1)\\). The family is not uniformly integrable; bounded \\(\\tau\\) or bounded stopped values would restore the identity.</li></ol><b>If you get stuck:</b> At time \\(n\\), what is the expectation of the stopped process, and where does the missing expectation sit?<br><b>Minimal memory:</b> Optional stopping needs a bounded stopped martingale or uniform integrability; doubling pushes unbounded negative mass into a tail of tiny probability.",
+  "tags": [
+   "s_optional_stopping",
+   "s_martingale",
+   "s_extremal",
+   "doubling_strategy",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From an urn with one red and one black ball, draw uniformly, return the ball and add one of the drawn colour only, rebuild the martingale \\(X_n=R_n/(R_n+B_n)\\) and the limiting law of the red fraction (uniform on \\([0,1]\\)).",
+  "back": "<ol><li><b>Counts.</b> \\(R_n\\), \\(B_n\\) counts; \\(T_n=R_n+B_n=n+2\\).</li><li><b>Transition.</b> \\(P(\\text{red at }n+1\\mid\\mathcal F_n)=R_n/T_n\\).</li><li><b>Expected count.</b> \\(E[R_{n+1}\\mid\\mathcal F_n]=R_n+R_n/T_n=R_n(T_n+1)/T_n\\).</li><li><b>Fraction.</b> \\(E[X_{n+1}\\mid\\mathcal F_n]=\\frac{R_n(T_n+1)}{T_n(T_n+1)}=X_n\\). So \\(X_n\\) is a bounded martingale.</li><li><b>Limit.</b> Martingale convergence gives \\(X_\\infty\\). Given \\(X_\\infty\\), the draws are i.i.d. Bernoulli\\((X_\\infty)\\) (de Finetti, since the urn sequence is exchangeable), so the red fraction \\(K_n/n\\) of the first \\(n\\) draws converges a.s. to \\(X_\\infty\\) by the strong law. The count \\(K_n\\) is uniform on \\(\\{0,\\dots,n\\}\\), so \\(K_n/n\\) converges in law to \\(\\text{Uniform}[0,1]\\). Hence \\(X_\\infty\\sim\\text{Uniform}[0,1]\\).</li></ol><b>If you get stuck:</b> What is the conditional expected fraction of red after one more draw?<br><b>Minimal memory:</b> Adding one ball of the drawn colour leaves the expected fraction unchanged.",
+  "tags": [
+   "s_martingale",
+   "s_symmetry",
+   "s_conditional_expectation_tower",
+   "polya_urn",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From a Galton-Watson process with offspring pgf \\(f(s)=E[s^Z]\\) and first-generation decomposition only, rebuild the extinction probability \\(q\\) as the smallest root of \\(f(q)=q\\) in \\([0,1]\\).",
+  "back": "<ol><li><b>Generation extinction.</b> Let \\(q_n=P(Z_n=0)\\). Generation \\(n+1\\) dies out by time \\(n+1\\) iff each of the \\(Z_1\\) families dies out by time \\(n\\).</li><li><b>Recursion.</b> \\(q_{n+1}=\\sum_k P(Z=k)q_n^k=f(q_n)\\), with \\(q_0=0\\).</li><li><b>Monotone limit.</b> \\(q_n\\) increases to a limit \\(q\\) with \\(f(q)=q\\).</li><li><b>Smallest root.</b> For any fixed point \\(s\\in[0,1]\\) with \\(s\\ge q_0\\), monotonicity of \\(f\\) gives \\(q_n\\le s\\) for all \\(n\\). So \\(q\\) is the smallest fixed point.</li><li><b>Example.</b> \\(P(Z=0)=\\tfrac14\\), \\(P(Z=2)=\\tfrac34\\): \\(\\tfrac34q^2-q+\\tfrac14=0\\), roots \\(1/3\\) and \\(1\\). Mean \\(3/2>1\\), so \\(q=1/3\\).</li></ol><b>If you get stuck:</b> Why does \\(f(q_n)=q_{n+1}\\) hold, that is, what makes generation \\(n+1\\) extinct?<br><b>Minimal memory:</b> Extinction is a fixed point of the offspring pgf, and the smallest one.",
+  "tags": [
+   "s_generating_function",
+   "s_first_step_conditioning",
+   "s_recursion",
+   "branching",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From \\(n\\) candidates in uniform random order, relative ranks only, and a threshold rule that rejects the first \\(r\\) only, rebuild the success probability \\(P(r)=\\frac rn\\sum_{j=r}^{n-1}\\frac1j\\), its optimum \\(r\\approx n/e\\), and the limit \\(1/e\\).",
+  "back": "<ol><li><b>Position of the best.</b> The overall best sits at position \\(k\\) with probability \\(1/n\\).</li><li><b>Success event.</b> The rule selects it iff \\(k>r\\) and the best of the first \\(k-1\\) lies in the rejected first \\(r\\).</li><li><b>Conditional probability.</b> Given position \\(k\\), the best of the first \\(k-1\\) is uniform there, so \\(P(\\text{in first }r)=r/(k-1)\\).</li><li><b>Sum.</b> \\(P(r)=\\sum_{k=r+1}^n\\frac1n\\cdot\\frac r{k-1}=\\frac rn\\sum_{j=r}^{n-1}\\frac1j\\).</li><li><b>Continuum limit.</b> With \\(x=r/n\\), \\(P\\approx -x\\ln x\\). Maximise: \\(-\\ln x-1=0\\), so \\(x=1/e\\), value \\(1/e\\).</li><li><b>Check.</b> \\(n=100\\): best \\(r=37\\), \\(P=0.371\\).</li></ol><b>If you get stuck:</b> Given that the best overall candidate is at position \\(k\\), what must be true about the best of the first \\(k-1\\)?<br><b>Minimal memory:</b> Success needs the best to come late and its predecessor-best to sit in the rejected block; maximise \\(-x\\ln x\\).",
+  "tags": [
+   "s_optimal_stopping",
+   "s_order_statistics",
+   "s_extremal",
+   "secretary",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From \\(n\\) i.i.d. uniform points on \\([0,1]\\) and the exchangeability of the spacings only, rebuild \\(E[U_{(k)}]=k/(n+1)\\) for the \\(k\\)-th order statistic.",
+  "back": "<ol><li><b>Spacings.</b> Let \\(D_1=U_{(1)}\\), \\(D_i=U_{(i)}-U_{(i-1)}\\), and \\(D_{n+1}=1-U_{(n)}\\).</li><li><b>Sum.</b> \\(\\sum_{i=1}^{n+1}D_i=1\\).</li><li><b>Symmetry.</b> The vector \\((D_1,\\dots,D_{n+1})\\) is Dirichlet\\((1,\\dots,1)\\), which is exchangeable.</li><li><b>Equal means.</b> Each \\(E D_i\\) is equal, so each is \\(1/(n+1)\\).</li><li><b>Build the order statistic.</b> \\(U_{(k)}=D_1+\\dots+D_k\\), so \\(E U_{(k)}=k/(n+1)\\). Check: \\(n=7\\), \\(k=3\\) gives \\(3/8\\).</li></ol><b>If you get stuck:</b> What symmetry do the gaps between uniform order statistics have?<br><b>Minimal memory:</b> Gaps are exchangeable and sum to 1; the mean of the \\(k\\)-th point is the mean of \\(k\\) gaps.",
+  "tags": [
+   "s_order_statistics",
+   "s_symmetry",
+   "s_linearity_expectation",
+   "order_statistics",
+   "spacings",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From a unit stick broken at two independent uniform points, and the triangle inequality for three pieces only, rebuild the probability \\(1/4\\) that the three pieces form a triangle.",
+  "back": "<ol><li><b>Sorted points.</b> Let \\(U_{(1)}<U_{(2)}\\); pieces \\(a=U_{(1)}\\), \\(b=U_{(2)}-U_{(1)}\\), \\(c=1-U_{(2)}\\), with \\(a+b+c=1\\).</li><li><b>Triangle criterion.</b> Pieces form a triangle iff each is less than \\(1/2\\) (since \\(a<b+c\\) iff \\(a<1/2\\)).</li><li><b>Sample space.</b> In the sorted region the area is \\(1/2\\).</li><li><b>Forbidden corners.</b> \\(a\\ge\\frac12\\): sub-triangle of area \\(1/8\\). \\(b\\ge\\frac12\\): area \\(1/8\\). \\(c\\ge\\frac12\\): area \\(1/8\\). Two pieces cannot both exceed \\(1/2\\), so these are disjoint.</li><li><b>Probability.</b> \\(\\frac{1/2-3/8}{1/2}=\\frac14\\). A \\(10^6\\)-trial simulation gives \\(0.2502\\).</li></ol><b>If you get stuck:</b> Can two of the three pieces each exceed half the stick at once?<br><b>Minimal memory:</b> A triangle is a stick with no piece above one half; three disjoint corners each carry area 1/8.",
+  "tags": [
+   "s_geometric_probability",
+   "s_complement",
+   "s_order_statistics",
+   "broken_stick",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From \\(n\\) i.i.d. uniform points on a circle, the rotational symmetry, and the unique 'first' point of a covering semicircle only, rebuild \\(P(\\text{all }n\\text{ points lie in a semicircle})=n/2^{n-1}\\).",
+  "back": "<ol><li><b>Reformulate.</b> All points lie in some semicircle iff some arc of length \\(1/2\\) contains none of them, equivalently iff one point is the counterclockwise-first point of a covering semicircle.</li><li><b>Name the start.</b> For each point \\(j\\), let \\(A_j\\) be the event that all other points lie in the semicircle starting at \\(j\\) going counterclockwise.</li><li><b>Disjoint.</b> The \\(A_j\\) are disjoint a.s., since the covering semicircle has a unique starting point. So \\(P=n\\,P(A_1)\\).</li><li><b>One event.</b> Given point 1, each of the other \\(n-1\\) points lies in the fixed semicircle with probability \\(1/2\\), independently: \\(P(A_1)=2^{-(n-1)}\\).</li><li><b>Answer.</b> \\(P=n/2^{n-1}\\). Check: \\(n=3\\) gives \\(3/4\\), \\(n=4\\) gives \\(1/2\\).</li></ol><b>If you get stuck:</b> Which point must be the counterclockwise start of a covering semicircle, and how many choices are there?<br><b>Minimal memory:</b> The covering semicircle has a unique start point; choose it in \\(n\\) ways and pay \\(2^{-(n-1)}\\).",
+  "tags": [
+   "s_geometric_probability",
+   "s_symmetry",
+   "s_indicators",
+   "semicircle",
+   "circle",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From independent exponential clocks \\(X_i\\) with rates \\(\\lambda_i\\) and the survival function \\(P(X>t)=e^{-\\lambda t}\\) only, rebuild the law of \\(\\min_i X_i\\), namely \\(\\text{Exp}(\\sum\\lambda_i)\\), and \\(P(X_1<X_2)=\\lambda_1/(\\lambda_1+\\lambda_2)\\).",
+  "back": "<ol><li><b>Survival of the minimum.</b> \\(P(\\min>t)=\\prod_iP(X_i>t)=e^{-(\\sum\\lambda_i)t}\\).</li><li><b>Identify.</b> The survival function identifies the law: \\(\\min\\sim\\text{Exp}(\\sum\\lambda_i)\\).</li><li><b>Memorylessness.</b> \\(P(X>s+t\\mid X>s)=P(X>t)\\). After a clock survives to time \\(s\\), its residual is again exponential with the same rate.</li><li><b>Race.</b> \\(P(X_1<X_2)=\\int_0^\\infty\\lambda_1e^{-\\lambda_1t}e^{-\\lambda_2t}dt\\).</li><li><b>Evaluate.</b> \\(=\\lambda_1/(\\lambda_1+\\lambda_2)\\). Check: rates 2 and 3 give \\(P(X<Y)=2/5\\), matching simulation.</li></ol><b>If you get stuck:</b> Which clock rings first, and what happens to the other clock's residual time?<br><b>Minimal memory:</b> Survival functions multiply; memorylessness restarts the surviving clock as a fresh exponential.",
+  "tags": [
+   "s_memorylessness",
+   "s_geometric_probability",
+   "s_order_statistics",
+   "exponential_distribution",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From a Poisson process of rate \\(\\lambda\\) with independent increments and each event kept independently with probability \\(p\\) only, rebuild that the kept and discarded events are independent Poisson processes of rates \\(\\lambda p\\) and \\(\\lambda(1-p)\\).",
+  "back": "<ol><li><b>Joint count.</b> Let \\(K\\) and \\(M\\) count kept and discarded events by time \\(t\\); \\(N=K+M\\sim\\text{Poisson}(\\lambda t)\\).</li><li><b>Conditional law.</b> Given \\(N=k+m\\), \\(K\\sim\\text{Bin}(k+m,p)\\).</li><li><b>Joint pmf.</b> \\(P(K=k,M=m)=e^{-\\lambda t}\\frac{(\\lambda t)^{k+m}}{(k+m)!}\\binom{k+m}{k}p^k(1-p)^m\\).</li><li><b>Factorise.</b> Using \\((\\lambda t)^{k+m}p^k(1-p)^m=(\\lambda pt)^k(\\lambda(1-p)t)^m\\), this is \\(e^{-\\lambda pt}\\frac{(\\lambda pt)^k}{k!}\\cdot e^{-\\lambda(1-p)t}\\frac{(\\lambda(1-p)t)^m}{m!}\\).</li><li><b>Conclude.</b> The joint law factorises, so \\(K\\) and \\(M\\) are independent Poisson variables with the stated means.</li></ol><b>If you get stuck:</b> Given the total count, what is the law of the kept count?<br><b>Minimal memory:</b> Binomial thinning of a Poisson count gives independent Poisson pieces.",
+  "tags": [
+   "s_poisson_approx",
+   "s_bijection",
+   "s_bayes",
+   "poisson",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From a renewal process with i.i.d. interarrival lengths \\(L\\), and a uniformly random time sampled from the time axis only, rebuild the inspection paradox: the mean length of the interval containing that time is \\(E[L^2]/E[L]\\).",
+  "back": "<ol><li><b>Time sampling.</b> A uniform time falls in an interval of length \\(L\\) with probability proportional to \\(L\\) (long-run).</li><li><b>Size-biased law.</b> The interval containing the sampled time has density \\(l f(l)/E[L]\\).</li><li><b>Mean.</b> \\(\\int l\\cdot\\frac{lf(l)}{E L}dl=\\frac{E[L^2]}{E[L]}\\).</li><li><b>Compare.</b> \\(\\operatorname{Var}L\\ge0\\) gives \\(E[L^2]\\ge(EL)^2\\), so the mean seen is at least \\(E[L]\\).</li><li><b>Check.</b> Lengths 1 and 3 equally likely: \\(E L=2\\), \\(E L^2=5\\), so the sampled interval averages \\(2.5\\), matching simulation.</li></ol><b>If you get stuck:</b> Which intervals are more likely to contain a random instant?<br><b>Minimal memory:</b> Sampling by time is size-biasing by length.",
+  "tags": [
+   "s_linearity_expectation",
+   "inspection_paradox",
+   "renewal",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the standard normal density \\(\\varphi(z)=e^{-z^2/2}/\\sqrt{2\\pi}\\) and the fact that \\(z\\,e^{-z^2/2}\\) is a total derivative only, rebuild \\(E|Z|=\\sqrt{2/\\pi}\\) for \\(Z\\sim N(0,1)\\).",
+  "back": "<ol><li><b>Symmetry.</b> \\(E|Z|=2\\int_0^\\infty z\\varphi(z)\\,dz\\).</li><li><b>Total derivative.</b> \\(z e^{-z^2/2}=-\\frac{d}{dz}e^{-z^2/2}\\).</li><li><b>Integrate.</b> \\(\\int_0^\\infty z e^{-z^2/2}dz=\\big[-e^{-z^2/2}\\big]_0^\\infty=1\\).</li><li><b>Assemble.</b> \\(E|Z|=\\frac{2}{\\sqrt{2\\pi}}=\\sqrt{2/\\pi}\\approx0.798\\). Matches simulation.</li></ol><b>If you get stuck:</b> On the half-line, is \\(z\\varphi(z)\\) an exact derivative?<br><b>Minimal memory:</b> The half-line integrand \\(z e^{-z^2/2}\\) is a total derivative, so the absolute moment is one line.",
+  "tags": [
+   "s_taylor",
+   "s_symmetry",
+   "normal",
+   "gaussian_integral",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From \\(I=\\int_{\\mathbb R}e^{-x^2}dx\\) and polar coordinates only, rebuild the Gaussian integral \\(I=\\sqrt\\pi\\).",
+  "back": "<ol><li><b>Square it.</b> \\(I^2=\\iint e^{-(x^2+y^2)}\\,dx\\,dy\\) by Fubini.</li><li><b>Polar.</b> With \\(x=r\\cos\\theta\\), \\(y=r\\sin\\theta\\), the Jacobian is \\(r\\): \\(I^2=\\int_0^{2\\pi}\\!\\!\\int_0^\\infty e^{-r^2}r\\,dr\\,d\\theta\\).</li><li><b>Radial integral.</b> \\(\\int_0^\\infty re^{-r^2}dr=\\tfrac12\\) (substitute \\(u=r^2\\)).</li><li><b>Angular integral.</b> \\(I^2=2\\pi\\cdot\\tfrac12=\\pi\\), so \\(I=\\sqrt\\pi\\).</li></ol><b>If you get stuck:</b> What is the Jacobian, and which substitution kills the radial integral?<br><b>Minimal memory:</b> Square the integral so the integrand is radial; the \\(r\\,dr\\) is the Jacobian and a total derivative.",
+  "tags": [
+   "s_dimensional_analysis",
+   "s_change_of_measure",
+   "gaussian_integral",
+   "polar_coordinates",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From a standard bivariate normal \\((X,Y)\\) with correlation \\(\\rho\\), its representation by two i.i.d. normals, and rotational invariance only, rebuild \\(P(XY>0)=\\tfrac12+\\dfrac{\\arcsin\\rho}{\\pi}\\).",
+  "back": "<ol><li><b>Representation.</b> Let \\(X=U\\), \\(Y=\\rho U+\\sqrt{1-\\rho^2}V\\), with \\(U,V\\) i.i.d. \\(N(0,1)\\).</li><li><b>Polar.</b> \\((U,V)\\) is rotation invariant, so its angle \\(\\Theta\\) is uniform on \\([0,2\\pi)\\); \\(P(\\text{event})=\\text{angle}/2\\pi\\).</li><li><b>Sign sectors.</b> \\(XY>0\\) iff \\((U,V)\\) lies in \\(\\{U>0,\\ \\rho U+\\sqrt{1-\\rho^2}V>0\\}\\) or its opposite. Each sector is bounded by two lines with normals \\((1,0)\\) and \\((\\rho,\\sqrt{1-\\rho^2})\\).</li><li><b>Sector angle.</b> Each sector has angle \\(\\pi-\\arccos\\rho=\\tfrac\\pi2+\\arcsin\\rho\\).</li><li><b>Total.</b> Two sectors: \\(\\frac{\\pi+2\\arcsin\\rho}{2\\pi}=\\frac12+\\frac{\\arcsin\\rho}\\pi\\). Check: \\(\\rho=0\\) gives \\(1/2\\); \\(\\rho=1\\) gives \\(1\\).</li></ol><b>If you get stuck:</b> Which two lines bound the regions where the product is positive?<br><b>Minimal memory:</b> The sign event is a double sector of angle \\(\\pi-\\arccos\\rho\\) each; rotation makes probability equal angle over \\(2\\pi\\).",
+  "tags": [
+   "s_geometric_probability",
+   "s_symmetry",
+   "s_clt_normal_approx",
+   "normal",
+   "correlation",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From a standard Brownian motion (independent Gaussian increments with variance equal to the length) and the mesh-refinement limit of squared increments only, rebuild the quadratic variation \\(\\sum(\\Delta W)^2\\to t\\) on \\([0,t]\\), and the scaling law \\(W_{ct}\\overset{d}{=}\\sqrt c\\,W_t\\).",
+  "back": "<ol><li><b>Scaling.</b> Let \\(\\tilde W_t=c^{-1/2}W_{ct}\\). Its increments are Gaussian, independent, and have variance \\((t-s)\\), with continuous paths, so \\(\\tilde W\\) is a Brownian motion.</li><li><b>Mean of the sum.</b> For a partition \\(0=t_0<\\dots<t_n=t\\), \\(E\\sum(\\Delta W_i)^2=\\sum\\Delta t_i=t\\).</li><li><b>Variance of the sum.</b> Each \\((\\Delta W_i)^2\\) has variance \\(2(\\Delta t_i)^2\\), so \\(\\operatorname{Var}\\sum=2\\sum(\\Delta t_i)^2\\le 2t\\max_i\\Delta t_i\\).</li><li><b>Mesh to zero.</b> The variance goes to 0, so the sum converges in \\(L^2\\) to \\(t\\). Hence \\((dW)^2=dt\\).</li><li><b>Consequence.</b> Increments over a step \\(\\Delta t\\) are of order \\(\\sqrt{\\Delta t}\\), which is why the square-root time scaling is forced.</li></ol><b>If you get stuck:</b> What is the variance of \\((\\Delta W)^2\\), and how does it scale with the mesh?<br><b>Minimal memory:</b> Each squared increment has mean \\(\\Delta t\\) and variance \\(2\\Delta t^2\\); summing gives \\(t\\).",
+  "tags": [
+   "s_sqrt_time_scaling",
+   "s_linearity_expectation",
+   "s_variance_decomposition",
+   "brownian_motion",
+   "ito_calculus",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the Taylor expansion of \\(f(X_t)\\) to second order, \\(dX=\\mu\\,dt+\\sigma\\,dW\\), and the rules \\((dW)^2=dt\\), \\(dt\\,dW=0\\), \\((dt)^2=0\\) only, rebuild Itô's lemma \\(df=\\big(\\mu f'+\\tfrac12\\sigma^2f''\\big)dt+\\sigma f'\\,dW\\).",
+  "back": "<ol><li><b>Taylor.</b> \\(df=f'(X)\\,dX+\\tfrac12f''(X)(dX)^2+\\dots\\).</li><li><b>Square.</b> \\((dX)^2=\\sigma^2(dW)^2+2\\mu\\sigma\\,dt\\,dW+\\mu^2(dt)^2=\\sigma^2dt\\).</li><li><b>Substitute.</b> \\(df=f'(\\mu\\,dt+\\sigma\\,dW)+\\tfrac12\\sigma^2f''\\,dt\\).</li><li><b>Collect.</b> \\(df=(\\mu f'+\\tfrac12\\sigma^2f'')\\,dt+\\sigma f'\\,dW\\).</li></ol><b>If you get stuck:</b> Which second-order term survives at order \\(dt\\)?<br><b>Minimal memory:</b> \\((dW)^2=dt\\) is the only second-order term that survives; it contributes \\(\\tfrac12f''\\sigma^2\\,dt\\).",
+  "tags": [
+   "s_taylor",
+   "s_martingale",
+   "ito_calculus",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From Itô's lemma with \\(f(x)=x^2\\) and \\(dW\\) only, rebuild \\(d(W^2)=2W\\,dW+dt\\), and hence \\(E[W_t^2]=t\\).",
+  "back": "<ol><li><b>Derivatives.</b> \\(f'(x)=2x\\), \\(f''(x)=2\\).</li><li><b>Apply Itô.</b> \\(d(W^2)=2W\\,dW+\\tfrac12\\cdot2\\,dt=2W\\,dW+dt\\).</li><li><b>Integrate.</b> \\(W_t^2=2\\int_0^tW\\,dW+t\\).</li><li><b>Take expectation.</b> The Itô integral is a martingale with mean zero, so \\(E W_t^2=t\\).</li></ol><b>If you get stuck:</b> Which term of \\(f''(W)(dW)^2\\) produces the extra \\(dt\\)?<br><b>Minimal memory:</b> The Itô correction \\(\\tfrac12f''\\,dt\\) is the extra term; here it is \\(dt\\).",
+  "tags": [
+   "s_taylor",
+   "s_martingale",
+   "ito_calculus",
+   "brownian_motion",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From \\(dS=\\mu S\\,dt+\\sigma S\\,dW\\) and Itô's lemma with \\(f=\\ln\\) only, rebuild \\(d\\ln S=(\\mu-\\tfrac12\\sigma^2)\\,dt+\\sigma\\,dW\\).",
+  "back": "<ol><li><b>Derivatives.</b> \\(f'=1/S\\), \\(f''=-1/S^2\\).</li><li><b>Quadratic variation.</b> \\((dS)^2=\\sigma^2S^2\\,dt\\).</li><li><b>Apply Itô.</b> \\(d\\ln S=\\dfrac{dS}{S}+\\tfrac12\\cdot\\left(-\\dfrac1{S^2}\\right)\\sigma^2S^2dt=\\dfrac{dS}S-\\tfrac12\\sigma^2dt\\).</li><li><b>Substitute.</b> \\(\\dfrac{dS}{S}=\\mu\\,dt+\\sigma\\,dW\\), so \\(d\\ln S=(\\mu-\\tfrac12\\sigma^2)dt+\\sigma\\,dW\\).</li></ol><b>If you get stuck:</b> What is \\((dS)^2\\) in terms of \\(S\\), and why does the log remove \\(S\\) from the diffusion term?<br><b>Minimal memory:</b> The log turns a multiplicative diffusion into an additive one; the \\(-\\tfrac12\\sigma^2\\) is the Itô correction.",
+  "tags": [
+   "s_taylor",
+   "s_change_of_measure",
+   "ito_calculus",
+   "gbm",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the SDE \\(dS=\\mu S\\,dt+\\sigma S\\,dW\\) with \\(S_0\\), and the Gaussian moment generating function only, rebuild \\(S_T=S_0\\exp\\big((\\mu-\\tfrac12\\sigma^2)T+\\sigma W_T\\big)\\) and \\(E[S_T]=S_0e^{\\mu T}\\).",
+  "back": "<ol><li><b>Log dynamics.</b> By the previous step, \\(\\ln S_T-\\ln S_0=(\\mu-\\tfrac12\\sigma^2)T+\\sigma W_T\\).</li><li><b>Solution.</b> \\(S_T=S_0\\exp\\big((\\mu-\\tfrac12\\sigma^2)T+\\sigma W_T\\big)\\).</li><li><b>Moment generating function.</b> \\(W_T\\sim N(0,T)\\), so \\(E e^{\\sigma W_T}=e^{\\sigma^2T/2}\\).</li><li><b>Expectation.</b> \\(E S_T=S_0\\exp\\big((\\mu-\\tfrac12\\sigma^2)T+\\tfrac12\\sigma^2T\\big)=S_0e^{\\mu T}\\).</li></ol><b>If you get stuck:</b> What is the moment generating function of \\(W_T\\) evaluated at \\(\\sigma\\)?<br><b>Minimal memory:</b> The Itô correction \\(-\\tfrac12\\sigma^2\\) exactly cancels the lognormal variance term in the mean.",
+  "tags": [
+   "s_taylor",
+   "s_martingale",
+   "gbm",
+   "ito_calculus",
+   "lognormal",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From an adapted elementary integrand \\(H=\\sum_i h_i\\mathbf 1_{(t_i,t_{i+1}]}\\) with \\(h_i\\) known at \\(t_i\\), and \\(I=\\sum_ih_i\\Delta W_i\\) only, rebuild the Itô isometry \\(E\\big[(\\int_0^TH\\,dW)^2\\big]=E\\int_0^TH_t^2\\,dt\\).",
+  "back": "<ol><li><b>Expand the square.</b> \\(E I^2=\\sum_iE[h_i^2(\\Delta W_i)^2]+2\\sum_{i<j}E[h_ih_j\\,\\Delta W_i\\,\\Delta W_j]\\).</li><li><b>Kill cross terms.</b> For \\(i<j\\), \\(h_ih_j\\Delta W_i\\) is \\(\\mathcal F_{t_j}\\)-measurable and \\(\\Delta W_j\\) is independent of it with mean 0.</li><li><b>Diagonal terms.</b> \\(E[h_i^2(\\Delta W_i)^2]=E[h_i^2]\\Delta t_i\\), since \\(h_i\\) is known at \\(t_i\\) and \\(\\Delta W_i\\) is independent of it.</li><li><b>Sum.</b> \\(E I^2=E\\sum_ih_i^2\\Delta t_i=E\\int_0^TH^2dt\\).</li><li><b>Extend.</b> Elementary integrands are dense in the adapted \\(L^2\\) class, so the identity extends.</li></ol><b>If you get stuck:</b> Why do the cross terms vanish, and what is the conditional law of \\(\\Delta W_j\\)?<br><b>Minimal memory:</b> Itô integrals have orthogonal martingale increments; variance accumulates as \\(\\int H^2dt\\).",
+  "tags": [
+   "s_martingale",
+   "s_variance_decomposition",
+   "ito_calculus",
+   "s_indicators",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the self-financing replicating portfolio of a stock \\(S\\) and a bond \\(B\\) with \\(dB=rB\\,dt\\), Itô's lemma and the delta hedge only, rebuild the Black-Scholes PDE \\(V_t+rSV_S+\\tfrac12\\sigma^2S^2V_{SS}=rV\\).",
+  "back": "<ol><li><b>Itô on the price.</b> \\(dV=(V_t+\\mu SV_S+\\tfrac12\\sigma^2S^2V_{SS})dt+\\sigma SV_S\\,dW\\).</li><li><b>Replicate.</b> Hold \\(\\phi=V_S\\) shares and \\(\\psi=(V-SV_S)/B\\) in the bond. Self-financing: \\(d\\Pi=V_S\\,dS+r(V-SV_S)dt\\).</li><li><b>Match the noise.</b> The \\(dW\\) terms agree; the hedge removes all risk.</li><li><b>Match the drift.</b> Equating drifts, \\(\\mu\\) cancels: \\(V_t+\\tfrac12\\sigma^2S^2V_{SS}=rV-rSV_S\\).</li><li><b>Terminal data.</b> Set \\(V(T,S)=\\text{payoff}\\); for a call, \\(\\max(S-K,0)\\).</li></ol><b>If you get stuck:</b> Which portfolio has no \\(dW\\) term, and what must its drift equal?<br><b>Minimal memory:</b> The delta hedge kills dW, and no-arbitrage pins the hedged drift to the risk-free rate, so mu drops out.",
+  "tags": [
+   "s_replication",
+   "s_martingale",
+   "s_invariant",
+   "black_scholes",
+   "pde",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From risk-neutral pricing \\(C=e^{-rT}E^Q[(S_T-K)^+]\\) with \\(\\ln S_T\\) normal under \\(Q\\), and the completing-the-square identity for the Gaussian tilt only, rebuild the Black-Scholes call \\(C=S N(d_1)-Ke^{-rT}N(d_2)\\).",
+  "back": "<ol><li><b>Lognormal.</b> Under \\(Q\\), \\(S_T=S_0\\exp((r-\\tfrac12\\sigma^2)T+\\sigma\\sqrt T Z)\\), \\(Z\\sim N(0,1)\\). The payoff is active for \\(Z>-d_2\\).</li><li><b>Split.</b> \\(C=e^{-rT}\\big(E[S_T\\mathbf 1_{S_T>K}]-K\\,P^Q(S_T>K)\\big)\\).</li><li><b>Tilt identity.</b> \\(e^{az}\\varphi(z)=e^{a^2/2}\\varphi(z-a)\\) with \\(a=\\sigma\\sqrt T\\).</li><li><b>First term.</b> \\(e^{-rT}S_0e^{rT}\\int_{z>-d_2}\\varphi(z-\\sigma\\sqrt T)dz=S_0N(d_1)\\), since \\(d_1=d_2+\\sigma\\sqrt T\\).</li><li><b>Second term.</b> \\(e^{-rT}K\\,N(d_2)\\).</li><li><b>Result.</b> Combine: \\(C=S_0N(d_1)-Ke^{-rT}N(d_2)\\).</li></ol><b>If you get stuck:</b> What does completing the square in the exponent do to the Gaussian density?<br><b>Minimal memory:</b> \\(e^{az}\\varphi(z)=e^{a^2/2}\\varphi(z-a)\\): the exponential tilt shifts the Gaussian, and that shift is the \\(N(d_1)\\) term.",
+  "tags": [
+   "s_change_of_measure",
+   "s_replication",
+   "s_martingale",
+   "black_scholes",
+   "lognormal",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the one-period risk-neutral binomial model \\(u=e^{\\sigma\\sqrt h}\\), \\(d=1/u\\), \\(p=(e^{rh}-d)/(u-d)\\), and the central limit theorem only, rebuild the Black-Scholes price as the limit of the \\(n\\)-step binomial price.",
+  "back": "<ol><li><b>Martingale probability.</b> Under \\(Q\\), \\(e^{rh}S=pS u+(1-p)Sd\\), giving \\(p\\).</li><li><b>Price as an expectation.</b> With \\(n\\) steps and \\(J\\sim\\text{Bin}(n,p)\\) up-moves, \\(C_n=e^{-rT}E[(S_0u^Jd^{n-J}-K)^+]\\).</li><li><b>Log-return.</b> \\(\\ln S_T=\\ln S_0+\\sigma\\sqrt h\\,(2J-n)\\). By the CLT, \\((2J-n)/\\sqrt n\\) is asymptotically normal, and the drift is matched by the choice of \\(p\\).</li><li><b>Limit.</b> The distribution of \\(\\ln S_T\\) converges to the Gaussian of the Black-Scholes model.</li><li><b>Conclude.</b> So \\(C_n\\to C_{BS}\\). Check: \\(S_0=K=100\\), \\(r=0.05\\), \\(\\sigma=0.2\\), \\(T=1\\): \\(n=2000\\) gives \\(10.4496\\) against Black-Scholes \\(10.4506\\).</li></ol><b>If you get stuck:</b> What is the risk-neutral law of the number of up moves, and what does the CLT say about its standardised form?<br><b>Minimal memory:</b> Discrete risk-neutral returns become lognormal in the limit, and the limit is the same Gaussian integral.",
+  "tags": [
+   "s_clt_normal_approx",
+   "s_replication",
+   "s_change_of_measure",
+   "black_scholes",
+   "binomial_tree",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From two portfolios with the same strike and maturity: long call plus cash \\(Ke^{-rT}\\), and long put plus one share only, rebuild put-call parity \\(C-P=S-Ke^{-rT}\\).",
+  "back": "<ol><li><b>Portfolio A.</b> Long call plus \\(Ke^{-rT}\\) cash (a zero-coupon bond paying \\(K\\) at \\(T\\)).</li><li><b>Portfolio B.</b> Long put plus one share.</li><li><b>Payoffs at T.</b> A pays \\((S_T-K)^++K=\\max(S_T,K)\\). B pays \\((K-S_T)^++S_T=\\max(S_T,K)\\).</li><li><b>Law of one price.</b> Identical payoffs in every state, so no arbitrage gives equal prices: \\(C+Ke^{-rT}=P+S\\).</li></ol><b>If you get stuck:</b> Which two portfolios pay \\(\\max(S_T,K)\\) at \\(T\\)?<br><b>Minimal memory:</b> Call plus bond equals put plus share: both pay the larger of the stock and the strike.",
+  "tags": [
+   "s_replication",
+   "s_invariant",
+   "s_complement",
+   "put_call_parity",
+   "options",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the Black-Scholes call formula and the normal density \\(\\varphi\\) only, rebuild the delta \\(\\partial C/\\partial S=N(d_1)\\), using the identity \\(S\\varphi(d_1)=Ke^{-rT}\\varphi(d_2)\\).",
+  "back": "<ol><li><b>Differentiate.</b> \\(\\partial_SC=N(d_1)+S\\varphi(d_1)\\partial_Sd_1-Ke^{-rT}\\varphi(d_2)\\partial_Sd_2\\).</li><li><b>Common derivative.</b> \\(\\partial_Sd_1=\\partial_Sd_2=1/(S\\sigma\\sqrt T)\\), since \\(d_2=d_1-\\sigma\\sqrt T\\).</li><li><b>Key identity.</b> \\(\\varphi(d_1)/\\varphi(d_2)=e^{-(d_1^2-d_2^2)/2}\\). Using \\(d_1^2-d_2^2=2d_1\\sigma\\sqrt T-\\sigma^2T\\) and \\(d_1\\sigma\\sqrt T=\\ln(S/K)+(r+\\tfrac12\\sigma^2)T\\), this equals \\((K/S)e^{-rT}\\).</li><li><b>Cancel.</b> So \\(S\\varphi(d_1)=Ke^{-rT}\\varphi(d_2)\\), and the two extra terms cancel.</li></ol><b>If you get stuck:</b> Compare \\(\\varphi(d_1)\\) and \\(\\varphi(d_2)\\) directly: what ratio do they have?<br><b>Minimal memory:</b> \\(S\\,n(d_1)=Ke^{-rT}n(d_2)\\): the second-term derivatives cancel the first.",
+  "tags": [
+   "s_taylor",
+   "s_symmetry",
+   "greeks",
+   "black_scholes",
+   "normal",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the Black-Scholes call, \\(\\partial d_1/\\partial\\sigma\\), and the identity \\(S\\varphi(d_1)=Ke^{-rT}\\varphi(d_2)\\) only, rebuild vega \\(\\partial C/\\partial\\sigma=S\\varphi(d_1)\\sqrt T\\).",
+  "back": "<ol><li><b>Differentiate.</b> \\(\\partial_\\sigma C=S\\varphi(d_1)\\partial_\\sigma d_1-Ke^{-rT}\\varphi(d_2)\\partial_\\sigma d_2\\).</li><li><b>Relation between the d's.</b> \\(d_2=d_1-\\sigma\\sqrt T\\), so \\(\\partial_\\sigma d_2=\\partial_\\sigma d_1-\\sqrt T\\).</li><li><b>Use the identity.</b> \\(Ke^{-rT}\\varphi(d_2)=S\\varphi(d_1)\\), so \\(\\partial_\\sigma C=S\\varphi(d_1)(\\partial_\\sigma d_1-\\partial_\\sigma d_2)\\).</li><li><b>Result.</b> \\(\\partial_\\sigma C=S\\varphi(d_1)\\sqrt T\\). Check: \\(S=100,K=105,\\sigma=0.25,T=0.75,r=0.03\\) numerically agrees.</li></ol><b>If you get stuck:</b> Which term of the derivative does the same cancellation remove?<br><b>Minimal memory:</b> The identity \\(S\\varphi(d_1)=Ke^{-rT}\\varphi(d_2)\\) kills every term except the one that differs between \\(d_1\\) and \\(d_2\\).",
+  "tags": [
+   "s_taylor",
+   "greeks",
+   "black_scholes",
+   "normal",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the Taylor expansion of the option value to second order, delta hedging, the Black-Scholes PDE at implied volatility, and the realised quadratic variation only, rebuild the gamma P&L \\(\\tfrac12\\Gamma S^2(\\sigma_{\\text{real}}^2-\\sigma_{\\text{imp}}^2)\\,dt\\) of a delta-hedged option.",
+  "back": "<ol><li><b>Portfolio.</b> \\(\\Pi=V-\\Delta S\\) (self-financing, cash account at rate \\(r\\)).</li><li><b>Taylor.</b> \\(dV=\\Theta\\,dt+\\Delta\\,dS+\\tfrac12\\Gamma(dS)^2\\).</li><li><b>Hedged change.</b> \\(d\\Pi-r\\Pi\\,dt=(\\Theta+r S\\Delta-rV)\\,dt+\\tfrac12\\Gamma(dS)^2\\).</li><li><b>Use the PDE.</b> At implied vol, \\(\\Theta+rS\\Delta-rV=-\\tfrac12\\sigma_{\\text{imp}}^2S^2\\Gamma\\).</li><li><b>Realised move.</b> \\((dS)^2=\\sigma_{\\text{real}}^2S^2dt\\). So the excess P&L is \\(\\tfrac12\\Gamma S^2(\\sigma_{\\text{real}}^2-\\sigma_{\\text{imp}}^2)dt\\).</li></ol><b>If you get stuck:</b> Which term of the Taylor expansion is the only source of P&L beyond carry?<br><b>Minimal memory:</b> A delta hedge removes dS; the leftover is half gamma times realised variance against theta.",
+  "tags": [
+   "s_taylor",
+   "s_replication",
+   "greeks",
+   "volatility",
+   "black_scholes",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the Black-Scholes call with \\(r=0\\), \\(K=S\\), and the first-order Taylor expansion of \\(N\\) near zero only, rebuild the ATM approximation \\(C\\approx\\frac{S\\sigma\\sqrt T}{\\sqrt{2\\pi}}\\approx0.4\\,S\\sigma\\sqrt T\\).",
+  "back": "<ol><li><b>Set up.</b> With \\(r=0\\), \\(K=S\\): \\(d_1=\\sigma\\sqrt T/2=h\\), \\(d_2=-h\\).</li><li><b>Rewrite.</b> \\(C=S[N(h)-N(-h)]=2S[N(h)-\\tfrac12]\\).</li><li><b>Taylor.</b> \\(N(h)-\\tfrac12=\\int_0^h\\varphi\\approx h\\,\\varphi(0)\\) for small \\(h\\).</li><li><b>Assemble.</b> \\(C\\approx 2Sh\\varphi(0)=\\dfrac{S\\sigma\\sqrt T}{\\sqrt{2\\pi}}\\).</li><li><b>Constant.</b> \\(1/\\sqrt{2\\pi}\\approx0.399\\). Check: \\(S=100,\\sigma=0.2,T=1\\): exact \\(7.97\\), approximation \\(7.98\\).</li></ol><b>If you get stuck:</b> What is \\(N(x)-\\tfrac12\\) for small \\(x\\)?<br><b>Minimal memory:</b> An ATM call is about \\(0.4\\,S\\sigma\\sqrt T\\): the slope of \\(N\\) at zero times the width.",
+  "tags": [
+   "s_taylor",
+   "s_fermi",
+   "black_scholes",
+   "options",
+   "mental_math",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the Black-Scholes call price \\(C(K)=e^{-rT}E^Q[(S_T-K)^+]\\) as an integral against the risk-neutral density only, rebuild the Breeden-Litzenberger density \\(f_{S_T}(K)=e^{rT}\\,\\partial^2C/\\partial K^2\\).",
+  "back": "<ol><li><b>Integral form.</b> \\(C(K)=e^{-rT}\\int_K^\\infty(s-K)f(s)\\,ds\\).</li><li><b>First derivative.</b> \\(\\partial_KC=-e^{-rT}\\int_K^\\infty f(s)\\,ds\\), since the boundary term \\((K-K)f(K)\\) vanishes.</li><li><b>Second derivative.</b> \\(\\partial_K^2C=e^{-rT}f(K)\\).</li><li><b>Invert.</b> \\(f(K)=e^{rT}\\partial_K^2C\\).</li></ol><b>If you get stuck:</b> What does the first derivative equal, and why does the boundary term vanish?<br><b>Minimal memory:</b> First strike derivative is minus the discounted tail probability; the second is the density.",
+  "tags": [
+   "s_tail_sum",
+   "s_change_of_measure",
+   "breeden_litzenberger",
+   "options",
+   "risk_neutral",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From a variance swap paying \\(\\frac1T\\int_0^T\\sigma_t^2dt\\), Itô's lemma on \\(\\ln S\\), and static replication of \\(\\ln S_T\\) by calls and puts only, rebuild the fair variance strike \\(K_{\\text{var}}=\\dfrac{2e^{rT}}{T}\\Big[\\int_0^F\\dfrac{P(K)}{K^2}dK+\\int_F^\\infty\\dfrac{C(K)}{K^2}dK\\Big]\\), with \\(F=S_0e^{rT}\\).",
+  "back": "<ol><li><b>Itô on the log.</b> Under \\(Q\\), \\(d\\ln S=(r-\\tfrac12\\sigma_t^2)dt+\\sigma_tdW\\), so \\(E^Q\\!\\int_0^T\\sigma_t^2dt=2\\big(rT-E^Q\\ln(S_T/S_0)\\big)\\), where the stochastic integral has mean zero under the standing assumption \\(E^Q\\int_0^T\\sigma_t^2dt<\\infty\\).</li><li><b>Static replication.</b> With \\(f''(K)=-1/K^2\\): \\(\\ln S=\\ln F+\\frac{S-F}{F}-\\int_0^F\\frac{(K-S)^+}{K^2}dK-\\int_F^\\infty\\frac{(S-K)^+}{K^2}dK\\).</li><li><b>Take expectations.</b> \\(E^Q S_T=F\\) kills the linear term; undiscounted option values are \\(e^{rT}\\) times the prices.</li><li><b>Log expectation.</b> \\(E^Q\\ln S_T=\\ln F-e^{rT}I\\), so \\(E^Q\\ln(S_T/S_0)=rT-e^{rT}I\\), with \\(I\\) the integral in the answer.</li><li><b>Strike.</b> \\(K_{\\text{var}}=\\frac1TE^Q\\!\\int\\sigma^2dt=\\frac{2e^{rT}}{T}I\\). Check: flat \\(\\sigma=0.25\\), \\(S=100\\), \\(r=0.03\\), \\(T=0.75\\) gives \\(0.0625=\\sigma^2\\).</li></ol><b>If you get stuck:</b> Which expansion point makes the linear term have zero expectation?<br><b>Minimal memory:</b> The variance strike is the log contract, and the log is a static strip of calls and puts weighted by \\(1/K^2\\).",
+  "tags": [
+   "s_replication",
+   "s_taylor",
+   "s_martingale",
+   "variance_swap",
+   "ito_calculus",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From a Brownian motion under \\(P\\) with drift \\(\\mu\\), volatility \\(\\sigma\\), and the exponential martingale \\(Z_t=\\exp(-\\theta W_t-\\tfrac12\\theta^2t)\\) only, rebuild Girsanov's drift change: under \\(Q\\), \\(dS=rS\\,dt+\\sigma S\\,dW^Q\\) with \\(\\theta=(\\mu-r)/\\sigma\\).",
+  "back": "<ol><li><b>Density process.</b> \\(Z_t=\\exp(-\\theta W_t-\\tfrac12\\theta^2t)\\). Itô gives \\(dZ_t=-\\theta Z_t\\,dW_t\\), so \\(Z\\) is a martingale with \\(EZ_T=1\\).</li><li><b>Define Q.</b> \\(dQ=Z_T\\,dP\\).</li><li><b>Girsanov.</b> \\(W^Q_t=W_t+\\theta t\\) is a \\(Q\\)-Brownian motion, since \\(Z\\) has the form above.</li><li><b>Rewrite the SDE.</b> \\(dS=\\mu S\\,dt+\\sigma S(dW^Q-\\theta\\,dt)=(\\mu-\\sigma\\theta)S\\,dt+\\sigma S\\,dW^Q\\).</li><li><b>Result.</b> \\(\\mu-\\sigma\\theta=r\\), so \\(dS=rS\\,dt+\\sigma S\\,dW^Q\\).</li></ol><b>If you get stuck:</b> Which drift term must \\(dW\\) absorb to replace \\(\\mu\\) by \\(r\\)?<br><b>Minimal memory:</b> Change measure to kill the drift; \\(\\theta\\) is the market price of risk.",
+  "tags": [
+   "s_change_of_measure",
+   "s_martingale",
+   "s_replication",
+   "girsanov",
+   "risk_neutral",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From i.i.d. even-money bets with win probability \\(p\\), loss probability \\(q=1-p\\), and the log-growth criterion only, rebuild the Kelly fraction \\(f^*=p-q\\) for even odds.",
+  "back": "<ol><li><b>Growth per bet.</b> Wealth multiplies by \\(1+f\\) or \\(1-f\\), so \\(g(f)=p\\ln(1+f)+q\\ln(1-f)\\).</li><li><b>Maximise.</b> \\(g'(f)=\\frac p{1+f}-\\frac q{1-f}=0\\), giving \\(p(1-f)=q(1+f)\\).</li><li><b>Solve.</b> \\(f(p+q)=p-q\\), so \\(f^*=p-q\\).</li><li><b>Concavity.</b> \\(g''(f)<0\\) everywhere, so this is the maximum. Check: \\(p=0.6\\) gives \\(f^*=0.2\\), matching a numerical search.</li></ol><b>If you get stuck:</b> What is the maximiser of \\(E\\ln W\\), and why is \\(\\ln\\), not \\(W\\), the right objective?<br><b>Minimal memory:</b> Maximise the expected log; the first-order condition is \\(p/(1+f)=q/(1-f)\\).",
+  "tags": [
+   "s_kelly_log_utility",
+   "s_convexity_jensen",
+   "s_optimal_stopping",
+   "kelly",
+   "betting",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From continuous wealth \\(dW=W(f\\mu\\,dt+f\\sigma\\,dB)\\) and the log-growth rate maximisation only, rebuild the continuous Kelly fraction \\(f^*=\\mu/\\sigma^2\\).",
+  "back": "<ol><li><b>Log dynamics.</b> Itô on \\(\\ln W\\): \\(d\\ln W=(f\\mu-\\tfrac12f^2\\sigma^2)dt+f\\sigma\\,dB\\).</li><li><b>Growth rate.</b> The long-run growth rate is \\(g(f)=f\\mu-\\tfrac12f^2\\sigma^2\\).</li><li><b>Maximise.</b> \\(g'(f)=\\mu-f\\sigma^2=0\\).</li><li><b>Result.</b> \\(f^*=\\mu/\\sigma^2\\), and the growth rate at that fraction is \\(\\mu^2/(2\\sigma^2)\\).</li></ol><b>If you get stuck:</b> What is the Itô correction for the log of wealth?<br><b>Minimal memory:</b> Growth = arithmetic return minus half the variance: \\(g(f)=f\\mu-\\tfrac12 f^2\\sigma^2\\).",
+  "tags": [
+   "s_kelly_log_utility",
+   "s_taylor",
+   "s_martingale",
+   "kelly",
+   "ito_calculus",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the model \\(y=a+bx+\\varepsilon\\) and the sum of squared residuals \\(\\sum(y_i-a-bx_i)^2\\), with calculus on \\(a,b\\) only, rebuild the OLS slope \\(b=\\dfrac{\\sum(x_i-\\bar x)(y_i-\\bar y)}{\\sum(x_i-\\bar x)^2}=\\dfrac{\\operatorname{Cov}(x,y)}{\\operatorname{Var}(x)}\\).",
+  "back": "<ol><li><b>Loss.</b> \\(L(a,b)=\\sum_i(y_i-a-bx_i)^2\\).</li><li><b>Intercept equation.</b> \\(\\partial_aL=0\\) gives \\(\\bar y=a+b\\bar x\\): the line passes through \\((\\bar x,\\bar y)\\).</li><li><b>Slope equation.</b> \\(\\partial_bL=0\\) gives \\(\\sum x_iy_i=a\\sum x_i+b\\sum x_i^2\\).</li><li><b>Substitute.</b> Using \\(a=\\bar y-b\\bar x\\): \\(\\sum x_iy_i-n\\bar x\\bar y=b(\\sum x_i^2-n\\bar x^2)\\).</li><li><b>Centre.</b> So \\(b=S_{xy}/S_{xx}\\), which is \\(\\operatorname{Cov}(x,y)/\\operatorname{Var}(x)\\).</li></ol><b>If you get stuck:</b> Why does the intercept equation force the fitted line through the point of means?<br><b>Minimal memory:</b> Normal equations make residuals orthogonal to the constant and to x; the slope is a covariance ratio.",
+  "tags": [
+   "s_extremal",
+   "s_linearity_expectation",
+   "s_eigen",
+   "ols",
+   "regression",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the true model \\(y=\\beta_1x_1+\\beta_2x_2+\\varepsilon\\) with \\(\\varepsilon\\) uncorrelated with the regressors, and the short regression of \\(y\\) on \\(x_1\\) only, rebuild the omitted-variable bias \\(E[b]-\\beta_1=\\beta_2\\,\\delta\\), with \\(\\delta=\\operatorname{Cov}(x_1,x_2)/\\operatorname{Var}(x_1)\\).",
+  "back": "<ol><li><b>Short slope.</b> \\(b=\\operatorname{Cov}(x_1,y)/\\operatorname{Var}(x_1)\\).</li><li><b>Substitute the truth.</b> \\(\\operatorname{Cov}(x_1,y)=\\beta_1\\operatorname{Var}(x_1)+\\beta_2\\operatorname{Cov}(x_1,x_2)+\\operatorname{Cov}(x_1,\\varepsilon)\\).</li><li><b>Exogeneity.</b> \\(\\operatorname{Cov}(x_1,\\varepsilon)=0\\).</li><li><b>Divide.</b> \\(b=\\beta_1+\\beta_2\\,\\delta\\).</li><li><b>Check.</b> Simulation with \\(\\beta_1=2\\), \\(\\beta_2=3\\), \\(\\delta=0.5\\): slope \\(\\approx3.50\\) against \\(2+3\\cdot0.5=3.5\\).</li></ol><b>If you get stuck:</b> Once you substitute the true model into \\(\\operatorname{Cov}(x_1,y)\\), what remains?<br><b>Minimal memory:</b> Short slope equals the true slope plus the omitted effect times the auxiliary regression slope.",
+  "tags": [
+   "s_linearity_expectation",
+   "s_conditional_expectation_tower",
+   "omitted_variable_bias",
+   "regression",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From \\(X_1,\\dots,X_n\\) i.i.d. uniform on \\([0,\\theta]\\), the likelihood \\(\\theta^{-n}\\mathbf 1\\{\\theta\\ge\\max X_i\\}\\), and the CDF of the maximum only, rebuild the MLE \\(\\hat\\theta=\\max X_i\\), its bias \\(E\\hat\\theta-\\theta=-\\theta/(n+1)\\), and the unbiased estimator \\(\\tfrac{n+1}n\\max X_i\\).",
+  "back": "<ol><li><b>Maximise the likelihood.</b> \\(L(\\theta)=\\theta^{-n}\\) on \\(\\theta\\ge M=\\max X_i\\), decreasing, so \\(\\hat\\theta=M\\).</li><li><b>CDF.</b> \\(P(M\\le t)=(t/\\theta)^n\\) on \\([0,\\theta]\\), so the density is \\(nt^{n-1}/\\theta^n\\).</li><li><b>Mean.</b> \\(EM=\\int_0^\\theta t\\cdot\\frac{nt^{n-1}}{\\theta^n}dt=\\frac{n\\theta}{n+1}\\).</li><li><b>Bias.</b> \\(E\\hat\\theta-\\theta=-\\theta/(n+1)\\), negative. Rescale: \\(\\tfrac{n+1}nM\\) is unbiased.</li><li><b>Variance.</b> \\(EM^2=\\frac{n\\theta^2}{n+2}\\), so \\(\\operatorname{Var}M=\\frac{n\\theta^2}{(n+1)^2(n+2)}\\). Check: \\(n=1\\) gives \\(EM=\\theta/2\\).</li></ol><b>If you get stuck:</b> Where is the likelihood maximised when it is a step-like function of \\(\\theta\\)?<br><b>Minimal memory:</b> The maximum is the MLE; its CDF \\((t/\\theta)^n\\) gives the bias and the rescaling.",
+  "tags": [
+   "s_extremal",
+   "s_order_statistics",
+   "s_bijection",
+   "mle",
+   "uniform",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From i.i.d. random variables with mean \\(\\mu\\) and variance \\(\\sigma^2\\), independence, and the characteristic-function expansion only, rebuild the CLT statement \\((S_n-n\\mu)/\\sqrt n\\to N(0,\\sigma^2)\\).",
+  "back": "<ol><li><b>Variance of the sum.</b> \\(\\operatorname{Var}S_n=n\\sigma^2\\) by independence, so the standardiser is \\(\\sqrt n\\).</li><li><b>Characteristic function.</b> \\(\\varphi(t)=E\\,e^{it(X-\\mu)}\\) satisfies \\(\\varphi(t)=1-\\tfrac12\\sigma^2t^2+o(t^2)\\).</li><li><b>Rescale.</b> For \\(Y_n=(S_n-n\\mu)/\\sqrt n\\), \\(E e^{itY_n}=\\big(\\varphi(t/\\sqrt n)\\big)^n=\\big(1-\\tfrac{\\sigma^2t^2}{2n}+o(1/n)\\big)^n\\).</li><li><b>Limit.</b> \\((1-x/n)^n\\to e^{-x}\\), so the limit is \\(e^{-\\sigma^2t^2/2}\\), the characteristic function of \\(N(0,\\sigma^2)\\).</li></ol><b>If you get stuck:</b> What is the second-order Taylor term of a centred characteristic function?<br><b>Minimal memory:</b> Variances add, so the standardiser is \\(\\sqrt n\\); the second-order term of the characteristic function gives the Gaussian.",
+  "tags": [
+   "s_clt_normal_approx",
+   "s_taylor",
+   "s_linearity_expectation",
+   "clt",
+   "normal",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From \\(\\ln n!=\\sum_{k\\le n}\\ln k\\), the trapezoid rule for \\(\\int\\ln x\\,dx\\), and the Gaussian integral for the constant only, rebuild Stirling's formula \\(n!\\sim\\sqrt{2\\pi n}\\,(n/e)^n\\).",
+  "back": "<ol><li><b>Log-sum.</b> \\(\\ln n!=\\sum_{k=1}^n\\ln k\\).</li><li><b>Integral comparison.</b> \\(\\int_1^n\\ln x\\,dx=n\\ln n-n+1\\).</li><li><b>Trapezoid correction.</b> Trapezoid endpoint correction contributes \\(\\tfrac12\\ln n\\), so \\(\\ln n!=n\\ln n-n+\\tfrac12\\ln n+\\text{const}+o(1)\\).</li><li><b>Constant.</b> The constant is \\(\\tfrac12\\ln(2\\pi)\\), fixed by Wallis' product or a Gaussian integral.</li><li><b>Check.</b> \\(n=50\\): \\(\\ln 50!=148.4778\\) against \\(148.4761\\) from the formula.</li></ol><b>If you get stuck:</b> What does the trapezoid rule say about \\(\\sum\\ln k\\) relative to \\(\\int\\ln x\\), and what does the endpoint at \\(n\\) contribute?<br><b>Minimal memory:</b> Log-sum equals integral plus half the endpoint; the \\(\\sqrt{2\\pi}\\) constant is the one thing to recall from Gaussians.",
+  "tags": [
+   "s_taylor",
+   "s_clt_normal_approx",
+   "stirling",
+   "approximation",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the equicorrelation matrix \\(\\Sigma=(1-\\rho)I+\\rho\\mathbf 1\\mathbf 1^\\top\\) and the eigenvectors of \\(\\mathbf 1\\mathbf 1^\\top\\) only, rebuild the eigenvalues \\(1+(n-1)\\rho\\) (once) and \\(1-\\rho\\) (multiplicity \\(n-1\\)).",
+  "back": "<ol><li><b>Rank-one part.</b> \\(J=\\mathbf 1\\mathbf 1^\\top\\) has \\(J\\mathbf 1=n\\mathbf 1\\) and \\(Jv=0\\) for every \\(v\\perp\\mathbf 1\\).</li><li><b>Eigenvector one.</b> \\(\\Sigma\\mathbf 1=(1-\\rho+n\\rho)\\mathbf 1\\), eigenvalue \\(1+(n-1)\\rho\\).</li><li><b>Orthogonal complement.</b> For \\(v\\perp\\mathbf 1\\), \\(\\Sigma v=(1-\\rho)v\\), giving eigenvalue \\(1-\\rho\\) with multiplicity \\(n-1\\).</li><li><b>Positivity.</b> Positive semidefinite iff \\(1-\\rho\\ge0\\) and \\(1+(n-1)\\rho\\ge0\\), i.e. \\(-1/(n-1)\\le\\rho\\le1\\). Check: \\(n=5\\), \\(\\rho=0.3\\): eigenvalues \\(2.2\\) and \\(0.7\\).</li></ol><b>If you get stuck:</b> Which vectors does the all-ones part kill, and which direction gets the large eigenvalue?<br><b>Minimal memory:</b> Rank-one plus identity: the all-ones direction gets the big eigenvalue, everything orthogonal gets \\(1-\\rho\\).",
+  "tags": [
+   "s_eigen",
+   "s_symmetry",
+   "s_linearity_expectation",
+   "eigenvalues",
+   "equicorrelation",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the Lagrangian \\(\\mathcal L=w^\\top\\Sigma w-\\lambda(\\mathbf 1^\\top w-1)\\) for minimum-variance weights only, rebuild the global minimum-variance weights \\(w^*=\\dfrac{\\Sigma^{-1}\\mathbf 1}{\\mathbf 1^\\top\\Sigma^{-1}\\mathbf 1}\\) and variance \\(1/(\\mathbf 1^\\top\\Sigma^{-1}\\mathbf 1)\\).",
+  "back": "<ol><li><b>Lagrangian.</b> \\(\\mathcal L=w^\\top\\Sigma w-\\lambda(\\mathbf 1^\\top w-1)\\).</li><li><b>Stationarity.</b> \\(2\\Sigma w=\\lambda\\mathbf 1\\), so \\(w=\\frac\\lambda2\\Sigma^{-1}\\mathbf 1\\).</li><li><b>Constraint.</b> \\(\\mathbf 1^\\top w=1\\) gives \\(\\frac\\lambda2=\\frac1{\\mathbf 1^\\top\\Sigma^{-1}\\mathbf 1}\\).</li><li><b>Variance.</b> \\(w^{*\\top}\\Sigma w^*=\\frac1{\\mathbf 1^\\top\\Sigma^{-1}\\mathbf 1}\\). Check: \\(\\Sigma=\\begin{pmatrix}0.04&0.006&0.004\\\\0.006&0.09&0.012\\\\0.004&0.012&0.16\\end{pmatrix}\\) gives \\(w^*\\approx(0.625,0.240,0.135)\\) and variance \\(0.02698\\), equal to \\(1/(\\mathbf 1^\\top\\Sigma^{-1}\\mathbf 1)\\).</li></ol><b>If you get stuck:</b> What does the budget constraint do to the Lagrange multiplier?<br><b>Minimal memory:</b> Gradient is proportional to \\(\\Sigma w\\), which is proportional to \\(\\mathbf 1\\); normalise.",
+  "tags": [
+   "s_lagrange",
+   "min_variance",
+   "portfolio",
+   "lagrange_multiplier",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the Ornstein-Uhlenbeck SDE \\(dX=-\\theta X\\,dt+\\sigma\\,dW\\) and the linear ODE for its mean only, rebuild the half-life \\(t_{1/2}=\\ln 2/\\theta\\).",
+  "back": "<ol><li><b>Mean ODE.</b> Taking expectations kills the \\(dW\\) term: \\(\\frac{d}{dt}E X_t=-\\theta\\,E X_t\\).</li><li><b>Solve.</b> \\(E X_t=X_0e^{-\\theta t}\\).</li><li><b>Half-life.</b> Set \\(e^{-\\theta t_{1/2}}=\\tfrac12\\), giving \\(t_{1/2}=\\ln2/\\theta\\).</li><li><b>Discrete check.</b> An AR(1) with \\(\\varphi=e^{-\\theta\\Delta}\\) has the same mean path; \\(\\theta=-\\ln\\varphi/\\Delta\\).</li></ol><b>If you get stuck:</b> What is the decay rate of the mean?<br><b>Minimal memory:</b> Mean reversion acts on the mean as pure exponential decay; the half-life is \\(\\ln 2\\) over the rate.",
+  "tags": [
+   "s_linearity_expectation",
+   "s_martingale",
+   "s_recursion",
+   "ornstein_uhlenbeck",
+   "half_life",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the heat equation \\(u_t=Du_{xx}\\) with an initial point mass, the Fourier transform in \\(x\\), and the inverse transform of a Gaussian only, rebuild the heat kernel \\(p(t,x)=\\dfrac{1}{\\sqrt{4\\pi Dt}}e^{-x^2/(4Dt)}\\).",
+  "back": "<ol><li><b>Fourier transform.</b> With \\(\\hat u(t,\\xi)=\\int u\\,e^{-i\\xi x}dx\\), \\(\\partial_t\\hat u=-D\\xi^2\\hat u\\).</li><li><b>Solve in frequency.</b> \\(\\hat u(t,\\xi)=\\hat u(0,\\xi)e^{-D\\xi^2t}\\).</li><li><b>Point mass.</b> For a point mass \\(\\hat u(0,\\xi)=1\\), so \\(\\hat u(t,\\xi)=e^{-D t\\xi^2}\\).</li><li><b>Invert.</b> \\(\\frac1{2\\pi}\\int e^{-Dt\\xi^2+i\\xi x}d\\xi=\\frac{1}{\\sqrt{4\\pi Dt}}e^{-x^2/(4Dt)}\\).</li><li><b>Check.</b> The kernel integrates to 1 and has variance \\(2Dt\\).</li></ol><b>If you get stuck:</b> What is the Fourier multiplier of \\(\\partial_{xx}\\)?<br><b>Minimal memory:</b> \\(\\partial_{xx}\\) becomes \\(-\\xi^2\\), so the heat equation is diagonal in frequency and the kernel is Gaussian of variance \\(2Dt\\).",
+  "tags": [
+   "s_generating_function",
+   "s_taylor",
+   "heat_equation",
+   "pde",
+   "fourier",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the explicit forward-time centred-space scheme \\(u^{n+1}_j=u^n_j+r(u_{j+1}^n-2u^n_j+u^n_{j-1})\\) and a Fourier mode \\(e^{ikj\\Delta x}\\) only, rebuild the von Neumann amplification factor \\(g=1-4r\\sin^2(k\\Delta x/2)\\), and the stability condition \\(r\\le\\tfrac12\\).",
+  "back": "<ol><li><b>Insert a mode.</b> Set \\(u_j^n=g^ne^{ikj\\Delta x}\\).</li><li><b>Second difference.</b> \\(e^{ik\\Delta x}-2+e^{-ik\\Delta x}=2\\cos(k\\Delta x)-2=-4\\sin^2(k\\Delta x/2)\\).</li><li><b>Amplification.</b> \\(g=1-4r\\sin^2(k\\Delta x/2)\\), with \\(r=D\\Delta t/\\Delta x^2\\).</li><li><b>Stability.</b> Need \\(|g|\\le1\\) for all \\(k\\). The worst mode has \\(\\sin^2=1\\): \\(g\\ge-1\\) iff \\(1-4r\\ge-1\\), i.e. \\(r\\le\\tfrac12\\).</li><li><b>Check.</b> \\(r=0.5\\) is marginal, \\(r=0.6\\) gives \\(g=-1.4\\), which is unstable.</li></ol><b>If you get stuck:</b> Which wavenumber is the worst case, and what is \\(g\\) there?<br><b>Minimal memory:</b> The highest-frequency mode decides stability: \\(1-4r\\ge-1\\) gives \\(r\\le\\tfrac12\\).",
+  "tags": [
+   "s_eigen",
+   "fdm",
+   "heat_equation",
+   "stability",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From i.i.d. draws \\(Y_i\\) with variance \\(\\sigma^2\\) and the estimator \\(\\bar Y=\\frac1N\\sum Y_i\\) only, rebuild the Monte Carlo standard error \\(\\sigma/\\sqrt N\\), and for a probability \\(\\sqrt{p(1-p)/N}\\le\\frac1{2\\sqrt N}\\).",
+  "back": "<ol><li><b>Variance of the mean.</b> \\(\\operatorname{Var}\\bar Y=\\frac1{N^2}\\sum\\operatorname{Var}Y_i=\\sigma^2/N\\).</li><li><b>Standard error.</b> \\(\\mathrm{SE}=\\sigma/\\sqrt N\\).</li><li><b>Confidence.</b> By the CLT, a 95% interval is \\(\\bar Y\\pm1.96\\,\\mathrm{SE}\\).</li><li><b>Indicator case.</b> For an indicator, \\(\\sigma^2=p(1-p)\\le\\frac14\\), so \\(\\mathrm{SE}\\le\\frac1{2\\sqrt N}\\).</li><li><b>Check.</b> \\(N=10^6\\) gives \\(\\mathrm{SE}\\le5\\times10^{-4}\\) for a probability.</li></ol><b>If you get stuck:</b> What is the variance of an indicator, and how much does a mean of \\(N\\) such indicators vary?<br><b>Minimal memory:</b> Variance of a mean of \\(N\\) i.i.d. draws is \\(\\sigma^2/N\\): to halve the error, use 4 times the samples.",
+  "tags": [
+   "s_clt_normal_approx",
+   "s_indicators",
+   "monte_carlo",
+   "standard_error",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the geometric trials model with success probability \\(p\\) and the first-step equation \\(E=1+(1-p)E\\) only, rebuild the geometric mean \\(E[T]=1/p\\).",
+  "back": "<ol><li><b>Truncate.</b> Let \\(T_m=\\min(T,m)\\) with \\(E T_0=0\\). Condition on the first trial: a success gives \\(T_m=1\\); a failure gives \\(T_m=1+\\min(T',m-1)\\) for a fresh copy \\(T'\\). So \\(E T_m=1+(1-p)E T_{m-1}\\).</li><li><b>Solve the finite recursion.</b> \\(E T_m=\\dfrac{1-(1-p)^m}{p}\\), by induction.</li><li><b>Limit.</b> \\(T_m\\uparrow T\\), so by monotone convergence \\(E T=\\lim E T_m=1/p\\). The bare equation \\(E=1+(1-p)E\\) is also satisfied by \\(E=\\infty\\), so finiteness has to come from this step.</li></ol><b>If you get stuck:</b> What happens after a failed first trial, and why can the bare equation not settle an infinite mean?<br><b>Minimal memory:</b> A failure restarts the process, so the mean satisfies a one-line self-referencing equation, once it is shown finite.",
+  "tags": [
+   "s_first_step_conditioning",
+   "s_recursion",
+   "geometric",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From \\(n\\) i.i.d. continuous random variables with a common distribution and the probability that the \\(k\\)-th one is a record only, rebuild the expected number of records \\(E[R_n]=H_n=\\sum_{k=1}^n 1/k\\).",
+  "back": "<ol><li><b>Indicators.</b> Let \\(I_k=\\mathbf 1\\{X_k\\text{ exceeds all earlier values}\\}\\), so \\(R_n=\\sum_k I_k\\).</li><li><b>Symmetry.</b> Among the first \\(k\\) values, each is equally likely to be the largest (no ties).</li><li><b>Probability.</b> \\(P(I_k=1)=1/k\\).</li><li><b>Linearity.</b> \\(E R_n=\\sum_{k=1}^n 1/k=H_n\\).</li><li><b>Check.</b> \\(n=3\\): \\(1+\\tfrac12+\\tfrac13=\\tfrac{11}6\\).</li></ol><b>If you get stuck:</b> Does the record event for position \\(k\\) depend on the common distribution?<br><b>Minimal memory:</b> Symmetry makes each record probability 1/k, whatever the distribution; linearity sums them.",
+  "tags": [
+   "s_indicators",
+   "s_symmetry",
+   "s_linearity_expectation",
+   "records",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From \\(n\\) independent Bernoulli\\((p)\\) indicators and their sum \\(X\\) only, rebuild \\(E[X]=np\\) and \\(\\operatorname{Var}X=np(1-p)\\).",
+  "back": "<ol><li><b>Decompose.</b> \\(X=\\sum_{i=1}^nI_i\\) with \\(EI_i=p\\), \\(\\operatorname{Var}I_i=p(1-p)\\).</li><li><b>Mean.</b> Linearity: \\(EX=np\\).</li><li><b>Variance.</b> Independence kills every covariance: \\(\\operatorname{Var}X=\\sum\\operatorname{Var}I_i=np(1-p)\\).</li></ol><b>If you get stuck:</b> Which covariances vanish, and why?<br><b>Minimal memory:</b> A binomial is a sum of independent indicators: mean is additive, variance is additive.",
+  "tags": [
+   "s_indicators",
+   "s_linearity_expectation",
+   "s_variance_decomposition",
+   "binomial",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the binomial pmf \\(\\binom nk p^k(1-p)^{n-k}\\) with \\(p=\\lambda/n\\) as \\(n\\to\\infty\\) only, rebuild the Poisson pmf \\(e^{-\\lambda}\\lambda^k/k!\\).",
+  "back": "<ol><li><b>Substitute.</b> \\(p=\\lambda/n\\): \\(\\binom nkp^k=\\dfrac{\\lambda^k}{k!}\\cdot\\dfrac{n(n-1)\\cdots(n-k+1)}{n^k}\\).</li><li><b>Fixed k.</b> The falling-factorial ratio tends to 1 as \\(n\\to\\infty\\).</li><li><b>Other factor.</b> \\((1-\\lambda/n)^{n-k}\\to e^{-\\lambda}\\).</li><li><b>Result.</b> So \\(P(X=k)\\to e^{-\\lambda}\\lambda^k/k!\\).</li></ol><b>If you get stuck:</b> Which factor of the binomial pmf produces the exponential?<br><b>Minimal memory:</b> Rare events in many trials: \\((1-\\lambda/n)^n\\to e^{-\\lambda}\\) is the source of every Poisson probability.",
+  "tags": [
+   "s_poisson_approx",
+   "s_taylor",
+   "s_recursion",
+   "poisson",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the Poisson pmf \\(e^{-\\lambda}\\lambda^k/k!\\) and the factorial-moment identity \\(E[X(X-1)]=\\lambda^2\\) only, rebuild \\(E X=\\lambda\\) and \\(\\operatorname{Var}X=\\lambda\\) for \\(X\\sim\\text{Poisson}(\\lambda)\\).",
+  "back": "<ol><li><b>Mean.</b> \\(EX=\\sum_k k\\,e^{-\\lambda}\\lambda^k/k!=\\lambda\\sum_{k\\ge1}e^{-\\lambda}\\lambda^{k-1}/(k-1)!=\\lambda\\).</li><li><b>Factorial moment.</b> \\(E[X(X-1)]=\\lambda^2\\sum_{k\\ge2}e^{-\\lambda}\\lambda^{k-2}/(k-2)!=\\lambda^2\\).</li><li><b>Variance.</b> \\(\\operatorname{Var}X=E[X(X-1)]+EX-(EX)^2=\\lambda^2+\\lambda-\\lambda^2=\\lambda\\).</li></ol><b>If you get stuck:</b> What does shifting the index by one do to the sum?<br><b>Minimal memory:</b> Factor out \\(\\lambda\\) and recognise the sum of the pmf again; the variance equals the mean.",
+  "tags": [
+   "s_generating_function",
+   "s_recursion",
+   "s_linearity_expectation",
+   "poisson",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From a Poisson process of rate \\(\\lambda\\) with \\(N_t\\sim\\text{Poisson}(\\lambda t)\\) and the first arrival time \\(T\\) only, rebuild \\(P(T>t)=e^{-\\lambda t}\\), so the interarrival time is \\(\\text{Exp}(\\lambda)\\).",
+  "back": "<ol><li><b>Event identity.</b> \\(\\{T>t\\}=\\{N_t=0\\}\\).</li><li><b>Probability.</b> \\(P(N_t=0)=e^{-\\lambda t}\\).</li><li><b>Interpretation.</b> So \\(T\\) has survival \\(e^{-\\lambda t}\\), the exponential law.</li><li><b>Memoryless.</b> The arrival times are stopping times, so by the strong Markov property of the independent-increment process the post-arrival process is a fresh copy. Hence every interarrival time has the same exponential law.</li></ol><b>If you get stuck:</b> What is the event \\(\\{T>t\\}\\) in terms of the counting process?<br><b>Minimal memory:</b> Survival of the first arrival is the probability of zero events; the rest follows from independent increments.",
+  "tags": [
+   "s_memorylessness",
+   "s_poisson_approx",
+   "exponential_distribution",
+   "poisson",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the Black-Scholes delta \\(\\Delta=N(d_1)\\) and the chain rule through \\(d_1\\) only, rebuild gamma \\(\\Gamma=\\partial^2C/\\partial S^2=\\varphi(d_1)/(S\\sigma\\sqrt T)\\).",
+  "back": "<ol><li><b>Differentiate delta.</b> \\(\\Gamma=\\partial_S N(d_1)=\\varphi(d_1)\\,\\partial_Sd_1\\).</li><li><b>Derivative of d1.</b> \\(d_1=\\dfrac{\\ln(S/K)+(r+\\tfrac12\\sigma^2)T}{\\sigma\\sqrt T}\\), so \\(\\partial_Sd_1=\\dfrac1{S\\sigma\\sqrt T}\\).</li><li><b>Result.</b> \\(\\Gamma=\\dfrac{\\varphi(d_1)}{S\\sigma\\sqrt T}\\), the same for call and put.</li><li><b>Check.</b> Positive for all inputs, peaking at the money.</li></ol><b>If you get stuck:</b> Which quantity does \\(\\partial_S d_1\\) equal, and why is gamma the same for call and put?<br><b>Minimal memory:</b> Gamma is the derivative of the delta; delta is \\(N(d_1)\\), so gamma is \\(\\varphi(d_1)\\) times \\(\\partial_Sd_1\\).",
+  "tags": [
+   "s_taylor",
+   "s_change_of_measure",
+   "greeks",
+   "black_scholes",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the independence and uniformity of the relative ranks only, rebuild \\(P(R_n=k)=c(n,k)/n!\\), the unsigned Stirling number of the first kind, with mean \\(H_n\\).",
+  "back": "<ol><li><b>Relative ranks.</b> Let \\(\\rho_k\\) be the rank of \\(X_k\\) among \\(X_1,\\dots,X_k\\). The \\(\\rho_k\\) are independent, with \\(\\rho_k\\) uniform on \\(\\{1,\\dots,k\\}\\).</li><li><b>Records.</b> \\(X_k\\) is a record iff \\(\\rho_k=1\\), so the indicators \\(I_k=\\mathbf 1\\{\\rho_k=1\\}\\) are independent with \\(P(I_k=1)=1/k\\).</li><li><b>Generating function.</b> \\(E\\,t^{R_n}=\\prod_{k=1}^n\\big(1-\\tfrac1k+\\tfrac tk\\big)=\\frac1{n!}\\,t(t+1)\\cdots(t+n-1)\\).</li><li><b>Read off the law.</b> The rising factorial expands as \\(\\sum_k c(n,k)t^k\\), the unsigned Stirling numbers of the first kind, so \\(P(R_n=k)=c(n,k)/n!\\).</li><li><b>Mean.</b> Differentiate at \\(t=1\\), or use linearity over the \\(I_k\\): \\(E R_n=\\sum_k 1/k=H_n\\). Check: \\(n=4\\) gives counts \\(6,11,6,1\\) over \\(24\\) permutations, mean \\(25/12=H_4\\).</li></ol><b>If you get stuck:</b> What is the probability that \\(X_k\\) is the largest of the first \\(k\\), and are these events independent across \\(k\\)?<br><b>Minimal memory:</b> Independent record events with probabilities \\(1/k\\); their product is a rising factorial, which is the Stirling law.",
+  "tags": [
+   "s_bijection",
+   "s_symmetry",
+   "s_indicators",
+   "records",
+   "stirling",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "From the Black-Scholes price of a call and a put on the same strike, the parity identity, and the put's relation to the call only, rebuild the Black-Scholes put \\(P=Ke^{-rT}N(-d_2)-SN(-d_1)\\).",
+  "back": "<ol><li><b>Parity.</b> \\(P=C-S+Ke^{-rT}\\).</li><li><b>Substitute the call.</b> \\(P=SN(d_1)-Ke^{-rT}N(d_2)-S+Ke^{-rT}\\).</li><li><b>Complement the normal.</b> \\(N(d_1)-1=-N(-d_1)\\) and \\(1-N(d_2)=N(-d_2)\\).</li><li><b>Result.</b> \\(P=Ke^{-rT}N(-d_2)-SN(-d_1)\\).</li></ol><b>If you get stuck:</b> Which normal-CDF identity converts \\(N(d)-1\\) into a term in \\(N(-d)\\)?<br><b>Minimal memory:</b> Put equals call minus the forward; the complement identity \\(N(x)+N(-x)=1\\) gives the put in standard form.",
+  "tags": [
+   "s_replication",
+   "s_symmetry",
+   "put_call_parity",
+   "black_scholes",
+   "options",
+   "fmt_rebuild"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the expected duration \\(E[\\tau]=i(N-i)\\) of the fair gambler's ruin, given only \\(P_i(\\text{hit }N)=i/N\\) and the martingale \\(S_n^2-n\\).",
+  "back": "<ol><li><b>Quadratic martingale.</b> \\(S_n^2-n\\) is a martingale, and optional stopping applies since \\(E\\tau<\\infty\\) (geometric tail) and the increments are bounded before exit, so \\(E[S_\\tau^2-\\tau]=i^2\\).</li><li><b>Terminal value.</b> At exit, \\(S_\\tau\\in\\{0,N\\}\\). Using the ruin probability, \\(E[S_\\tau^2]=N^2\\cdot\\frac iN=iN\\).</li><li><b>Combine.</b> \\(E\\tau=iN-i^2=i(N-i)\\).</li></ol><b>Minimal memory:</b> The ruin probability supplies the terminal value; the quadratic martingale turns that into a time.",
+  "tags": [
+   "s_martingale",
+   "s_optional_stopping",
+   "s_invariant",
+   "gamblers_ruin",
+   "duration",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive \\(D_n=(n-1)(D_{n-1}+D_{n-2})\\) from the closed form \\(D_n=n!\\sum_{k=0}^n(-1)^k/k!\\).",
+  "back": "<ol><li><b>Shift the sum.</b> \\(nD_{n-1}=\\sum_{k=0}^{n-1}(-1)^k\\,n!/k!=D_n-(-1)^n\\), so \\(D_n=nD_{n-1}+(-1)^n\\).</li><li><b>Same at \\(n-1\\).</b> \\(D_{n-1}=(n-1)D_{n-2}+(-1)^{n-1}\\).</li><li><b>Subtract the two.</b> \\(D_n-nD_{n-1}=-(D_{n-1}-(n-1)D_{n-2})\\).</li><li><b>Rearrange.</b> \\(D_n=(n-1)D_{n-1}+(n-1)D_{n-2}=(n-1)(D_{n-1}+D_{n-2})\\). Check: \\(D_4=3(D_3+D_2)=9\\).</li></ol><b>If you get stuck:</b> Which term of the closed form is the single leftover when you shift the index?<br><b>Minimal memory:</b> Shifting the index in the alternating sum isolates a (-1)^n; subtracting consecutive identities gives the recursion.",
+  "tags": [
+   "s_inclusion_exclusion",
+   "s_recursion",
+   "derangements",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the digital call price \\(e^{-rT}P(S_T>K)\\) from put-call parity, by differentiating in \\(K\\).",
+  "back": "<ol><li><b>Parity for all strikes.</b> \\(C(K)-P(K)=S_0-Ke^{-rT}\\) for every \\(K\\).</li><li><b>Put derivative.</b> \\(\\partial_KP=e^{-rT}P^Q(S_T<K)\\), the digital put price.</li><li><b>Parity derivative.</b> \\(\\partial_KC-\\partial_KP=-e^{-rT}\\), so \\(\\partial_KC=\\partial_KP-e^{-rT}\\).</li><li><b>Call derivative.</b> \\(\\partial_KC=-e^{-rT}P^Q(S_T>K)\\), since \\(P^Q(S_T<K)+P^Q(S_T>K)=1\\).</li><li><b>Result.</b> The digital call price is \\(e^{-rT}P^Q(S_T>K)=-\\partial_KC\\).</li></ol><b>If you get stuck:</b> What does differentiating parity in \\(K\\) do to the call and put derivatives?<br><b>Minimal memory:</b> Parity is a static identity in \\(K\\); differentiating once turns the call into a digital, minus its strike slope.",
+  "tags": [
+   "s_replication",
+   "s_change_of_measure",
+   "put_call_parity",
+   "digital",
+   "options",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the risk-neutral density \\(e^{rT}\\partial_K^2C\\) from the price of a butterfly spread.",
+  "back": "<ol><li><b>Butterfly.</b> Buy calls at \\(K-h\\) and \\(K+h\\), sell two at \\(K\\). Payoff \\((S-K+h)^+-2(S-K)^++(S-K-h)^+\\).</li><li><b>Payoff shape.</b> This is a tent of base \\(2h\\) and height \\(h\\), area \\(h^2\\), centred at \\(K\\).</li><li><b>Expectation.</b> \\(E^Q[\\text{tent}]\\approx h^2 f(K)\\) as \\(h\\to0\\), since the tent concentrates at \\(K\\).</li><li><b>Price.</b> Since \\(C(K)=e^{-rT}E^Q[(S_T-K)^+]\\), linearity gives \\(C(K-h)-2C(K)+C(K+h)=e^{-rT}E^Q[\\text{tent}]\\approx e^{-rT}h^2f(K)\\).</li><li><b>Limit.</b> Divide by \\(h^2\\) and let \\(h\\to0\\): \\(e^{-rT}\\partial_K^2C=e^{-rT}\\cdot\\)density, hence \\(f(K)=e^{rT}\\partial_K^2C\\).</li></ol><b>If you get stuck:</b> What is the second central difference of \\(C\\) in \\(K\\), in terms of the payoff's area?<br><b>Minimal memory:</b> The second strike derivative of the call is the price of a vanishing-width butterfly, which is a density.",
+  "tags": [
+   "s_geometric_probability",
+   "s_taylor",
+   "breeden_litzenberger",
+   "options",
+   "risk_neutral",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive \\(\\Theta=rV-rS\\Delta-\\tfrac12\\sigma^2S^2\\Gamma\\) from the Black-Scholes PDE, and state the gamma-theta trade-off.",
+  "back": "<ol><li><b>PDE.</b> \\(\\Theta+rS\\Delta+\\tfrac12\\sigma^2S^2\\Gamma=rV\\), where \\(\\Theta=V_t\\), \\(\\Delta=V_S\\), \\(\\Gamma=V_{SS}\\).</li><li><b>Rearrange.</b> Move the Greeks to one side: \\(\\Theta=rV-rS\\Delta-\\tfrac12\\sigma^2S^2\\Gamma\\).</li><li><b>Interpret.</b> Long gamma pays theta at rate \\(\\tfrac12\\sigma^2S^2\\Gamma\\). A delta-hedged book then earns exactly \\(r\\) when the volatility used is the one priced in.</li></ol><b>If you get stuck:</b> Which Greek is the one you can hedge away each instant, and which two must balance?<br><b>Minimal memory:</b> The PDE is a conservation law: theta pays for gamma.",
+  "tags": [
+   "s_replication",
+   "s_martingale",
+   "greeks",
+   "black_scholes",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the continuous-time Kelly fraction \\(f^*=\\mu/\\sigma^2\\) as the limit of discrete even-odds Kelly, \\(f^*=p-q\\).",
+  "back": "<ol><li><b>Small bets.</b> Bet fraction \\(f\\) on steps of size \\(u=\\sigma\\sqrt{dt}\\), returns \\(\\pm u\\).</li><li><b>Discrete Kelly.</b> Discrete Kelly gives \\(fu=p-q\\), so \\(f=(p-q)/u\\).</li><li><b>Match the drift.</b> The mean return per step is \\((p-q)u=\\mu\\,dt\\), so \\(p-q=\\mu\\,dt/u=\\mu\\sqrt{dt}/\\sigma\\).</li><li><b>Limit.</b> \\(f=\\dfrac{\\mu\\sqrt{dt}/\\sigma}{\\sigma\\sqrt{dt}}=\\dfrac{\\mu}{\\sigma^2}\\).</li><li><b>Check.</b> \\(\\mu=0.08\\), \\(\\sigma=0.2\\) gives \\(2.0\\) from both routes.</li></ol><b>If you get stuck:</b> What is the mean return per step, and how does it compare to \\(p-q\\) times the step size?<br><b>Minimal memory:</b> Small-bet Kelly with matched drift and variance gives \\(\\mu/\\sigma^2\\).",
+  "tags": [
+   "s_kelly_log_utility",
+   "s_sqrt_time_scaling",
+   "kelly",
+   "gbm",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive \\(E[T]=nH_n\\) for the coupon collector from inclusion-exclusion and the tail-sum formula.",
+  "back": "<ol><li><b>Tail sum.</b> \\(E T=\\sum_{t\\ge0}P(T>t)\\).</li><li><b>Inclusion-exclusion.</b> \\(P(T>t)=P(\\text{some coupon missing})=\\sum_{k=1}^n(-1)^{k+1}\\binom nk(1-k/n)^t\\).</li><li><b>Sum over time.</b> \\(\\sum_{t\\ge0}(1-k/n)^t=n/k\\).</li><li><b>Combine.</b> \\(E T=n\\sum_{k=1}^n(-1)^{k+1}\\binom nk\\frac1k=nH_n\\), using \\(\\sum_k(-1)^{k+1}\\binom nk/k=H_n\\), which follows from \\(\\sum_k(-1)^{k+1}\\binom nk\\frac{x^k}{k}=\\int_0^x\\frac{1-(1-u)^n}{u}\\,du\\) at \\(x=1\\) and the substitution \\(v=1-u\\): \\(\\int_0^1\\frac{1-v^n}{1-v}\\,dv=\\sum_{j=0}^{n-1}\\frac1{j+1}=H_n\\).</li></ol><b>If you get stuck:</b> What is the probability that a given set of coupons is still missing at time \\(t\\)?<br><b>Minimal memory:</b> Time-indexed tails plus inclusion-exclusion turn the coupon problem into a sum of geometric series.",
+  "tags": [
+   "s_tail_sum",
+   "s_inclusion_exclusion",
+   "s_linearity_expectation",
+   "coupon_collector",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive \\(E[T_{\\text{pattern}}]=\\sum 2^k\\) over the self-overlaps \\(k\\) of a fair-coin pattern, from the casino argument.",
+  "back": "<ol><li><b>Fair casino.</b> Each flip launches a gambler who bets their full bankroll on the next letter, doubling on each correct call.</li><li><b>Who holds money at \\(T\\).</b> For each \\(k\\) where the length-\\(k\\) prefix equals the length-\\(k\\) suffix at time \\(T\\), one gambler holds \\(2^k\\). No other gambler survives.</li><li><b>Total.</b> The bankroll at \\(T\\) is \\(\\sum_{k\\in\\text{borders}}2^k\\).</li><li><b>Optional stopping.</b> Let \\(L\\) be the pattern length. Before \\(T\\) at most \\(L-1\\) gamblers are alive, each holding at most \\(2^{L-1}\\) (otherwise the pattern would have completed earlier), so the stopped process has bounded increments; with \\(E T<\\infty\\) (geometric tail), optional stopping gives \\(E[\\text{bankroll}-T]=0\\), so \\(E T=\\sum_{k\\in\\text{borders}}2^k\\). Check: HH gives 6, HTH gives 10, HHH gives 14.</li></ol><b>If you get stuck:</b> Which gamblers are still holding money when the pattern completes, indexed by what?<br><b>Minimal memory:</b> The expected waiting time is the sum of 2 to the power of each border length.",
+  "tags": [
+   "s_martingale",
+   "s_optional_stopping",
+   "pattern_waiting",
+   "coin_patterns",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive \\(P(\\max_{s\\le t}W_s\\ge a)=2P(W_t\\ge a)\\) as the scaling limit of the discrete reflection identity for simple random walk.",
+  "back": "<ol><li><b>Discrete identity.</b> For simple random walk \\(S_n\\), \\(P(\\max_{k\\le n}S_k\\ge a)=P(S_n\\ge a)+P(S_n>a)\\) for \\(a\\ge1\\).</li><li><b>Scale.</b> Set \\(a=x\\sqrt n\\) and \\(W_t\\approx S_{\\lfloor nt\\rfloor}/\\sqrt n\\) (Donsker).</li><li><b>Limit of each term.</b> Both \\(P(S_n\\ge x\\sqrt n)\\) and \\(P(S_n>x\\sqrt n)\\) tend to \\(P(W_1\\ge x)\\), since the boundary has no mass.</li><li><b>Combine.</b> The limit is \\(2P(W_1\\ge x)\\), which is the continuous reflection identity.</li></ol><b>If you get stuck:</b> Which discrete terms carry the endpoint and the strict inequality, and what does each become in the limit?<br><b>Minimal memory:</b> The discrete reflection is \\(P(S_n\\ge a)+P(S_n>a)\\); scaling collapses both terms to the same Gaussian tail.",
+  "tags": [
+   "s_reflection",
+   "s_sqrt_time_scaling",
+   "s_coupling",
+   "brownian_motion",
+   "random_walk",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive \\(R^2=\\beta_{yx}\\beta_{xy}\\) from the definitions of the two regression slopes and \\(R^2=1-\\text{SSR}/\\text{SST}\\).",
+  "back": "<ol><li><b>Two slopes.</b> \\(\\beta_{yx}=S_{xy}/S_{xx}\\), \\(\\beta_{xy}=S_{xy}/S_{yy}\\).</li><li><b>Product.</b> \\(\\beta_{yx}\\beta_{xy}=S_{xy}^2/(S_{xx}S_{yy})\\).</li><li><b>Fitted values.</b> The fit of \\(y\\) on \\(x\\) has \\(\\text{SSR}=S_{yy}-\\beta_{yx}S_{xy}\\), so \\(R^2=1-\\text{SSR}/S_{yy}=\\beta_{yx}S_{xy}/S_{yy}\\).</li><li><b>Compare.</b> \\(\\beta_{yx}S_{xy}/S_{yy}=\\frac{S_{xy}}{S_{xx}}\\cdot\\frac{S_{xy}}{S_{yy}}\\), which is the product.</li></ol><b>If you get stuck:</b> What is the fitted-value sum of squares, in terms of the slope?<br><b>Minimal memory:</b> \\(R^2\\) equals the product of the two slopes because both are the same covariance over different variances.",
+  "tags": [
+   "s_extremal",
+   "s_symmetry",
+   "regression_symmetry",
+   "r_squared",
+   "regression",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the heat equation from the Black-Scholes PDE by the change of variables \\(x=\\ln(S/K)\\), \\(\\tau=\\tfrac12\\sigma^2(T-t)\\), \\(V=Ke^{ax+b\\tau}u\\).",
+  "back": "<ol><li><b>Log coordinate.</b> With \\(x=\\ln(S/K)\\), \\(S V_S=V_x\\) and \\(S^2V_{SS}=V_{xx}-V_x\\).</li><li><b>Rewrite the PDE.</b> \\(V_t+(r-\\tfrac12\\sigma^2)V_x+\\tfrac12\\sigma^2V_{xx}-rV=0\\).</li><li><b>Time variable.</b> With \\(\\tau=\\tfrac12\\sigma^2(T-t)\\), \\(V_t=-\\tfrac12\\sigma^2V_\\tau\\).</li><li><b>Exponential prefactor.</b> Choose \\(a=\\tfrac12-r/\\sigma^2\\) and \\(b=-(r/\\sigma^2+\\tfrac12)^2\\). Then the residual is \\(\\tfrac12\\sigma^2(u_{xx}-u_\\tau)\\) times the prefactor.</li><li><b>Result.</b> So \\(u_\\tau=u_{xx}\\), the heat equation with diffusivity 1.</li></ol><b>If you get stuck:</b> Which exponential prefactor kills the drift and the zero-order term together?<br><b>Minimal memory:</b> Log-price turns the PDE into heat with drift; an exponential tilt removes drift and discounting.",
+  "tags": [
+   "s_change_of_measure",
+   "s_taylor",
+   "heat_equation",
+   "black_scholes",
+   "pde",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive \\(\\binom{2n}{n}\\sim 4^n/\\sqrt{\\pi n}\\) from Stirling's formula.",
+  "back": "<ol><li><b>Write the binomial.</b> \\(\\binom{2n}n=\\dfrac{(2n)!}{(n!)^2}\\).</li><li><b>Stirling each factorial.</b> \\((2n)!\\sim\\sqrt{4\\pi n}\\,(2n/e)^{2n}\\) and \\((n!)^2\\sim2\\pi n\\,(n/e)^{2n}\\).</li><li><b>Ratio.</b> \\(\\dfrac{\\sqrt{4\\pi n}\\,4^n n^{2n}e^{-2n}}{2\\pi n\\,n^{2n}e^{-2n}}=\\dfrac{\\sqrt{4\\pi n}\\,4^n}{2\\pi n}\\).</li><li><b>Simplify.</b> \\(=\\dfrac{4^n}{\\sqrt{\\pi n}}\\). Check: \\(n=50\\) gives a ratio \\(\\approx1+\\tfrac1{8n}\\).</li></ol><b>If you get stuck:</b> What are the exponential factors in the two Stirling expansions, and do they cancel?<br><b>Minimal memory:</b> The central binomial is a ratio of Stirling expansions; the \\(e^{-2n}\\) and \\(n^{2n}\\) cancel.",
+  "tags": [
+   "s_taylor",
+   "s_fermi",
+   "stirling",
+   "central_binomial",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the Catalan number \\(C_n=\\binom{2n}{n}/(n+1)\\) from the ballot theorem.",
+  "back": "<ol><li><b>Ballot count.</b> Strictly positive paths of \\(2n+1\\) steps with \\(n+1\\) up and \\(n\\) down steps number \\(\\frac{(n+1)-n}{2n+1}\\binom{2n+1}{n}\\).</li><li><b>Remove the first step.</b> Such a path must start with an up step from 0 to 1. Delete it and subtract 1 from every later height: the remaining \\(2n\\) steps go from 0 to 0 with \\(n\\) up and \\(n\\) down steps and never go below 0. That is a Dyck path of length \\(2n\\).</li><li><b>Bijection.</b> Prepend an up step and add 1 to every height to invert; this is a bijection between the two families.</li><li><b>Simplify.</b> \\(\\frac1{2n+1}\\binom{2n+1}{n}=\\frac{1}{n+1}\\binom{2n}{n}\\), since \\(\\binom{2n+1}n=\\frac{2n+1}{n+1}\\binom{2n}n\\).</li><li><b>Check.</b> \\(n=5\\) gives 42.</li></ol><b>If you get stuck:</b> Which step must a strictly positive path of odd length start with, and what happens to the heights when you delete it?<br><b>Minimal memory:</b> Strict positivity forces the first step; deleting it and shifting heights gives Dyck paths, so the ballot count is a Catalan count.",
+  "tags": [
+   "s_bijection",
+   "s_reflection",
+   "s_complement",
+   "catalan",
+   "ballot",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the expected return time to a vertex \\(v\\) of a connected graph random walk, \\(2|E|/\\deg v\\), from the stationary distribution \\(\\pi_v\\propto\\deg v\\).",
+  "back": "<ol><li><b>Stationary law.</b> \\(\\pi_v=\\deg v/(2|E|)\\) for the simple random walk.</li><li><b>Kac's formula.</b> The mean return time to \\(v\\) is \\(1/\\pi_v\\).</li><li><b>Result.</b> \\(E_v[T_v^+]=2|E|/\\deg v\\). Check: the triangle with a pendant edge gives 8 at the pendant vertex, matching a direct solve.</li></ol><b>If you get stuck:</b> What is the fraction of time the walk spends at \\(v\\) in the long run?<br><b>Minimal memory:</b> The return time to a vertex is the reciprocal of its stationary mass.",
+  "tags": [
+   "s_markov_chain",
+   "s_eigen",
+   "random_walk_graph",
+   "stationary",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive \\(\\operatorname{Var}(S_N)=\\sigma^2E[N]+\\mu^2\\operatorname{Var}(N)\\) for a random sum with \\(N\\) independent of the i.i.d. steps.",
+  "back": "<ol><li><b>Conditional mean and variance.</b> \\(E[S_N\\mid N]=N\\mu\\) and \\(\\operatorname{Var}(S_N\\mid N)=N\\sigma^2\\).</li><li><b>Total variance.</b> \\(\\operatorname{Var}(S_N)=E[\\operatorname{Var}(S_N\\mid N)]+\\operatorname{Var}(E[S_N\\mid N])\\).</li><li><b>Substitute.</b> \\(=\\sigma^2E[N]+\\operatorname{Var}(N\\mu)=\\sigma^2E[N]+\\mu^2\\operatorname{Var}(N)\\).</li></ol><b>If you get stuck:</b> What are the conditional mean and variance of \\(S_N\\) given \\(N\\)?<br><b>Minimal memory:</b> Condition on the count, then apply the law of total variance.",
+  "tags": [
+   "s_variance_decomposition",
+   "s_conditional_expectation_tower",
+   "s_linearity_expectation",
+   "random_sum",
+   "variance",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the expected duration of the biased gambler's ruin, \\(E\\tau=\\dfrac{N h-i}{p-q}\\) with \\(h=P_i(\\text{hit }N)\\), from the martingale \\(S_n-(p-q)n\\).",
+  "back": "<ol><li><b>Martingale.</b> \\(M_n=S_n-(p-q)n\\) has zero conditional drift, so it is a martingale.</li><li><b>Optional stopping.</b> Stopping at the exit time (finite mean, bounded increments): \\(E[S_\\tau]-(p-q)E\\tau=i\\).</li><li><b>Terminal value.</b> \\(E S_\\tau=N\\cdot h\\), since \\(S_\\tau\\in\\{0,N\\}\\) is \\(N\\) with probability \\(h\\).</li><li><b>Solve.</b> \\(E\\tau=(Nh-i)/(p-q)\\). Check: \\(p=2/3\\), \\(i=3\\), \\(N=10\\) gives \\(17.28\\), against a \\(10^5\\)-run simulation of about \\(17.3\\).</li></ol><b>If you get stuck:</b> What is the drift of the walk, and what does subtracting it do to the position?<br><b>Minimal memory:</b> Subtract the drift per step to get a martingale, then the exit value gives the time.",
+  "tags": [
+   "s_martingale",
+   "s_optional_stopping",
+   "s_linearity_expectation",
+   "gamblers_ruin",
+   "duration",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive that the superposition of independent Poisson processes with rates \\(\\lambda_1,\\lambda_2\\) is Poisson with rate \\(\\lambda_1+\\lambda_2\\), from the race between exponential clocks.",
+  "back": "<ol><li><b>Next event.</b> After any event, the next event is the first of two independent clocks, Exp\\((\\lambda_1)\\) and Exp\\((\\lambda_2)\\).</li><li><b>Race law.</b> The minimum is Exp\\((\\lambda_1+\\lambda_2)\\), by the survival product.</li><li><b>Memorylessness.</b> Restarting after each event gives i.i.d. exponential interarrivals.</li><li><b>Labels.</b> The label of each event is independent, with probability \\(\\lambda_1/(\\lambda_1+\\lambda_2)\\) for type 1.</li><li><b>Conclude.</b> Interarrivals i.i.d. Exp\\((\\lambda_1+\\lambda_2)\\) means the superposition is Poisson of rate \\(\\lambda_1+\\lambda_2\\).</li></ol><b>If you get stuck:</b> After one event, what is the law of the time until the next one?<br><b>Minimal memory:</b> Memoryless races restart cleanly; superposition is just the minimum of the two clocks.",
+  "tags": [
+   "s_memorylessness",
+   "s_poisson_approx",
+   "s_order_statistics",
+   "poisson",
+   "superposition",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the mean residual life at a uniformly random time, \\(E[R]=E[L^2]/(2E[L])\\), from the inspection paradox.",
+  "back": "<ol><li><b>Size bias.</b> The interval containing a random time has density \\(lf(l)/E L\\).</li><li><b>Residual within it.</b> Given the interval has length \\(L\\), the time from the random instant to its end is uniform on \\((0,L)\\), with mean \\(L/2\\).</li><li><b>Average.</b> \\(E[R]=\\int\\frac L2\\cdot\\frac{Lf(L)}{EL}dL=\\frac{E[L^2]}{2E[L]}\\).</li></ol><b>If you get stuck:</b> Given the sampled interval has length \\(L\\), where is the random instant within it?<br><b>Minimal memory:</b> Size bias gives the interval, and within it the instant is uniform, so the residual averages half the length.",
+  "tags": [
+   "s_linearity_expectation",
+   "s_geometric_probability",
+   "inspection_paradox",
+   "renewal",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive \\(E[Z^4]=3\\) from Stein's identity \\(E[Zg(Z)]=E[g'(Z)]\\), which itself follows by integration by parts.",
+  "back": "<ol><li><b>Stein's identity.</b> \\(E[Zg(Z)]=\\int zg(z)\\varphi(z)dz=\\int g(z)(-\\varphi'(z))dz=\\int g'(z)\\varphi(z)dz=E[g'(Z)]\\), since \\(\\varphi'=-z\\varphi\\).</li><li><b>Choose g.</b> Take \\(g(z)=z^3\\), so \\(E[Z^4]=E[3Z^2]\\).</li><li><b>Repeat.</b> Take \\(g(z)=z\\): \\(E[Z^2]=E[1]=1\\). So \\(E[Z^4]=3\\).</li></ol><b>If you get stuck:</b> What is \\(\\varphi'(z)\\), and what does integration by parts do to \\(\\int zg\\varphi\\)?<br><b>Minimal memory:</b> Stein's identity is integration by parts with \\(\\varphi'=-z\\varphi\\); moments of the normal follow by induction.",
+  "tags": [
+   "s_taylor",
+   "s_linearity_expectation",
+   "normal",
+   "stein",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive \\(E\\big[(\\int_0^TW_t\\,dW_t)^2\\big]=T^2/2\\) from \\(d(W^2)\\) and the Itô isometry.",
+  "back": "<ol><li><b>Itô on W squared.</b> \\(d(W^2)=2W\\,dW+dt\\), so \\(W_T^2=2\\int_0^TW\\,dW+T\\).</li><li><b>Isolate the integral.</b> \\(\\int_0^TW\\,dW=\\tfrac12(W_T^2-T)\\).</li><li><b>Second moment.</b> \\(E[(W_T^2-T)^2]=EW_T^4-2TEW_T^2+T^2=3T^2-2T^2+T^2=2T^2\\), so \\(E[(\\int W\\,dW)^2]=\\tfrac14\\cdot2T^2=T^2/2\\).</li><li><b>Isometry check.</b> \\(\\int_0^TE[W_t^2]\\,dt=\\int_0^Tt\\,dt=T^2/2\\).</li></ol><b>If you get stuck:</b> What is \\(E[W_T^4]\\), and how does the Itô isometry apply to the integrand \\(W_t\\)?<br><b>Minimal memory:</b> Both routes give \\(T^2/2\\): the square of an Itô integral is the integral of the squared integrand.",
+  "tags": [
+   "s_martingale",
+   "s_variance_decomposition",
+   "s_taylor",
+   "ito_calculus",
+   "ito_isometry",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive \\(E[S_T]=S_0e^{\\mu T}\\) for geometric Brownian motion directly from the SDE, without writing the explicit solution.",
+  "back": "<ol><li><b>Expectation of the SDE.</b> Since \\(dS=\\mu S\\,dt+\\sigma S\\,dW\\), taking expectations kills the Itô integral (mean zero, since \\(E\\int_0^T S_t^2dt<\\infty\\) for GBM).</li><li><b>Mean ODE.</b> \\(m(t)=E S_t\\) satisfies \\(m'(t)=\\mu\\,m(t)\\), with \\(m(0)=S_0\\).</li><li><b>Solve.</b> \\(m(T)=S_0e^{\\mu T}\\).</li></ol><b>If you get stuck:</b> What is the expectation of the Itô integral term?<br><b>Minimal memory:</b> Expectations turn an SDE into an ODE for the mean, because the martingale term has mean zero.",
+  "tags": [
+   "s_martingale",
+   "s_linearity_expectation",
+   "gbm",
+   "ito_calculus",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the Black-Scholes PDE from the risk-neutral price \\(C(t,S)\\) by Itô's lemma and the martingale property of \\(e^{-rt}C\\) under \\(Q\\).",
+  "back": "<ol><li><b>Itô on the price.</b> Under \\(Q\\), \\(dS=rS\\,dt+\\sigma S\\,dW\\), so \\(dC=(C_t+rSC_S+\\tfrac12\\sigma^2S^2C_{SS})dt+\\sigma SC_S\\,dW\\).</li><li><b>Discount.</b> \\(d(e^{-rt}C)=e^{-rt}(-rC+C_t+rSC_S+\\tfrac12\\sigma^2S^2C_{SS})dt+e^{-rt}\\sigma SC_S\\,dW\\).</li><li><b>Martingale.</b> The discounted price is a \\(Q\\)-martingale, so its drift is zero.</li><li><b>Result.</b> \\(C_t+rSC_S+\\tfrac12\\sigma^2S^2C_{SS}=rC\\).</li></ol><b>If you get stuck:</b> What must the drift of \\(e^{-rt}C\\) be under \\(Q\\), and why?<br><b>Minimal memory:</b> The discounted price is a martingale under Q; zero drift is the PDE.",
+  "tags": [
+   "s_martingale",
+   "s_change_of_measure",
+   "s_taylor",
+   "black_scholes",
+   "pde",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the simple regression slope \\(b=\\rho\\,\\sigma_y/\\sigma_x\\) from the OLS slope formula.",
+  "back": "<ol><li><b>OLS slope.</b> \\(b=\\operatorname{Cov}(x,y)/\\operatorname{Var}(x)\\).</li><li><b>Correlation.</b> \\(\\operatorname{Cov}(x,y)=\\rho\\,\\sigma_x\\sigma_y\\).</li><li><b>Substitute.</b> \\(b=\\rho\\sigma_x\\sigma_y/\\sigma_x^2=\\rho\\,\\sigma_y/\\sigma_x\\).</li></ol><b>If you get stuck:</b> Write the covariance in terms of the correlation and the two standard deviations.<br><b>Minimal memory:</b> The slope is the correlation rescaled by the ratio of standard deviations.",
+  "tags": [
+   "s_symmetry",
+   "s_eigen",
+   "ols",
+   "regression",
+   "correlation",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the global minimum-variance weights of \\(n\\) equicorrelated assets from the eigenstructure, and show they are equal.",
+  "back": "<ol><li><b>Eigenvector.</b> \\(\\Sigma\\mathbf 1=(1+(n-1)\\rho)\\mathbf 1\\), so \\(\\mathbf 1\\) is an eigenvector of \\(\\Sigma\\).</li><li><b>Inverse applied to one.</b> \\(\\Sigma^{-1}\\mathbf 1=\\mathbf 1/(1+(n-1)\\rho)\\).</li><li><b>Normalise.</b> \\(w^*=\\Sigma^{-1}\\mathbf 1/(\\mathbf 1^\\top\\Sigma^{-1}\\mathbf 1)=\\mathbf 1/n\\).</li></ol><b>If you get stuck:</b> Which vector is an eigenvector of the equicorrelation matrix?<br><b>Minimal memory:</b> Equal weights are the eigenvector of the all-ones direction, so minimum variance is equal weight.",
+  "tags": [
+   "s_eigen",
+   "s_symmetry",
+   "s_lagrange",
+   "min_variance",
+   "equicorrelation",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the variance of the equally weighted average of \\(n\\) equicorrelated assets, \\(\\rho+(1-\\rho)/n\\), from the eigenvalues.",
+  "back": "<ol><li><b>Average.</b> The weight vector is \\(w=\\mathbf 1/n\\).</li><li><b>Quadratic form.</b> \\(\\operatorname{Var}=w^\\top\\Sigma w=\\frac{\\mathbf 1^\\top\\Sigma\\mathbf 1}{n^2}\\).</li><li><b>Eigenvalue.</b> \\(\\Sigma\\mathbf 1=(1+(n-1)\\rho)\\mathbf 1\\), so \\(\\mathbf 1^\\top\\Sigma\\mathbf 1=n(1+(n-1)\\rho)\\).</li><li><b>Simplify.</b> \\(\\operatorname{Var}=\\frac{1+(n-1)\\rho}{n}=\\rho+\\frac{1-\\rho}n\\). Check: \\(n=5\\), \\(\\rho=0.3\\): \\(0.44\\).</li></ol><b>If you get stuck:</b> What is the eigenvalue of \\(\\Sigma\\) on the all-ones vector?<br><b>Minimal memory:</b> Average variance is the all-ones eigenvalue divided by \\(n\\).",
+  "tags": [
+   "s_eigen",
+   "s_linearity_expectation",
+   "portfolio_variance",
+   "equicorrelation",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the OU half-life \\(\\ln2/\\theta\\) from the discrete AR(1) coefficient \\(\\varphi=e^{-\\theta\\Delta}\\).",
+  "back": "<ol><li><b>AR(1) step.</b> Exact discretisation gives \\(X_{t+\\Delta}=\\varphi X_t+\\text{noise}\\) with \\(\\varphi=e^{-\\theta\\Delta}\\).</li><li><b>Mean after k steps.</b> \\(E[X_{t+k\\Delta}\\mid X_t]=\\varphi^kX_t\\).</li><li><b>Half-life.</b> Set \\(\\varphi^k=\\tfrac12\\): \\(k=\\ln2/(-\\ln\\varphi)=\\ln2/(\\theta\\Delta)\\).</li><li><b>Time units.</b> Multiplying by \\(\\Delta\\) gives \\(t_{1/2}=\\ln2/\\theta\\).</li></ol><b>If you get stuck:</b> What does \\(\\varphi\\) become after \\(k\\) steps, and what \\(k\\) makes it one half?<br><b>Minimal memory:</b> Half-life is the number of steps for \\(\\varphi^k=1/2\\), converted to time.",
+  "tags": [
+   "s_recursion",
+   "s_markov_chain",
+   "ornstein_uhlenbeck",
+   "half_life",
+   "time_series",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the stability condition \\(r\\le\\tfrac12\\) of the explicit heat scheme from the non-negativity of its weights.",
+  "back": "<ol><li><b>Scheme as an average.</b> \\(u_j^{n+1}=r\\,u_{j+1}^n+(1-2r)u_j^n+r\\,u_{j-1}^n\\).</li><li><b>Weights.</b> The three weights are \\(r\\), \\(1-2r\\), \\(r\\), which sum to 1.</li><li><b>Positivity.</b> All weights are non-negative iff \\(r\\ge0\\) and \\(1-2r\\ge0\\), i.e. \\(r\\le\\tfrac12\\).</li><li><b>Consequence.</b> With non-negative weights, the scheme is a Markov average of its neighbours, so the maximum does not grow. Check: \\(r=0.6\\) gives a negative weight and an unstable mode.</li></ol><b>If you get stuck:</b> What random walk do the three weights describe, and what must each of them be?<br><b>Minimal memory:</b> The explicit scheme is a random-walk average; it is stable exactly when the walk has nonnegative probabilities.",
+  "tags": [
+   "s_markov_chain",
+   "s_martingale",
+   "fdm",
+   "heat_equation",
+   "stability",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the \\(\\sqrt n\\) scaling of a simple random walk from Brownian scaling.",
+  "back": "<ol><li><b>Variance scale.</b> The steps are i.i.d., mean 0, variance 1, so \\(\\operatorname{Var}S_m=m\\).</li><li><b>Invariance principle.</b> Donsker's theorem gives \\(S_{\\lfloor nt\\rfloor}/\\sqrt n\\Rightarrow W_t\\), which needs exactly these mean and variance hypotheses.</li><li><b>Brownian scaling.</b> \\(W_{nt}\\overset d=\\sqrt n\\,W_t\\) (take \\(c=n\\) in \\(W_{ct}\\overset d=\\sqrt c\\,W_t\\)).</li><li><b>Read off.</b> At \\(t=1\\), \\(S_n\\) has the law of \\(\\sqrt n\\,W_1\\) to leading order, so its typical size is \\(\\sqrt n\\).</li></ol><b>If you get stuck:</b> Which hypothesis makes the walk converge to Brownian motion after dividing by \\(\\sqrt n\\), and what does Brownian scaling say at time \\(t=1\\)?<br><b>Minimal memory:</b> The invariance principle carries the walk to Brownian motion; Brownian scaling then gives the square-root law.",
+  "tags": [
+   "s_sqrt_time_scaling",
+   "s_clt_normal_approx",
+   "s_coupling",
+   "random_walk",
+   "brownian_motion",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive \\(E[U_{(n)}]=n/(n+1)\\) from the tail-sum formula.",
+  "back": "<ol><li><b>Tail probability.</b> \\(P(U_{(n)}>x)=1-P(\\text{all}\\le x)=1-x^n\\) for \\(x\\in[0,1]\\).</li><li><b>Tail sum.</b> For a non-negative variable, \\(E X=\\int_0^\\infty P(X>x)\\,dx\\).</li><li><b>Integrate.</b> \\(\\int_0^1(1-x^n)\\,dx=1-\\frac1{n+1}=\\frac n{n+1}\\).</li></ol><b>If you get stuck:</b> What is the probability that all \\(n\\) uniforms are at most \\(x\\)?<br><b>Minimal memory:</b> The maximum's tail is \\(1-x^n\\); the continuous tail-sum integrates that.",
+  "tags": [
+   "s_tail_sum",
+   "s_order_statistics",
+   "s_extremal",
+   "order_statistics",
+   "uniform",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the unbiased estimator \\(\\tfrac{n+1}{n}\\max X_i\\) of \\(\\theta\\) for \\(U[0,\\theta]\\) from \\(E[\\max X_i]\\).",
+  "back": "<ol><li><b>Expectation of the maximum.</b> \\(E[\\max X_i]=\\frac{n\\theta}{n+1}\\), a known result of the uniform order statistic.</li><li><b>Rescale.</b> Multiply by the reciprocal of the factor: \\(E\\!\\left[\\tfrac{n+1}n\\max X_i\\right]=\\theta\\).</li><li><b>Interpretation.</b> The MLE is biased low by a factor \\(n/(n+1)\\); rescaling removes the bias.</li></ol><b>If you get stuck:</b> What is the constant multiplying \\(\\theta\\) in \\(E[\\max X_i]\\)?<br><b>Minimal memory:</b> The MLE is the maximum, and the maximum's mean is a fixed fraction of theta; invert that fraction.",
+  "tags": [
+   "s_order_statistics",
+   "s_extremal",
+   "mle",
+   "unbiasedness",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive \\(E[U_{(k)}]=k/(n+1)\\) from the density of the \\(k\\)-th order statistic and a Beta integral.",
+  "back": "<ol><li><b>Density.</b> \\(f_{(k)}(x)=\\dfrac{n!}{(k-1)!(n-k)!}x^{k-1}(1-x)^{n-k}\\).</li><li><b>Mean.</b> \\(E U_{(k)}=\\int_0^1x f_{(k)}(x)\\,dx\\).</li><li><b>Beta integral.</b> The integral is \\(\\frac{n!}{(k-1)!(n-k)!}\\cdot\\frac{k!\\,(n-k)!}{(n+1)!}\\).</li><li><b>Simplify.</b> \\(=\\frac{k}{n+1}\\). Check: \\(n=7\\), \\(k=3\\) gives \\(3/8\\).</li></ol><b>If you get stuck:</b> Which Beta distribution does \\(U_{(k)}\\) follow?<br><b>Minimal memory:</b> The order statistic is Beta\\((k,n-k+1)\\), with mean \\(k/(n+1)\\).",
+  "tags": [
+   "s_order_statistics",
+   "s_taylor",
+   "order_statistics",
+   "beta_distribution",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the ATM straddle price \\(\\approx0.8\\,S\\sigma\\sqrt T\\) from put-call parity and the ATM call approximation.",
+  "back": "<ol><li><b>Parity at ATM.</b> With \\(r=0\\) and \\(K=S\\), \\(P=C-S+Ke^{-rT}=C\\).</li><li><b>Straddle.</b> Straddle \\(=C+P=2C\\).</li><li><b>ATM call.</b> \\(C\\approx S\\sigma\\sqrt T/\\sqrt{2\\pi}\\approx0.4\\,S\\sigma\\sqrt T\\).</li><li><b>Result.</b> Straddle \\(\\approx 0.8\\,S\\sigma\\sqrt T\\). Check: \\(S=100\\), \\(\\sigma=0.2\\), \\(T=1\\): \\(2\\times7.97=15.9\\) against \\(0.8\\times20=16\\).</li></ol><b>If you get stuck:</b> At the money with zero rates, what is the put price in terms of the call?<br><b>Minimal memory:</b> Parity makes the ATM put equal the call, so the straddle is twice the ATM call.",
+  "tags": [
+   "s_replication",
+   "s_taylor",
+   "put_call_parity",
+   "mental_math",
+   "straddle",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the Monty Hall switch probability \\(2/3\\) from Bayes' rule alone.",
+  "back": "<ol><li><b>Setup.</b> Pick door 1; the host opens door 3. Let \\(C\\) be the prize door, uniform on \\(\\{1,2,3\\}\\).</li><li><b>Likelihood.</b> \\(P(H=3\\mid C=1)=\\tfrac12\\), \\(P(H=3\\mid C=2)=1\\), \\(P(H=3\\mid C=3)=0\\).</li><li><b>Evidence.</b> \\(P(H=3)=\\frac13(\\frac12+1+0)=\\frac12\\).</li><li><b>Posterior.</b> \\(P(C=1\\mid H=3)=\\frac{\\frac12\\cdot\\frac13}{\\frac12}=\\frac13\\), so \\(P(C=2\\mid H=3)=\\frac23\\).</li><li><b>Switch.</b> Switching to door 2 wins with probability \\(2/3\\).</li></ol><b>If you get stuck:</b> Which door has the higher posterior after the host's choice, and what is its likelihood ratio?<br><b>Minimal memory:</b> Bayes with the host's likelihood (1/2 for the picked door's win, 1 for the other door) gives 2/3 for the unpicked door.",
+  "tags": [
+   "s_bayes",
+   "s_complement",
+   "monty_hall",
+   "conditional",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the Poisson approximation \\(P(\\text{no collision})\\approx e^{-\\lambda}\\), \\(\\lambda=\\binom n2/N\\), from the birthday product.",
+  "back": "<ol><li><b>Product.</b> \\(P(\\text{no collision})=\\prod_{i=1}^{n-1}(1-i/N)\\).</li><li><b>Exponential.</b> For small \\(i/N\\), \\(1-i/N\\approx e^{-i/N}\\), so the product is about \\(\\exp(-\\sum i/N)\\).</li><li><b>Sum.</b> \\(\\sum_{i=1}^{n-1}i/N=\\binom n2/N=\\lambda\\).</li><li><b>Interpretation.</b> \\(\\lambda\\) is the expected number of colliding pairs; the count is approximately Poisson. Check: \\(n=23\\): \\(e^{-0.693}\\approx0.50\\) against exact \\(0.493\\).</li></ol><b>If you get stuck:</b> What is the expected number of colliding pairs?<br><b>Minimal memory:</b> The collision count is a sum of pair indicators, and a sum of rare indicators is Poisson.",
+  "tags": [
+   "s_poisson_approx",
+   "s_indicators",
+   "s_linearity_expectation",
+   "birthday",
+   "poisson",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the Kelly fraction \\(f^*=(bp-q)/b\\) for odds \\(b\\) by maximising the expected log, and check that \\(b=1\\) gives \\(p-q\\).",
+  "back": "<ol><li><b>Growth rate.</b> Win pays \\(b\\) per unit stake with probability \\(p\\); lose 1 with probability \\(q\\). \\(g(f)=p\\ln(1+bf)+q\\ln(1-f)\\).</li><li><b>First-order condition.</b> \\(g'(f)=\\frac{pb}{1+bf}-\\frac q{1-f}=0\\).</li><li><b>Solve.</b> \\(pb(1-f)=q(1+bf)\\), so \\(f(pb+qb)=pb-q\\), giving \\(f=\\frac{pb-q}{b}\\).</li><li><b>Check.</b> Setting \\(b=1\\) gives \\(p-q\\). With \\(b=2\\), \\(p=0.4\\): \\(f^*=0.1\\), matching numerics.</li></ol><b>If you get stuck:</b> Where does the Kelly derivative change when the win is worth \\(b\\) rather than 1?<br><b>Minimal memory:</b> Same first-order condition as even odds, with the win-side denominator scaled by \\(b\\).",
+  "tags": [
+   "s_kelly_log_utility",
+   "kelly",
+   "betting",
+   "odds",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the ATM vega \\(\\approx S\\sqrt T/\\sqrt{2\\pi}\\) from the vega formula \\(\\partial_\\sigma C=S\\varphi(d_1)\\sqrt T\\).",
+  "back": "<ol><li><b>Vega.</b> \\(\\partial_\\sigma C=S\\varphi(d_1)\\sqrt T\\) (Black-Scholes vega).</li><li><b>ATM.</b> At the money with \\(r=0\\), \\(d_1=\\sigma\\sqrt T/2\\to0\\) as \\(\\sigma\\sqrt T\\to0\\), so \\(\\varphi(d_1)\\approx\\varphi(0)\\).</li><li><b>Result.</b> \\(\\partial_\\sigma C\\approx S\\sqrt T/\\sqrt{2\\pi}\\approx0.4\\,S\\sqrt T\\).</li></ol><b>If you get stuck:</b> What is \\(\\varphi(0)\\), and what does \\(d_1\\) approach for an ATM option?<br><b>Minimal memory:</b> ATM vega is \\(\\approx0.4\\,S\\sqrt T\\): the density at zero times the width.",
+  "tags": [
+   "s_taylor",
+   "greeks",
+   "vega",
+   "mental_math",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the de Moivre-Laplace normal approximation to \\(P(X\\le k)\\) for \\(X\\sim\\text{Bin}(n,p)\\), with continuity correction, from the CLT.",
+  "back": "<ol><li><b>Moments.</b> \\(EX=np\\), \\(\\operatorname{Var}X=np(1-p)\\), as a sum of \\(n\\) independent indicators.</li><li><b>Standardise.</b> \\(Z_n=(X-np)/\\sqrt{np(1-p)}\\) is asymptotically \\(N(0,1)\\) by the CLT.</li><li><b>Continuity.</b> \\(X\\) is integer-valued, so \\(P(X\\le k)=P(X\\le k+\\tfrac12)\\) is the better target.</li><li><b>Result.</b> \\(P(X\\le k)\\approx\\Phi\\!\\left(\\dfrac{k+\\frac12-np}{\\sqrt{np(1-p)}}\\right)\\).</li></ol><b>If you get stuck:</b> What are the mean and variance of a binomial variable, and how does the CLT standardise it?<br><b>Minimal memory:</b> Binomial is a sum of indicators; CLT with a half-integer shift is the approximation.",
+  "tags": [
+   "s_clt_normal_approx",
+   "s_indicators",
+   "s_linearity_expectation",
+   "binomial",
+   "normal_approximation",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the optimal secretary success probability \\(1/e\\) from the cut-off sum \\(\\frac rn\\sum_{j=r}^{n-1}\\frac1j\\).",
+  "back": "<ol><li><b>Sum.</b> Success probability for cut-off \\(r\\) is \\(P(r)=\\frac rn\\sum_{j=r}^{n-1}\\frac1j\\).</li><li><b>Continuum.</b> With \\(x=r/n\\), \\(\\sum_{j=r}^{n}\\frac1j\\approx\\ln(1/x)\\), so \\(P\\approx-x\\ln x\\).</li><li><b>Optimise.</b> \\(\\frac{d}{dx}(-x\\ln x)=-\\ln x-1=0\\), so \\(x=1/e\\).</li><li><b>Value.</b> \\(-x\\ln x=\\frac1e\\).</li></ol><b>If you get stuck:</b> What is the integral approximation of a harmonic sum from \\(r\\) to \\(n\\)?<br><b>Minimal memory:</b> Harmonic sums become logarithms; maximising \\(-x\\ln x\\) gives 1/e.",
+  "tags": [
+   "s_optimal_stopping",
+   "s_order_statistics",
+   "s_extremal",
+   "secretary",
+   "fmt_connect"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the memoryless property of the geometric distribution from its tail formula \\(P(T>m)=q^m\\).",
+  "back": "<ol><li><b>Tail formula.</b> \\(P(T>m)=q^m\\) for trials to first success.</li><li><b>Conditional tail.</b> \\(P(T>m+k\\mid T>m)=\\dfrac{P(T>m+k)}{P(T>m)}=\\dfrac{q^{m+k}}{q^m}\\).</li><li><b>Result.</b> \\(=q^k=P(T>k)\\): the residual waiting time has the original law.</li></ol><b>If you get stuck:</b> What is the ratio \\(P(T>m+k)/P(T>m)\\) when the tail is \\(q^m\\)?<br><b>Minimal memory:</b> A geometric tail is multiplicative, so conditioning on survival only shifts the origin.",
+  "tags": [
+   "s_memorylessness",
+   "s_geometric_probability",
+   "geometric",
+   "fmt_connect"
+  ]
+ }
+]
