@@ -281,7 +281,7 @@ def card9():
     n = 200_000
     cov = np.array([[sS * sS, rho * sS * sX], [rho * sS * sX, sX * sX]]) * T
     Z = RNG.multivariate_normal([0, 0], cov, n)
-    ST = S0 * np.exp((rf - 0.5 * sS * sS) * T + Z[:, 0])
+    ST = S0 * np.exp((rf - rho * sS * sX - 0.5 * sS * sS) * T + Z[:, 0])
     # the domestic value X*S must drift at rd: check E[X_T S_T]/(X0 S0) = e^{rd T}
     XT = 1.0 * np.exp((rd - rf - 0.5 * sX * sX) * T + Z[:, 1])
     mc_line(9, "E[S_T] under Q_d", ST, FQ, 4.0)
@@ -293,9 +293,9 @@ def card10():
     S0, K, rf, rd, rho, sS, sX, T = 100.0, 100.0, 0.02, 0.05, 0.5, 0.25, 0.10, 1.0
     FQ = S0 * math.exp((rf - rho * sS * sX) * T)
     price = bs_black_call(FQ, K, sS, T, df=math.exp(-rd * T))
-    check(10, "quanto call price per unit of X0", 10.28, price, 0.005)
+    check(10, "quanto call price per unit of X0 (T=1)", 9.86, price, 0.005)
     naive = bs_black_call(S0 * math.exp(rf * T), K, sS, T, df=math.exp(-rd * T))
-    check(10, "same call with rho=0 (naive forward), per unit", 10.9, naive, 0.05)
+    check(10, "same call with rho=0 (naive forward), per unit", 10.55, naive, 0.005)
     n = 200_000
     cov = np.array([[sS * sS, rho * sS * sX], [rho * sS * sX, sX * sX]]) * T
     Z = RNG.multivariate_normal([0, 0], cov, n)
@@ -372,19 +372,37 @@ def card14():
 
 
 # ---------- card 15: tail dependence, Gaussian vs t4 (rho=0.3) ----------
+def phi2(h, k, rho):
+    """Bivariate normal CDF by 1-D quadrature (accurate in the far tail, unlike mvn.cdf)."""
+    from scipy.integrate import quad
+    sd = math.sqrt(1 - rho * rho)
+    return quad(lambda x: norm.pdf(x) * norm.cdf((k - rho * x) / sd), -40, h,
+                epsabs=1e-16, epsrel=1e-12, limit=500)[0]
+
+
 def card15():
+    from scipy.integrate import quad
+    from scipy.stats import chi2
     rho, nu = 0.3, 4
     lam = 2 * tdist.cdf(-math.sqrt((nu + 1) * (1 - rho) / (1 + rho)), nu + 1)
     check(15, "t4 copula tail dependence lambda", 0.162, lam, 5e-4)
-    for q in (1e-2, 1e-3):
-        gq = mvn(mean=[0, 0], cov=[[1, rho], [rho, 1]]).cdf([norm.ppf(q), norm.ppf(q)]) / q
-        tq = mvt(loc=[0, 0], shape=[[1, rho], [rho, 1]], df=nu).cdf([tdist.ppf(q, nu), tdist.ppf(q, nu)]) / q
-        print(f"       q={q:g}: Gaussian P(U2<q|U1<q)={gq:.5f}  t4={tq:.5f}")
-    gq = mvn(mean=[0, 0], cov=[[1, rho], [rho, 1]]).cdf([norm.ppf(1e-3), norm.ppf(1e-3)]) / 1e-3
-    check(15, "Gaussian conditional at q=0.1% (%)", 1.49, gq * 100, 0.01)
-    tq = mvt(loc=[0, 0], shape=[[1, rho], [rho, 1]], df=nu).cdf(
-        [tdist.ppf(1e-5, nu), tdist.ppf(1e-5, nu)]) / 1e-5
-    check(15, "t4 conditional at q=1e-5 approaches lambda", lam, tq, 0.01)
+
+    def gauss_cond(q):
+        return phi2(norm.ppf(q), norm.ppf(q), rho) / q
+
+    def t_cond(q):
+        # X = Z / sqrt(W/nu), W ~ chi2_nu:  P(U1<q,U2<q) = E_W[Phi2(a sqrt(W/nu))], a = t_nu^{-1}(q)
+        a = tdist.ppf(q, nu)
+        f = lambda w: phi2(a * math.sqrt(w / nu), a * math.sqrt(w / nu), rho) * chi2.pdf(w, nu)
+        return quad(f, 0, 2000, limit=800, epsabs=1e-16, epsrel=1e-10)[0] / q
+
+    check(15, "Gaussian conditional at q=0.1% (%)", 1.49, gauss_cond(1e-3) * 100, 0.005)
+    check(15, "t4 conditional at q=0.1% (%)", 17.04, t_cond(1e-3) * 100, 0.02)
+    check(15, "t4 conditional at q=1% (%)", 18.71, t_cond(1e-2) * 100, 0.02)
+    tq5 = t_cond(1e-5)
+    check(15, "t4 conditional at q=1e-5 (%) approaches lambda", 16.18, tq5 * 100, 0.3)
+    print(f"       lambda={lam:.5f}; decreasing toward it: t4 at 1e-2={t_cond(1e-2):.5f}, "
+          f"1e-3={t_cond(1e-3):.5f}, 1e-5={tq5:.5f}")
 
 
 # ---------- card 16: large-pool loss CDF, p=2%, rho=0.2 (correct vs candidate) ----------
