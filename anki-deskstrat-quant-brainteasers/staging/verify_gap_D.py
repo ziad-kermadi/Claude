@@ -49,6 +49,12 @@ def N(x):
     return norm.cdf(x)
 
 
+def dif(f, x, n=1):
+    """Central-difference derivative in 60-digit arithmetic (explicit step, no sign flips)."""
+    h = mp.mpf("1e-20") if n == 1 else mp.mpf("1e-12")
+    return mp.diff(f, x, n, h=h)
+
+
 def bs_black_call(F, K, sig, T, df=1.0):
     d1 = (math.log(F / K) + 0.5 * sig * sig * T) / (sig * math.sqrt(T))
     return df * (F * N(d1) - K * N(d1 - sig * math.sqrt(T)))
@@ -115,29 +121,30 @@ def card3():
 
 # ---------- card 4: local vol skew for sigma_imp(m)=0.20-m at K=102 (T -> 0) ----------
 def card4():
+    # smile linear in LOG-strike: sigma(y) = 0.20 - y, y = ln(K/F), F = 100, zero rates
     def C(K, T):
-        sig = mp.mpf("1.20") - K / 100          # 0.20 - m, m = K/100 - 1
+        sig = mp.mpf("0.20") - mp.log(K / 100)
         d1 = (mp.log(mp.mpf(100) / K) + sig * sig * T / 2) / (sig * mp.sqrt(T))
         d2 = d1 - sig * mp.sqrt(T)
-        Nm = lambda z: (1 + mp.erf(z / mp.sqrt(2))) / 2
-        return 100 * Nm(d1) - K * Nm(d2)           # zero rates
+        Nm = lambda z: mp.erfc(-z / mp.sqrt(2)) / 2      # erfc keeps the far tail exact
+        return 100 * Nm(d1) - K * Nm(d2)
 
-    T0 = mp.mpf("1e-12")
-    K = mp.mpf(102)
-    CT = mp.diff(lambda t: C(K, t), T0)
-    CKK = mp.diff(lambda k: C(k, T0), K, 2)
-    sloc = mp.sqrt(2 * CT / (K * K * CKK))
-    check(4, "local vol at K=102 (T->0), exact Dupire", 0.162, sloc, 2e-5)
-    check(4, "closed form (0.20-m)^2/0.20 at m=0.02", 0.162, 0.18**2 / 0.20, 1e-12)
-    check(4, "linear approximation sigma-2m (not exact)", 0.160, 0.20 - 2 * 0.02, 1e-12)
-    # skew ratio: d/dm of local vol at ATM
-    def sloc_at(Kv):
-        Kv = mp.mpf(Kv)
-        return mp.sqrt(2 * mp.diff(lambda t: C(Kv, t), T0) / (Kv * Kv * mp.diff(lambda k: C(k, T0), Kv, 2)))
-    h = mp.mpf("0.01")
-    # m = K/100 - 1, so dK = 100 dm
-    skew_per_m = (sloc_at(100 + h) - sloc_at(100 - h)) / (2 * h) * 100
-    check(4, "local-vol skew per unit m at ATM", -2.0, skew_per_m, 2e-3)
+    T0 = mp.mpf("1e-6")
+
+    def sloc_at_y(y):
+        K = 100 * mp.exp(y)
+        CT = dif(lambda t: C(K, t), T0)
+        CKK = dif(lambda k: C(k, T0), K, 2)
+        return mp.sqrt(2 * CT / (K * K * CKK))
+
+    y_pt = mp.mpf("0.02")
+    sloc = sloc_at_y(y_pt)
+    check(4, "local vol at y=ln(K/F)=0.02 (T->0), exact Dupire", 0.162, sloc, 2e-5)
+    check(4, "closed form (0.20-y)^2/0.20 at y=0.02", 0.162, 0.18**2 / 0.20, 1e-12)
+    check(4, "linear approximation 0.20-2y (not exact)", 0.160, 0.20 - 2 * 0.02, 1e-12)
+    h = mp.mpf("1e-4")
+    skew_loc = (sloc_at_y(h) - sloc_at_y(-h)) / (2 * h)
+    check(4, "local-vol skew d sigma_loc / dy at ATM", -2.0, skew_loc, 2e-3)
 
 
 # ---------- card 5: forward vol, flat smile, sigma(T)=0.20+0.05T ----------
@@ -158,7 +165,7 @@ def card5():
         return 100 * Nm(d1) - K * Nm(d2)
     for K in (100, 120):
         Km = mp.mpf(K)
-        loc = mp.sqrt(2 * mp.diff(lambda t: C(Km, t), mp.mpf(1)) / (Km * Km * mp.diff(lambda k: C(k, mp.mpf(1)), Km, 2)))
+        loc = mp.sqrt(2 * dif(lambda t: C(Km, t), mp.mpf(1)) / (Km * Km * dif(lambda k: C(k, mp.mpf(1)), Km, 2)))
         check(5, f"Dupire local vol at T=1, K={K}", 0.295804, loc, 1e-5)
 
 

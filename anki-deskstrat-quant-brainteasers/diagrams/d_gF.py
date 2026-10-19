@@ -46,15 +46,15 @@ def _(ax):
     prof = su * sv / 2
     ax.loglog(su, lam, color=BLUE, lw=1.8, label=r"price impact $\lambda=\frac{\sigma_v}{2\sigma_u}$")
     ax.loglog(su, prof, color=ORANGE, lw=1.8, label=r"insider profit $\frac{\sigma_u\sigma_v}{2}$")
-    for s0, col in [(1.0, GREY), (2.0, INK)]:
-        l0 = sv / (2 * s0)
-        p0 = s0 * sv / 2
-        ax.plot(s0, l0, "o", color=BLUE, ms=5)
-        ax.plot(s0, p0, "o", color=ORANGE, ms=5)
-        ax.annotate(rf"$\sigma_u={s0:g}$", (s0, 0.42), ha="center", fontsize=8.5, color=col)
-    ax.set_xlabel(r"noise-trader volatility $\sigma_u$"); ax.set_ylabel("value")
-    ax.set_ylim(0.3, 3.5)
-    ax.legend(frameon=False, fontsize=8.5, loc="upper left")
+    for s0 in (1.0, 2.0):
+        ax.plot(s0, sv / (2 * s0), "o", color=BLUE, ms=5)
+        ax.plot(s0, s0 * sv / 2, "o", color=ORANGE, ms=5)
+    ax.set_xticks([0.25, 0.5, 1, 2, 4]); ax.set_xticklabels(["0.25", "0.5", "1", "2", "4"])
+    ax.minorticks_off()
+    ax.set_yticks([0.25, 0.5, 1, 2, 4]); ax.set_yticklabels(["0.25", "0.5", "1", "2", "4"])
+    ax.set_xlabel(r"noise-trader volatility $\sigma_u$ (dots at $\sigma_u=1,2$)"); ax.set_ylabel("value")
+    ax.set_ylim(0.2, 4.2)
+    ax.legend(frameon=False, fontsize=8.5, loc="upper center")
     ax.set_title(r"$\sigma_v=2$: impact halves, profit doubles; $\mathrm{Var}(p)=2$ throughout",
                  fontsize=9.5)
 
@@ -130,9 +130,10 @@ def _(ax):
         ax.plot([x0 - 0.22, x0 + 0.22], [ask, ask], color=col, lw=1.6)
         ax.text(x0 + 0.3, ask, f"ask {ask:.3f}", va="center", fontsize=8.5, color=col)
         ax.text(x0 + 0.3, bid, f"bid {bid:.3f}", va="center", fontsize=8.5, color=col)
-        ax.text(x0 - 0.3, r, f"$r={r:.2f}$", va="center", ha="right", fontsize=8.5, color=col)
+        ax.text(x0 - 0.3, r + 0.13, f"$r={r:.2f}$", va="center", ha="right", fontsize=8.5, color=col,
+                bbox=dict(fc="white", ec="none", pad=1.0), zorder=6)
     ax.axhline(s, color=INK, ls=":", lw=1.0)
-    ax.text(1.45, s + 0.04, "mid $s=100$", fontsize=8, color=GREY, ha="right")
+    ax.text(1.85, s + 0.06, "mid $s=100$", fontsize=8, color=GREY, ha="right")
     ax.set_xlim(-0.9, 1.9); ax.set_ylim(98.8, 101.2)
     ax.set_xticks([0, 1]); ax.set_xticklabels([r"$q=0$", r"$q=+3$"])
     ax.set_ylabel("price")
@@ -147,7 +148,7 @@ def _(ax):
     pbuy_H = mu + (1 - mu) / 2          # 5/8
     pbuy_L = (1 - mu) / 2               # 3/8
     root, H, L = (0.0, 0.0), (2.0, 0.9), (2.0, -0.9)
-    leaves = {"Hb": (4.3, 1.45), "Hs": (4.3, 0.35), "Lb": (4.3, -0.35), "Ls": (4.3, -1.45)}
+    leaves = {"Hb": (4.6, 1.45), "Hs": (4.6, 0.35), "Lb": (4.6, -0.35), "Ls": (4.6, -1.45)}
     node(ax, root, "V", r=0.3)
     box(ax, H, r"$V_H=110$", w=1.3, h=0.5, fc=LIGHT_BLUE, ec=BLUE)
     box(ax, L, r"$V_L=90$", w=1.3, h=0.5, fc=LIGHT_ORANGE, ec=ORANGE)
@@ -160,8 +161,8 @@ def _(ax):
         box(ax, leaves[key], lab, w=0.7, h=0.42, fc=LIGHT_BLUE if lab == "buy" else "white",
             ec=col, fs=9.5)
         frac = {0.625: r"$\frac{5}{8}$", 0.375: r"$\frac{3}{8}$"}[round(pr, 3)]
-        _edge(ax, src, leaves[key], rB=0.4, label=frac, color=col,
-              off=(0.0, 0.12 if key in ("Hb", "Lb") else -0.12))
+        _edge(ax, src, leaves[key], rB=0.4, label=frac, color=col, fs=9.5,
+              off=(0.0, 0.32 if key in ("Hb", "Lb") else -0.32))
     ax.text(0.5, -2.2, r"$E[V\mid \mathrm{buy}]=110\cdot\frac{5}{8}+90\cdot\frac{3}{8}=102.5$",
             ha="center", fontsize=9.5, color=INK)
-    frame(ax, -0.6, 5.2, -2.5, 2.1)
+    frame(ax, -0.6, 5.4, -2.5, 2.1)
