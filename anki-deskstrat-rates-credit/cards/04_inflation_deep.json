@@ -1,0 +1,332 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: RPI_REFORM 1/5]</b> Context: from 2030 RPI uses the CPIH methodology, which removes the Carli formula effect. Model the expected RPI-CPI wedge as an instantaneous rate \\(w(t)=w_0\\) before 2030 and \\(w(t)=w_1<w_0\\) after. What is the par wedge to maturity \\(T\\), and why is it an average of the path rather than an instantaneous rate?",
+  "back": "Under the model, \\(\\ln(I^{RPI}_T/I^{CPI}_T)=\\int_0^T w(t)\\,dt\\). The par wedge \\(W_T\\) solves \\((1+W_T)^T=\\) ratio of expected cumulative indices, so to first order \\(W_T=\\frac{1}{T}\\int_0^T w(t)\\,dt\\).<br>\nHypothetical: \\(w_0=1.0\\%\\), \\(w_1=0.4\\%\\), \\(t_0=3.3\\)y. The 10y par is \\((3.3\\times1.0\\%+6.7\\times0.4\\%)/10\\approx0.60\\%\\) pa. It is neither \\(w_1\\) nor the pre-reform level.<br>\n<b>Interviewer follow-up:</b> Why is the 2030 change not a visible step in the par curve? The par rate integrates the instantaneous path, so the change appears as a slope break, which is the next card.",
+  "tags": [
+   "chain_rpi_reform",
+   "rpi_reform",
+   "rpi_cpi",
+   "inflation_swaps"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: RPI_REFORM 2/5]</b> Context: the instantaneous expected wedge falls from 1.0% to 0.4% pa at 2030 (hypothetical). Why does the par RPI-CPI curve show a kink at 2030 rather than a jump, and what are the slopes either side?",
+  "back": "Since \\(W_T=\\frac{1}{T}\\int_0^T w\\,dt\\), the par rate is continuous. Its slope is \\(\\frac{dW_T}{dT}=\\frac{w(T)-W_T}{T}\\), and \\(w(T)\\) jumps at \\(t_0\\), so the derivative of the par curve jumps.<br>\nBefore 2030 the par rises toward \\(w_0\\). After 2030 it flattens and falls toward \\(w_1\\), since the slope turns negative once \\(w(T)<W_T\\). Numerically the 10y par is 0.60% against 1.00% with no reform, a 40bp gap.<br>\nThe instantaneous (forward) wedge jumps by 60bp at \\(t_0\\). That discontinuity is the observable object, and the par curve only shows its footprint.<br>\n<b>Where it breaks:</b> the step is a deterministic model. Markets smooth the transition, so the observed kink is spread over the months around 2030, and the forward wedge is only observable through instruments whose fixings straddle the change.",
+  "tags": [
+   "chain_rpi_reform",
+   "rpi_reform",
+   "inflation_swaps",
+   "scenario"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: RPI_REFORM 3/5]</b> Context: the forward RPI-CPI wedge drops by 60bp at 2030 (hypothetical). Design a DV01-neutral trade that isolates the forward step rather than the level of the par curve. Give the legs, and the P&L if the market reprices the step late.",
+  "back": "Calendar spread on forward-wedge fixings. Pay the pre-reform forward wedge over a period ending before 2030 (for example, 2028-2029), and receive the post-reform forward wedge over a period starting after 2030 (for example, 2031-2032). Size each leg to its own wedge DV01, per bp of forward wedge over its fixing window, not to notional.<br>\nIf the market already prices the step at the correct date, expected P&L is zero. If it reprices late, the P&L is approximately the step size times the relative DV01 of the post-2030 leg, not the change in the par curve.<br>\n<b>Where it breaks:</b> check the fixing months, not only the tenor. A window that crosses the transition date carries part of the step, and the two legs can have different convexity to the wedge model.",
+  "tags": [
+   "chain_rpi_reform",
+   "rpi_reform",
+   "trade_idea",
+   "rpi_cpi"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: RPI_REFORM 4/5]</b> Context: after the 2030 step, RPI swaps price lower post-2030 RPI, while RPI-linked gilt holders are being compensated under a policy that is not yet fully priced. What RPI-CPI basis trade does this create, and what must you know about the compensation to size it?",
+  "back": "Define the basis as the linker-implied RPI breakeven minus the swap-implied RPI breakeven, at the same tenor and lag. If linkers are priced on the pre-reform index path while swaps are priced on the post-reform path, linker-implied breakevens sit above swap-implied ones at post-2030 tenors. A basis trade is long the cheap side against the rich side, DV01-neutral.<br>\nTo size it you need the compensation's form (a one-off payment, a coupon or index uplift, or a change to the index ratio), its timing, and which holdings it covers. These are policy terms that may change, so check the current official terms before quoting them.<br>\n<b>Where it breaks:</b> the basis also reflects repo specialness, supply and LDI demand. Compensation explains only the part that is a deterministic change in post-2030 cash flows.",
+  "tags": [
+   "chain_rpi_reform",
+   "basis",
+   "rpi_reform",
+   "linkers"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: RPI_REFORM 5/5]</b> Context: the post-2030 index path is scaled by \\(e^{-w(T-t_0)}\\) with a constant wedge \\(w\\) (hypothetical \\(w=0.4\\%\\)). A holder's post-2030 cash flows have real duration 12 measured from \\(t_0\\). What is the PV loss, and what one-off payment today makes the holder whole?",
+  "back": "PV loss \\(=\\sum_{t_i>t_0}CF_i\\,P_r(0,t_i)\\bigl(1-e^{-w(t_i-t_0)}\\bigr)\\approx w\\sum_{t_i>t_0}(t_i-t_0)\\,CF_i\\,P_r(0,t_i)\\).<br>\nThe sum in the second line is the real duration measured from \\(t_0\\) times the PV of post-2030 flows, so loss \\(\\approx w\\,D_{t_0}\\,PV_{\\text{post}}\\).<br>\nHypothetical: \\(0.004\\times12\\approx4.8\\%\\) of the post-2030 PV. The PV today of the make-whole is the loss at \\(t_0\\) (about 4.8% of post-2030 PV) times the discount factor from \\(t_0\\) to today.<br>\n<b>Where it breaks:</b> the first-order formula ignores convexity in \\(w\\), assumes \\(w\\) is deterministic, and ignores the timing of the payment. A stochastic wedge makes the make-whole a payoff on the wedge, not a number.",
+  "tags": [
+   "chain_rpi_reform",
+   "rpi_reform",
+   "linkers",
+   "scenario"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SEASONAL_CARRY 1/4]</b> Context: a post-2005 linker's index ratio uses \\(RPI_{m-3}\\) and is flat within each month. Over a 3-month holding period, what is the seasonal component of the index accrual, and how does it enter linker carry?",
+  "back": "Index accrual over 3 months is \\(\\ln(I_m/I_{m-3})\\). With \\(\\ln I_m=\\text{trend}_m+s_m\\), the accrual is \\(\\text{trend}+(s_m-s_{m-3})\\). The seasonal part \\(s_m-s_{m-3}\\) is known from the seasonal estimate at trade date, so it is a deterministic addition to carry.<br>\nIt enters as the index accrual term of the dirty price. Carry = real coupon accrual + index accrual - financing. The index accrual is the only carry term that depends on the calendar.<br>\n<b>Interviewer follow-up:</b> Does the seasonal term average out? Over a full 12-month cycle \\(\\sum_m(s_m-s_{m-3})=0\\), so it telescopes to zero. It matters for every window shorter than a year, which is why short-dated carry depends on the calendar.",
+  "tags": [
+   "chain_seasonality",
+   "seasonality",
+   "carry",
+   "linkers"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SEASONAL_CARRY 2/4]</b> Context: the seasonal component of a 3-month index accrual is \\(s_m-s_{m-3}\\). A desk computes linker carry using a deseasonalised breakeven curve, so its index accrual uses trend only. What is the error, and how does it bias a long linker when \\(s_m-s_{m-3}<0\\)?",
+  "back": "Error \\(=\\text{trend-only accrual}-\\text{seasonal-adjusted accrual}=-(s_m-s_{m-3})\\times\\) dirty index exposure. When the seasonal term is \\(-0.20\\%\\) over the window and the position is 13.1m dirty, the trend-only carry overstates index accrual by about 26k (see the 3-month carry case study).<br>\nSign rule: trend-only carry overstates the carry of a long linker when \\(s_m-s_{m-3}<0\\), and understates it when \\(s_m-s_{m-3}>0\\). The sign flips for a short position.<br>\n<b>Where it breaks:</b> if the desk's real curve was stripped using the same trend-only projection, the error also appears in the breakeven-implied real yield, not only in carry.",
+  "tags": [
+   "chain_seasonality",
+   "carry",
+   "seasonality",
+   "mental_math"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SEASONAL_CARRY 3/4]</b> Context: a 3-month breakeven trade exchanges the 3-month RPI accrual for a fixed rate. The seasonal term in the window is \\(-0.20\\%\\) and the trend breakeven is 3.0% pa. How do you set the fixed leg so the trade expresses a view on the deseasonalised expectation, and not on the calendar?",
+  "back": "Fair fixed rate \\(=E[\\text{deseasonalised accrual}]+(s_m-s_{m-3})\\). The seasonal add-on belongs in the fixed leg.<br>\nHere the trend accrual over 3 months is \\((1.03)^{0.25}-1\\approx0.74\\%\\). With the seasonal term of \\(-0.20\\%\\), the fair fixed leg is about \\(0.54\\%\\). A breakeven buyer (pays fixed) on a trend-only fixed leg of 0.74% overpays about 0.20% of notional per period in expectation, with no change in any view.<br>\n<b>Interviewer follow-up:</b> Who loses if the fixed leg is set at trend? The fixed payer, which is the long-breakeven side. The trade looks cheap or rich on the trend curve only because the calendar is ignored.",
+  "tags": [
+   "chain_seasonality",
+   "seasonality",
+   "breakeven",
+   "trade_idea"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SEASONAL_CARRY 4/4]</b> Context: a 3-month breakeven trade has run through a seasonal window. How do you attribute its realised P&L into seasonal carry, expectation change, real carry and residual, so that a seasonal-model error is not booked as a view?",
+  "back": "Attribution:\n<ol><li><b>Seasonal term:</b> dirty index exposure \\(\\times(s_m-s_{m-3})\\), using the seasonal estimate at trade date.</li>\n<li><b>Expectation change:</b> change in the deseasonalised 3m breakeven \\(\\times\\) DV01 to that breakeven.</li>\n<li><b>Real carry:</b> real coupon accrual less real financing.</li>\n<li><b>Seasonal model error:</b> the difference between the seasonal term recomputed with the realised estimate and the trade-date estimate. Book it separately.</li></ol>\n<b>Where it breaks:</b> a surprise print changes the seasonal estimate for that month, so seasonal error and expectation change are correlated. Use trade-date factors for item 1, and treat the surprise in full as expectation change in item 2.",
+  "tags": [
+   "chain_seasonality",
+   "carry",
+   "seasonality",
+   "case_study"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: nominal value of a lagged linker coupon.</b> A coupon paid at \\(t\\) is \\(\\frac{c}{2}N\\,I(s)/I_{\\text{base}}\\) with \\(s=t-L\\). Derive its value at time 0 using the nominal deflator \\(D\\), the JY identity \\(E^n[D_sI(s)]=I(0)P_r(0,s)\\), and state where the approximation enters.",
+  "back": "Value: \\(V=\\frac{c}{2}\\frac{N}{I_{\\text{base}}}E^n[D_t I(s)]\\). Condition on \\(\\mathcal F_s\\): \\(D_t=D_s\\,P_n(s,t)\\), so \\(V=\\frac{c}{2}\\frac{N}{I_{\\text{base}}}E^n[D_sI(s)\\,P_n(s,t)]\\).<br>\nReplace \\(P_n(s,t)\\) by its forward value \\(P_n(0,t)/P_n(0,s)\\), which holds exactly when nominal rates are deterministic between \\(s\\) and \\(t\\). Then<br>\n\\[V\\approx\\frac{c}{2}\\frac{N}{I_{\\text{base}}}\\,I(0)\\,P_r(0,s)\\,P_n(s,t).\\]\nSo the coupon is a real-discounted claim at the fixing date \\(s\\), carried forward nominally across the lag \\(L\\).<br>\n<b>Where it breaks:</b> \\(P_n(s,t)\\) is not deterministic. Its covariance with \\(I(s)\\) gives a lag-convexity term of the same form as the ZC lag adjustment, which is small for a 3-month lag but not zero.",
+  "tags": [
+   "derivation",
+   "linkers",
+   "indexation",
+   "jarrow_yildirim"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: Fisher relation with convexity and risk premium.</b> For a zero-coupon index that is lognormal with constant vol \\(\\sigma_I\\), relate the nominal ZC yield \\(n\\), real yield \\(r\\) and ZC breakeven \\(K\\), and separate the convexity term from the inflation risk premium. Use the \\(T\\)-forward measure \\(\\mathbb Q^T\\) and the real-world measure \\(\\mathbb P\\).",
+  "back": "Let \\(\\pi^{T}\\) be the \\(\\mathbb Q^T\\)-mean of \\(\\ln(I_T/I_0)/T\\). Lognormality gives \\(E^T[I_T/I_0]=\\exp(T\\pi^T+\\tfrac12\\sigma_I^2T)\\). The par condition \\((1+K)^T=E^T[I_T/I_0]\\) gives \\(K\\approx\\pi^T+\\tfrac12\\sigma_I^2\\).<br>\nThe discount factors satisfy \\(P_r/P_n=(1+K)^T\\), so \\((1+n)=(1+r)(1+K)\\), i.e. \\(n=r+K+rK\\). Split \\(\\pi^T=\\pi^{\\mathbb P}+\\mathrm{IRP}\\), where \\(\\mathrm{IRP}\\) is the change of measure from \\(\\mathbb P\\) to \\(\\mathbb Q^T\\). Then<br>\n\\[n\\approx r+\\pi^{\\mathbb P}+\\mathrm{IRP}+\\tfrac12\\sigma_I^2+rK.\\]\n<b>Where it breaks:</b> \\(\\tfrac12\\sigma_I^2\\) is a convexity term that a ZC breakeven contains, not expected inflation. With stochastic index vol, \\(\\sigma_I^2\\) becomes a time average. The \\(rK\\) cross term is second order but not negligible at high yields.",
+  "tags": [
+   "derivation",
+   "real_rates",
+   "breakeven",
+   "inflation_risk_premium"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: YoY convexity with Gaussian real rates.</b> A YoY fixing at \\(T_1\\) and payment at \\(T_2=T_1+\\tau\\). With \\(X_t=I(t)/I_0\\), \\(dX/X=\\sigma_I\\,dW^1\\), and nominal short rate following Hull-White with vol \\(\\sigma_r\\) and mean reversion \\(a\\), derive \\(E^{T_2}[X_{T_1}]\\) relative to \\(E^{T_1}[X_{T_1}]\\) to first order in the Girsanov drift.",
+  "back": "Under \\(\\mathbb Q^{T_1}\\), \\(X\\) is a martingale, so \\(E^{T_1}[X_{T_1}]=F(0,T_1)\\). The density to \\(\\mathbb Q^{T_2}\\) on \\(\\mathcal F_t\\) is \\(\\frac{P(t,T_2)P(0,T_1)}{P(t,T_1)P(0,T_2)}\\). In Hull-White, \\(d\\ln P(t,T)\\) has diffusion \\(-\\sigma_rB(t,T)\\,dW^r\\) with \\(B(t,T)=(1-e^{-a(T-t)})/a\\), so the log-density has diffusion \\(-\\sigma_r[B(t,T_2)-B(t,T_1)]\\,dW^r\\).<br>\nGirsanov: \\(dW^1\\) acquires drift \\(-\\rho\\sigma_r[B(t,T_2)-B(t,T_1)]\\,dt\\). Hence \\(d\\ln X\\) acquires drift \\(-\\rho\\sigma_I\\sigma_r[B(t,T_2)-B(t,T_1)]\\,dt\\), and to first order (ignoring the Ito term)<br>\n\\[E^{T_2}[X_{T_1}]\\approx E^{T_1}[X_{T_1}]\\exp\\Bigl(-\\rho\\sigma_I\\sigma_r\\!\\int_0^{T_1}\\![B(t,T_2)-B(t,T_1)]\\,dt\\Bigr).\\]\nFor small \\(\\tau\\), \\(B(t,T_2)-B(t,T_1)\\approx\\tau e^{-a(T_1-t)}\\), so the integral is \\(\\tau B(0,T_1)\\) and the adjustment is \\(\\exp(-\\rho\\sigma_I\\sigma_r\\tau B(0,T_1))\\). For \\(a\\to0\\), \\(B(0,T_1)\\to T_1\\), which recovers the \\(\\tau T_1\\) scaling.<br>\n<b>Where it breaks:</b> the Ito term and the stochastic index vol are dropped. The correlation is with the nominal short rate that drives the discount, which is not the same as a real-rate correlation in a model with separate real and nominal factors.",
+  "tags": [
+   "derivation",
+   "convexity",
+   "yoy",
+   "jarrow_yildirim"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: ZC inflation swap with a lag.</b> A 10y ZCIIS fixes \\(I(T-L)\\) and pays at \\(T\\), with \\(L=3\\)m. Starting from the index forward \\(F(0,T-L)\\), derive the par rate \\(K\\). Is a timing adjustment needed, and what is its sign?",
+  "back": "Par condition: \\((1+K)^T=E^T[I(T-L)]/I_0\\). The fixing is at \\(T-L\\) and the payment at \\(T\\), so the \\(T\\)-forward measure is not the fixing measure. Applying the YoY result with \\(T_1=T-L\\) and \\(\\tau=L/12\\):<br>\n\\[(1+K)^T=\\frac{F(0,T-L)}{I_0}\\exp\\!\\Bigl(-\\rho\\sigma_I\\sigma_r\\tfrac{L}{12}B(0,T-L)\\Bigr).\\]\nThe sign is negative for \\(\\rho>0\\), so the par is below the naive lagged forward. Size: with \\(\\rho=0.3\\), \\(\\sigma_I=1.2\\%\\) per root-year, \\(\\sigma_r=1\\%\\) normal, \\(a=0.03\\), \\(L=3\\)m, \\(B(0,9.75)\\approx8.45\\), the index correction is about \\(-0.76\\)bp, which is about \\(-0.08\\)bp on \\(K\\).<br>\n<b>Where it breaks:</b> the term is zero only at \\(L=0\\). So the lag, not the ZC structure, creates the adjustment. A claim that a ZC never needs a timing adjustment holds only without a lag.",
+  "tags": [
+   "derivation",
+   "zc",
+   "convexity",
+   "inflation_swaps"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: LPI(0,5%) as a forward minus a far-OTM cap.</b> On a YoY fixing with forward \\(F\\), show that the value of \\(\\min(\\max(x,0),5\\%)\\) equals \\(\\mathrm{Floor}(0)+P\\tau F-\\mathrm{Cap}(5\\%)\\), and use it to show the LPI value is close to the forward \\(P\\tau F\\) when the 5% cap is far out of the money.",
+  "back": "Payoff: \\(\\min(\\max(x,0),5\\%)=\\max(x,0)-\\max(x-5\\%,0)=\\mathrm{Cap}(0)-\\mathrm{Cap}(5\\%)\\) per unit of \\(P\\tau\\). Put-call parity at strike 0 gives \\(\\mathrm{Cap}(0)-\\mathrm{Floor}(0)=P\\tau(F-0)\\). Substituting, \\(\\mathrm{LPI}=\\mathrm{Floor}(0)+P\\tau F-\\mathrm{Cap}(5\\%)\\).<br>\nIf \\(F\\gg\\sigma\\sqrt{T_1}\\), \\(\\mathrm{Floor}(0)\\approx0\\), and the LPI value is \\(P\\tau F\\) minus the value of a 5% cap. That cap is far out of the money, so its value is small. The scheme's optionality is therefore mostly in the small \\(\\mathrm{Cap}(5\\%)\\) term, not in the forward.<br>\n<b>Where it breaks:</b> near deflation, \\(F\\to0\\), \\(\\mathrm{Floor}(0)\\) is no longer negligible and the Bachelier form matters. The 5% cap sits in the skew region, so its value depends on the strike-specific vol, not the ATM vol.",
+  "tags": [
+   "derivation",
+   "lpi",
+   "caps_floors",
+   "put_call_parity"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: hedging linker real DV01 and breakeven exposure.</b> A linker's real and breakeven DV01 are often quoted as equal. Derive the hedge that neutralises the real DV01 with a nominal bond and then a ZCIIS, and show what breakeven exposure remains.",
+  "back": "Let the linker's dirty value be \\(V_L(r)\\) with \\(\\partial V_L/\\partial r=-D_LV_L\\). For a move \\((\\Delta n,\\Delta BEI)\\), \\(\\Delta r=\\Delta n-\\Delta BEI\\), so \\(\\Delta V_L=-D_LV_L\\Delta n+D_LV_L\\Delta BEI\\). Short a nominal bond with DV01 \\(D_LV_L\\): its P&L is \\(+D_LV_L\\Delta n\\). The net is \\(D_LV_L\\Delta BEI\\), so the residual is a breakeven DV01 equal to the real DV01.<br>\nHedge the breakeven with a ZCIIS at tenor \\(T\\). Its breakeven DV01 is \\(N\\,P_n(0,T)\\,T(1+K)^{T-1}\\) per unit of \\(K\\). Set \\(N\\) to match \\(D_LV_L\\). This leaves key-rate residuals because the linker's exposure is spread across its coupon and principal dates, not concentrated at \\(T\\).<br>\n<b>Where it breaks:</b> one parallel DV01 number hides the key-rate profile on both the real and breakeven curves. Hedge on key-rate DV01 for both.",
+  "tags": [
+   "derivation",
+   "dv01",
+   "breakeven",
+   "trade_idea"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: caplet forward delta.</b> For a Bachelier YoY caplet \\(P\\tau[(F-K)\\Phi(d)+\\sigma\\sqrt{T_1}\\phi(d)]\\), with \\(d=(F-K)/(\\sigma\\sqrt{T_1})\\), derive the delta to the forward \\(F\\). State the ZCIIS notional that hedges it, and say what the hedge does not cover.",
+  "back": "Write \\(s=\\sigma\\sqrt{T_1}\\), so \\(d=(F-K)/s\\) and \\(\\partial d/\\partial F=1/s\\). The first term gives \\(\\partial_F[(F-K)\\Phi(d)]=\\Phi(d)+(F-K)\\phi(d)/s=\\Phi(d)+d\\,\\phi(d)\\). The second gives \\(\\partial_F[s\\phi(d)]=\\phi'(d)=-d\\,\\phi(d)\\). The two extra terms cancel:<br>\n\\[\\frac{\\partial\\,\\mathrm{Cap}}{\\partial F}=P\\tau\\,\\Phi(d).\\]\nSo the caplet is hedged by a forward-YoY position of notional \\(P\\tau\\Phi(d)\\) per unit of caplet notional, and the hedge is long in \\(F\\) when \\(d\\) is large.<br>\n<b>Where it breaks:</b> the YoY forward depends on the whole ZC curve, so a delta to \\(F\\) must be mapped through the bootstrap to ZC pillars. The forward hedge does not cover the vega in \\(\\sigma\\), and the Bachelier vol is a single number across the strike.",
+  "tags": [
+   "derivation",
+   "caps_floors",
+   "yoy",
+   "dv01"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: linker convexity in real yield.</b> Expand a linker's dirty price to second order in real yield, \\(\\Delta V/V\\approx-D_m\\Delta r+\\tfrac12C\\Delta r^2\\). At fixed nominal yield, what is the second-order term in breakeven, and for what size of move does convexity exceed duration?",
+  "back": "With \\(C=\\frac{1}{V}\\partial^2V/\\partial r^2\\) and \\(\\Delta r=-\\Delta BEI\\) at fixed nominal yield, \\(\\Delta V/V\\approx D_m\\Delta BEI+\\tfrac12C\\Delta BEI^2\\). The convexity term is positive for a long-duration bond, so a breakeven move in either direction is slightly better than linear.<br>\nConvexity equals duration times move when \\(\\tfrac12C|\\Delta r|=D_m\\), i.e. \\(|\\Delta r|=2D_m/C\\). For a 10y bond with \\(D_m\\approx9.4\\) and \\(C\\approx95\\), that is about 20% in yield.<br>\n<b>Where it breaks:</b> convexity is not a P&L driver for ordinary breakeven moves. It matters for the sign of gamma in a hedged book and for optionality that is written against index moves.",
+  "tags": [
+   "derivation",
+   "dv01",
+   "breakeven",
+   "linkers"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: Bachelier to Black conversion for inflation caplets.</b> A Black (lognormal) YoY caplet with vol \\(\\sigma_B\\) over \\(T_1\\) and a Bachelier caplet with normal vol \\(\\sigma_N\\) over \\(T_1\\) should have equal value at the money. Derive the ATM equivalence \\(\\sigma_N\\approx F\\sigma_B\\), extend it to off-the-money strikes, and say when it fails.",
+  "back": "Black ATM (\\(K=F\\)): \\(P\\tau F[\\Phi(d_1)-\\Phi(d_2)]\\) with \\(d_{1,2}=\\pm\\tfrac12\\sigma_B\\sqrt{T_1}\\). A first-order expansion gives \\(P\\tau F\\,\\phi(0)\\,\\sigma_B\\sqrt{T_1}\\).<br>\nBachelier ATM: \\(P\\tau\\,\\sigma_N\\sqrt{T_1}\\,\\phi(0)\\). Equating the two gives<br>\n\\[\\sigma_N\\approx F\\,\\sigma_B.\\]\nOff the money, the leading-order conversion is \\(\\sigma_N\\approx\\sigma_B\\,(F-K)/\\ln(F/K)\\), which reduces to \\(F\\sigma_B\\) as \\(K\\to F\\).<br>\n<b>Where it breaks:</b> as \\(F\\to0\\), \\(\\sigma_B\\) must blow up to keep \\(\\sigma_N\\) finite, and Black cannot be used at all for \\(F\\le0\\). That is why inflation caps are quoted in normal vol. The leading-order conversion also ignores the smile, so it is only a guide away from the money.",
+  "tags": [
+   "derivation",
+   "caps_floors",
+   "convention",
+   "model_risk"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Under a lognormal index, \\(E[I_T]=I_0\\exp\\bigl(E[\\ln I_T]+\\tfrac12\\mathrm{Var}[\\ln I_T]\\bigr)\\), so the ZC breakeven exceeds the log-expected inflation rate by about {{c1::\\(\\tfrac12\\sigma_I^2\\)}} per year.",
+  "back": "This convexity is priced by ZC swaps and is not expected inflation. It is one reason a breakeven is not a clean forecast.",
+  "tags": [
+   "derivation",
+   "breakeven",
+   "convexity",
+   "inflation_swaps"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a Bachelier YoY caplet, put-call parity gives \\(\\mathrm{Cap}(0)=\\mathrm{Floor}(0)+\\){{c1::\\(P\\tau F\\)}}, so a 0% caplet is the forward plus a 0% floorlet.",
+  "back": "Use this to check quotes at the 0% strike and to split LPI-type structures into a forward and a far-OTM cap.",
+  "tags": [
+   "put_call_parity",
+   "lpi",
+   "caps_floors",
+   "convention"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "At the money, a Black inflation vol \\(\\sigma_B\\) converts to a normal vol of about {{c1::\\(F\\sigma_B\\)}}, and Black cannot price a forward that is {{c2::zero or negative}}.",
+  "back": "The conversion follows from matching ATM vegas: \\(P\\tau F\\phi(0)\\sigma_B\\sqrt{T_1}=P\\tau\\phi(0)\\sigma_N\\sqrt{T_1}\\). Away from ATM use \\(\\sigma_N\\approx\\sigma_B(F-K)/\\ln(F/K)\\) to leading order.",
+  "tags": [
+   "derivation",
+   "caps_floors",
+   "convention",
+   "model_risk"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A linker coupon paid at \\(t\\) on the index at \\(t-L\\) is worth about \\(I(0)P_r(0,t-L)P_n(t-L,t)\\): the real part is discounted to the {{c1::fixing date}}, and the {{c2::lag}} window is carried at nominal rates.",
+  "back": "The nominal carry over the lag is a deterministic adjustment, not a model choice. Its covariance with the index is a small second-order term.",
+  "tags": [
+   "linkers",
+   "indexation",
+   "derivation",
+   "convention"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: settlement cash price of a post-2005 linker.</b> Real coupon 1.25% semi-annual. Settlement is 60 days into a 182-day coupon period. Base RPI at issue 290.0; RPI for the lag month (\\(m-3\\)) is 350.0. Quoted real clean price 98.20 per 100 real nominal. Compute the index ratio, the cash clean and dirty prices per 100 nominal, and a sanity check.",
+  "back": "<ol><li>Index ratio: \\(IR=350.0/290.0=1.20690\\). No interpolation, so the ratio is flat for the month.</li>\n<li>Real accrued: \\(0.625\\times60/182=0.20604\\).</li>\n<li>Real dirty: \\(98.20+0.20604=98.40604\\).</li>\n<li>Cash clean: \\(98.20\\times1.20690=118.517\\).</li>\n<li>Cash accrued: \\(0.20604\\times1.20690=0.2487\\).</li>\n<li>Cash dirty: \\(98.40604\\times1.20690=118.766\\).</li></ol>\n<b>Answer: cash dirty about 118.77 per 100 nominal, with a clean cash price of about 118.52.</b><br>\nSanity: \\(IR\\) multiplies the whole real price, and accrued is about 0.2% of dirty, so the cash dirty is \\(1.2069\\times98.41\\). Check that the desk's quote is real or nominal before comparing.",
+  "tags": [
+   "case_study",
+   "linkers",
+   "index_ratio",
+   "accrued"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: breakeven P&L from a CPI surprise.</b> Receive 10y ZC inflation, notional £10m, par \\(K=3.10\\%\\). Nominal discount \\(P_n(0,10)=0.65\\) (hypothetical). A monthly RPI print is 0.30% above the market path and is treated as a permanent level shift of the index. Compute the PV change and the change in the 10y ZC breakeven, and check against DV01.",
+  "back": "<ol><li>Index ratio at 10y rises by 0.30%: \\((1+K)^{10}=1.031^{10}=1.3570\\).</li>\n<li>Payoff change at \\(T\\): \\(N\\times1.3570\\times0.003=\\text{£}40{,}710\\). PV: \\(\\times0.65=\\text{£}26{,}462\\).</li>\n<li>New par: \\((1.003\\times1.3570)^{1/10}-1=3.109\\%\\), so \\(\\Delta K\\approx3.09\\)bp.</li>\n<li>Receiver DV01: \\(N\\,P_n\\,T(1+K)^{9}\\times1\\text{bp}=10\\text{m}\\times0.65\\times10\\times1.3162\\times10^{-4}=\\text{£}8{,}555\\) per bp.</li></ol>\n<b>Answer: about +£26.5k to the receiver, from a 3bp rise in the 10y breakeven.</b><br>\nSanity: DV01 times \\(\\Delta K\\) is \\(8{,}555\\times3.09\\approx\\text{£}26.4\\)k, matching the PV change. A transient print would move the swap less than a permanent level shift.",
+  "tags": [
+   "case_study",
+   "inflation_swaps",
+   "dv01",
+   "scenario"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: real yield versus nominal, relative value.</b> 10y nominal yield 4.60%. 10y ZC swap breakeven 3.10%. The 10y linker's real yield is quoted at 1.75%. (a) What is the fair real yield from the swap? (b) What breakeven does the linker imply? (c) How much P&L does a DV01-matched breakeven trade make if the gap closes, given a linker real DV01 of £10,000 per bp?",
+  "back": "<ol><li>Fair real: \\((1.046/1.031)-1=1.455\\%\\). The additive shortcut gives \\(4.60-3.10=1.50\\%\\), about 4.5bp too high.</li>\n<li>Linker-implied breakeven: \\((1.046/1.0175)-1=2.801\\%\\). The linker's breakeven is 30bp below the swap's.</li>\n<li>If the gap closes by 30bp with nominal yields fixed, the real yield falls 30bp. The P&L is \\(30\\times\\text{£}10{,}000=\\text{£}300\\)k.</li></ol>\n<b>Answer: linker is cheap on breakeven by 30bp, worth about £300k if it converges.</b><br>\nSanity: with nominal fixed, a 30bp breakeven gap equals a 30bp real gap, so the P&L is DV01 times the gap. The additive shortcut is the wrong tool at 30bp, but the 5bp error is small against the trade.",
+  "tags": [
+   "case_study",
+   "real_rates",
+   "breakeven",
+   "relative_value"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: LPI(0,5%) annual caplet value.</b> RPI YoY forward \\(F=3.00\\%\\), normal vol \\(\\sigma_N=1.00\\%\\), fixing in 1y, \\(P(0,1)=0.97\\), \\(\\tau=1\\). Value (i) the 0% caplet, (ii) the 5% caplet, (iii) the LPI(0,5%) leg, per unit notional.",
+  "back": "<ol><li>0% caplet: \\(d=3.0\\), \\(\\Phi(3)=0.99865\\), \\(\\phi(3)=0.004432\\). Value \\(=0.97\\,[0.03\\times0.99865+0.01\\times0.004432]=0.97\\times0.030004=2.9104\\%\\).</li>\n<li>5% caplet: \\(d=-2.0\\), \\(\\Phi(-2)=0.02275\\), \\(\\phi(2)=0.05399\\). Value \\(=0.97\\,[-0.02\\times0.02275+0.01\\times0.05399]=0.97\\times0.0000849=0.0082\\%\\).</li>\n<li>LPI(0,5%) \\(=2.9104\\%-0.0082\\%=2.9022\\%\\).</li></ol>\n<b>Answer: about 2.90% of notional, almost exactly \\(P\\tau F\\).</b><br>\nSanity: the 0% floorlet is about 0.04bp here, so the LPI leg is the forward less a small 5% cap. The scheme's optionality value is about 0.8bp of notional at this vol.",
+  "tags": [
+   "case_study",
+   "lpi",
+   "caps_floors",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: seasonal-adjusted carry over 3 months.</b> Long £10m nominal of a 3-month-lag linker. Real dirty price 105.00, index ratio \\(IR_0=1.25\\), so dirty nominal value £13.125m. Real coupon 1.25% pa (3-month accrual 0.3125%). Repo 4.00% pa. Trend breakeven 3.00% pa. Seasonal term over the window \\(s_m-s_{m-3}=-0.20\\%\\). Compute 3-month carry with and without the seasonal term, ignoring real price roll.",
+  "back": "<ol><li>Coupon accrual: \\(10\\text{m}\\times1.25\\times0.0125\\times0.25=\\text{£}39{,}063\\).</li>\n<li>Trend 3m accrual: \\((1.03)^{0.25}-1=0.7417\\%\\). Index accrual: \\(13.125\\text{m}\\times0.7417\\%=\\text{£}97{,}349\\).</li>\n<li>Seasonal-adjusted accrual: \\(0.7417\\%-0.20\\%=0.5417\\%\\). Index accrual: \\(13.125\\text{m}\\times0.5417\\%=\\text{£}71{,}099\\).</li>\n<li>Repo: \\(13.125\\text{m}\\times4.00\\%\\times0.25=\\text{£}131{,}250\\).</li>\n<li>Carry, trend only: \\(39{,}063+97{,}349-131{,}250=+\\text{£}5{,}162\\).</li>\n<li>Carry, seasonal-adjusted: \\(39{,}063+71{,}099-131{,}250=-\\text{£}21{,}088\\).</li></ol>\n<b>Answer: the seasonal term flips the 3-month carry from about +£5k to about -£21k.</b><br>\nSanity: the difference is \\(0.20\\%\\times13.125\\text{m}=\\text{£}26{,}250\\), exactly the gap between the two accruals.",
+  "tags": [
+   "case_study",
+   "carry",
+   "seasonality",
+   "linkers"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: DV01-matched linker versus nominal.</b> Linker dirty value £13.125m, real modified duration 8.0 (hypothetical). Short a nominal gilt with the same DV01. Compute P&L for three scenarios: (A) BEI +5bp, nominal fixed; (B) nominal +10bp, BEI +5bp; (C) nominal +10bp, BEI unchanged.",
+  "back": "Real DV01 \\(=13.125\\text{m}\\times8.0\\times10^{-4}/10=\\text{£}10{,}500\\) per bp. Breakeven DV01 equal to it, by the derivation.<br>\n(A) Real falls 5bp. Linker \\(+52.5\\)k. Nominal \\(0\\). Net \\(+52.5\\)k.<br>\n(B) Real rises 5bp. Linker \\(-52.5\\)k. Short nominal \\(+105\\)k. Net \\(+52.5\\)k.<br>\n(C) Real rises 10bp. Linker \\(-105\\)k. Short nominal \\(+105\\)k. Net \\(0\\).<br>\n<b>Answer: net P&L equals £10,500 times the BEI change in every case, and is zero when BEI does not move.</b><br>\nSanity: scenario (C) shows the real-rate exposure is fully hedged. The residual is only the breakeven.",
+  "tags": [
+   "case_study",
+   "dv01",
+   "breakeven",
+   "trade_idea"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: lag convexity in a 10y ZCIIS.</b> Parameters (hypothetical): \\(\\rho=0.3\\), \\(\\sigma_I=1.2\\%\\) per root-year, \\(\\sigma_r=1.0\\%\\) normal, \\(a=0.03\\), lag \\(L=3\\)m, \\(T=10\\)y. Compute the index-ratio correction from the lag and its effect on par \\(K\\), and compare with the deterministic lag cost.",
+  "back": "<ol><li>\\(B(0,9.75)=(1-e^{-0.2925})/0.03=8.45\\).</li>\n<li>Index correction: \\(-\\rho\\sigma_I\\sigma_r\\cdot\\tfrac{L}{12}B=-0.3\\times0.012\\times0.01\\times0.25\\times8.45=-7.6\\times10^{-5}\\), so about \\(-0.76\\)bp.</li>\n<li>Effect on par: about \\(-0.76/10\\approx-0.08\\)bp.</li></ol>\n<b>Answer: the lag convexity is about -0.08bp on the 10y par.</b><br>\nSanity: the deterministic lag cost is about \\(3/12\\times\\) the index drift, which is roughly 75bp of index. The convexity term is about 1/100 of that, so it is a refinement and not the lag itself.",
+  "tags": [
+   "case_study",
+   "zc",
+   "convexity",
+   "inflation_swaps"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: caplet delta hedge and gamma.</b> Notional £10m, YoY caplet on 1y, strike 3.50%. \\(F=3.00\\%\\), \\(\\sigma_N=1.00\\%\\), \\(P(0,1)=0.97\\), \\(\\tau=1\\). Compute the value, the forward delta and the ZCIIS hedge notional. Then check the P&L of a 5bp rise in \\(F\\) against the delta-only prediction.",
+  "back": "<ol><li>\\(d=(3.00-3.50)/1.00=-0.5\\). \\(\\Phi(-0.5)=0.30854\\), \\(\\phi(-0.5)=0.35207\\).</li>\n<li>Value: \\(0.97\\,[(-0.005)(0.30854)+0.01(0.35207)]=0.97\\times0.0019785=19.19\\)bp, so £19,186.</li>\n<li>Delta: \\(P\\tau\\Phi(d)=0.97\\times0.30854=0.2993\\). Hedge notional about \\(\\text{£}10\\text{m}\\times0.2993=\\text{£}2.99\\)m.</li>\n<li>\\(F\\to3.05\\%\\): exact value 20.73bp, so exact P&L \\(=\\text{£}1{,}539\\). Delta-only P&L \\(=\\text{£}1{,}496\\).</li></ol>\n<b>Answer: hedge about £2.99m of ZCIIS per £10m caplet; the 5bp move gives £1.54k exact against £1.50k from delta.</b><br>\nSanity: the £43 gap is gamma. It is positive for a long caplet, as expected for a long option.",
+  "tags": [
+   "case_study",
+   "caps_floors",
+   "dv01",
+   "yoy"
+  ]
+ }
+]
