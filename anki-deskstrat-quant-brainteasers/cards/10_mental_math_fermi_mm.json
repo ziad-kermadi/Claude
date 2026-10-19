@@ -22,7 +22,7 @@
  {
   "type": "basic",
   "front": "Compute \\(37\\times 43\\) without writing long multiplication.",
-  "back": "<b>Answer:</b> \\(37\\times43=1591\\).<br><b>Structure:</b> s_taylor: difference of squares, \\(a^2-b^2\\), centred on 40.<br><b>Key move:</b> Write both factors as \\(40\\mp3\\), so the product is \\(40^2-3^2\\).<br><b>Working:</b> \\((40-3)(40+3)=1600-9=1591\\).<br><b>Sanity check:</b> A product of two numbers with mean 40 is at most \\(40^2=1600\\) (AM-GM). 1591 is just below.<br><b>Transfer:</b> \\(88\\times92=8100-16=8084\\). \\(96\\times104=10000-16=9984\\).",
+  "back": "<b>Answer:</b> \\(37\\times43=1591\\).<br><b>Structure:</b> s_taylor: difference of squares, \\(a^2-b^2\\), centred on 40.<br><b>Key move:</b> Write both factors as \\(40\\mp3\\), so the product is \\(40^2-3^2\\).<br><b>Working:</b> \\((40-3)(40+3)=1600-9=1591\\).<br><b>Sanity check:</b> A product of two numbers with mean 40 is at most \\(40^2=1600\\) (AM-GM). 1591 is just below.<br><b>Transfer:</b> \\(88\\times92=8100-4=8096\\). \\(96\\times104=10000-16=9984\\).",
   "tags": [
    "s_taylor",
    "mental_math",
@@ -74,7 +74,7 @@
  {
   "type": "basic",
   "front": "You approximate \\((1.01)^{100}\\) by \\(e^{100\\cdot0.01}=e\\). What breaks, and by how much?",
-  "back": "<b>What breaks:</b> \\(\\ln(1+r)&lt;r\\), so replacing \\(\\ln(1+r)\\) with \\(r\\) overstates the exponent by about \\(nr^2/2\\). Here that is \\(100\\cdot0.00005=0.005\\), an overstatement of about 0.5%.<br><b>Fix:</b> Keep the second-order term: exponent \\(n(r-r^2/2)=100(0.01-0.00005)=0.995\\).<br><b>New answer:</b> \\(e^{0.995}\\approx2.7046\\), against the exact \\(1.01^{100}=2.7048\\). The true value is \\(2.7048\\), not \\(e=2.7183\\).",
+  "back": "<b>What breaks:</b> \\(\\ln(1+r)&lt;r\\), so replacing \\(\\ln(1+r)\\) with \\(r\\) overstates the exponent by about \\(nr^2/2\\). Here that is \\(100\\cdot0.00005=0.005\\), an overstatement of about 0.5%.<br><b>Fix:</b> Keep the second-order term: exponent \\(n(r-r^2/2)=100(0.01-0.00005)=0.995\\).<br><b>New answer:</b> \\(e^{0.995}\\approx2.7047\\), against the exact \\(1.01^{100}=2.7048\\). The true value is \\(2.7048\\), not \\(e=2.7183\\).",
   "tags": [
    "s_taylor",
    "mental_math",
@@ -118,7 +118,7 @@
  {
   "type": "basic",
   "front": "Estimate \\(\\sqrt{2}\\) with two Newton steps starting from 1.5. How many correct digits do you get?",
-  "back": "<b>Answer:</b> \\(x_1=1.41667\\), \\(x_2=1.414216\\) (exact \\(1.414214\\)). Four correct digits.<br><b>Structure:</b> s_recursion: Newton's method for \\(f(x)=x^2-a\\), i.e. \\(x_{k+1}=\\tfrac12(x_k+a/x_k)\\).<br><b>Key move:</b> Each step squares the relative error: \\(e_{k+1}\\approx e_k^2/(2x)\\).<br><b>Working:</b> \\((1.5+2/1.5)/2=1.416667\\). Then \\((1.416667+2/1.416667)/2=1.4142157\\). Error went \\(0.0858\\to0.00245\\), and \\(0.0858^2/3=0.00245\\).<br><b>Sanity check:</b> Starting above the root, the iteration decreases monotonically towards \\(\\sqrt2\\).<br><b>Transfer:</b> Reciprocal without division: \\(x_{k+1}=x_k(2-ax_k)\\) gives \\(1/7\\) from \\(x_0=0.14\\): \\(0.1428\\), then \\(0.142857\\).",
+  "back": "<b>Answer:</b> \\(x_1=1.41667\\), \\(x_2=1.414216\\) (exact \\(1.414214\\)). Correct to four decimals (five significant figures).<br><b>Structure:</b> s_recursion: Newton's method for \\(f(x)=x^2-a\\), i.e. \\(x_{k+1}=\\tfrac12(x_k+a/x_k)\\).<br><b>Key move:</b> Each step squares the relative error: \\(e_{k+1}\\approx e_k^2/(2x)\\).<br><b>Working:</b> \\((1.5+2/1.5)/2=1.416667\\). Then \\((1.416667+2/1.416667)/2=1.4142157\\). Error went \\(0.0858\\to0.00245\\), and \\(0.0858^2/3=0.00245\\).<br><b>Sanity check:</b> Starting above the root, the iteration decreases monotonically towards \\(\\sqrt2\\).<br><b>Transfer:</b> Reciprocal without division: \\(x_{k+1}=x_k(2-ax_k)\\) gives \\(1/7\\) from \\(x_0=0.14\\): \\(0.1428\\), then \\(0.142857\\).",
   "tags": [
    "s_recursion",
    "mental_math",
@@ -150,7 +150,7 @@
  },
  {
   "type": "basic",
-  "front": "A tally moves +1 or -1 each day with equal probability, independently. After 252 days, how many standard deviations wide is the tally? Give a number.",
+  "front": "A tally moves +1 or -1 each day with equal probability, independently. After 252 days, what is the standard deviation of the tally, in units of one step?",
   "back": "<b>Classic:</b> Annualising volatility: an annual sd is the daily sd times \\(\\sqrt{252}\\).<br><b>Mapping:</b> The tally is a sum of 252 i.i.d. shocks with variance 1 each, so its variance is 252. The sd is \\(\\sqrt{252}\\).<br><b>Answer:</b> \\(\\sqrt{252}\\approx15.87\\) daily units.",
   "tags": [
    "s_sqrt_time_scaling",
@@ -296,7 +296,7 @@
  {
   "type": "basic",
   "front": "Estimate London's daily FX turnover. Decompose, then triangulate with a top-down figure.",
-  "back": "<b>Answer:</b> Low single-digit trillions of US dollars a day. Central estimate about $2tn.<br><b>Structure:</b> s_fermi: two independent routes to one quantity (bottom-up and top-down) and a geometric mean.<br><b>Key move:</b> Bottom-up: desks \\(\\times\\) trades per desk \\(\\times\\) average size. Top-down: global turnover \\(\\times\\) London share.<br><b>Working:</b> Bottom-up: \\(400\\times250\\times$10\\text{m}=$1.0\\)tn. Top-down: recalled BIS 2022 survey figure about $7.5tn globally, London share about 38%, giving about $2.85tn. Geometric mean \\(\\sqrt{1.0\\times2.85}\\approx1.7\\)tn. The BIS figures are recalled, so verify them before quoting.<br><b>Sanity check:</b> A factor-of-3 gap is normal for Fermi estimates. The top-down route is usually the stronger anchor because it is a measured aggregate.<br><b>Transfer:</b> Use the same two-route method for a bank's daily payment volume.",
+  "back": "<b>Answer:</b> Low single-digit trillions of US dollars a day. Central estimate about $1.7tn (the geometric mean of the two routes).<br><b>Structure:</b> s_fermi: two independent routes to one quantity (bottom-up and top-down) and a geometric mean.<br><b>Key move:</b> Bottom-up: desks \\(\\times\\) trades per desk \\(\\times\\) average size. Top-down: global turnover \\(\\times\\) London share.<br><b>Working:</b> Bottom-up: \\(400\\times250\\times$10\\text{m}=$1.0\\)tn. Top-down: recalled BIS 2022 Triennial Survey figure, approx. $7.5tn globally, London share approx. 38%, giving approx. $2.85tn. Geometric mean \\(\\sqrt{1.0\\times2.85}\\approx1.7\\)tn. The BIS figures are approximate and recalled; check them against the BIS Triennial Survey before quoting.<br><b>Sanity check:</b> A factor-of-3 gap is normal for Fermi estimates. The top-down route is usually the stronger anchor because it is a measured aggregate.<br><b>Transfer:</b> Use the same two-route method for a bank's daily payment volume.",
   "tags": [
    "s_fermi",
    "fermi",
@@ -319,7 +319,7 @@
  {
   "type": "basic",
   "front": "Five independent factors, each known to within a factor of 2 (uniform in log between 1/2 and 2), multiply together. What is the 1-sigma band of the product?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
-  "back": "<b>Structure:</b> s_fermi and s_clt_normal_approx: a product of independent factors is log-normal by the CLT on the logs.<br><b>Trigger:</b> A product of many independent uncertain factors. Logs add, so the spread adds in variance.<br><b>Key move:</b> Per factor, \\(\\sigma_{\\ln}=\\ln2/\\sqrt3=0.400\\). For five, \\(0.400\\sqrt5=0.894\\), and \\(e^{0.894}=2.45\\).<br><b>Answer:</b> Multiply or divide by about 2.45 for 1 sigma. Simulation of \\(10^5\\) draws gave 2.44.",
+  "back": "<b>Structure:</b> s_fermi and s_clt_normal_approx: a product of independent factors is log-normal by the CLT on the logs.<br><b>Trigger:</b> A product of many independent uncertain factors. Logs add, so the spread adds in variance.<br><b>Key move:</b> Per factor, \\(\\sigma_{\\ln}=\\ln2/\\sqrt3=0.400\\). For five, \\(0.400\\sqrt5=0.894\\), and \\(e^{0.894}=2.45\\).<br><b>Answer:</b> Multiply or divide by about 2.45 for 1 sigma. Simulation of \\(10^5\\) draws gave 2.45.",
   "tags": [
    "s_fermi",
    "s_clt_normal_approx",
@@ -331,7 +331,7 @@
  {
   "type": "basic",
   "front": "Same five-factor estimate, except two of the factors (bus count and mean bus mass) both scale with city size, with correlation +0.5 and each log-sd 0.40. What breaks?",
-  "back": "<b>What breaks:</b> The independence assumption. Variance of a sum of two correlated log-factors is \\(\\sigma_1^2+\\sigma_2^2+2\\rho\\sigma_1\\sigma_2\\), not the sum of the variances.<br><b>Fix:</b> Model the joint: combine the correlated pair into one factor with its own spread, then propagate the rest as before.<br><b>New answer:</b> Pair sd \\(=\\sqrt{0.16+0.16+0.16}=0.693\\), so one sigma is \\(\\times2.0\\), against \\(\\times1.76\\) if independent (\\(\\sqrt{0.32}=0.566\\)). Positive correlation widens the band.",
+  "back": "<b>What breaks:</b> The independence assumption. Variance of a sum of two correlated log-factors is \\(\\sigma_1^2+\\sigma_2^2+2\\rho\\sigma_1\\sigma_2\\), not the sum of the variances.<br><b>Fix:</b> Model the joint: combine the correlated pair into one factor with its own spread, then propagate the rest as before.<br><b>New answer:</b> The pair has log-sd \\(\\sqrt{0.16+0.16+2(0.5)(0.16)}=\\sqrt{0.48}=0.693\\), so \\(\\times2.0\\) for the pair alone, against \\(\\times1.76\\) if independent. For the full five-factor product the variance is \\(0.48+3(0.16)=0.96\\), so one sigma is \\(e^{0.980}\\approx\\times2.66\\), against \\(\\times2.45\\) if independent. Positive correlation widens the band.",
   "tags": [
    "s_fermi",
    "fermi",
@@ -342,7 +342,7 @@
  {
   "type": "basic",
   "front": "A manager runs 1000 zero-skill funds. Each fund's annual alpha is an independent standard normal, in units of its own sd. Expected alpha of the best fund, in sd units?",
-  "back": "<b>Classic:</b> The expected maximum of \\(N\\) i.i.d. standard normals. The naive asymptotic \\(\\sqrt{2\\ln N}\\) overshoots here.<br><b>Mapping:</b> The best fund is the maximum of 1000 draws. Each draw is independent, so this is an order statistic problem.<br><b>Answer:</b> About 3.24 sd. Simulation of \\(10^5\\) samples of the maximum gave \\(3.242\\). The asymptotic \\(\\sqrt{2\\ln1000}=3.72\\) is too high.",
+  "back": "<b>Classic:</b> The expected maximum of \\(N\\) i.i.d. standard normals. The naive asymptotic \\(\\sqrt{2\\ln N}\\) overshoots here.<br><b>Mapping:</b> The best fund is the maximum of 1000 draws. Each draw is independent, so this is an order statistic problem.<br><b>Answer:</b> About 3.24 sd. Simulation of \\(10^5\\) samples of the maximum gave \\(3.241\\). The asymptotic \\(\\sqrt{2\\ln1000}=3.72\\) is too high.",
   "tags": [
    "s_extremal",
    "s_fermi",
@@ -400,7 +400,7 @@
  {
   "type": "basic",
   "front": "A market on the number of red cards in 10 cards drawn without replacement from a standard 52-card deck. What are the mean and sd?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
-  "back": "<b>Structure:</b> s_indicators: a sum of dependent indicators. The variance has a finite-population correction.<br><b>Trigger:</b> A count of successes in draws from a finite population without replacement.<br><b>Key move:</b> Mean \\(n/2\\). Variance \\(np(1-p)\\frac{N-n}{N-1}\\).<br><b>Answer:</b> Mean 5. Variance \\(10\\cdot\\tfrac14\\cdot\\tfrac{42}{51}=2.06\\). sd \\(1.43\\). Simulation of \\(10^5\\) draws gave variance 2.04.",
+  "back": "<b>Structure:</b> s_indicators: a sum of dependent indicators. The variance has a finite-population correction.<br><b>Trigger:</b> A count of successes in draws from a finite population without replacement.<br><b>Key move:</b> Mean \\(n/2\\). Variance \\(np(1-p)\\frac{N-n}{N-1}\\).<br><b>Answer:</b> Mean 5. Variance \\(10\\cdot\\tfrac14\\cdot\\tfrac{42}{51}=2.06\\). sd \\(1.43\\). Simulation of \\(10^5\\) draws gave variance about 2.06.",
   "tags": [
    "s_indicators",
    "market_making",
@@ -479,7 +479,7 @@
  {
   "type": "basic",
   "front": "Five analysts each estimate a stock's value as the true value plus independent N(0,1) noise. You buy at the highest estimate's price. Expected overestimate, in sd units?",
-  "back": "<b>Classic:</b> Auction winner's curse: the winning bid overpays on average because the winner is the one with the largest error.<br><b>Mapping:</b> Highest estimate = max of five i.i.d. normals. The expected overestimate equals \\(E[\\max\\text{ of }5]\\).<br><b>Answer:</b> \\(E[\\max_5]\\approx1.163\\) (exact by integration \\(1.16296\\); simulation of \\(10^5\\) gave 1.165).",
+  "back": "<b>Classic:</b> Auction winner's curse: the winning bid overpays on average because the winner is the one with the largest error.<br><b>Mapping:</b> Highest estimate = max of five i.i.d. normals. The expected overestimate equals \\(E[\\max\\text{ of }5]\\).<br><b>Answer:</b> \\(E[\\max_5]\\approx1.163\\) (exact by integration \\(1.16296\\); simulation of \\(10^5\\) gave 1.163).",
   "tags": [
    "s_extremal",
    "s_order_statistics",
@@ -524,7 +524,7 @@
  },
  {
   "type": "basic",
-  "front": "A trader buys with prob 0.8 if the coin is 0.6, and with prob 0.2 if it is 0.4. The prior is 50/50. You observe one buy. What is your posterior on 0.6, and the mean probability? Then two buys.<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "front": "A hidden bias \\(\\theta\\) is 0.6 or 0.4, with prior 50/50. Given \\(\\theta\\), a trader buys with probability 0.8 if \\(\\theta=0.6\\) and 0.2 if \\(\\theta=0.4\\). You observe one buy. What is the posterior \\(P(\\theta=0.6)\\), and the posterior mean of \\(\\theta\\)? Then two buys.<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
   "back": "<b>Structure:</b> s_bayes: flow as a noisy signal of a hidden parameter.<br><b>Trigger:</b> A counterparty's action is a likelihood-ratio signal about the hidden state.<br><b>Key move:</b> Posterior odds = likelihood ratio \\(\\times\\) prior odds. Each buy multiplies the odds by \\(0.8/0.2=4\\).<br><b>Answer:</b> One buy: posterior 0.80, mean \\(0.8\\cdot0.6+0.2\\cdot0.4=0.56\\). Two buys: odds 16, posterior \\(16/17=0.941\\), mean \\(0.588\\). Monte Carlo of \\(10^6\\) gave 0.80.",
   "tags": [
    "s_bayes",
@@ -575,7 +575,7 @@
  {
   "type": "basic",
   "front": "<b>[Chain: MM session 4/4]</b> Recap: fair value now 9.5, short 1 at 8, running P&amp;L +0.5. Further buyers may also have seen the first die.<br><b>Question:</b> Give a new mid, a width, and the reason for each.",
-  "back": "<b>Answer:</b> Mid 9.5. Widen to about 8.5 bid / 10.5 ask. The 8 ask was filled by a buyer whose information cost you 1.5 per unit.<br><b>Structure:</b> s_information_design<br><b>Key move:</b> Re-centre on the new conditional fair value. Widen by the expected adverse-selection cost when informed flow is present.<br><b>Working:</b> New mid \\(9.5\\). Width of ±1 gives 8.5 to 10.5. Expected cost of the next informed fill is about 1.5 per unit, above the uninformed edge of 1.<br><b>Sanity check:</b> If informed flow dominates, widen further or stop quoting. Quoting at 8 again would lose 1.5 per fill.<br><b>Transfer:</b> Recentre on conditional mean after each informed fill, and never quote a side at a price below the new fair.",
+  "back": "<b>Answer:</b> Mid 9.5, quote 8.5 bid / 10.5 ask (the same ±1 width, re-centred). The 8 ask was filled by a buyer whose information cost you 1.5 per unit.<br><b>Structure:</b> s_information_design<br><b>Key move:</b> Re-centre on the new conditional fair value. Keep each quote on the correct side of it: an ask below 9.5 gives an informed buyer a sure profit.<br><b>Working:</b> New mid \\(9.5\\). Width of ±1 gives 8.5 to 10.5. A buyer with the same information will not lift 10.5, since that is above their fair value of 9.5. An ask at 8 would cost 1.5 per unit against that buyer.<br><b>Sanity check:</b> If informed flow dominates, widen further or stop quoting. Quoting at 8 again would lose 1.5 per fill.<br><b>Transfer:</b> Recentre on conditional mean after each informed fill, and never quote a side at a price below the new fair.",
   "tags": [
    "s_information_design",
    "market_making",
@@ -670,7 +670,7 @@
  {
   "type": "basic",
   "front": "Coin with \\(p=0.6\\), even money. You bet full Kelly, \\(f=0.2\\), each flip. What is the chance your wealth ever falls to half its starting value? Give a rigorous bound and check by simulation.",
-  "back": "<b>Answer:</b> At most \\(1/2\\). Simulation over 1000 bets gave 0.456.<br><b>Structure:</b> s_martingale and s_optional_stopping: \\(1/W_t\\) is a martingale, so Doob's maximal inequality bounds the drawdown.<br><b>Key move:</b> Choose \\(f^*=0.2\\). Then \\(E[1/(1+fX)]=0.6/1.2+0.4/0.8=1\\), so \\(M_t=1/W_t\\) is a positive martingale with \\(M_0=1\\).<br><b>Working:</b> \\(P(\\sup_t M_t\\ge2)\\le E[M_0]/2=1/2\\). Event \\(\\sup M\\ge2\\) is the same as \\(W\\) falling to \\(1/2\\). Simulation of \\(10^5\\) paths over 1000 bets gave 0.456.<br><b>Sanity check:</b> The bound is loose for this edge, which is consistent with the simulation sitting below it.<br><b>Transfer:</b> Under half-Kelly, \\(1/W\\) is a supermartingale, since \\(E[1/(1+0.1X)]=0.99&lt;1\\), so the same bound still holds, and the drawdown probability is much lower.",
+  "back": "<b>Answer:</b> At most \\(1/2\\). Simulation over 1000 bets gave about 0.45 (about 0.445 over 5000 bets).<br><b>Structure:</b> s_martingale and s_optional_stopping: \\(1/W_t\\) is a martingale, so Doob's maximal inequality bounds the drawdown.<br><b>Key move:</b> Choose \\(f^*=0.2\\). Then \\(E[1/(1+fX)]=0.6/1.2+0.4/0.8=1\\), so \\(M_t=1/W_t\\) is a positive martingale with \\(M_0=1\\).<br><b>Working:</b> \\(P(\\sup_t M_t\\ge2)\\le E[M_0]/2=1/2\\). Event \\(\\sup M\\ge2\\) is the same as \\(W\\) falling to \\(1/2\\). Simulation of \\(10^5\\) paths over 1000 bets gave 0.454.<br><b>Sanity check:</b> The bound is loose for this edge, which is consistent with the simulation sitting below it.<br><b>Transfer:</b> Under half-Kelly, \\(1/W\\) is a supermartingale, since \\(E[1/(1+0.1X)]=0.99&lt;1\\), so the same bound still holds, and the drawdown probability is much lower.",
   "tags": [
    "s_martingale",
    "s_optional_stopping",
@@ -695,7 +695,7 @@
  {
   "type": "basic",
   "front": "Game: payoff \\(2^k\\) with probability \\(2^{-k}\\), \\(k\\ge1\\) (2 with prob 1/2, 4 with prob 1/4...). Infinite expected value. What is the most you would pay at wealth 100, under log utility?",
-  "back": "<b>Answer:</b> About $7.79 at wealth 100. Price grows slowly with wealth: about $10.95 at 1000, $14.24 at 10,000.<br><b>Structure:</b> s_convexity_jensen and s_kelly_log_utility: concave utility caps the price even when expected value is infinite.<br><b>Key move:</b> Solve \\(\\sum_k 2^{-k}\\ln(W-c+2^k)=\\ln W\\) for \\(c\\).<br><b>Working:</b> Bisection on \\(c\\) with \\(W=100\\) gives \\(c=7.79\\). Monte Carlo of \\(10^6\\) draws of the payoff gives \\(E[\\ln(W-c+X)]-\\ln W=0.0002\\pm0.0002\\), i.e. zero within error.<br><b>Sanity check:</b> The price is far below the infinite expected value, and grows roughly like \\(\\ln W\\).<br><b>Transfer:</b> Replacing log utility with \\(\\sqrt{\\cdot}\\) gives a different, larger price.",
+  "back": "<b>Answer:</b> About $7.79 at wealth 100. Price grows slowly with wealth: about $10.95 at 1000, $14.24 at 10,000.<br><b>Structure:</b> s_convexity_jensen and s_kelly_log_utility: concave utility caps the price even when expected value is infinite.<br><b>Key move:</b> Solve \\(\\sum_k 2^{-k}\\ln(W-c+2^k)=\\ln W\\) for \\(c\\).<br><b>Working:</b> Bisection on \\(c\\) with \\(W=100\\) gives \\(c=7.79\\). Monte Carlo of \\(10^6\\) draws of the payoff gives \\(E[\\ln(W-c+X)]-\\ln W=-0.0001\\pm0.0002\\), i.e. zero within error.<br><b>Sanity check:</b> The price is far below the infinite expected value, and grows roughly like \\(\\ln W\\).<br><b>Transfer:</b> Replacing log utility with \\(\\sqrt{\\cdot}\\) gives a different, larger price.",
   "tags": [
    "s_convexity_jensen",
    "s_kelly_log_utility",
@@ -707,8 +707,8 @@
  },
  {
   "type": "basic",
-  "front": "Same St. Petersburg game, but payoffs are capped at \\(2^{20}\\) (so \\(k\\le20\\)). What happens to the expected value?",
-  "back": "<b>What breaks:</b> The infinite sum is now finite. Each term contributes \\(\\tfrac12\\) per \\(k\\), so the expected value is linear in the cap index.<br><b>Fix:</b> The expected value is \\(\\sum_{k=1}^{20}1=20\\). Price the cap as \\(20\\) under risk-neutral pricing, then apply utility.<br><b>New answer:</b> Expected value \\(=20\\). The log-utility price is much lower than 20.",
+  "front": "Same St. Petersburg game, but the payoff is capped at \\(\\min(2^k,2^{20})\\), with the same probabilities \\(2^{-k}\\). What happens to the expected value?",
+  "back": "<b>What breaks:</b> The infinite sum becomes finite. Each term \\(k=1,\\dots,19\\) contributes \\(2^k\\cdot2^{-k}=1\\). The capped tail \\(k\\ge20\\) has probability \\(2^{-19}\\) and pays \\(2^{20}\\), contributing 2.<br><b>Fix:</b> \\(E=\\sum_{k=1}^{19}1+2^{20}\\cdot2^{-19}=19+2=21\\). Price the cap as 21 under risk-neutral pricing, then apply utility.<br><b>New answer:</b> Expected value \\(=21\\). The log-utility price at wealth 100 is about $7.79, far below 21.",
   "tags": [
    "s_convexity_jensen",
    "market_making",
@@ -744,7 +744,7 @@
  {
   "type": "basic",
   "front": "A deck of 26 red and 26 black cards is shuffled. Before each card you guess its colour: +1 if right, -1 if wrong. You play all 52 cards. What is the optimal expected score?",
-  "back": "<b>Answer:</b> About 8.08 (expected correct guesses about 30.04 of 52).<br><b>Structure:</b> s_dynamic_programming: value depends on the remaining composition \\((r,b)\\).<br><b>Key move:</b> \\(V(r,b)=\\max\\{r-b,b-r\\}/(r+b)+\\frac{rV(r-1,b)+bV(r,b-1)}{r+b}\\). Guess the majority colour.<br><b>Working:</b> Dynamic programme in exact fractions gives \\(V(26,26)=8.0813\\). Monte Carlo of \\(10^6\\) greedy plays gave \\(8.0813\\pm0.005\\).<br><b>Sanity check:</b> A fair bet on each card would total 0, so the positive value is due to the information in the composition.<br><b>Transfer:</b> Small deck: \\(V(2,2)=5/3\\). With replacement the value is 0.",
+  "back": "<b>Answer:</b> About 8.08 (expected correct guesses about 30.04 of 52).<br><b>Structure:</b> s_dynamic_programming: value depends on the remaining composition \\((r,b)\\).<br><b>Key move:</b> \\(V(r,b)=\\max\\{r-b,b-r\\}/(r+b)+\\frac{rV(r-1,b)+bV(r,b-1)}{r+b}\\). Guess the majority colour.<br><b>Working:</b> Dynamic programme in exact fractions gives \\(V(26,26)=8.0813\\). Monte Carlo of \\(10^6\\) greedy plays gave \\(8.083\\pm0.005\\).<br><b>Sanity check:</b> A fair bet on each card would total 0, so the positive value is due to the information in the composition.<br><b>Transfer:</b> Small deck: \\(V(2,2)=5/3\\). With replacement the value is 0.",
   "tags": [
    "s_dynamic_programming",
    "market_making",
@@ -846,7 +846,7 @@
  },
  {
   "type": "basic",
-  "front": "A bet has expected value +5% of stake, but a loss wipes out the whole bankroll. The win probability is 0.51 at even money. Do you bet all?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "front": "A bet has expected value +2% of stake, but a loss wipes out the whole bankroll. The win probability is 0.51 at even money. Do you bet all?<br><i>Before solving: which structure, and what in the statement triggers it?</i>",
   "back": "<b>Structure:</b> s_convexity_jensen: the expected log of wealth, not expected wealth, governs the long run.<br><b>Trigger:</b> A loss that takes wealth to zero makes expected log utility \\(-\\infty\\), however small the chance.<br><b>Key move:</b> \\(E[\\ln W]=0.51\\ln2+0.49\\ln0=-\\infty\\). Choose \\(f&lt;1\\), with Kelly \\(f^*=0.02\\).<br><b>Answer:</b> No. Bet the Kelly fraction, \\(0.51-0.49=0.02\\).",
   "tags": [
    "s_convexity_jensen",

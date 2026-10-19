@@ -112,7 +112,6 @@
   "back": "<b>Structure:</b> linearity over levels (no finite value).<br><b>Trigger:</b> Each level \\(k\\) contributes the same amount to the expectation, so the series does not converge.<br><b>Key move:</b> \\(P(K=k)2^k=1\\) for every \\(k\\), so the sum diverges.<br><b>Answer:</b> Infinite. The uncapped St Petersburg game has no finite expectation. Any cap restores a finite value.",
   "tags": [
    "s_linearity_expectation",
-   "s_kelly_log_utility",
    "st_petersburg",
    "utility",
    "fmt_recognise"
@@ -330,7 +329,7 @@
  {
   "type": "basic",
   "front": "A stick of length 1 is broken at two independent uniform points into three pieces. Find the probability the three pieces can form a triangle.",
-  "back": "<b>Answer:</b> \\(\\frac14\\).<br><b>Structure:</b> geometric probability with complement: the three events 'piece \\(i\\ge\\frac12\\)' are disjoint.<br><b>Key move:</b> A triangle needs every piece below \\(\\frac12\\). At most one piece can exceed \\(\\frac12\\), so \\(P(\\text{no triangle})=3\\cdot P(L_1\\ge\\frac12)\\). Each has probability \\((\\frac12)^2=\\frac14\\).<br><b>Working:</b> \\(1-3\\cdot\\frac14=\\frac14\\approx 0.25\\). Monte Carlo \\(0.2522\\).<br><b>Sanity check:</b> The 'at most one piece above half' argument is the same for any two i.i.d. uniform cuts. Only the threshold changes with more pieces.<br><b>Transfer:</b> Probability that a random point split into 3 pieces forms a triangle.",
+  "back": "<b>Answer:</b> \\(\\frac14\\).<br><b>Structure:</b> geometric probability with complement: the three events 'piece \\(i\\ge\\frac12\\)' are disjoint.<br><b>Key move:</b> A triangle needs every piece below \\(\\frac12\\). At most one piece can exceed \\(\\frac12\\), so \\(P(\\text{no triangle})=3\\cdot P(L_1\\ge\\frac12)\\). Each has probability \\((\\frac12)^2=\\frac14\\).<br><b>Working:</b> \\(1-3\\cdot\\frac14=\\frac14\\approx 0.25\\). Monte Carlo \\(0.2522\\).<br><b>Sanity check:</b> The 'at most one piece above half' argument is the same for any two i.i.d. uniform cuts. Only the threshold changes with more pieces.<br><b>Transfer:</b> Probability that the largest of the three pieces exceeds \\(\\frac34\\) is \\(3\\cdot(\\frac14)^2=\\frac3{16}\\). The events are disjoint, since two pieces cannot both exceed \\(\\frac34\\), and each spacing has \\(P(L\\ge t)=(1-t)^2\\).",
   "tags": [
    "s_geometric_probability",
    "s_complement",
@@ -390,10 +389,9 @@
  {
   "type": "basic",
   "front": "A fair coin is flipped until the first head on flip \\(K\\). The payoff is \\(2^K\\) dollars if \\(K\\le 20\\) and \\(2^{20}\\) dollars otherwise. Find the expected payoff.",
-  "back": "<b>Answer:</b> 21 dollars.<br><b>Structure:</b> linearity over levels; the cap makes each level contribute and the tail contributes one more.<br><b>Key move:</b> For \\(k\\le 20\\), \\(P(K=k)2^k=1\\). The tail gives \\(P(K>20)\\cdot2^{20}=2^{-20}\\cdot 2^{20}=1\\).<br><b>Working:</b> Sum \\(=20+1=21\\). With cap \\(2^m\\) the answer is \\(m+1\\). Monte Carlo with cap 10 gives 10.74 versus exact 11.<br><b>Sanity check:</b> The uncapped game is infinite. The expectation grows by 1 for each extra allowed level.<br><b>Transfer:</b> Any St Petersburg variant where each level has the same probability times payoff (see recognise card).",
+  "back": "<b>Answer:</b> 21 dollars.<br><b>Structure:</b> linearity over levels; the cap makes each level contribute and the tail contributes one more.<br><b>Key move:</b> For \\(k\\le 20\\), \\(P(K=k)2^k=1\\). The tail gives \\(P(K>20)\\cdot2^{20}=2^{-20}\\cdot 2^{20}=1\\).<br><b>Working:</b> Sum \\(=20+1=21\\). With cap \\(2^m\\) the answer is \\(m+1\\). For example, cap \\(2^{10}\\) gives \\(11\\).<br><b>Sanity check:</b> The uncapped game is infinite. The expectation grows by 1 for each extra allowed level.<br><b>Transfer:</b> Any St Petersburg variant where each level has the same probability times payoff (see recognise card).",
   "tags": [
    "s_linearity_expectation",
-   "s_kelly_log_utility",
    "st_petersburg",
    "utility",
    "fmt_solve"
@@ -402,7 +400,7 @@
  {
   "type": "basic",
   "front": "Your wealth is 1000 dollars and your utility is \\(\\log(\\text{wealth})\\). A game pays \\(2^K\\) dollars, where \\(K\\) is the flip on which the first head appears. What is the largest fee \\(c\\) you should pay to play, \\(E[\\log(1000-c+2^K)]=\\log 1000\\)?",
-  "back": "<b>Answer:</b> About \\(10.95\\) dollars.<br><b>Structure:</b> log utility (Kelly-style): the expected payoff is infinite, but the expected log is finite, so the bankroll sets the price.<br><b>Key move:</b> Solve \\(\\sum_{k\\ge1}2^{-k}\\log(w-c+2^k)=\\log w\\) numerically (bisection on \\(c\\)).<br><b>Working:</b> Wealth 100 gives about 7.79. Each 10x in wealth adds about 3.3 (\\(\\log_2 10\\)), so the price grows like \\(\\log_2(w)\\).<br><b>Sanity check:</b> Price for a 100-dollar bankroll \\(\\approx 7.79\\). Monte Carlo check: the expected log gap is within \\(3\\times10^{-4}\\) at the root.<br><b>Transfer:</b> A risk-neutral player would pay any amount. Log utility caps the fee to about \\(\\log_2\\) of the bankroll.",
+  "back": "<b>Answer:</b> About \\(10.95\\) dollars.<br><b>Structure:</b> log utility (Kelly-style): the expected payoff is infinite, but the expected log is finite, so the bankroll sets the price.<br><b>Key move:</b> Solve \\(\\sum_{k\\ge1}2^{-k}\\log(w-c+2^k)=\\log w\\) numerically (bisection on \\(c\\)).<br><b>Working:</b> Wealth 100 gives about 7.79. Each 10x in wealth adds about 3.2 (approaching \\(\\log_2 10\\approx3.32\\) for large wealth), so the price grows roughly like \\(\\log_2(w)\\).<br><b>Sanity check:</b> Price for a 100-dollar bankroll \\(\\approx 7.79\\). Exact root by bisection: \\(c\\approx10.954\\) at wealth 1000.<br><b>Transfer:</b> A risk-neutral player would pay any amount. Log utility caps the fee to about \\(\\log_2\\) of the bankroll.",
   "tags": [
    "s_kelly_log_utility",
    "st_petersburg",
@@ -636,7 +634,7 @@
  {
   "type": "basic",
   "front": "\\(X\\sim U(0,1)\\) and \\(Y\\sim U(0,1)\\) independent. \\(E\\left[\\frac{X}{X+Y}\\right]=\\frac12\\) by symmetry.<br><br><b>Now change one assumption:</b> \\(X\\sim U(0,1)\\) and \\(Y\\sim U(0,2)\\), independent. Find \\(E\\left[\\frac{X}{X+Y}\\right]\\).",
-  "back": "<b>What breaks:</b> Symmetry needs \\(X\\) and \\(Y\\) to have the same distribution. Here \\(Y\\) tends to be larger, so the ratio is smaller on average.<br><b>Fix:</b> Integrate directly: \\(E=\\int_0^1\\int_0^2\\frac{x}{x+y}\\cdot\\frac12\\,dy\\,dx=\\frac12\\int_0^1 x\\ln\\frac{x+2}{x}\\,dx\\).<br><b>New answer:</b> \\(\\frac12+\\ln 2-\\frac34\\ln 3\\approx 0.3692\\) (Monte Carlo \\(0.3690\\)).",
+  "back": "<b>What breaks:</b> Symmetry needs \\(X\\) and \\(Y\\) to have the same distribution. Here \\(Y\\) tends to be larger, so the ratio is smaller on average.<br><b>Fix:</b> Integrate directly: \\(E=\\int_0^1\\int_0^2\\frac{x}{x+y}\\cdot\\frac12\\,dy\\,dx=\\frac12\\int_0^1 x\\ln\\frac{x+2}{x}\\,dx\\).<br><b>New answer:</b> \\(\\frac12+\\ln 2-\\frac34\\ln 3\\approx 0.3690\\) (Monte Carlo \\(0.3690\\)).",
   "tags": [
    "s_symmetry",
    "ratios",
@@ -695,7 +693,7 @@
  {
   "type": "basic",
   "front": "A uniform random permutation of 4 people with hats. \\(P(\\text{nobody gets own hat})=\\frac38\\) and \\(E[\\text{matches}]=1\\).<br><br><b>Now change one assumption:</b> condition on at least one person getting their own hat. Find \\(E[\\text{matches}\\mid\\text{at least one match}]\\).",
-  "back": "<b>What breaks:</b> Conditioning changes the marginal of the count. \\(E[F\\mid F\\ge1]=E[F]/P(F\\ge1)\\) only holds because \\(F=0\\) on the complement.<br><b>Fix:</b> \\(P(F\\ge1)=1-\\frac38=\\frac58\\). Then \\(E[F\\mid F\\ge1]=\\frac{1}{5/8}\\).<br><b>New answer:</b> \\(\\frac85=1.6\\) (Monte Carlo \\(1.5945\\)).",
+  "back": "<b>What breaks:</b> Conditioning changes the marginal of the count. \\(E[F\\mid F\\ge1]=E[F]/P(F\\ge1)\\) only holds because \\(F=0\\) on the complement.<br><b>Fix:</b> \\(P(F\\ge1)=1-\\frac38=\\frac58\\). Then \\(E[F\\mid F\\ge1]=\\frac{1}{5/8}\\).<br><b>New answer:</b> \\(\\frac85=1.6\\) (Monte Carlo agrees, about \\(1.60\\)).",
   "tags": [
    "s_complement",
    "s_indicators",
@@ -741,8 +739,8 @@
  },
  {
   "type": "basic",
-  "front": "A rope is cut at two independent uniform points into three pieces. What is the probability the three pieces can be tied into a closed triangle?",
-  "back": "<b>Classic:</b> the broken-stick triangle problem.<br><b>Mapping:</b> a triangle needs each piece shorter than half the rope. At most one piece can be longer than half, so the complement is a disjoint union.<br><b>Answer:</b> \\(\\frac14\\).",
+  "front": "Two independent uniform draws on \\((0,1)\\) divide the unit interval into three pieces. What is the probability that every piece is at most \\(\\frac12\\)?<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Classic:</b> the broken-stick triangle problem. Three pieces can form a triangle exactly when each is less than half the total.<br><b>Mapping:</b> a triangle needs each piece shorter than half the rope. At most one piece can be longer than half, so the complement is a disjoint union.<br><b>Answer:</b> \\(\\frac14\\).",
   "tags": [
    "s_geometric_probability",
    "s_complement",
@@ -753,12 +751,13 @@
  },
  {
   "type": "basic",
-  "front": "A fair coin is tossed repeatedly. Find the expected number of tosses until the first time a head is immediately followed by a tail.",
-  "back": "<b>Classic:</b> the waiting time for the pattern HT.<br><b>Mapping:</b> HT cannot overlap with itself, so the mean is \\(2^2\\) (Conway's leading-number formula).<br><b>Answer:</b> \\(4\\).",
+  "front": "A fair six-sided die is rolled repeatedly. Find the expected number of rolls until a 6 is immediately followed by a 1.<br><br><i>Before solving: which structure, and what in the statement triggers it?</i>",
+  "back": "<b>Structure:</b> pattern waiting time with no self-overlap (first-step conditioning, Conway's leading-number formula).<br><b>Trigger:</b> the target is a fixed two-step pattern, and the pattern cannot overlap itself: a 6 followed by a 1 cannot begin again inside a match.<br><b>Key move:</b> Each position completes the pattern with probability \\(\\frac1{36}\\). With no self-overlap, the mean is \\(36\\).<br><b>Answer:</b> \\(36\\).<br><b>Classic:</b> the HT coin-pattern waiting time (mean 4), with 6 playing the role of H and 1 the role of T, and 36 outcomes per step instead of 2 per step, so \\(6^2=36\\) in place of \\(2^2=4\\). Monte Carlo \\(36.19\\) with \\(10^5\\) trials.",
   "tags": [
    "s_first_step_conditioning",
    "s_markov_chain",
-   "coin_patterns",
+   "dice",
+   "pattern_waiting",
    "twin",
    "fmt_twin"
   ]
