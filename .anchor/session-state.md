@@ -1,6 +1,6 @@
 # Session state (auto-saved — last known reality)
 
-_Updated: 2026-10-19 18:25:54_  ·  branch: `claude/dazzling-pasteur-18h2mo`
+_Updated: 2026-10-19 19:55:51_  ·  branch: `claude/quant-deck-cpp-training-0rix4z`
 
 ## Uncommitted changes
 ```
@@ -9,20 +9,20 @@ _Updated: 2026-10-19 18:25:54_  ·  branch: `claude/dazzling-pasteur-18h2mo`
 
 Diff stat:
 ```
- .anchor/session-state.md | 22 ++--------------------
- 1 file changed, 2 insertions(+), 20 deletions(-)
+ .anchor/session-state.md | 25 +------------------------
+ 1 file changed, 1 insertion(+), 24 deletions(-)
 ```
 
 ## Recent commits
 ```
-6abe47f Add anchor-memory session state snapshot
-5cfad96 Add handoff file for next session
-887cbd9 Deck v2: 856 notes, 12 subdecks, fact-checked; rebuild .apkg and add README
-e8d8efd Replace dubious 'Narrowed Reference Obligation' card with Standard Reference Obligation
-ddd61e2 Fact-check: coding and scenarios subdecks
-314fffc Fact-check in progress
-bfa4a20 Fact-check: converts and inflation subdecks
-418e330 Fact-check: rates options subdeck
+c51760a Final v3 build: layered explanations, 331 diagrams, README
+3af5240 WIP: layering pass
+4e8986b WIP: layering pass
+0c37cae WIP: layering pass
+0d80f48 WIP: layering pass
+e351bef Layering desk 7; record token-minimisation rule
+9a2455b WIP: layering pass in progress
+7edf87d Layered explanations: desk practice 1
 ```
 
 ## Resume

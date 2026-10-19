@@ -2,12 +2,13 @@
  {
   "type": "basic",
   "front": "UK index-linked gilts: what does the indexation lag do to the index ratio, and why does it matter when comparing a linker with a swap curve?",
-  "back": "<b>Headline:</b> the lag decides which RPI print sets the cash flows. For settlement in month \\(m\\), \\(IR = RPI_{\\text{ref}}/RPI_{\\text{base}}\\), where \\(RPI_{\\text{ref}}\\) is the print for month \\(m-L\\), with \\(L\\in\\{3,8\\}\\).<br>\n<b>Why it matters:</b>\n<ul><li>Known-ahead cash flows: each index value is published before the date it sets, so inflation exposure ends \\(L\\) months before settlement.</li>\n<li>Comparability: a linker breakeven is only like-for-like with a swap curve of the same lag. The lag mismatch is a deterministic term in the basis.</li></ul>\n<b>Interviewer follow-up:</b> Which way does the lag bias breakeven? The lag removes roughly \\(L\\) months of expected inflation from the index ratio (approx.), so lag-adjust the linker before comparing its breakeven with a swap of a different lag.",
+  "back": "<b>Headline:</b> the lag decides which RPI print sets the cash flows. For settlement in month \\(m\\), \\(IR = RPI_{\\text{ref}}/RPI_{\\text{base}}\\), where \\(RPI_{\\text{ref}}\\) is the print for month \\(m-L\\), with \\(L\\in\\{3,8\\}\\).<br>\n<b>Why it matters:</b>\n<ul><li>Known-ahead cash flows: each index value is published before the date it sets, so inflation exposure ends \\(L\\) months before settlement.</li>\n<li>Comparability: a linker breakeven is only like-for-like with a swap curve of the same lag. The lag mismatch is a deterministic term in the basis.</li></ul>\n<b>Interviewer follow-up:</b> Which way does the lag bias breakeven? The lag removes roughly \\(L\\) months of expected inflation from the index ratio (approx.), so lag-adjust the linker before comparing its breakeven with a swap of a different lag.<div class=\"fig\"><img src=\"04_inflation_0_indexation_lag_timeline.png\"><div class=\"cap\">Post-2005 IR uses RPI(m-3) and is flat; pre-2005 uses RPI(m-8) and RPI(m-7), interpolated daily.</div></div>",
   "tags": [
    "linkers",
    "uk_gilts",
    "indexation",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -18,7 +19,8 @@
    "linkers",
    "uk_gilts",
    "convention",
-   "indexation"
+   "indexation",
+   "lvl_foundation"
   ]
  },
  {
@@ -29,29 +31,32 @@
    "linkers",
    "index_ratio",
    "derivation",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "Why is the index ratio of a post-2005 UK linker a step function, and what does the step imply for accrued interest and index-linked DV01 around month-end?",
-  "back": "The post-2005 index ratio is constant through each calendar month: \\(IR_m = RPI_{m-3}/RPI_{\\text{base}}\\). The step on the 1st equals the monthly change in the lagged print: \\(\\Delta IR \\approx IR\\cdot(RPI_{m-3}/RPI_{m-4}-1)\\).\n<ul><li>Within the month the index is already known, so intramonth inflation risk is zero. Index-linked DV01 is concentrated at the month boundary.</li>\n<li>Accrued interest uses the settlement-date IR, so dirty price moves in steps while the clean quote is ex-index.</li></ul>\n<b>Follow-up:</b> Holding the clean price fixed, why does a breakeven computed on the 1st differ from one computed on the 31st? The IR, and so the dirty-to-clean conversion, has stepped between the two dates.",
+  "back": "The post-2005 index ratio is constant through each calendar month: \\(IR_m = RPI_{m-3}/RPI_{\\text{base}}\\). The step on the 1st equals the monthly change in the lagged print: \\(\\Delta IR \\approx IR\\cdot(RPI_{m-3}/RPI_{m-4}-1)\\).\n<ul><li>Within the month the index is already known, so intramonth inflation risk is zero. Index-linked DV01 is concentrated at the month boundary.</li>\n<li>Accrued interest uses the settlement-date IR, so dirty price moves in steps while the clean quote is ex-index.</li></ul>\n<b>Follow-up:</b> Holding the clean price fixed, why does a breakeven computed on the 1st differ from one computed on the 31st? The IR, and so the dirty-to-clean conversion, has stepped between the two dates.<div class=\"fig\"><img src=\"04_inflation_3_index_ratio_step_vs_interp.png\"><div class=\"cap\">Interpolated index moves daily; post-2005 index is flat in each month and steps on the 1st (illustrative 0.3% change).</div></div>",
   "tags": [
    "linkers",
    "index_ratio",
    "convention",
-   "dv01"
+   "dv01",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "Mental math: a linker pays a 1.25% real coupon semi-annually. Settlement is 60 days into a 182-day coupon period and the settlement index ratio is 1.30. What is accrued interest per 100 nominal?",
-  "back": "\\[\\text{Accrued}=\\frac{c}{2}\\times IR\\times\\frac{\\text{days}}{\\text{period}}=0.625\\times1.30\\times\\frac{60}{182}\\]\n\\(0.625\\times1.30=0.8125\\) and \\(60/182\\approx0.33\\), so \\(0.8125\\times0.33\\approx0.27\\).<br>\n<b>Answer: about 0.27 per 100 nominal</b> (index-scaled).<br>\nCheck: the full half-period coupon is about 0.81, and accrued is roughly a third of it. Use the settlement-date IR, which already includes the lag.",
+  "back": "\\[\\text{Accrued}=\\frac{c}{2}\\times IR\\times\\frac{\\text{days}}{\\text{period}}=0.625\\times1.30\\times\\frac{60}{182}\\]\n\\(0.625\\times1.30=0.8125\\) and \\(60/182\\approx0.33\\), so \\(0.8125\\times0.33\\approx0.27\\).<br>\n<b>Answer: about 0.27 per 100 nominal</b> (index-scaled).<br>\nCheck: the full half-period coupon is about 0.81, and accrued is roughly a third of it. Use the settlement-date IR, which already includes the lag.<div class=\"fig\"><img src=\"04_inflation_4_accrued_interest_day60.png\"><div class=\"cap\">Accrued at day 60 of 182 with index ratio 1.30: about 0.27 of the 0.81 half-coupon.</div></div>",
   "tags": [
    "linkers",
    "mental_math",
    "accrued",
-   "index_ratio"
+   "index_ratio",
+   "lvl_foundation"
   ]
  },
  {
@@ -62,7 +67,8 @@
    "real_rates",
    "breakeven",
    "mental_math",
-   "fisher"
+   "fisher",
+   "lvl_vp_core"
   ]
  },
  {
@@ -73,7 +79,8 @@
    "breakeven",
    "linkers",
    "inflation_risk_premium",
-   "liquidity"
+   "liquidity",
+   "lvl_vp_core"
   ]
  },
  {
@@ -84,18 +91,20 @@
    "rpi_cpi",
    "breakeven",
    "scenario",
-   "linkers"
+   "linkers",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "Explain the RPI formula effect. Why does the arithmetic-versus-geometric choice bias RPI above CPI? Use a two-item example.",
-  "back": "RPI aggregates elementary prices with the arithmetic mean (Carli): \\(\\bar R_C=\\frac{1}{n}\\sum_i R_i\\). CPI uses the geometric mean (Jevons) at elementary level: \\(\\bar R_J=\\prod_i R_i^{1/n}\\). By AM-GM, \\(\\bar R_C\\ge\\bar R_J\\), with the gap rising with price dispersion.<br>\nExample: two items with price relatives 1.2 and 0.8. Carli gives \\(1.000\\). Jevons gives \\(\\sqrt{0.96}\\approx0.980\\). The Carli measure is about 2% higher at this item level.<br>\nAt the aggregate level the effect is diluted by averaging over many items and by weights, but it is a structural upward bias whenever relative price dispersion is positive. The 2030 alignment removes this component from RPI.",
+  "back": "RPI aggregates elementary prices with the arithmetic mean (Carli): \\(\\bar R_C=\\frac{1}{n}\\sum_i R_i\\). CPI uses the geometric mean (Jevons) at elementary level: \\(\\bar R_J=\\prod_i R_i^{1/n}\\). By AM-GM, \\(\\bar R_C\\ge\\bar R_J\\), with the gap rising with price dispersion.<br>\nExample: two items with price relatives 1.2 and 0.8. Carli gives \\(1.000\\). Jevons gives \\(\\sqrt{0.96}\\approx0.980\\). The Carli measure is about 2% higher at this item level.<br>\nAt the aggregate level the effect is diluted by averaging over many items and by weights, but it is a structural upward bias whenever relative price dispersion is positive. The 2030 alignment removes this component from RPI.<div class=\"fig\"><img src=\"04_inflation_8_carli_vs_jevons_bias.png\"><div class=\"cap\">Carli (arithmetic) gives 1.000 and Jevons (geometric) 0.980 for relatives 1.2 and 0.8.</div></div>",
   "tags": [
    "rpi_cpi",
    "formula_effect",
    "derivation",
-   "index_construction"
+   "index_construction",
+   "lvl_vp_core"
   ]
  },
  {
@@ -106,7 +115,8 @@
    "rpi_reform",
    "rpi_cpi",
    "convention",
-   "linkers"
+   "linkers",
+   "lvl_vp_core"
   ]
  },
  {
@@ -117,7 +127,8 @@
    "rpi_reform",
    "linkers",
    "derivation",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -128,7 +139,8 @@
    "rpi_cpi",
    "rpi_reform",
    "inflation_swaps",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -139,18 +151,20 @@
    "inflation_swaps",
    "yoy",
    "zc",
-   "curve_construction"
+   "curve_construction",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "Given zero-coupon breakevens \\(K_1\\) to \\(T_1=1\\)y and \\(K_2\\) to \\(T_2=2\\)y, derive the forward YoY rate for year two, ignoring convexity. Check with \\(K_1=3.0\\%\\), \\(K_2=3.2\\%\\).",
-  "back": "\\(E[I(T_2)]/E[I(T_1)]=\\frac{(1+K_2)^{T_2}}{(1+K_1)^{T_1}}\\). Over period \\(\\tau=T_2-T_1\\), the annual forward is\n\\[1+f_{12}=\\left[\\frac{(1+K_2)^{T_2}}{(1+K_1)^{T_1}}\\right]^{1/\\tau}\\]\nNumerical check: \\((1.032)^2/1.03=1.065024/1.03\\approx1.0340\\), so \\(f_{12}\\approx3.40\\%\\). The forward year-two YoY is above both quoted breakevens, which is the usual result when the ZC curve is upward sloping.",
+  "back": "\\(E[I(T_2)]/E[I(T_1)]=\\frac{(1+K_2)^{T_2}}{(1+K_1)^{T_1}}\\). Over period \\(\\tau=T_2-T_1\\), the annual forward is\n\\[1+f_{12}=\\left[\\frac{(1+K_2)^{T_2}}{(1+K_1)^{T_1}}\\right]^{1/\\tau}\\]\nNumerical check: \\((1.032)^2/1.03=1.065024/1.03\\approx1.0340\\), so \\(f_{12}\\approx3.40\\%\\). The forward year-two YoY is above both quoted breakevens, which is the usual result when the ZC curve is upward sloping.<div class=\"fig\"><img src=\"04_inflation_13_zc_path_forward_yoy.png\"><div class=\"cap\">ZC breakevens 3.0% (1y) and 3.2% (2y) give a year-two forward YoY of 3.40%, before convexity.</div></div>",
   "tags": [
    "yoy",
    "zc",
    "mental_math",
-   "curve_construction"
+   "curve_construction",
+   "lvl_vp_core"
   ]
  },
  {
@@ -161,7 +175,8 @@
    "convexity",
    "yoy",
    "derivation",
-   "inflation_swaps"
+   "inflation_swaps",
+   "lvl_stretch"
   ]
  },
  {
@@ -172,7 +187,8 @@
    "zc",
    "convexity",
    "inflation_swaps",
-   "yoy"
+   "yoy",
+   "lvl_stretch"
   ]
  },
  {
@@ -183,7 +199,8 @@
    "seasonality",
    "curve_construction",
    "rpi",
-   "estimation"
+   "estimation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -194,18 +211,20 @@
    "seasonality",
    "breakeven",
    "scenario",
-   "carry"
+   "carry",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "Walk through bootstrapping a monthly projected RPI index from ZCIIS pillars at 1y, 2y and 5y, when the 1y pillar's reference month is partly known. What are the unknowns, and where do known prints and seasonal factors enter the equations?",
-  "back": "<b>Setup:</b> the unknowns are the reference-month index values from the last published print to each pillar's reference month. Known prints are fixed and removed from the unknown set.<br>\n<ol><li><b>Known prints:</b> take the last published lagged print as \\(I_{\\text{known}}\\). Any month whose print is published is an input, not a parameter.</li>\n<li><b>Seasonal form:</b> work on the deseasonalised series \\(I^{SA}_k=I_k e^{-s_{m(k)}}\\). The pillar equation becomes \\(I^{SA}(T_j)=I^{SA}(0)(1+K_j)^{T_j}\\,e^{-(s_{m(T_j)}-s_{m(0)})}\\), so each pillar carries one known seasonal adjustment.</li>\n<li><b>Pillar solve:</b> at each pillar, solve for the reference-month value given the values already fixed at earlier pillars, then interpolate between pillars (log-linear on the index).</li>\n<li><b>Re-seasonalise:</b> add \\(s_m\\) back to get the projected fixing.</li></ol>\n<b>Interviewer follow-up:</b> What happens if the seasonal term is omitted? The 1y pillar absorbs the calendar effect, and the 2y forward is distorted by the same amount with the sign reversed. A known-print error at the front has the same effect, so check the base month first.<br>\n<b>Where it breaks:</b> revisions to the most recent prints, and the lag convention, change the pillar equations. Use the swap's own lag for every step.",
+  "back": "<b>Setup:</b> the unknowns are the reference-month index values from the last published print to each pillar's reference month. Known prints are fixed and removed from the unknown set.<br>\n<ol><li><b>Known prints:</b> take the last published lagged print as \\(I_{\\text{known}}\\). Any month whose print is published is an input, not a parameter.</li>\n<li><b>Seasonal form:</b> work on the deseasonalised series \\(I^{SA}_k=I_k e^{-s_{m(k)}}\\). The pillar equation becomes \\(I^{SA}(T_j)=I^{SA}(0)(1+K_j)^{T_j}\\,e^{-(s_{m(T_j)}-s_{m(0)})}\\), so each pillar carries one known seasonal adjustment.</li>\n<li><b>Pillar solve:</b> at each pillar, solve for the reference-month value given the values already fixed at earlier pillars, then interpolate between pillars (log-linear on the index).</li>\n<li><b>Re-seasonalise:</b> add \\(s_m\\) back to get the projected fixing.</li></ol>\n<b>Interviewer follow-up:</b> What happens if the seasonal term is omitted? The 1y pillar absorbs the calendar effect, and the 2y forward is distorted by the same amount with the sign reversed. A known-print error at the front has the same effect, so check the base month first.<br>\n<b>Where it breaks:</b> revisions to the most recent prints, and the lag convention, change the pillar equations. Use the swap's own lag for every step.<div class=\"fig\"><img src=\"04_inflation_18_rpi_bootstrap_flow.png\"><div class=\"cap\">Steps for projecting a monthly RPI index from ZCIIS pillars: known prints, seasonal factors, pillar solve, interpolation.</div></div>",
   "tags": [
    "curve_construction",
    "bootstrap",
    "fixings",
-   "seasonality"
+   "seasonality",
+   "lvl_vp_core"
   ]
  },
  {
@@ -216,7 +235,8 @@
    "interpolation",
    "curve_construction",
    "derivation",
-   "zc"
+   "zc",
+   "lvl_vp_core"
   ]
  },
  {
@@ -227,7 +247,8 @@
    "real_rates",
    "curve_construction",
    "model_risk",
-   "linkers"
+   "linkers",
+   "lvl_vp_core"
   ]
  },
  {
@@ -238,7 +259,8 @@
    "tips",
    "oat",
    "linkers",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -249,18 +271,20 @@
    "tips",
    "convention",
    "indexation",
-   "linkers"
+   "linkers",
+   "lvl_foundation"
   ]
  },
  {
   "type": "basic",
   "front": "TIPS principal is floored at par at maturity. Price this floor for a 10y TIPS as an option on cumulative inflation, and explain why a normal-model estimate gives almost nothing.",
-  "back": "At maturity, principal is \\(N\\max(I(T)/I(0),1)\\). The floor payoff is \\(N\\max(1-I(T)/I(0),0)\\), a put on cumulative index struck at 1.<br>\nForward cumulative index: with a 10y breakeven of about 3.4%, \\((1.034)^{10}\\approx1.40\\). Strike 1 is therefore far out of the money. With annual normal vol \\(\\sigma\\approx1\\%\\), cumulative vol is about \\(\\sigma\\sqrt{10}\\approx3.2\\%\\). The gap of 0.40 is about 12.6 standard deviations, so the Bachelier value is effectively zero.<br>\nThe market still prices the floor, so the value sits in the left tail and the skew, not in a normal-model ATM estimate. Price it with a smile that is fitted to deflation-regime strikes.",
+  "back": "At maturity, principal is \\(N\\max(I(T)/I(0),1)\\). The floor payoff is \\(N\\max(1-I(T)/I(0),0)\\), a put on cumulative index struck at 1.<br>\nForward cumulative index: with a 10y breakeven of about 3.4%, \\((1.034)^{10}\\approx1.40\\). Strike 1 is therefore far out of the money. With annual normal vol \\(\\sigma\\approx1\\%\\), cumulative vol is about \\(\\sigma\\sqrt{10}\\approx3.2\\%\\) of the index, i.e. a standard deviation of about \\(1.40\\times0.032\\approx0.045\\) in index-ratio units. The gap of 0.40 is about 9 standard deviations, so the Bachelier value is effectively zero.<br>\nThe market still prices the floor, so the value sits in the left tail and the skew, not in a normal-model ATM estimate. Price it with a smile that is fitted to deflation-regime strikes.<div class=\"fig\"><img src=\"04_inflation_23_tips_floor_payoff.png\"><div class=\"cap\">TIPS par floor pays max(1 - I(T)/I(0), 0): a put on cumulative inflation at 1.00, far from the 1.40 forward.</div></div>",
   "tags": [
    "tips",
    "deflation_floor",
    "caps_floors",
-   "mental_math"
+   "mental_math",
+   "lvl_stretch"
   ]
  },
  {
@@ -271,7 +295,8 @@
    "caps_floors",
    "yoy",
    "convention",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -282,7 +307,8 @@
    "jarrow_yildirim",
    "derivation",
    "zc",
-   "real_rates"
+   "real_rates",
+   "lvl_stretch"
   ]
  },
  {
@@ -293,29 +319,32 @@
    "sabr",
    "jarrow_yildirim",
    "caps_floors",
-   "model_risk"
+   "model_risk",
+   "lvl_stretch"
   ]
  },
  {
   "type": "basic",
   "front": "A UK defined-benefit scheme pays LPI increases capped at 5% with a 0% floor on annual RPI. Write the annual LPI payoff as caplets, and state the derivative position the scheme's hedge implies.",
-  "back": "Payoff: \\(\\min(\\max(x,0),5\\%)=\\max(x,0)-\\max(x-5\\%,0)\\), where \\(x\\) is the annual RPI. The first term is a 0%-strike caplet and the second a 5% caplet.<br>\nThe scheme owes this payoff, so it is short the collar. Its hedge receives the same collar through RPI swaps and caps. That is long 0%-strike caplets and short 5% caplets.<br>\n<b>Net:</b> unhedged, the liability is long the 5% caplet (the cap limits what the scheme pays), so the hedge is short 5% RPI caps. Pension hedgers sell 5% caps to dealers, which makes 5% caps a supply instrument for pension flows.<br>\n<b>Follow-up:</b> Why does the level matter? A 5% cap is far out of the money at normal inflation, so its value sits in the tail.",
+  "back": "Payoff: \\(\\min(\\max(x,0),5\\%)=\\max(x,0)-\\max(x-5\\%,0)\\), where \\(x\\) is the annual RPI. The first term is a 0%-strike caplet and the second a 5% caplet.<br>\nThe scheme owes this payoff, so it is short the collar. Its hedge receives the same collar through RPI swaps and caps. That is long 0%-strike caplets and short 5% caplets.<br>\n<b>Net:</b> unhedged, the liability is long the 5% caplet (the cap limits what the scheme pays), so the hedge is short 5% RPI caps. Pension hedgers sell 5% caps to dealers, which makes 5% caps a supply instrument for pension flows.<br>\n<b>Follow-up:</b> Why does the level matter? A 5% cap is far out of the money at normal inflation, so its value sits in the tail.<div class=\"fig\"><img src=\"04_inflation_27_lpi_collar_payoff.png\"><div class=\"cap\">LPI(0,5%) payoff: a 0% caplet less a 5% caplet, so the pension hedge is short 5% caps.</div></div>",
   "tags": [
    "lpi",
    "caps_floors",
    "ldi",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "Scenario: pension schemes add long-dated inflation hedges during a rally in long real yields. Which way do 30y real yields and 30y RPI breakevens move, and what is the feedback channel?",
-  "back": "Schemes want to receive inflation. They buy linkers and pay fixed in ZCIIS. Buying linkers lowers real yields. With nominal yields fixed, breakevens rise. Paying fixed in ZCIIS also raises the fixed rate, which is the breakeven. So the long end sees real yields down and breakevens up, driven by price-insensitive, duration-matching demand.<br>\n<b>Feedback:</b> lower yields raise the discounted value of liabilities, which raises hedge demand, a self-reinforcing duration loop until funding or surplus constraints bind.<br>\n<b>Caveat:</b> in stress the sign of the flow can reverse. In the 2022 UK LDI episode, collateral calls forced selling. Structural demand and forced selling are different regimes, so state which one you are assuming.",
+  "back": "Schemes want to receive inflation. They buy linkers and pay fixed in ZCIIS. Buying linkers lowers real yields. With nominal yields fixed, breakevens rise. Paying fixed in ZCIIS also raises the fixed rate, which is the breakeven. So the long end sees real yields down and breakevens up, driven by price-insensitive, duration-matching demand.<br>\n<b>Feedback:</b> lower yields raise the discounted value of liabilities, which raises hedge demand, a self-reinforcing duration loop until funding or surplus constraints bind.<br>\n<b>Caveat:</b> in stress the sign of the flow can reverse. In the 2022 UK LDI episode, collateral calls forced selling. Structural demand and forced selling are different regimes, so state which one you are assuming.<div class=\"fig\"><img src=\"04_inflation_28_ldi_hedging_feedback_loop.png\"><div class=\"cap\">Long-end hedging loop: linker buying and ZCIIS payers push real yields down and breakevens up; stress reverses the flow.</div></div>",
   "tags": [
    "ldi",
    "lpi",
    "scenario",
-   "linkers"
+   "linkers",
+   "lvl_vp_core"
   ]
  },
  {
@@ -326,7 +355,8 @@
    "trade_idea",
    "breakeven",
    "ldi",
-   "seasonality"
+   "seasonality",
+   "lvl_vp_core"
   ]
  },
  {
@@ -337,7 +367,8 @@
    "trade_idea",
    "breakeven",
    "dv01",
-   "real_rates"
+   "real_rates",
+   "lvl_vp_core"
   ]
  },
  {
@@ -348,7 +379,8 @@
    "basis",
    "linkers",
    "trade_idea",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -359,7 +391,8 @@
    "rpi_reform",
    "scenario",
    "breakeven",
-   "linkers"
+   "linkers",
+   "lvl_vp_core"
   ]
  },
  {
@@ -370,7 +403,8 @@
    "carry",
    "rolldown",
    "real_rates",
-   "breakeven"
+   "breakeven",
+   "lvl_vp_core"
   ]
  },
  {
@@ -381,7 +415,8 @@
    "mental_math",
    "zc",
    "inflation_swaps",
-   "dv01"
+   "dv01",
+   "lvl_foundation"
   ]
  },
  {
@@ -392,7 +427,8 @@
    "dv01",
    "breakeven",
    "derivation",
-   "jarrow_yildirim"
+   "jarrow_yildirim",
+   "lvl_vp_core"
   ]
  },
  {
@@ -403,7 +439,8 @@
    "lpi",
    "caps_floors",
    "derivation",
-   "ldi"
+   "ldi",
+   "lvl_vp_core"
   ]
  },
  {
@@ -414,7 +451,8 @@
    "fixings",
    "convention",
    "interpolation",
-   "linkers"
+   "linkers",
+   "lvl_vp_core"
   ]
  },
  {
@@ -425,7 +463,8 @@
    "model_risk",
    "real_rates",
    "curve_construction",
-   "linkers"
+   "linkers",
+   "lvl_vp_core"
   ]
  },
  {
@@ -436,7 +475,8 @@
    "put_call_parity",
    "caps_floors",
    "yoy",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -447,7 +487,8 @@
    "rpi_cpi",
    "formula_effect",
    "convention",
-   "rpi_reform"
+   "rpi_reform",
+   "lvl_foundation"
   ]
  },
  {
@@ -458,7 +499,8 @@
    "seasonality",
    "curve_construction",
    "derivation",
-   "rpi"
+   "rpi",
+   "lvl_foundation"
   ]
  }
 ]

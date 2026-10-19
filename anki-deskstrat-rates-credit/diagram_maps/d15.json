@@ -1,0 +1,184 @@
+[
+ {
+  "file": "15_found_deriv.json",
+  "index": 0,
+  "front_start": "<b>[Chain: PCP 1/4]</b> Context: European call and put, same",
+  "image": "15_found_deriv_0_pcp_payoffs.png",
+  "caption": "Long call plus short put has the same payoff as a long forward struck at K."
+ },
+ {
+  "file": "15_found_deriv.json",
+  "index": 4,
+  "front_start": "<b>[Chain: BIN 1/4]</b> Context: one step, \\(S_0=100\\), \\(u=",
+  "image": "15_found_deriv_4_binomial_one_step.png",
+  "caption": "One-step tree: shares plus bond replicate the call, giving 7.19."
+ },
+ {
+  "file": "15_found_deriv.json",
+  "index": 6,
+  "front_start": "<b>[Chain: BIN 3/4]</b> Context: extend to two steps, \\(h=1\\",
+  "image": "15_found_deriv_6_binomial_two_step.png",
+  "caption": "Two-step tree with terminal payoffs 21, 0, 0; backward induction gives 10.87."
+ },
+ {
+  "file": "15_found_deriv.json",
+  "index": 7,
+  "front_start": "<b>[Chain: BIN 4/4]</b> Context: same two-step tree (\\(u=1.1",
+  "image": "15_found_deriv_7_american_put_tree.png",
+  "caption": "American put tree: exercise at S=90 (value 10 vs 5.12 continuation), root 2.48."
+ },
+ {
+  "file": "15_found_deriv.json",
+  "index": 8,
+  "front_start": "<b>[Chain: GAM 1/4]</b> Context: \\(S=100\\), \\(K=100\\), \\(\\si",
+  "image": "15_found_deriv_8_gamma_vega_vs_spot.png",
+  "caption": "ATM gamma and vega peak near the money; the same for call and put."
+ },
+ {
+  "file": "15_found_deriv.json",
+  "index": 41,
+  "front_start": "Give the Black-Scholes delta of a European call and put on a",
+  "image": "15_found_deriv_41_delta_vs_spot.png",
+  "caption": "Call and put delta versus spot; the call delta rises toward 1 as the call moves in the money."
+ },
+ {
+  "file": "15_found_deriv.json",
+  "index": 9,
+  "front_start": "<b>[Chain: GAM 2/4]</b> Context: the same ATM call (\\(S=100,",
+  "image": "15_found_deriv_9_pde_greek_bridge.png",
+  "caption": "The PDE identity theta + rS Delta + 0.5 sig^2 S^2 Gamma = rV: -6.41 + 3.18 + 3.75 = 0.52."
+ },
+ {
+  "file": "15_found_deriv.json",
+  "index": 10,
+  "front_start": "<b>[Chain: GAM 3/4]</b> Context: a delta-hedged long ATM opt",
+  "image": "15_found_deriv_10_gamma_theta_breakeven.png",
+  "caption": "Gamma P&L against daily theta: the net is zero at a one-day move of about 1.05 points."
+ },
+ {
+  "file": "15_found_deriv.json",
+  "index": 11,
+  "front_start": "<b>[Chain: GAM 4/4]</b> Context: you are long an ATM option ",
+  "image": "15_found_deriv_11_hedged_pnl_vs_realised_vol.png",
+  "caption": "Expected delta-hedged P&L per year is positive only when realised vol exceeds the 20% implied."
+ },
+ {
+  "file": "15_found_deriv.json",
+  "index": 16,
+  "front_start": "<b>Derivation: lognormal price dynamics from Itô.</b> From \\",
+  "image": "15_found_deriv_16_lognormal_quantiles.png",
+  "caption": "Lognormal S_T: mean 105.13, median 103.05, 5% and 95% quantiles at 74.16 and 143.19."
+ },
+ {
+  "file": "15_found_deriv.json",
+  "index": 22,
+  "front_start": "<b>Case study: Vasicek curve from parameters.</b> \\(dr=a(b-r",
+  "image": "15_found_deriv_22_vasicek_zero_curve.png",
+  "caption": "Vasicek zero yields from the parameters: 3.21%, 3.60%, 3.86%, rising to the 3.92% asymptote."
+ },
+ {
+  "file": "15_found_deriv.json",
+  "index": 44,
+  "front_start": "Define implied volatility. Why does a call price give a uniq",
+  "image": "15_found_deriv_44_newton_implied_vol.png",
+  "caption": "Newton on the call price from 20% vol: one step to 22.7%, converging to the 22.66% implied vol."
+ },
+ {
+  "file": "15_found_deriv.json",
+  "index": 48,
+  "front_start": "Define the 25-delta risk reversal and the butterfly quote. G",
+  "image": "15_found_deriv_48_vol_quotes_smile.png",
+  "caption": "25-delta quotes: negative risk reversal (puts richer) and a small positive butterfly."
+ },
+ {
+  "file": "16_found_stats.json",
+  "index": 1,
+  "front_start": "<b>[Chain: PCA_CURVE 2/4]</b> Context: same \\(\\Sigma\\) as ca",
+  "image": "16_found_stats_1_pca_loadings.png",
+  "caption": "Level, slope and curvature loadings on 2y, 5y, 10y; they are the eigenvectors of the covariance."
+ },
+ {
+  "file": "16_found_stats.json",
+  "index": 2,
+  "front_start": "<b>[Chain: PCA_CURVE 3/4]</b> Context: same \\(\\Sigma\\) (2y, ",
+  "image": "16_found_stats_2_pca_steepener_split.png",
+  "caption": "The 2s10s steepener's 32 bp^2 variance is all PC2 (slope); level and curvature contribute zero."
+ },
+ {
+  "file": "16_found_stats.json",
+  "index": 4,
+  "front_start": "<b>[Chain: PSD_FIX 1/4]</b> Context: a 3x3 correlation matri",
+  "image": "16_found_stats_4_psd_eigenvalues.png",
+  "caption": "Correlation matrix with rho12 = rho23 = 0.9, rho13 = -0.9 has a negative eigenvalue, so it is invalid."
+ },
+ {
+  "file": "16_found_stats.json",
+  "index": 7,
+  "front_start": "<b>[Chain: PSD_FIX 4/4]</b> Context: the non-PSD matrix \\(C\\",
+  "image": "16_found_stats_7_cholesky_pivots.png",
+  "caption": "Cholesky pivots of the invalid matrix: 1, 0.19, then -15.20, so the factorisation fails."
+ },
+ {
+  "file": "16_found_stats.json",
+  "index": 8,
+  "front_start": "<b>[Chain: HEDGE_BETA 1/3]</b> Context: daily changes of a c",
+  "image": "16_found_stats_8_hedge_regression_scatter.png",
+  "caption": "Scatter of simulated daily yield changes with the minimum-variance hedge line, slope 1.108."
+ },
+ {
+  "file": "16_found_stats.json",
+  "index": 9,
+  "front_start": "<b>[Chain: HEDGE_BETA 2/3]</b> Context: the true relationshi",
+  "image": "16_found_stats_9_attenuation_scatter.png",
+  "caption": "Equal noise variance in the proxy regressor halves the OLS slope from 1 to about 0.5."
+ },
+ {
+  "file": "16_found_stats.json",
+  "index": 14,
+  "front_start": "<b>[Chain: OVERLAP_SE 1/3]</b> Context: daily returns \\(r_t\\",
+  "image": "16_found_stats_14_overlap_naive_vs_true_se.png",
+  "caption": "Standard error of the mean of overlapping 5-day returns: naive sqrt(5) versus true 5, in units of sig/sqrt(T)."
+ },
+ {
+  "file": "16_found_stats.json",
+  "index": 15,
+  "front_start": "<b>[Chain: OVERLAP_SE 2/3]</b> Context: the same 5-day overl",
+  "image": "16_found_stats_15_overlap_autocovariance.png",
+  "caption": "Autocovariance of 5-day overlapping returns: 5, 4, 3, 2, 1 for lags 0 to 4, and zero from lag 5."
+ },
+ {
+  "file": "16_found_stats.json",
+  "index": 16,
+  "front_start": "<b>[Chain: OVERLAP_SE 3/3]</b> Context: 5-day overlapping re",
+  "image": "16_found_stats_16_bartlett_recovery_by_lag.png",
+  "caption": "Share of the true 25 sig^2 long-run variance recovered by Bartlett Newey-West at each lag."
+ },
+ {
+  "file": "16_found_stats.json",
+  "index": 19,
+  "front_start": "<b>Derivation:</b> Derive the minimum-variance hedge ratio \\",
+  "image": "16_found_stats_19_minvar_hedge_parabola.png",
+  "caption": "Hedged variance as a function of the hedge ratio: minimum at h* = 1.108, leaving 12.16 bp^2."
+ },
+ {
+  "file": "16_found_stats.json",
+  "index": 30,
+  "front_start": "<b>Case study: VaR and ES on £2m daily sd, normal versus fat",
+  "image": "16_found_stats_30_var_es_normal_vs_t4.png",
+  "caption": "99% VaR and ES on a GBP 2.0m sd: normal gives 4.65 and 5.33, Student-t4 gives 5.30 and 7.38."
+ },
+ {
+  "file": "16_found_stats.json",
+  "index": 32,
+  "front_start": "<b>Case study: half-life and the time to revert.</b> A daily",
+  "image": "16_found_stats_32_ar1_halflife_decay.png",
+  "caption": "AR(1) spread from +8 bp with phi = 0.97: half-life 22.8 days, and 45.5 days to fall to 2 bp."
+ },
+ {
+  "file": "16_found_stats.json",
+  "index": 33,
+  "front_start": "<b>Case study: best of 100 strategies by chance.</b> A resea",
+  "image": "16_found_stats_33_best_of_100_by_chance.png",
+  "caption": "The best of 100 zero-skill strategies averages a t-statistic near 2.5, above the naive 1.96."
+ }
+]

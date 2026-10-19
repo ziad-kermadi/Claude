@@ -1,0 +1,298 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SNOWBALL 1/4]</b> Context: 3y note, annual, notional 100, redeemed at par. Coupon for period \\(i\\) is \\(c_i=\\max(0,\\;c_{i-1}+m-L_i)\\), with \\(c_1=2\\%\\) fixed, \\(m=1\\%\\), and \\(L_i\\) the 1y reference fixed at the start of period \\(i\\) and paid at its end.<br>What is the investor's position in rates, and what does the \\(\\max(0,\\cdot)\\) do to the path?",
+  "back": "<b>Headline:</b> the investor is long a floored ratchet. Each period adds \\(m-L_i\\) to the running coupon, so falling rates accumulate into later coupons. Rates above \\(c_{i-1}+m\\) pull the coupon down, but it is floored at zero at every reset.<br>\nMechanism: the coupon is a state variable, not a function of the current fixing alone. In a rally, \\(c_i\\) rises and stays high, so gains carry forward. In a sell-off, \\(c_i\\) hits zero and the accumulated gain is lost; the floor does not give it back. The position is therefore long a path-dependent random walk whose upside is kept and whose downside is truncated at each reset.<br>\n<b>Interviewer follow-up:</b> Is the snowball a bond plus a strip of floorlets? Not in general. A strip pays each period independently, while the snowball's coupon depends on the previous coupon, so the strip decomposition fails without a state-dependent replication.<div class=\"fig\"><img src=\"12_structured_exotics__v3_0_snowball_ratchet_map.png\"><div class=\"cap\">Snowball ratchet: next coupon as a function of the fixing, for two previous coupons</div></div>",
+  "tags": [
+   "snowball",
+   "path_dependence",
+   "chain_snowball",
+   "structured",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SNOWBALL 2/4]</b> Same snowball, \\(c_1=2\\%\\), \\(m=1\\%\\). Each of \\(L_2\\) and \\(L_3\\) is independently 1% or 3% with probability one half. Compute \\(\\mathbb E[c_2]\\) and \\(\\mathbb E[c_3]\\). Then say why \\(\\mathbb E[c_3]\\) is below the value you get from a no-memory reset \\(\\max(0,c_1+m-L_3)\\).",
+  "back": "\\(c_2=\\max(0,\\,2\\%+1\\%-L_2)\\): 2% if \\(L_2=1\\%\\), 0 if \\(L_2=3\\%\\). So \\(\\mathbb E[c_2]=1.00\\%\\).<br>\n\\(c_3=\\max(0,\\,c_2+1\\%-L_3)\\). If \\(L_2=1\\%\\) (so \\(c_2=2\\%\\)), \\(c_3=2\\%\\) when \\(L_3=1\\%\\) and 0 when \\(L_3=3\\%\\). If \\(L_2=3\\%\\) then \\(c_2=0\\) and \\(c_3=0\\) in both states. So \\(\\mathbb E[c_3]=\\tfrac14\\cdot2\\%=0.50\\%\\).<br>\nNo-memory benchmark: \\(\\max(0,3\\%-L_3)\\) gives 2% or 0 with equal odds, so 1.00%. Memory lowers the value by 0.5%: when \\(L_2=3\\%\\) the coupon resets to zero and the 2% base does not come back.<br>\nCorrelation: positive correlation between \\(L_2\\) and \\(L_3\\) raises \\(\\mathbb E[c_3]\\), because the only paying path needs low fixings in both periods. The note is long the co-movement of low fixings.<br>\n<b>Interviewer follow-up:</b> What does a strip of independent floorlets over-state here? It over-states \\(\\mathbb E[c_3]\\) by 0.5% of notional, which is the value of the memory the snowball gives up.<div class=\"fig\"><img src=\"12_structured_exotics__v3_1_snowball_state_tree.png\"><div class=\"cap\">Two-period snowball enumeration: coupon states and E[c2], E[c3]</div></div>",
+  "tags": [
+   "snowball",
+   "path_dependence",
+   "chain_snowball",
+   "numerical",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SNOWBALL 3/4]</b> The snowball of 2/4 has coupon state \\(c_{i-1}\\in[0,c_{\\max}]\\) and fixings \\(L_i(\\mathbf x)\\) driven by a multi-factor rate model with state \\(\\mathbf x\\).<br>Set up the price as a backward induction. Which state variables are needed, what is the boundary condition, and why is Monte Carlo not automatically sufficient once the note is callable?",
+  "back": "<b>Headline:</b> the state is \\((\\mathbf x_i,\\,c_{i-1})\\): the rate-model state that determines \\(L_i\\), and the coupon memory. For the non-callable note, \\(V_0=\\mathbb E\\big[\\sum_i D(0,t_i)c_i\\big]+100\\,D(0,T)\\).<br>\nBackward induction: at \\(t_N\\) the value is \\(100\\) plus the last coupon. At each \\(t_i\\), on each grid point \\((\\mathbf x,c)\\), the coupon \\(c_i=\\max(0,c+m-L_i(\\mathbf x))\\) is paid and the continuation is interpolated at \\((\\mathbf x',c_i)\\). The coupon axis must cover \\(c_{\\max}=c_1+(N-1)m\\) when fixings are non-negative, and the \\(\\max\\) creates a kink that the interpolation must respect.<br>\nMonte Carlo is exact up to discretisation for the non-callable note, because each path reveals its coupons. Once the issuer can call, each path needs the continuation value conditioned on \\((\\mathbf x,c)\\) at every date. That is a regression or grid problem, so the callable price needs LSM or a PDE/tree in the state.<br>\n<b>Interviewer follow-up:</b> Why is a one-factor model weak for the memory risk? The correlation of fixings across periods is set by the factor structure, and memory risk depends on exactly that correlation, which the market constrains only weakly.",
+  "tags": [
+   "snowball",
+   "numerics",
+   "chain_snowball",
+   "bermudan",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SNOWBALL 4/4]</b> The issuer may call the 3y snowball at par on each coupon date after year 1.<br>Which way does the call move the investor's rate sensitivity, and why does the call region coincide with the high-memory states?",
+  "back": "The call is a Bermudan option on the note's continuation value, so the investor is short it. The issuer calls on \\(t_i\\) when the continuation value of remaining coupons and principal, valued on its funding curve, exceeds par plus any call premium.<br>\nContinuation is high when the coupon state \\(c\\) is high, which follows a run of low fixings. So the call region is the rate-down, high-memory region, which is where the investor's gain is largest. The callable snowball is therefore capped exactly where the investor is most rich, the same negative-convexity shape as a callable bond, but with the cap set by a path state.<br>\nHedge consequence: the Bermudan's delta jumps at the call boundary, so a static strip of swaptions leaves the memory exposure partly unhedged. The effective strike depends on \\(c\\), so the option is not a standard swaption.<br>\n<b>Interviewer follow-up:</b> Why is it not simply a bullet minus a Bermudan receiver on one swap? The receiver's underlying is one swap rate with a fixed strike; the snowball's exercise value depends on the coupon state, which is a second dimension.",
+  "tags": [
+   "snowball",
+   "callable",
+   "negative_convexity",
+   "chain_snowball",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CALLABLE RA 1/3]</b> Context: a 5y range accrual on the 3m rate. It accrues 6% per year on each day the rate is in range, paid quarterly. The issuer may redeem at par on each annual date from year 2.<br>Write the investor's position as a range accrual minus an option, and say what the option is written on.",
+  "back": "Callable \\(=\\) RA \\(-\\) Bermudan option. The issuer's right on \\(t_k\\) is to pay par and stop the remaining accruals, so the option's exercise value is the continuation: the PV at \\(t_k\\) of the remaining accruals and principal, valued on the issuer's funding.<br>\nThe underlying is not a swap. Each accrual observation pays only if in range, so the continuation is \\(\\sum_{j>k}\\tau c\\,\\mathbb P_{t_k}(L_j\\in[\\ell,u])\\,D(t_k,t_j)+D(t_k,T)\\). Its value depends on the rate level, the forward curve's vol and skew, and the band's width.<br>\nPosition: the investor is short a Bermudan whose exercise value is high when the remaining in-range probability is high. The investor is short vol on that probability.<br>\n<b>Interviewer follow-up:</b> Is the callable's delta the RA delta minus the Bermudan delta? Yes, but the Bermudan delta depends on the exercise decision, and at the boundary the decision flips the sign of the continuation's rate sensitivity.",
+  "tags": [
+   "range_accrual",
+   "callable",
+   "bermudan",
+   "chain_callable_ra",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CALLABLE RA 2/3]</b> Same note, with the accrual treated as annual for this calculation. At the call date, the three remaining annual periods each have in-range share \\(p\\), accrue \\(c=6\\%\\) on that share, and are discounted flat at 4% continuously compounded. Find the break-even \\(p^*\\) at which the issuer is indifferent to calling, then give the continuation value per 100 at \\(p=0.5\\) and \\(p=0.8\\).",
+  "back": "Continuation per 100 \\(=c\\,p\\sum_{j=1}^{3}e^{-0.04j}+e^{-0.12}\\). The discount sum is \\(\\sum_{j=1}^3 e^{-0.04j}=2.7708\\), and \\(e^{-0.12}=0.8869\\).<br>\nBreak-even: \\(0.06\\cdot p^*\\cdot2.7708+0.8869=1\\), so \\(p^*=0.1131/0.16625=0.680\\).<br>\nValues: at \\(p=0.5\\), continuation \\(=97.00\\), so the issuer does not call. At \\(p=0.8\\), continuation \\(=101.99\\), so it calls and the investor receives par, giving up about 2 points.<br>\nSanity bounds: at \\(p=0\\) the continuation is \\(88.69\\), the discounted principal alone; at \\(p=1\\) it is \\(105.32\\). The exercise boundary sits at an in-range share of about 68%, not at a particular rate level.<br>\n<b>Interviewer follow-up:</b> Why does the issuer call when the investor's note is valuable? The issuer compares the continuation with par on its own funding, so exercise is driven by the in-range share. That share is high exactly when the investor's note is rich.<div class=\"fig\"><img src=\"12_structured_exotics__v3_5_callable_ra_breakeven.png\"><div class=\"cap\">Callable range accrual: continuation value vs in-range share, boundary near 0.68</div></div>",
+  "tags": [
+   "range_accrual",
+   "callable",
+   "numerical",
+   "chain_callable_ra",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CALLABLE RA 3/3]</b> Context: the issuer's continuation value \\(V_k(\\mathbf x)\\) at call date \\(t_k\\), with state \\(\\mathbf x\\) from a multi-factor model. Derive the exercise rule and say why a swaption-based hedge of the callable leaves a residual.",
+  "back": "Exercise on \\(t_k\\) iff \\(V_k(\\mathbf x)\\ge 100+\\text{premium}\\), where \\(V_k(\\mathbf x)=\\mathbb E^{\\mathbb Q}\\!\\big[\\sum_{j>k}\\tau c\\,\\mathbf 1\\{L_j\\in R\\}D(t_k,t_j)+D(t_k,T)\\,\\big|\\,\\mathbf x\\big]\\) on the issuer's funding curve. The holder's value is \\(\\min\\) of the bullet-like continuation and the call price along the optimal policy, and it is estimated by LSM on basis functions of \\(\\mathbf x\\) (the 3m rate and the slope of the forward curve, for example). A dual upper bound brackets the low-biased exercise policy.<br>\nWhy swaptions leave a residual: a swaption pays on one swap rate with a strike. The continuation depends on a probability of staying in a band across several fixings, which depends on the skew and the joint law of the observations. A payer or receiver struck at par captures the level but not the band width or the skew at the edges. The practical hedge is a strip of digitals on the same band, plus a Bermudan delta near the boundary.<br>\n<b>Interviewer follow-up:</b> What is the sign of gamma near the boundary? Negative, because the Bermudan delta flips at the boundary and the issuer is most likely to exercise where the note is rich.",
+  "tags": [
+   "range_accrual",
+   "lsm",
+   "derivation",
+   "chain_callable_ra",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: ZERO CALLABLE 1/3]</b> Context: a 20y zero-coupon bond, face 100, issued at a yield of 4% (annual compounding). Stylised: the issuer may call once, on the 5th anniversary, at the accreted value. Real Formosa-style call terms varied, so treat this as a stylised model.<br>Write the investor's position as bullet minus option, and say which market rate the option is effectively struck on.",
+  "back": "The investor holds Callable \\(=\\) Bullet \\(-\\) Call. At \\(t=5\\) the bullet's market value is \\(100/(1+r)^{15}\\). The call lets the issuer pay the accreted value \\(A(5)=100/1.04^{15}\\) and retire the note, so the investor's value at \\(t=5\\) is \\(\\min\\big(100/(1+r)^{15},\\,A(5)\\big)\\).<br>\nThe option is a call on the zero's price struck at the accreted value. Because \\(A(5)\\) is the value at the issue yield, the call is in the money when the market yield \\(r\\) is below 4%. The investor is short a receiver-type option on the yield, which pays the issuer when yields fall.<br>\nConsequence: in falling-rate states the investor's value is capped at \\(A(5)\\), which is negative convexity on a zero that has no coupons to shorten its duration.<br>\n<b>Interviewer follow-up:</b> Is this a Bermudan receiver on a zero? Here it is a single exercise date, so it is a European receiver on the 15-year zero yield struck at the issue yield. Adding call dates makes it Bermudan.",
+  "tags": [
+   "zero_coupon_callable",
+   "formosa",
+   "callable",
+   "chain_zero_callable",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: ZERO CALLABLE 2/3]</b> Same note, with the 5-year call. At \\(t=5\\), 15 years remain. Give the market value of the zero, the call price and the investor's value for market yields of 3%, 4% and 5%. Then compute the investor's loss versus the uncalled bullet at 3%.",
+  "back": "Issue price \\(100/1.04^{20}=45.64\\). Accreted value at 5y \\(=100/1.04^{15}=55.53\\).<br>\n<table><tr><th>r</th><th>Market value at 5y</th><th>Call price (accreted)</th><th>Investor value = min</th></tr>\n<tr><td>3%</td><td>64.19</td><td>55.53</td><td>55.53 (called)</td></tr>\n<tr><td>4%</td><td>55.53</td><td>55.53</td><td>55.53 (at strike)</td></tr>\n<tr><td>5%</td><td>48.10</td><td>55.53</td><td>48.10 (not called)</td></tr></table>\nAt 3% the investor gives up \\(64.19-55.53=8.66\\) relative to the uncalled bullet. The issuer retires a 15-year zero below its market value, so the investor receives less than fair value exactly when rates have fallen.<br>\n<b>Interviewer follow-up:</b> Why does the loss grow as rates fall? The strike is fixed at the accreted value while the market value grows with duration, so the gap widens as \\(r\\) falls. The call is worth most where the bullet's duration is greatest.<div class=\"fig\"><img src=\"12_structured_exotics__v3_8_zero_callable_value.png\"><div class=\"cap\">Zero callable at t=5: investor value is capped at the accreted value of 55.53</div></div>",
+  "tags": [
+   "zero_coupon_callable",
+   "formosa",
+   "numerical",
+   "chain_zero_callable",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: ZERO CALLABLE 3/3]</b> Compare the bullet's modified duration at 3% (15y remaining) with the callable's effective duration in the called region. Then say which model you would use to price the call and why.",
+  "back": "Bullet: modified duration \\(\\approx15/1.03=14.56\\). In the called region the investor's cash flow is fixed at the accreted value on the call date, so the note behaves like a 5-year cash flow and its duration tends to 5. Effective duration therefore falls from about 14.6 towards 5 as yields drop below the issue yield. The note is shortest in the state where a long-duration investor would most want duration.<br>\nModel: a one-factor Hull-White calibrated to the swaption strip for the call's tenor is the usual minimum, since the call is on one zero yield. Add a second factor if the desk hedges curve-shape risk or values the call against steepener-type instruments.<br>\n<b>Interviewer follow-up:</b> Why not average the two durations? The callable is a minimum of two functions of the rate, so its effective duration comes from bump-and-reprice across the kink and is not a weighted average of the regions.",
+  "tags": [
+   "zero_coupon_callable",
+   "formosa",
+   "duration",
+   "model_choice",
+   "chain_zero_callable",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> Kirk's approximation for a CMS spread call \\((S_1-S_2-K)^+\\) with lognormal legs. Write the payoff as an exchange option \\((S_1-G)^+\\) with \\(G=S_2+K\\), derive the effective variance, and price it with \\(F_1=3.50\\%\\), \\(F_2=3.00\\%\\), \\(K=0.50\\%\\), \\(\\sigma_1=20\\%\\), \\(\\sigma_2=25\\%\\), \\(\\rho=0.6\\), \\(T=1\\), discount and annuity set to 1. Check against Monte Carlo.",
+  "back": "Kirk treats \\(G=S_2+K\\) as lognormal with volatility \\(\\sigma_K=\\sigma_2\\,F_2/(F_2+K)\\). The spread is then an exchange option with effective variance\n\\[\\sigma^2=\\sigma_1^2+\\sigma_K^2-2\\rho\\,\\sigma_1\\sigma_K,\\]\nand, with \\(D=1\\),\n\\[\\text{Kirk}=F_1N(d_1)-(F_2+K)N(d_2),\\qquad d_{1,2}=\\frac{\\ln\\!\\big(F_1/(F_2+K)\\big)\\pm\\tfrac12\\sigma^2T}{\\sigma\\sqrt T}.\\]\nNumbers: \\(\\sigma_K=0.25\\cdot3.00/3.50=21.43\\%\\). \\(\\sigma^2=0.04+0.0459-0.0514=0.0345\\), so \\(\\sigma=18.57\\%\\). \\(d_1=0.0929\\), \\(d_2=-0.0929\\), \\(N(d_1)=0.5370\\), \\(N(d_2)=0.4630\\). Kirk \\(=3.50\\cdot0.5370-3.50\\cdot0.4630=0.2589\\%\\), i.e. 25.9bp. A 2,000,000-path correlated lognormal Monte Carlo gives 25.89bp (standard error about 0.03bp).<br>\nWhere it breaks: the approximation is first order in \\(K/F_2\\), so its error grows as the strike moves away from the forward of \\(S_2\\) (approx.). It also assumes lognormal legs, so it is not valid when a leg is near or below zero; use a shifted-lognormal or normal copula there.<br>\n<b>Interviewer follow-up:</b> Why is the Kirk vol below \\(\\sigma_1\\) here? The positive correlation reduces the spread variance, and the \\(G\\) leg's weight \\(F_2/(F_2+K)\\) shrinks its own vol.",
+  "tags": [
+   "cms_spread",
+   "kirk",
+   "derivation",
+   "spread_option",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> A 5y note pays a 3.00% annual coupon and 100 at maturity, sold at par. The issuer's funding is 3.60% flat (annual), OIS is flat 3.00%. Derive the funding benefit as the PV difference of the bond part, and say how it is used in the structure.",
+  "back": "The benefit is \\(\\text{FB}=\\text{PV}_{\\text{OIS}}(\\text{bond})-\\text{PV}_{\\text{fund}}(\\text{bond})\\). With the coupon at OIS, \\(\\text{PV}_{\\text{OIS}}=100\\). At funding,\n\\[\\text{PV}_{\\text{fund}}=\\sum_{t=1}^{5}3\\cdot1.036^{-t}+100\\cdot1.036^{-5}=97.30.\\]\nSo \\(\\text{FB}=2.70\\) per 100. Check by duration: the modified duration is 4.58, so the first-order estimate is \\(4.58\\cdot0.60\\%\\cdot100=2.75\\), with an error of 0.05 from convexity.<br>\nUse: the issuer's promises are worth less at its own funding rate. The 2.70 is what it can spend on an embedded option and still break even on its funding curve. That is the funding-benefit budget in a structured note.<br>\nWhere it breaks: the benefit is real only while the issuer's spread is a stable cost. A tighter spread shrinks the benefit, and part of it is an own-credit gain, so it reverses when credit improves (approx.; sign conventions differ across desks).<br>\n<b>Interviewer follow-up:</b> Why not discount at OIS and pay the option out of the margin? Then the option budget is the OIS-based residual, and the funding benefit is simply not available to the structure.<div class=\"fig\"><img src=\"12_structured_exotics__v3_11_funding_benefit_pv.png\"><div class=\"cap\">Funding benefit: 3% bond at par, PV at OIS 100 vs PV at funding 97.30</div></div>",
+  "tags": [
+   "funding",
+   "structured_notes",
+   "derivation",
+   "issuer_economics",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation:</b> A snowball coupon with previous coupon \\(c_{i-1}=2\\%\\), margin \\(m=1\\%\\), and reference \\(L\\) normal with forward \\(F=2.5\\%\\), normal vol \\(\\sigma_N=1\\%\\), period 1y. Show that the coupon \\(\\max(0,K-L)\\), with \\(K=c_{i-1}+m\\), is a floorlet. Derive its expectation under the normal model and compare it with the floor-free value.",
+  "back": "\\(c_i=\\max(0,\\,c_{i-1}+m-L)=\\max(0,\\,K-L)\\), a floorlet on \\(L\\) struck at \\(K\\). Under the normal model \\(L\\sim N(F,\\sigma_N^2T)\\). With \\(d=(K-F)/(\\sigma_N\\sqrt T)\\),\n\\[\\mathbb E[\\max(0,K-L)]=(K-F)\\,N(d)+\\sigma_N\\sqrt T\\,\\varphi(d).\\]\nHere \\(K=3\\%\\), \\(F=2.5\\%\\), \\(\\sigma_N\\sqrt T=1\\%\\), \\(d=0.5\\): \\(=0.50\\%\\cdot0.6915+1\\%\\cdot0.3521=0.698\\%\\) per unit accrual, undiscounted, with payment at period end ignored (approx.).<br>\nThe floor-free value is \\(K-F=0.50\\%\\), so the floor adds about 0.20% of value. A coupon that looks linear in rates carries an option component.<br>\nWhere it breaks: this is one step only. The next period's \\(K\\) depends on this coupon, so the multi-period value needs the state grid of 3/4. The normal model is used because \\(L\\) may be near or below zero, where a lognormal floorlet is not defined.<br>\n<b>Interviewer follow-up:</b> Why is the floorlet's value sensitive to the vol but the linear part is not? The linear part \\(K-F\\) depends only on the forward, while the \\(\\sigma_N\\varphi(d)\\) term is the convexity from the floor.<div class=\"fig\"><img src=\"12_structured_exotics__v3_12_snowball_floorlet.png\"><div class=\"cap\">Snowball step is a floorlet: payoff max(0, K - L) against its linear part</div></div>",
+  "tags": [
+   "snowball",
+   "floorlet",
+   "normal_model",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study (structuring):</b> A 3y note is issued at 100 and redeems at 100. At \\(t=1,2,3\\) it pays a digital coupon \\(c\\) on that date if the 10y swap rate \\(S\\ge K=3.00\\%\\), otherwise nothing. Inputs: forward 10y swap 3.20% flat, normal vol 0.90%, OIS flat 3.00% (annual), issuer funding 3.60% (annual), distribution and structuring fee 1.00. Solve the fair digital coupon \\(c\\) step by step, and state the funding benefit.",
+  "back": "<b>Step 1, digital probabilities</b> (Bachelier, ignoring swap convexity): \\(P_t=N\\big((3.20-3.00)/(0.90\\sqrt t)\\big)\\). \\(P_1=0.588\\), \\(P_2=0.562\\), \\(P_3=0.551\\).<br>\n<b>Step 2, OIS discounting</b> (the issuer hedges the digitals with swaps): \\(D_t=1.03^{-t}\\). \\(\\sum_t P_tD_t=0.571+0.530+0.504=1.605\\).<br>\n<b>Step 3, principal at funding:</b> \\(100/1.036^3=89.93\\). Against OIS (\\(100/1.03^3=91.51\\)) the funding benefit is 1.58.<br>\n<b>Step 4, option budget:</b> \\(100-1.00-89.93=9.07\\).<br>\n<b>Step 5, fair coupon:</b> \\(c^*=9.07/1.605=5.65\\%\\) per paid date. Expected undiscounted coupons are about 9.6 over the three dates.<br>\n<b>Check:</b> \\(89.93+0.0565\\cdot1.605\\cdot100=99.00\\), which is 100 less the fee.<br>\n<b>Without the funding benefit</b> (issuer funds at OIS) the budget is \\(100-1-91.51=7.49\\) and \\(c^*=4.66\\%\\). The funding benefit lifts the fair coupon by about 1 point.<br>\n<b>Interviewer follow-up:</b> What makes this a free lunch and what does not? The extra 1.58 is real only if the issuer's spread is a cost it must pay. It is compensation for funding risk and it disappears if spreads tighten.<div class=\"fig\"><img src=\"12_structured_exotics__v3_13_funding_budget.png\"><div class=\"cap\">Funding benefit lifts the option budget from 7.49 to 9.07, fair coupon 4.66% to 5.65%</div></div>",
+  "tags": [
+   "structured_notes",
+   "case_study",
+   "digital",
+   "funding",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study:</b> Long a 1y expiry CMS spread call \\((S_{10}-S_2-0.50\\%)^+\\) on notional 100m, accrual 1. Inputs: \\(F_{10}=3.50\\%\\), \\(F_2=3.00\\%\\), lognormal vols 20% (10y) and 25% (2y), \\(\\rho=0.6\\), \\(D=1/1.03=0.9709\\). Using Kirk (25.9bp per unit), give the price, the PV01 to each leg, the swap hedge to offset each leg (10y and 2y annuities 8.32 and 1.91), and the correlation sensitivity per 0.10 of \\(\\rho\\).",
+  "back": "<b>Price:</b> \\(100\\text{m}\\cdot0.9709\\cdot0.002589\\approx251{,}400\\).<br>\n<b>Deltas</b> (bumped Kirk, \\(\\sigma_K\\) recomputed for each bump): \\(\\partial P/\\partial F_{10}=0.537\\), \\(\\partial P/\\partial F_2=-0.456\\), per unit rate.<br>\n<b>PV01 per bp:</b> 10y leg \\(+5{,}213\\); 2y leg \\(-4{,}425\\).<br>\n<b>Hedge:</b> the long call gains when \\(S_{10}\\) rises and loses when \\(S_2\\) rises. Pay-fixed 10y notional \\(=5{,}213/831.7\\) per 1m, so \\(\\approx6.3\\)m. Pay-fixed 2y notional \\(=4{,}425/191.0\\) per 1m, so \\(\\approx23.2\\)m. The 2y hedge is about 3.7 times the 10y notional because the 2y annuity is much smaller.<br>\n<b>Correlation:</b> \\(\\partial P/\\partial\\rho\\approx-0.000321\\) per unit per 0.10, so about \\(-31{,}100\\) per 0.10 of \\(\\rho\\). Vega per 1 vol point is about \\(+5{,}190\\) on the 10y vol and \\(+5{,}870\\) on the 2y vol. The correlation term is the largest single sensitivity and the swaps do not hedge it.<br>\n<b>Interviewer follow-up:</b> Why does the 2y hedge matter more than the 10y hedge in notional? Because the hedge is sized in DV01, and the 2y annuity is 1.91 against 8.32 for the 10y.",
+  "tags": [
+   "cms_spread",
+   "case_study",
+   "hedging",
+   "correlation",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study (snowball enumeration):</b> 3y snowball, annual, notional 100, \\(c_1=2\\%\\) fixed, \\(m=1\\%\\), \\(c_i=\\max(0,c_{i-1}+m-L_i)\\). \\(L_2\\) and \\(L_3\\) are independent and equal 1% or 3% with probability one half each. Discount flat 3% (annual, deterministic). Give the coupon cash flows and the expected PV of the note including par.",
+  "back": "Four equally likely states \\((L_2,L_3)\\):\n<table><tr><th>(L2, L3)</th><th>c2</th><th>c3</th><th>Cash flows (yr 1, 2, 3)</th><th>PV at 3%</th></tr>\n<tr><td>(1%, 1%)</td><td>2%</td><td>2%</td><td>2, 2, 102</td><td>97.17</td></tr>\n<tr><td>(1%, 3%)</td><td>2%</td><td>0</td><td>2, 2, 100</td><td>95.34</td></tr>\n<tr><td>(3%, 1%)</td><td>0</td><td>0</td><td>2, 0, 100</td><td>93.46</td></tr>\n<tr><td>(3%, 3%)</td><td>0</td><td>0</td><td>2, 0, 100</td><td>93.46</td></tr></table>\nExpected PV \\(=94.86\\). Expected coupons \\(=2+1.00+0.50=3.50\\) per 100.<br>\nCaveat: this toy has expected fixings of 2%, below the 3% discount rate, so it is not arbitrage-consistent with the discount curve. Use it to read the memory effect, not the price. The no-memory strip gives \\(\\mathbb E[c_3]=1.00\\), which overstates the coupon by 0.50 in this toy.<br>\n<b>Interviewer follow-up:</b> What would change with a calibrated model? The joint law of \\(L_2,L_3\\) and the forward curve, which set both the expected coupon and the memory term.",
+  "tags": [
+   "snowball",
+   "case_study",
+   "path_dependence",
+   "scenario",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 5y TARN pays 4% in each year a rate condition holds, and redeems when cumulative paid coupons reach 12%. The bank sold it, so it pays coupons. Describe the hedge for the coupon-condition risk, the residual the hedge cannot remove, and which failure is most likely at the knockout.",
+  "back": "The bank is short the condition's digitals up to the knockout. Static hedge: buy a strip of digitals or caps on the condition, one per year, weighted to the expected coupon sensitivity. Dynamic hedge: rates swaps for the delta and swaptions for the vega on the condition.<br>\nResidual: the knockout date is random and depends on the joint law of the condition across years, while a strip is priced on marginal probabilities. The strip therefore mis-hedges the timing of the knockout, and the error grows with the correlation across years.<br>\nMost likely failure at knockout: the bank's short coupon exposure ends the moment the note redeems, but the long digital hedge bought for surviving paths does not. The hedge is then naked and must be unwound. Check the hedge book against the knockout schedule on every path, not only in aggregate.<br>\n<b>Interviewer follow-up:</b> Which model input matters most? The year-on-year correlation of the condition. A one-factor model fixes it through one parameter, and a multi-factor model can give a materially different knockout distribution with the same marginal probabilities.",
+  "tags": [
+   "tarn",
+   "hedging",
+   "knockout",
+   "path_dependence",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Your book is long a 10y-2y CMS spread call. Why can a basket of 10y and 2y swaptions not hedge its correlation sensitivity, and what does the desk do with the residual?",
+  "back": "Swaptions and swaps hedge the legs' delta and their own vols, but their prices do not depend on \\(\\rho\\). The correlation enters only the spread variance of the call, so a leg-only hedge leaves \\(\\partial P/\\partial\\rho\\) unhedged. With the 100m call above, that is about \\(-31{,}000\\) per 0.10 of \\(\\rho\\).<br>\nOnly an instrument whose payoff depends on the joint law of the two rates offsets it. A spread option at a different strike or tenor is the only partial offset, and it carries its own correlation exposure with a different sign profile, so it moves the risk rather than removing it.<br>\nDesk treatment: mark the correlation at a level set by independent price verification, hold a correlation reserve for the uncertainty range, limit the net correlation position, and reserve bid-offer on any hedge that is used.<br>\n<b>Interviewer follow-up:</b> Who sets the reserve? Product control and the valuation committee, with the IPV evidence as the input.",
+  "tags": [
+   "cms_spread",
+   "correlation",
+   "hedging",
+   "ipv",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A 3y rate autocall redeems at par plus the coupon on an annual date if the 10y swap rate is at or above a trigger, and the trigger steps down each year. The bank issued it. On a day when the forward sits just below the next trigger, describe the risks and the hedge instruments you would use.",
+  "back": "The bank is long the early-redemption option, so its delta and gamma concentrate at the trigger on each observation date. Near the trigger the delta changes quickly with the rate, and the gamma spike sits just before the observation time.<br>\nHedges: trigger-strike swaptions on each observation date, sized to the offset of the bank's redemption option, plus a short-dated call spread to replicate the discontinuity around the trigger. Residual delta goes into swaps. Rebalance before the observation date, not after, because the redemption is decided at the fixing.<br>\nStep-down matters: a lower later trigger raises the call probability on later dates, so the bank's vega shifts across the schedule, and a single-date hedge understates it.<br>\n<b>Interviewer follow-up:</b> Why does a strip of trigger-strike swaptions not hedge the timing? It hedges the level at each date, not the path. A path that is below the trigger on one date and above on another changes which option is live, and that is what the joint law of observations sets.",
+  "tags": [
+   "autocall",
+   "hedging",
+   "rates",
+   "bermudan",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "For each product name the model you would use, the calibration instruments, and the single feature that forces that choice: (1) callable range accrual, (2) snowball with memory, (3) TARN, (4) CMS spread option, (5) Formosa-style zero-coupon callable, (6) rate autocall.",
+  "back": "<table><tr><th>Product</th><th>Model</th><th>Calibrate to</th><th>Forcing feature</th></tr>\n<tr><td>Callable range accrual</td><td>Multi-factor HJM/LMM or HW2F with skew</td><td>Caps, floors, digital strips on the band, Bermudan swaptions</td><td>In-range probability depends on skew and band width; Bermudan exercise</td></tr>\n<tr><td>Snowball</td><td>HW2F or LMM with a coupon-state grid or MC</td><td>Caps, floors, CMS, swaptions</td><td>Memory needs the joint law of fixings, so correlation across periods matters</td></tr>\n<tr><td>TARN</td><td>LMM with smile per forward, MC with cumulative-coupon state</td><td>Caps, swaptions, year-on-year correlation proxies</td><td>Knockout depends on path, not on any single date</td></tr>\n<tr><td>CMS spread option</td><td>Two-factor model or copula with each leg's smile</td><td>Swaptions per tenor, spread options where quoted</td><td>Correlation between the two tenors is the main input</td></tr>\n<tr><td>Zero-coupon callable</td><td>One-factor HW (two factors for curve-shape hedging)</td><td>Swaptions for the call's tenor</td><td>Single yield, so one factor captures the level</td></tr>\n<tr><td>Rate autocall</td><td>LMM or HW2F with skew, MC with LSM</td><td>Swaptions on each observation date, with step-down triggers</td><td>Discrete trigger schedule and joint law across observations</td></tr></table>\nRule: choose the model whose first-order risk matches the product. A product that depends on one yield needs one factor calibrated to its tenor. A product that depends on the joint law of fixings needs a model that gets the correlation across dates right, and a one-factor model usually does not.<br>\n<b>Interviewer follow-up:</b> Which of these would you expect to be most model-dependent in a stress? The snowball and TARN, because their risk sits in the cross-period correlation that the market quotes least.",
+  "tags": [
+   "model_choice",
+   "structured_notes",
+   "calibration",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Desk practice:</b> It is 16:20. Your callable snowball shows a 2.4m P&amp;L jump after a 10bp move in the 1y reference, while call-date vega is flat. Walk through what you check before you tell the desk the cause, and which two numbers you need first.",
+  "back": "Steps:<br>\n1. Confirm which fixing moved and whether its reset date is the one the model uses. A 10bp move that crosses a zero floor on the coupon gives a zero-delta region on one side and a full delta on the other, which can look like a jump.<br>\n2. Check the coupon-state map: does the model's \\(c_{i-1}\\) equal the booked coupon? A mismatch between trade booking and model state produces a jump only when the floor binds.<br>\n3. Check the exercise boundary: did the call decision flip on that date? A flip changes the Bermudan delta, and the P&amp;L jump is about (new decision minus old decision) times the continuation value.<br>\n4. Two numbers: the coupon-state delta before and after the move (bump-and-reprice), and the model's call probability on the date.<br>\nTrader angle: a floor crossing is real market P&amp;L and expected for this structure. A call flip is real only if the continuation regression is adequate; otherwise the desk should check the basis functions.<br>\nControl angle: a booked-versus-model coupon-state break is a booking break, not market P&amp;L, and goes to product control before the desk reports the number.<br>\n<b>Interviewer follow-up:</b> Which one would you tell the desk first? The fixing and floor check, since it takes minutes and separates a booking break from a market move.",
+  "tags": [
+   "snowball",
+   "desk_practice",
+   "pnl_explain",
+   "callable",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The snowball coupon \\(c_i=\\max(0,\\,c_{i-1}+m-L_i)\\) carries memory through {{c1::\\(c_{i-1}\\)}}, and the floor is applied {{c2::at every reset}}, so a period with {{c3::\\(L_i>c_{i-1}+m\\)}} resets the coupon to zero.",
+  "back": "The prior coupon is the state. The reset floor destroys any accumulated gain, which is why the snowball's value is not a strip of independent floorlets.",
+  "tags": [
+   "snowball",
+   "cloze",
+   "path_dependence",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A callable range accrual equals {{c1::a range accrual}} minus a {{c2::Bermudan option}} on the {{c3::continuation value}} of the remaining accruals, with the issuer as holder.",
+  "back": "The exercise value compares the continuation with par plus any call premium. The underlying is a digital strip on the band, not a single swap rate.",
+  "tags": [
+   "range_accrual",
+   "callable",
+   "cloze",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a zero-coupon callable whose call is struck at the {{c1::accreted value}}, the investor's value on the call date is the {{c2::minimum}} of the bullet's market value and the strike, and the call is in the money when the market yield falls {{c3::below}} the issue yield.",
+  "back": "Stylised example: issue yield 4%, 15 years remaining at 3% gives market value 64.19 against a call strike of 55.53, so the issuer calls.",
+  "tags": [
+   "zero_coupon_callable",
+   "formosa",
+   "cloze",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In Kirk's approximation the lognormal volatility of \\(G=S_2+K\\) is {{c1::\\(\\sigma_K=\\sigma_2F_2/(F_2+K)\\)}}, so the effective spread variance is {{c2::\\(\\sigma_1^2+\\sigma_K^2-2\\rho\\sigma_1\\sigma_K\\)}}.",
+  "back": "With \\(\\sigma_1=20\\%\\), \\(\\sigma_2=25\\%\\), \\(F_2=3.00\\%\\), \\(K=0.50\\%\\), \\(\\rho=0.6\\): \\(\\sigma_K=21.43\\%\\), effective vol 18.57%, Kirk 25.9bp against 25.9bp by Monte Carlo.",
+  "tags": [
+   "cms_spread",
+   "kirk",
+   "cloze",
+   "lvl_stretch"
+  ]
+ }
+]

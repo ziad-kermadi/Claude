@@ -1,0 +1,156 @@
+[
+ {
+  "file": "10_xva_funding.json",
+  "index": 2,
+  "front_start": "<b>[Chain: CLOSEOUT 3/4]</b> Flat expected positive exposure",
+  "image": "10_xva_funding_2_cva_dva_bilateral.png",
+  "caption": "Bilateral CVA and DVA with flat exposures: naive CVA, bilateral CVA, DVA and net adjustment."
+ },
+ {
+  "file": "10_xva_funding.json",
+  "index": 6,
+  "front_start": "<b>[Chain: MPOR 3/4]</b> Portfolio MTM deep in the money (\\(",
+  "image": "10_xva_funding_6_mpor_lag_distribution.png",
+  "caption": "MTM move over a 10-day margin period: lag EE 0.477m and 97.5% PFE 2.34m."
+ },
+ {
+  "file": "10_xva_funding.json",
+  "index": 10,
+  "front_start": "<b>[Chain: FVA 3/4]</b> Uncollateralised 5-year swap: flat \\",
+  "image": "10_xva_funding_10_fva_asymmetric.png",
+  "caption": "Asymmetric FVA: FCA, FBA and net -0.0557m against -0.0464m for symmetric 100bp."
+ },
+ {
+  "file": "10_xva_funding.json",
+  "index": 43,
+  "front_start": "<b>Case study:</b> A 10-year uncleared swap posts initial ma",
+  "image": "10_xva_funding_43_mva_runoff_profile.png",
+  "caption": "Flat vs run-off posted IM: MVA -1.382m flat, -0.726m with linear run-off."
+ },
+ {
+  "file": "10_xva_funding.json",
+  "index": 17,
+  "front_start": "<b>[Chain: KVA 3/3]</b> A 5-year trade consumes capital \\(K(",
+  "image": "10_xva_funding_17_kva_capital_profile.png",
+  "caption": "Linear capital run-off vs flat 2m: KVA 0.333m vs 0.650m at h = 7%."
+ },
+ {
+  "file": "10_xva_funding.json",
+  "index": 25,
+  "front_start": "Two trades have future MTMs \\(V_A,V_B\\) with zero mean, \\(\\s",
+  "image": "10_xva_funding_25_euler_allocation.png",
+  "caption": "Standalone EE (0.798m each) vs Euler shares (0.399m each) summing to portfolio EE."
+ },
+ {
+  "file": "10_xva_funding__v3.json",
+  "index": 5,
+  "front_start": "<b>[Chain: XVA_PNL 3/3]</b> Same CVA book as the previous ca",
+  "image": "10_xva_funding__v3_5_xva_pnl_waterfall.png",
+  "caption": "Daily CVA P&L explain as a waterfall: theta, spread, exposure, rates, residual."
+ },
+ {
+  "file": "10_xva_funding__v3.json",
+  "index": 12,
+  "front_start": "<b>Derivation:</b> Collateral with threshold \\(H\\) and no MT",
+  "image": "10_xva_funding__v3_12_threshold_ee_curve.png",
+  "caption": "Expected uncollateralised exposure vs threshold: 0.798m at H = 0, 0.396m at H = 1m."
+ },
+ {
+  "file": "10_xva_funding__v3.json",
+  "index": 13,
+  "front_start": "<b>Derivation:</b> Basel III final reduced BA-CVA, counterpa",
+  "image": "10_xva_funding__v3_13_ba_cva_bounds.png",
+  "caption": "Reduced BA-CVA K = 13.0 lies between the rho = 0 (11.36) and rho = 1 (17.0) bounds."
+ },
+ {
+  "file": "10_xva_funding__v3.json",
+  "index": 1,
+  "front_start": "<b>[Chain: SIMM_IM 2/3]</b> Same netting set, \\(s=(10,-6)\\)m",
+  "image": "10_xva_funding__v3_1_simm_exact_vs_euler.png",
+  "caption": "SIMM-style IM after the offsetting trade: exact 9.59m vs Euler estimate 8.80m."
+ },
+ {
+  "file": "10_xva_funding__v3.json",
+  "index": 8,
+  "front_start": "<b>[Chain: WWR 3/3]</b> A bank hedges the spread CS01 of a C",
+  "image": "10_xva_funding__v3_8_wwr_hedge_notional.png",
+  "caption": "CDS hedge notional: GBP 2.80m under independence vs GBP 4.44m under wrong-way risk."
+ },
+ {
+  "file": "11_repo_financing.json",
+  "index": 0,
+  "front_start": "<b>[Chain: REPO 1/4]</b> A dealer funds a £50m gilt position",
+  "image": "11_repo_financing_0_repo_cash_flows.png",
+  "caption": "Classic repo over 14 days: cash and gilt legs, repurchase price GBP 50,076,712."
+ },
+ {
+  "file": "11_repo_financing.json",
+  "index": 3,
+  "front_start": "<b>[Chain: REPO 4/4]</b> A dealer funds £100m of gilts at a ",
+  "image": "11_repo_financing_3_haircut_funding_stack.png",
+  "caption": "Haircut 2% to 10% on GBP 100m with GBP 2m equity: cash falls, GBP 8m equity shortfall."
+ },
+ {
+  "file": "11_repo_financing.json",
+  "index": 17,
+  "front_start": "<b>Derivation:</b> Two term repo rates are quoted: 4.00% for",
+  "image": "11_repo_financing_17_forward_repo_timeline.png",
+  "caption": "Forward repo for days 30 to 90 implied by the 4.00% and 4.20% term rates: 4.29%."
+ },
+ {
+  "file": "11_repo_financing.json",
+  "index": 19,
+  "front_start": "<b>Derivation:</b> Derive the carry of a long bond financed ",
+  "image": "11_repo_financing_19_carry_waterfall.png",
+  "caption": "Carry on GBP 100m: coupon accrual GBP 1.000m less repo cost GBP 0.875m = GBP 125,000."
+ },
+ {
+  "file": "11_repo_financing.json",
+  "index": 28,
+  "front_start": "<b>Case study:</b> TRS vs repo cost comparison. Exposure of ",
+  "image": "11_repo_financing_28_trs_vs_repo_cost.png",
+  "caption": "Annual cost on $100m: repo $4.177m vs TRS $4.75m, TRS dearer by $0.573m."
+ },
+ {
+  "file": "11_repo_financing.json",
+  "index": 29,
+  "front_start": "<b>Case study:</b> Haircut stress on ROE. A dealer holds £10",
+  "image": "11_repo_financing_29_haircut_stress_roe.png",
+  "caption": "Haircut stress: position GBP 100m to GBP 20m on GBP 2m equity; ROE 54% to 14%."
+ },
+ {
+  "file": "11_repo_financing__v3.json",
+  "index": 0,
+  "front_start": "<b>[Chain: TRIPARTY 1/4]</b> A dealer borrows £200m of cash ",
+  "image": "11_repo_financing__v3_0_triparty_flows.png",
+  "caption": "Tri-party repo flows: cash via the agent to the dealer, collateral to the lender's pool claim."
+ },
+ {
+  "file": "11_repo_financing__v3.json",
+  "index": 1,
+  "front_start": "<b>[Chain: TRIPARTY 2/4]</b> Same £200m tri-party book, coll",
+  "image": "11_repo_financing__v3_1_uncovered_exposure.png",
+  "caption": "Uncovered exposure after a 3% gilt fall: GBP 194.00m haircut-adjusted vs GBP 200m cash."
+ },
+ {
+  "file": "11_repo_financing__v3.json",
+  "index": 8,
+  "front_start": "<b>[Chain: LEV 2/3]</b> A dealer has Tier 1 capital of £2.0b",
+  "image": "11_repo_financing__v3_8_leverage_ratio_bars.png",
+  "caption": "Leverage ratio 2.87% gross vs 3.97% netted, against the 3.25% minimum."
+ },
+ {
+  "file": "11_repo_financing__v3.json",
+  "index": 14,
+  "front_start": "<b>Case study: funding a £500m 10-year gilt inventory under ",
+  "image": "11_repo_financing__v3_14_leverage_funding_rate.png",
+  "caption": "Effective funding rate vs haircut: flat at 4.195% while the leverage ratio binds."
+ },
+ {
+  "file": "11_repo_financing__v3.json",
+  "index": 20,
+  "front_start": "<b>Scenario: desk practice at 16:15.</b> The tri-party alloc",
+  "image": "11_repo_financing__v3_20_desk_triage_flowchart.png",
+  "caption": "Desk triage at 16:15 for a GBP 180m gilt shortfall: the five checks in order."
+ }
+]

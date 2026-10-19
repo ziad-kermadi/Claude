@@ -1,0 +1,377 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: DMO_PREP 1/3]</b> Context: the DMO is auctioning a new 10-year gilt. The desk expects to be allocated <b>£200m nominal</b> at a clean price of 99.20 with modified duration 8.10. It is <b>07:15</b> on auction day, and the auction runs later that morning. Walk through what the strat does before the auction and what DV01 the desk should be prepared to hedge.",
+  "back": "<b>Answer:</b> hedge the <i>expected allocation</i>, not the bid.<br><br>\n<b>Steps:</b><ol>\n<li>07:15: pull the auction terms (size, coupon, maturity, auction format) and check them against the published calendar.</li>\n<li>Fair-value the bond: compare the expected clearing yield with the current secondary curve and the when-issued level. Set a clearing-yield range, not a point.</li>\n<li>Decide the expected allocation. The desk gets back less than it bids for, so size the hedge on the expected allocation and keep a range for the tail.</li>\n<li>Pre-hedge with long gilt futures only if the desk's limit allows it. Otherwise hedge immediately after the allocation is confirmed.</li>\n</ol>\n<b>Numbers:</b> cash DV01 on £200m: \\(200\\text{m} \\times 0.9920 \\times 8.10 \\times 10^{-4} \\approx \\text{£}160{,}700\\) per bp.<br><br>\n<b>Control angle / Where it breaks:</b> hedging the bid rather than the allocation (over-hedged if the desk is cut back), and hedging with the wrong contract (see the CTD cards).<br><br>\n<b>Interviewer follow-up:</b> Why is a single-bond DV01 hedge with futures not enough on the day? Because the futures leg is priced off the cheapest-to-deliver bond, so the hedge carries a basis risk that changes when the CTD switches.<div class=\"fig\"><img src=\"18_desk_6_0_dmo_auction_sequence.png\"><div class=\"cap\">Pre-auction sequence and the cash DV01 (GBP 160,700 per bp) to hedge on the expected allocation.</div></div>",
+  "tags": [
+   "dmo_auction",
+   "auction_prep",
+   "gilts",
+   "chain_dmo_prep",
+   "scenario",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: DMO_PREP 2/3]</b> Context: the desk holds a £200m 10-year gilt allocation with cash DV01 about £160,700 per bp. The long gilt future is on a 4% notional gilt, £100k face per contract. The CTD has conversion factor 0.8500, modified duration 7.60 and dirty price about 100.30. The futures price is 118. How many long gilt futures hedge the position, and what is the residual DV01?",
+  "back": "<b>Answer:</b> about <b>1,792 contracts</b>, with a residual of about £3 per bp.<br><br>\n<b>Intuition:</b> the futures contract is priced off the CTD, so its DV01 is the CTD's DV01 rescaled by the conversion factor.<br><br>\n<b>Precise:</b> the futures DV01 is the CTD DV01 divided by the conversion factor, and the number of contracts is the cash DV01 divided by the futures DV01.<br><br>\n<b>Worked example:</b><br>\n\\[\\text{DV01}_{\\text{CTD}} = 100{,}000 \\times \\frac{100.30}{100} \\times 7.60 \\times 10^{-4} \\approx \\text{£}76.23 \\text{ per bp per £100k face}\\]\n\\[\\text{DV01}_{\\text{fut}} = \\frac{\\text{DV01}_{\\text{CTD}}}{CF} = \\frac{76.23}{0.8500} \\approx \\text{£}89.68 \\text{ per bp per contract}\\]\n\\[N = \\frac{160{,}704}{89.68} \\approx 1{,}792\\]\nResidual after rounding: \\(160{,}704 - 1{,}792 \\times 89.68 \\approx -\\text{£}3\\) per bp, which is immaterial.<br>\nSign: the desk is long cash, so it is short futures. The futures are sold.<br><br>\n<b>Interviewer follow-up:</b> Why does the conversion factor drop out of the cash-to-futures comparison? It does not drop out of the futures DV01; the CF scales the futures price to the CTD. A bond with a lower CF has a larger futures DV01 for the same CTD DV01, so the hedge ratio depends on which bond is CTD.",
+  "tags": [
+   "gilts",
+   "futures_hedge",
+   "ctd",
+   "derivation",
+   "chain_dmo_prep",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: DMO_PREP 3/3]</b> Context: the desk is short 1,792 long gilt futures against £200m of cash 10-year gilts, hedged at a futures DV01 of £89.68 per bp per contract. Overnight the CTD switches to a bond with CF 0.8800, modified duration 7.90 and dirty price 102.00. The new futures DV01 becomes about £91.57 per bp. What is the hedge P&amp;L for a 1bp rise in yields, and what should the desk do?",
+  "back": "<b>Answer:</b> about <b>+£3.4k</b> for a 1bp rise. The hedge is over-hedged after the switch.<br><br>\n<b>Numbers:</b><ul>\n<li>Cash loss for a 1bp rise: \\(-160{,}704\\).</li>\n<li>Futures gain for a 1bp rise, short 1,792 contracts: \\(+1{,}792 \\times 91.57 \\approx +164{,}093\\).</li>\n<li>Net: \\(+164{,}093 - 160{,}704 \\approx +\\text{£}3{,}389\\).</li>\n</ul>\n<b>Steps:</b><ol>\n<li>Recompute the futures DV01 with the new CTD.</li>\n<li>Check the cheapest-to-deliver in the new delivery window, not just the one that was CTD yesterday.</li>\n<li>Rebalance by roughly \\(3{,}389 / 91.57 \\approx 37\\) contracts, or accept the mismatch if it sits inside the desk's basis limit.</li>\n</ol>\n<b>Control angle / Where it breaks:</b> the desk is now short more DV01 than it is long in cash, so a rally of 1bp costs it about £3.4k.<br><br>\n<b>Interviewer follow-up:</b> Why does a CTD switch hurt a hedger who is short futures even when the cash position does not move? The short-futures leg changes its DV01 when the delivered bond changes, while the cash leg does not, so the hedge ratio goes stale.",
+  "tags": [
+   "gilts",
+   "futures_hedge",
+   "ctd",
+   "basis",
+   "chain_dmo_prep",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PRELOCK 1/3]</b> Context: an A-rated issuer will price a <b>£500m 10-year sterling bond in six weeks</b>. It asks the desk for a rate lock on the 10y swap rate at <b>4.10%</b>. The 10y swap DV01 on £500m is about £410k per bp (modified duration approx. 8.20). Walk through how the desk hedges the lock and which risks remain with the desk.",
+  "back": "<b>Answer:</b> the issuer buys a payer lock (it will pay fixed at 4.10% on a forward-starting swap if rates rise). The desk sells that lock, so the desk <b>receives</b> fixed forward on £500m. It is a receiver, and rates rising hurt it.<br><br>\n<b>Steps:</b><ol>\n<li>Hedge: pay fixed on a forward-starting swap of matching start and tenor (or a spot 10y payer as a proxy with an explicit roll-forward), so the desk's DV01 is near zero.</li>\n</ol>\n<b>Control angle / Where it breaks:</b> residual risks:<ul>\n<li>Spread: the lock covers only the benchmark. The issuer's new-issue spread over swaps is not locked and is the issuer's risk unless it buys a separate spread protection.</li>\n<li>Timing: the actual issue date and size are not certain. A pulled deal leaves a naked lock.</li>\n<li>Basis between the forward-starting swap and the eventual benchmark gilt.</li>\n</ul>\n<b>Interviewer follow-up:</b> Why does the desk not simply hedge with the 10y gilt? Because the lock is on swap rates and the desk wants to hedge the benchmark it has been asked for. A gilt hedge brings in gilt-swap spread risk, which is a separate exposure.",
+  "tags": [
+   "corporate_hedging",
+   "pre_hedge",
+   "rate_lock",
+   "swaps",
+   "chain_prelock",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PRELOCK 2/3]</b> Context: six weeks later the 10y swap rate is <b>4.35%</b> and the issuer prices at a spread of <b>110bp</b> over swaps. The lock was struck at 4.10% on £500m with DV01 about £410k per bp. What is the lock payoff, what is the issuer's effective coupon, and what is the annual saving?",
+  "back": "<b>Answer:</b> the lock pays the issuer about <b>£10.25m</b>, which is the DV01 times the 25bp move (\\(410{,}000 \\times 25 \\approx 10.25\\text{m}\\)).<br><br>\n<b>Numbers:</b><br>\nCheck: this is the same as \\(N \\times \\Delta S \\times A\\) with annuity \\(A\\approx 8.2\\), so the linear DV01 approximation is fine for a 25bp move.<ul>\n<li>Effective coupon, unhedged: \\(4.35\\% + 1.10\\% = 5.45\\%\\)</li>\n<li>Effective coupon, hedged: \\(4.10\\% + 1.10\\% = 5.20\\%\\), a saving of 25bp</li>\n<li>Annual saving on £500m: \\(500\\text{m} \\times 0.25\\% = \\text{£}1.25\\text{m}\\) per year, which is the economic value of the lock spread across the life of the bond.</li>\n</ul>\n<b>Control angle:</b> the desk pays the £10.25m on settlement (it is the receiver). The lock is worth exactly what the issuer saves in present value, so the desk is flat to rates after the hedge.<br><br>\n<b>Interviewer follow-up:</b> Why is the lock payoff not the same as the annual saving? The payoff is a present-value amount settled at pricing. The annual saving is a stream over the bond's life. Discounting the stream at the swap curve recovers the payoff, which is the reason the two numbers differ in size.",
+  "tags": [
+   "corporate_hedging",
+   "pre_hedge",
+   "rate_lock",
+   "case_study_numbers",
+   "chain_prelock",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PRELOCK 3/3]</b> Context: the swap rate is unchanged at 4.35% over the six weeks, but the issuer's new-issue spread widens <b>10bp</b> (from 110bp to 120bp) before pricing. The desk is flat to rates after the lock. What does the issuer lose, and what is the right response on the desk's side?",
+  "back": "<b>Answer:</b> the issuer pays about <b>£4.1m</b> more in present value: \\(500\\text{m} \\times 0.10\\% \\times 8.2 \\approx \\text{£}4.1\\text{m}\\). The lock did not cover it.<br><br>\n<b>Steps:</b> desk response. The desk's position is unchanged, because it only ever hedged the benchmark. The desk should not take a spread view with the lock. Options to protect the issuer:<ul>\n<li>A separate spread lock or a credit hedge (CDS or a credit-linked hedge), which the desk prices separately.</li>\n<li>Accept the spread risk and disclose it. Widening spreads during a pre-deal window are common in issuer hedging, so the issuer should size the hedge against its own risk limit, not against the desk's view.</li>\n</ul>\n<b>Control angle / Where it breaks:</b> check the desk's rate hedge is unwound when the bond is priced or pulled. Keep a record of the trade date, the DV01, and the cancellation terms.<br><br>\n<b>Interviewer follow-up:</b> What tells you a deal is about to be pulled? A widening of the new-issue spread beyond the desk's pricing band, or a change in the issuer's mandate. Both should trigger a check on the lock's cancellation terms before the deal is pulled.",
+  "tags": [
+   "corporate_hedging",
+   "pre_hedge",
+   "credit_spread",
+   "rate_lock",
+   "chain_prelock",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: LG_ROLL 1/3]</b> Context: a desk holds long gilt futures in the <b>December 2026</b> contract and must decide when to roll to March 2027. The contract is 4% notional, £100k face, and delivers on any business day in the delivery month at the seller's choice. What are the last trading day and the last notice day for December 2026?",
+  "back": "<b>Answer:</b> the last trading day is <b>29 December 2026</b>, and the last notice day is <b>30 December 2026</b>.<br><br>\n<b>Precise:</b> the rule (ICE Long Gilt) is that the last trading day is the last business day preceding the penultimate business day of the delivery month, which is two business days before the last business day of the month. The last notice day is the business day after the last trading day.<br><br>\n<b>Worked example:</b> the last business day of December 2026 is Thursday 31 December, so the penultimate business day is Wednesday 30 December, and the last trading day is Tuesday 29 December. Last notice day is 30 December.<br><br>\n<b>Trap / Where it breaks:</b> practical roll: the desk rolls well before first notice, so it never has to take or make delivery. The delivery risk falls on whoever holds the position at the notice stage.<br><br>\n<b>Interviewer follow-up:</b> Why roll early rather than run to last trading day? Holding into the notice period exposes the desk to the seller's delivery option, the CTD switch, and the risk of a tight delivery squeeze. The roll cost is paid in the futures spread, which is usually smaller than the squeeze risk.",
+  "tags": [
+   "gilts",
+   "futures",
+   "roll",
+   "calendar",
+   "scenario",
+   "chain_lg_roll",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: LG_ROLL 2/3]</b> Context: the December 2026 long gilt future is priced at 118.40, the CTD has CF 0.8500 and dirty price 100.30, and the cash-and-carry trade has 40 days to delivery. Ignore intermediate coupons. What is the implied repo rate, and what does it say about the basis if general collateral (GC) is 4.00%?",
+  "back": "<b>Answer:</b> the implied repo rate is about <b>3.09%</b>, below GC of 4.00%. The futures are cheap relative to the CTD.<br><br>\n<b>Intuition:</b> a holder of the bond earns 3.09% by delivering, against a funding cost of 4.00%. Cash-and-carry loses money, so the futures are priced below their fair level relative to that CTD (fair F is about 118.52 at 4.00% repo): the reverse trade, selling the bond and buying the future, is the one that earns.<br><br>\n<b>Precise:</b> cash-and-carry: buy the CTD at dirty price \\(P\\) funded at repo, and sell the future at \\(F\\). At delivery you receive \\(F \\cdot CF\\) plus accrued, and you pay back the financing.<br><br>\n<b>Worked example:</b><br>\n\\[\\text{IRR} = \\frac{F \\cdot CF - P}{P} \\times \\frac{365}{t} = \\frac{118.40 \\times 0.8500 - 100.30}{100.30} \\times \\frac{365}{40}\\]\n\\[= \\frac{100.64 - 100.30}{100.30} \\times 9.125 \\approx 3.09\\%\\]<br>\n<b>Trap / Where it breaks:</b> ignoring coupon and accrued changes is valid only if no coupon date falls before delivery. Other bonds may be the true CTD. Check the whole basket.<br><br>\n<b>Interviewer follow-up:</b> Why do you check the whole basket of deliverable bonds rather than only the bond the market calls the CTD? Because the seller picks the cheapest bond to deliver, and the basket's cheapest bond can change after a yield move.",
+  "tags": [
+   "gilts",
+   "futures",
+   "implied_repo",
+   "basis",
+   "derivation",
+   "chain_lg_roll",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: LG_ROLL 3/3]</b> Context: the desk rolls <b>1,792</b> long gilt contracts from December to March, and the December-to-March calendar spread is <b>0.40</b> of a point. Each point is worth £1,000 per contract on the £100k face. What is the roll cost, and what changes in the hedge after the roll?",
+  "back": "<b>Answer:</b> the roll cost is about <b>£0.72m</b>. The hedge DV01 is unchanged only if the CTD and CF are the same in the new contract, and they usually are not.<br><br>\n<b>Numbers:</b> roll cost: \\(1{,}792 \\times 0.40 \\times \\text{£}1{,}000 = \\text{£}716{,}800\\). Whether the desk pays or receives depends on the sign of the spread; here it pays.<br><br>\n<b>Steps:</b><ol>\n<li>After the roll, recompute the futures DV01 with the new CTD and CF (see the DMO chain).</li>\n<li>Re-hedge the new contract to the cash DV01 on the day of the roll.</li>\n<li>Operational checks: confirm the roll is booked against the correct contract month, confirm the notional and the futures DV01 in the risk system, and reconcile the variation margin to the exchange statement.</li>\n</ol>\n<b>Control angle / Where it breaks:</b> a roll with a CTD switch changes the hedge ratio by a few percent, which is more than the basis-risk limit on many desks.<br><br>\n<b>Interviewer follow-up:</b> What do you do with the roll P&amp;L in the P&amp;L explain? Keep the calendar spread as a separate P&amp;L line from the rate move, so the explain does not show an unexplained residual on roll day.",
+  "tags": [
+   "gilts",
+   "futures",
+   "roll",
+   "operations",
+   "chain_lg_roll",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: lock payoff for a forward-starting swap, linearised in the rate.</b> A payer forward-starting swap on notional \\(N\\) pays fixed \\(K\\) and receives floating from start \\(T_s\\) to \\(T_n\\). Its value today is \\(V = N \\cdot A(0)\\cdot (S_{fwd}-K)\\), where \\(A(0)=\\sum_i \\tau_i P(0,T_i)\\) is the forward annuity and \\(S_{fwd}\\) the forward swap rate. Show that a parallel move in the forward rate of \\(\\Delta S\\) changes \\(V\\) by approximately \\(N \\cdot A \\cdot \\Delta S\\), and state the error of this approximation.",
+  "back": "<b>Answer.</b> A small parallel move \\(\\Delta S_{fwd}\\) in the forward swap rate changes \\(V\\) by about \\(N \\cdot A \\cdot \\Delta S_{fwd}\\), with the forward annuity \\(A\\) held fixed.<br><br>\n<b>Intuition.</b> The forward annuity \\(A\\) depends on the discount curve, not on \\(K\\), so for a small move in \\(S_{fwd}\\) it is held fixed. Take the forward swap rate \\(S_{fwd}\\) as the single state variable.<br><br>\n<b>Precise.</b><br>\n\\[\\Delta V \\approx N \\cdot A \\cdot \\Delta S_{fwd}\\]<br>\n<b>Worked example.</b> With \\(N=500\\text{m}\\), \\(A\\approx 8.2\\), \\(\\Delta S=25\\text{bp}\\): \\(\\Delta V \\approx 500\\text{m} \\times 8.2 \\times 0.0025 \\approx \\text{£}10.25\\text{m}\\).<br><br>\n<b>Trap / Where it breaks.</b> Error: the annuity changes with the discount rate, so the linear term misses the second-order move in \\(A\\). Convexity of the annuity gives a second-order term of order \\(\\tfrac{1}{2}\\,\\partial^2 A\\,\\Delta y^2\\). For a 25bp move on a 10-year swap this is typically a small fraction of a percent of the payoff.<br>\nWhere it breaks: a large move (100bp or more), or a forward start far out, where the forward annuity and the forward rate are more sensitive to the curve shape. Use full repricing then.<br>\nThe approximation also assumes the forward start is fixed, so the desk's risk is not sensitive to the start date. A pull or delay of the deal changes the start, which needs a separate calculation.",
+  "tags": [
+   "derivation",
+   "swaps",
+   "forward_start",
+   "pre_hedge",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: DMO allocation, hedge, CTD switch and P&amp;L.</b> The desk is allocated <b>£200m</b> of a new 10y gilt at clean 99.20 and modified duration 8.10. It hedges with long gilt futures (CF 0.8500, CTD modified duration 7.60, CTD dirty 100.30, futures 118.00). Overnight the CTD switches to CF 0.8800, modified duration 7.90, dirty 102.00. Compute: (a) the cash DV01, (b) the contracts needed before the switch, (c) the hedge P&amp;L for a 2bp adverse move after the switch, and (d) the residual if the desk does nothing.",
+  "back": "<b>Answer:</b> a 2bp rise after the switch gains about <b>£6,780</b>, because the desk is over-hedged. Rebalance by about 37 contracts.<br><br>\n<b>Steps:</b><ol>\n<li><b>Cash DV01:</b> \\(200\\text{m} \\times 0.9920 \\times 8.10 \\times 10^{-4} \\approx \\text{£}160{,}704\\) per bp.</li>\n<li><b>Futures DV01 before the switch:</b> \\(76.23 / 0.8500 \\approx \\text{£}89.68\\) per contract. Contracts: \\(160{,}704 / 89.68 \\approx 1{,}792\\).</li>\n<li><b>After the switch, futures DV01:</b> CTD DV01 = \\(100{,}000 \\times 1.02 \\times 7.90 \\times 10^{-4} \\approx \\text{£}80.58\\); divided by CF 0.8800 gives \\(\\approx \\text{£}91.57\\) per contract.</li>\n<li><b>Hedge P&amp;L for a 2bp rise in yields, after the switch:</b> cash loses \\(2 \\times 160{,}704 = \\text{£}321{,}408\\); short futures gain \\(2 \\times 1{,}792 \\times 91.57 \\approx \\text{£}328{,}188\\). Net \\(\\approx +\\text{£}6{,}780\\).</li>\n<li><b>Residual if nothing is done:</b> the desk is over-hedged by about \\(1{,}792 \\times 91.57 - 160{,}704 \\approx \\text{£}3{,}389\\) per bp, so for a 2bp rise it gains about £6.8k. Rebalance by about 37 contracts.</li>\n</ol>\n<b>Sanity check:</b> the switch raised the futures DV01 by about 2%, and the hedge error is about 2% of the cash DV01 (3,389 / 160,704). Consistent.<br><br>\n<b>Interviewer follow-up:</b> Why would a desk keep the over-hedge rather than rebalance? If the expected move is small relative to the basis-risk limit and the roll is near, the trading cost of 37 contracts may exceed the risk saving.",
+  "tags": [
+   "dmo_auction",
+   "futures_hedge",
+   "ctd",
+   "case_study",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: corporate pre-lock, rate and spread decomposition.</b> An A-rated issuer locks the 10y swap rate at 4.10% on a £500m, 10-year sterling bond six weeks before pricing. Swap DV01 is £410k per bp (modified duration approx. 8.20). At pricing, the 10y swap is 4.35% and the issuer's spread over swaps has moved from 110bp to 120bp. Compute: (a) the rate payoff to the issuer, (b) the spread cost to the issuer, (c) the all-in coupon, and (d) the annual interest saving from the rate lock.",
+  "back": "<b>Answer:</b> the lock adds about <b>£10.25m</b> against no lock. The 10bp spread widening costs about <b>£4.10m</b> that the lock does not cover.<br><br>\n<b>Steps:</b><ol>\n<li><b>Rate payoff:</b> \\(410{,}000 \\times 25 \\approx \\text{£}10.25\\text{m}\\) received by the issuer (paid by the desk).</li>\n<li><b>Spread cost:</b> \\(500\\text{m} \\times 0.10\\% \\times 8.20 \\approx \\text{£}4.10\\text{m}\\) more present value, not hedged.</li>\n<li><b>All-in coupon:</b> with the lock, \\(4.10\\% + 1.20\\% = 5.30\\%\\). Without a lock but with the spread widening, \\(4.35\\% + 1.20\\% = 5.55\\%\\).</li>\n<li><b>Annual saving from the lock:</b> \\(500\\text{m} \\times 0.25\\% = \\text{£}1.25\\text{m}\\) per year.</li>\n</ol>\n<b>Sanity check:</b> the PV of £1.25m a year at a 10y annuity of about 8.2 gives about £10.25m, which matches the lock payoff.<br><br>\n<b>Control angle:</b> the lock adds \\(\\text{£}10.25\\text{m}\\) against no lock, because the rate move is paid to the issuer under the lock. The \\(\\text{£}4.10\\text{m}\\) spread cost is incurred with or without the lock, so it does not reduce the lock's benefit. The rate hedge did its job; the spread move is separate.<br><br>\n<b>Interviewer follow-up:</b> Which number does the issuer care about for its funding budget? The all-in coupon in basis points over its own funding curve, net of the lock settlement, and the spread at pricing, since that is what the treasurer approves.<div class=\"fig\"><img src=\"18_desk_6_11_prelock_coupon_bridge.png\"><div class=\"cap\">All-in coupon bridge from plan to locked level, with the GBP 10.25m rate payoff and 1.25m annual saving.</div></div>",
+  "tags": [
+   "corporate_hedging",
+   "rate_lock",
+   "case_study",
+   "credit_spread",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A long gilt future has a notional of {{c1::£100,000}} with a notional coupon of {{c2::4%}}. Its last trading day is {{c3::two business days}} before the last business day of the delivery month.",
+  "back": "Convention from the ICE Long Gilt contract specification. Last notice day is the business day after the last trading day.",
+  "tags": [
+   "gilts",
+   "futures",
+   "convention",
+   "lvl_foundation",
+   "cloze"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The futures DV01 per contract equals the CTD's DV01 divided by the {{c1::conversion factor}}, so a bond with a {{c2::lower}} CF gives a larger futures DV01 for the same CTD DV01.",
+  "back": "A DV01 of £76.23 per bp per £100k face at CF 0.85 gives £89.68 per bp per contract.",
+  "tags": [
+   "futures_hedge",
+   "ctd",
+   "convention",
+   "lvl_vp_core",
+   "cloze"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: IDX_EXT 1/3]</b> Context: an index-tracking gilt fund of about <b>£20bn</b> (illustrative size) has index duration <b>9.00</b> years. The index provider's month-end rebalance extends the index duration to <b>9.05</b> years. Index funds therefore have to buy duration and sell duration at the close. What trade does the desk expect to see, and how big is it roughly?",
+  "back": "<b>Answer:</b> a curve-shape trade. Index funds sell short-to-intermediate bonds and buy longer bonds, extending the duration of the portfolio at the close. The size is driven by the change in duration, not by the change in market value.<br><br>\n<b>Numbers:</b> if the fund swaps a fraction \\(f\\) of its portfolio from a 5-year bond (duration 5) into a 14-year bond (duration 14), its duration rises by \\(f \\times (14 - 5) = 0.05\\). So \\(f = 0.05 / 9 \\approx 0.56\\%\\), and the trade is \\(0.0056 \\times \\text{£}20\\text{bn} \\approx \\text{£}111\\text{m}\\).<br><br>\n<b>Control angle / Where it breaks:</b> the exact flow depends on the provider's preview file and on which bonds enter and leave the index. Check the official preliminary file before the day; figures here are illustrative.<br><br>\n<b>Interviewer follow-up:</b> Why is the desk's risk from this flow small even though the trade is £111m? Because the net DV01 change is small, as the next card shows. The risk is in execution, not in the rate level.",
+  "tags": [
+   "index_flows",
+   "month_end",
+   "gilts",
+   "chain_idx_ext",
+   "scenario",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: IDX_EXT 2/3]</b> Context: the fund's index flow is about £111m, sold in intermediate gilts with duration 5 and bought in long gilts with duration 14, on a £20bn portfolio with duration 9.00 going to 9.05. Show that the net DV01 of the switch is small, and compute the index DV01 before and after.",
+  "back": "<b>Answer:</b> the net DV01 of the switch is about <b>£0.1m per bp</b>, and the index DV01 moves from about £18.0m per bp to £18.1m per bp.<br><br>\n<b>Worked example:</b><br>\nIndex DV01 before: \\(20{,}000\\text{m} \\times 9.00 \\times 10^{-4} = \\text{£}18.0\\text{m}\\) per bp.<br>\nIndex DV01 after: \\(20{,}000\\text{m} \\times 9.05 \\times 10^{-4} \\approx \\text{£}18.1\\text{m}\\) per bp.<br>\nNet DV01 of the switch: \\(111\\text{m} \\times (14 - 5) \\times 10^{-4} \\approx \\text{£}0.1\\text{m}\\) per bp.<br><br>\n<b>Intuition:</b> the switch is a small change in the fund's DV01 but a large change in its curve shape. It sells the belly and buys the long end, which is the same as a 5s14s steepener on a notional of about £111m. The desk sees the fund's order as a steepening flow of roughly that size.<br><br>\n<b>Interviewer follow-up:</b> Why is a £111m trade in a £20bn index a meaningful event for the desk? Because it lands on the long end at one time, when liquidity is thinner than on the belly and the desk must warehouse the risk.",
+  "tags": [
+   "index_flows",
+   "month_end",
+   "derivation_numbers",
+   "chain_idx_ext",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: IDX_EXT 3/3]</b> Context: the index switch is a £111m sale of 5-year bonds and a £111m purchase of 14-year bonds, executed at the month-end close. The long leg is illiquid compared with the belly. What is the cost of a 1bp concession on the 14-year leg, and what is the failure mode the desk should plan for?",
+  "back": "<b>Answer:</b> a 1bp concession on the long leg costs about <b>£155k</b>: \\(111\\text{m} \\times 14 \\times 10^{-4} \\approx \\text{£}155\\text{k}\\).<br><br>\n<b>Trap / Where it breaks:</b><ul>\n<li><b>Known flow:</b> the index preview is public, so the market front-runs the flow in the days before the rebalance. The desk should expect the long end to richen before the close, not after.</li>\n<li><b>Close timing:</b> the trade is executed at the close, so the desk's marks and the index fund's execution price may differ. Check marks and close times on the P&amp;L explain.</li>\n<li><b>Liquidity:</b> if the desk takes the other side, it is short the long end at the close. Warehouse risk with the futures or a swap, not in the illiquid cash bond.</li>\n</ul>\n<b>Interviewer follow-up:</b> How do you decide whether to take the other side of an index flow or to step aside? Compare the expected concession with the expected reversion after the month-end. If the cash bond's bid-offer and the concession exceed the reversion, step aside.",
+  "tags": [
+   "index_flows",
+   "month_end",
+   "liquidity",
+   "chain_idx_ext",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CB_DAY 1/3]</b> Context: it is <b>11:30</b> on a Bank of England MPC decision day. The decision is published at <b>12:00</b> London. Bank Rate is 3.75%, and SONIA futures price a <b>60%</b> chance of a 25bp hike at this meeting. What does the strat do before 12:00?",
+  "back": "<b>Answer:</b> the expected move is \\(0.60 \\times 25 = 15\\)bp, so the market is priced for a 15bp hike on average. Steps before 12:00:<ol>\n<li>Check the priced path: SONIA futures and the OIS curve, front 3 to 6 months, so you know which contracts reprice on each outcome.</li>\n<li>Check client positions and the book's gamma. Reduce option gamma around the announcement if the limit is tight, because a 25bp move in the front end is a large move for short-dated options.</li>\n<li>Widen bid-offer on the front end, and keep sizes small. Quote a two-way market on the event, not a view.</li>\n<li>Set the desk's expected P&amp;L in each outcome so the explain can be checked after 12:00.</li>\n</ol>\n<b>Interviewer follow-up:</b> Why does pricing a 60% hike matter more than the bare decision? Because the P&amp;L depends on the surprise against the priced path, not on the decision itself.<div class=\"fig\"><img src=\"18_desk_6_17_mpc_day_steps.png\"><div class=\"cap\">Priced path (60% chance of +25bp, 15bp expected move) and the four steps before the 12:00 decision.</div></div>",
+  "tags": [
+   "central_bank",
+   "event_risk",
+   "sonia",
+   "chain_cb_day",
+   "scenario",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CB_DAY 2/3]</b> Context: the MPC hikes 25bp at 12:00, and the market had priced a 60% chance. The desk is a receiver of 2-year SONIA swaps with £100m notional and 2-year DV01 about £19,000 per bp. What is the surprise, and what is the P&amp;L on the receiver if the front end moves by the surprise?",
+  "back": "<b>Answer:</b> the surprise is \\(25 - 15 = 10\\)bp against the priced path, so the front end moves about 10bp more than the market expected.<br><br>\n<b>Worked example:</b> receiver P&amp;L: \\(-19{,}000 \\times 10 = -\\text{£}190\\text{k}\\) on £100m. A receiver loses when yields rise.<br><br>\n<b>Intuition:</b> the 2-year moves by less than 25bp because the surprise is the difference in expected path, not the current policy rate. The 2-year reprices by the average of the expected path over two years, so the move is smaller than the policy move unless the market expects a persistent change. Check the 1-year and 2-year point separately.<br><br>\n<b>Interviewer follow-up:</b> Why might the desk's P&amp;L differ from \\(-\\text{£}190\\text{k}\\) on the day? The move in SONIA-linked swaps can differ from the SONIA futures move, and the close may be a few basis points off the 12:00 print, so the explain needs the basis term.",
+  "tags": [
+   "central_bank",
+   "event_risk",
+   "dv01",
+   "scenario",
+   "chain_cb_day",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CB_DAY 3/3]</b> Context: after the hike the desk's receiver P&amp;L explain shows a <b>£260k</b> loss on the day, but the expected loss from the 10bp surprise is £190k. The residual is £70k. Walk through how you find it at 16:15.",
+  "back": "<b>Answer:</b> the residual is 70k, which is about 3.7bp on the £19k per bp DV01. Check, in order:<ol>\n<li><b>Snapshot time:</b> are the desk's marks taken at 12:00 or at the close? A 12:00 snapshot misses the post-announcement drift in the afternoon.</li>\n<li><b>Curve basis:</b> compare the SONIA swap move with the SONIA futures move at the same tenor. A basis move of a few bp across the front end explains a large part of residuals on decision days.</li>\n<li><b>Mark source:</b> is the 2-year point marked on the curve used by the desk or on a broker mark? A stale broker mark can give the residual.</li>\n<li><b>Convexity and gamma:</b> if the book has options, the 25bp move gives gamma P&amp;L that the first-order explain does not capture.</li>\n</ol>\n<b>Control angle:</b> document the residual with its source before the close, and escalate to the product controller if it is not explained by the first three checks.<br><br>\n<b>Interviewer follow-up:</b> Why does the control function care about a residual on an event day? Event days are where marks are most likely to be stale or wrong. A residual that is not explained on the day is a valuation control issue, not only a P&amp;L issue.",
+  "tags": [
+   "central_bank",
+   "pnl_explain",
+   "control",
+   "scenario",
+   "chain_cb_day",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SSA_SWAP 1/3]</b> Context: a sovereign-supranational-agency (SSA) issuer sells a <b>£1bn, 7-year fixed-rate bond at 4.50%</b> and swaps it into floating (SONIA plus a spread) with a dealer. The issuer wants floating funding. Describe the cash flows and the dealer's position. Which way is the dealer's net interest-rate exposure, and how does the dealer hedge it?",
+  "back": "<b>Answer:</b> the dealer is a payer of fixed in the swap, so it is short duration, and it hedges by receiving fixed in the swap or gilt market, which creates receive-fixed demand in the market.<br><br>\n<b>Steps:</b><ol>\n<li>The issuer pays the bond's 4.50% coupons to investors, receives 4.50% fixed from the dealer, and pays SONIA plus its spread to the dealer.</li>\n<li>The dealer pays fixed 4.50% and receives SONIA plus the spread.</li>\n<li>Hedge: receive fixed in the swap or gilt market.</li>\n</ol>\n<b>Control angle / Where it breaks:</b> caveat: the net effect of a large volume of SSA swapped issuance on swap spreads is a judgement and depends on who holds the other side. Do not state a direction without the flow data.<br><br>\n<b>Interviewer follow-up:</b> Why does the dealer's hedge matter for swap spreads? A large receive-fixed hedge pushes swap rates down relative to gilts or bonds, which tightens swap spreads. Whether it does so depends on the other flows in the same week.<div class=\"fig\"><img src=\"18_desk_6_20_ssa_swap_flows.png\"><div class=\"cap\">Cash and swap flows between SSA bond investors, the issuer and the dealer, which is short duration.</div></div>",
+  "tags": [
+   "ssa",
+   "swapped_issuance",
+   "swaps",
+   "chain_ssa_swap",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SSA_SWAP 2/3]</b> Context: the 7-year SSA bond is priced at a yield of <b>4.62%</b>, and the 7-year SONIA swap rate is <b>4.20%</b>. What is the asset-swap spread, and what is the issuer's approximate floating cost, ignoring fees and day-count differences?",
+  "back": "<b>Answer:</b> the asset-swap spread is about <b>42bp</b>, and the issuer's floating cost is about <b>SONIA + 42bp</b>.<br><br>\n<b>Precise:</b> the bond yield minus the swap rate is \\(4.62\\% - 4.20\\% = 0.42\\%\\). When the bond is swapped to floating, the swap spread over SONIA is the spread the issuer pays on top of SONIA. Ignoring fees and day-count differences (the bond is annual or semi-annual, SONIA is compounded daily on ACT/365), the issuer's floating cost is about SONIA plus 42bp.<br><br>\n<b>Trap / Where it breaks:</b> the true figure differs by the difference in conventions and by the dealer's fee, which is typically small but not zero. Check with the desk's pricing model.<br><br>\n<b>Interviewer follow-up:</b> Why would an issuer accept SONIA plus 42bp rather than a floating note at a lower spread? It may be the cheapest route to floating funding after accounting for the bond's new-issue spread and the investor base, which is the reason SSA issuers swap.",
+  "tags": [
+   "ssa",
+   "swapped_issuance",
+   "asset_swap",
+   "derivation",
+   "chain_ssa_swap",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SSA_SWAP 3/3]</b> Context: the dealer has taken on £100m of SSA swapped issuance (payer of fixed, DV01 about £60k per bp). It hedged with a receive-fixed swap of matching DV01. The issuer pulls the deal before pricing, and the swap with the issuer is cancelled at market value, but the receive-fixed hedge stays on. What is the dealer's residual risk, and what does a 5bp rise in swap rates cost?",
+  "back": "<b>Answer:</b> the dealer is left with a naked receive-fixed position of DV01 about £60k per bp. Its rate risk was matched only while the payer swap existed; with the swap gone, the hedge is the only trade left, and it is pure rates.<br><br>\n<b>Numbers:</b> a 5bp rise in swap rates costs about <b>£300k</b>: \\(60{,}000 \\times 5\\).<br><br>\n<b>Steps (management):</b><ul>\n<li>Unwind the receive-fixed hedge, or hold it as a rates position inside the desk's DV01 limit, not as a hedge of a deal that no longer exists.</li>\n<li>Check the cancellation terms of the swap with the issuer, since a cancellation may carry a fee or a break price.</li>\n<li>Escalate to the product controller and check the rates DV01 limit.</li>\n</ul>\n<b>Interviewer follow-up:</b> Why is this a rates risk rather than a swap-spread risk? While the deal existed, the payer swap and the receive-fixed hedge cancelled each other's rate exposure. Once the deal is pulled, only the hedge is left, and its exposure is to the level of swap rates.",
+  "tags": [
+   "ssa",
+   "swapped_issuance",
+   "hedge_residual",
+   "risk",
+   "chain_ssa_swap",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Scenario: it is 16:15 on the last business day of the month.</b> The P&amp;L explain shows <b>£2.1m unexplained</b> on the long-end gilt book. The desk executed the month-end index switch at the close, and the book also holds a 30-year nominal position with a new benchmark. Walk through how you find the residual.",
+  "back": "<b>Answer:</b> work in the order that finds the largest and cheapest errors first.<br><br>\n<b>Steps:</b><ol>\n<li><b>Trades vs marks:</b> the index-switch trades were executed at the close. Are they priced in the risk system at the execution price or at the mark? A 3bp mismatch on £100m of a 30-year bond (DV01 about £170k per bp) is about £0.5m.</li>\n<li><b>Benchmark change:</b> if the 30-year benchmark rolled, the risk system may still hold the old bond's yield. Compare the DV01 of the old and new bond. A 0.2 duration gap on £2bn of face gives a DV01 mismatch of about £40k per bp.</li>\n<li><b>Curve snapshot:</b> compare the snapshot time of the marks against the close. A 15:30 snapshot misses the last half hour of the index flow.</li>\n<li><b>New issue marks:</b> a new issue marked at the auction price rather than the secondary price creates a residual.</li>\n<li><b>Roll and calendar spreads:</b> any futures roll booked on the day should be a separate P&amp;L line.</li>\n</ol>\n<b>Control angle:</b> report the residual with its source before the close, and do not leave it as unexplained overnight.<br><br>\n<b>Interviewer follow-up:</b> Which of these is most likely to be wrong on a month-end? The benchmark change and the snapshot time, because both are operational and both happen on the same day as the index flow.",
+  "tags": [
+   "pnl_explain",
+   "month_end",
+   "control",
+   "scenario",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Scenario: it is 13:40 on a Thursday in late October.</b> A UK defined-benefit pension scheme's LDI manager calls and wants to <b>receive fixed on £150m of 30-year sterling swaps</b> to lock in long-end yields after a rally. The scheme's trigger is a funding-level test that lifts its hedge ratio if yields rise. Walk through what the strat does before quoting.",
+  "back": "<b>Answer:</b> the scheme is a long-dated receiver. It wants to receive fixed on 30y, so it is buying duration, and the desk is the payer.<br><br>\n<b>Steps:</b><ol>\n<li><b>Size the risk:</b> DV01 on £150m of 30-year swap is about \\(150\\text{m} \\times 17 \\times 10^{-4} \\approx \\text{£}255\\text{k}\\) per bp (modified duration approx. 17, check against the curve).</li>\n<li><b>Choose the instrument:</b> swap, gilt or a mix. A swap gives no index-linked cash flow and avoids the gilt repo; a gilt uses the balance sheet and the repo. Check the 30y swap-gilt spread before choosing.</li>\n<li><b>Price and liquidity:</b> the 30y point is illiquid. Quote with a wider spread, and check the desk's limit on the long end.</li>\n<li><b>Collateral and margin:</b> a receiver's margin moves with yields. A 30bp fall in yields on £255k per bp costs the scheme about £7.7m of variation margin; confirm the scheme's collateral and its CSA terms before the trade.</li>\n<li><b>Hedge the desk's side:</b> the desk's payer is short duration. Hedge at the 30y point or with a 10y/30y curve trade, and keep the residual in the curve limit.</li>\n</ol>\n<b>Interviewer follow-up:</b> Why does the scheme's trigger matter to the desk? The trigger makes the client's demand procyclical. The desk may see more flow after a rally, and should expect the demand to appear when the long end is already rich.",
+  "tags": [
+   "pension_hedging",
+   "long_end",
+   "scenario",
+   "swaps",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: how much of an index portfolio must be switched to move its duration.</b> A portfolio of market value \\(A\\) has duration \\(d_0\\). The index provider extends its duration to \\(d_1\\) by swapping a fraction \\(f\\) of the portfolio from a short bond (duration \\(d_s\\)) into a long bond (duration \\(d_b\\)). Derive \\(f\\) and the net DV01 of the switch.",
+  "back": "<b>Answer.</b> Duration is value-weighted. The switched fraction \\(f\\) of the value leaves a bond of duration \\(d_s\\) and comes in at duration \\(d_b\\), so the portfolio duration changes by\n\\[d_1 - d_0 = f\\,(d_b - d_s)\\]<br>\n<b>Precise.</b><ol>\n<li>\\[d_1 - d_0 = f\\,(d_b - d_s) \\quad\\Rightarrow\\quad f = \\frac{d_1 - d_0}{d_b - d_s}\\]</li>\n<li>The net DV01 change is \\(f \\times A \\times (d_b - d_s) \\times 10^{-4} = (d_1 - d_0) \\times A \\times 10^{-4}\\), which is independent of the bond choice. The trade size is \\(f \\times A\\).</li>\n</ol>\n<b>Worked example.</b> With \\(d_0 = 9.00\\), \\(d_1 = 9.05\\), \\(d_s = 5\\), \\(d_b = 14\\): \\(f = 0.05 / 9 \\approx 0.56\\%\\).<br><br>\n<b>Trap / Where it breaks.</b> The approximation uses value weights at the start of the switch. Price moves during the trade change \\(f\\), and the DV01 of each leg depends on the yield, so re-solve if the trade is large or the market moves. The derivation also treats duration as the only risk. Two portfolios with the same duration can have very different key-rate profiles, so check the key-rate DV01 after the switch.",
+  "tags": [
+   "derivation",
+   "index_flows",
+   "duration",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: month-end index extension, sizing and execution cost.</b> An index-tracking gilt fund of £20bn (illustrative) has index duration 9.00 that extends to 9.05. The switch sells 5-year bonds and buys 14-year bonds. The execution is at the close, and the long leg is quoted 1.5bp wide in yield. Compute: (a) the trade size, (b) the net DV01 of the switch, (c) the cost of crossing the long-leg bid-offer, and (d) the cost if the desk's mark is 0.5bp off the execution price.",
+  "back": "<b>Answer:</b> the trade is about £111m, the net DV01 is about £0.10m per bp, crossing the long-leg bid-offer costs about £117k at half of the 1.5bp spread (about £233k at the full spread), and a 0.5bp mark error on the long leg is about £78k.<br><br>\n<b>Steps:</b><ol>\n<li><b>Trade size:</b> \\(f = 0.05/9 = 0.00556\\), so \\(0.00556 \\times 20{,}000\\text{m} \\approx \\text{£}111\\text{m}\\).</li>\n<li><b>Net DV01 of the switch:</b> \\(111\\text{m} \\times (14-5) \\times 10^{-4} \\approx \\text{£}0.10\\text{m}\\) per bp. Matches \\((9.05 - 9.00) \\times 20\\text{bn} \\times 10^{-4} = \\text{£}0.10\\text{m}\\).</li>\n<li><b>Cost of crossing the long-leg bid-offer:</b> half of 1.5bp is 0.75bp, so the cost is about \\(0.75 \\times 111\\text{m} \\times 14 \\times 10^{-4} \\approx \\text{£}117\\text{k}\\). Using the full 1.5bp spread gives about £233k.</li>\n<li><b>Mark error at 0.5bp on the long leg:</b> \\(0.5 \\times 111\\text{m} \\times 14 \\times 10^{-4} \\approx \\text{£}78\\text{k}\\). This is a P&amp;L error that the explain must show, not a trading loss.</li>\n</ol>\n<b>Sanity check:</b> the cost of the crossing is about 0.1% of the trade's market value, which is the scale a dealer would expect for an illiquid long-end trade.<br><br>\n<b>Interviewer follow-up:</b> Why is the net DV01 the right number to report to the risk committee for this flow? The gross trade is large, but the DV01 change is small, so the risk committee's limit is about the DV01 and the curve shape, and the gross notional is a liquidity question.",
+  "tags": [
+   "index_flows",
+   "case_study",
+   "execution",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The Bank of England MPC decision is published at {{c1::12:00 London time}} on announcement days, and the FOMC statement is released at {{c2::14:00 Eastern time}}.",
+  "back": "Times are the standard published announcement times. Confirm the date on the central bank's calendar before using them.",
+  "tags": [
+   "central_bank",
+   "event_risk",
+   "convention",
+   "lvl_foundation",
+   "cloze"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "IMM dates for the quarterly futures cycle fall on the {{c1::third Wednesday}} of March, June, September and December. The December 2026 IMM date is {{c2::16 December 2026}}.",
+  "back": "Third Wednesday of December 2026: 16 December 2026, computed in Python with the calendar module.",
+  "tags": [
+   "futures",
+   "imm_dates",
+   "convention",
+   "lvl_foundation",
+   "cloze"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A benchmark fixing order is executed at the {{c1::published fixing price}}, not at the desk's mark, so the desk's risk between the order and the fix is in {{c2::the hedge timing}} and in the {{c3::size of the order against the market}}.",
+  "back": "Practical point for a large fixing day: hedge the expected fill with the desk's own mark, and check the fixing methodology before the day, not on the day.",
+  "tags": [
+   "fixing",
+   "execution",
+   "convention",
+   "lvl_vp_core",
+   "cloze"
+  ]
+ }
+]

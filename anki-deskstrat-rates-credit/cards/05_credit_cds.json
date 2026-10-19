@@ -6,7 +6,8 @@
   "tags": [
    "bond_spreads",
    "convention",
-   "curves"
+   "curves",
+   "lvl_foundation"
   ]
  },
  {
@@ -15,7 +16,8 @@
   "back": "For an option-free bond the Z-spread is the spread the investor earns over the risk-free zero curve, cash flow by cash flow. For a callable or putable bond the Z-spread mixes credit spread with option value (see the OAS card).",
   "tags": [
    "bond_spreads",
-   "convention"
+   "convention",
+   "lvl_foundation"
   ]
  },
  {
@@ -25,7 +27,8 @@
   "tags": [
    "bond_spreads",
    "derivation",
-   "swaps"
+   "swaps",
+   "lvl_vp_core"
   ]
  },
  {
@@ -35,7 +38,8 @@
   "tags": [
    "bond_spreads",
    "options",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -45,7 +49,8 @@
   "tags": [
    "bond_spreads",
    "risk",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -55,7 +60,8 @@
   "tags": [
    "bond_spreads",
    "mental_math",
-   "risk"
+   "risk",
+   "lvl_foundation"
   ]
  },
  {
@@ -65,27 +71,30 @@
   "tags": [
    "bond_spreads",
    "risk",
-   "portfolio"
+   "portfolio",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "A bond is priced at 95 (per 100 par) with a recovery assumption of 40. You are long the bond. What is its jump-to-default (JTD) loss, and why is it not simply notional times \\((1-R)\\)?",
-  "back": "JTD = market value minus recovery value: \\(JTD = P - R \\times 100 = 95 - 40 = 55\\) per 100 par.<br>\nNotional times \\((1-R)\\) gives the loss measured against par. The bond is marked at 95, so the loss that actually hits the position is measured against its current market value. The gap of 5 points is the price already paid for, which disappears on default.<br>\n<b>Interviewer follow-up:</b> How does accrued interest enter? It is paid or recovered as part of the claim, so it is usually excluded from the MV-based JTD in a first pass.",
+  "back": "JTD = market value minus recovery value: \\(JTD = P - R \\times 100 = 95 - 40 = 55\\) per 100 par.<br>\nNotional times \\((1-R)\\) gives the loss measured against par. The bond is marked at 95, so the loss that actually hits the position is measured against its current market value. The gap of 5 points is the price already paid for, which disappears on default.<br>\n<b>Interviewer follow-up:</b> How does accrued interest enter? It is paid or recovered as part of the claim, so it is usually excluded from the MV-based JTD in a first pass.<div class=\"fig\"><img src=\"05_credit_cds_7_jtd_bond.png\"><div class=\"cap\">Bond at 95 with R = 40: JTD loss is 55 per 100 par, not the 60 loss vs par.</div></div>",
   "tags": [
    "bond_spreads",
    "jtd",
-   "risk"
+   "risk",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "A protection buyer holds $10m notional of single-name CDS with recovery 40%, and the position has a mark-to-market gain of $300k. What is its jump-to-default P&L?",
-  "back": "On default the buyer receives \\((1-R)N = 0.6 \\times 10\\text{m} = $6.0\\text{m}\\).<br>\nThe existing MTM of $300k is already in the book, so the incremental jump gain is \\(JTD_{buyer} = (1-R)N - MTM = 6.0 - 0.3 = $5.7\\text{m}\\).<br>\nFor the protection seller the sign flips: \\(JTD_{seller} = -(1-R)N + MTM\\).<br>\n<b>Interviewer follow-up:</b> Why does the MTM matter for JTD on CDS but not for a bond measured against par? The CDS settles at a fixed payout, so the existing mark is the only offset; a bond's JTD is measured against its own market value already, as in the previous card.",
+  "back": "On default the buyer receives \\((1-R)N = 0.6 \\times 10\\text{m} = $6.0\\text{m}\\).<br>\nThe existing MTM of $300k is already in the book, so the incremental jump gain is \\(JTD_{buyer} = (1-R)N - MTM = 6.0 - 0.3 = $5.7\\text{m}\\).<br>\nFor the protection seller the sign flips: \\(JTD_{seller} = -(1-R)N + MTM\\).<br>\n<b>Interviewer follow-up:</b> Why does the MTM matter for JTD on CDS but not for a bond measured against par? The CDS settles at a fixed payout, so the existing mark is the only offset; a bond's JTD is measured against its own market value already, as in the previous card.<div class=\"fig\"><img src=\"05_credit_cds_8_cds_jtd_buyer.png\"><div class=\"cap\">CDS buyer JTD: 6.0m payout on default less the 0.3m MTM already held = 5.7m.</div></div>",
   "tags": [
    "cds",
    "jtd",
-   "risk"
+   "risk",
+   "lvl_vp_core"
   ]
  },
  {
@@ -95,27 +104,30 @@
   "tags": [
    "cds",
    "derivation",
-   "pricing"
+   "pricing",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "How are single-name CDS quoted and paid? Use a 5y IG name with par spread 80bp, standard coupon 100bp and RPV01 of 4.6. Who pays what upfront, and what about HY names?",
-  "back": "Single-name CDS trade with a fixed standard coupon and a quoted par spread. North American names use 100bp (IG) or 500bp (HY); European names use 25, 100, 500 or 1000bp, chosen close to the par spread. The protection buyer pays the coupon, and the difference is settled with an upfront payment.<br>\nUpfront \\(\\approx (c - S^{*})\\times RPV01 = (100-80)\\text{bp} \\times 4.6 = 0.92\\) points of notional. The buyer pays 100bp but the market is 80bp, so the buyer overpays and receives 0.92 points from the seller. Accrued premium since the last coupon date is added on top.<br>\nHY names trade with a 500bp coupon, and the quote is points upfront plus the 500bp running premium.<br>\n<b>Interviewer follow-up:</b> Who receives the upfront if the par spread is above the coupon? The protection seller receives it, because the buyer is underpaying.",
+  "back": "Single-name CDS trade with a fixed standard coupon and a quoted par spread. North American names use 100bp (IG) or 500bp (HY); European names use 25, 100, 500 or 1000bp, chosen close to the par spread. The protection buyer pays the coupon, and the difference is settled with an upfront payment.<br>\nUpfront \\(\\approx (c - S^{*})\\times RPV01 = (100-80)\\text{bp} \\times 4.6 = 0.92\\) points of notional. The buyer pays 100bp but the market is 80bp, so the buyer overpays and receives 0.92 points from the seller. Accrued premium since the last coupon date is added on top.<br>\nHY names trade with a 500bp coupon, and the quote is points upfront plus the 500bp running premium.<br>\n<b>Interviewer follow-up:</b> Who receives the upfront if the par spread is above the coupon? The protection seller receives it, because the buyer is underpaying.<div class=\"fig\"><img src=\"05_credit_cds_10_cds_upfront_flow.png\"><div class=\"cap\">Standard 100bp coupon vs 80bp par spread: buyer pays coupon, seller pays 0.92-point upfront.</div></div>",
   "tags": [
    "cds",
    "convention",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "State the credit-triangle approximation. A 5y CDS trades at 300bp and recovery is 40%. What is the implied flat hazard rate and the approximate 5-year default probability?",
-  "back": "With a flat hazard rate \\(\\lambda\\), the premium leg per unit time is \\(S\\) and the expected loss per unit time is \\(\\lambda(1-R)\\). Equating them gives the credit triangle:<br>\n\\[ S \\approx \\lambda (1-R) \\quad\\Rightarrow\\quad \\lambda \\approx \\frac{S}{1-R} \\]\nHere \\(\\lambda = 0.03/0.6 = 5.0\\%\\). The 5-year cumulative default probability is \\(1-e^{-5\\times0.05} = 1-e^{-0.25}\\approx 22\\%\\).<br>\n<b>Interviewer follow-up:</b> When does the triangle break down? When spreads are large relative to \\(1-R\\), or when the rate level matters, so the risky annuity and discounting need the full model.",
+  "back": "With a flat hazard rate \\(\\lambda\\), the premium leg per unit time is \\(S\\) and the expected loss per unit time is \\(\\lambda(1-R)\\). Equating them gives the credit triangle:<br>\n\\[ S \\approx \\lambda (1-R) \\quad\\Rightarrow\\quad \\lambda \\approx \\frac{S}{1-R} \\]\nHere \\(\\lambda = 0.03/0.6 = 5.0\\%\\). The 5-year cumulative default probability is \\(1-e^{-5\\times0.05} = 1-e^{-0.25}\\approx 22\\%\\).<br>\n<b>Interviewer follow-up:</b> When does the triangle break down? When spreads are large relative to \\(1-R\\), or when the rate level matters, so the risky annuity and discounting need the full model.<div class=\"fig\"><img src=\"05_credit_cds_11_credit_triangle.png\"><div class=\"cap\">Credit triangle at R = 40%: spread = lambda x 0.6, so 300bp implies lambda of 5%.</div></div>",
   "tags": [
    "cds",
    "credit_triangle",
-   "mental_math"
+   "mental_math",
+   "lvl_foundation"
   ]
  },
  {
@@ -125,7 +137,8 @@
   "tags": [
    "cds",
    "credit_triangle",
-   "mental_math"
+   "mental_math",
+   "lvl_foundation"
   ]
  },
  {
@@ -135,7 +148,8 @@
   "tags": [
    "cds",
    "risky_annuity",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -145,7 +159,8 @@
   "tags": [
    "cds",
    "pricing",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -155,18 +170,20 @@
   "tags": [
    "basis",
    "cds_bond",
-   "funding"
+   "funding",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "Why does the cheapest-to-deliver option in a CDS push the CDS-bond basis positive? Give the protection buyer's payoff and what drives the option's value.",
-  "back": "The protection buyer's auction payoff is \\((100 - P_{auc})\\) per 100 notional, where \\(P_{auc} = \\min_j P_j\\) over eligible deliverables. The buyer is paid for the cheapest bond in the deliverable set, not for a bond it owns.<br>\nThe option's value is roughly the expected gap between the highest and lowest eligible post-default prices, weighted by default probability. Example: if eligible bonds settle at 30 and 40, the buyer receives 70 on the cheapest-bond auction versus 60 if the cheapest were 40, a 10-point option.<br>\nThe seller of protection prices this into the running spread, so CDS spread > bond-implied spread and basis = CDS minus bond > 0.<br>\n<b>Interviewer follow-up:</b> What shrinks the option? Fewer eligible deliverables (restructuring clause, maturity limits, subordination, currency restrictions) and tighter post-default price dispersion across them.",
+  "back": "The protection buyer's auction payoff is \\((100 - P_{auc})\\) per 100 notional, where \\(P_{auc} = \\min_j P_j\\) over eligible deliverables. The buyer is paid for the cheapest bond in the deliverable set, not for a bond it owns.<br>\nThe option's value is roughly the expected gap between the highest and lowest eligible post-default prices, weighted by default probability. Example: if eligible bonds settle at 30 and 40, the buyer receives 70 on the cheapest-bond auction versus 60 if the cheapest were 40, a 10-point option.<br>\nThe seller of protection prices this into the running spread, so CDS spread > bond-implied spread and basis = CDS minus bond > 0.<br>\n<b>Interviewer follow-up:</b> What shrinks the option? Fewer eligible deliverables (restructuring clause, maturity limits, subordination, currency restrictions) and tighter post-default price dispersion across them.<div class=\"fig\"><img src=\"05_credit_cds_16_ctd_option.png\"><div class=\"cap\">CTD option: auction at the cheapest eligible price (30) pays 70 vs 60 at 40.</div></div>",
   "tags": [
    "basis",
    "cds_bond",
    "options",
-   "ctd"
+   "ctd",
+   "lvl_vp_core"
   ]
  },
  {
@@ -176,7 +193,8 @@
   "tags": [
    "basis",
    "repo",
-   "funding"
+   "funding",
+   "lvl_vp_core"
   ]
  },
  {
@@ -187,17 +205,19 @@
    "basis",
    "convention",
    "spreads",
-   "options"
+   "options",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "List the 2014 ISDA credit events relevant to corporate and sovereign reference entities. Which apply only to some entity types?",
-  "back": "Bankruptcy, Failure to Pay (subject to a grace period and a default threshold), Obligation Acceleration, Obligation Default, Repudiation or Moratorium, Restructuring (only if the contract includes a restructuring clause), and Governmental Intervention.<br>\n<b>Corporates</b>: Bankruptcy, Failure to Pay, Obligation Acceleration, Obligation Default and Restructuring if included. Repudiation or Moratorium and Governmental Intervention are not relevant.<br>\n<b>Sovereigns</b>: Repudiation or Moratorium and Restructuring apply.<br>\n<b>Financial Reference Entities</b>: Governmental Intervention is also a credit event.<br>\n<b>Interviewer follow-up:</b> Why is Restructuring optional in North America but treated differently in Europe? Market practice and the choice of restructuring clause were historically regional, and the 2014 definitions preserve the clause choice rather than imposing one.",
+  "back": "Bankruptcy, Failure to Pay (subject to a grace period and a default threshold), Obligation Acceleration, Obligation Default, Repudiation or Moratorium, Restructuring (only if the contract includes a restructuring clause), and Governmental Intervention.<br>\n<b>Corporates</b>: Bankruptcy, Failure to Pay, Obligation Acceleration, Obligation Default and Restructuring if included. Repudiation or Moratorium and Governmental Intervention are not relevant.<br>\n<b>Sovereigns</b>: Failure to Pay, Repudiation or Moratorium and Restructuring (Obligation Acceleration is also used for some emerging-market sovereigns). Bankruptcy does not apply to a sovereign.<br>\n<b>Financial Reference Entities</b>: Governmental Intervention is also a credit event.<br>\n<b>Interviewer follow-up:</b> Why is Restructuring optional in North America but treated differently in Europe? Market practice and the choice of restructuring clause were historically regional, and the 2014 definitions preserve the clause choice rather than imposing one.",
   "tags": [
    "credit_events",
    "isda_2014",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -207,7 +227,8 @@
   "tags": [
    "credit_events",
    "isda_2014",
-   "convention"
+   "convention",
+   "lvl_vp_core"
   ]
  },
  {
@@ -217,7 +238,8 @@
   "tags": [
    "credit_events",
    "isda_2014",
-   "options"
+   "options",
+   "lvl_vp_core"
   ]
  },
  {
@@ -227,17 +249,19 @@
   "tags": [
    "credit_events",
    "isda_2014",
-   "banks"
+   "banks",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "Describe the CDS credit-event auction protocol and explain how the final price sets the recovery. Why is open interest netted?",
-  "back": "After a credit event is determined, a CDS auction runs. Dealers submit an initial market midpoint quote, physical settlement requests are collected, and the net open interest is calculated. Bidders then submit prices and the Final Price is set.<br>\nCash settlement pays the protection buyer approximately \\(N\\times(1-\\text{Final Price})\\), adjusted for the coupon and accrued premium conventions. The Final Price is effectively the market recovery of the auctioned bonds.<br>\nNetting open interest reduces the number of bonds that have to be physically delivered, because only the net imbalance has to be filled.<br>\n<b>Interviewer follow-up:</b> Why can the final price differ from the recovery on the bonds? Auction prices reflect deliverable bonds and supply-demand, and they can differ from the eventual workout recovery.",
+  "back": "After a credit event is determined, a CDS auction runs. Dealers submit an initial market midpoint quote, physical settlement requests are collected, and the net open interest is calculated. Bidders then submit prices and the Final Price is set.<br>\nCash settlement pays the protection buyer approximately \\(N\\times(1-\\text{Final Price})\\), adjusted for the coupon and accrued premium conventions. The Final Price is effectively the market recovery of the auctioned bonds.<br>\nNetting open interest reduces the number of bonds that have to be physically delivered, because only the net imbalance has to be filled.<br>\n<b>Interviewer follow-up:</b> Why can the final price differ from the recovery on the bonds? Auction prices reflect deliverable bonds and supply-demand, and they can differ from the eventual workout recovery.<div class=\"fig\"><img src=\"05_credit_cds_23_auction_flow.png\"><div class=\"cap\">CDS credit-event auction: DC decision, netting, Final Price, cash settlement.</div></div>",
   "tags": [
    "credit_events",
    "auctions",
-   "settlement"
+   "settlement",
+   "lvl_vp_core"
   ]
  },
  {
@@ -247,7 +271,8 @@
   "tags": [
    "credit_events",
    "dc",
-   "succession"
+   "succession",
+   "lvl_vp_core"
   ]
  },
  {
@@ -256,7 +281,8 @@
    "isda_2014",
    "reference_obligation",
    "convention",
-   "succession"
+   "succession",
+   "lvl_vp_core"
   ],
   "front": "What is the <b>Standard Reference Obligation (SRO)</b> introduced by the 2014 ISDA Credit Derivatives Definitions, and what problem does it solve?",
   "back": "<b>Headline:</b> ISDA (via the Determinations Committee) publishes an SRO list giving one designated reference obligation per entity and seniority level. Contracts electing \"Standard Reference Obligation\" automatically reference it, and it is replaced if it is redeemed or no longer eligible.<br><b>Problem solved:</b> under 2003 Definitions each trade carried its own reference obligation. When that bond matured, was repaid, or became the obligation of another entity after a succession, trades on the same name could end up with different (or no) reference obligations. That fragmented liquidity and created basis between economically identical trades. A single, centrally maintained SRO keeps the seniority level and fungibility consistent across the market.<br><b>Related 2014 changes:</b> no more Orphaned Reference Entity problem when the RO is repaid; succession now traces Relevant Obligations (bonds and loans) with a look-back period of 90 days for succession events; asset package delivery for financials and sovereigns.<br><b>Interviewer follow-up:</b> Why does the RO matter if all deliverable obligations rank pari passu? It sets the seniority level (senior vs subordinated) of the contract, and that decides which obligations are deliverable and which auction applies."
@@ -264,11 +290,12 @@
  {
   "type": "basic",
   "front": "Standard composition and coupons of the four main CDS indices: iTraxx Main, iTraxx Crossover, CDX IG and CDX HY. Which ones use a 500bp coupon?",
-  "back": "iTraxx Main (European IG): 125 names, 5y, 100bp coupon.<br>\niTraxx Crossover (European sub-IG): 75 names (approx.; unverified current count), 5y, 500bp coupon.<br>\nCDX IG (North American IG): 125 names, 5y, 100bp coupon.<br>\nCDX HY (North American HY): 100 names, 5y, 500bp coupon.<br>\nThe HY-style indices (Crossover and CDX HY) are quoted as points upfront plus the 500bp running premium.<br>\n<b>Interviewer follow-up:</b> Why is the composition fixed at each roll? It keeps the index a fixed portfolio for the series life, with defaults handled through the index factor rather than by rebalancing.",
+  "back": "iTraxx Main (European IG): 125 names, 5y, 100bp coupon.<br>\niTraxx Crossover (European sub-IG): 75 names, 5y, 500bp coupon.<br>\nCDX IG (North American IG): 125 names, 5y, 100bp coupon.<br>\nCDX HY (North American HY): 100 names, 5y, 500bp coupon.<br>\nThe HY-style indices (Crossover and CDX HY) are quoted as points upfront plus the 500bp running premium.<br>\n<b>Interviewer follow-up:</b> Why is the composition fixed at each roll? It keeps the index a fixed portfolio for the series life, with defaults handled through the index factor rather than by rebalancing.",
   "tags": [
    "indices",
    "convention",
-   "coupons"
+   "coupons",
+   "lvl_foundation"
   ]
  },
  {
@@ -278,7 +305,8 @@
   "tags": [
    "indices",
    "roll",
-   "convention"
+   "convention",
+   "lvl_foundation"
   ]
  },
  {
@@ -289,7 +317,8 @@
    "indices",
    "roll",
    "convention",
-   "trades"
+   "trades",
+   "lvl_vp_core"
   ]
  },
  {
@@ -299,7 +328,8 @@
   "tags": [
    "indices",
    "defaults",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -309,7 +339,8 @@
   "tags": [
    "indices",
    "defaults",
-   "mental_math"
+   "mental_math",
+   "lvl_foundation"
   ]
  },
  {
@@ -319,7 +350,8 @@
   "tags": [
    "indices",
    "basis",
-   "trades"
+   "trades",
+   "lvl_vp_core"
   ]
  },
  {
@@ -330,17 +362,19 @@
    "indices",
    "basis",
    "stress",
-   "trades"
+   "trades",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "Write the conditional default probability in a one-factor Gaussian copula and explain the role of the correlation parameter \\(\\rho\\).",
-  "back": "Latent variables: \\(X_i = \\sqrt{\\rho}\\,M + \\sqrt{1-\\rho}\\,\\varepsilon_i\\), with \\(M\\) and \\(\\varepsilon_i\\) independent standard normals. Name \\(i\\) defaults when \\(X_i < \\Phi^{-1}(p)\\), where \\(p\\) is the unconditional default probability.<br>\nConditional on the common factor \\(M\\), defaults are independent with probability<br>\n\\[ p(M) = \\Phi\\!\\left(\\frac{\\Phi^{-1}(p) - \\sqrt{\\rho}\\,M}{\\sqrt{1-\\rho}}\\right) \\]\nTranche expected loss is obtained by integrating over \\(M\\). \\(\\rho=0\\) gives independent defaults, and \\(\\rho\\to1\\) gives all names defaulting together.<br>\n<b>Interviewer follow-up:</b> What does this model miss? It has no tail dependence in the limit and a single correlation for all names, which is why base correlation is used.",
+  "back": "Latent variables: \\(X_i = \\sqrt{\\rho}\\,M + \\sqrt{1-\\rho}\\,\\varepsilon_i\\), with \\(M\\) and \\(\\varepsilon_i\\) independent standard normals. Name \\(i\\) defaults when \\(X_i < \\Phi^{-1}(p)\\), where \\(p\\) is the unconditional default probability.<br>\nConditional on the common factor \\(M\\), defaults are independent with probability<br>\n\\[ p(M) = \\Phi\\!\\left(\\frac{\\Phi^{-1}(p) - \\sqrt{\\rho}\\,M}{\\sqrt{1-\\rho}}\\right) \\]\nTranche expected loss is obtained by integrating over \\(M\\). \\(\\rho=0\\) gives independent defaults, and \\(\\rho\\to1\\) gives all names defaulting together.<br>\n<b>Interviewer follow-up:</b> What does this model miss? It has no tail dependence in the limit and a single correlation for all names, which is why base correlation is used.<div class=\"fig\"><img src=\"05_credit_cds_33_copula_cond_pd.png\"><div class=\"cap\">Conditional default probability vs market factor M for rho = 0, 0.3, 0.7 at p = 5%.</div></div>",
   "tags": [
    "tranches",
    "copula",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -350,7 +384,8 @@
   "tags": [
    "tranches",
    "base_correlation",
-   "copula"
+   "copula",
+   "lvl_vp_core"
   ]
  },
  {
@@ -361,7 +396,8 @@
    "tranches",
    "base_correlation",
    "hedging",
-   "correlation"
+   "correlation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -371,18 +407,20 @@
   "tags": [
    "tranches",
    "correlation",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "Why is the expected loss of a 3-7% mezzanine tranche a hump in correlation, while the 0-3% equity tranche's EL falls monotonically? Use the large-pool conditional loss.",
-  "back": "Large pool with \\(p=5\\%\\), \\(R=40\\%\\): the pool's mean loss is \\((1-R)p = 3\\%\\) for every \\(\\rho\\). Correlation changes the spread of the conditional loss \\(L(M)\\), not its mean.<br>\nTranche EL \\(= E[\\min((L-A)^+, B-A)]/(B-A)\\). Equity \\([0,3]\\): as \\(\\rho\\) rises, the mass moves out of the band where the equity tranche is partly hit, so its EL falls (about 74%, 54%, 40% for \\(\\rho = 0.1, 0.3, 0.5\\)).<br>\nMezzanine \\([3,7]\\): at low \\(\\rho\\), \\(L\\) sits near the 3% attachment and the tranche loses little. As \\(\\rho\\) rises, mass enters the band and EL rises (about 17.2%, 19.6%). At high \\(\\rho\\), \\(L\\) is mostly 0 or above 7%, so the tranche is either untouched or fully hit, and EL falls toward \\(P(L > 7\\%)\\), about 5% as \\(\\rho \\to 1\\). The peak sits near \\(\\rho \\approx 0.3\\) for this calibration (17.8% at 0.5).<br>\nHedge consequence: the mezzanine's correlation sensitivity changes sign across the hump, so a book marked at \\(\\rho = 0.1\\) is long correlation in the mezzanine and a book at \\(\\rho = 0.5\\) is short it. Hedge with index delta plus offsetting base correlation vega on the 3% and 7% points, and recheck the sign whenever the market moves across the peak.",
+  "back": "Large pool with \\(p=5\\%\\), \\(R=40\\%\\): the pool's mean loss is \\((1-R)p = 3\\%\\) for every \\(\\rho\\). Correlation changes the spread of the conditional loss \\(L(M)\\), not its mean.<br>\nTranche EL \\(= E[\\min((L-A)^+, B-A)]/(B-A)\\). Equity \\([0,3]\\): as \\(\\rho\\) rises, the mass moves out of the band where the equity tranche is partly hit, so its EL falls (about 74%, 54%, 40% for \\(\\rho = 0.1, 0.3, 0.5\\)).<br>\nMezzanine \\([3,7]\\): at low \\(\\rho\\), \\(L\\) sits near the 3% attachment and the tranche loses little. As \\(\\rho\\) rises, mass enters the band and EL rises (about 17.2%, 19.6%). At high \\(\\rho\\), \\(L\\) is mostly 0 or above 7%, so the tranche is either untouched or fully hit, and EL falls toward \\(P(L > 7\\%)\\), about 5% as \\(\\rho \\to 1\\). The peak sits near \\(\\rho \\approx 0.3\\) for this calibration (17.8% at 0.5).<br>\nHedge consequence: the mezzanine's correlation sensitivity changes sign across the hump, so a book marked at \\(\\rho = 0.1\\) is long correlation in the mezzanine and a book at \\(\\rho = 0.5\\) is short it. Hedge with index delta plus offsetting base correlation vega on the 3% and 7% points, and recheck the sign whenever the market moves across the peak.<div class=\"fig\"><img src=\"05_credit_cds_37_tranche_el_corr.png\"><div class=\"cap\">Equity tranche EL falls with correlation; mezzanine EL is a hump peaking near rho of 0.3.</div></div>",
   "tags": [
    "tranches",
    "correlation",
    "hedging",
-   "copula"
+   "copula",
+   "lvl_stretch"
   ]
  },
  {
@@ -392,7 +430,8 @@
   "tags": [
    "index_options",
    "fep",
-   "knockout"
+   "knockout",
+   "lvl_stretch"
   ]
  },
  {
@@ -402,7 +441,8 @@
   "tags": [
    "index_options",
    "fep",
-   "forward"
+   "forward",
+   "lvl_stretch"
   ]
  },
  {
@@ -412,18 +452,20 @@
   "tags": [
    "curve_trades",
    "steepener",
-   "carry"
+   "carry",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "For a one-issuer 5s10s curve trade (5y protection at 120bp, 10y at 150bp, recovery 40%), compare the carry-neutral and JTD-neutral notionals. Give both answers and the residual book exposure under each rule.",
-  "back": "Carry-neutral (running premium, ignoring RPV01 differences): \\(N_{10} s_{10} = N_5 s_5\\), so \\(N_{10} = (120/150)\\,N_5 = 0.8\\,N_5\\). Book JTD = \\((1-R)(N_{10} - N_5) = 0.6 \\times (-0.2) N_5\\). With \\(N_5 = 10\\text{m}\\) the book is short $1.2m of default exposure.<br>\nJTD-neutral: \\(N_{10} = N_5\\), so carry = \\((s_5 - s_{10})N_5 = -30\\text{bp}\\times 10\\text{m} = -$30\\text{k}\\) per year.<br>\nBoth rules coincide only when \\(s_5 = s_{10}\\). The steeper the CDS curve, the further apart they are. Carry-neutral leaves default exposure; JTD-neutral leaves negative carry and a long-10y CS01 slope exposure.<br>\n<b>Interviewer follow-up:</b> Which rule for a steepener in a jump-risk regime? JTD-neutral: the cost is $30k of carry per year, against $1.2m of default exposure that carry-neutral would leave.",
+  "back": "Carry-neutral (running premium, ignoring RPV01 differences): \\(N_{10} s_{10} = N_5 s_5\\), so \\(N_{10} = (120/150)\\,N_5 = 0.8\\,N_5\\). Book JTD = \\((1-R)(N_{10} - N_5) = 0.6 \\times (-0.2) N_5\\). With \\(N_5 = 10\\text{m}\\) the book is short $1.2m of default exposure.<br>\nJTD-neutral: \\(N_{10} = N_5\\), so carry = \\((s_5 - s_{10})N_5 = -30\\text{bp}\\times 10\\text{m} = -$30\\text{k}\\) per year.<br>\nBoth rules coincide only when \\(s_5 = s_{10}\\). The steeper the CDS curve, the further apart they are. Carry-neutral leaves default exposure; JTD-neutral leaves negative carry and a long-10y CS01 slope exposure.<br>\n<b>Interviewer follow-up:</b> Which rule for a steepener in a jump-risk regime? JTD-neutral: the cost is $30k of carry per year, against $1.2m of default exposure that carry-neutral would leave.<div class=\"fig\"><img src=\"05_credit_cds_41_steepener_sizing.png\"><div class=\"cap\">5s10s steepener: carry-neutral gives 0 carry and -1.2m JTD; JTD-neutral gives -30k carry and 0 JTD.</div></div>",
   "tags": [
    "curve_trades",
    "carry",
    "jtd",
-   "steepener"
+   "steepener",
+   "lvl_vp_core"
   ]
  },
  {
@@ -433,27 +475,30 @@
   "tags": [
    "curve_trades",
    "carry",
-   "jtd"
+   "jtd",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "What is a recovery lock on a CDS, and what is the payoff for the protection buyer?",
-  "back": "A recovery lock fixes the recovery used in the CDS settlement at \\(R_{lock}\\), so that the contract pays on a locked recovery rather than the realised one.<br>\nRelative to a standard CDS, the protection buyer's adjustment is \\((R_{actual} - R_{lock})\\,N\\). Their net payout is \\((1-R_{lock})N\\) in place of \\((1-R_{actual})N\\).<br>\nA buyer who locks at 40% gains if the realised recovery is above 40% (the standard payout would be smaller) and loses if it is below, so the buyer is long recovery. The recovery lock is a pure recovery view and removes the default-recovery uncertainty from the payout.<br>\n<b>Interviewer follow-up:</b> Who takes the other side? The other side is a seller who expects recoveries below the locked level, so the lock is a recovery swap between two views.",
+  "back": "A recovery lock fixes the recovery used in the CDS settlement at \\(R_{lock}\\), so that the contract pays on a locked recovery rather than the realised one.<br>\nRelative to a standard CDS, the protection buyer's adjustment is \\((R_{actual} - R_{lock})\\,N\\). Their net payout is \\((1-R_{lock})N\\) in place of \\((1-R_{actual})N\\).<br>\nA buyer who locks at 40% gains if the realised recovery is above 40% (the standard payout would be smaller) and loses if it is below, so the buyer is long recovery. The recovery lock is a pure recovery view and removes the default-recovery uncertainty from the payout.<br>\n<b>Interviewer follow-up:</b> Who takes the other side? The other side is a seller who expects recoveries below the locked level, so the lock is a recovery swap between two views.<div class=\"fig\"><img src=\"05_credit_cds_43_recovery_lock.png\"><div class=\"cap\">Recovery lock at 40%: buyer gains if realised recovery exceeds 40%, loses below.</div></div>",
   "tags": [
    "recovery",
    "recovery_lock",
-   "payoff"
+   "payoff",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "With a 5y CDS at 100bp, how does the implied hazard rate change if the assumed recovery moves from 40% to 39%? Why does the sign of the change matter for a trader?",
-  "back": "Credit triangle: \\(\\lambda = S/(1-R)\\).<br>\nAt R = 40%: \\(\\lambda = 0.01/0.60 = 1.667\\%\\).<br>\nAt R = 39%: \\(\\lambda = 0.01/0.61 = 1.639\\%\\).<br>\nA one point drop in the assumed recovery lowers the hazard by about 2.7bp of hazard, or about 1.6% relative. Higher recovery means each default costs less, so a fixed spread requires a higher implied default rate. Lower recovery means the reverse.<br>\n<b>Interviewer follow-up:</b> Why does the recovery assumption matter more for distressed names? At a high spread the \\(1-R\\) denominator drives most of the hazard, so small recovery changes move implied default probabilities more.",
+  "back": "Credit triangle: \\(\\lambda = S/(1-R)\\).<br>\nAt R = 40%: \\(\\lambda = 0.01/0.60 = 1.667\\%\\).<br>\nAt R = 39%: \\(\\lambda = 0.01/0.61 = 1.639\\%\\).<br>\nA one point drop in the assumed recovery lowers the hazard by about 2.8bp of hazard, or about 1.6% relative. Higher recovery means each default costs less, so a fixed spread requires a higher implied default rate. Lower recovery means the reverse.<br>\n<b>Interviewer follow-up:</b> Why does the recovery assumption matter more for distressed names? At a high spread the \\(1-R\\) denominator drives most of the hazard, so small recovery changes move implied default probabilities more.",
   "tags": [
    "recovery",
    "credit_triangle",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -463,7 +508,8 @@
   "tags": [
    "correlation",
    "dispersion",
-   "trades"
+   "trades",
+   "lvl_vp_core"
   ]
  },
  {
@@ -473,7 +519,8 @@
   "tags": [
    "correlation",
    "dispersion",
-   "formula"
+   "formula",
+   "lvl_stretch"
   ]
  },
  {
@@ -483,7 +530,8 @@
   "tags": [
    "hedging",
    "beta",
-   "cds"
+   "cds",
+   "lvl_vp_core"
   ]
  },
  {
@@ -493,17 +541,19 @@
   "tags": [
    "hedging",
    "beta",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "Sovereign CDS: what is redenomination risk, and how does a euro-area sovereign's exit from the euro interact with its CDS contract?",
-  "back": "Redenomination risk is the risk that a sovereign's bonds are converted into a new currency that is expected to depreciate. The contract's payout and the reference obligation then diverge, because the bond's currency changes while the CDS currency may not.<br>\nThe 2003 Definitions treated a binding change to a non-permitted currency as a restructuring-type event; the 2014 Definitions add express redenomination language and asset package delivery (approx.; unverified against the operative text), so it can in principle trigger a payout. Whether and how it does so depends on the clause text and the Determinations Committee, so verify the operative wording before relying on it.<br>\n<b>Interviewer follow-up:</b> Why is this a quanto problem? The payout is converted into the contract currency at a fixed rate while the bond is in a depreciating currency, so default and FX are linked.",
+  "back": "Redenomination risk is the risk that a sovereign's bonds are converted into a new currency that is expected to depreciate. The contract's payout and the reference obligation then diverge, because the bond's currency changes while the CDS currency may not.<br>\nThe 2003 Definitions treated a binding change to a non-permitted currency as a restructuring-type event; the 2014 Definitions add express currency redenomination provisions, a Governmental Intervention Credit Event and asset package delivery, so it can in principle trigger a payout. Whether and how it does so depends on the clause text and the Determinations Committee, so verify the operative wording before relying on it.<br>\n<b>Interviewer follow-up:</b> Why is this a quanto problem? The payout is converted into the contract currency at a fixed rate while the bond is in a depreciating currency, so default and FX are linked.",
   "tags": [
    "sovereign",
    "quanto",
-   "redenomination"
+   "redenomination",
+   "lvl_vp_core"
   ]
  },
  {
@@ -513,7 +563,8 @@
   "tags": [
    "sovereign",
    "quanto",
-   "fx"
+   "fx",
+   "lvl_stretch"
   ]
  },
  {
@@ -523,7 +574,8 @@
   "tags": [
    "cva",
    "cds",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -534,7 +586,8 @@
    "dva",
    "cva",
    "banks",
-   "valuation"
+   "valuation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -544,17 +597,19 @@
   "tags": [
    "mental_math",
    "carry",
-   "cds"
+   "cds",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "P&L = spread change times CS01. A protection buyer holds $25m notional of a 5y CDS with RPV01 4.8. Spreads widen 20bp. What is the approximate P&L, and what are the limitations of the approximation?",
-  "back": "CS01 \\(= N\\times RPV01\\times 0.0001 = 25{,}000{,}000\\times4.8\\times0.0001 = $12{,}000\\) per bp.<br>\nP&L for the buyer \\(\\approx 20 \\times $12{,}000 = $240{,}000\\) gain, since spread widening benefits the protection buyer.<br>\nLimitations: the approximation is linear in the spread change. For large moves the CS01 changes because RPV01 falls as spreads widen, so the true P&L is slightly below the linear estimate for widening moves.<br>\n<b>Interviewer follow-up:</b> What is the sign for the seller? The seller loses $240k in the same move.",
+  "back": "CS01 \\(= N\\times RPV01\\times 0.0001 = 25{,}000{,}000\\times4.8\\times0.0001 = $12{,}000\\) per bp.<br>\nP&L for the buyer \\(\\approx 20 \\times $12{,}000 = $240{,}000\\) gain, since spread widening benefits the protection buyer.<br>\nLimitations: the approximation is linear in the spread change. For large moves the CS01 changes because RPV01 falls as spreads widen, so the true P&L is slightly below the linear estimate for widening moves.<br>\n<b>Interviewer follow-up:</b> What is the sign for the seller? The seller loses $240k in the same move.<div class=\"fig\"><img src=\"05_credit_cds_54_cds_pnl_spread.png\"><div class=\"cap\">$25m 5y CDS, CS01 $12k per bp: +20bp is +240k to buyer and -240k to seller (long credit).</div></div>",
   "tags": [
    "mental_math",
    "pnl",
-   "cds"
+   "cds",
+   "lvl_foundation"
   ]
  },
  {
@@ -564,7 +619,8 @@
   "tags": [
    "mental_math",
    "pnl",
-   "cds"
+   "cds",
+   "lvl_foundation"
   ]
  }
 ]

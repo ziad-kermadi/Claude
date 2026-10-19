@@ -2,11 +2,12 @@
  {
   "type": "basic",
   "front": "A convertible has face 1,000 and a conversion ratio of 12.5 shares per bond. The share price is 75 and the bond trades at 1,020. Compute the conversion price, the parity and the premium over parity.",
-  "back": "Conversion price \\(= 1000 / 12.5 = 80\\).<br>\nParity \\(= 12.5 \\times 75 = 937.5\\).<br>\nPremium \\(= 1020 / 937.5 - 1 \\approx 8.8\\%\\). Per share, the bond costs \\(1020 / 12.5 = 81.6\\), which is 8.8% above spot.<br>\n<b>Interviewer follow-up:</b> What does the premium buy? It buys the embedded option plus any bond-floor support above parity. It is repaid by the coupon pickup over the dividend income forgone (see the payback card).",
+  "back": "Conversion price \\(= 1000 / 12.5 = 80\\).<br>\nParity \\(= 12.5 \\times 75 = 937.5\\).<br>\nPremium \\(= 1020 / 937.5 - 1 \\approx 8.8\\%\\). Per share, the bond costs \\(1020 / 12.5 = 81.6\\), which is 8.8% above spot.<br>\n<b>Interviewer follow-up:</b> What does the premium buy? It buys the embedded option plus any bond-floor support above parity. It is repaid by the coupon pickup over the dividend income forgone (see the payback card).<div class=\"fig\"><img src=\"07_converts_loans_0_parity_premium.png\"><div class=\"cap\">Parity line 12.5 x S with the 1,020 bond price; premium 82.5 at S = 75.</div></div>",
   "tags": [
    "convertibles",
    "conversion",
-   "mental_math"
+   "mental_math",
+   "lvl_foundation"
   ]
  },
  {
@@ -17,7 +18,8 @@
    "convertibles",
    "payback",
    "carry",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -27,7 +29,8 @@
   "tags": [
    "convertibles",
    "pricing",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -37,7 +40,8 @@
   "tags": [
    "convertibles",
    "greeks",
-   "scenario"
+   "scenario",
+   "lvl_vp_core"
   ]
  },
  {
@@ -48,7 +52,8 @@
    "convertibles",
    "pricing",
    "credit",
-   "derivation"
+   "derivation",
+   "lvl_stretch"
   ]
  },
  {
@@ -59,7 +64,8 @@
    "convertibles",
    "pricing",
    "credit",
-   "derivation"
+   "derivation",
+   "lvl_stretch"
   ]
  },
  {
@@ -70,7 +76,8 @@
    "convertibles",
    "pricing",
    "credit",
-   "scenario"
+   "scenario",
+   "lvl_stretch"
   ]
  },
  {
@@ -81,7 +88,8 @@
    "convertibles",
    "pricing",
    "trees",
-   "coding"
+   "coding",
+   "lvl_vp_core"
   ]
  },
  {
@@ -91,7 +99,8 @@
   "tags": [
    "convertibles",
    "features",
-   "path_dependence"
+   "path_dependence",
+   "lvl_stretch"
   ]
  },
  {
@@ -101,7 +110,8 @@
   "tags": [
    "convertibles",
    "features",
-   "takeover"
+   "takeover",
+   "lvl_vp_core"
   ]
  },
  {
@@ -112,18 +122,20 @@
    "convertibles",
    "coco",
    "credit",
-   "barrier"
+   "barrier",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "A long convertible is delta-hedged with short stock. Show that the expected hedged P&L per unit time is approximately \\(\\tfrac{1}{2} \\Gamma S^2 (\\sigma_r^2 - \\sigma_i^2)\\,dt\\). Then compute the P&L per bond per year for \\(\\Gamma = 0.05\\) per share, \\(S = 75\\), \\(\\sigma_r = 40\\%\\) and \\(\\sigma_i = 30\\%\\).",
-  "back": "Hedged value: \\(d\\Pi = dV - \\Delta\\, dS\\). Ito gives \\(dV = (V_t + \\tfrac{1}{2}\\sigma_r^2 S^2 \\Gamma)\\,dt + V_S\\, dS\\). Hence \\(d\\Pi = (\\Theta + \\tfrac{1}{2}\\sigma_r^2 S^2 \\Gamma)\\,dt\\).<br>\nThe price satisfies \\(\\Theta + \\tfrac{1}{2}\\sigma_i^2 S^2 \\Gamma = \\text{carry}\\), so \\(d\\Pi = \\tfrac{1}{2}\\Gamma S^2(\\sigma_r^2 - \\sigma_i^2)\\,dt + \\text{carry}\\). Carry includes financing, borrow and credit terms.<br>\nNumbers: \\(\\tfrac{1}{2} \\times 0.05 \\times 75^2 \\times (0.16 - 0.09) = 9.84\\) per year per bond, or about 0.04 per bond per trading day (252 days).<br>\n<b>Interviewer follow-up:</b> What is the sign of gamma P&L when realised vol equals implied vol but the stock gaps? The expected gamma P&L is zero, but the realised path is still volatile. Gap risk and jump-to-default are not captured by the continuous formula.",
+  "back": "Hedged value: \\(d\\Pi = dV - \\Delta\\, dS\\). Ito gives \\(dV = (V_t + \\tfrac{1}{2}\\sigma_r^2 S^2 \\Gamma)\\,dt + V_S\\, dS\\). Hence \\(d\\Pi = (\\Theta + \\tfrac{1}{2}\\sigma_r^2 S^2 \\Gamma)\\,dt\\).<br>\nThe price satisfies \\(\\Theta + \\tfrac{1}{2}\\sigma_i^2 S^2 \\Gamma = \\text{carry}\\), so \\(d\\Pi = \\tfrac{1}{2}\\Gamma S^2(\\sigma_r^2 - \\sigma_i^2)\\,dt + \\text{carry}\\). Carry includes financing, borrow and credit terms.<br>\nNumbers: \\(\\tfrac{1}{2} \\times 0.05 \\times 75^2 \\times (0.16 - 0.09) = 9.84\\) per year per bond, or about 0.04 per bond per trading day (252 days).<br>\n<b>Interviewer follow-up:</b> What is the sign of gamma P&L when realised vol equals implied vol but the stock gaps? The expected gamma P&L is zero, but the realised path is still volatile. Gap risk and jump-to-default are not captured by the continuous formula.<div class=\"fig\"><img src=\"07_converts_loans_11_gamma_pnl_vs_realised_vol.png\"><div class=\"cap\">Expected hedged gamma P&amp;L per bond per year against realised vol; zero at the 30% implied vol.</div></div>",
   "tags": [
    "convertibles",
    "convertible_arb",
    "derivation",
-   "mental_math"
+   "mental_math",
+   "lvl_stretch"
   ]
  },
  {
@@ -133,7 +145,8 @@
   "tags": [
    "convertibles",
    "convertible_arb",
-   "derivation"
+   "derivation",
+   "lvl_stretch"
   ]
  },
  {
@@ -144,7 +157,8 @@
    "convertibles",
    "credit",
    "hedging",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -155,7 +169,8 @@
    "convertibles",
    "convertible_arb",
    "borrow",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -166,7 +181,8 @@
    "convertibles",
    "relative_value",
    "cheapness",
-   "trade_off"
+   "trade_off",
+   "lvl_vp_core"
   ]
  },
  {
@@ -177,7 +193,8 @@
    "convertibles",
    "mandatory",
    "payoff",
-   "derivation"
+   "derivation",
+   "lvl_vp_core"
   ]
  },
  {
@@ -188,7 +205,8 @@
    "convertibles",
    "credit",
    "correlation",
-   "wrong_way_risk"
+   "wrong_way_risk",
+   "lvl_stretch"
   ]
  },
  {
@@ -198,30 +216,33 @@
   "tags": [
    "convertibles",
    "convention",
-   "yield"
+   "yield",
+   "lvl_foundation"
   ]
  },
  {
   "type": "basic",
   "front": "A CLO holds loans with a 0.50% SOFR floor, and its liabilities have zero floors. Pool 400 at margin 3.50%, debt 360 at margin 1.60%, and next year's SOFR forward is a flat 0.20%. Compute the annual income from the floor and state what it does and does not hedge.",
-  "back": "Asset coupon with the floor: \\((\\max(0.20\\%, 0.50\\%) + 3.50\\%) \\times 400 = 16.00\\). Without the floor it would be \\((0.20\\% + 3.50\\%) \\times 400 = 14.80\\). The floor adds \\(1.20\\) a year.<br>\nLiability cost: \\((0.20\\% + 1.60\\%) \\times 360 = 6.48\\), since zero floors do not bind. The mismatch is a long-floorlet position for the equity, worth most when forwards are below the floor.<br>\nFloor income is an asset-side option paid exactly when rates fall. It does not hedge the liabilities, which keep their floating cost. Value the residual as a strip of floorlets, using forwards and a vol surface.<br>\n<b>Interviewer follow-up:</b> Why do managers accept this basis? The floor protects income in a rates-down scenario, which is the scenario where liability spreads and the loan's prepayment behaviour are most stressed. The basis is a deliberate exposure, to be measured, not a hedge gap to be ignored.",
+  "back": "Asset coupon with the floor: \\((\\max(0.20\\%, 0.50\\%) + 3.50\\%) \\times 400 = 16.00\\). Without the floor it would be \\((0.20\\% + 3.50\\%) \\times 400 = 14.80\\). The floor adds \\(1.20\\) a year.<br>\nLiability cost: \\((0.20\\% + 1.60\\%) \\times 360 = 6.48\\), since zero floors do not bind. The mismatch is a long-floorlet position for the equity, worth most when forwards are below the floor.<br>\nFloor income is an asset-side option paid exactly when rates fall. It does not hedge the liabilities, which keep their floating cost. Value the residual as a strip of floorlets, using forwards and a vol surface.<br>\n<b>Interviewer follow-up:</b> Why do managers accept this basis? The floor protects income in a rates-down scenario, which is the scenario where liability spreads and the loan's prepayment behaviour are most stressed. The basis is a deliberate exposure, to be measured, not a hedge gap to be ignored.<div class=\"fig\"><img src=\"07_converts_loans_19_floor_coupon_vs_sofr.png\"><div class=\"cap\">CLO loan coupon with the 0.50% floor vs unfloored and debt cost; the floor adds income when SOFR is low.</div></div>",
   "tags": [
    "loans",
    "floors",
    "clo",
    "basis",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "A 3-year loan is priced at 99 with a 350bp margin on quarterly SOFR resets, flat forward SOFR of 4.00%, and a 3-year convention life. Estimate the discount margin, and say why the shortcut of one point over three years (33bp) is not accurate.",
-  "back": "Use the annuity: \\(A = \\sum \\tau\\,DF_i \\approx 2.65\\) years at the solution, since each cash flow is discounted at about 7.9%. DM \\(\\approx 350 + 100/2.65 \\approx 350 + 37.7 = 388\\)bp. An exact solve gives 387.8bp.<br>\nWhy 33bp is wrong: the shortcut divides the discount by the life, which assumes no discounting. The annuity is shorter than the life, so the correct add-on is larger.<br>\nIf the loan trades above par, the discount becomes a premium and the convention life shortens to the earliest likely call date, which lowers the DM for the same price difference.<br>\n<b>Interviewer follow-up:</b> What changes if the forward curve is not flat? Use the forward curve and solve the same identity. The flat-curve answer is a shortcut only.",
+  "back": "Use the annuity: \\(A = \\sum \\tau\\,DF_i \\approx 2.65\\) years at the solution, since each cash flow is discounted at about 7.9%. DM \\(\\approx 350 + 100/2.65 \\approx 350 + 37.7 = 388\\)bp. An exact solve gives 387.8bp.<br>\nWhy 33bp is wrong: the shortcut divides the discount by the life, which assumes no discounting. The annuity is shorter than the life, so the correct add-on is larger.<br>\nIf the loan trades above par, the discount becomes a premium and the convention life shortens to the earliest likely call date, which lowers the DM for the same price difference.<br>\n<b>Interviewer follow-up:</b> What changes if the forward curve is not flat? Use the forward curve and solve the same identity. The flat-curve answer is a shortcut only.<div class=\"fig\"><img src=\"07_converts_loans_20_floater_price_vs_dm.png\"><div class=\"cap\">Floater price vs discount margin; price 99 solves to a DM of about 388bp.</div></div>",
   "tags": [
    "loans",
    "discount_margin",
    "convention",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -232,7 +253,8 @@
    "loans",
    "prepayment",
    "convexity",
-   "pricing"
+   "pricing",
+   "lvl_vp_core"
   ]
  },
  {
@@ -243,18 +265,20 @@
    "loans",
    "clo",
    "convention",
-   "libor_transition"
+   "libor_transition",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "Compare settlement conventions for par loan trades under LSTA (US) and LMA (Europe). What is delayed compensation, and why do consent-required trades settle slowly?",
-  "back": "LSTA: standard par settlement is T+7 business days (approx.). LMA: standard settlement is customarily longer, around T+10 (approx.; unverified, varies by trade type).<br>\nDelayed compensation: if settlement runs beyond the standard period, the party causing the delay pays the other a compensation accrual on the notional. It is a rate-based payment, not a fee, and the exact terms follow the trade documentation.<br>\nConsent-required trades settle slowly because the agent's consent, KYC and assignment documentation must be completed before the buyer is a lender of record.<br>\n<b>Interviewer follow-up:</b> Why does settlement timing matter for a distressed buyer? Delayed compensation and loss of voting rights during the restructuring can change the economics, and a buyer who settles late may miss a vote.",
+  "back": "LSTA: standard par settlement is T+7 business days. LMA: the settlement period is set by the LMA trading terms for the trade type and is not a single fixed number here; check the current LMA standard before quoting it.<br>\nDelayed compensation: if settlement runs beyond the standard period, the party causing the delay pays the other a compensation accrual on the notional. It is a rate-based payment, not a fee, and the exact terms follow the trade documentation.<br>\nConsent-required trades settle slowly because the agent's consent, KYC and assignment documentation must be completed before the buyer is a lender of record.<br>\n<b>Interviewer follow-up:</b> Why does settlement timing matter for a distressed buyer? Delayed compensation and loss of voting rights during the restructuring can change the economics, and a buyer who settles late may miss a vote.",
   "tags": [
    "loans",
    "settlement",
    "convention",
-   "distressed"
+   "distressed",
+   "lvl_vp_core"
   ]
  },
  {
@@ -265,7 +289,8 @@
    "loans",
    "covenants",
    "recovery",
-   "trade_off"
+   "trade_off",
+   "lvl_vp_core"
   ]
  },
  {
@@ -276,40 +301,44 @@
    "loans",
    "cds",
    "basis",
-   "credit"
+   "credit",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "A CLO holds 100 of par loans at SOFR + 350bp. It funds 90 of debt at SOFR + 160bp on average and pays 0.40 per year in fees. Ignoring defaults, assume SOFR is hedged. What is the levered equity spread on the 10 of equity?",
-  "back": "Asset spread income: \\(100 \\times 3.50\\% = 3.50\\).<br>\nDebt cost: \\(90 \\times 1.60\\% = 1.44\\).<br>\nFees: \\(0.40\\).<br>\nResidual to equity: \\(3.50 - 1.44 - 0.40 = 1.66\\).<br>\nEquity spread: \\(1.66 / 10 \\approx 16.6\\%\\) over SOFR, before defaults, losses, OID and reinvestment drag.<br>\n<b>Interviewer follow-up:</b> What is the main drag on this number? Credit losses. Equity is the first-loss tranche, so a modest default rate removes a large share of the spread, which is why the manager's selection and the OC tests matter.",
+  "back": "Asset spread income: \\(100 \\times 3.50\\% = 3.50\\).<br>\nDebt cost: \\(90 \\times 1.60\\% = 1.44\\).<br>\nFees: \\(0.40\\).<br>\nResidual to equity: \\(3.50 - 1.44 - 0.40 = 1.66\\).<br>\nEquity spread: \\(1.66 / 10 \\approx 16.6\\%\\) over SOFR, before defaults, losses, OID and reinvestment drag.<br>\n<b>Interviewer follow-up:</b> What is the main drag on this number? Credit losses. Equity is the first-loss tranche, so a modest default rate removes a large share of the spread, which is why the manager's selection and the OC tests matter.<div class=\"fig\"><img src=\"07_converts_loans_26_clo_equity_income_waterfall.png\"><div class=\"cap\">Income waterfall from assets to the 1.66 residual on 10 of equity.</div></div>",
   "tags": [
    "clo",
    "arbitrage",
    "mental_math",
-   "structure"
+   "structure",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "A CLO has performing collateral par of 400 and senior notes of 320. The OC trigger is 120%. Compute the OC ratio. If defaults reduce performing collateral by 20, what happens to the waterfall? State the IC test.",
-  "back": "OC ratio \\(= 400 / 320 = 125\\%\\), which passes the 120% trigger.<br>\nAfter the 20 of defaults, performing par is 380, so \\(380 / 320 = 118.75\\%\\), a fail.<br>\nEffect: excess interest is diverted from the junior waterfall to pay down senior notes until the ratio is restored. This raises senior protection and cuts equity cash flow now.<br>\nIC test: interest collections divided by interest due on the senior notes, against a deal-specific threshold. A fail diverts cash in the same way.<br>\n<b>Interviewer follow-up:</b> How are defaulted assets counted in the OC test? Usually they are excluded or valued at market or a recovery-type value, depending on the document. Check the definition before using the numbers.",
+  "back": "OC ratio \\(= 400 / 320 = 125\\%\\), which passes the 120% trigger.<br>\nAfter the 20 of defaults, performing par is 380, so \\(380 / 320 = 118.75\\%\\), a fail.<br>\nEffect: excess interest is diverted from the junior waterfall to pay down senior notes until the ratio is restored. This raises senior protection and cuts equity cash flow now.<br>\nIC test: interest collections divided by interest due on the senior notes, against a deal-specific threshold. A fail diverts cash in the same way.<br>\n<b>Interviewer follow-up:</b> How are defaulted assets counted in the OC test? Usually they are excluded or valued at market or a recovery-type value, depending on the document. Check the definition before using the numbers.<div class=\"fig\"><img src=\"07_converts_loans_27_oc_test_defaults.png\"><div class=\"cap\">Senior OC ratio before and after 20 of defaults against the 120% trigger.</div></div>",
   "tags": [
    "clo",
    "oc_test",
    "waterfall",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
-  "front": "A CLO pool is 40% in B2 (WARF factor 2,720), 40% in Ba3 (1,766) and 20% in Caa1 (4,770), using Moody's factor values (approx.; unverified against Moody's CLO methodology; check the deal's own table). Compute the WARF. If the 10% of Caa1 that is cut is moved to Ba3, what is the new WARF?",
-  "back": "WARF \\(= 0.4 \\times 2{,}720 + 0.4 \\times 1{,}766 + 0.2 \\times 4{,}770 = 1{,}088 + 706.4 + 954 = 2{,}748\\).<br>\nAfter the move: B2 40%, Ba3 50%, Caa1 10%. WARF \\(= 1{,}088 + 883 + 477 = 2{,}448\\), a fall of 300.<br>\nThe WARF is linear in rating factors, so the Caa1 cut reduces it by \\(0.10 \\times (4{,}770 - 1{,}766) = 300\\). A separate CCC bucket limit is tested on its own, so a WARF pass does not cure a CCC excess.<br>\n<b>Interviewer follow-up:</b> Why do managers still trade into CCC names? The WARF test allows a margin, and CCC exposure is paid for in spread. The binding constraint is usually the CCC bucket and the diversity score, not the average.",
+  "front": "A CLO pool is 40% in B2 (WARF factor 2,720), 40% in Ba1 (940) and 20% in Caa3 (8,070), using Moody's rating factors (the deal's own table governs). Compute the WARF. If 10% of the pool is cut from Caa3 and moved to Ba1, what is the new WARF?",
+  "back": "WARF \\(= 0.4 \\times 2{,}720 + 0.4 \\times 940 + 0.2 \\times 8{,}070 = 1{,}088 + 376 + 1{,}614 = 3{,}078\\).<br>\nAfter the move: B2 40%, Ba1 50%, Caa3 10%. WARF \\(= 1{,}088 + 470 + 807 = 2{,}365\\), a fall of 713.<br>\nThe WARF is linear in rating factors, so the Caa3 cut reduces it by \\(0.10 \\times (8{,}070 - 940) = 713\\). A separate CCC bucket limit is tested on its own, so a WARF pass does not cure a CCC excess.<br>\n<b>Interviewer follow-up:</b> Why do managers still trade into CCC names? The WARF test allows a margin, and CCC exposure is paid for in spread. The binding constraint is usually the CCC bucket and the diversity score, not the average.",
   "tags": [
    "clo",
    "rating",
    "warf",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -321,30 +350,33 @@
    "reinvestment",
    "equity",
    "reset",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "A CLO has a 500 pool, senior fees of 0.15% of the pool per year, and 50 of equity. Residual cash after all debt interest and senior fees, before the subordinated fee, is 6.50 in a year. The subordinated fee is 20% of equity distributions above a 10% annual hurdle on equity (illustrative). Compute both fees and say how this changes manager incentives.",
-  "back": "Senior fee: \\(0.15\\% \\times 500 = 0.75\\) a year, paid ahead of equity.<br>\nSubordinated fee: hurdle \\(= 10\\% \\times 50 = 5.00\\). Excess \\(= 6.50 - 5.00 = 1.50\\). Fee \\(= 20\\% \\times 1.50 = 0.30\\). Below the hurdle the fee is zero.<br>\nIncentive: the manager is paid a call-like share of equity cash above the hurdle and nothing below it. That rewards risk in the equity tail, since the downside is borne by equity and the upside is shared with the manager. Risk retention (5% approx., US and EU) limits this, but does not remove it.<br>\n<b>Interviewer follow-up:</b> Where do US and European structures differ on this? Terms differ in the fee hurdle, the CCC and trading limits, and the currency basis of floors, so the same headline spread can give a different equity outcome. Check the indenture, not the summary.",
+  "back": "Senior fee: \\(0.15\\% \\times 500 = 0.75\\) a year, paid ahead of equity.<br>\nSubordinated fee: hurdle \\(= 10\\% \\times 50 = 5.00\\). Excess \\(= 6.50 - 5.00 = 1.50\\). Fee \\(= 20\\% \\times 1.50 = 0.30\\). Below the hurdle the fee is zero.<br>\nIncentive: the manager is paid a call-like share of equity cash above the hurdle and nothing below it. That rewards risk in the equity tail, since the downside is borne by equity and the upside is shared with the manager. Risk retention (5% approx., US and EU) limits this, but does not remove it.<br>\n<b>Interviewer follow-up:</b> Where do US and European structures differ on this? Terms differ in the fee hurdle, the CCC and trading limits, and the currency basis of floors, so the same headline spread can give a different equity outcome. Check the indenture, not the summary.<div class=\"fig\"><img src=\"07_converts_loans_30_sub_fee_hurdle.png\"><div class=\"cap\">Subordinated fee is zero below the 5.00 hurdle and 20% of the excess above it.</div></div>",
   "tags": [
    "clo",
    "manager",
    "fees",
    "incentives",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
   "type": "basic",
   "front": "A bank pays the total return on a TLB (price change plus coupon) to a fund. The fund pays SOFR + 150bp on a 100 notional. Over one quarter the loan price rises from 98.00 to 98.50. The loan coupon is SOFR + 350bp with SOFR at 4.00%, accruing for 0.25 years. Ignore day counts and defaults. What is the fund's net P&L per 100 notional?",
-  "back": "Price change on 100 notional: \\(+0.50\\).<br>\nCoupon received: \\((4.00\\% + 3.50\\%) \\times 0.25 \\times 100 = 1.875\\).<br>\nFinancing paid: \\((4.00\\% + 1.50\\%) \\times 0.25 \\times 100 = 1.375\\).<br>\nNet P&L: \\(0.50 + 1.875 - 1.375 = 1.00\\) per quarter. Of this, 0.50 is carry (200bp spread over 0.25 years), and 0.50 is price return.<br>\n<b>Interviewer follow-up:</b> What does the fund bear beyond the price? Default: the TRS terminates, the bank pays recovery and the fund may owe the bank's losses on the funding leg. The fund also carries the bank's collateral and margin calls.",
+  "back": "Price change on 100 notional: \\(+0.50\\).<br>\nCoupon received: \\((4.00\\% + 3.50\\%) \\times 0.25 \\times 100 = 1.875\\).<br>\nFinancing paid: \\((4.00\\% + 1.50\\%) \\times 0.25 \\times 100 = 1.375\\).<br>\nNet P&L: \\(0.50 + 1.875 - 1.375 = 1.00\\) per quarter. Of this, 0.50 is carry (200bp spread over 0.25 years), and 0.50 is price return.<br>\n<b>Interviewer follow-up:</b> What does the fund bear beyond the price? Default: the TRS terminates, the bank pays recovery and the fund may owe the bank's losses on the funding leg. The fund also carries the bank's collateral and margin calls.<div class=\"fig\"><img src=\"07_converts_loans_31_trs_pnl_bridge.png\"><div class=\"cap\">TRS P&amp;L per quarter: price return, loan coupon and funding leg, net 1.00.</div></div>",
   "tags": [
    "trs",
    "loans",
    "funding",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  },
  {
@@ -355,7 +387,8 @@
    "distressed",
    "lme",
    "covenants",
-   "legal"
+   "legal",
+   "lvl_vp_core"
   ]
  },
  {
@@ -366,7 +399,8 @@
    "distressed",
    "chapter11",
    "priority",
-   "legal"
+   "legal",
+   "lvl_stretch"
   ]
  },
  {
@@ -377,7 +411,8 @@
    "distressed",
    "chapter11",
    "uk_restructuring",
-   "legal"
+   "legal",
+   "lvl_stretch"
   ]
  },
  {
@@ -388,7 +423,8 @@
    "distressed",
    "recovery",
    "waterfall",
-   "mental_math"
+   "mental_math",
+   "lvl_vp_core"
   ]
  }
 ]

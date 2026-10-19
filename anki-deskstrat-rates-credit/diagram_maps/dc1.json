@@ -1,0 +1,142 @@
+[
+ {
+  "file": "17_cpp_m1.json",
+  "index": 0,
+  "front_start": "Walk through what happens between <code>g++ main.cpp pricing",
+  "image": "17_cpp_m1_0_compile_link.png",
+  "caption": "Build pipeline: each .cpp becomes an object file, then the linker joins them into one native executable."
+ },
+ {
+  "file": "17_cpp_m1.json",
+  "index": 15,
+  "front_start": "A double has a {{c1::53}}-bit significand, so the spacing be",
+  "image": "17_cpp_m1_15_ieee_double.png",
+  "caption": "IEEE 754 binary64 layout of 1.0, and the gap to the next double, which doubles at each power of two."
+ },
+ {
+  "file": "17_cpp_m1.json",
+  "index": 18,
+  "front_start": "What does this print? Contrast it with what a Python name do",
+  "image": "17_cpp_m1_18_ref_vs_ptr.png",
+  "caption": "A reference is a second name for x; a pointer holds an address and can be re-pointed."
+ },
+ {
+  "file": "17_cpp_m1.json",
+  "index": 28,
+  "front_start": "What is wrong with this code? Run under AddressSanitizer, wh",
+  "image": "17_cpp_m1_28_vector_realloc.png",
+  "caption": "reserve(1) then push_back reallocates the buffer, leaving the reference pointing at freed memory."
+ },
+ {
+  "file": "17_cpp_m2.json",
+  "index": 5,
+  "front_start": "What does this program print, and in what order do the destr",
+  "image": "17_cpp_m2_5_lifetime_timeline.png",
+  "caption": "Construction order and destruction order of Position and its members, by program step."
+ },
+ {
+  "file": "17_cpp_m2.json",
+  "index": 22,
+  "front_start": "<b>[Chain: Virtual 2/3]</b> Context: the same instrument hie",
+  "image": "17_cpp_m2_22_object_sizes.png",
+  "caption": "Object layouts behind the four sizeof values: a vptr adds 8 bytes and padding rounds to 16."
+ },
+ {
+  "file": "17_cpp_m2.json",
+  "index": 24,
+  "front_start": "A class with at least one virtual function holds a hidden {{",
+  "image": "17_cpp_m2_24_vtable_vptr.png",
+  "caption": "Each Bond or Swap object holds one vptr; the vtable is one per class and shared by its objects."
+ },
+ {
+  "file": "17_cpp_m2.json",
+  "index": 25,
+  "front_start": "What is object slicing, and what does this program print for",
+  "image": "17_cpp_m2_25_slicing.png",
+  "caption": "Copying Derived into Base keeps only the Base part; a by-value parameter slices, a const reference does not."
+ },
+ {
+  "file": "17_cpp_m2.json",
+  "index": 31,
+  "front_start": "Design a payoff hierarchy for a Monte Carlo pricer: an abstr",
+  "image": "17_cpp_m2_31_payoff_hierarchy.png",
+  "caption": "Payoff interface with its implementations; Straddle is built from a call and a put by composition."
+ },
+ {
+  "file": "17_cpp_m3.json",
+  "index": 0,
+  "front_start": "Where does a local variable live compared with an object cre",
+  "image": "17_cpp_m3_0_stack_heap.png",
+  "caption": "Locals live in the stack frame and die at the closing brace; new objects live on the heap until delete."
+ },
+ {
+  "file": "17_cpp_m3.json",
+  "index": 6,
+  "front_start": "Fix the previous program. What does this version print, and ",
+  "image": "17_cpp_m3_6_unique_ptr_move.png",
+  "caption": "std::move transfers unique_ptr ownership: the source becomes null and the new owner holds the int."
+ },
+ {
+  "file": "17_cpp_m3.json",
+  "index": 9,
+  "front_start": "What does this program print? Explain the size of <code>shar",
+  "image": "17_cpp_m3_9_shared_control_block.png",
+  "caption": "A shared_ptr is two pointers; the control block holds the strong and weak counts and the deleter."
+ },
+ {
+  "file": "17_cpp_m3.json",
+  "index": 12,
+  "front_start": "<b>[Chain: SHARED 1/3]</b> Context: two <code>Node</code> ob",
+  "image": "17_cpp_m3_12_shared_cycle_leak.png",
+  "caption": "Two shared_ptrs that point at each other keep each other's count at 1, so neither destructor runs."
+ },
+ {
+  "file": "17_cpp_m3.json",
+  "index": 13,
+  "front_start": "<b>[Chain: SHARED 2/3]</b> Context: the same two-node struct",
+  "image": "17_cpp_m3_13_weak_back_edge.png",
+  "caption": "Making the back-edge weak lets each count reach 0 in turn, so both destructors run."
+ },
+ {
+  "file": "17_cpp_m3.json",
+  "index": 16,
+  "front_start": "What does <code>std::move</code> do at run time? Predict the",
+  "image": "17_cpp_m3_16_move_string.png",
+  "caption": "std::move hands the heap buffer to b; a is left valid but empty in this implementation."
+ },
+ {
+  "file": "17_cpp_m3.json",
+  "index": 20,
+  "front_start": "Predict the output of this program. Why does the vector copy",
+  "image": "17_cpp_m3_20_vector_move_copy.png",
+  "caption": "Vector growth moves elements only when the move constructor is noexcept; otherwise it copies them."
+ },
+ {
+  "file": "17_cpp_m4.json",
+  "index": 0,
+  "front_start": "What is a function template, and what does the compiler prod",
+  "image": "17_cpp_m4_0_template_instances.png",
+  "caption": "One function template gives two instantiations, maxof<int> and maxof<double>, chosen by the arguments."
+ },
+ {
+  "file": "17_cpp_m4.json",
+  "index": 2,
+  "front_start": "What does this print? State the deduction rule for each call",
+  "image": "17_cpp_m4_2_deduction.png",
+  "caption": "By-value deduction drops top-level const and makes arrays pointers; by-reference keeps const and the array type."
+ },
+ {
+  "file": "17_cpp_m4.json",
+  "index": 21,
+  "front_start": "Explain the CRTP (curiously recurring template pattern) in t",
+  "image": "17_cpp_m4_21_crtp_static.png",
+  "caption": "CRTP: the base forwards pv to Derived::pv_impl through a static_cast, bound at compile time."
+ },
+ {
+  "file": "17_cpp_m4.json",
+  "index": 22,
+  "front_start": "Trade-off: virtual functions against CRTP for pricing kernel",
+  "image": "17_cpp_m4_22_virtual_vs_crtp.png",
+  "caption": "Virtual dispatch loads a vptr and calls through a vtable; CRTP calls the derived function directly."
+ }
+]

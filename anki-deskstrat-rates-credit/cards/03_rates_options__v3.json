@@ -1,0 +1,247 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CHEYETTE 1/3]</b> Context: Cheyette (quasi-Gaussian) short rate \\(r_t=f(0,t)+x_t\\), with \\(dx_t=(y_t-\\lambda x_t)\\,dt+\\sigma\\,dW_t\\), \\(dy_t=(\\sigma^2-2\\lambda y_t)\\,dt\\), \\(x_0=y_0=0\\), and constant \\(\\sigma=1\\%\\), \\(\\lambda=3\\%\\).<br>\n<b>Question:</b> What is \\(y_t\\), and why does the model need it as a second state variable?",
+  "back": "<b>Answer:</b> \\(y_t\\) is the variance of \\(x_t\\): \\(y_t=\\sigma^2\\int_0^t e^{-2\\lambda(t-s)}ds=\\sigma^2\\frac{1-e^{-2\\lambda t}}{2\\lambda}\\).<br>\nCheck: for \\(dx=-\\lambda x\\,dt+\\sigma\\,dW\\) from \\(x_0=0\\), \\(\\mathrm{Var}(x_t)=\\sigma^2(1-e^{-2\\lambda t})/(2\\lambda)\\), the same closed form, and it solves the ODE \\(dy=(\\sigma^2-2\\lambda y)dt\\).<br>\nNumbers: at \\(t=5\\)y, \\(y_5=4.32\\times10^{-4}\\), so the standard deviation of \\(x_5\\) is \\(\\sqrt{y_5}\\approx 2.08\\%\\).<br>\nWhy the second state: the drift of \\(x\\) depends on \\(y\\), and \\(y\\) is a deterministic function of time given \\(\\sigma\\) and \\(\\lambda\\). The pair \\((x,y)\\) is therefore Markov. The bond price is then exponential-affine in \\(x\\) with a \\(y\\)-dependent convexity term (next card), and a Cheyette tree or 2-D PDE replaces a path-dependent calculation. The separable loading \\(\\sigma(t,T)=\\sigma e^{-\\lambda(T-t)}\\) in HJM is what produces this state.<br>\n<b>Interviewer follow-up:</b> What is the long-run value of \\(y\\)? \\(y_\\infty=\\sigma^2/(2\\lambda)\\), so \\(x\\) has a long-run standard deviation of about \\(4.08\\%\\) at these parameters.",
+  "tags": [
+   "chain_cheyette_xy",
+   "cheyette",
+   "quasi_gaussian",
+   "lvl_vp_core",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CHEYETTE 2/3]</b> Context: same model, \\(\\sigma=1\\%\\), \\(\\lambda=3\\%\\). At \\(t=5\\)y the state is \\(x_5=0.5\\%\\) and \\(y_5=4.32\\times10^{-4}\\). Flat \\(f(0,t)=3\\%\\), so \\(P(0,5)=e^{-0.15}\\) and \\(P(0,10)=e^{-0.30}\\).<br>\n<b>Question:</b> Write \\(P(5,10)\\) in terms of \\(x_5\\) and \\(y_5\\), evaluate it, and compare it with the value you get by dropping the \\(y\\)-term.",
+  "back": "<b>Answer:</b> \\(P(t,T)=\\dfrac{P(0,T)}{P(0,t)}\\exp\\!\\big(-G(t,T)\\,x_t-\\tfrac12G(t,T)^2\\,y_t\\big)\\), with \\(G(t,T)=\\dfrac{1-e^{-\\lambda(T-t)}}{\\lambda}\\).<br>\nNumbers: \\(G(5,10)=4.6431\\), \\(P(0,10)/P(0,5)=e^{-0.15}=0.86071\\). The exponent is \\(-4.6431\\times0.005-\\tfrac12(4.6431)^2\\times4.32\\times10^{-4}=-0.023215-0.004656=-0.027871\\). So \\(P(5,10)=0.86071\\,e^{-0.027871}=0.83705\\).<br>\nWithout the \\(y\\)-term: \\(0.86071\\,e^{-0.023215}=0.84096\\). The \\(y\\)-term moves the price by about \\(-0.0039\\), i.e. \\(-0.47\\%\\) relative.<br>\nCheck (different parameters, to test the formula): with \\(\\sigma=3\\%\\), \\(\\lambda=3\\%\\), \\(x_5=2\\%\\), \\(y_5=3.89\\times10^{-3}\\), I simulated 300k paths with 1000 Euler steps under the same SDEs. Monte Carlo gave \\(0.75215\\pm0.00025\\) against the formula's \\(0.75219\\). Without the \\(y\\)-term the value is \\(0.78438\\), so the term matters at that vol.<br>\n<b>Interviewer follow-up:</b> Which term does a model that uses only \\(x\\) get wrong, and by how much at \\(\\sigma=3\\%\\)? The whole \\(\\tfrac12G^2y\\) term, which is 0.042 in the exponent, or about 4.3% of the bond price (0.7844 against 0.7522).",
+  "tags": [
+   "chain_cheyette_xy",
+   "cheyette",
+   "bond_price",
+   "lvl_vp_core",
+   "derivation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CHEYETTE 3/3]</b> Context: with deterministic \\(\\sigma(t)\\), the Cheyette state \\(x\\) is Gaussian and swaption smiles are essentially flat in normal vol (no skew, up to small convexity). A desk wants to fit the swaption skew by letting the vol depend on the rate level, \\(\\sigma(t,x)\\).<br>\n<b>Question:</b> What does state-dependent \\(\\sigma(t,x)\\) buy, what does it cost in closed-form bond pricing, and how do you calibrate it so that you do not break the at-the-money fit?",
+  "back": "<b>Answer:</b> Making the vol depend on the state \\(x\\) gives a level-dependent vol and so a skew across strikes. Its sign and size follow from \\(\\partial_x\\sigma\\). The cost is the exponential-affine structure: \\(P(t,T)\\) is no longer \\(\\exp(-Gx-\\tfrac12G^2y)\\) and must come from a 2-D PDE or Monte Carlo.<br>\nCalibration: fix \\(\\sigma(t)\\) and \\(\\lambda\\) to the at-the-money vol term structure (the ATM matrix), then fit the state-dependence parameters to the skew of each expiry. Re-check the ATM fit after the skew calibration, since the two are coupled.<br>\nWhere it breaks: the parameters that generate skew also change the forward-rate vol and the backbone, so a skew fit at one expiry can shift the ATM vols at others. Test with a swaption matrix after every calibration step, not only at the end.<br>\n<b>Interviewer follow-up:</b> Why not use per-expiry SABR and skip Cheyette? Per-expiry SABR does not define one consistent term structure of \\(x\\) dynamics, so Bermudan and callable exercise values are not internally consistent. Cheyette gives one Markov model for all expiries and exercise dates.",
+  "tags": [
+   "chain_cheyette_xy",
+   "cheyette",
+   "smile",
+   "calibration",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: LMM SWAPVOL 1/3]</b> Context: a 1y-start swap paying annually at 2y and 3y. Forwards \\(F_1=F(1,2)=2.50\\%\\) and \\(F_2=F(2,3)=3.00\\%\\). Discount factors \\(P(0,1)=0.98\\), so \\(P(0,2)=0.95610\\) and \\(P(0,3)=0.92825\\). Lognormal vols \\(\\sigma_1=20\\%\\), \\(\\sigma_2=18\\%\\), \\(\\rho_{12}=0.9\\).<br>\n<b>Question:</b> Write the swap rate \\(S(t)\\) in terms of the forwards and annuity weights. Why is a swaption under an LMM not a Black formula on the forward rates, and where does the difficulty sit in \\(dS\\)?",
+  "back": "<b>Answer:</b> \\(S(t)=\\sum_i w_i(t)F_i(t)\\), with \\(w_i(t)=\\tau_iP(t,T_i)/A(t)\\) and \\(A(t)=\\sum_i\\tau_iP(t,T_i)\\). This is the same as \\(S=(P(t,T_0)-P(t,T_n))/A(t)\\).<br>\nUnder the annuity measure \\(\\mathbb{Q}^A\\), \\(S\\) is a martingale, so the payer swaption is Black on \\(S\\) with the swap vol. The LMM models each \\(F_i\\) as a martingale under its own forward measure, not under the annuity measure. Hence \\(dS=\\sum_i w_i\\,dF_i+\\sum_i F_i\\,dw_i+\\sum_i d\\langle w_i,F_i\\rangle\\). The first term is the forward-rate noise. The second, the weight drift \\(dw_i\\), is why \\(S\\) has no closed-form Black law in the LMM.<br>\nNumbers: \\(w_1=P(0,2)/A=0.50739\\), \\(w_2=0.49261\\), \\(A=1.88435\\), \\(S=\\sum w_iF_i=2.7463\\%\\). The swap rate is a weighted average of the two forwards, and the weights depend on the rates themselves.<br>\n<b>Interviewer follow-up:</b> Which part of \\(dS\\) causes the approximation error? The \\(\\sum F_i\\,dw_i\\) term. Its size grows with the annuity's sensitivity to rates, i.e. with tenor and with the vol level.",
+  "tags": [
+   "chain_lmm_swapvol",
+   "lmm",
+   "swaptions",
+   "annuity_measure",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: LMM SWAPVOL 2/3]</b> Context: the 1y-start, 2-period swap from the previous card (\\(S=2.7463\\%\\), \\(w=(0.50739,0.49261)\\), \\(F=(2.50\\%,3.00\\%)\\), \\(\\sigma=(20\\%,18\\%)\\), \\(\\rho_{12}=0.9\\)).<br>\n<b>Question:</b> Using Rebonato's approximation (weights frozen at \\(t=0\\)), what lognormal vol does the swap rate have, and how does it compare with the perfect-correlation value?",
+  "back": "<b>Answer:</b> Freezing \\(w_i(t)=w_i(0)\\) and using \\(dS\\approx\\sum_i w_i(0)F_i\\sigma_i\\,dZ_i\\) gives \\(\\sigma_S^2T\\approx\\dfrac{1}{S^2}\\sum_{i,j}w_iF_i\\sigma_i\\,w_jF_j\\sigma_j\\,\\rho_{ij}\\,T\\).<br>\nNumbers: the cross-term structure gives \\(\\sigma_S=18.44\\%\\) at \\(\\rho_{12}=0.9\\). At \\(\\rho_{12}=1\\) the formula collapses to the weighted average \\(\\sum_iw_iF_i\\sigma_i/S=18.92\\%\\), which is the upper bound for this pair.<br>\nSo the correlation moves the swap vol by \\(0.48\\) vol points between \\(\\rho=1\\) and \\(\\rho=0.9\\). Correlation is therefore a swaption-vol lever, not just a cap-vol lever.<br>\n<b>Interviewer follow-up:</b> Two parameter sets fit the same caplets. Why can they still differ on the swaption vol? The caplets pin the diagonal of the forward vols. The swaption vol depends on the off-diagonal correlations through the \\(\\rho_{ij}\\) sum above.",
+  "tags": [
+   "chain_lmm_swapvol",
+   "lmm",
+   "rebonato",
+   "correlation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: LMM SWAPVOL 3/3]</b> Context: the frozen-weight formula is used to set the correlation matrix of a 10y-tail LMM with 20% lognormal forward vols. The desk then prices a Bermudan on the same LMM.<br>\n<b>Question:</b> When is the frozen-weight error material, and what is the correct way to price the swaption and the Bermudan that does not rely on the approximation?",
+  "back": "<b>Answer:</b> The error is material when the annuity weights respond strongly to rates: long tenors, high vols, and large forward moves over the option's life. The first-order error is the \\(\\sum F_i\\,dw_i\\) term from the previous card.<br>\nFix: calibrate the correlation to swaption prices computed by Monte Carlo of the full LMM under the relevant measure, not by the frozen-weight formula. For the Bermudan, price on the same full-LMM simulation with a regression (LSM) exercise rule. The frozen-weight formula is a quick calibration seed, not the pricing model.<br>\nWhere it breaks: a correlation matrix calibrated to swaptions by the frozen formula can match the ATM swaption matrix and still misprice the Bermudan, because the Bermudan depends on the joint path of the forwards, not on one swap vol.<br>\n<b>Interviewer follow-up:</b> What would you check before trusting the Bermudan? Re-price the co-terminal European swaptions with the same simulation and confirm they match market vols within the bid-offer. A mismatch means the correlation or the rank reduction is wrong, not the Bermudan logic.",
+  "tags": [
+   "chain_lmm_swapvol",
+   "lmm",
+   "bermudan",
+   "calibration",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation (smile skew).</b> Hagan's leading-order normal SABR with \\(\\beta=0\\) is \\(\\sigma_N(K)=\\alpha\\,\\zeta/x(\\zeta)\\), where \\(\\zeta=\\tfrac{\\nu}{\\alpha}(F-K)\\) and \\(x(\\zeta)=\\ln\\dfrac{\\sqrt{1-2\\rho\\zeta+\\zeta^2}+\\zeta-\\rho}{1-\\rho}\\). Show that near the money \\(\\sigma_N(K)\\approx\\alpha-\\tfrac12\\rho\\nu(F-K)\\), and give the ATM normal skew \\(\\partial\\sigma_N/\\partial K\\) for \\(\\rho=-0.3\\), \\(\\nu=0.4\\).",
+  "back": "<b>Steps.</b><br>\n1. Expand the root: \\(\\sqrt{1-2\\rho\\zeta+\\zeta^2}=1-\\rho\\zeta+\\tfrac12(1-\\rho^2)\\zeta^2+O(\\zeta^3)\\).<br>\n2. The numerator becomes \\(1-\\rho\\zeta+\\tfrac12(1-\\rho^2)\\zeta^2+\\zeta-\\rho=(1-\\rho)\\big[1+\\zeta+\\tfrac12(1+\\rho)\\zeta^2\\big]\\).<br>\n3. Take the log: \\(x=\\ln\\big(1+u\\big)\\) with \\(u=\\zeta+\\tfrac12(1+\\rho)\\zeta^2\\). Then \\(x=u-\\tfrac12u^2+O(\\zeta^3)=\\zeta+\\tfrac12\\rho\\zeta^2+O(\\zeta^3)\\).<br>\n4. Hence \\(\\zeta/x=1/(1+\\tfrac12\\rho\\zeta)\\approx1-\\tfrac12\\rho\\zeta\\), and \\(\\sigma_N(K)\\approx\\alpha-\\tfrac12\\rho\\nu(F-K)\\).<br>\n5. The skew is \\(\\partial\\sigma_N/\\partial K=\\tfrac12\\rho\\nu\\). For \\(\\rho=-0.3\\), \\(\\nu=0.4\\): \\(-0.06\\), so the normal vol falls by 6bp per 100bp of strike.<br>\nNumerical check (\\(\\alpha=0.9\\%\\), \\(F=3\\%\\)): the exact leading-order formula gives \\(\\sigma_N(2.90\\%)=0.9063\\%\\), \\(\\sigma_N(3.10\\%)=0.8943\\%\\), and a numerical slope of \\(-0.0600\\), matching \\(\\tfrac12\\rho\\nu\\).<br>\nSanity: a negative \\(\\rho\\) gives vol falling in strike, the standard sign for negative correlation.<br>\n<b>Where it breaks:</b> the linear term holds only for \\(|\\zeta|\\) small, i.e. near the money and for small \\(\\nu\\). The curvature in \\(K\\) comes from \\(\\nu^2\\) terms that this expansion drops. The ATM level correction \\((2-3\\rho^2)\\nu^2T/24\\) is also a separate level shift and is not in the skew.<div class=\"fig\"><img src=\"03_rates_options__v3_6_smile_skew_linear.png\"><div class=\"cap\">Normal SABR skew at the money: vol falls 6bp per 100bp of strike (rho = -0.3, nu = 0.4).</div></div>",
+  "tags": [
+   "derivation",
+   "sabr",
+   "hagan",
+   "skew",
+   "smile_dynamics",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation (break-even move).</b> Use the Bachelier PDE \\(\\partial_tV+\\tfrac12\\sigma_N^2\\partial_{FF}V=0\\) (zero drift). Show that at the money \\(\\theta=-\\tfrac12\\sigma_N^2\\Gamma\\). Then find the one-day move \\(|\\Delta F|\\) at which a delta-hedged long ATM straddle's gamma P&L offsets one day of theta, for \\(\\sigma_N=100\\)bp and \\(\\Delta t=1/252\\).",
+  "back": "<b>Steps.</b><br>\n1. The PDE gives \\(\\partial_tV=-\\tfrac12\\sigma_N^2\\partial_{FF}V\\). Time decay is \\(\\theta=\\partial_tV\\) (per unit time), and \\(\\Gamma=\\partial_{FF}V\\), so \\(\\theta=-\\tfrac12\\sigma_N^2\\Gamma\\) at every point. The relation holds at the money without further approximation.<br>\n2. Delta-hedged daily P&amp;L over \\(\\Delta t\\): \\(\\Delta P\\approx\\tfrac12\\Gamma(\\Delta F)^2+\\theta\\Delta t=\\tfrac12\\Gamma\\big[(\\Delta F)^2-\\sigma_N^2\\Delta t\\big]\\).<br>\n3. Break-even: \\((\\Delta F)^2=\\sigma_N^2\\Delta t\\), so \\(|\\Delta F|=\\sigma_N\\sqrt{\\Delta t}\\).<br>\n4. Numbers: \\(\\sigma_N\\sqrt{1/252}=100\\text{bp}\\times0.0630=6.30\\)bp. The expected absolute move under a normal with that sd is \\(\\sqrt{2/\\pi}\\times6.30\\approx5.0\\)bp, so a long straddle is roughly break-even on an ordinary day.<br>\n<b>Where it breaks:</b> the break-even is per day in gamma terms only. Vanna and volga cross terms move it, a non-zero forward-measure drift changes \\(\\theta\\), and with a smile (vol depending on \\(F\\)) the PDE gets an extra term, so \\(\\theta\\neq-\\tfrac12\\sigma_N^2\\Gamma\\) there. In the pure Bachelier model the identity holds at every strike, not only at the money. Over a path, the test is \\(\\sum(\\Delta F)^2\\) against \\(\\sigma_N^2T\\), not one day's move.<div class=\"fig\"><img src=\"03_rates_options__v3_7_breakeven_move_pnl.png\"><div class=\"cap\">Delta-hedged straddle: daily gamma gain equals theta when the one-day move is sigma_N sqrt(dt), about 6.3bp.</div></div>",
+  "tags": [
+   "derivation",
+   "straddle",
+   "gamma_theta",
+   "normal_model",
+   "vol_trading",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation (variance from a swaption strip).</b> Under the annuity measure \\(\\mathbb{Q}^A\\), with \\(\\mathrm{Pay}(K)=E^A[(S-K)^+]\\) and \\(\\mathrm{Rec}(K)=E^A[(K-S)^+]\\), show that \\(\\mathrm{Var}^A(S)=2\\Big(\\int_F^\\infty\\mathrm{Pay}(K)\\,dK+\\int_0^F\\mathrm{Rec}(K)\\,dK\\Big)\\). Check it in the normal model with \\(F=3\\%\\), \\(\\sigma_N=1\\%\\), \\(T=1\\).",
+  "back": "<b>Steps.</b><br>\n1. Static replication with \\(g(S)=S^2\\), so \\(g''=2\\): \\(g(S)=g(F)+g'(F)(S-F)+\\int_F^\\infty g''(K)(S-K)^+dK+\\int_0^F g''(K)(K-S)^+dK\\).<br>\n2. Take \\(E^A\\). Since \\(S\\) is an \\(\\mathbb{Q}^A\\)-martingale, \\(E^A[S]=F\\), so \\(E^A[S^2]-F^2=\\mathrm{Var}^A(S)\\), and \\(\\mathrm{Var}^A(S)=2\\int_F^\\infty\\mathrm{Pay}+2\\int_0^F\\mathrm{Rec}\\).<br>\n3. Check: with \\(\\mathrm{Pay}(K)=(F-K)N(d)+\\sigma\\sqrt T\\varphi(d)\\), \\(d=(F-K)/(\\sigma\\sqrt T)\\), and the matching Receiver, the numerical integrals give \\(2(I_{\\rm pay}+I_{\\rm rec})=1.0000\\times10^{-4}\\), equal to \\(\\sigma_N^2T\\) to a relative error of about \\(10^{-9}\\).<br>\n<b>Where it breaks:</b> the identity needs prices at every strike. In practice the strip is truncated, and with a steep smile the wings carry much of the variance, so the truncation error can exceed the quoting error. Lognormal versions weight strikes by \\(1/K^2\\) and need \\(K>0\\).",
+  "tags": [
+   "derivation",
+   "static_replication",
+   "swaptions",
+   "cms",
+   "annuity_measure",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation (capped CMS, no lag).</b> A CMS cap pays \\(\\min(S,k)\\) on the swap rate \\(S\\) fixed at \\(T_f\\). Show that \\(E^A[\\min(S,k)]=F-E^A[(S-k)^+]\\), so the capped fixing equals the forward minus a payer swaption at strike \\(k\\), and state what the identity needs and where it fails once the payment is lagged.",
+  "back": "<b>Steps.</b><br>\n1. \\(\\min(S,k)=S-(S-k)^+\\), an exact identity.<br>\n2. \\(E^A[S]=F\\) because \\(S\\) is an \\(\\mathbb{Q}^A\\)-martingale.<br>\n3. So \\(E^A[\\min(S,k)]=F-E^A[(S-k)^+]\\). Multiplying by the annuity \\(A(0)\\) gives the value of the capped leg as the forward value minus the payer swaption at \\(k\\).<br>\nNumbers: the \\(\\mathrm{Pay}(k)\\) term is the payer swaption price per unit of annuity, computed with the smile vol at strike \\(k\\), not with ATM vol.<br>\n<b>Where it breaks:</b> the identity is exact on the annuity measure, which is the measure of the swap's own fixing structure. A coupon paid at a later date \\(T_p>T_f\\) is valued on the \\(T_p\\) forward measure, where \\(E^{T_p}[S]\\neq F\\). That gap is the CMS convexity adjustment, and this card does not include it.<br>\n<b>Interviewer follow-up:</b> Why does the strike of the payer matter for a capped CMS? Because \\(\\mathrm{Pay}(k)\\) is priced on the smile at \\(k\\). Using the ATM vol for every strike misprices the cap by the skew.<div class=\"fig\"><img src=\"03_rates_options__v3_9_capped_cms_identity.png\"><div class=\"cap\">Capped CMS fixing min(S,k) equals S minus the payoff of a payer struck at k.</div></div>",
+  "tags": [
+   "derivation",
+   "cms",
+   "static_replication",
+   "smile",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation (ATM alpha from the ATM vol).</b> For a normal SABR with \\(\\beta=0\\), use the first-order ATM expansion \\(\\sigma_N^{\\rm ATM}=\\alpha\\big[1+\\tfrac{(2-3\\rho^2)\\nu^2}{24}T\\big]\\) (approx.; first order in \\(T\\)). Solve for \\(\\alpha\\) given the quoted ATM normal vol, and evaluate for \\(\\rho=-0.3\\), \\(\\nu=0.4\\), \\(T=1\\)y, \\(\\sigma_N^{\\rm ATM}=100\\)bp.",
+  "back": "<b>Steps.</b><br>\n1. Write \\(c=(2-3\\rho^2)\\nu^2/24\\). Then \\(\\alpha=\\sigma_N^{\\rm ATM}/(1+cT)\\).<br>\n2. Numbers: \\(\\rho^2=0.09\\), so \\(2-3\\rho^2=1.73\\), \\(\\nu^2=0.16\\), and \\(c=1.73\\times0.16/24=0.011533\\). For \\(T=1\\): \\(\\alpha=100/1.011533=98.86\\)bp.<br>\n3. Check: \\(98.86\\times1.011533=99.99\\)bp.<br>\n4. Note that for \\(\\beta=0\\) the \\(\\rho\\) sign enters only through \\(\\rho^2\\) at ATM, because the \\(\\rho\\beta\\) term vanishes. The ATM level does not depend on whether the skew slopes up or down.<br>\n<b>Where it breaks:</b> the correction is first order in \\(T\\). At \\(T=10\\)y with \\(\\nu=0.4\\), \\(cT\\approx0.115\\), so the first-order inversion gives \\(\\alpha\\approx89.7\\)bp and the higher-order terms are not negligible. Long-dated ATM alphas should come from the full formula, not this shortcut. The wings do not depend on this step at all; they need the full \\(\\zeta/x(\\zeta)\\) form.<br>\n<b>Interviewer follow-up:</b> What is \\(\\alpha\\) doing in the wings? It sets the overall level, while \\(\\nu\\) and \\(\\rho\\) set the curvature and the skew.",
+  "tags": [
+   "derivation",
+   "sabr",
+   "normal_model",
+   "calibration",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation (SABR ATM backbone).</b> Start from the leading-order lognormal ATM SABR vol, \\(\\sigma_B(F,F)=\\alpha\\,F^{\\beta-1}\\,[1+O(T)]\\). Show that the ATM normal vol is \\(\\sigma_N(F,F)=\\alpha F^{\\beta}[1+O(T)]\\). For \\(\\beta=0.5\\) and a forward move from 3.00% to 2.00% with \\(\\alpha\\) fixed, compute the change in both ATM vols.",
+  "back": "<b>Steps.</b><br>\n1. The lognormal ATM vol is \\(\\alpha F^{\\beta-1}\\). The backbone exponent is \\(\\partial\\ln\\sigma_B/\\partial\\ln F=\\beta-1\\).<br>\n2. The normal ATM vol is \\(\\sigma_N=F\\,\\sigma_B=\\alpha F^\\beta\\). The normal backbone exponent is \\(\\beta\\).<br>\n3. Numbers for \\(\\beta=0.5\\): \\((2/3)^{-1/2}=1.2247\\), so the lognormal ATM vol rises by 22.5%. \\((2/3)^{1/2}=0.8165\\), so the normal ATM vol falls by 18.4%. The two are consistent because \\(\\sigma_N=F\\sigma_B\\): \\(1.2247\\times2/3=0.8165\\).<br>\n4. The model's delta picks up a vega times the backbone slope: \\(\\partial_F\\sigma_B=(\\beta-1)\\sigma_B/F\\). With \\(\\beta=0.5\\) the lognormal backbone is \\(-\\tfrac12\\sigma_B/F\\) per unit forward.<br>\n<b>Where it breaks:</b> the expansion is at the money and first order in \\(T\\). Away from the money the smile moves with \\(\\nu\\) and \\(\\rho\\) too, so the backbone is only the ATM part of the sticky-delta adjustment. \\(\\beta\\) is also not identified from one expiry; it has to come from how the ATM vol moves with the forward across dates.",
+  "tags": [
+   "derivation",
+   "sabr",
+   "backbone",
+   "smile_dynamics",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study (Cheyette convexity term against horizon).</b> Cheyette with \\(\\sigma=1\\%\\), \\(\\lambda=3\\%\\). Take a 5y bond \\(P(t,t+5)\\) with \\(G=G(t,t+5)=4.6431\\), for \\(t=1\\)y, \\(5\\)y and \\(20\\)y. For each, compute \\(y_t\\), the convexity term \\(\\tfrac12G^2y_t\\), and the change in price from dropping it.",
+  "back": "<b>Steps.</b><br>\n1. \\(y_t=\\sigma^2(1-e^{-2\\lambda t})/(2\\lambda)\\): \\(y_1=9.71\\times10^{-5}\\) (sd of \\(x\\) about 0.99%); \\(y_5=4.32\\times10^{-4}\\) (sd 2.08%); \\(y_{20}=1.165\\times10^{-3}\\) (sd 3.41%).<br>\n2. \\(\\tfrac12G^2y_t\\): \\(0.00105\\), \\(0.00466\\), \\(0.01255\\).<br>\n3. Price effect of the term, \\(e^{-\\frac12G^2y_t}-1\\): \\(-0.10\\%\\), \\(-0.46\\%\\), \\(-1.25\\%\\) of the no-\\(y\\) price.<br>\n4. Sanity: \\(y\\) saturates at \\(\\sigma^2/(2\\lambda)=1.667\\times10^{-3}\\), so the term saturates at \\(\\tfrac12(4.6431)^2\\times1.667\\times10^{-3}=0.0180\\). The \\(t=20\\) value (0.0126) is below the limit, as it should be.<br>\nInterpretation: at constant \\(\\sigma,\\lambda\\) this is the same convexity term that appears in the Hull-White 1F bond formula. Cheyette and HW agree on bond prices in that case, and they differ in smile and in the state-dependent extensions.<br>\n<b>Interviewer follow-up:</b> At what horizon does the term reach 1% of the bond price? At about \\(t\\approx13.7\\)y for these parameters (where \\(1-e^{-0.06t}=0.559\\)), so it is a long-dated issue for a 5y tenor bond.<div class=\"fig\"><img src=\"03_rates_options__v3_12_cheyette_convexity_horizon.png\"><div class=\"cap\">Cheyette convexity term rises with horizon and saturates near 1.80% of price for a 5y bond.</div></div>",
+  "tags": [
+   "case_study",
+   "cheyette",
+   "bond_price",
+   "convexity",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study (ATM straddle decomposition).</b> Long 1y\\(\\times\\)10y ATM straddle, normal vol 100bp, forward = strike = 3.00%, notional 100mm, annuity \\(A=8.2818\\) (10y tail, flat 3%). Instantly the forward falls 30bp to 2.70% and the normal vol rises 3bp to 1.03%. Give the premium, the gamma and vega P&amp;L in cash, and the exact revaluation with the residual.",
+  "back": "<b>Steps.</b><br>\n1. Premium: the straddle is \\(\\text{Pay}+\\text{Rec}=2\\sigma\\sqrt T\\varphi(0)=0.7979\\%\\) per unit annuity. Cash premium is \\(100\\text{mm}\\times8.2818\\times0.7979\\%=6.61\\)mm, about 6.6% of notional.<br>\n2. Greeks per unit annuity at the money: \\(\\Delta=0\\), \\(\\Gamma=2\\varphi(0)/(\\sigma\\sqrt T)=79.79\\), vega \\(=2\\sqrt T\\varphi(0)=0.7979\\) per unit \\(\\sigma\\). Check: \\(\\Gamma/\\text{vega}=1/(\\sigma T)=100\\).<br>\n3. Gamma P&amp;L: \\(\\tfrac12\\Gamma(\\Delta F)^2=\\tfrac12(79.79)(0.0030)^2=3.59\\times10^{-4}\\), i.e. \\(+0.297\\)mm.<br>\n4. Vega P&amp;L: \\(0.7979\\times0.0003=2.39\\times10^{-4}\\), i.e. \\(+0.198\\)mm.<br>\n5. Sum of the two Taylor terms: \\(+0.495\\)mm. Exact revaluation at 2.70% and 1.03%: \\(\\Delta V=5.855\\times10^{-4}\\), i.e. \\(+0.485\\)mm. The residual is \\(-0.010\\)mm (about \\(-2\\%\\) of the scenario P&amp;L), from the vanna cross term and third-order effects. The straddle delta is now about \\(-0.23\\), since \\(d=-0.29\\).<br>\nSanity: the scenario adds about 7% to the premium. The gamma and vega shares are positive for a long position and the residual is small, so the decomposition is sound.<br>\n<b>Interviewer follow-up:</b> Why is delta zero at entry but not after the move? The straddle delta is \\(2N(d)-1\\), which is zero only at the money. A 30bp move takes \\(d\\) to \\(-0.29\\).<div class=\"fig\"><img src=\"03_rates_options__v3_13_straddle_pnl_vs_move.png\"><div class=\"cap\">100mm 1y x 10y ATM straddle: exact P&amp;L vs forward move; the marked point adds a 3bp vol rise.</div></div>",
+  "tags": [
+   "case_study",
+   "straddle",
+   "gamma",
+   "vega",
+   "normal_model",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study (smile-adjusted delta on a payer).</b> Long 1y\\(\\times\\)10y payer, notional 100mm, strike = forward = 3.00%, ATM normal vol 100bp, annuity \\(A=8.2818\\). The smile at this expiry has \\(\\partial\\sigma_N/\\partial K=-0.06\\). Compare the sticky-strike and sticky-delta delta in DV01 per bp, and the P&amp;L of a 30bp fall in the forward under each smile dynamic.",
+  "back": "<b>Steps.</b><br>\n1. \\(d=0\\), so \\(N(d)=0.5\\) and \\(\\varphi(0)=0.3989\\). Vega per unit \\(\\sigma\\) is \\(A\\sqrt T\\varphi(0)=3.3039\\).<br>\n2. Sticky strike (\\(\\sigma\\) fixed at each \\(K\\)): \\(\\partial\\sigma/\\partial F=0\\), delta \\(=A\\cdot0.5=4.1409\\) per unit notional. DV01 = \\(100\\text{mm}\\times4.1409\\times10^{-4}\\approx\\) 41,409 per bp.<br>\n3. Sticky delta (vol a function of \\(K-F\\)): \\(\\partial\\sigma/\\partial F=-\\partial\\sigma/\\partial K=+0.06\\). Delta \\(=A[0.5+0.3989\\times0.06]=A\\times0.5239\\), so DV01 \\(\\approx\\) 43,391 per bp.<br>\n4. Add-on: \\(43{,}391-41{,}409=1{,}982\\) per bp, which is \\(33{,}039\\times0.06\\), i.e. cash vega per bp of vol times the vol change per bp of forward.<br>\n5. A 30bp fall in the forward: under sticky delta the vol moves by \\(0.06\\times(-30\\text{bp})=-1.8\\)bp, so the long payer loses \\(33{,}039\\times1.8\\approx 59{,}500\\). Under sticky strike the vol does not move, so the vega P&amp;L is zero. The add-on times 30bp gives the same 59,500.<br>\nSanity: the add-on is about 5% of the base DV01, and it is driven entirely by the skew and vega.<br>\n<b>Interviewer follow-up:</b> Which delta do you hedge with? The smile-consistent one, if the market trades the smile as sticky delta. Otherwise the hedge leaves a vega-driven P&amp;L exposure of about 60k per 30bp.",
+  "tags": [
+   "case_study",
+   "smile_dynamics",
+   "sticky_delta",
+   "sticky_strike",
+   "vega",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study (capped CMS, flat vol against skew).</b> A 1y-fixing CMS cap on the 10y swap rate, strike 4.00%, notional 100mm, paid at the fixing (no lag, annuity measure). Forward 3.00%, annuity \\(A=8.2818\\), 1y\\(\\times\\)10y normal vol 100bp. Value the cap with the replication from the previous derivation, first with a flat smile, then with \\(\\partial\\sigma/\\partial K=-0.06\\) (linear, \\(\\sigma(4\\%)=0.94\\%\\)).",
+  "back": "<b>Steps.</b><br>\n1. \\(E^A[\\min(S,4\\%)]=3.00\\%-\\mathrm{Pay}(4\\%)\\). Payer at 4%, flat vol: \\(d=(3\\%-4\\%)/1\\%=-1\\), \\(\\mathrm{Pay}=-0.01\\,N(-1)+0.01\\,\\varphi(-1)=-0.001587+0.002420=0.000833\\), i.e. 8.33bp per unit annuity.<br>\n2. Cash payer value: \\(100\\text{mm}\\times8.2818\\times0.000833=0.690\\)mm. The capped leg is \\(N\\,A\\,F-0.690\\text{mm}=24.845-0.690\\)mm.<br>\n3. With the skew, the payer at 4% uses \\(\\sigma(4\\%)=0.94\\%\\): \\(d=-1.0638\\), \\(\\mathrm{Pay}=0.000693\\), i.e. 6.93bp. Cash payer value \\(0.574\\)mm, which is 0.116mm less than flat.<br>\nSanity: a higher strike sits in the lower-vol region of a negatively sloped smile, so the payer that the cap is short is worth less. The cap is worth more with the skew than with flat vol.<br>\n<b>Interviewer follow-up:</b> Why does the desk not just use the ATM vol for every strike? It misprices the cap by about 0.12mm here, roughly 17% of the payer leg, and that is the whole skew effect on the cap.<div class=\"fig\"><img src=\"03_rates_options__v3_15_capped_cms_skew.png\"><div class=\"cap\">Capped CMS (strike 4%): a negative skew lowers the value of the payer the cap is short.</div></div>",
+  "tags": [
+   "case_study",
+   "cms",
+   "smile",
+   "static_replication",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In the Rebonato approximation for an LMM swap rate, the annuity weights are frozen at {{c1::\\(w_i(0)=\\tau_iP(0,T_i)/A(0)\\)}}, so the swap vol uses only the forward vols and correlations.",
+  "back": "Frozen weights remove the \\(\\sum_iF_i\\,dw_i\\) and covariation terms from \\(dS=\\sum_iw_i\\,dF_i+\\sum_iF_i\\,dw_i+\\sum_i d\\langle w_i,F_i\\rangle\\). This is the source of the approximation error discussed in the LMM chain.",
+  "tags": [
+   "lmm",
+   "rebonato",
+   "swaptions",
+   "annuity_measure",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Mental math: for a normal vol of 80bp, one standard deviation of a one-day move is about {{c1::5.0bp}}, since \\(0.0080\\times\\sqrt{1/252}=0.000504\\).",
+  "back": "This is the one-day break-even move for a delta-hedged ATM straddle (\\(\\sigma\\sqrt{\\Delta t}\\)). The one-day expected absolute move is about \\(\\sqrt{2/\\pi}\\) times this, about 4.0bp.",
+  "tags": [
+   "mental_math",
+   "straddle",
+   "normal_model",
+   "vol_trading",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For a capped fixing \\(g(S)=\\min(S,k)\\), the second derivative \\(g''(K)\\) is a {{c1::negative Dirac delta at \\(k\\), \\(-\\delta_k\\)}}, so static replication needs one payer swaption at strike \\(k\\) rather than a continuum.",
+  "back": "Because \\(g'(S)=\\mathbf 1\\{S&lt;k\\}\\), its derivative is \\(-\\delta_k\\). This is the reason a capped CMS has no wing term from the strikes above \\(k\\).",
+  "tags": [
+   "static_replication",
+   "cms",
+   "derivation",
+   "smile",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In the Cheyette model with \\(x_0=0\\), the state \\(y_t\\) converges to {{c1::\\(\\sigma^2/(2\\lambda)\\)}} as \\(t\\to\\infty\\), so the long-run standard deviation of \\(x\\) is \\(\\sigma/\\sqrt{2\\lambda}\\).",
+  "back": "Closed form: \\(y_t=\\sigma^2(1-e^{-2\\lambda t})/(2\\lambda)\\). At \\(\\sigma=1\\%\\), \\(\\lambda=3\\%\\), the limit is \\(1.667\\times10^{-3}\\), and \\(\\sqrt{y_\\infty}=4.08\\%\\).",
+  "tags": [
+   "cheyette",
+   "mean_reversion",
+   "bond_price",
+   "derivation",
+   "lvl_stretch"
+  ]
+ }
+]

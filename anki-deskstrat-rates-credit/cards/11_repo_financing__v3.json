@@ -1,0 +1,310 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: TRIPARTY 1/4]</b> A dealer borrows £200m of cash against a basket of gilts and investment-grade corporate bonds through a tri-party repo. Who holds the collateral, who allocates it, and where does the intraday credit come from?",
+  "back": "Headline: the tri-party agent holds the collateral on behalf of both sides, allocates it against each side's eligibility and haircut schedule, and settles the cash leg. The lender takes a claim against the agent's collateral pool; the dealer is the cash borrower.<br>\nMechanics: the agent runs an allocation at the start of the day (after the morning unwind) and re-optimises during the day. Between the unwind and the re-allocation the dealer does not yet have its full collateral allocation, so the agent funds the gap.<br>\nIntraday credit: the agent is exposed to the dealer for whatever cash it has advanced that is not yet covered by allocated collateral at the haircut.<br>\n<i>Interviewer follow-up:</i> why does the cash lender not carry this exposure directly? Because the lender's cash is held against the agent's allocation rules, and the agent carries the timing gap, which is why the agent sets intraday limits and the rules on collateral eligibility matter.<div class=\"fig\"><img src=\"11_repo_financing__v3_0_triparty_flows.png\"><div class=\"cap\">Tri-party repo flows: cash via the agent to the dealer, collateral to the lender's pool claim.</div></div>",
+  "tags": [
+   "triparty",
+   "repo",
+   "mechanics",
+   "chain_triparty",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: TRIPARTY 2/4]</b> Same £200m tri-party book, collateral haircut 2%. The morning unwind releases the collateral before the afternoon re-allocation. Before any margin call, what is the agent's uncovered exposure to the dealer after a 3% fall in the gilt prices?",
+  "back": "Headline: about £6.0m uncovered.<br>\nInitial collateral market value: \\(MV_0=\\dfrac{200}{1-0.02}=£204.08\\text{m}\\).<br>\nAfter a 3% fall: \\(MV_1=204.08\\times0.97=£197.96\\text{m}\\).<br>\nHaircut-adjusted value: \\(0.98\\times197.96=£194.00\\text{m}\\).<br>\nExposure: \\(200-194.00=£6.00\\text{m}\\), before any intraday margining.<br>\nThe shortfall is a function of the haircut and the price move together: with no haircut the agent would be exposed to the full price move on £200m, which is why haircuts exist.<br>\n<i>Interviewer follow-up:</i> what stops the agent being left with a £6m gap in practice? Intraday margin calls, the agent's own intraday limits, and the agreed substitution and eligibility rules.<div class=\"fig\"><img src=\"11_repo_financing__v3_1_uncovered_exposure.png\"><div class=\"cap\">Uncovered exposure after a 3% gilt fall: GBP 194.00m haircut-adjusted vs GBP 200m cash.</div></div>",
+  "tags": [
+   "triparty",
+   "repo",
+   "numbers",
+   "chain_triparty",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: TRIPARTY 3/4]</b> A dealer needs £150m of cash. It can post gilts (haircut 2%, repo 4.00%) or investment-grade corporates (haircut 8%, repo 4.50%). The unsecured funding rate for the haircut shortfall is 5.00%. Which collateral is cheaper per year, and by how much?",
+  "back": "Headline: the gilt collateral is cheaper by about £1.25m a year.<br>\nModel: cost of a repo = cash borrowed at the repo rate, plus the haircut amount funded unsecured at 5.00%.<br>\nGilts: collateral \\(=150/0.98=£153.06\\text{m}\\), haircut \\(=£3.06\\text{m}\\). Cost \\(=150\\times0.040+3.06\\times0.050=£6.153\\text{m}\\) a year.<br>\nCorporates: collateral \\(=150/0.92=£163.04\\text{m}\\), haircut \\(=£13.04\\text{m}\\). Cost \\(=150\\times0.045+13.04\\times0.050=£7.402\\text{m}\\) a year.<br>\nDifference: \\(7.402-6.153=£1.25\\text{m}\\) a year.<br>\n<i>Interviewer follow-up:</i> what does this say about collateral transformation? A swap that delivers gilts for corporates is worth doing only if its fee is below about £1.25m a year on this book, before the operational cost.",
+  "tags": [
+   "triparty",
+   "repo",
+   "collateral_transformation",
+   "case_study",
+   "chain_triparty",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: TRIPARTY 4/4]</b> Starting from the tri-party book in card 1, where does the structure break, and which features of the agent's intraday credit make a stress more dangerous than a single counterparty default?",
+  "back": "Headline: the agent's intraday credit becomes unsecured if the collateral is not allocated, or if its value falls faster than the haircut covers.<br>\nBreak points: (1) the agent's intraday exposure is concentrated in a few agents, so an operational outage stops collateral moves for all clients at once; (2) collateral pools are concentrated in a few issuers, so the same stress hits both sides of many trades; (3) corporate collateral has haircut cliffs in stress, so the haircut that was adequate on the day can be inadequate the next morning.<br>\nIndustry reform since 2010 has cut the daily unwind and the intraday reliance on the agent, so the stress case is an operational or a liquidity one, not a routine funding one.<br>\n<i>Interviewer follow-up:</i> what would you check first in a stress? The agent's allocation status for the largest counterparty, the haircut on each collateral line, and the settlement fails.",
+  "tags": [
+   "triparty",
+   "repo",
+   "risk",
+   "chain_triparty",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SPONSORED 1/3]</b> A pension fund that is not a clearing member wants to borrow £100m of cash against gilts through a central counterparty (CCP). Who is the CCP's member for the trade, and who guarantees the fund's obligations to the CCP?",
+  "back": "Headline: in the sponsored-principal model, a clearing member (the sponsor) is the CCP's counterparty for the fund's position, and the sponsor guarantees the fund's obligations to the CCP.<br>\nMechanics: the fund has a contractual arrangement with the sponsor. The sponsor posts initial and variation margin to the CCP for the fund's position, and the fund posts margin to the sponsor. The CCP sees the sponsor's account, not the fund.<br>\nBenefit: the fund gets access to central clearing (and the balance-sheet treatment that goes with it) without becoming a member.<br>\n<i>Interviewer follow-up:</i> what does the fund owe the CCP directly? In a sponsored model the fund's obligations run through the sponsor, so the CCP's claim is on the sponsor, not the fund.",
+  "tags": [
+   "sponsored_repo",
+   "ccp",
+   "clearing",
+   "repo",
+   "chain_sponsored",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SPONSORED 2/3]</b> A sponsor clears for four clients. Its cleared repo book is £800m of reverse repo (cash lent) and £500m of repo (cash borrowed), all eligible for netting at the CCP. Compute the gross and net positions and the percentage reduction in the CCP's netted notional.",
+  "back": "Headline: netting reduces the notional base from £1,300m to £300m, a reduction of about 77%.<br>\nGross: \\(800+500=£1{,}300\\text{m}\\).<br>\nNet: \\(|800-500|=£300\\text{m}\\).<br>\nReduction: \\(1-\\dfrac{300}{1300}=76.9\\%\\).<br>\nCaveat: the margin the CCP requires depends on the portfolio risk of the net positions, not on notional, so the margin saving is a different number from the notional reduction. The notional number is a sanity check, not the margin answer.<br>\n<i>Interviewer follow-up:</i> why is notional netting not the same as margin netting? Because initial margin is set on the risk of the offsetting positions, which depends on their maturities and collateral, not on their face values.",
+  "tags": [
+   "sponsored_repo",
+   "ccp",
+   "netting",
+   "numbers",
+   "chain_sponsored",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SPONSORED 3/3]</b> A sponsor is downgraded and the fund's cleared repo positions are still open. Describe the port to another clearing member, the collateral at risk during the port, and how segregation changes that risk.",
+  "back": "Headline: the fund's positions are moved (ported) to another clearing member, and during the port the fund's collateral sits in the sponsor's account at the CCP.<br>\nPort: the CCP and the fund's new member transfer the positions and the margin; the timeline depends on the CCP's rules, and the positions stay open during the move.<br>\nSegregation: under individual segregation the fund's collateral is held in a separate account, so it can be identified and ported; under omnibus segregation the collateral is pooled across clients, so the fund's share has to be reconstructed in the default process, which takes longer and carries more risk.<br>\nWhere it breaks: the sponsor's default, combined with omnibus segregation and a slow port, leaves the fund's margin exposed for longer than the fund's own model assumes.<br>\n<i>Interviewer follow-up:</i> what question should a fund ask its sponsor before clearing through it? Which segregation model applies, and what is the port timeline in a default.",
+  "tags": [
+   "sponsored_repo",
+   "ccp",
+   "default",
+   "risk",
+   "chain_sponsored",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: LEV 1/3]</b> A dealer holds £10.0bn of reverse repos and £9.6bn of repos with the same counterparty, settling the same day, under one legally enforceable master netting agreement. Assume the netted cash exposure in the set is £0.4bn before collateral and any regulatory add-on. How does the netting change the leverage exposure measure?",
+  "back": "Headline: the netted exposure is £0.4bn, against a gross of £19.6bn (£10.0bn plus £9.6bn), but only if the netting conditions are met.<br>\nConditions: a single counterparty, a legally enforceable master netting agreement that holds in the relevant insolvency jurisdictions, and a netting set that is recognised for the leverage calculation.<br>\nComputation: exposure in the set \\(=\\max\\big(0,\\sum_i(E_i-C_i)\\big)\\), with the collateral haircut applied and the regulatory add-on added on top. The £0.4bn is the cash net of the two legs before collateral and add-ons, so it is a simplified figure, not a leverage answer.<br>\n<i>Interviewer follow-up:</i> why is the add-on not netted? Because the add-on is meant to capture the potential future exposure, which is not reduced by offsetting trades in the same way as the current exposure.",
+  "tags": [
+   "leverage",
+   "netting",
+   "sft",
+   "chain_leverage_netting",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: LEV 2/3]</b> A dealer has Tier 1 capital of £2.0bn and £50.0bn of other leverage exposure (excluding SFTs). Compare the leverage ratio using the gross SFT exposure of £19.6bn with the netted exposure of £0.4bn from card 1. Ignore add-ons. Which result would matter for a 3.25% minimum?",
+  "back": "Headline: the ratio is 2.87% gross and 3.97% netted, so the netting decides whether the dealer clears a 3.25% minimum.<br>\nGross: \\(\\dfrac{2.0}{50.0+19.6}=2.87\\%\\).<br>\nNetted: \\(\\dfrac{2.0}{50.0+0.4}=3.97\\%\\).<br>\nSo the same Tier 1 capital is either below or above the threshold depending on whether the netting set is recognised.<br>\nCaveat: the add-ons would lower both ratios, so the real answer depends on them; the point here is the sensitivity to netting, not the level.<br>\n<i>Interviewer follow-up:</i> what is the first action a dealer takes when its netted ratio is close to the minimum? Check the netting-set eligibility and then the SFT book at the reporting date.<div class=\"fig\"><img src=\"11_repo_financing__v3_8_leverage_ratio_bars.png\"><div class=\"cap\">Leverage ratio 2.87% gross vs 3.97% netted, against the 3.25% minimum.</div></div>",
+  "tags": [
+   "leverage",
+   "netting",
+   "numbers",
+   "chain_leverage_netting",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: LEV 3/3]</b> Using the figures in card 2, the dealer's ratio is 2.87% on the gross basis. How far must the exposure measure fall to reach a 3.25% minimum with the same Tier 1 capital of £2.0bn, and why does this make quarter-end window dressing a rational response?",
+  "back": "Headline: the exposure must fall to about £61.5bn, a cut of about £8.1bn from £69.6bn.<br>\nRequired exposure: \\(\\dfrac{2.0}{0.0325}=£61.54\\text{bn}\\).<br>\nCut: \\(69.6-61.54=£8.06\\text{bn}\\).<br>\nOn a point-in-time quarter-end measure, a dealer that shrinks its gross reverse repo and repo books on that date lowers the exposure measure directly, without changing its economic position. That is why quarter-end window dressing is rational on such a measure. The cost is the repo spread the dealer gives up when it withdraws from the matched book on that date.<br>\nUK caveat: the UK minimum is tested on an averaged leverage ratio, with daily averaging for on-balance-sheet and securities financing exposures and end-of-month averaging for other off-balance-sheet items, so a one-day cut moves the UK ratio much less than this arithmetic suggests. The quarter-end incentive bites most on point-in-time measures, such as the quarter-end basis that some banks report on.<br>\n<i>Interviewer follow-up:</i> how would you test whether a quarter-end move is leverage-driven? Check whether the move reverses on the first day of the next quarter and whether unsecured rates move too.",
+  "tags": [
+   "leverage",
+   "quarter_end",
+   "numbers",
+   "chain_leverage_netting",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: all-in funding cost of a bond inventory when the leverage ratio binds.</b> A dealer buys £100m of a bond with a 3% haircut. The repo rate is 4.00%, and the leverage ratio requires equity of 3.25% of the exposure. The cost of equity is 10%. Derive the all-in annual cost per £100m of inventory and the effective funding rate.",
+  "back": "Setup: \\(MV=100\\). Equity \\(E=0.0325\\times MV=3.25\\). Repo \\(R\\) funds the rest, \\(R=MV-E=96.75\\).<br>\nCheck against the haircut: \\(R\\le(1-h)MV=97\\), so the repo is feasible. The dealer could borrow 97 against 3% haircut, but the leverage ratio requires equity of 3.25, so the repo is capped at 96.75.<br>\nCost: \\(R\\times0.04+E\\times0.10=3.870+0.325=4.195\\) a year.<br>\nEffective funding rate: \\(4.195/100=4.195\\%\\), against 4.00% for a pure secured funding.<br>\nThe 0.195% gap is the cost of the leverage constraint.<br>\nWhere it breaks: the 10% cost of equity is a hurdle, not a market price; if the bank is not leverage-constrained, the marginal charge is zero and the haircut is the only binding term, so the effective rate is about 4.00% plus the haircut-funding term.",
+  "tags": [
+   "derivation",
+   "funding",
+   "leverage",
+   "repo",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: when a seller fails rather than borrows, and why the fail charge caps specialness.</b> A seller must deliver £20m of a special bond in 5 days. Borrowing the bond costs a fee \\(f\\) a year on value; failing costs a fail charge \\(c\\) a year on value. Derive the condition under which the seller fails, and show the cap it places on the special fee.",
+  "back": "Setup: value \\(V\\), days \\(\\tau\\), year 365.<br>\nBorrow cost: \\(V f \\tau/365\\). Fail cost: \\(V c \\tau/365\\).<br>\nThe seller fails when \\(c&lt;f\\). Both costs share the factor \\(V\\tau/365\\), so the comparison reduces to the two rates.<br>\nNumbers: with \\(f=1.20\\%\\) and \\(c=0.50\\%\\): borrow \\(=20\\text{m}\\times0.012\\times5/365=£3{,}288\\); fail \\(=20\\text{m}\\times0.005\\times5/365=£1{,}370\\).<br>\nCap: a seller who can fail will never pay a fee above \\(c\\), so the fail charge sets an upper bound on the special fee the market will pay, and therefore on the specialness.<br>\nWhere it breaks: fails are not free. The buyer may refuse to accept a fail, the seller takes reputational and operational cost, and the fail charge is a convention that can be changed, so the cap is only as good as the convention.",
+  "tags": [
+   "derivation",
+   "fails",
+   "specialness",
+   "securities_lending",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: effective funding rate of a collateral line, and the break-even collateral swap fee.</b> Collateral with haircut \\(h\\) is financed at repo rate \\(r_r\\), and the haircut is funded unsecured at \\(r_u\\). Derive the effective rate per unit of collateral market value, and the break-even fee for swapping gilts (\\(h=2\\%\\), \\(r_r=4.00\\%\\)) into corporates (\\(h=8\\%\\), \\(r_r=4.50\\%\\)), with \\(r_u=5.00\\%\\).",
+  "back": "Derivation: the cash raised is \\((1-h)MV\\) at \\(r_r\\), and the haircut \\(hMV\\) is funded unsecured at \\(r_u\\). So the cost per unit of collateral is \\(r_{eff}=(1-h)r_r+h\\,r_u\\).<br>\nGilts: \\(0.98\\times4.00+0.02\\times5.00=4.02\\%\\).<br>\nCorporates: \\(0.92\\times4.50+0.08\\times5.00=4.54\\%\\).<br>\nBreak-even fee: \\(4.54\\%-4.02\\%=0.52\\%\\) a year on the collateral market value. A collateral swap that moves the dealer from gilts to corporates is worth doing only if its fee is below about 0.52% a year.<br>\nWhere it breaks: the formula assumes the same counterparty and the same repo rate applied to the whole market value; if the corporate repo is at a different counterparty or the haircut varies with the stress, the break-even moves.<br>\n<i>Interviewer follow-up:</i> how does this tie to card TRIPARTY 3/4? It is the same calculation with the cash fixed at £150m; the £1.25m figure is the cost difference on the £150m book, not 0.52% times a single base, because each line grosses the cash up by a different \\(1/(1-h)\\): \\(153.06\\times4.02\\%=6.15\\) against \\(163.04\\times4.54\\%=7.40\\).",
+  "tags": [
+   "derivation",
+   "collateral_transformation",
+   "haircut",
+   "repo",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: netted exposure across two trades under one netting agreement.</b> Trade A: cash lent £100m, gilts received worth £95m, haircut 2%. Trade B: cash borrowed £80m against gilts posted worth £90m, haircut 2%. Both trades are with the same counterparty and under one netting agreement. Derive the netted exposure and compare it with the gross positive exposure.",
+  "back": "Sign convention: exposure to the counterparty is positive when the dealer is owed more than it owes.<br>\nTrade A: \\(E_A=100-0.98\\times95=100-93.10=+6.90\\).<br>\nTrade B: the counterparty holds the dealer's collateral and has lent cash, so the counterparty's exposure to the dealer is \\(0.98\\times90-80=+8.20\\), and the dealer's exposure is \\(-8.20\\).<br>\nNetted: \\(E_{net}=\\max\\big(0,6.90-8.20\\big)=\\max(0,-1.30)=0\\).<br>\nGross positive exposure: \\(6.90\\). Netting removes all of it here.<br>\nWhere it breaks: netting depends on the enforceability of the agreement in each insolvency regime; cross-product netting may not be recognised; and the add-on is not netted in the same way. A legal opinion, not the arithmetic, is what makes the zero stand.",
+  "tags": [
+   "derivation",
+   "netting",
+   "sft",
+   "leverage",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: funding a £500m 10-year gilt inventory under a binding leverage ratio.</b> The dealer holds £500m nominal of gilts. The haircut is 2%, the repo rate is 4.00%, the leverage ratio requires equity of 3.25% of exposure, and the cost of equity is 10%. Find the equity, repo, annual cost, and effective rate, and check the answer against the haircut.",
+  "back": "Step 1: equity \\(E=0.0325\\times500=£16.25\\text{m}\\).<br>\nStep 2: repo \\(R=500-16.25=£483.75\\text{m}\\). Feasibility check: \\(R\\le0.98\\times500=490\\), so yes.<br>\nStep 3: annual cost \\(=483.75\\times0.04+16.25\\times0.10=19.35+1.625=£20.975\\text{m}\\).<br>\nStep 4: effective rate \\(=20.975/500=4.195\\%\\). Daily cost on a 365-day basis is about £57,500.<br>\nSanity check: the effective rate is 4.195% regardless of the 2% haircut, because the equity constraint, not the haircut, sets the repo amount. That is the signal that the leverage constraint is the binding one.<br>\nInterviewer follow-up: what happens if the haircut rises to 5%? The repo capacity falls to \\(0.95\\times500=475\\), below the 483.75 the equity constraint allows, so the haircut now binds. Equity must fund the £25m haircut: cost \\(=475\\times0.04+25\\times0.10=21.50\\)m, an effective rate of 4.30%. The rate is flat for haircuts below 3.25% and rises above it.<div class=\"fig\"><img src=\"11_repo_financing__v3_14_leverage_funding_rate.png\"><div class=\"cap\">Effective funding rate vs haircut: flat at 4.195% while the leverage ratio binds.</div></div>",
+  "tags": [
+   "case_study",
+   "funding",
+   "leverage",
+   "repo",
+   "numbers",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: fail versus borrow on a short gilt position.</b> A desk is short a special bond worth £42m, with 6 days to cure. The stock-loan fee is 2.50% a year and the fail charge is 0.80% a year. Compute the cost of each route and the saving from failing.",
+  "back": "Borrow: \\(42\\text{m}\\times0.025\\times6/365=£17{,}260\\).<br>\nFail: \\(42\\text{m}\\times0.008\\times6/365=£5{,}523\\).<br>\nSaving from failing: \\(17{,}260-5{,}523=£11{,}737\\).<br>\nCheck: the saving is proportional to the rate gap, \\(0.025-0.008=1.70\\%\\), times value and days: \\(42\\text{m}\\times0.017\\times6/365=£11{,}737\\). The two calculations agree.<br>\nWhere it breaks: the saving is only real if the buyer accepts the fail and the fail charge is the one applied; a longer fail, or a buyer who refuses, changes the answer.<br>\nInterviewer follow-up: what limits the desk from failing for a year? The fail charge is a cap on the fee, and a long fail carries operational and reputational costs that the simple saving leaves out.",
+  "tags": [
+   "case_study",
+   "fails",
+   "specialness",
+   "securities_lending",
+   "numbers",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: collateral choice for £150m of cash.</b> The dealer needs £150m of cash. It can post gilts (haircut 2%, repo 4.00%) or corporates (haircut 8%, repo 4.50%). The unsecured funding rate for the haircut is 5.00%. Compute the collateral value needed, the annual cost of each, and the saving from the cheaper choice.",
+  "back": "Gilts: MV \\(=150/0.98=£153.06\\text{m}\\). Haircut \\(=£3.06\\text{m}\\). Cost \\(=6.000+0.153=£6.153\\text{m}\\).<br>\nCorporates: MV \\(=150/0.92=£163.04\\text{m}\\). Haircut \\(=£13.04\\text{m}\\). Cost \\(=6.750+0.652=£7.402\\text{m}\\).<br>\nSaving from gilts: \\(7.402-6.153=£1.25\\text{m}\\) a year.<br>\nCheck: \\(153.06\\times4.02\\%=6.153\\) and \\(163.04\\times4.54\\%=7.402\\), so the effective-rate formula gives the same answer.<br>\nInterviewer follow-up: what would make the corporate collateral the right choice? A cheaper corporate repo rate, a shortage of gilts, or a stress where the gilt repo is not available.",
+  "tags": [
+   "case_study",
+   "collateral_transformation",
+   "haircut",
+   "numbers",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: sponsored netting across four clients.</b> A sponsor's cleared book is £750m of reverse repo and £700m of repo across four clients, all in one netting set at the CCP. Compute the gross and net notional and the reduction. Then say what the notional reduction does not tell you about the margin.",
+  "back": "Gross: \\(750+700=£1{,}450\\text{m}\\).<br>\nNet: \\(|750-700|=£50\\text{m}\\).<br>\nReduction: \\(1-50/1450=96.6\\%\\).<br>\nMargin: the reduction in notional is not the reduction in margin. Initial margin depends on the portfolio risk of the net positions, and the two reverse repo legs can still carry margin if their maturities and collateral differ.<br>\nSanity check: a near-balanced book shows a large notional reduction, but the margin saving depends on how well the legs offset in risk, which is what the CCP's margin model measures.<br>\nInterviewer follow-up: what would you ask the sponsor for? The margin per client, the portfolio margin breakdown, and the netting set's rules on maturity mismatch.",
+  "tags": [
+   "case_study",
+   "sponsored_repo",
+   "ccp",
+   "netting",
+   "numbers",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: secured versus unsecured overnight cost on a £400m book.</b> A dealer funds £400m for 30 days. The secured overnight rate (RONIA, from sterling repo trades) is 4.10%, and the unsecured SONIA-based rate is 4.15%. Using an ACT/365F basis, compute the cost difference over the 30 days and say what the spread measures.",
+  "back": "Difference: \\(400\\text{m}\\times0.0005\\times30/365=£16{,}438\\).<br>\nWhat the spread measures: the 5bp gap is the price of the collateral and credit terms. The secured rate is lower because the lender holds collateral; the unsecured rate carries the bank's credit and funding premium.<br>\nCaveat: the 4.10% and 4.15% are illustrative levels, not market quotes. RONIA (Repurchase Overnight Index Average) is a secured rate based on sterling repo trades. It is not administered by the Bank of England, which administers SONIA. Check RONIA's current administration and status before quoting its level in an interview.<br>\nInterviewer follow-up: when would the spread widen? In stress, when the unsecured market dries up or when gilt collateral is scarce and the secured rate moves up toward the unsecured one.",
+  "tags": [
+   "case_study",
+   "sonia",
+   "ronia",
+   "gilt_repo",
+   "numbers",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Quarter-end gilt repo rates spike on reporting dates. Name the two channels that can cause it, the observable that separates them, and the check you would run first.",
+  "back": "Two channels: (1) balance-sheet, where dealers and banks cut matched repo on the reporting date to lower a point-in-time leverage exposure measure (the UK averaged measure dampens this); (2) cash and settlement timing, where large flows around the quarter-end (coupons, auctions, tax and settlement) tighten the cash supply for a day or two.<br>\nThe observable: a balance-sheet move concentrates in the repo book on the reporting date and reverses on the first business day of the next quarter, and it is seen in the secured rate only when the matched book shrinks. A cash-timing move follows the flows and often shows in the unsecured rate too.<br>\nFirst check: the size and timing of the repo book change at the reporting date, against the rate move on the same day.<br>\n<i>Interviewer follow-up:</i> what would you tell the desk about the trade? Whether the spike is a leverage cost or a cash scarcity, because the answer changes whether the desk should lend into it.",
+  "tags": [
+   "quarter_end",
+   "repo",
+   "leverage",
+   "scenario",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Scenario: desk practice at 16:15.</b> The tri-party allocation shows £180m of gilts short against a lender's requirement at the afternoon run. Walk through the steps you take in order.",
+  "back": "Steps:<br>\n1. Check the allocation against the eligibility and haircut schedule for each collateral line, to see whether the shortfall is a haircut or a line-level eligibility problem.<br>\n2. Check whether the shortfall is a settlement fail on the gilt leg, which would be on the settlement system, not the tri-party.<br>\n3. Check whether the morning unwind or any substitution has been missed, and whether the agent has a pending instruction.<br>\n4. Check the margin calls and any intraday limit that the agent has set for the dealer.<br>\n5. Escalate to the agent and to the desk head with the amount, the cause and the time-to-cure, and record the allocation in the booking system.<br>\n<i>Interviewer follow-up:</i> what is the failure mode you are most afraid of here? Assuming the shortfall is a real gap and not a booking error, the risk is that the cure requires a sale into a falling market.<div class=\"fig\"><img src=\"11_repo_financing__v3_20_desk_triage_flowchart.png\"><div class=\"cap\">Desk triage at 16:15 for a GBP 180m gilt shortfall: the five checks in order.</div></div>",
+  "tags": [
+   "triparty",
+   "scenario",
+   "desk_practice",
+   "operations",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Under the SEC Treasury clearing rule, the compliance date for eligible cash Treasury transactions was extended to {{c1::31 December 2026}}, and for eligible repo transactions to {{c2::30 June 2027}}.",
+  "back": "Source: SEC order of 25 February 2025 extending the Rule 17ad-22(e)(18)(iv) compliance dates by 12 months. The timeline has moved before, so check the current status before quoting it.",
+  "tags": [
+   "clearing_mandate",
+   "sec",
+   "repo",
+   "convention",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In a tri-party repo, the {{c1::tri-party agent}} allocates collateral against each side's {{c2::eligibility and haircut schedule}}, and the morning unwind creates {{c3::intraday credit}} exposure for the agent.",
+  "back": "The agent's intraday exposure is what the cash it has advanced exceeds the haircut-adjusted collateral it holds at that moment.",
+  "tags": [
+   "triparty",
+   "mechanics",
+   "repo",
+   "convention",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In a sponsored repo, the {{c1::clearing member (sponsor)}} is the CCP's counterparty for the client's position and {{c2::guarantees}} the client's obligations to the CCP.",
+  "back": "The client does not become a clearing member. Under omnibus segregation, the client's collateral is pooled and must be reconstructed in a default.",
+  "tags": [
+   "sponsored_repo",
+   "ccp",
+   "clearing",
+   "convention",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "RONIA is a {{c1::secured}} sterling overnight rate built from {{c2::sterling repo}} trades, whereas SONIA is {{c3::unsecured}}.",
+  "back": "RONIA (Repurchase Overnight Index Average) is not administered by the Bank of England, which administers SONIA. Check RONIA's current administration and status before citing it.",
+  "tags": [
+   "gilt_repo",
+   "ronia",
+   "sonia",
+   "convention",
+   "lvl_vp_core"
+  ]
+ }
+]

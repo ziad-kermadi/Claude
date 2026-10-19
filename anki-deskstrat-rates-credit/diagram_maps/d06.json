@@ -1,0 +1,128 @@
+[
+ {
+  "file": "06_credit_models_cln.json",
+  "index": 0,
+  "front_start": "In Merton (1974), write equity as a call on firm value and g",
+  "image": "06_credit_models_cln_0_merton_payoff.png",
+  "caption": "Merton: equity payoff max(V_T-D,0) and debt payoff min(V_T,D) at T, with the default region below D=80."
+ },
+ {
+  "file": "06_credit_models_cln.json",
+  "index": 2,
+  "front_start": "In Merton's model, asset value falls from \\(V_0=100\\) to \\(V",
+  "image": "06_credit_models_cln_2_merton_fall_in_v.png",
+  "caption": "Merton at D=80, T=5, 25% vol: spread rises 210bp to 274bp and sigma_E rises 54.5% to 58.3% as V0 falls 100 to 90."
+ },
+ {
+  "file": "06_credit_models_cln.json",
+  "index": 29,
+  "front_start": "Derive the Basel IRB (ASRF) capital requirement per unit exp",
+  "image": "06_credit_models_cln_29_basel_irb_k_curve.png",
+  "caption": "Basel IRB capital K vs PD (LGD 45%, M=2.5) using the supervisory correlation R(PD)."
+ },
+ {
+  "file": "06_credit_models_cln.json",
+  "index": 31,
+  "front_start": "Why does a Gaussian copula with correlation \\(\\rho\\) underpr",
+  "image": "06_credit_models_cln_31_gaussian_vs_t_tail.png",
+  "caption": "Gaussian copula tail dependence goes to zero; t copula (nu=4, rho=0.5) tends to lambda of about 0.253."
+ },
+ {
+  "file": "06_credit_models_cln.json",
+  "index": 19,
+  "front_start": "An issuer has bonds but no liquid CDS. Outline a proxy-curve",
+  "image": "06_credit_models_cln_19_proxy_curve_flow.png",
+  "caption": "Five-step proxy-curve construction for an issuer with bonds and no liquid CDS."
+ },
+ {
+  "file": "06_credit_models_cln.json",
+  "index": 45,
+  "front_start": "Why does the expected exposure of an at-the-money vanilla sw",
+  "image": "06_credit_models_cln_45_atm_swap_ee_hump.png",
+  "caption": "ATM swap EE in a normal model on a flat curve: sqrt(t) growth times annuity run-off, peak at T/3."
+ },
+ {
+  "file": "06_credit_models_cln.json",
+  "index": 47,
+  "front_start": "Describe the cash flows of a par credit-linked note (CLN) on",
+  "image": "06_credit_models_cln_47_cln_cash_flows.png",
+  "caption": "Par CLN cash flows: SPV collateral earning RFR, coupons to investor, CDS premium to SPV, credit-event payments."
+ },
+ {
+  "file": "06_credit_models_cln.json",
+  "index": 48,
+  "front_start": "Compare a funded credit-linked note with an unfunded CDS on ",
+  "image": "06_credit_models_cln_48_funded_vs_unfunded.png",
+  "caption": "Unfunded CDS versus funded CLN from the protection buyer's side at 10m notional, with the 0.6m loss example."
+ },
+ {
+  "file": "06_credit_models_cln.json",
+  "index": 53,
+  "front_start": "For a total return swap (TRS) on a corporate bond, describe ",
+  "image": "06_credit_models_cln_53_trs_cash_flows.png",
+  "caption": "TRS cash flows: receiver gets coupons plus price change and pays RFR plus financing spread."
+ },
+ {
+  "file": "06_credit_models_cln.json",
+  "index": 55,
+  "front_start": "Define the risky PV01 (RPV01) of a CDS and state the formula",
+  "image": "06_credit_models_cln_55_rpv01_survival_weighting.png",
+  "caption": "RPV01 vs risk-free annuity for quarterly premiums at 3.33% hazard: each payment weighted by survival."
+ },
+ {
+  "file": "06_credit_models_cln.json",
+  "index": 56,
+  "front_start": "Holding a 200bp CDS spread fixed, how does the implied hazar",
+  "image": "06_credit_models_cln_56_hazard_vs_recovery.png",
+  "caption": "At a fixed 200bp spread, implied hazard rises as recovery falls (2.50% at R=20%, 3.33% at R=40%)."
+ },
+ {
+  "file": "06_credit_models_cln.json",
+  "index": 58,
+  "front_start": "You own a 5y bond on a 10m notional with a CS01 of about 4,5",
+  "image": "06_credit_models_cln_58_cds_hedge_basis_pnl.png",
+  "caption": "CDS sized to bond CS01 (about 9.8m notional): parallel moves hedge out, a 10bp basis move leaves about 45k."
+ },
+ {
+  "file": "06_credit_models_cln_deep.json",
+  "index": 2,
+  "front_start": "<b>[Chain: BOOTSTRAP 3/4]</b> Context: 1y 300bp and 3y 90bp ",
+  "image": "06_credit_models_cln_deep_2_bootstrap_negative_forward.png",
+  "caption": "Unconstrained bootstrap of 1y 300bp and 3y 90bp at R=40% gives a forward hazard of -0.29% on (1,3]."
+ },
+ {
+  "file": "06_credit_models_cln_deep.json",
+  "index": 9,
+  "front_start": "<b>[Chain: FTD 2/4]</b> Context: same pair, \\(p=10\\%\\) each,",
+  "image": "06_credit_models_cln_deep_9_ftd_vs_correlation.png",
+  "caption": "First-to-default probability for two 10% names falls from 19% (independent) to 10% (comonotone) as rho rises."
+ },
+ {
+  "file": "06_credit_models_cln_deep.json",
+  "index": 20,
+  "front_start": "Worked case: par CDS spreads 1y 80bp, 3y 110bp, 5y 135bp, \\(",
+  "image": "06_credit_models_cln_deep_20_worked_bootstrap_hazards.png",
+  "caption": "Worked bootstrap of 80/110/135bp: piecewise forward hazards and survival curve at r=0 and r=3%."
+ },
+ {
+  "file": "06_credit_models_cln_deep.json",
+  "index": 21,
+  "front_start": "Worked case: a 3y funded CLN with notional 100. The collater",
+  "image": "06_credit_models_cln_deep_21_cln_leg_split.png",
+  "caption": "Funded CLN spread leg of 280bp over RFR split into reference-default (5.36) and issuer-default (2.14) parts, total 7.50 points."
+ },
+ {
+  "file": "06_credit_models_cln_deep.json",
+  "index": 23,
+  "front_start": "Worked case: one-factor Vasicek with \\(p=1\\%\\) and \\(\\rho=12",
+  "image": "06_credit_models_cln_deep_23_vasicek_loss_quantile.png",
+  "caption": "Vasicek pool (p=1%, rho=12%) loss CDF with the 99.9% quantile at 9.03%."
+ },
+ {
+  "file": "06_credit_models_cln_deep.json",
+  "index": 25,
+  "front_start": "Worked case: unilateral CVA of a 5y interest-rate swap on an",
+  "image": "06_credit_models_cln_deep_25_cva_worked_profile.png",
+  "caption": "Five-year swap CVA: EE profile and per-year CVA contributions summing to about 0.115m EUR."
+ }
+]

@@ -1,0 +1,114 @@
+[
+ {
+  "file": "12_structured_exotics.json",
+  "index": 1,
+  "front_start": "<b>[Chain: CALLABLE 2/4]</b> The 10NC2 pays coupon \\(c\\); th",
+  "image": "12_structured_exotics_1_callable_waterfall.png",
+  "caption": "10NC2 at par: bullet at 4.47% less Bermudan receiver (k=1) gives callable at 100"
+ },
+ {
+  "file": "12_structured_exotics.json",
+  "index": 7,
+  "front_start": "<b>[Chain: RANGE ACCRUAL 1/3]</b> A 1y note accrues 5% per y",
+  "image": "12_structured_exotics_7_ra_payoff_binaries.png",
+  "caption": "Range accrual payoff per quarter as long and short binaries"
+ },
+ {
+  "file": "12_structured_exotics.json",
+  "index": 25,
+  "front_start": "<b>Case study:</b> A 1y range accrual, notional 10m, accrues",
+  "image": "12_structured_exotics_25_ra_case_period_values.png",
+  "caption": "Range accrual case: value per quarterly fixing, total 362k"
+ },
+ {
+  "file": "12_structured_exotics__v3.json",
+  "index": 5,
+  "front_start": "<b>[Chain: CALLABLE RA 2/3]</b> Same note, with the accrual ",
+  "image": "12_structured_exotics__v3_5_callable_ra_breakeven.png",
+  "caption": "Callable range accrual: continuation value vs in-range share, boundary near 0.68"
+ },
+ {
+  "file": "12_structured_exotics.json",
+  "index": 10,
+  "front_start": "<b>[Chain: TARN 1/3]</b> A 5y TARN pays a fixed 4% per year ",
+  "image": "12_structured_exotics_10_tarn_cumulative_ko.png",
+  "caption": "TARN on one illustrative path: coupons accumulate to 12% cap, then knockout"
+ },
+ {
+  "file": "12_structured_exotics.json",
+  "index": 26,
+  "front_start": "<b>Case study (toy model):</b> A 5y TARN pays 4% per year in",
+  "image": "12_structured_exotics_26_tarn_p_expected_ko.png",
+  "caption": "TARN toy model: expected coupon and knockout probability for p = 0.5, 0.75, 0.9"
+ },
+ {
+  "file": "12_structured_exotics__v3.json",
+  "index": 0,
+  "front_start": "<b>[Chain: SNOWBALL 1/4]</b> Context: 3y note, annual, notio",
+  "image": "12_structured_exotics__v3_0_snowball_ratchet_map.png",
+  "caption": "Snowball ratchet: next coupon as a function of the fixing, for two previous coupons"
+ },
+ {
+  "file": "12_structured_exotics__v3.json",
+  "index": 1,
+  "front_start": "<b>[Chain: SNOWBALL 2/4]</b> Same snowball, \\(c_1=2\\%\\), \\(m",
+  "image": "12_structured_exotics__v3_1_snowball_state_tree.png",
+  "caption": "Two-period snowball enumeration: coupon states and E[c2], E[c3]"
+ },
+ {
+  "file": "12_structured_exotics__v3.json",
+  "index": 12,
+  "front_start": "<b>Derivation:</b> A snowball coupon with previous coupon \\(",
+  "image": "12_structured_exotics__v3_12_snowball_floorlet.png",
+  "caption": "Snowball step is a floorlet: payoff max(0, K - L) against its linear part"
+ },
+ {
+  "file": "12_structured_exotics.json",
+  "index": 15,
+  "front_start": "<b>[Chain: AUTOCALL 3/3]</b> Case: 3 annual observations. Re",
+  "image": "12_structured_exotics_15_autocall_timeline.png",
+  "caption": "Autocall observation timeline with call and maturity branch probabilities"
+ },
+ {
+  "file": "12_structured_exotics.json",
+  "index": 15,
+  "front_start": "<b>[Chain: AUTOCALL 3/3]</b> Case: 3 annual observations. Re",
+  "image": "12_structured_exotics_15_autocall_expected_cf.png",
+  "caption": "Autocall expected cash flows by year, expected life 2.155y"
+ },
+ {
+  "file": "12_structured_exotics.json",
+  "index": 4,
+  "front_start": "<b>[Chain: CMS SPREAD 1/3]</b> A 10s2s steepener pays on the",
+  "image": "12_structured_exotics_4_cms_spread_payoff.png",
+  "caption": "10s2s CMS spread call payoff with the ATM strike at 0.50%"
+ },
+ {
+  "file": "12_structured_exotics.json",
+  "index": 24,
+  "front_start": "<b>Case study:</b> ATM 10s2s CMS spread call, one-year expir",
+  "image": "12_structured_exotics_24_cms_spread_rho.png",
+  "caption": "ATM CMS spread call price per unit annuity falls from 47.6bp to 31.8bp as rho goes 0.3 to 0.7"
+ },
+ {
+  "file": "12_structured_exotics__v3.json",
+  "index": 8,
+  "front_start": "<b>[Chain: ZERO CALLABLE 2/3]</b> Same note, with the 5-year",
+  "image": "12_structured_exotics__v3_8_zero_callable_value.png",
+  "caption": "Zero callable at t=5: investor value is capped at the accreted value of 55.53"
+ },
+ {
+  "file": "12_structured_exotics__v3.json",
+  "index": 11,
+  "front_start": "<b>Derivation:</b> A 5y note pays a 3.00% annual coupon and ",
+  "image": "12_structured_exotics__v3_11_funding_benefit_pv.png",
+  "caption": "Funding benefit: 3% bond at par, PV at OIS 100 vs PV at funding 97.30"
+ },
+ {
+  "file": "12_structured_exotics__v3.json",
+  "index": 13,
+  "front_start": "<b>Case study (structuring):</b> A 3y note is issued at 100 ",
+  "image": "12_structured_exotics__v3_13_funding_budget.png",
+  "caption": "Funding benefit lifts the option budget from 7.49 to 9.07, fair coupon 4.66% to 5.65%"
+ }
+]

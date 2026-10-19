@@ -1,0 +1,358 @@
+[
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PRICE_TOOL 1/4]</b> Context: a sales pricing tool quotes a client on a 10y gilt (4.00% coupon, semi-annual, mid yield 4.20%, clean price 98.3805 per 100 face, modified duration 8.15). The desk wants a 0.5bp yield markup on a £100m clip. What must the tool return, and how is the markup turned into a price?",
+  "back": "<b>Answer:</b> the tool returns the executable price, derived by repricing the bond at the marked-up yield with the same settlement date and day count as the book. The yield markup is a display convention; the price is what the client trades.<br>\n<b>Steps:</b><br>\n1. Mid yield \\(y=4.200\\%\\). Shifted yield \\(y'=y+0.5\\text{bp}=4.205\\%\\).<br>\n2. Reprice: \\(P(4.205\\%)=98.3404\\), so \\(\\Delta P=-0.04009\\) per 100 face.<br>\n3. Cross-check with duration: \\(-D_{mod}\\,P\\,\\Delta y=-8.1516\\times98.3805\\times0.00005=-0.04010\\). Agrees.<br>\n4. On £100m nominal (1,000,000 units of £100 face): \\(\\Delta\\text{cash}\\approx-£40{,}088\\). A client buying from the desk pays £40k less than mid.<br>\n<b>Control angle / Where it breaks:</b> The tool should show the yield, the price, the cash amount, and the markup in both units so that sales and the controller see the same number.<br>\n<b>Interviewer follow-up:</b> why reprice rather than apply DV01? Answer: at £100m the DV01 approximation is fine for 0.5bp, but a sales tool is used for 50bp concessions too, where convexity matters (next card).",
+  "tags": [
+   "strat_tooling",
+   "sales_pricing",
+   "bond_pricing",
+   "chain_price_tool",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PRICE_TOOL 2/4]</b> Same 10y gilt (4.00% semi-annual, mid yield 4.20%, clean 98.3805, \\(D_{mod}=8.15\\)). A client asks for a price with a 50bp yield concession on £100m. A junior builds the tool using \\(-D_{mod}P\\,\\Delta y\\) only. How big is the error, why does it have the same sign on both sides, and what should the tool compute?",
+  "back": "<b>Answer:</b> the duration-only estimate is off by roughly £95k to £98k per £100m, and the tool must reprice exactly.<br>\n<b>Worked example:</b><br>\nLinear estimate for \\(\\Delta y=+50\\text{bp}\\): \\(-8.1516\\times98.3805\\times0.005=-4.010\\) per 100 face.<br>\nExact repricing: \\(P(4.70\\%)-P(4.20\\%)=-3.915\\). Error \\(=+0.095\\).<br>\nFor \\(\\Delta y=-50\\text{bp}\\): exact \\(+4.108\\), linear \\(+4.010\\). Error \\(=+0.098\\).<br>\nSecond-order term: \\(\\tfrac12 C\\,\\Delta y^2 P\\) with \\(C\\approx78.5\\) (numerical convexity, normalised by price): \\(\\tfrac12\\times78.5\\times(0.005)^2\\times98.38\\approx0.097\\) per 100 face. This is the error.<br>\n<b>Intuition:</b> Convexity is positive, so the linear estimate understates the price rise and the price fall equally. Duration-only pricing therefore gives a systematic error in both directions, which the client will find within minutes.<br>\n<b>Control angle / Where it breaks:</b> The tool should reprice the bond at the shifted yield using the actual settlement date and day count, and show DV01 separately for hedging.<br>\n<b>Interviewer follow-up:</b> is convexity error ever in the desk's favour? Answer: only if the desk is hedging with a DV01-neutral position and the risk is the second-order P&amp;L; for pricing a client, the error is just a mispriced quote.<div class=\"fig\"><img src=\"18_desk_8_1_price_yield_convexity.png\"><div class=\"cap\">Exact price-yield curve against the duration-only line for the 10y 4% gilt at +/-50bp: positive error both ways.</div></div>",
+  "tags": [
+   "strat_tooling",
+   "sales_pricing",
+   "convexity",
+   "chain_price_tool",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PRICE_TOOL 3/4]</b> The sales tool quotes a 10y swap at mid + 0.3bp of spread-to-curve. The book values the same trade off the official curve snapshot, with DV01 £410k per bp. Where does the 0.3bp markup live in the books, and what goes wrong if the sales team enters it as a bump to the curve pillar?",
+  "back": "<b>Answer:</b> the markup is a separate, traceable component (day-one margin credited to sales), booked as the difference between executed price and mid computed on the same curve. It must never be pushed into curve nodes.<br>\n<b>Worked example:</b> Margin: \\(0.3\\times£410\\text{k}=£123\\text{k}\\), recorded as trade-level day-one P&amp;L with a sales-credit tag.<br>\n<b>Trap / Where it breaks:</b> Failure mode: if the markup is entered as a bump to the 10y pillar, then (a) the risk report shows a curve move that never happened, (b) the curve-P&amp;L bucket picks up £123k that is really sales margin, and (c) the next curve build removes the bump and the P&amp;L reverses in the market bucket. Attribution is wrong in both directions.<br>\n<b>Control angle:</b> Check: across all trades on the day, day-one P&amp;L by source should equal executed price minus mid. A non-zero residual inside the market-move bucket is a control break.<br>\n<b>Interviewer follow-up:</b> does the margin count against the market-risk limit? Answer: no. It is realised at inception and goes to desk P&amp;L. The position is still marked at mid, so limits use DV01 and the marked value.",
+  "tags": [
+   "strat_tooling",
+   "sales_pricing",
+   "attribution",
+   "pnl_explain",
+   "chain_price_tool",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: PRICE_TOOL 4/4]</b> The sales tool computes gilt accrued as \\(c\\times\\text{days}/365\\) (ACT/365F). The book uses the gilt convention, ACT/ACT, \\(\\tfrac c2\\times\\text{days}/\\text{days in coupon period}\\). Both are on the same 10y gilt, 4.00% coupon, 61 days accrued in a 182-day period. Quantify the break on £100m and say how you stop it recurring.",
+  "back": "<b>Answer:</b> Difference \\(=0.00184\\) per 100 face, so \\(\\approx£1{,}837\\) on £100m nominal. The break is on every gilt trade, not one.<br>\n<b>Worked example (per 100 face):</b><br>\nACT/ACT: \\(\\tfrac{4.00}{2}\\times\\tfrac{61}{182}=0.67033\\).<br>\nACT/365F: \\(4.00\\times\\tfrac{61}{365}=0.66849\\).<br>\n<b>Control angle:</b> <b>Fix:</b> conventions come from one reference-data source (the golden copy), and both tools call the same accrual function. Add a unit test with a known coupon date pair, and a daily reconciliation of invoice amounts between the sales tool and the book.<br>\n<b>Interviewer follow-up:</b> is a one-day settlement error material? Answer: one day of gilt accrual is \\(\\tfrac{4}{2}\\times\\tfrac{1}{182}\\times100\\approx0.011\\) per 100 face, so about £10,990 on £100m. Settlement date is a bigger risk than the day-count denominator.",
+  "tags": [
+   "strat_tooling",
+   "day_count",
+   "reconciliation",
+   "gilts",
+   "chain_price_tool",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CURVE_0700 1/4]</b> It is 06:40. The overnight rates curve build has failed: the bootstrap reports a non-convergent solve at the 30y pillar. Pricing and risk runs start at 07:30, trading opens at 08:00. Walk through the first 15 minutes.",
+  "back": "<b>Answer:</b> find which stage failed, fix only the bad input, and escalate if the fix is not clear by 07:15.<br>\n<b>Steps:</b><br>\n1. Read the build log to see which stage failed: input load, input validation, solve, or post-solve QA. A solve failure after valid inputs points to the solver; a solve failure after a short input count points to the data.<br>\n2. Check the inputs: number of quotes received against the expected list, quote timestamps and age, bid above offer, zeros or blanks, a futures strip with a missing contract, and whether today's holiday calendar loaded.<br>\n3. If one input is clearly bad, remove only that pillar under the pre-approved playbook, and log the removal with the reason. Never drop a pillar silently.<br>\n4. If the fix is not clear by 07:15, notify the curve owner, the risk owner and the sales desk, and start the fallback decision (next card).<br>\n5. Keep a time-stamped incident note. Every later decision is audited against it.<br>\n<b>Interviewer follow-up:</b> why not just loosen the convergence tolerance? Answer: the solver then produces a curve that does not reprice its inputs, and the error is invisible downstream. Fix the input, not the tolerance.<div class=\"fig\"><img src=\"18_desk_8_4_curve_fail_timeline.png\"><div class=\"cap\">Timeline from the 06:40 build failure: fix window to 07:15, pricing at 07:30, trading at 08:00.</div></div>",
+  "tags": [
+   "strat_tooling",
+   "curve_builder",
+   "incident_response",
+   "chain_curve_0700",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CURVE_0700 2/4]</b> It is 07:20. The 30y pillar cannot be fixed in time. You decide to mark the book on yesterday's curve shifted by the move in a bond-futures proxy (front and belly contracts), which is +2bp. The true overnight move in the 30y area is +5bp. The desk's DV01 is £380k per bp. What is the P&amp;L misstatement, and what else does the proxy miss?",
+  "back": "<b>Answer:</b> the P&amp;L misstatement is about £1.1m, and a front-and-belly proxy also leaves the 30y bucket of the key-rate DV01 unmoved.<br>\n<b>Worked example:</b> P&amp;L error: \\(\\text{DV01}\\times(\\text{true move}-\\text{proxy move})=380{,}000\\times3=£1.14\\text{m}\\), so the book is mis-marked by about £1.1m, with the sign set by the residual move.<br>\n<b>Trap / Where it breaks:</b> What the proxy misses: a front-and-belly futures proxy only moves the front and belly. The 30y bucket of the book's key-rate DV01 is not moved at all, so the true exposure there is unhedged in the mark. A parallel shift of yesterday's curve is not the same as moving the 30y pillar.<br>\n<b>Control angle:</b> Governance: mark the status as fallback, flag the P&amp;L as estimated, restrict new risk above an agreed materiality threshold until the official curve is in, and reconcile the day when it lands.<br>\n<b>Interviewer follow-up:</b> how do you choose a proxy? Answer: match the bucketed DV01 profile, instrument by instrument, not a single parallel shift; check the residual key-rate exposure after the proxy move.",
+  "tags": [
+   "strat_tooling",
+   "curve_builder",
+   "fallback",
+   "risk_bucketing",
+   "chain_curve_0700",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CURVE_0700 3/4]</b> A bootstrapped curve reprices all of its input quotes to machine precision and still publishes a bad 2y. The 2y swap quote was a fat finger: 10bp too high. What checks run before the curve is published, and why does the repricing check not catch this?",
+  "back": "<b>Answer:</b> the repricing check cannot catch a bad input, so the checks must test the data and the curve shape.<br>\n<b>Trap / Where it breaks:</b> Why repricing does not catch it: a bootstrap solves for pillars so that each input reprices exactly. An input error is therefore reproduced exactly, and repricing error is zero by construction. It tests the solver, not the data.<br>\n<b>Control angle / Checks that do catch it:</b><br>\n1. Input gate: quote age, crossing, count, and source flags.<br>\n2. Day-on-day change per pillar against a threshold set from recent history, flagged for review when it breaches.<br>\n3. Cross-instrument test: the 2y swap against the 2y futures-implied or deposit-implied level. A 10bp gap between linked instruments is a data problem until proved otherwise.<br>\n4. Shape checks: discount factors monotone, forwards not extreme between pillars, and no kinks at a single node.<br>\n<b>Interviewer follow-up:</b> which check catches a single-pillar fat finger fastest? Answer: the cross-instrument test, because it needs no history and it fires on the day of the error.<div class=\"fig\"><img src=\"18_desk_8_6_curve_publish_gates.png\"><div class=\"cap\">Gates that run before a curve is published; the repricing check alone passes a bad input.</div></div>",
+  "tags": [
+   "strat_tooling",
+   "curve_builder",
+   "data_quality",
+   "chain_curve_0700",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CURVE_0700 4/4]</b> After the 07:20 fallback, the post-incident review asks which control would have stopped a fallback curve being used to quote a client. Propose the control changes and the metrics the desk should track.",
+  "back": "<b>Answer:</b> four controls answer the root causes: a hard input gate, a pre-approved fallback playbook, a status flag that downstream systems respect, and a build deadline.<br>\n<b>Root-cause classes:</b> bad input accepted by the gate; no pre-approved fallback; fallback status not visible to downstream systems; and no time budget for the build.<br>\n<b>Controls:</b><br>\n1. Input gate with hard stops for missing or crossed quotes, and soft flags for stale ones.<br>\n2. A pre-approved fallback playbook with named approvers and a maximum fallback duration.<br>\n3. A status flag published with the curve (official, fallback, or held). The sales tool refuses to quote when the flag is fallback unless a senior override is logged.<br>\n4. A build deadline that triggers the playbook automatically at a fixed time.<br>\n<b>Metrics:</b> build completion time against deadline, number of fallback days per month, P&amp;L restated after the official curve, and override count.<br>\n<b>Interviewer follow-up:</b> what is the single most important metric? Answer: the restated P&amp;L from fallback days, because it measures how far the decision moved the books.",
+  "tags": [
+   "strat_tooling",
+   "curve_builder",
+   "controls",
+   "incident_response",
+   "chain_curve_0700",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Scenario:</b> It is 07:15. The 2y swap quote in the feed is 4.02%. The 2y futures-implied level is 4.12%. The quote is nine minutes old and carries a stale flag. The desk's 2y DV01 is £150k per bp. Walk through what you do before the curve publishes.",
+  "back": "<b>Answer:</b> treat the 10bp gap as a stale quote, not a market move, and quarantine the 2y pillar under the pre-approved rule.<br>\n<b>Steps:</b><br>\n1. Confirm the stale flag and the quote timestamp against the feed's own clock; check whether the feed is delayed for all pillars or one.<br>\n2. Compare with the 2y futures-implied level and the prior close. A 10bp gap with a stale flag points to a stale or wrong quote, not a market move. Check the futures level is itself fresh.<br>\n3. Quarantine the 2y pillar. Use the pre-approved rule: either drop it and re-solve with the next pillar, or replace it with the cross-checked level, with the replacement logged.<br>\n4. Re-solve, then check day-on-day change and cross-instrument consistency.<br>\n5. If the fix is not confirmed by 07:25, publish under the fallback process and tell traders what 10bp means: \\(10\\times£150\\text{k}=£1.5\\text{m}\\) of mis-mark on the 2y book if the quote had been used.<br>\n<b>Interviewer follow-up:</b> would you ask the trader before dropping the pillar? Answer: inform, not ask. The pre-approved rule governs; the trader is told what changed and why.",
+  "tags": [
+   "strat_tooling",
+   "curve_builder",
+   "data_quality",
+   "scenario",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: stale 5y quote.</b> A desk is pay-fixed 5y, £200m notional, DV01 £85k per bp. Overnight the 5y pillar of the curve shows 4.12%, but the correct close is 4.02% (a stale quote). Compute the spurious mark, state its sign, and show how the error appears in the P&amp;L explain.",
+  "back": "<b>Answer:</b> the spurious mark is about £850k, a gain for a payer that did not happen, and it reverses into a loss of about £850k the next day.<br>\n<b>Steps:</b><br>\n1. Spurious mark: \\(\\text{DV01}\\times\\Delta y=85{,}000\\times10=£850\\text{k}\\).<br>\n2. Sign: a payer gains when rates rise. The bad curve is 10bp higher, so the book shows a gain of about £850k that did not happen.<br>\n3. Next day, the corrected curve reverses it: the book shows a loss of about £850k in the curve bucket.<br>\n4. P&amp;L explain: a 5y move of -10bp appears with no move in 4y and 6y. Interpolation normally spreads a pillar move into neighbouring buckets, so the isolated 5y bucket is a diagnostic clue.<br>\n5. Sum of bucketed DV01 times the moves must equal the total curve P&amp;L. A residual is the second flag.<br>\n<b>Interviewer follow-up:</b> does the spurious gain hit risk limits? Answer: not DV01 limits, which are not moved by a curve level error. It does hit P&amp;L stop-loss and daily P&amp;L limits, which is why the correction must be fast.",
+  "tags": [
+   "strat_tooling",
+   "case_study",
+   "data_quality",
+   "pnl_explain",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Derivation: finite-difference DV01 and the bump size.</b> A risk system computes DV01 as \\(-\\frac{P(y+h)-P(y)}{h}\\) (forward bump) or \\(-\\frac{P(y+h)-P(y-h)}{2h}\\) (central bump). Derive the error order of each, and compute the error on a 10y bond with yield 4.20% and \\(D_{mod}=8.15157\\) for \\(h=1\\text{bp}\\) and \\(h=10\\text{bp}\\).",
+  "back": "<b>Answer:</b> the forward bump is first order in h and the central bump is second order. At h=10bp on a 10y bond, the forward error is -0.0391 and the central error is +0.0001.<br>\n<b>Derivation:</b><br>\nForward: \\(P(y+h)=P+hP'+\\tfrac12h^2P''+O(h^3)\\), so \\(\\frac{P(y+h)-P}{h}=P'+\\tfrac12hP''+O(h^2)\\). Error is first order in \\(h\\), proportional to \\(P''\\).<br>\nCentral: \\(P(y\\pm h)=P\\pm hP'+\\tfrac12h^2P''\\pm\\tfrac16h^3P'''+\\dots\\). The difference divided by \\(2h\\) gives \\(P'+\\tfrac16h^2P'''+O(h^4)\\). Error is second order in \\(h\\).<br>\n<b>Worked example</b> (\\(D_{mod}=-P'/P\\), 10y bond, exact \\(8.15157\\)):<br>\nForward, \\(h=1\\text{bp}\\): \\(8.14764\\), error \\(-0.0039\\) (about \\(-0.05\\%\\)).<br>\nForward, \\(h=10\\text{bp}\\): \\(8.11243\\), error \\(-0.0391\\) (about \\(-0.5\\%\\)). Error scales linearly with \\(h\\), as predicted.<br>\nCentral, \\(h=10\\text{bp}\\): \\(8.15170\\), error \\(+0.0001\\).<br>\n<b>Trap / Where it breaks:</b> The bump is not smooth when the curve has a kink at a pillar (a linear-in-zero interpolator bumped at a single node), or when the bump crosses a cash-flow date. Use central bumps for DV01 and bump in market-quote units, consistent with how the desk hedges.",
+  "tags": [
+   "strat_tooling",
+   "risk",
+   "finite_difference",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: overnight risk run performance.</b> The book has 200,000 trades and 300 scenarios. Revaluing one trade in one scenario takes 25 microseconds on one core. The farm has 64 cores at 80% parallel efficiency. Estimate the run time, then say what would make it four times slower than this estimate.",
+  "back": "<b>Answer:</b> the single core takes 25 minutes and the farm about 30 s of pricing, and that 30 s excludes curve builds, data load and serialisation.<br>\n<b>Worked example:</b><br>\nSingle core: \\(200{,}000\\times300\\times25\\,\\mu\\text{s}=1{,}500\\,\\text{s}=25\\) minutes.<br>\nFarm: \\(1{,}500/(64\\times0.8)=29.3\\) s, about 30 s of pricing.<br>\n<b>Control angle / Where it breaks:</b> Sanity: the 30-second number is pricing only. Scenario curve builds (300 curves at about 0.5 s each, 150 s single-core, roughly 3 s spread across the farm), data load, and serialisation add to it.<br>\nFour times slower usually means: curves are rebuilt per trade instead of per scenario; the cache is keyed on a curve name rather than on content, so it misses; a Python loop or GIL-bound code path serialises the farm; or memory pressure forces swapping.<br>\n<b>Interviewer follow-up:</b> what do you check first? Answer: a profile of one trade-scenario and one curve build, then the cache hit rate, before touching the farm size.",
+  "tags": [
+   "strat_tooling",
+   "risk_run",
+   "performance",
+   "case_study",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "On a desk risk farm, why is an incremental risk run (reprice only trades whose inputs changed) faster than a full overnight run, and what is the main way it produces a wrong number?",
+  "back": "<b>Answer:</b> it reprices only trades whose inputs changed, and the main wrong-number mode is a cache keyed on a curve name rather than its content.<br>\n<b>Intuition:</b> Why it is faster: a trade's PV depends only on its static data and the market inputs it uses (curves, vol surfaces, fixings). If a trade's input hash is unchanged, its last PV is reused. In the example above, 2% of trades changed, so the cost is about 2% of the full run, or about 0.6 s of farm time.<br>\n<b>Precise:</b> Design: store PVs keyed by a hash of the trade's static data and the content hash of every curve, surface and fixing it reads. Run a full revaluation overnight and incremental runs intraday. Reconcile the incremental result to a full run on a sample each day.<br>\n<b>Trap / Where it breaks:</b> Main wrong-number mode: cache invalidation by name. If a curve is rebuilt with the same name and new content, a cache keyed on the name returns old PVs. Key on content, not on name.<br>\n<b>Interviewer follow-up:</b> what would you test for? Answer: a trade whose curve dependency changes but whose static data does not, which must be repriced.",
+  "tags": [
+   "strat_tooling",
+   "risk_run",
+   "caching",
+   "performance",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In an Excel pricing add-in, the functions {{c1::NOW}}, {{c2::RAND}}, {{c3::OFFSET}} and {{c4::INDIRECT}} are volatile. They recalculate on every worksheet change, so any cell that depends on them forces the pricer to run again on each edit.",
+  "back": "Design rule: keep the pricer a non-volatile function of explicit inputs, and supply the valuation time as an input cell refreshed by a deliberate macro or button. Other volatile functions to know are CELL and INFO. A sheet of 5,000 quote rows re-priced on each keystroke is a production incident, not a convenience.",
+  "tags": [
+   "strat_tooling",
+   "excel",
+   "performance",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Design an Excel add-in that lets sales price a 10y swap or a gilt from a sheet, backed by the desk's Python or C++ pricing library. What do you build, and what are the three ways it fails?",
+  "back": "<b>Answer:</b> a batch function over a range of trades, a shared curve with a version and timestamp, a cache keyed on the trade's inputs and the curve version, and a status on every output. The three failures are per-cell recalculation, silent use of a fallback curve, and library version drift.<br>\n<b>Build:</b><br>\n1. A batch function that takes a range of trades and returns a range of prices in one call. Per-cell calls to a slow pricer are the first failure: 5,000 cells at 3 ms each is 15 s of serial recalculation.<br>\n2. The curve comes from the shared curve service with a version and timestamp. The add-in never builds a curve per call.<br>\n3. A cache keyed on the trade's inputs and the curve version.<br>\n4. Every output carries the curve timestamp and a status (official or fallback). A blank or zero is never returned for an error.<br>\n<b>Trap / Where it breaks:</b> Three failure modes: (a) per-cell recalculation of a volatile or chatty sheet; (b) silent use of a fallback or stale curve; (c) library version drift, where a sales sheet calls an older price for a trade the desk prices with a newer version.<br>\n<b>Interviewer follow-up:</b> what happens when the service is down? Answer: return the last good value with a stale flag and a timestamp, and log the call. Show #N/A rather than zero.",
+  "tags": [
+   "strat_tooling",
+   "excel",
+   "sales_pricing",
+   "design",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Scenario:</b> it is 09:05. Four requests land at once: (1) a trader needs a risk report by 09:30 for a limit discussion; (2) a salesperson needs a quote in ten minutes for a client who will execute; (3) a controller asks why a P&amp;L line moved overnight, with sign-off at 10:00; (4) a quant wants to refactor the curve module. Order them and say what you do with each.",
+  "back": "<b>Answer:</b> Order: (2), then (1), then (3), then (4).<br>\n<b>Steps:</b><br>\n(2) Client execution in ten minutes carries revenue and client-relationship cost, and a wrong quote is worse than a late one, so it goes first, and you confirm the size and the curve status before pricing.<br>\n(1) Risk report by 09:30 is a limit deadline, so it is second. If the report can use the official curve, do it first; if not, tell the trader the time it will be ready.<br>\n(3) The controller's P&amp;L question is a sign-off deadline at 10:00, so it is third but starts now with the decomposition (curve, carry, residual).<br>\n(4) The refactor is not a request with a deadline. It goes to the backlog.<br>\n<b>Control angle:</b> Rule: a control or sign-off deadline beats a convenience request; a live client or production break beats everything. Say the order out loud to the requesters, so the queue is visible.",
+  "tags": [
+   "strat_tooling",
+   "prioritisation",
+   "scenario",
+   "trader_requests",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A rates trader asks why your pricer values a 1y caplet at a price that does not match the sheet they use. The forward is 0.10% and the market quotes a normal vol of 60bp. Your pricer uses lognormal (Black) vol. Explain the discrepancy with numbers, and what you tell the trader.",
+  "back": "<b>Answer:</b> the gap is a model convention. At a forward near zero, a 60bp normal vol converts to a lognormal vol of about 600%, which is not meaningful, so quote normal vol.<br>\n<b>Intuition:</b> Mechanism: the lognormal model needs a positive forward and expresses vol as a percentage of the forward. Near zero, the same normal vol becomes a huge lognormal vol. Approximately, \\(\\sigma_L\\approx\\sigma_N/f\\) at the money, so \\(\\sigma_L\\approx0.0060/0.0010=600\\%\\). The quote is not meaningful, and a pricer that inverts it is unstable.<br>\n<b>Worked example:</b> Price: an at-the-money 1y normal caplet with \\(\\sigma_N=60\\text{bp}\\) is worth about \\(\\sigma\\sqrt{T}/\\sqrt{2\\pi}\\approx0.0024\\) per unit of accrual, roughly 24bp of notional.<br>\n<b>Control angle:</b> Alternatives: normal (Bachelier) pricing, or shifted Black with shift \\(s\\), which uses \\(f+s\\) in place of \\(f\\). With \\(s=2\\%\\), the equivalent lognormal vol is approximately \\(0.0060/0.0210=28.6\\%\\).<br>\nWhat you tell the trader: the model and its shift, the vol convention used on the sheet, and the approximation error. Quote in normal vol near zero. A price difference that comes from a convention is not a mispricing.<br>\n<b>Interviewer follow-up:</b> which convention should the desk quote? Answer: normal vol in the current low-rate regime, with shifted Black only where the shift is documented and used consistently.",
+  "tags": [
+   "strat_tooling",
+   "model_limitations",
+   "normal_vol",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Changing a holiday calendar in the curve builder moves {{c1::pillar dates}}, which changes {{c2::year fractions and discount factors}} on every curve that uses that calendar. Before release, the change needs {{c3::a diff of discount factors on a fixed grid and a DV01 bucket report}} across the whole curve set.",
+  "back": "A calendar change is a model change even though no code changed. The release checks are: diff of discount factors on a fixed grid against the last release, bucketed DV01 before and after, and a list of trades whose maturity or fixing date moves. A calendar edit that is not reviewed is a silent change to every book that uses the curve.",
+  "tags": [
+   "strat_tooling",
+   "curve_builder",
+   "change_control",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Scenario:</b> it is 08:10. The overnight P&amp;L for a rates book moved by £420k. No trades were booked, and the market moved by less than the desk expected. List the five checks you run, in order, and what each one rules out.",
+  "back": "<b>Answer:</b> work through the five checks in order after the P&amp;L explain, since a move with no trades and a small market move is almost always a data problem.<br>\n<b>Steps:</b><br>\n1. <b>Curve status:</b> was the curve official or fallback, and did the pillar count change? Rules out a silent input change.<br>\n2. <b>Static data:</b> did a bond's maturity, coupon, day count or a trade's fixing date change in reference data? Rules out a golden-copy break.<br>\n3. <b>Valuation date and roll:</b> did a holiday move the settlement or valuation date, so that theta or accrual rolled? Rules out a calendar effect.<br>\n4. <b>Trade amendments:</b> were any trades amended or repriced after the cut-off? Rules out a booking change.<br>\n5. <b>Market-data timing:</b> did any source snapshot a different close or time than yesterday? Rules out a timing mismatch.<br>\n<b>Control angle:</b> Run the P&amp;L explain (carry, curve, vol, residual) first, so the check list is targeted. A P&amp;L move with no trades and a small market move is almost always a data problem.<br>\n<b>Interviewer follow-up:</b> when do you escalate? Answer: when the residual exceeds the explain threshold and no check explains it by the sign-off time.<div class=\"fig\"><img src=\"18_desk_8_18_pnl_check_triage.png\"><div class=\"cap\">The five checks for the overnight P&amp;L move, each with what it rules out.</div></div>",
+  "tags": [
+   "strat_tooling",
+   "pnl_explain",
+   "triage",
+   "scenario",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two q tables, both sorted by <code>sym</code> then <code>time</code>: <code>trades</code> (sym, time, px, qty) and <code>quotes</code> (sym, time, bid, ask). You want each trade matched to the last quote for the same symbol at or before the trade time, with no look-ahead. Which operation, and what does it return?",
+  "back": "<b>Answer:</b> an as-of join, <code>aj[`sym`time; trades; quotes]</code>. For each trade row it finds the last quote row with the same <code>sym</code> and a quote time at or before the trade time. The result has the trade columns plus the quote's columns.<br>\n<b>Intuition:</b> Why no look-ahead: the join never takes a quote after the trade time. A trade at 10:00:00.500 matches a quote at 10:00:00.200, not one at 10:00:00.700.<br>\n<b>Interview trap:</b> <code>aj</code> silently gives wrong answers if the tables are not sorted on the key columns, with the time column last. For an exact match on the symbol and time, use an equi-join such as <code>ej</code> instead. Check sort order before trusting the output.<br>\n<b>Interviewer follow-up:</b> what is the use in TCA? Answer: the mid at trade time is the reference for effective spread and markout; a look-ahead join makes every dealer look better.",
+  "tags": [
+   "kdb",
+   "time_series",
+   "tca",
+   "data_engineering",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "In q, {{c1::aj}} is an as-of join. It requires its tables to be {{c2::sorted on the join columns}}, with {{c3::time}} as the {{c4::last}} column of the key list. A {{c5::parted attribute (`p#)}} on the symbol column speeds up per-symbol lookups within a date partition.",
+  "back": "Failure mode: an unsorted table gives plausible-looking output with no error. Check the sort attribute before running a long TCA job, and check a sample of matches by hand against the raw quotes.",
+  "tags": [
+   "kdb",
+   "time_series",
+   "data_engineering",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You are designing a tick store for rates and credit quotes used by risk and TCA. How do you partition it, and how do you build one-minute bars for a dashboard without introducing a look-ahead bias?",
+  "back": "<b>Answer:</b> one partition per date, sorted by symbol and time, with one-minute bars built by <code>xbar</code> and labelled by close time, or signals lagged by one bar, so that no signal reads a bar before it closes.<br>\n<b>Precise:</b> Layout: one partition per date, sorted by symbol and time, with a parted attribute on the symbol column. Reference data (symbol to instrument mapping) is kept separate so that a mapping change is a join, not a rewrite.<br>\nBars: <code>select last mid by sym, 00:01 xbar time from quotes where date=...</code>. The <code>xbar</code> operator rounds each time down to a multiple of one minute, so each bar is labelled by its start.<br>\n<b>Trap / Where it breaks:</b> Look-ahead trap: the value of the bar labelled 10:00 is the last quote in 10:00 to 10:01, which is only known at 10:01. Any signal that reads the 10:00 bar at 10:00 has look-ahead. Label bars by close time, or lag the signal by one bar.<br>\n<b>Interviewer follow-up:</b> why keep reference data separate? Answer: a renamed or re-mapped instrument then changes a join, not historical rows, so history stays reproducible.",
+  "tags": [
+   "kdb",
+   "time_series",
+   "data_engineering",
+   "look_ahead",
+   "lvl_stretch"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The golden copy is the {{c1::single approved}} source for static and reference data (coupon, day count, issue and maturity dates, identifiers). Breaks are reconciled between the golden copy and {{c2::each downstream system}}. A break in {{c3::a day-count convention}} is a {{c4::systematic}} price error on every trade in that bond, unlike a random feed error on one quote.",
+  "back": "The distinction matters for triage. A random error affects one trade and one day. A static-data error repeats on every trade and every day until the record is fixed, so the reconciliation must check the golden copy first and fix it at source, not patch each book.",
+  "tags": [
+   "golden_copy",
+   "reference_data",
+   "reconciliation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: day-count break.</b> A reconciliation shows that the sales tool and the book disagree on accrued interest for a 4.00% semi-annual gilt. The book uses ACT/ACT, the tool uses ACT/365F, and the golden copy says ACT/365F for this bond. The desk has 30 open trades of £100m each in the bond. Quantify the break, and set out the triage.",
+  "back": "<b>Answer:</b> the break is about £55,110 across 30 trades, and the fix belongs in the golden copy, not in each trade.<br>\n<b>Worked example:</b> per 100 face, accrued under ACT/ACT is \\(0.67033\\), under ACT/365F is \\(0.66849\\). Difference \\(0.00184\\) per 100, so \\(\\approx£1{,}837\\) per £100m. Across 30 trades: \\(30\\times1{,}837=£55{,}110\\) of invoice mismatch.<br>\n<b>Steps:</b> Triage:<br>\n1. Establish the correct convention from the market convention for this instrument type, not from which system is newer. For gilts it is ACT/ACT.<br>\n2. Fix the golden copy record. Do not patch 30 trades.<br>\n3. Re-run the accrual and invoice for every open trade in the bond and check that the book and tool now agree.<br>\n4. Check other bonds from the same data feed for the same field error. A systematic break often has siblings.<br>\n5. Record the break as a data-control incident with the P&amp;L effect and the date it began.<br>\n<b>Interviewer follow-up:</b> does a day-count error affect risk? Answer: slightly, through the accrued and the clean-to-dirty bridge; the bigger effect is the invoice and the sales quote.",
+  "tags": [
+   "golden_copy",
+   "day_count",
+   "reconciliation",
+   "case_study",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "After a pricing library release, the regression run shows a PV change of \\(1.3\\times10^{-6}\\) on a trade with £1bn notional. Pass or fail, and why?",
+  "back": "<b>Answer:</b> pass, provided the change is inside the tolerance policy and it has an explanation. Tolerances are set by measure: for analytic PV, a relative tolerance on the order of \\(10^{-10}\\) of notional or the stated currency tolerance; for Monte Carlo or numerical solvers, a looser tolerance tied to the simulation error.<br>\n<b>Intuition:</b> Why tiny changes happen: summation order, compiler optimisation, and threading change the last bits of a double. Adding 0.1 one million times in naive double precision gives 100000.00000133288, an error of about \\(1.3\\times10^{-6}\\) on a total of \\(10^5\\), which is the same order of magnitude. On the £1bn trade the change is about \\(10^{-15}\\) relative to notional, well inside any sensible tolerance. The \\(10^{-11}\\) figure is the relative size of the summation example above.<br>\n<b>Control angle:</b> Escalate when: the change is above the tolerance, the Greeks move without a PV change, or the changes cluster on one product.<br>\n<b>Interviewer follow-up:</b> why not compare bit-for-bit? Answer: every release would fail on compiler and summation noise, and the team would stop reading the report.",
+  "tags": [
+   "regression_testing",
+   "pricing_library",
+   "numerics",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A regression test in the pricing library asserts <code>a == b</code> on two PV totals. The totals sum the same three trade PVs, 0.1, 0.2 and 0.3, in a different order. Compile and run the snippet below; state what it prints and the fix.\n\n<pre><code>#include &lt;cmath&gt;\n#include &lt;iostream&gt;\n#include &lt;vector&gt;\n\ndouble total(const std::vector&lt;double&gt;&amp; pvs) {\n    double s = 0.0;\n    for (double x : pvs) s += x;\n    return s;\n}\n\nint main() {\n    std::vector&lt;double&gt; yesterday{0.1, 0.2, 0.3};\n    std::vector&lt;double&gt; today{0.3, 0.2, 0.1};\n    double a = total(yesterday);\n    double b = total(today);\n    std::cout &lt;&lt; std::boolalpha;\n    std::cout.precision(17);\n    std::cout &lt;&lt; \"a = \" &lt;&lt; a &lt;&lt; \"\\n\";\n    std::cout &lt;&lt; \"b = \" &lt;&lt; b &lt;&lt; \"\\n\";\n    std::cout &lt;&lt; \"a == b : \" &lt;&lt; (a == b) &lt;&lt; \"\\n\";\n    std::cout &lt;&lt; \"|a-b| &lt; 1e-9 : \" &lt;&lt; (std::abs(a - b) &lt; 1e-9) &lt;&lt; \"\\n\";\n    std::cout &lt;&lt; \"0.1+0.2 == 0.3 : \" &lt;&lt; (0.1 + 0.2 == 0.3) &lt;&lt; \"\\n\";\n}\n</code></pre>",
+  "back": "<b>Answer:</b> it prints <code>a == b : false</code>, so the exact-equality assertion fails although the two totals differ only in the last bit.<br>\n<b>Output:</b> compiled with <code>g++ -std=c++20 -Wall -Wextra -O2</code>, it prints:<br>\n<pre><code>a = 0.60000000000000009\nb = 0.59999999999999998\na == b : false\n|a-b| &lt; 1e-9 : true\n0.1+0.2 == 0.3 : false\n</code></pre><br>\n<b>Why:</b> 0.1, 0.2 and 0.3 are not exact in binary, and the rounding error depends on the order of addition. The two totals differ in the last bit.<br>\n<b>Fix:</b> compare with a tolerance scaled to the magnitude of the totals, such as <code>std::abs(a - b) &lt;= tol * std::max(1.0, std::abs(a))</code>. For the regression itself, sum in a fixed order (sort by trade ID) so the result is reproducible.<br>\n<b>Interview trap:</b> <code>0.1 + 0.2 == 0.3</code> is false in IEEE 754 double precision. Equality on floating-point results is almost never the right test.",
+  "tags": [
+   "coding",
+   "cpp",
+   "floating_point",
+   "regression_testing",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "The pricing library needs a new version because the curve-builder API gains a required argument. How do you release it, and what is the rollback?",
+  "back": "<b>Answer:</b> release a breaking change as a new major version, gated on regression, P&amp;L and DV01 diffs with sign-off, and roll back by redeploying the previous tag.<br>\n<b>Steps:</b> Release:<br>\n1. Breaking API change means a major version bump under semantic versioning. Keep the previous major version available for one release cycle, with the old call marked deprecated.<br>\n2. Gate: full regression against the last release on the named golden book, a P&amp;L diff by trade and by bucket, and a DV01 diff. Sign-off by the desk owner and by risk.<br>\n3. Tag the release in version control, and deploy outside the 07:00 curve window.<br>\n<b>Control angle:</b> Rollback: redeploy the previous tag. Do not hot-patch the running version. The rollback must be rehearsed, because it is the only defence when a release is wrong on the day.<br>\n<b>Interviewer follow-up:</b> what if the desk needs the fix before sign-off? Answer: a hotfix branch from the release tag, with its own regression run, and a documented exception for the sign-off.<div class=\"fig\"><img src=\"18_desk_8_26_release_rollback.png\"><div class=\"cap\">Release path for a breaking curve-builder API change: version, gate, sign-off, tag and deploy, with rollback.</div></div>",
+  "tags": [
+   "pricing_library",
+   "release_management",
+   "version_control",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A production hotfix is branched from the {{c1::release tag}}, reviewed, and merged to the release branch. The same fix is then {{c2::cherry-picked back}} to the main branch so that the next release does not lose it. Branching the hotfix from main would ship {{c3::unreleased changes}} along with the fix.",
+  "back": "Principle: production code is the release tag, not the tip of main. Any fix made in production must return to main, or the next release silently reverts it.",
+  "tags": [
+   "version_control",
+   "git",
+   "release_management",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "You are asked to approve a pull request that changes a pricing formula in the desk library. Name the checks you run before you approve it.",
+  "back": "<b>Answer:</b> check that the change is the intended one only, with each regression delta explained, and that no convention changed without the PR saying so.<br>\n<b>Checks:</b><br>\n1. <b>Intended change only:</b> the regression diff on the golden trades, with each delta explained. An unexplained delta blocks the review.<br>\n2. <b>Edge cases tested:</b> zero rate, negative rate, expiry at or near today, and the boundary of any day-count switch.<br>\n3. <b>No hidden convention change:</b> day count, calendar, compounding and settlement lag are unchanged unless the PR says so.<br>\n4. <b>Performance:</b> run time on the benchmark book before and after.<br>\n5. <b>Compatibility:</b> callers in the sales add-in and the risk farm still build and pass their tests.<br>\n6. <b>Hygiene:</b> no hard-coded dates or market values, no secrets, and an author who is not the only approver.<br>\n<b>Interviewer follow-up:</b> what do you do with a large PR you cannot fully review? Answer: ask for it to be split into a pure refactor (no numerical change, checked by bit-for-bit or by the regression) and a behaviour change with its own diff.",
+  "tags": [
+   "code_review",
+   "pricing_library",
+   "version_control",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study: RFQ dashboard.</b> In a month, the desk received 180 RFQs in 10y swaps from clients and quoted 150 of them. It traded 36. Compute the two hit rates, and state which one the dashboard should show as the headline and why. Then say what the dashboard must add so that a rising hit rate is not read as success.",
+  "back": "<b>Answer:</b> trades per quote shown is 24%, trades per request is 20%, and coverage is 83%. The headline is trades per quote shown, with both denominators labelled.<br>\n<b>Worked example:</b> Numbers: \\(36/150=24\\%\\) (trades per quote shown). \\(36/180=20\\%\\) (trades per request). Coverage is \\(150/180=83\\%\\).<br>\n<b>Intuition:</b> Headline: trades per quote shown measures pricing competitiveness given that you quoted. Coverage measures how often you were in the market. Show both, and label the denominator on every chart; a number without its denominator is ambiguous.<br>\n<b>Control angle:</b> What to add:<br>\n1. Response time: median and 95th percentile.<br>\n2. Quote level against mid, in bp, per client cohort.<br>\n3. Markout at 1 and 5 minutes after each trade, to measure whether the client's fills were informed.<br>\n<b>Interviewer follow-up:</b> hit rate rose but P&amp;L fell. Why? Answer: adverse selection. Tighter quotes won mostly with clients who knew the next move, and the markout turns negative.",
+  "tags": [
+   "rfq",
+   "dashboard",
+   "tca",
+   "adverse_selection",
+   "case_study",
+   "lvl_vp_core"
+  ]
+ }
+]
