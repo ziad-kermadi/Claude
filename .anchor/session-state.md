@@ -1,6 +1,6 @@
 # Session state (auto-saved — last known reality)
 
-_Updated: 2026-10-19 19:13:16_  ·  branch: `claude/quant-deck-cpp-training-0rix4z`
+_Updated: 2026-10-19 19:13:28_  ·  branch: `claude/quant-deck-cpp-training-0rix4z`
 
 ## Uncommitted changes
 ```
@@ -15,6 +15,7 @@ Diff stat:
 
 ## Recent commits
 ```
+8a3417c Update anchor session state
 90fbfe8 Force-copy socratic config on session start; delete used handoff; record v3 scope
 5669827 Merge pull request #1 from ziad-kermadi/claude/dazzling-pasteur-18h2mo
 877a1cf Persist socratic config (all but Flow); v3 spec rules and subdeck map
@@ -22,7 +23,6 @@ Diff stat:
 5cfad96 Add handoff file for next session
 887cbd9 Deck v2: 856 notes, 12 subdecks, fact-checked; rebuild .apkg and add README
 e8d8efd Replace dubious 'Narrowed Reference Obligation' card with Standard Reference Obligation
-ddd61e2 Fact-check: coding and scenarios subdecks
 ```
 
 ## Resume
