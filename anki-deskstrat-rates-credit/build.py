@@ -14,6 +14,9 @@ SUBDECKS = {
     "07_converts_loans": "Credit::3 Converts, Loans & CLOs",
     "08_coding_numerics": "Quant & Coding::Numerical Methods",
     "09_scenarios_markets_reg": "Markets::Scenarios, Microstructure & Regulation",
+    "10_xva_funding": "XVA & Funding::XVA, Funding & Capital",
+    "11_repo_financing": "Rates::5 Repo, Financing & Balance Sheet",
+    "12_structured_exotics": "Structured Products::Exotics & Structuring",
 }
 ROOT = "DeskStrat VP London"
 
@@ -69,7 +72,7 @@ def clean(t):
 decks = {ROOT: genanki.Deck(did(ROOT), ROOT)}
 n = 0
 for f in sorted(glob.glob(os.path.join(D, "cards", "*.json"))):
-    key = os.path.basename(f)[:-5]
+    key = os.path.basename(f)[:-5].replace("_deep", "")
     name = f"{ROOT}::{SUBDECKS[key]}"
     for part in range(1, name.count("::") + 1):
         pass

@@ -22,3 +22,12 @@ Write a single valid JSON file (UTF-8) at the path given in your task: a JSON ar
 - 2-6 tags each, e.g. "swaps", "multicurve", "derivation", "mental_math", "scenario", "coding", "convention".
 - Validate your JSON by running: python3 -c "import json,sys; d=json.load(open(sys.argv[1])); print(len(d))" <path>  and fix errors.
 - Write the file with the Write tool or a Python script. Aim for the card count given in your task.
+
+## Depth expansion (v2) — additional rules
+Target: make the reader a top-decile rates/credit quant-strat. Every new card must be at least as hard as a final-round VP question at a top-tier bank.
+Three formats are required in every new file, in roughly equal measure:
+1. **Follow-up chains**: 3-5 linked basic cards simulating an interviewer drilling down on one topic (base question -> "why" -> edge case/failure mode -> derivation or numbers). Front of each card starts with `<b>[Chain: SHORT_NAME n/N]</b>` and recaps the context in one line so the card stands alone. Tag with `chain_short_name`.
+2. **Full derivations**: step-by-step, every step justified (measure change, Ito, replication argument, approximation used and its error order). End with "Where it breaks:" line. Tag `derivation`.
+3. **Worked case studies**: a realistic multi-step problem with concrete numbers (notional, rates, spreads, vols), solved step by step with intermediate results, final answer, and a sanity check. Tag `case_study`. Do the arithmetic carefully (use python to verify every number).
+Also keep ~15% cloze for must-know formulas/conventions.
+Use python3 to verify every numerical result before writing it.
