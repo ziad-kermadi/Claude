@@ -1,0 +1,114 @@
+[
+ {
+  "file": "09_scenarios_markets_reg.json",
+  "index": 2,
+  "front_start": "<b>Mental math:</b> DV01-neutral and cash-neutral 2s5s10s bu",
+  "image": "09_scenarios_markets_reg_2_fly_dv01.png",
+  "caption": "2s5s10s fly: long 100 in the 5y belly against 58.7 of 2y and 41.3 of 10y wings nets to zero DV01."
+ },
+ {
+  "file": "09_scenarios_markets_reg.json",
+  "index": 6,
+  "front_start": "<b>Scenario/mental math:</b> a 2s10s steepener is DV01-neutr",
+  "image": "09_scenarios_markets_reg_6_steepener_pnl.png",
+  "caption": "DV01-neutral 2s10s steepener: +£0.82m from the 2y leg and +£1.64m from the 10y leg, +£2.46m in total."
+ },
+ {
+  "file": "09_scenarios_markets_reg.json",
+  "index": 8,
+  "front_start": "<b>Mental math:</b> 1-month at-the-money swaption straddle o",
+  "image": "09_scenarios_markets_reg_8_straddle_payoff.png",
+  "caption": "1m ATM straddle payoff at expiry: premium about 23bp, break-evens at about ±23bp (0.8 sigma)."
+ },
+ {
+  "file": "09_scenarios_markets_reg.json",
+  "index": 9,
+  "front_start": "<b>Scenario:</b> Bank Rate is 4.00% and the MPC delivers an ",
+  "image": "09_scenarios_markets_reg_9_policy_path.png",
+  "caption": "Expected Bank Rate after a 25bp hike: permanent path gives a 2y average of +25bp, reversal after one quarter gives +3bp."
+ },
+ {
+  "file": "09_scenarios_markets_reg.json",
+  "index": 11,
+  "front_start": "<b>Scenario:</b> a volatility spike hits rates markets and C",
+  "image": "09_scenarios_markets_reg_11_margin_loop.png",
+  "caption": "Margin procyclicality loop: a vol shock raises IM, forced selling lowers prices and raises realised vol, which raises IM again."
+ },
+ {
+  "file": "09_scenarios_markets_reg.json",
+  "index": 12,
+  "front_start": "<b>Scenario:</b> describe the mechanism of the September 202",
+  "image": "09_scenarios_markets_reg_12_ldi_chain.png",
+  "caption": "Sep-Oct 2022 LDI spiral: fiscal shock, collateral calls, forced gilt sales, halted by BoE temporary purchases."
+ },
+ {
+  "file": "09_scenarios_markets_reg.json",
+  "index": 22,
+  "front_start": "<b>Desk strat:</b> define effective spread, realised spread ",
+  "image": "09_scenarios_markets_reg_22_realised_spread.png",
+  "caption": "Buy at 99.50 with mid 99.55: effective spread 0.05, markout 0.03 and realised spread 0.02 after five minutes."
+ },
+ {
+  "file": "09_scenarios_markets_reg.json",
+  "index": 29,
+  "front_start": "<b>Desk strat:</b> a desk holds £500m of 10y gilts (DV01 £40",
+  "image": "09_scenarios_markets_reg_29_exit_cost.png",
+  "caption": "Exit cost of £500m 10y gilts: £80k half-spread alone, £880k over one day, £646k over two days."
+ },
+ {
+  "file": "09_scenarios_markets_reg.json",
+  "index": 36,
+  "front_start": "<b>Regulation:</b> explain the FRTB P&L attribution test (PL",
+  "image": "09_scenarios_markets_reg_36_pla_zones.png",
+  "caption": "PLA traffic light: Spearman zones (red below 0.7, amber 0.7-0.8, green 0.8 and above) and KS zones; thresholds approximate."
+ },
+ {
+  "file": "09_scenarios_markets_reg_deep.json",
+  "index": 6,
+  "front_start": "<b>[Chain: FRTB_SBM 2/4]</b> Context: the same bucket as ste",
+  "image": "09_scenarios_markets_reg_deep_6_frtb_kcurve.png",
+  "caption": "Bucket charge vs tenor correlation for +£10m 2y and -£8m 10y: low, medium and high scenarios give 6.0, 4.47 and 2.0."
+ },
+ {
+  "file": "09_scenarios_markets_reg_deep.json",
+  "index": 14,
+  "front_start": "<b>Derivation: Avellaneda-Stoikov reservation price.</b> A d",
+  "image": "09_scenarios_markets_reg_deep_14_as_quotes.png",
+  "caption": "Indifference bid and ask vs inventory (γ=0.01, σ=2, τ=0.25): constant width 0.01, reservation price shifts 0.01 per unit."
+ },
+ {
+  "file": "09_scenarios_markets_reg_deep.json",
+  "index": 16,
+  "front_start": "<b>Derivation: Almgren-Chriss optimal liquidation path (line",
+  "image": "09_scenarios_markets_reg_deep_16_ac_trajectory.png",
+  "caption": "Almgren-Chriss path with κT=2 has sold 68% by mid-horizon, against 50% for a constant trading rate."
+ },
+ {
+  "file": "09_scenarios_markets_reg_deep.json",
+  "index": 21,
+  "front_start": "<b>Case study: daily P&amp;L attribution for a curve book.</",
+  "image": "09_scenarios_markets_reg_deep_21_pnl_waterfall.png",
+  "caption": "Curve book P&L explain: delta +£106.2k dominates; unexplained residual £3.3k, about 3% of the day's P&L."
+ },
+ {
+  "file": "09_scenarios_markets_reg_deep.json",
+  "index": 23,
+  "front_start": "<b>Case study: capital-adjusted pricing of a long-dated swap",
+  "image": "09_scenarios_markets_reg_deep_23_kva_profile.png",
+  "caption": "SA-CCR EAD for a £100m 30y swap falls with remaining maturity, from £10.9m to £0.68m; KVA about £662k (3.7bp running)."
+ },
+ {
+  "file": "09_scenarios_markets_reg_deep.json",
+  "index": 4,
+  "front_start": "<b>[Chain: RFQ_GILT 5/5]</b> Context: the client sold £50m a",
+  "image": "09_scenarios_markets_reg_deep_4_markout_path.png",
+  "caption": "Client sells £50m at 4.21% against a 4.20% mid: mid moves to 4.22% at 5 min and 4.23% at 30 min, so the edge is lost."
+ },
+ {
+  "file": "09_scenarios_markets_reg_deep.json",
+  "index": 19,
+  "front_start": "<b>Derivation: SA-CCR exposure at default for one uncollater",
+  "image": "09_scenarios_markets_reg_deep_19_saccr_multiplier.png",
+  "caption": "SA-CCR PFE multiplier vs V-C with AddOn £3.935m: 1.0 at V-C = 0, 0.537 at V-C = -5m (EAD £2.96m)."
+ }
+]
