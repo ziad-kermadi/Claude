@@ -1,0 +1,142 @@
+[
+ {
+  "file": "02_swaps_curves.json",
+  "index": 3,
+  "front_start": "What is a lockout in a compounded RFR coupon? Write the coup",
+  "image": "02_swaps_curves_3_lockout_timeline.png",
+  "caption": "Lockout: the final L days take the rate fixed on the last day before the lockout, with the coupon known L days before period end."
+ },
+ {
+  "file": "02_swaps_curves.json",
+  "index": 38,
+  "front_start": "Decompose an FX swap into its legs and explain what the forw",
+  "image": "02_swaps_curves_38_fx_swap_legs.png",
+  "caption": "FX swap: spot and forward exchanges of principal; forward points and the exposure that stays until maturity."
+ },
+ {
+  "file": "02_swaps_curves.json",
+  "index": 41,
+  "front_start": "Why are cleared swaps discounted at the CCP's collateral rat",
+  "image": "02_swaps_curves_41_cleared_flow.png",
+  "caption": "Cleared swap flows: VM in cash, collateral-rate remuneration, and PAI; the trade is discounted at the CCP collateral rate."
+ },
+ {
+  "file": "02_swaps_curves.json",
+  "index": 44,
+  "front_start": "Compare initial margin (IM) and variation margin (VM) for cl",
+  "image": "02_swaps_curves_44_im_vm_flow.png",
+  "caption": "Cleared margin: VM is returned at the collateral rate, while IM is funded above it and rises in volatility spikes."
+ },
+ {
+  "file": "02_swaps_curves.json",
+  "index": 27,
+  "front_start": "Derive the value of a payer swap with notional \\(N\\), fixed ",
+  "image": "02_swaps_curves_27_payer_pv_vs_par.png",
+  "caption": "Payer and receiver PV vs par rate: payer = N*A*(S-K), 100m notional, A = 4.60, K = 3.00%; +920,000 at S = 3.20%."
+ },
+ {
+  "file": "02_swaps_curves_deep.json",
+  "index": 1,
+  "front_start": "<b>[Chain: BOOT 2/4]</b> Same curve (1y 4.10%, 2y 4.20% par,",
+  "image": "02_swaps_curves_deep_1_interp_1y2y.png",
+  "caption": "1.5y zero under linear-zero vs log-linear-DF interpolation: 4.1511% vs 4.1681%, DF 0.940816 vs 0.940585."
+ },
+ {
+  "file": "02_swaps_curves_deep.json",
+  "index": 2,
+  "front_start": "<b>[Chain: BOOT 3/4]</b> Same 1y/2y curve. Under linear-in-c",
+  "image": "02_swaps_curves_deep_2_forward_tilt.png",
+  "caption": "A +1bp move in the 2y quote tilts the 1y-2y forward under linear zeros (+1.0 to +2.9bp) but shifts it flat under log-linear DF (+2.0bp)."
+ },
+ {
+  "file": "02_swaps_curves_deep.json",
+  "index": 4,
+  "front_start": "<b>[Chain: CSA 1/3]</b> A 5y receiver swap, 100m notional, f",
+  "image": "02_swaps_curves_deep_4_csa_mtm.png",
+  "caption": "5y receiver MTM falls from -910,734 to -913,332 when the collateral rate drops from 3.20% to 3.10%: change -2,598."
+ },
+ {
+  "file": "02_swaps_curves_deep.json",
+  "index": 18,
+  "front_start": "<b>Case study: bootstrap three SONIA-style annual par OIS qu",
+  "image": "02_swaps_curves_deep_18_bootstrap_3y.png",
+  "caption": "Three-quote OIS bootstrap: zeros 4.100%, 4.202%, 4.254% with 1y1y forward 4.3043% and 2y1y forward 4.3566%."
+ },
+ {
+  "file": "02_swaps_curves_deep.json",
+  "index": 20,
+  "front_start": "<b>Case study: bucketed DV01 and par hedge.</b> Portfolio: (",
+  "image": "02_swaps_curves_deep_20_bucket_dv01.png",
+  "caption": "Par bucket DV01: +22,899 at 5y and -85,302 at 10y (total -62,403); par swaps of 100m 10y payer and 50m 5y receiver hedge both buckets."
+ },
+ {
+  "file": "02_swaps_curves_deep.json",
+  "index": 22,
+  "front_start": "<b>Case study: MTM of a 5y payer after a 25bp parallel move.",
+  "image": "02_swaps_curves_deep_22_mtm_pv01.png",
+  "caption": "5y payer after a 25bp rise: exact MTM +1,136,800 vs first-order PV01 estimate +1,144,927, an error of +8,127 from the annuity."
+ },
+ {
+  "file": "02_swaps_curves__v3.json",
+  "index": 0,
+  "front_start": "<b>[Chain: JPY_BASIS 1/3]</b> Context: a USD borrower raises",
+  "image": "02_swaps_curves__v3_0_jpy_basis_flow.png",
+  "caption": "JPY/USD basis synthetic USD borrowing: the borrower pays SOFR and receives TONA + b; with b = -25bp the all-in cost is 4.25%."
+ },
+ {
+  "file": "02_swaps_curves__v3.json",
+  "index": 3,
+  "front_start": "<b>Derivation: basis cash flows on a mark-to-market (MtM) re",
+  "image": "02_swaps_curves__v3_3_mtm_reset.png",
+  "caption": "MtM EURUSD basis reset: USD notional fixed at 110m, EUR notional re-marked from 100m to 98.2143m at spot 1.12; quarterly spread cash flow -49,107 EUR."
+ },
+ {
+  "file": "02_swaps_curves__v3.json",
+  "index": 4,
+  "front_start": "<b>Derivation: discount rate for a multi-currency CSA.</b> E",
+  "image": "02_swaps_curves__v3_4_csa_df.png",
+  "caption": "Multi-currency CSA: the cheapest-rate collateral DF (EUR 2.40%, 0.88692) dominates the USD single-currency DF (0.81873) over 5y."
+ },
+ {
+  "file": "02_swaps_curves__v3.json",
+  "index": 5,
+  "front_start": "<b>Case study: value of the collateral-currency option.</b> ",
+  "image": "02_swaps_curves__v3_5_switch_option.png",
+  "caption": "Collateral-currency switch option: ATM value E[max(spread,0)] = sigma/sqrt(2 pi) with sigma = 0.50%, about 0.1995% of notional (199,500 on 100m)."
+ },
+ {
+  "file": "02_swaps_curves__v3.json",
+  "index": 9,
+  "front_start": "<b>Case study: EURIBOR 6M against €STR basis on a 5y swap.</",
+  "image": "02_swaps_curves__v3_9_basis_pv.png",
+  "caption": "EURIBOR 6M vs EUR STR basis: spread of -20bp on 100m with annuity 4.7391 gives PV -947,820 and PV01 47,391 per bp."
+ },
+ {
+  "file": "02_swaps_curves__v3.json",
+  "index": 10,
+  "front_start": "A 1-month OIS spans 31 December. The overnight €STR fixing f",
+  "image": "02_swaps_curves__v3_10_year_end_turn.png",
+  "caption": "A 50bp one-day year-end spike moves the compounded rate by 1.61bp for a 1m OIS and 0.55bp for a 3m OIS; PV 1,388.89 on 100m."
+ },
+ {
+  "file": "02_swaps_curves__v3.json",
+  "index": 12,
+  "front_start": "<b>[Chain: MEETING 1/3]</b> Context: the market path has the",
+  "image": "02_swaps_curves__v3_12_meeting_forward.png",
+  "caption": "Policy path forward is a step function at meeting dates (4.00%, 3.75%, 3.50%), so nodes sit at each meeting."
+ },
+ {
+  "file": "02_swaps_curves__v3.json",
+  "index": 15,
+  "front_start": "<b>[Chain: SOFR_FUT 1/3]</b> Context: CME one-month SOFR fut",
+  "image": "02_swaps_curves__v3_15_sofr_avg_vs_comp.png",
+  "caption": "Three-month SOFR at a flat 4.00% over 91 days: averaging rule 1.0111% vs compounding rule 1.0162%, a 0.51bp difference."
+ },
+ {
+  "file": "02_swaps_curves__v3.json",
+  "index": 17,
+  "front_start": "<b>[Chain: SOFR_FUT 3/3]</b> Context: a 3M SOFR strip with f",
+  "image": "02_swaps_curves__v3_17_sofr_strip_convexity.png",
+  "caption": "SOFR futures strip: convexity adjustments 4.88 to 7.50bp take futures rates 4.00% to 3.85% down to forwards 3.9512% to 3.7750%."
+ }
+]

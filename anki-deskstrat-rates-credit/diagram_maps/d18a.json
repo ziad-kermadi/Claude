@@ -1,0 +1,156 @@
+[
+ {
+  "file": "18_desk_1.json",
+  "index": 0,
+  "front_start": "<b>[Chain: PNL_BREAK 1/5]</b> Context: at 16:15 the rates de",
+  "image": "18_desk_1_0_pnl_break_triage.png",
+  "caption": "Triage order for a £400k residual: population, then market data, then day basis, then breakdown."
+ },
+ {
+  "file": "18_desk_1.json",
+  "index": 2,
+  "front_start": "<b>[Chain: PNL_BREAK 3/5]</b> Context: trade A is a £150m 7y",
+  "image": "18_desk_1_2_trade_a_bucket_bridge.png",
+  "caption": "Trade A explain by bucket: stale 7y pillar leaves a £72k residual, actual P&L £308k."
+ },
+ {
+  "file": "18_desk_1.json",
+  "index": 12,
+  "front_start": "<b>[Chain: FLASH 2/3]</b> Context: flash P&amp;L is +£2.10m.",
+  "image": "18_desk_1_12_flash_official_bridge.png",
+  "caption": "Flash £2.10m to official £2.015m: late trade and EOD vol mark, no plug."
+ },
+ {
+  "file": "18_desk_1.json",
+  "index": 19,
+  "front_start": "<b>Case study: five-day explain and the gamma trap.</b> A re",
+  "image": "18_desk_1_19_five_day_gamma_trap.png",
+  "caption": "Five-day explain: gamma summed on daily moves (£8.5k), not on the net move (£1.0k)."
+ },
+ {
+  "file": "18_desk_2.json",
+  "index": 2,
+  "front_start": "<b>[Chain: IPV 3/4]</b> Context: on the 2y10y book the IPV d",
+  "image": "18_desk_2_2_ipv_wing_evidence_flow.png",
+  "caption": "Single-source wing point: evidence steps, and what to do if evidence stays thin."
+ },
+ {
+  "file": "18_desk_2.json",
+  "index": 21,
+  "front_start": "<b>It is 17:45 on month-end.</b> The consensus service has n",
+  "image": "18_desk_2_21_month_end_fallback_order.png",
+  "caption": "Month-end mark fallback order, fixed in the valuation policy in advance."
+ },
+ {
+  "file": "18_desk_2.json",
+  "index": 22,
+  "front_start": "<b>Case study: month-end IPV for a 10y receiver vol book.</b",
+  "image": "18_desk_2_22_ipv_three_point_bars.png",
+  "caption": "Three IPV points against the 0.5 vol bp band, with vega-weighted P&L."
+ },
+ {
+  "file": "18_desk_2.json",
+  "index": 23,
+  "front_start": "<b>Case study: AVA aggregation on a rates options book.</b> ",
+  "image": "18_desk_2_23_ava_build_waterfall.png",
+  "caption": "AVA build-up of 1.75m (0.39% of fair value) from three components."
+ },
+ {
+  "file": "18_desk_3.json",
+  "index": 1,
+  "front_start": "<b>[Chain: BOOK_FLIP 2/4]</b> Context: the same 250m 10y pay",
+  "image": "18_desk_3_1_book_flip_residual.png",
+  "caption": "Payer booked as receiver: residual is 2 × DV01 × move, about −£2.09m."
+ },
+ {
+  "file": "18_desk_3.json",
+  "index": 17,
+  "front_start": "For a cleared trade, what is the difference between a give-u",
+  "image": "18_desk_3_17_give_up_vs_novation.png",
+  "caption": "Give-up then CCP novation: who holds the risk at each stage."
+ },
+ {
+  "file": "18_desk_3.json",
+  "index": 20,
+  "front_start": "<b>Case study: compression of a same-currency book.</b> A de",
+  "image": "18_desk_3_20_compression_before_after.png",
+  "caption": "Compression: gross falls from 310m to 70m, aggregate DV01 unchanged at 31,960 per bp."
+ },
+ {
+  "file": "18_desk_3.json",
+  "index": 23,
+  "front_start": "<b>Case study: novation of an in-the-money swap.</b> You are",
+  "image": "18_desk_3_23_novation_itm_flow.png",
+  "caption": "Novating an in-the-money swap: transferee pays about 0.916m and the credit exposure follows."
+ },
+ {
+  "file": "18_desk_4.json",
+  "index": 1,
+  "front_start": "<b>[Chain: RFQ_WIN 2/4]</b> Context: the same five-dealer RF",
+  "image": "18_desk_4_1_winners_curse_vs_dealers.png",
+  "caption": "Expected error given a win rises with the number of dealers (5 dealers: 0.58bp at σ = 0.5bp)."
+ },
+ {
+  "file": "18_desk_4.json",
+  "index": 4,
+  "front_start": "<b>Derivation:</b> A dealer quotes a half-spread \\(h\\) (bp) ",
+  "image": "18_desk_4_4_hit_ratio_curve_optimum.png",
+  "caption": "Logistic hit curve and expected P&L per RFQ: optimum at h = 1.33bp, not the tightest spread."
+ },
+ {
+  "file": "18_desk_4.json",
+  "index": 9,
+  "front_start": "<b>[Chain: MARK 2/3]</b> Context: a month of gilt RFQ flow s",
+  "image": "18_desk_4_9_tier_realised_spread.png",
+  "caption": "Tier effective spread split into realised spread and 5-minute markout give-back."
+ },
+ {
+  "file": "18_desk_4.json",
+  "index": 10,
+  "front_start": "<b>[Chain: MARK 3/3]</b> Context: tier B's markout is −0.2bp",
+  "image": "18_desk_4_10_markout_by_horizon.png",
+  "caption": "Markout by horizon: tier B grows from −0.2 to −1.2bp (informed flow); tier A stays small."
+ },
+ {
+  "file": "18_desk_4.json",
+  "index": 12,
+  "front_start": "<b>[Chain: AUTOHEDGE 2/3]</b> Context: same £200m swap, but ",
+  "image": "18_desk_4_12_autohedge_threshold.png",
+  "caption": "Auto-hedge: £66k/bp excess above the £100k/bp limit, and 1-day 1σ risk £830k vs £500k."
+ },
+ {
+  "file": "18_desk_5.json",
+  "index": 0,
+  "front_start": "<b>[Chain: PORT_BID 1/4]</b> Context: a client offers a 40-b",
+  "image": "18_desk_5_0_portfolio_bid_waterfall.png",
+  "caption": "Portfolio bid at 99.20% of mid: £2.0m (0.80%) discount to the £250m mid."
+ },
+ {
+  "file": "18_desk_5.json",
+  "index": 4,
+  "front_start": "<b>[Chain: DEFAULT_DAY 1/4]</b> Context: an IG-rated issuer ",
+  "image": "18_desk_5_4_default_day_workflow.png",
+  "caption": "Credit desk first hours after an issuer bankruptcy: four steps in order."
+ },
+ {
+  "file": "18_desk_5.json",
+  "index": 5,
+  "front_start": "<b>[Chain: DEFAULT_DAY 2/4]</b> Context: as before, the issu",
+  "image": "18_desk_5_5_cds_payout_profile.png",
+  "caption": "Cash-settled CDS payoff: $20m × (1 − 0.28) = $14.4m at an auction price of 28."
+ },
+ {
+  "file": "18_desk_5.json",
+  "index": 9,
+  "front_start": "<b>Case study: ETF premium arbitrage.</b> An IG bond ETF tra",
+  "image": "18_desk_5_9_etf_arb_waterfall.png",
+  "caption": "ETF creation arbitrage: 0.40% premium less 0.15% bid-offer and 0.02% fee, £115k on £50m."
+ },
+ {
+  "file": "18_desk_5.json",
+  "index": 21,
+  "front_start": "<b>[Chain: FUNDING 1/3]</b> Context: the dealer holds £300m ",
+  "image": "18_desk_5_21_repo_carry_waterfall.png",
+  "caption": "Funding carry on £300m: 5.2% bond income less 4.0% GC funding, net £3.6m a year."
+ }
+]

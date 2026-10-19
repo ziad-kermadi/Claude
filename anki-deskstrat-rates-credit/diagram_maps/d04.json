@@ -1,0 +1,114 @@
+[
+ {
+  "file": "04_inflation.json",
+  "index": 0,
+  "front_start": "UK index-linked gilts: what does the indexation lag do to th",
+  "image": "04_inflation_0_indexation_lag_timeline.png",
+  "caption": "Post-2005 IR uses RPI(m-3) and is flat; pre-2005 uses RPI(m-8) and RPI(m-7), interpolated daily."
+ },
+ {
+  "file": "04_inflation.json",
+  "index": 3,
+  "front_start": "Why is the index ratio of a post-2005 UK linker a step funct",
+  "image": "04_inflation_3_index_ratio_step_vs_interp.png",
+  "caption": "Interpolated index moves daily; post-2005 index is flat in each month and steps on the 1st (illustrative 0.3% change)."
+ },
+ {
+  "file": "04_inflation.json",
+  "index": 4,
+  "front_start": "Mental math: a linker pays a 1.25% real coupon semi-annually",
+  "image": "04_inflation_4_accrued_interest_day60.png",
+  "caption": "Accrued at day 60 of 182 with index ratio 1.30: about 0.27 of the 0.81 half-coupon."
+ },
+ {
+  "file": "04_inflation.json",
+  "index": 8,
+  "front_start": "Explain the RPI formula effect. Why does the arithmetic-vers",
+  "image": "04_inflation_8_carli_vs_jevons_bias.png",
+  "caption": "Carli (arithmetic) gives 1.000 and Jevons (geometric) 0.980 for relatives 1.2 and 0.8."
+ },
+ {
+  "file": "04_inflation.json",
+  "index": 13,
+  "front_start": "Given zero-coupon breakevens \\(K_1\\) to \\(T_1=1\\)y and \\(K_2",
+  "image": "04_inflation_13_zc_path_forward_yoy.png",
+  "caption": "ZC breakevens 3.0% (1y) and 3.2% (2y) give a year-two forward YoY of 3.40%, before convexity."
+ },
+ {
+  "file": "04_inflation.json",
+  "index": 18,
+  "front_start": "Walk through bootstrapping a monthly projected RPI index fro",
+  "image": "04_inflation_18_rpi_bootstrap_flow.png",
+  "caption": "Steps for projecting a monthly RPI index from ZCIIS pillars: known prints, seasonal factors, pillar solve, interpolation."
+ },
+ {
+  "file": "04_inflation.json",
+  "index": 23,
+  "front_start": "TIPS principal is floored at par at maturity. Price this flo",
+  "image": "04_inflation_23_tips_floor_payoff.png",
+  "caption": "TIPS par floor pays max(1 - I(T)/I(0), 0): a put on cumulative inflation at 1.00, far from the 1.40 forward."
+ },
+ {
+  "file": "04_inflation.json",
+  "index": 27,
+  "front_start": "A UK defined-benefit scheme pays LPI increases capped at 5% ",
+  "image": "04_inflation_27_lpi_collar_payoff.png",
+  "caption": "LPI(0,5%) payoff: a 0% caplet less a 5% caplet, so the pension hedge is short 5% caps."
+ },
+ {
+  "file": "04_inflation.json",
+  "index": 28,
+  "front_start": "Scenario: pension schemes add long-dated inflation hedges du",
+  "image": "04_inflation_28_ldi_hedging_feedback_loop.png",
+  "caption": "Long-end hedging loop: linker buying and ZCIIS payers push real yields down and breakevens up; stress reverses the flow."
+ },
+ {
+  "file": "04_inflation_deep.json",
+  "index": 1,
+  "front_start": "<b>[Chain: RPI_REFORM 2/5]</b> Context: the instantaneous ex",
+  "image": "04_inflation_deep_1_par_wedge_kink_2030.png",
+  "caption": "Instantaneous wedge steps from 1.0% to 0.4% at 3.3y (hypothetical); par wedge is the running average, 0.60% at 10y."
+ },
+ {
+  "file": "04_inflation_deep.json",
+  "index": 12,
+  "front_start": "<b>Derivation: ZC inflation swap with a lag.</b> A 10y UK RP",
+  "image": "04_inflation_deep_12_zc_swap_fixing_lag.png",
+  "caption": "10y RPI ZCIIS fixes I(T-2m) and pays at T; the lag is the source of the timing adjustment."
+ },
+ {
+  "file": "04_inflation_deep.json",
+  "index": 22,
+  "front_start": "<b>Case study: settlement cash price of a post-2005 linker.<",
+  "image": "04_inflation_deep_22_linker_cash_price_flow.png",
+  "caption": "Real clean 98.20 to cash dirty 118.77 per 100 nominal, using IR 1.2069 and real accrued 0.2060."
+ },
+ {
+  "file": "04_inflation_deep.json",
+  "index": 24,
+  "front_start": "<b>Case study: real yield versus nominal, relative value.</b",
+  "image": "04_inflation_deep_24_real_yield_fisher_vs_shortcut.png",
+  "caption": "Fair 10y real yield 1.455% (Fisher) against 1.50% (additive shortcut) and 1.75% quoted on the linker."
+ },
+ {
+  "file": "04_inflation_deep.json",
+  "index": 26,
+  "front_start": "<b>Case study: seasonal-adjusted carry over 3 months.</b> Lo",
+  "image": "04_inflation_deep_26_seasonal_carry_components.png",
+  "caption": "3-month carry: the -0.20% seasonal term turns about +GBP 5.2k of trend carry into about -GBP 21.1k."
+ },
+ {
+  "file": "04_inflation_deep.json",
+  "index": 27,
+  "front_start": "<b>Case study: DV01-matched linker versus nominal.</b> Linke",
+  "image": "04_inflation_deep_27_dv01_matched_scenarios.png",
+  "caption": "DV01-matched linker vs short nominal: net P&L is GBP 10,500 per bp of breakeven move in each scenario."
+ },
+ {
+  "file": "04_inflation_deep.json",
+  "index": 29,
+  "front_start": "<b>Case study: caplet delta hedge and gamma.</b> Notional £1",
+  "image": "04_inflation_deep_29_caplet_value_vs_forward.png",
+  "caption": "Caplet value against forward YoY with delta tangent at 3.00%: the 5bp move is 1.50bp by delta, 1.54bp exact."
+ }
+]
