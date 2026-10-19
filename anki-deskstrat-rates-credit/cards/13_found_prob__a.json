@@ -1,0 +1,502 @@
+[
+ {
+  "type": "basic",
+  "front": "What is a probability space \\((\\Omega,\\mathcal F,P)\\), in plain terms, and what does each component do?",
+  "back": "<b>Answer:</b> a probability space has three parts: the set of all possible outcomes \\(\\Omega\\), the collection \\(\\mathcal F\\) of events you are allowed to assign a probability to, and a measure \\(P\\) that gives each event a number in \\([0,1]\\) with \\(P(\\Omega)=1\\) and additivity over disjoint events.<br>\n<b>Intuition:</b> \\(\\Omega\\) is a complete description of everything that could happen, \\(\\mathcal F\\) is the set of questions you may ask, and \\(P\\) gives the weight of each answer.<br>\n<b>Statement:</b> countable additivity, \\(P(\\bigcup_n A_n)=\\sum_n P(A_n)\\) for disjoint \\(A_n\\in\\mathcal F\\).<br>\n<b>Example:</b> two fair coin tosses, \\(\\Omega=\\{HH,HT,TH,TT\\}\\), \\(\\mathcal F=2^\\Omega\\) with 16 events. \\(P(\\text{at least one }H)=3/4\\).<br>\n<b>Used in the deck for:</b> pricing measures (risk-neutral \\(Q\\), forward measures \\(Q^T\\) in 03), and the filtered-probability language of the stochastic-calculus cards below.",
+  "tags": [
+   "foundations",
+   "probability_space",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is a \\(\\sigma\\)-algebra, and why is it the right object for \"what is known\" rather than the list of all outcomes?",
+  "back": "<b>Answer:</b> a \\(\\sigma\\)-algebra is the family of events that can be assigned a probability. It contains \\(\\Omega\\) and is closed under complement and countable union. A random variable \\(X\\) generates the \\(\\sigma\\)-algebra \\(\\sigma(X)\\) of events it determines, and that is the information \\(X\\) carries.<br>\n<b>Intuition:</b> information is a partition of outcomes, not a list of numbers. Two variables that answer the same yes/no questions carry the same information.<br>\n<b>Example:</b> \\(X=\\#\\text{heads}\\) in two tosses. The events determined by \\(X\\) are unions of the cells \\(\\{TT\\}\\), \\(\\{HT,TH\\}\\), \\(\\{HH\\}\\), so \\(\\sigma(X)\\) has \\(2^3=8\\) events. The full \\(\\mathcal F\\) on the same \\(\\Omega\\) has 16, so \\(X\\) does not reveal the order of the tosses.<br>\n<b>Used in the deck for:</b> filtrations \\(\\mathcal F_t\\) (Brownian section below), and the \"known at time \\(t\\)\" condition in martingale pricing (03).",
+  "tags": [
+   "foundations",
+   "sigma_algebra",
+   "information",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CE 1/3]</b> Context: two fair coin tosses, \\(X\\) = number of heads, \\(\\mathcal G=\\sigma(\\text{first toss})\\). What is \\(E[X\\mid\\mathcal G]\\), and what is its defining property?",
+  "back": "<b>Answer:</b> \\(E[X\\mid\\mathcal G]\\) is the \\(\\mathcal G\\)-measurable variable that averages \\(X\\) over each cell of \\(\\mathcal G\\). Here it equals \\(1.5\\) if the first toss is H and \\(0.5\\) if it is T.<br>\n<b>Defining property:</b> \\(E[\\mathbf 1_A\\,E[X\\mid\\mathcal G]]=E[\\mathbf 1_A X]\\) for every \\(A\\in\\mathcal G\\). Equivalently, it is the best \\(L^2\\) predictor of \\(X\\) using only \\(\\mathcal G\\)-information.<br>\n<b>Check:</b> given H, the second toss averages \\(1/2\\), so \\(E[X\\mid H]=1+\\tfrac12=1.5\\). Given T, \\(E[X\\mid T]=0+\\tfrac12=0.5\\). Averaging over the two cells, each with probability \\(1/2\\), gives \\(E[X]=1\\).<br>\n<b>Used in the deck for:</b> the forward swap-rate martingale under the annuity measure (03), and every conditional expectation in the martingale cards below.",
+  "tags": [
+   "foundations",
+   "conditional_expectation",
+   "chain_ce",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CE 2/3]</b> Context: three fair coin tosses, \\(X\\) = number of heads, \\(Y_1\\) = indicator of the first toss, \\(\\mathcal G=\\sigma(Y_1)\\), \\(\\mathcal H\\) the trivial \\(\\sigma\\)-algebra \\(\\{\\emptyset,\\Omega\\}\\). State the tower property and check it on this example.",
+  "back": "<b>Answer:</b> for \\(\\mathcal H\\subseteq\\mathcal G\\), \\(E\\bigl[E[X\\mid\\mathcal G]\\mid\\mathcal H\\bigr]=E[X\\mid\\mathcal H]\\). When you condition in stages, the smaller information set is the one that survives.<br>\n<b>Check:</b> \\(E[X\\mid\\mathcal G]=Y_1+1\\), because the other two tosses average 1. Then \\(E[X\\mid\\mathcal H]=E[X]=1.5\\), and \\(E[Y_1+1]=0.5+1=1.5\\). Both sides agree.<br>\n<b>Special case:</b> with \\(\\mathcal H\\) trivial, the tower property gives \\(E[E[X\\mid\\mathcal G]]=E[X]\\), the law of total expectation.<br>\n<b>Used in the deck for:</b> nested expectations in exposure profiles (10), and the Doob-martingale argument in the Andersen–Broadie bound (08).",
+  "tags": [
+   "foundations",
+   "tower_property",
+   "chain_ce",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: CE 3/3]</b> Context: \\(W\\) is a standard Brownian motion, \\(W_1=2\\) is observed, \\(\\mathcal F_1\\) is the information up to time 1. What is \\(E[W_1W_3\\mid\\mathcal F_1]\\), and what is \\(E[W_1W_3]\\) without conditioning?",
+  "back": "<b>Answer:</b> \\(E[W_1W_3\\mid\\mathcal F_1]=W_1\\,E[W_3\\mid\\mathcal F_1]=2\\cdot2=4\\). Unconditionally, \\(E[W_1W_3]=1\\).<br>\n<b>Rule (taking out what is known):</b> if \\(X\\) is \\(\\mathcal G\\)-measurable, \\(E[XY\\mid\\mathcal G]=X\\,E[Y\\mid\\mathcal G]\\). \\(W_1\\) is known at time 1, so it comes out of the expectation.<br>\n<b>Why the unconditional value is 1:</b> \\(W_1\\) and \\(W_3-W_1\\) are independent, so \\(E[W_1W_3]=E[W_1^2]+E[W_1]\\,E[W_3-W_1]=1\\). The observation \\(W_1=2\\) moves the forecast of \\(W_3\\) from 0 to 2, which is why the conditional value is 4.<br>\n<b>Used in the deck for:</b> the martingale checks for \\(W_t\\) and \\(W_t^2-t\\) below, and the same reduction used when conditioning Brownian paths on an observed value.",
+  "tags": [
+   "foundations",
+   "conditional_expectation",
+   "chain_ce",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Are independent random variables always uncorrelated, and is the converse true? Give a counterexample.",
+  "back": "<b>Answer:</b> independence implies zero covariance. Zero covariance does not imply independence.<br>\n<b>Intuition:</b> covariance measures only linear association. A relation like \\(Y=X^2\\) is perfectly deterministic but invisible to a linear measure when the distribution of \\(X\\) is symmetric.<br>\n<b>Counterexample:</b> \\(X\\) uniform on \\(\\{-1,0,1\\}\\) and \\(Y=X^2\\). Then \\(E[X]=0\\) and \\(E[XY]=E[X^3]=0\\), so \\(\\text{Cov}(X,Y)=0\\). But \\(P(Y=1)=2/3\\) while \\(P(Y=1\\mid X=1)=1\\), so they are dependent.<br>\n<b>Rule:</b> independence means \\(P(A\\cap B)=P(A)P(B)\\) for all events. Zero correlation tests only the second moment of the joint law.<br>\n<b>Used in the deck for:</b> correlated default and copula cards (06), and the warning that a zero-correlation assumption can still leave a non-linear joint-tail exposure.",
+  "tags": [
+   "foundations",
+   "independence",
+   "correlation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "For \\(X\\sim N(0,\\sigma_X^2)\\) and \\(Y\\sim N(0,\\sigma_Y^2)\\) with correlation \\(\\rho\\), what is the standard deviation of \\(X-Y\\)? Give \\(\\sigma_X=\\sigma_Y=1\\%\\) and \\(\\rho=0.5\\).",
+  "back": "<b>Answer:</b> \\(\\text{Var}(X-Y)=\\sigma_X^2+\\sigma_Y^2-2\\rho\\sigma_X\\sigma_Y\\), so \\(\\text{sd}(X-Y)=\\sqrt{\\sigma_X^2+\\sigma_Y^2-2\\rho\\sigma_X\\sigma_Y}\\).<br>\n<b>Intuition:</b> correlation enters only through the cross term, and it enters linearly. The more the two legs move together, the less their difference moves.<br>\n<b>Example:</b> \\(\\text{Var}=10^{-4}+10^{-4}-2(0.5)(10^{-4})=10^{-4}\\), so the sd is 1%. At \\(\\rho=0\\) it is \\(\\sqrt2\\%\\approx1.41\\%\\); at \\(\\rho=1\\) it is zero.<br>\n<b>Used in the deck for:</b> the CMS spread-option variance \\(\\sigma_1^2+\\sigma_2^2-2\\rho\\sigma_1\\sigma_2\\) (03), and index-versus-single-name volatility in the credit cards (05).",
+  "tags": [
+   "foundations",
+   "covariance",
+   "case_study",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Independence implies {{c1::zero covariance}}. The converse fails in general, but it holds for {{c2::jointly Gaussian}} random variables.",
+  "back": "For a jointly normal pair, uncorrelated means independent. This is why a Gaussian copula can use correlation as its entire dependence structure, and why the conditioning formulas below depend only on \\(\\rho\\). The converse fails for \\(X\\) and \\(X^2\\) with \\(X\\) symmetric (previous card).<br><b>Used in the deck for:</b> the Gaussian-copula default model (06).",
+  "tags": [
+   "foundations",
+   "independence",
+   "gaussian",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Derive the fourth moment of \\(X\\sim N(0,\\sigma^2)\\). Why is it \\(3\\sigma^4\\), and what is the general even-moment formula?",
+  "back": "<b>Answer:</b> \\(E[X^4]=3\\sigma^4\\). In general \\(E[X^{2k}]=(2k-1)!!\\,\\sigma^{2k}\\), and odd moments vanish.<br>\n<b>Derivation:</b> Stein's identity for the normal, \\(E[Xg(X)]=\\sigma^2E[g'(X)]\\), with \\(g(X)=X^3\\) gives \\(E[X^4]=3\\sigma^2E[X^2]\\). Then \\(E[X^2]=\\sigma^2\\), so \\(E[X^4]=3\\sigma^4\\).<br>\n<b>Intuition:</b> kurtosis 3 is the benchmark. Fat tails show up as excess kurtosis above 3.<br>\n<b>Example:</b> \\(\\sigma=1\\%\\): \\(E[X^4]=3\\times10^{-8}\\). The fourth-moment root is \\(3^{1/4}\\sigma\\approx1.32\\%\\), already above \\(\\sigma\\) for a normal.<br>\n<b>Used in the deck for:</b> Taylor and Hermite expansions of CMS convexity (03), and the normal-moment inputs in the tail-sensitive scenario cards (09).",
+  "tags": [
+   "foundations",
+   "normal_distribution",
+   "moments",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For \\(X\\sim N(\\mu,\\sigma^2)\\), the moment generating function is \\(E[e^{tX}]=\\){{c1::\\(\\exp\\bigl(\\mu t+\\tfrac12\\sigma^2t^2\\bigr)\\)}}, obtained by completing the square in the Gaussian integral.",
+  "back": "Worked: \\(\\mu=0\\), \\(\\sigma=0.1\\), \\(t=2\\) gives \\(E[e^{2X}]=\\exp(0.02)=1.0202\\). Derivation: the exponent \\(tx-\\tfrac{(x-\\mu)^2}{2\\sigma^2}\\) equals \\(-\\tfrac{(x-\\mu-\\sigma^2t)^2}{2\\sigma^2}+\\mu t+\\tfrac12\\sigma^2t^2\\). The remaining integral is 1. <b>Used in the deck for:</b> lognormal moments (below) and the Hull–White bond formula (03).",
+  "tags": [
+   "foundations",
+   "mgf",
+   "normal_distribution",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the characteristic function of a random variable, why is it preferred to the MGF in general, and what is it for \\(X\\sim N(\\mu,\\sigma^2)\\)?",
+  "back": "<b>Answer:</b> \\(\\varphi_X(u)=E[e^{iuX}]\\). It always exists because the integrand is bounded. The MGF \\(E[e^{tX}]\\) can be infinite. For the normal, \\(\\varphi_X(u)=\\exp(i\\mu u-\\tfrac12\\sigma^2u^2)\\).<br>\n<b>Intuition:</b> it is the Fourier transform of the law. It determines the distribution uniquely, and for independent variables \\(\\varphi_{X+Y}=\\varphi_X\\varphi_Y\\).<br>\n<b>Example:</b> standard normal at \\(u=1\\): \\(\\varphi(1)=e^{-1/2}=0.6065\\). A Cauchy variable has no MGF at any \\(t\\neq0\\), yet its characteristic function \\(e^{-|u|}\\) exists.<br>\n<b>Used in the deck for:</b> Fourier (Carr–Madan type) option pricing, and the affine closed forms such as the CIR bond price (06).",
+  "tags": [
+   "foundations",
+   "characteristic_function",
+   "fourier",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "If \\(Y\\sim N(\\mu,\\sigma^2)\\) and \\(X=e^{Y}\\), what are the mean and variance of \\(X\\)? Give the numbers for \\(\\mu=0\\), \\(\\sigma=0.2\\).",
+  "back": "<b>Answer:</b> \\(E[X]=e^{\\mu+\\sigma^2/2}\\) and \\(\\text{Var}[X]=\\bigl(e^{\\sigma^2}-1\\bigr)e^{2\\mu+\\sigma^2}\\).<br>\n<b>Derivation:</b> \\(E[X]=M_Y(1)\\), where \\(M_Y(t)=e^{\\mu t+\\sigma^2t^2/2}\\). For the second moment, \\(E[X^2]=E[e^{2Y}]=M_Y(2)=e^{2\\mu+2\\sigma^2}\\), and subtract \\(E[X]^2=e^{2\\mu+\\sigma^2}\\).<br>\n<b>Example:</b> \\(\\mu=0\\), \\(\\sigma=0.2\\): \\(E[X]=e^{0.02}=1.0202\\). \\(\\text{Var}=(e^{0.04}-1)e^{0.04}=0.04248\\), so the sd is 0.2061. The median is \\(e^{\\mu}=1\\), so the mean sits 2.0% above the median.<br>\n<b>Intuition:</b> \\(X\\) is positive and right-skewed. The mean exceeds the median by the convexity factor \\(e^{\\sigma^2/2}\\) (see the Jensen cards below).<br>\n<b>Used in the deck for:</b> lognormal forward and Black-model moments (03), and the lognormal index convexity \\(E[I_T]\\) in the inflation cards (04).",
+  "tags": [
+   "foundations",
+   "lognormal",
+   "moments",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For \\(Y\\sim N(\\mu,\\sigma^2)\\), \\(E[e^{Y}]=\\){{c1::\\(\\exp\\bigl(\\mu+\\tfrac12\\sigma^2\\bigr)\\)}}, so the expectation of the exponential exceeds \\(e^{E[Y]}\\) by the factor \\(e^{\\sigma^2/2}\\).",
+  "back": "This is the MGF at \\(t=1\\). It is the reason a lognormal forward is not the exponential of its expected log-value: the gap is the convexity adjustment, and it is quadratic in \\(\\sigma\\). <b>Used in the deck for:</b> the lognormal forward and inflation index moments (03, 04).",
+  "tags": [
+   "foundations",
+   "lognormal",
+   "convexity",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "For a bivariate normal \\((X,Y)\\) with means \\(\\mu_X,\\mu_Y\\), standard deviations \\(\\sigma_X,\\sigma_Y\\) and correlation \\(\\rho\\), what is the conditional law of \\(X\\) given \\(Y=y\\)?",
+  "back": "<b>Answer:</b> \\(X\\mid Y=y\\sim N\\!\\left(\\mu_X+\\rho\\,\\frac{\\sigma_X}{\\sigma_Y}\\,(y-\\mu_Y),\\ \\sigma_X^2(1-\\rho^2)\\right)\\).<br>\n<b>Intuition:</b> the conditional mean is a regression on \\(y\\). The slope is \\(\\rho\\sigma_X/\\sigma_Y\\), not \\(\\rho\\). The conditional variance does not depend on \\(y\\), and it shrinks by \\(1-\\rho^2\\). A correlation of 0.9 removes 81% of the variance.<br>\n<b>Derivation sketch:</b> the joint density has exponent \\(-\\frac{x^2-2\\rho xy+y^2}{2(1-\\rho^2)}\\) in standardised units. Completing the square in \\(x\\) gives mean \\(\\rho y\\) and variance \\(1-\\rho^2\\). Rescale to recover the general form.<br>\n<b>Where it breaks:</b> the conditional mean is exactly linear only because the pair is jointly Gaussian. For other pairs it is in general non-linear.<br>\n<b>Used in the deck for:</b> the Gaussian-copula conditional default model (06), and the factor conditioning in the rate and inflation scenario maps (03, 04).",
+  "tags": [
+   "foundations",
+   "gaussian_conditioning",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>Case study:</b> \\(\\mu_X=\\mu_Y=0\\), \\(\\sigma_X=\\sigma_Y=1\\), \\(\\rho=0.6\\). Given \\(Y=1.5\\), what is the conditional distribution of \\(X\\), and what is its 95% interval?",
+  "back": "<b>Answer:</b> mean \\(=0.6\\times1.5=0.90\\). Variance \\(=1-0.36=0.64\\), so sd \\(=0.80\\). The 95% interval is \\(0.90\\pm1.96\\times0.80=[-0.67,\\,2.47]\\).<br>\n<b>Comparison:</b> the unconditional interval is \\([-1.96,1.96]\\), of width 3.92. The conditional width is \\(3.14\\), a ratio of 0.80, which is \\(\\sqrt{1-\\rho^2}\\). The observation shifts the centre by 0.9 and narrows the interval.<br>\n<b>Sanity check:</b> \\(\\rho=0\\) gives back \\(N(0,1)\\). \\(\\rho=1\\) gives a point mass at \\(y\\), since the conditional variance is zero.<br>\n<b>Used in the deck for:</b> conditional-scenario checks in the copula and factor cards (06), where the same formula gives the conditional distribution of a latent default factor.",
+  "tags": [
+   "foundations",
+   "gaussian_conditioning",
+   "case_study",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the conditional distribution of \\(X_1\\) given \\(X_2=x_2\\) for a multivariate normal? Give the formula with covariance blocks and a worked case.",
+  "back": "<b>Answer:</b> with \\(\\Sigma=\\begin{pmatrix}\\Sigma_{11}&amp;\\Sigma_{12}\\\\\\Sigma_{21}&amp;\\Sigma_{22}\\end{pmatrix}\\), \\(X_1\\mid X_2=x_2\\sim N\\!\\bigl(\\mu_1+\\Sigma_{12}\\Sigma_{22}^{-1}(x_2-\\mu_2),\\ \\Sigma_{11}-\\Sigma_{12}\\Sigma_{22}^{-1}\\Sigma_{21}\\bigr)\\).<br>\n<b>Intuition:</b> the Schur complement \\(\\Sigma_{11}-\\Sigma_{12}\\Sigma_{22}^{-1}\\Sigma_{21}\\) is the uncertainty left in \\(X_1\\) after the regression on \\(X_2\\). With a one-dimensional \\(X_2\\) it reduces to the bivariate formula.<br>\n<b>Example:</b> \\(\\sigma_1=2\\), \\(\\sigma_2=1\\), \\(\\rho=0.5\\), zero means, observed \\(x_2=1.5\\). Then \\(\\Sigma_{12}=\\rho\\sigma_1\\sigma_2=1\\), \\(\\Sigma_{22}=1\\), \\(\\Sigma_{11}=4\\). Conditional mean \\(=1\\cdot1.5=1.5\\), conditional variance \\(=4-1=3\\).<br>\n<b>Check:</b> the bivariate slope is \\(\\rho\\sigma_1/\\sigma_2=1\\) and the variance is \\(\\sigma_1^2(1-\\rho^2)=4\\times0.75=3\\). Both agree.<br>\n<b>Used in the deck for:</b> Gaussian conditioning of multi-factor rate and credit scenarios (03, 06), and the Brownian bridge with several fixed times (below).",
+  "tags": [
+   "foundations",
+   "gaussian_conditioning",
+   "case_study",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "State Jensen's inequality for a convex \\(f\\), and give a two-point example in which it is strict.",
+  "back": "<b>Answer:</b> for convex \\(f\\), \\(E[f(X)]\\ge f(E[X])\\). For concave \\(f\\) the inequality reverses. Equality holds only if \\(f\\) is linear on the support of \\(X\\), or \\(X\\) is constant.<br>\n<b>Intuition:</b> a convex function lies below its chords. Spreading \\(X\\) raises the average of \\(f\\), because the chord sits above \\(f\\) at the mean.<br>\n<b>Example:</b> \\(X\\) equal to 0 or 2 with probability 1/2 each, \\(f(x)=e^x\\). \\(E[X]=1\\), so \\(f(E[X])=e=2.7183\\). \\(E[f(X)]=(1+e^2)/2=4.1945\\). The Jensen gap is 1.48.<br>\n<b>Quick test:</b> for \\(f(x)=x^2\\) the gap is exactly \\(\\text{Var}(X)\\).<br>\n<b>Used in the deck for:</b> the CMS and futures-versus-forward convexity adjustments (03), and the equity-tranche spread argument in the copula cards (06).",
+  "tags": [
+   "foundations",
+   "jensen",
+   "convexity",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why is \\(E[e^{Y}]>e^{E[Y]}\\) for a normal \\(Y\\), and how big is the gap for \\(Y\\sim N(0,0.2^2)\\)? Connect this to convexity adjustments in rates.",
+  "back": "<b>Answer:</b> \\(\\exp\\) is convex, so Jensen gives \\(E[e^Y]\\ge e^{E[Y]}\\). For Gaussian \\(Y\\) the ratio is exact: \\(E[e^Y]/e^{E[Y]}=e^{\\sigma^2/2}\\).<br>\n<b>Intuition:</b> the convexity adjustment is the variance of the exponent seen through a convex map. It grows with \\(\\sigma^2\\), so doubling the vol roughly quadruples the adjustment.<br>\n<b>Example:</b> \\(\\sigma=0.2\\): \\(E[e^Y]=e^{0.02}=1.0202\\) against \\(e^{E[Y]}=1\\). The gap is 2.02%. At \\(\\sigma=0.4\\) the gap is \\(e^{0.08}-1=8.3\\%\\).<br>\n<b>Desk angle:</b> a model that uses \\(e^{E[Y]}\\) as the expected value of a lognormal payoff underestimates it by exactly this factor. That factor is the size of the convexity adjustment.<br>\n<b>Used in the deck for:</b> the CMS convexity adjustment (03), the lognormal inflation index convexity (04), and the expected-loss convexity in tranche pricing (06).",
+  "tags": [
+   "foundations",
+   "jensen",
+   "convexity",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The sample mean of i.i.d. draws converges to {{c1::\\(E[X]\\)}} almost surely (the LLN), but the LLN says nothing about {{c2::the rate of convergence}}. The rate, of order \\(1/\\sqrt N\\), comes from the CLT.",
+  "back": "Use the LLN to justify that a Monte Carlo estimate is consistent. Use the CLT (next card) to size the error. <b>Used in the deck for:</b> the Monte Carlo sizing in XVA (10) and the numerics cards (08).",
+  "tags": [
+   "foundations",
+   "lln",
+   "monte_carlo",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "State the central limit theorem for i.i.d. draws with finite variance. What is the standard error of the sample mean for \\(N=100\\) draws with \\(\\sigma=1\\)?",
+  "back": "<b>Answer:</b> \\(\\sqrt N(\\bar X_N-\\mu)/\\sigma\\Rightarrow N(0,1)\\) in distribution, so \\(\\bar X_N\\approx N(\\mu,\\sigma^2/N)\\) for large \\(N\\).<br>\n<b>Intuition:</b> the LLN says the mean converges. The CLT says the error around it is Gaussian and scales like \\(1/\\sqrt N\\). Halving the error needs four times the sample.<br>\n<b>Rate:</b> with a finite third moment, the Berry–Esseen theorem bounds the error in the distribution function by a constant times \\(1/\\sqrt N\\). The constant is only an order-of-magnitude guide.<br>\n<b>Example:</b> \\(N=100\\), \\(\\sigma=1\\): standard error \\(=0.1\\). The 95% interval for the mean is \\(\\pm0.196\\).<br>\n<b>Trap:</b> the approximation is worst in the tails. A 99.9% quantile from 100 draws of a skewed payoff is typically underestimated.<br>\n<b>Used in the deck for:</b> Monte Carlo error bars (08), and the sampling error in PFE and XVA estimates (10).",
+  "tags": [
+   "foundations",
+   "clt",
+   "monte_carlo",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A Monte Carlo estimate uses \\(N=10{,}000\\) paths of a payoff with standard deviation 10. What is the standard error, the 95% half-width, and how many paths halve it?",
+  "back": "<b>Answer:</b> \\(\\text{SE}=\\sigma/\\sqrt N=10/100=0.10\\). The 95% half-width is \\(1.96\\times0.10=0.196\\).<br>\n<b>Scaling:</b> halving the SE needs \\(4\\times\\) the paths. Cutting it by 10 needs \\(100\\times\\). Cost grows as \\(1/\\text{SE}^2\\), so a tenfold accuracy target costs a hundredfold compute.<br>\n<b>Intuition:</b> Monte Carlo error decays like \\(1/\\sqrt N\\) whatever the dimension. That is why it suits path-dependent and high-dimensional problems, and also why it is slow.<br>\n<b>Used in the deck for:</b> XVA Monte Carlo sizing (10), and the path-count trade-off in the numerics cards (08).",
+  "tags": [
+   "foundations",
+   "monte_carlo",
+   "mental_math",
+   "case_study",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Antithetic variates for \\(E[e^{Z}]\\), with \\(Z\\sim N(0,1)\\): by how much does averaging the pair \\((Z,-Z)\\) reduce variance compared with two independent draws, at equal cost?",
+  "back": "<b>Answer:</b> the pair average is \\(\\tfrac12(e^Z+e^{-Z})=\\cosh Z\\), with variance \\(1.476\\). Two independent draws averaged have variance \\(\\text{Var}(e^Z)/2=2.335\\). The ratio is \\(0.632\\), a 37% reduction at the same cost of two evaluations.<br>\n<b>Derivation:</b> \\(E[\\cosh Z]=e^{1/2}=1.6487\\). \\(E[\\cosh^2Z]=\\tfrac12(1+E[\\cosh 2Z])=\\tfrac12(1+e^2)=4.1945\\). So \\(\\text{Var}(\\cosh Z)=4.1945-1.6487^2=1.476\\). Also \\(\\text{Var}(e^Z)=e^2-e=4.671\\).<br>\n<b>Intuition:</b> the pair cancels the odd, linear part of the payoff around the mean and keeps the even part.<br>\n<b>Where it breaks:</b> for a payoff that is even in \\(Z\\) (a straddle, say), the pair \\((Z,-Z)\\) gives identical values. The pair is worth one draw, so antithetics doubles the variance relative to independent draws.<br>\n<b>Used in the deck for:</b> variance reduction in the Monte Carlo cards (08), next to the Sobol and Brownian-bridge path constructions.",
+  "tags": [
+   "foundations",
+   "monte_carlo",
+   "variance_reduction",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Let \\(S_n=\\sum_{i=1}^n\\xi_i\\) with \\(\\xi_i=\\pm1\\) with probability 1/2 each. What are \\(E[S_n]\\) and \\(\\text{Var}(S_n)\\), and what is the standard deviation after 100 steps?",
+  "back": "<b>Answer:</b> \\(E[S_n]=0\\) and \\(\\text{Var}(S_n)=n\\). After 100 steps the sd is 10.<br>\n<b>Intuition:</b> the steps are independent with variance 1, so variances add linearly in \\(n\\). The spread grows like \\(\\sqrt n\\), not \\(n\\).<br>\n<b>Martingale facts:</b> \\(S_n\\) is a martingale, and so is \\(S_n^2-n\\) (checked in the martingale cards below). Both drive the gambler's-ruin cards.<br>\n<b>Check:</b> \\(E|S_{100}|\\approx\\sqrt{2\\cdot100/\\pi}\\approx8.0\\).<br>\n<b>Used in the deck for:</b> the discrete analogue of Brownian motion in the path-simulation cards (08), and the gambler's ruin example below.",
+  "tags": [
+   "foundations",
+   "random_walk",
+   "martingale",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How does a scaled random walk become Brownian motion? State the scaling and the result, and give the trap in the discrete-to-continuous step.",
+  "back": "<b>Answer:</b> \\(W^{(n)}_t=n^{-1/2}S_{\\lfloor nt\\rfloor}\\) converges in distribution, as a path, to a standard Brownian motion \\(W_t\\). This is Donsker's invariance principle.<br>\n<b>Intuition:</b> \\(\\text{Var}(S_{nt})=nt\\), and dividing by \\(\\sqrt n\\) fixes the variance at \\(t\\). The steps are small and independent, so the CLT applies to every increment, and the limit inherits independent increments.<br>\n<b>Check:</b> \\(\\text{Var}(W^{(n)}_1)=n/n=1\\) for every \\(n\\).<br>\n<b>Trap:</b> the result is about the law of the path. It does not mean discrete monitoring behaves like continuous monitoring. For barriers and first-passage times, discreteness changes the answer.<br>\n<b>Used in the deck for:</b> the justification of Brownian simulation in the numerics cards (08), and the Brownian lag in the margin-period-of-risk cards (10).",
+  "tags": [
+   "foundations",
+   "random_walk",
+   "brownian_motion",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What are the defining properties of a standard Brownian motion \\(W\\), and what is \\(P(W_4>2)\\)?",
+  "back": "<b>Answer:</b> \\(W_0=0\\). Increments are independent: \\(W_t-W_s\\) is independent of the past up to \\(s\\). For \\(s&lt;t\\), \\(W_t-W_s\\sim N(0,t-s)\\). Paths are continuous almost surely.<br>\n<b>Intuition:</b> future increments are fresh normal noise whatever has happened, and displacement variance grows linearly in time.<br>\n<b>Consequences:</b> \\(W_t\\sim N(0,t)\\), so the sd grows like \\(\\sqrt t\\). \\(\\text{sd}(W_4)=2\\).<br>\n<b>Example:</b> \\(P(W_4>2)=P(Z>1)=1-\\Phi(1)=0.1587\\). It equals \\(P(W_1>1)\\), because the sd and the threshold both double.<br>\n<b>Used in the deck for:</b> the Hull–White (03), CIR (06) and Ornstein–Uhlenbeck (08) processes, and the \\(\\sqrt{\\Delta t}\\) scaling of each Monte Carlo step (08).",
+  "tags": [
+   "foundations",
+   "brownian_motion",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "For standard Brownian motion and \\(c>0\\), the process \\(c^{-1/2}W_{ct}\\) has the same law as {{c1::\\(W_t\\)}}, so BM is self-similar with Hurst exponent {{c2::\\(1/2\\)}}.",
+  "back": "Example: \\(c=4\\). Then \\(W_{4t}/2\\) is again standard BM, so \\(\\text{sd}(W_4)=2\\,\\text{sd}(W_1)\\). A volatility of 1% per root-year gives 2% over four years for a driver with constant vol. <b>Used in the deck for:</b> time-scaling of vol in the Gaussian models (03, 06).",
+  "tags": [
+   "foundations",
+   "brownian_motion",
+   "scaling",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is \\(\\text{Cov}(W_s,W_t)\\) for \\(s&lt;t\\), and what is the correlation between \\(W_1\\) and \\(W_3\\)?",
+  "back": "<b>Answer:</b> \\(\\text{Cov}(W_s,W_t)=\\min(s,t)=s\\). The correlation is \\(\\min(s,t)/\\sqrt{st}=\\sqrt{s/t}\\).<br>\n<b>Derivation:</b> write \\(W_t=W_s+(W_t-W_s)\\). The increment is independent of \\(W_s\\), so \\(\\text{Cov}(W_s,W_t)=\\text{Var}(W_s)=s\\).<br>\n<b>Example:</b> \\(\\text{Cov}(W_1,W_3)=1\\). \\(\\text{Var}(W_1)=1\\) and \\(\\text{Var}(W_3)=3\\), so \\(\\rho=1/\\sqrt3=0.577\\).<br>\n<b>Intuition:</b> two paths share only the history up to the earlier time, so correlation decays with the ratio of times, not with the gap \\(t-s\\).<br>\n<b>Used in the deck for:</b> correlations across simulated times in the Monte Carlo cards (08), and exposure correlations across tenors in the XVA cards (10).",
+  "tags": [
+   "foundations",
+   "brownian_motion",
+   "covariance",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the quadratic variation of Brownian motion on \\([0,T]\\), and why does it force the rule \\((dW)^2=dt\\)?",
+  "back": "<b>Answer:</b> \\(\\sum_i(W_{t_{i+1}}-W_{t_i})^2\\to T\\) in \\(L^2\\) as the mesh goes to zero. This is the origin of \\((dW)^2=dt\\) in Itô calculus.<br>\n<b>Derivation:</b> each increment has variance \\(h=\\Delta t\\), so each squared increment has mean \\(h\\) and the sum has mean \\(T\\). The variance of each squared increment is \\(2h^2\\). With \\(n\\) independent terms the total variance is \\(2nh^2=2Th\\to0\\).<br>\n<b>Example:</b> \\(T=1\\), \\(n=4\\): \\(\\text{Var}(\\sum)=0.5\\), so the sum is 1 with sd 0.71. At \\(n=10{,}000\\) the variance is \\(2\\times10^{-4}\\), sd 0.014.<br>\n<b>Trap:</b> for a smooth \\(f\\), \\(\\sum(\\Delta f)^2\\approx\\sum f'^2h^2\\to0\\). Only the randomness of Brownian increments makes the squared increments add up to something finite.<br>\n<b>Used in the deck for:</b> the Itô correction in the SDE cards (03, 06), and the discretisation-error discussion in the Monte Carlo cards (08).",
+  "tags": [
+   "foundations",
+   "brownian_motion",
+   "quadratic_variation",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Why is Brownian motion nowhere differentiable, and what goes wrong with the ordinary chain rule?",
+  "back": "<b>Answer:</b> the paths are continuous but have infinite first variation. The sum of absolute increments grows without bound, so there is no finite slope at any point.<br>\n<b>Derivation:</b> \\(E|\\Delta W|=\\sqrt{2h/\\pi}\\). On a uniform grid of \\(n\\) steps on \\([0,1]\\), \\(E\\sum|\\Delta W|=n\\sqrt{2/(\\pi n)}=\\sqrt{2n/\\pi}\\to\\infty\\). A differentiable path would give a finite limit, \\(\\int|f'|\\).<br>\n<b>Example:</b> at \\(n=10{,}000\\) the expected total variation is about 79.8, and it keeps growing with \\(n\\).<br>\n<b>Consequence:</b> \\(dW\\) has no ordinary derivative, but \\((dW)^2=dt\\). The chain rule picks up a second-order term, which is Itô's lemma.<br>\n<b>Where it breaks:</b> the quadratic variation is finite, so the second-order correction survives. That is why Itô calculus differs from ordinary calculus.<br>\n<b>Used in the deck for:</b> the Itô drift terms in the lognormal and CIR SDE cards (03, 06), and the exact-versus-Euler discussion in the numerics (08).",
+  "tags": [
+   "foundations",
+   "brownian_motion",
+   "ito_calculus",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "State the Markov property for Brownian motion. Given \\(W_1=2\\), compute \\(E[W_3^2\\mid\\mathcal F_1]\\).",
+  "back": "<b>Answer:</b> \\(E[f(W_{t+s})\\mid\\mathcal F_t]=g(W_t)\\), where \\(g(x)=E[f(x+W_s)]\\). Only the present position matters, not the path that led to it.<br>\n<b>Check:</b> \\(W_3=W_1+(W_3-W_1)\\), and the increment \\(N(0,2)\\) is independent of \\(\\mathcal F_1\\). So \\(E[W_3^2\\mid\\mathcal F_1]=W_1^2+\\text{Var}(W_3-W_1)=4+2=6\\). The square's conditional mean is not \\(W_1^2\\), because the variance of the next two time units adds 2.<br>\n<b>Intuition:</b> the Markov property is what lets a PDE (the Kolmogorov backward equation) price a claim from the current state alone.<br>\n<b>Trap:</b> Markov and martingale are separate properties. A Markov process can have drift and fail to be a martingale.<br>\n<b>Used in the deck for:</b> PDE pricing of the Hull–White and CIR bond and option models (03, 06), and the one-factor state-space in the exposure simulation (10).",
+  "tags": [
+   "foundations",
+   "markov_property",
+   "brownian_motion",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is a Brownian bridge? Build it from \\(W\\), then give the conditional law of \\(W_t\\) given \\(W_T=b\\).",
+  "back": "<b>Answer:</b> \\(B_t=W_t-\\tfrac tT W_T\\) is a Brownian bridge: it is zero at \\(t=0\\) and at \\(t=T\\). Conditioned on \\(W_T=b\\), \\(W_t\\) is Gaussian with mean \\(\\tfrac tT b\\) and variance \\(\\tfrac{t(T-t)}{T}\\).<br>\n<b>Derivation:</b> the bivariate formula, with \\(\\text{Cov}(W_t,W_T)=t\\) and \\(\\text{Var}(W_T)=T\\). The conditional mean is \\(\\tfrac tT b\\), and the conditional variance is \\(t-t^2/T=t(T-t)/T\\).<br>\n<b>Example:</b> \\(T=1\\), \\(b=2\\), \\(t=0.5\\): mean 1, variance 0.25, sd 0.5. The path is pulled toward the straight line from 0 to 2, and the uncertainty is largest in the middle.<br>\n<b>Intuition:</b> a bridge is a Brownian path with its endpoint pinned. Conditioning a Gaussian process on a linear functional is just Gaussian regression.<br>\n<b>Used in the deck for:</b> Sobol path construction (08), where the endpoint is fixed first and the midpoints are filled in. Also the conditional-path reasoning in the Brownian-bridge exposure bound (10).",
+  "tags": [
+   "foundations",
+   "brownian_bridge",
+   "gaussian_conditioning",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The Brownian bridge \\(B_t=W_t-\\tfrac tT W_T\\) has variance {{c1::\\(t(T-t)/T\\)}}. It is largest at the midpoint, where it equals {{c2::\\(T/4\\)}}.",
+  "back": "Check: at \\(t=T/2\\), \\(\\tfrac{(T/2)(T/2)}{T}=T/4\\). With \\(T=1\\), the maximum sd is 0.5. <b>Used in the deck for:</b> the bridge-based path construction in the numerics (08) and the bridge-maximum exposure bound in XVA (10).",
+  "tags": [
+   "foundations",
+   "brownian_bridge",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is a filtration \\((\\mathcal F_t)\\), and what does \\(\\mathcal F_s\\subseteq\\mathcal F_t\\) for \\(s\\le t\\) mean?",
+  "back": "<b>Answer:</b> a filtration is an increasing family of \\(\\sigma\\)-algebras. \\(\\mathcal F_t\\) is the information available at time \\(t\\), and what was known at \\(s\\) is still known at \\(t\\).<br>\n<b>Intuition:</b> a filtration is the calendar of observability. Information is never lost, only added to.<br>\n<b>Example:</b> \\(\\mathcal F_t=\\sigma(W_u:u\\le t)\\), the information in the Brownian path up to \\(t\\). At \\(t=1\\) you know \\(W_{0.5}\\) but not \\(W_{1.5}\\).<br>\n<b>Trap:</b> the filtration is part of the question. The same process can be adapted to one filtration and not to a smaller one.<br>\n<b>Used in the deck for:</b> the conditional expectations in martingale pricing (03), the Doob martingale in the Andersen–Broadie bound (08), and the stopping-time cards below.",
+  "tags": [
+   "foundations",
+   "filtration",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does it mean for a process \\(X_t\\) to be adapted to \\((\\mathcal F_t)\\)? Give one adapted and one non-adapted example.",
+  "back": "<b>Answer:</b> \\(X_t\\) is \\(\\mathcal F_t\\)-measurable for each \\(t\\): its value is known at time \\(t\\).<br>\n<b>Adapted examples:</b> \\(W_t\\), \\(\\max_{s\\le t}W_s\\), and any price \\(S_t\\) that is a function of the Brownian path up to \\(t\\).<br>\n<b>Non-adapted example:</b> \\(W_{t+1}\\). Its value depends on a future increment that is not in \\(\\mathcal F_t\\).<br>\n<b>Intuition:</b> adaptedness is the no-peeking condition. A hedge ratio or a stopping rule must be adapted, otherwise the strategy could use tomorrow's price.<br>\n<b>Used in the deck for:</b> the hedge ratio in the delta-hedging cards (03), and the no-look-ahead rule in the Monte Carlo exposure engine (10).",
+  "tags": [
+   "foundations",
+   "adapted_process",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Define a martingale with respect to \\((\\mathcal F_t)\\). Show that \\(W_t\\) is one.",
+  "back": "<b>Answer:</b> \\(M\\) is a martingale if it is adapted, integrable, and \\(E[M_t\\mid\\mathcal F_s]=M_s\\) for all \\(s\\le t\\). Today's value is the best forecast of the future: a fair game.<br>\n<b>Check for \\(W\\):</b> \\(W_t=W_s+(W_t-W_s)\\), and \\(W_t-W_s\\) is independent of \\(\\mathcal F_s\\) with mean 0. So \\(E[W_t\\mid\\mathcal F_s]=W_s\\).<br>\n<b>Example:</b> \\(W_1=2\\) is observed. Then \\(E[W_3\\mid\\mathcal F_1]=2\\), not 0. The unconditional mean is 0 at every time, but the martingale property is about the conditional mean.<br>\n<b>Trap:</b> constant expectation \\(E[M_t]=M_0\\) is necessary but not sufficient. Test the conditional property.<br>\n<b>Used in the deck for:</b> the no-arbitrage drift condition under the risk-neutral measure (03), the forward swap rate under the annuity measure (03), and the Doob martingale in the Andersen–Broadie bound (08).",
+  "tags": [
+   "foundations",
+   "martingale",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Show that \\(W_t^2-t\\) is a martingale, and compute \\(E[W_3^2-3\\mid\\mathcal F_1]\\) given \\(W_1=1.5\\).",
+  "back": "<b>Answer:</b> \\(E[W_t^2-t\\mid\\mathcal F_s]=W_s^2-s\\), so it is a martingale.<br>\n<b>Derivation:</b> \\(W_t=W_s+D\\), with \\(D\\sim N(0,t-s)\\) independent of \\(\\mathcal F_s\\). Then \\(E[W_t^2\\mid\\mathcal F_s]=W_s^2+2W_sE[D]+E[D^2]=W_s^2+(t-s)\\). Subtract \\(t\\) to get \\(W_s^2-s\\).<br>\n<b>Example:</b> \\(W_1=1.5\\): \\(E[W_3^2-3\\mid\\mathcal F_1]=2.25-1=1.25\\).<br>\n<b>Intuition:</b> \\(W_t^2\\) grows on average at rate 1, which is its quadratic variation. Subtracting \\(t\\) removes that drift and leaves a fair game.<br>\n<b>Used in the deck for:</b> the Itô drift bookkeeping in the SDE and pricing cards (03, 06), and the martingale test behind the Doob-martingale bounds (08).",
+  "tags": [
+   "foundations",
+   "martingale",
+   "brownian_motion",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Show that \\(M_t=\\exp(\\theta W_t-\\tfrac12\\theta^2t)\\) is a martingale with expectation 1, and explain how it changes drift. Give the value of \\(E[e^{W_2-1}]\\).",
+  "back": "<b>Answer:</b> \\(M^\\theta_t=\\exp(\\theta W_t-\\tfrac12\\theta^2t)\\) is a martingale with \\(E[M^\\theta_t]=1\\).<br>\n<b>Derivation:</b> \\(E[e^{\\theta W_t}]=e^{\\theta^2t/2}\\) by the normal MGF, so \\(E[M_t]=1\\). For the conditional property, apply the same MGF to the increment: \\(E[M_t\\mid\\mathcal F_s]=e^{\\theta^2(t-s)/2}e^{\\theta W_s-\\theta^2t/2}=M_s\\).<br>\n<b>Example:</b> \\(\\theta=1\\), \\(t=2\\): \\(E[e^{W_2-1}]=e^{1-1}=1\\).<br>\n<b>Drift change (Girsanov):</b> \\(M_T\\) is the density of a measure \\(Q\\) under which \\(W_t-\\theta t\\) is a Brownian motion. This is how a drift is moved between the physical and the pricing measure.<br>\n<b>Where it breaks:</b> drop the \\(-\\tfrac12\\theta^2t\\) term and the mean becomes \\(e^{\\theta^2t/2}\\), not 1. The process then is not a martingale.<br>\n<b>Used in the deck for:</b> the change of numéraire and drift in the forward-measure and annuity-measure pricing (03), and the importance-sampling tilt in Monte Carlo (08).",
+  "tags": [
+   "foundations",
+   "martingale",
+   "girsanov",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Define a stopping time \\(\\tau\\). Is the first time BM hits level \\(a\\) a stopping time? Is the last zero of BM before \\(T=1\\) one?",
+  "back": "<b>Answer:</b> \\(\\tau\\) is a stopping time if \\(\\{\\tau\\le t\\}\\in\\mathcal F_t\\) for all \\(t\\). You can decide whether to stop by time \\(t\\) using only information up to \\(t\\).<br>\n<b>First hitting time:</b> \\(\\tau_a=\\inf\\{t:W_t=a\\}\\) is a stopping time, because \\(\\{\\tau_a\\le t\\}=\\{\\max_{s\\le t}W_s\\ge a\\}\\) depends only on the path up to \\(t\\).<br>\n<b>Last zero before 1:</b> \\(\\sup\\{t\\le1:W_t=0\\}\\) is not a stopping time. Knowing it at time \\(t&lt;1\\) requires knowing future zeros.<br>\n<b>Intuition:</b> a stopping time is a rule that says \"stop now\" using the past only. That is what lets the optional stopping theorem apply.<br>\n<b>Used in the deck for:</b> Bermudan exercise rules (03), the Andersen–Broadie and LSM bounds (08), and first-passage default times in Black–Cox (06).",
+  "tags": [
+   "foundations",
+   "stopping_time",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "For BM started at 0 and level \\(a>0\\), what is \\(P(\\tau_a\\le t)\\)? Compute it for \\(a=1\\), \\(t=1\\), and give the expected hitting time.",
+  "back": "<b>Answer:</b> \\(P(\\tau_a\\le t)=2P(W_t\\ge a)=2\\bigl(1-\\Phi(a/\\sqrt t)\\bigr)\\).<br>\n<b>Derivation:</b> by the reflection principle (next card), the paths that hit \\(a\\) and end below it are mirror images of paths that end above it. So \\(P(\\tau_a\\le t)=P(W_t\\ge a)+P(W_t>a)\\).<br>\n<b>Example:</b> \\(a=1\\), \\(t=1\\): \\(2(1-\\Phi(1))=2\\times0.1587=0.3173\\). Of the paths that hit 1 by time 1, half are back below 1 at time 1.<br>\n<b>Consequence:</b> \\(\\tau_a&lt;\\infty\\) almost surely, so BM hits every level, but \\(E[\\tau_a]=\\infty\\). The density of \\(\\tau_a\\) decays like \\(t^{-3/2}\\). Check: \\(P(\\tau_1\\le4)=2(1-\\Phi(0.5))=0.617\\).<br>\n<b>Used in the deck for:</b> first-passage default in the Black–Cox and Merton structural models (06), and barrier-hit intuition in the credit cards (06).",
+  "tags": [
+   "foundations",
+   "hitting_time",
+   "brownian_motion",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "State the reflection principle for Brownian motion, and derive \\(P(M_t\\ge a)\\) for \\(a\\ge0\\), where \\(M_t=\\max_{s\\le t}W_s\\).",
+  "back": "<b>Answer:</b> for \\(a\\ge0\\), \\(P(M_t\\ge a)=2P(W_t\\ge a)\\).<br>\n<b>Derivation:</b> \\(\\tau_a\\) is a stopping time, so by the strong Markov property the path after \\(\\tau_a\\), namely \\(W_{\\tau_a+u}-a\\), is again a Brownian motion. Reflecting it about \\(a\\) gives a path with the same law. The reflected path ends above \\(a\\) exactly when the original ends below. So \\(P(\\tau_a\\le t,W_t&lt;a)=P(W_t>a)\\), and \\(P(\\tau_a\\le t,W_t\\ge a)=P(W_t\\ge a)\\). Adding the two gives \\(2P(W_t\\ge a)\\) for \\(P(\\tau_a\\le t)\\).<br>\n<b>Example:</b> \\(a=1\\), \\(t=1\\): \\(P(M_1\\ge1)=2\\times0.1587=0.3173\\).<br>\n<b>Where it breaks:</b> it needs zero drift and a symmetric driver. A drift or a moving barrier requires a Girsanov-adjusted formula. The XVA bridge version in the margin cards (10) is the same argument with two fixed endpoints.<br>\n<b>Used in the deck for:</b> barrier and first-passage credit models (06), and the Brownian-bridge exposure bound in the margin-period-of-risk cards (10).",
+  "tags": [
+   "foundations",
+   "reflection_principle",
+   "brownian_motion",
+   "derivation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The running maximum \\(M_t=\\max_{s\\le t}W_s\\) has the same law as {{c1::\\(|W_t|\\)}}, so \\(P(M_1\\le 1)=\\){{c2::\\(2\\Phi(1)-1=0.6827\\)}}.",
+  "back": "Derivation: \\(P(M_t\\le a)=1-2P(W_t\\ge a)=P(|W_t|\\le a)\\) for \\(a\\ge0\\). So \\(M_t\\) has density \\(\\frac{2}{\\sqrt{2\\pi t}}e^{-x^2/2t}\\) on \\(x\\ge0\\). At \\(t=1\\) the probability that the path never exceeds 1 is 68.3%. <b>Used in the deck for:</b> maximum-based exposure and PFE for Brownian exposures (10), and first-passage default probabilities (06).",
+  "tags": [
+   "foundations",
+   "running_max",
+   "brownian_motion",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: OST 1/4]</b> Context: a symmetric random walk \\(S_n\\) with \\(\\pm1\\) steps, started at \\(k\\) with \\(0&lt;k&lt;N\\), stopped at \\(\\tau\\) = first hit of 0 or \\(N\\). State the optional stopping theorem and its conditions, and say why they hold here.",
+  "back": "<b>Answer:</b> if \\(M\\) is a martingale and \\(\\tau\\) a stopping time, then \\(E[M_\\tau]=E[M_0]\\) under any of: \\(\\tau\\) bounded; or \\(E[\\tau]&lt;\\infty\\) with bounded increments of \\(M\\); or \\(M\\) uniformly integrable with \\(\\tau&lt;\\infty\\) a.s.<br>\n<b>Here:</b> \\(\\tau\\) has \\(E[\\tau]&lt;\\infty\\) (shown below) and each step of \\(S\\) has size exactly 1, so the second condition applies.<br>\n<b>Intuition:</b> a fair game stopped by a rule that uses only the past is still a fair game.<br>\n<b>Where the conditions matter:</b> the last card of this chain gives a stopping time for which the theorem fails.<br>\n<b>Used in the deck for:</b> the gambler's-ruin probabilities and durations (next cards), and the optimal-stopping arguments for Bermudan pricing (03, 08).",
+  "tags": [
+   "foundations",
+   "optional_stopping",
+   "chain_ost",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: OST 2/4]</b> Context: the same walk, \\(k=3\\), \\(N=10\\). What is the probability of hitting \\(N\\) before 0?",
+  "back": "<b>Answer:</b> \\(P(\\text{hit }N\\text{ first})=k/N=3/10=0.30\\).<br>\n<b>Derivation:</b> \\(S_n\\) is a martingale, so \\(E[S_\\tau]=k\\). At exit \\(S_\\tau\\in\\{0,N\\}\\). Let \\(p=P(\\text{hit }N)\\). Then \\(Np+0(1-p)=k\\), so \\(p=k/N\\). Overshoot is zero because each step is exactly one unit, so \\(S_\\tau\\) lands on \\(N\\) or 0.<br>\n<b>Intuition:</b> the win probability is proportional to the starting stake. Only the martingale property and the exit set are used.<br>\n<b>Trap:</b> with a drift the answer becomes a ratio of \\((q/p)^k\\) terms, so \\(k/N\\) is specific to the fair walk.<br>\n<b>Used in the deck for:</b> barrier-survival intuition in the structural credit cards (06), and the fair-game reasoning in the Bermudan exercise cards (03).",
+  "tags": [
+   "foundations",
+   "optional_stopping",
+   "gamblers_ruin",
+   "chain_ost",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: OST 3/4]</b> Context: the same walk, \\(k=3\\), \\(N=10\\). Find \\(E[\\tau]\\) with a martingale, and check it against the Brownian analogue.",
+  "back": "<b>Answer:</b> \\(E[\\tau]=k(N-k)=3\\times7=21\\).<br>\n<b>Derivation:</b> \\(M_n=S_n^2-n\\) is a martingale, because \\(E[S_{n+1}^2\\mid\\mathcal F_n]=S_n^2+1\\). OST gives \\(E[S_\\tau^2-\\tau]=S_0^2=k^2\\). At exit \\(S_\\tau^2\\in\\{0,N^2\\}\\), with \\(P(S_\\tau=N)=k/N\\), so \\(E[S_\\tau^2]=N^2\\cdot k/N=kN\\). Hence \\(E[\\tau]=kN-k^2=k(N-k)\\).<br>\n<b>Example:</b> \\(kN-k^2=30-9=21\\).<br>\n<b>Brownian analogue:</b> the exit time of BM from \\((0,N)\\), started at \\(k\\), has mean \\(k(N-k)\\) too. The variance rate of BM is 1, which matches the walk.<br>\n<b>Intuition:</b> the expected duration peaks at the centre, where \\(k=N/2\\) and it equals \\(N^2/4\\).<br>\n<b>Used in the deck for:</b> the expected time between two barriers, as a sanity check on barrier-survival intuition in the structural credit cards (06).",
+  "tags": [
+   "foundations",
+   "optional_stopping",
+   "gamblers_ruin",
+   "chain_ost",
+   "derivation",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: OST 4/4]</b> Context: standard BM \\(W\\) with \\(W_0=0\\). Let \\(\\tau\\) be the first time \\(W\\) hits \\(+1\\). Compute \\(E[W_\\tau]\\) and say which OST condition fails.",
+  "back": "<b>Answer:</b> \\(E[W_\\tau]=1\\), but \\(E[W_0]=0\\). The OST fails.<br>\n<b>Reason:</b> \\(\\tau&lt;\\infty\\) almost surely, but \\(E[\\tau]=\\infty\\), so the sufficient condition \"finite expected time with bounded increments\" does not hold. Also \\(\\tau\\) is unbounded, so the bounded-time condition fails.<br>\n<b>Mechanism:</b> \\(E[W_{\\tau\\wedge n}]=0\\) for each \\(n\\), since the stopped process is a martingale. Split it as \\(E[W_\\tau;\\tau\\le n]+E[W_n;\\tau>n]\\). The first term tends to 1. The second tends to \\(-1\\), because the paths that have not hit +1 by time \\(n\\) carry a large negative value. The mass escapes to \\(-\\infty\\).<br>\n<b>Intuition:</b> this is the doubling-strategy paradox. A fair game with an unbounded stopping rule appears to yield a sure gain, which is impossible with finite capital.<br>\n<b>Used in the deck for:</b> the free-lunch caveat for Bermudan and early-exercise stopping rules (03, 08), and the Monte Carlo upper-bound argument in the numerics cards (08).",
+  "tags": [
+   "foundations",
+   "optional_stopping",
+   "chain_ost",
+   "lvl_foundation"
+  ]
+ }
+]
