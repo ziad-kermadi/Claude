@@ -169,7 +169,7 @@
  },
  {
   "type": "basic",
-  "front": "Scenario: it is 07:15 on Tuesday 17 September 2019. Overnight repo has printed well above 5%, against about 2.4% the day before. Your book finances £2bn of cash bonds overnight. Give the first three actions and the one-day cost of the move, using a 3pp spike.",
+  "front": "Scenario: it is 07:15 on Tuesday 17 September 2019. Overnight repo has printed well above 5%, against about 2.4% the day before. Your book finances $2bn of US Treasuries overnight. Give the first three actions and the one-day cost of the move, using a 3pp spike.",
   "back": "<b>Actions:</b> (1) check your funding by counterparty and by tri-party versus bilateral, since the spike is in the segment you borrow in; (2) check the NY Fed's repo operation for the morning and whether dealers are taking it up (on the day the Fed offered $75bn and dealers took $53bn); (3) check your collateral: whether you can re-pledge, and what haircut the cash bonds now carry.<br><b>Cost:</b> \\(2\\text{bn}\\times 3\\%/360 \\approx \\$166{,}667\\) for one day on an Act/360 basis, before any change in haircut. The relevant comparison is the spike against your hedge carry, not the headline.<br><b>Context:</b> quarterly corporate tax payments on 16 September drained deposits. Aggregate reserves were at a multi-year low by mid-September.<br><b>Interviewer follow-up:</b> is this a funding or a price problem? Answer: funding, because it is the repo rate that moves while the bond price barely does. Re-price the bond book only if the bond itself becomes special.",
   "tags": [
    "repo_2019",

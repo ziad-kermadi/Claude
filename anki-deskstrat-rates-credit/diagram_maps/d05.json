@@ -1,0 +1,121 @@
+[
+ {
+  "file": "05_credit_cds.json",
+  "index": 7,
+  "front_start": "A bond is priced at 95 (per 100 par) with a recovery assumpt",
+  "image": "05_credit_cds_7_jtd_bond.png",
+  "caption": "Bond at 95 with R = 40: JTD loss is 55 per 100 par, not the 60 loss vs par."
+ },
+ {
+  "file": "05_credit_cds.json",
+  "index": 8,
+  "front_start": "A protection buyer holds $10m notional of single-name CDS wi",
+  "image": "05_credit_cds_8_cds_jtd_buyer.png",
+  "caption": "CDS buyer JTD: 6.0m payout on default less the 0.3m MTM already held = 5.7m."
+ },
+ {
+  "file": "05_credit_cds.json",
+  "index": 10,
+  "front_start": "How are single-name CDS quoted and paid? Use a 5y IG name wi",
+  "image": "05_credit_cds_10_cds_upfront_flow.png",
+  "caption": "Standard 100bp coupon vs 80bp par spread: buyer pays coupon, seller pays 0.92-point upfront."
+ },
+ {
+  "file": "05_credit_cds.json",
+  "index": 11,
+  "front_start": "State the credit-triangle approximation. A 5y CDS trades at ",
+  "image": "05_credit_cds_11_credit_triangle.png",
+  "caption": "Credit triangle at R = 40%: spread = lambda x 0.6, so 300bp implies lambda of 5%."
+ },
+ {
+  "file": "05_credit_cds.json",
+  "index": 16,
+  "front_start": "Why does the cheapest-to-deliver option in a CDS push the CD",
+  "image": "05_credit_cds_16_ctd_option.png",
+  "caption": "CTD option: auction at the cheapest eligible price (30) pays 70 vs 60 at 40."
+ },
+ {
+  "file": "05_credit_cds.json",
+  "index": 23,
+  "front_start": "Describe the CDS credit-event auction protocol and explain h",
+  "image": "05_credit_cds_23_auction_flow.png",
+  "caption": "CDS credit-event auction: DC decision, netting, Final Price, cash settlement."
+ },
+ {
+  "file": "05_credit_cds.json",
+  "index": 33,
+  "front_start": "Write the conditional default probability in a one-factor Ga",
+  "image": "05_credit_cds_33_copula_cond_pd.png",
+  "caption": "Conditional default probability vs market factor M for rho = 0, 0.3, 0.7 at p = 5%."
+ },
+ {
+  "file": "05_credit_cds.json",
+  "index": 37,
+  "front_start": "Why is the expected loss of a 3-7% mezzanine tranche a hump ",
+  "image": "05_credit_cds_37_tranche_el_corr.png",
+  "caption": "Equity tranche EL falls with correlation; mezzanine EL is a hump peaking near rho of 0.3."
+ },
+ {
+  "file": "05_credit_cds.json",
+  "index": 41,
+  "front_start": "For a one-issuer 5s10s curve trade (5y protection at 120bp, ",
+  "image": "05_credit_cds_41_steepener_sizing.png",
+  "caption": "5s10s steepener: carry-neutral gives 0 carry and -1.2m JTD; JTD-neutral gives -30k carry and 0 JTD."
+ },
+ {
+  "file": "05_credit_cds.json",
+  "index": 43,
+  "front_start": "What is a recovery lock on a CDS, and what is the payoff for",
+  "image": "05_credit_cds_43_recovery_lock.png",
+  "caption": "Recovery lock at 40%: buyer gains if realised recovery exceeds 40%, loses below."
+ },
+ {
+  "file": "05_credit_cds.json",
+  "index": 54,
+  "front_start": "P&L = spread change times CS01. A protection buyer holds $25",
+  "image": "05_credit_cds_54_cds_pnl_spread.png",
+  "caption": "$25m 5y CDS, CS01 $12k per bp: +20bp is +240k to buyer and -240k to seller (long credit)."
+ },
+ {
+  "file": "05_credit_cds_deep.json",
+  "index": 0,
+  "front_start": "<b>[Chain: NEG_BASIS 1/5]</b> Context: 5y bond bought at an ",
+  "image": "05_credit_cds_deep_0_negbasis_cashflows.png",
+  "caption": "Negative basis trade: 150bp ASW long less 120bp CDS paid gives +30bp carry before funding."
+ },
+ {
+  "file": "05_credit_cds_deep.json",
+  "index": 3,
+  "front_start": "<b>[Chain: NEG_BASIS 4/5]</b> Context: 5y bond bought at an ",
+  "image": "05_credit_cds_deep_3_negbasis_stress.png",
+  "caption": "Stress: bond -450k and CDS +220k give a -230k mark, about 7.7 years of 30k carry."
+ },
+ {
+  "file": "05_credit_cds_deep.json",
+  "index": 16,
+  "front_start": "<b>Derivation:</b> Under the ISDA standard CDS model, write ",
+  "image": "05_credit_cds_deep_16_upfront_coupon.png",
+  "caption": "Upfront = (s - c) x RPV01 changes sign at c = s; at c = 500bp the buyer receives 8.21 points."
+ },
+ {
+  "file": "05_credit_cds_deep.json",
+  "index": 18,
+  "front_start": "<b>Derivation:</b> A knockout payer option on a CDS index wi",
+  "image": "05_credit_cds_deep_18_fep_expiry.png",
+  "caption": "FEP rises to 0.477% of notional by 1y while P(no default) falls to 0.2%."
+ },
+ {
+  "file": "05_credit_cds_deep.json",
+  "index": 20,
+  "front_start": "<b>Derivation:</b> Derive the jump-to-default P&L of a singl",
+  "image": "05_credit_cds_deep_20_jtd_steepener.png",
+  "caption": "10y MTM gain of 77k lowers the 10y JTD to 5.92m; with the 5y sold, book JTD is -77k."
+ },
+ {
+  "file": "05_credit_cds_deep.json",
+  "index": 24,
+  "front_start": "<b>Case study:</b> Negative basis trade on 10m: bond bought ",
+  "image": "05_credit_cds_deep_24_recovery_mismatch.png",
+  "caption": "Carry of 60k is swamped by the 500k auction-vs-bond recovery mismatch, total -440k."
+ }
+]
