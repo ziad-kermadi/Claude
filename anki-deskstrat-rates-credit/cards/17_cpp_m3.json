@@ -1,0 +1,516 @@
+[
+ {
+  "type": "basic",
+  "front": "Where does a local variable live compared with an object created by <code>new</code>, and what decides when each is destroyed?",
+  "back": "<b>Automatic (local) objects</b> live in the stack frame of their function. They are destroyed at the closing brace of their scope, in reverse order of construction. Allocating them is a stack-pointer adjustment with no call into the allocator.<br><b>Objects from <code>new</code></b> live on the heap until something calls <code>delete</code>. The pointer is an ordinary value, so nothing destroys the object when the pointer goes out of scope.<br><b>Python comparison:</b> every Python object is on the heap and is freed when its reference count reaches zero, with a cyclic collector for cycles. In C++ lifetime is fixed by scope or by an explicit owner, so destruction points can be read from the code.<br><b>Interview trap:</b> returning the address of a local, or storing it in an object that outlives the scope, is undefined behaviour. Compilers often accept it with only a warning.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "memory",
+   "stack_heap",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A function declares <code>double buf[2000000];</code> as a local, which is 16 MB. What goes wrong, and what do you use instead?",
+  "back": "It exceeds the default stack size. On Linux the main thread commonly has 8 MiB (check <code>ulimit -s</code>), so the function overflows the stack and the program crashes with a segmentation fault when it touches the array.<br>Put large buffers on the heap: <code>std::vector&lt;double&gt; buf(2000000);</code>. The vector object (pointer, size, capacity) is on the stack, and the 16 MB lives on the heap.<br><b>Interview trap:</b> the same limit governs recursion depth. A recursive tree or pricer with a large frame per level can overflow at a depth that looks harmless. Use an explicit heap-allocated work stack for deep recursion.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "memory",
+   "stack_heap",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with this code? Name the leak, explain why it happens, and show what LeakSanitizer reports.",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n#include &lt;stdexcept&gt;\n\nvolatile bool fail = true;   // runtime value so the optimiser cannot remove the path\n\nvoid work() {\n    if (fail) throw std::runtime_error(\"boom\");\n}\n\nint main() {\n    int* buf = new int[1000];    // 4000 bytes\n    try {\n        work();                  // throws\n        delete[] buf;            // skipped on the throw path\n    } catch (const std::exception&amp; e) {\n        std::printf(\"caught: %s\\n\", e.what());\n    }\n}</code></pre><br><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>caught: boom</code></pre><br>Built with <code>-O0 -g -fsanitize=leak</code>, LeakSanitizer reports:<br><pre><code>==10381==ERROR: LeakSanitizer: detected memory leaks\nDirect leak of 4000 byte(s) in 1 object(s) allocated from:\nSUMMARY: LeakSanitizer: 4000 byte(s) leaked in 1 allocation(s).</code></pre>The <code>delete[]</code> is after a call that can throw. When <code>work()</code> throws, control jumps to the <code>catch</code> and the delete is skipped. <code>buf</code> is a raw pointer, so nothing else releases the 4000 bytes.<br>Fix: own the array in a type with a destructor:<br><pre><code>#include &lt;cstdio&gt;\n#include &lt;memory&gt;\n#include &lt;stdexcept&gt;\n\nvolatile bool fail = true;\n\nvoid work() {\n    if (fail) throw std::runtime_error(\"boom\");\n}\n\nint main() {\n    auto buf = std::make_unique&lt;int[]&gt;(1000);   // released on every exit path\n    try {\n        work();\n    } catch (const std::exception&amp; e) {\n        std::printf(\"caught: %s\\n\", e.what());\n    }\n}</code></pre><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>caught: boom</code></pre><b>Interview trap:</b> in the -O2 build this leak was not reported, because C++ allows the compiler to elide an unused allocation and deallocation pair. Run leak checks on a -O0 build.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "new_delete",
+   "exceptions",
+   "sanitizer",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A {{c1::new[]}} expression must be released with {{c2::delete[]}}. Calling plain {{c3::delete}} on it is undefined behaviour.",
+  "back": "The array form may store an element count and must run the destructor of every element, and the scalar form is not required to match that. ASan reports <code>alloc-dealloc-mismatch</code> at run time. GCC warns <code>-Wmismatched-new-delete</code> when it can see both calls in one function.<br>Owning types remove the choice: <code>std::vector</code>, or <code>std::unique_ptr&lt;T[]&gt;</code> when a raw array is needed.<br><b>Interview trap:</b> for a type with a non-trivial destructor, scalar delete on an array is undefined, and in practice the other elements' destructors never run.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "new_delete",
+   "arrays",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does this program print, and what does it say about the cost of <code>std::unique_ptr</code> compared with a raw pointer?",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n#include &lt;memory&gt;\n\nint main() {\n    std::unique_ptr&lt;double&gt; p = std::make_unique&lt;double&gt;(3.5);\n    std::printf(\"sizeof(unique_ptr&lt;double&gt;)=%zu sizeof(double*)=%zu\\n\",\n                sizeof(p), sizeof(double*));\n    std::printf(\"value=%.1f\\n\", *p);\n}</code></pre><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>sizeof(unique_ptr&lt;double&gt;)=8 sizeof(double*)=8\nvalue=3.5</code></pre>The default deleter is an empty class. The standard library stores it with the empty-base optimisation, so the object is exactly one pointer. There is no reference count and no atomic operation. The deleter runs once, when the owner goes out of scope.<br><b>Interview trap:</b> the object stays one pointer only for a stateless deleter. A function-pointer deleter adds a second pointer (see the custom deleter card).",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "unique_ptr",
+   "smart_pointers",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with this code, and what does the compiler report?",
+  "back": "<pre><code>#include &lt;memory&gt;\n\nint main() {\n    std::unique_ptr&lt;int&gt; a = std::make_unique&lt;int&gt;(1);\n    std::unique_ptr&lt;int&gt; b = a;   // copy: not allowed\n    return *b;\n}</code></pre>Compiler output (g++ 13.3, -std=c++20):<br><pre><code>s_c05_unique_copy.cpp:5:30: error: use of deleted function ‘std::unique_ptr&lt;_Tp, _Dp&gt;::unique_ptr(const std::unique_ptr&lt;_Tp, _Dp&gt;&amp;) [with _Tp = int; _Dp = std::default_delete&lt;int&gt;]’</code></pre><code>unique_ptr</code> has a deleted copy constructor. Ownership can be transferred but never duplicated. Transfer it with an explicit move (next card), or use <code>shared_ptr</code> if ownership really is shared.<br><b>Interview trap:</b> the error is at compile time, which is the point. The equivalent raw-pointer copy compiles, and only fails at run time, typically as a double delete.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "unique_ptr",
+   "compile_error",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Fix the previous program. What does this version print, and what state is <code>a</code> in afterwards?",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n#include &lt;memory&gt;\n\nint main() {\n    std::unique_ptr&lt;int&gt; a = std::make_unique&lt;int&gt;(1);\n    std::unique_ptr&lt;int&gt; b = std::move(a);   // ownership transfers\n    std::printf(\"a is null: %d\\n\", a == nullptr);\n    std::printf(\"*b = %d\\n\", *b);\n}</code></pre><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>a is null: 1\n*b = 1</code></pre><code>std::move</code> is a cast to an rvalue reference. The move constructor of <code>unique_ptr</code> takes the pointer out of <code>a</code> and sets <code>a</code> to <code>nullptr</code>. A moved-from <code>unique_ptr</code> is valid: you may assign to it or destroy it. Dereferencing it is undefined behaviour.<br><b>Interview trap:</b> using a moved-from <code>unique_ptr</code> compiles without complaint. It is a null dereference at run time, so check the state or do not read the object after the move.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "unique_ptr",
+   "move_semantics",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "{{c1::std::unique_ptr}} expresses exclusive ownership and is {{c2::move-only}}. A raw pointer in an interface should mean {{c3::non-owning access}}, and the type should carry ownership rather than a comment.",
+  "back": "Return a heap object as <code>std::unique_ptr&lt;T&gt;</code>. The caller gets exclusive ownership at no runtime cost, and the result converts implicitly to <code>std::shared_ptr&lt;T&gt;</code> if the caller later needs sharing.<br>Python has no equivalent: every reference in Python is effectively a co-owner.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "unique_ptr",
+   "ownership",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "How many heap allocations does each form make? Explain the counts this program prints and the lifetime consequence of <code>make_shared</code>.",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n#include &lt;cstdlib&gt;\n#include &lt;memory&gt;\n\nstatic int allocs = 0;\nvoid* operator new(std::size_t n) { ++allocs; return std::malloc(n); }\nvoid operator delete(void* p) noexcept { std::free(p); }\nvoid operator delete(void* p, std::size_t) noexcept { std::free(p); }\n\nstruct Node {\n    int v;\n    explicit Node(int x) : v(x) {}\n};\n\nint main() {\n    allocs = 0;\n    auto a = std::shared_ptr&lt;Node&gt;(new Node(1));\n    std::printf(\"new + shared_ptr: %d allocations\\n\", allocs);\n\n    allocs = 0;\n    auto b = std::make_shared&lt;Node&gt;(2);\n    std::printf(\"make_shared: %d allocation(s)\\n\", allocs);\n\n    std::printf(\"values: %d %d\\n\", a-&gt;v, b-&gt;v);\n}</code></pre><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>new + shared_ptr: 2 allocations\nmake_shared: 1 allocation(s)\nvalues: 1 2</code></pre><code>std::shared_ptr&lt;Node&gt;(new Node(1))</code> allocates the <code>Node</code> and then the control block, two calls. <code>std::make_shared</code> allocates one block that holds both the control block and the object, so the count is one. The program replaces <code>operator new</code> to count calls.<br><b>Consequence:</b> the destructor of the object runs when the strong count reaches zero, but the combined block is released only when the weak count also reaches zero. A long-lived <code>weak_ptr</code> therefore keeps the memory of a destroyed object alive.<br><b>Interview trap:</b> <code>make_shared</code> does not accept a custom deleter. Use the explicit <code>shared_ptr</code> constructor when you need one.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "shared_ptr",
+   "make_shared",
+   "allocation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does this program print? Explain the size of <code>shared_ptr</code> and each count.",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n#include &lt;memory&gt;\n\nint main() {\n    std::printf(\"sizeof(shared_ptr&lt;int&gt;)=%zu\\n\", sizeof(std::shared_ptr&lt;int&gt;));\n    auto a = std::make_shared&lt;int&gt;(7);\n    {\n        auto b = a;\n        std::printf(\"inside: %ld\\n\", a.use_count());\n    }\n    std::printf(\"after scope: %ld\\n\", a.use_count());\n    std::weak_ptr&lt;int&gt; w = a;\n    std::printf(\"with weak: strong=%ld\\n\", w.use_count());\n}</code></pre><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>sizeof(shared_ptr&lt;int&gt;)=16\ninside: 2\nafter scope: 1\nwith weak: strong=1</code></pre>A <code>shared_ptr</code> is two pointers: one to the object and one to the control block. The control block holds the strong count, the weak count and the deleter. A copy increments the strong count and leaving the scope decrements it. A <code>weak_ptr</code> does not change the strong count.<br><b>Interview trap:</b> <code>use_count()</code> is for diagnostics. Another thread can change the count right after you read it, so do not branch on it in concurrent code.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "shared_ptr",
+   "reference_counting",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does a <code>shared_ptr</code> copy cost in a hot loop, and what should a function take instead when it does not extend ownership?",
+  "back": "Copying a <code>shared_ptr</code> increments the strong count, and destroying a copy decrements it. Both are atomic read-modify-write operations on the control block, which on x86 are lock-prefixed instructions. An uncontended atomic is typically on the order of ten to twenty cycles (approx.). Under contention the cache line moves between cores and each update costs far more.<br>If the callee does not keep the object, take <code>const T&amp;</code> (or <code>T&amp;</code> if it mutates). Take <code>const std::shared_ptr&lt;T&gt;&amp;</code> when it might store a copy, and take by value only when the callee always keeps one. Move when ownership is transferred.<br><b>Interview trap:</b> the atomic counts make copying safe across threads, not the pointed-to object. Concurrent reads are fine only if nothing mutates the object.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "shared_ptr",
+   "performance",
+   "concurrency",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "The control block of a <code>shared_ptr</code> holds the {{c1::strong count}}, the {{c2::weak count}} and the deleter. Changes to the strong count are {{c3::atomic}}, so copies may happen on different threads, but this does not synchronise access to the pointed-to object.",
+  "back": "<b>Interviewer follow-up:</b> two threads each call <code>p-&gt;push_back(x)</code> on a <code>std::vector</code> owned through the same <code>shared_ptr</code>. Is that safe? No. The reference counts are safe, the vector is not, and a mutex or a single writer is needed. Atomic counts protect the bookkeeping, not your data.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "shared_ptr",
+   "concurrency",
+   "control_block",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SHARED 1/3]</b> Context: two <code>Node</code> objects each hold a <code>std::shared_ptr</code> to the other, the bidirectional link that appears in linked lists and graphs. What does this program print?",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n#include &lt;memory&gt;\n\nstruct Node {\n    std::shared_ptr&lt;Node&gt; other;\n    ~Node() { std::printf(\"~Node\\n\"); }\n};\n\nint main() {\n    auto a = std::make_shared&lt;Node&gt;();\n    auto b = std::make_shared&lt;Node&gt;();\n    a-&gt;other = b;\n    b-&gt;other = a;   // cycle: each keeps the other alive\n}</code></pre><br><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>(no output)</code></pre>Nothing is printed. Each control block has a strong count of 2 at the end of <code>main</code>: the local variable plus the other node's member. Leaving the scope lowers each count to 1, so neither reaches zero, neither destructor runs, and both nodes leak.<br><b>Interviewer follow-up:</b> how do you fix it? Make one direction a <code>weak_ptr</code>. See the next card.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "shared_ptr",
+   "weak_ptr",
+   "cycles",
+   "chain_shared",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SHARED 2/3]</b> Context: the same two-node structure, now with a parent and child. <code>a</code> owns <code>b</code>, and <code>b</code> refers back to <code>a</code>. Which edge should be weak, and what does the fixed program print?",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n#include &lt;memory&gt;\n\nstruct Node {\n    std::shared_ptr&lt;Node&gt; next;   // strong edge: a owns b\n    std::weak_ptr&lt;Node&gt; prev;     // weak back-edge: b observes a\n    ~Node() { std::printf(\"~Node\\n\"); }\n};\n\nint main() {\n    auto a = std::make_shared&lt;Node&gt;();\n    auto b = std::make_shared&lt;Node&gt;();\n    a-&gt;next = b;\n    b-&gt;prev = a;\n    std::printf(\"use_count(b)=%ld\\n\", b.use_count());\n}</code></pre><br><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>use_count(b)=2\n~Node\n~Node</code></pre>The back-edge (<code>prev</code>) is weak. The owner keeps the child alive, and the child only observes the owner. At the end of <code>main</code>, <code>b</code> drops from 2 to 1. Then <code>a</code> drops from 1 to 0, which runs <code>~Node</code> for <code>a</code> and releases <code>next</code>. That drops <code>b</code> to 0 and runs its destructor.<br><b>Interviewer follow-up:</b> how does the child use its parent? It calls <code>lock()</code> on the weak pointer, covered by the last card of this chain.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "shared_ptr",
+   "weak_ptr",
+   "cycles",
+   "chain_shared",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "<b>[Chain: SHARED 3/3]</b> Context: a <code>weak_ptr</code> is taken to an object that is destroyed at the end of an inner block. What does this program print, and how should a weak pointer be used safely?",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n#include &lt;memory&gt;\n\nint main() {\n    std::weak_ptr&lt;int&gt; w;\n    {\n        auto sp = std::make_shared&lt;int&gt;(42);\n        w = sp;\n        if (auto locked = w.lock()) std::printf(\"alive %d\\n\", *locked);\n    }\n    std::printf(\"expired=%d lock_is_null=%d\\n\", w.expired(), w.lock() == nullptr);\n}</code></pre><br><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>alive 42\nexpired=1 lock_is_null=1</code></pre><code>lock()</code> returns a <code>shared_ptr</code> that is null if the object has expired. While the returned pointer exists, the object stays alive.<br><b>Interview trap:</b> <code>if (!w.expired()) use(*w.lock());</code> has a time-of-check to time-of-use race in multithreaded code, because the object can expire between the two calls. Call <code>lock()</code> once and test the result.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "shared_ptr",
+   "weak_ptr",
+   "lock",
+   "chain_shared",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does this program print? What decides which <code>f</code> is chosen, and what does <code>g(5)</code> print?",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n\nvoid f(int&amp;)       { std::puts(\"lvalue ref\"); }\nvoid f(int&amp;&amp;)      { std::puts(\"rvalue ref\"); }\nvoid f(const int&amp;) { std::puts(\"const lvalue ref\"); }\n\nvoid g(int&amp;&amp; r) { f(r); }   // r has a name, so inside g it is an lvalue\n\nint main() {\n    int x = 1;\n    f(x);\n    f(2);\n    f(x + 1);\n    f(static_cast&lt;int&amp;&amp;&gt;(x));\n    g(5);\n}</code></pre><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>lvalue ref\nrvalue ref\nrvalue ref\nrvalue ref\nlvalue ref</code></pre>An lvalue has a name and an address. A prvalue such as <code>x + 1</code> or <code>2</code> is a temporary. An xvalue such as <code>static_cast&lt;int&amp;&amp;&gt;(x)</code>, which is what <code>std::move</code> produces, is an object that is about to be reused. Overload resolution prefers <code>int&amp;&amp;</code> for rvalues and <code>int&amp;</code> for non-const lvalues.<br><b>Interview trap:</b> a named rvalue reference is an lvalue. Inside <code>g</code>, <code>r</code> has a name, so <code>f(r)</code> calls the lvalue overload. Pass it on with <code>std::move</code> or <code>std::forward</code> to keep the category.<br>Python has no such distinction: every name is a reference to an object.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "lvalue_rvalue",
+   "value_categories",
+   "overloading",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does <code>std::move</code> do at run time? Predict the output of this program.",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n#include &lt;string&gt;\n#include &lt;utility&gt;\n\nint main() {\n    std::string a = \"a string long enough to avoid the small-string buffer\";\n    std::printf(\"before: a.size()=%zu\\n\", a.size());\n    std::string b = std::move(a);      // a is now in a valid, unspecified state\n    std::printf(\"after:  a.size()=%zu b.size()=%zu\\n\", a.size(), b.size());\n}</code></pre><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>before: a.size()=53\nafter:  a.size()=0 b.size()=53</code></pre><code>std::move</code> only casts its argument to an rvalue reference. The move constructor of <code>std::string</code> takes over the buffer and leaves <code>a</code> in a valid but unspecified state. The standard only guarantees that <code>a</code> can be assigned or destroyed. The zero size here is what this implementation does, not something to rely on.<br><b>Interview trap:</b> do not read a moved-from object. Reassign it, or let it go out of scope.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "move_semantics",
+   "std_move",
+   "moved_from",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does this program print? The code calls <code>std::move</code>, so why is no move constructor run?",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n#include &lt;utility&gt;\n\nstruct T {\n    T() = default;\n    T(const T&amp;) { std::puts(\"copy ctor\"); }\n    T(T&amp;&amp;) noexcept { std::puts(\"move ctor\"); }\n};\n\nint main() {\n    const T c{};\n    T d = std::move(c);   // std::move(c) is const T&amp;&amp;; it cannot bind to T&amp;&amp;, so the copy ctor runs\n    (void)d;\n}</code></pre><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>copy ctor</code></pre><code>std::move(c)</code> on a const object produces a <code>const T&amp;&amp;</code>. The move constructor takes <code>T&amp;&amp;</code>, and a const rvalue cannot bind to it. Overload resolution therefore selects the copy constructor, which takes <code>const T&amp;</code>. The compiler gives no warning.<br><b>Interview trap:</b> do not declare an object <code>const</code> if you intend to move from it later. The copy happens silently, which is a performance bug rather than a compile error.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "move_semantics",
+   "const_correctness",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Implement a <code>Buffer</code> that owns a heap array using the rule of five. Then explain, in order, the events this program prints.",
+  "back": "<pre><code>#include &lt;cstddef&gt;\n#include &lt;cstdio&gt;\n#include &lt;utility&gt;\n\nclass Buffer {\npublic:\n    explicit Buffer(std::size_t n) : data_(new double[n]), n_(n) { std::puts(\"ctor\"); }\n    Buffer(const Buffer&amp; o) : data_(new double[o.n_]), n_(o.n_) {\n        for (std::size_t i = 0; i &lt; n_; ++i) data_[i] = o.data_[i];\n        std::puts(\"copy\");\n    }\n    Buffer(Buffer&amp;&amp; o) noexcept : data_(o.data_), n_(o.n_) {\n        o.data_ = nullptr;\n        o.n_ = 0;\n        std::puts(\"move\");\n    }\n    Buffer&amp; operator=(const Buffer&amp; o) {\n        if (this != &amp;o) { Buffer tmp(o); swap(tmp); }\n        std::puts(\"copy=\");\n        return *this;\n    }\n    Buffer&amp; operator=(Buffer&amp;&amp; o) noexcept {\n        if (this != &amp;o) {\n            delete[] data_;\n            data_ = o.data_;\n            n_ = o.n_;\n            o.data_ = nullptr;\n            o.n_ = 0;\n        }\n        std::puts(\"move=\");\n        return *this;\n    }\n    ~Buffer() { delete[] data_; }\n    std::size_t size() const { return n_; }\n\nprivate:\n    void swap(Buffer&amp; o) noexcept {\n        std::swap(data_, o.data_);\n        std::swap(n_, o.n_);\n    }\n    double* data_;\n    std::size_t n_;\n};\n\nint main() {\n    Buffer a(4);\n    Buffer b = a;             // copy\n    Buffer c = std::move(a);  // move\n    c = b;                    // copy assignment\n    Buffer d(2);\n    d = std::move(b);         // move assignment\n    std::printf(\"a=%zu b=%zu c=%zu d=%zu\\n\", a.size(), b.size(), c.size(), d.size());\n}</code></pre><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>ctor\ncopy\nmove\ncopy\ncopy=\nctor\nmove=\na=0 b=0 c=4 d=4</code></pre>The five special members are the destructor, copy constructor, copy assignment, move constructor and move assignment. Copy assignment uses copy-and-swap, so the old contents are released only after the new copy succeeds. The moves are <code>noexcept</code> and leave the source empty, so the source's destructor frees nothing.<br>Trace: <code>Buffer b = a</code> prints copy. <code>c = std::move(a)</code> prints move. <code>c = b</code> prints copy, from the temporary made inside copy assignment, then copy=. <code>d = std::move(b)</code> prints move=. At the end <code>a</code> and <code>b</code> are empty and <code>c</code> and <code>d</code> hold four elements.<br><b>Interview trap:</b> a move assignment that does not release the old array leaks it. One that does not null the source leads to a double delete. Writing the rule of zero, with a <code>std::vector</code> member, avoids all of this.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "rule_of_five",
+   "move_semantics",
+   "implementation",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with this class? Predict what AddressSanitizer reports when the program runs.",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n\nclass Buffer {\npublic:\n    explicit Buffer(int n) : data_(new int[n]) {}\n    ~Buffer() { delete[] data_; }\n    // no copy operations declared: the compiler generates a memberwise copy\nprivate:\n    int* data_;\n};\n\nint main() {\n    Buffer a(10);\n    Buffer b = a;     // shallow copy: a.data_ == b.data_\n    std::puts(\"copied\");\n}</code></pre>AddressSanitizer report (built with <code>-fsanitize=address</code>):<br><pre><code>==10724==ERROR: AddressSanitizer: attempting double-free on 0x504000000010 in thread T0:\nSUMMARY: AddressSanitizer: double-free ../../../../src/libsanitizer/asan/asan_new_delete.cpp:155 in operator delete[](void*)</code></pre>The implicit copy constructor copies the pointer, so <code>a</code> and <code>b</code> refer to the same array. Both destructors call <code>delete[]</code> on it.<br>Fixes, in order of preference: use a <code>std::vector&lt;int&gt;</code> member (rule of zero); delete the copy operations and keep the class move-only; or write a deep copy.<br><b>Interview trap:</b> a user-declared destructor suppresses the implicit move constructor and move assignment. Rvalues then silently use the copy operations, which is slow, and a shallow copy still double-frees.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "rule_of_five",
+   "double_free",
+   "sanitizer",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Predict the output of this program. Why does the vector copy elements for one type and move them for the other?",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n#include &lt;vector&gt;\n\nstruct Noexc {\n    Noexc() = default;\n    Noexc(const Noexc&amp;) { std::puts(\"copy\"); }\n    Noexc(Noexc&amp;&amp;) noexcept { std::puts(\"move\"); }\n};\n\nstruct Throwing {\n    Throwing() = default;\n    Throwing(const Throwing&amp;) { std::puts(\"copy\"); }\n    Throwing(Throwing&amp;&amp;) { std::puts(\"move\"); }   // not noexcept\n};\n\ntemplate &lt;class T&gt;\nvoid run(const char* name) {\n    std::printf(\"-- %s\\n\", name);\n    std::vector&lt;T&gt; v;\n    v.emplace_back();\n    v.emplace_back();   // capacity 1 -&gt; 2: element 0 is relocated\n}\n\nint main() {\n    run&lt;Noexc&gt;(\"noexcept move\");\n    run&lt;Throwing&gt;(\"throwing move\");\n}</code></pre><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>-- noexcept move\nmove\n-- throwing move\ncopy</code></pre>When <code>std::vector</code> reallocates, it relocates the existing elements. It moves them only if the move constructor is <code>noexcept</code>, or if the type is not copyable. Otherwise it copies. The reason is the strong exception guarantee: if a move throws part way, the original elements are already partly moved-from and cannot be restored.<br><b>Interview trap:</b> a missing <code>noexcept</code> on a move constructor silently turns every growth into a deep copy. It compiles without warnings and shows up only in a profile.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "vector",
+   "noexcept",
+   "move_semantics",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "Mark a move constructor {{c1::noexcept}} whenever it cannot throw. If it is not marked, and the type is copyable, {{c2::std::vector}} reallocation falls back to {{c3::copying}} the elements.",
+  "back": "The mechanism is <code>std::move_if_noexcept</code>. Check the property in a unit test with <code>static_assert(std::is_nothrow_move_constructible_v&lt;T&gt;)</code>. Destructors are implicitly <code>noexcept</code> since C++11.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "noexcept",
+   "vector",
+   "move_semantics",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Predict the output of this program. Which of the three return forms does the standard guarantee to avoid copies and moves?",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n#include &lt;utility&gt;\n\nstruct Noisy {\n    Noisy() { std::puts(\"default\"); }\n    Noisy(const Noisy&amp;) { std::puts(\"copy\"); }\n    Noisy(Noisy&amp;&amp;) noexcept { std::puts(\"move\"); }\n};\n\nNoisy make() { return Noisy{}; }                      // prvalue: elided (C++17)\nNoisy named() { Noisy n; return n; }                  // NRVO: permitted, not guaranteed\nNoisy pessimised() { Noisy n; return std::move(n); }  // blocks NRVO\n\nint main() {\n    std::puts(\"A\"); Noisy a = make();\n    std::puts(\"B\"); Noisy b = named();\n    std::puts(\"C\"); Noisy c = pessimised();\n    (void)a; (void)b; (void)c;\n}</code></pre><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>A\ndefault\nB\ndefault\nC\ndefault\nmove</code></pre>Compiler warning for the third function:<br><pre><code>s_c22_elision.cpp:12:47: warning: moving a local object in a return statement prevents copy elision [-Wpessimizing-move]</code></pre><code>make()</code> returns a prvalue. Since C++17 the object is constructed directly in the caller's storage, so this is guaranteed: one default constructor and nothing else. <code>named()</code> returns a local. The standard permits but does not require NRVO, and GCC applies it here, so no copy or move is printed. <code>pessimised()</code> applies <code>std::move</code> to the local, which turns the return into a move from a named object. NRVO is blocked and the move constructor runs.<br><b>Interview trap:</b> never write <code>return std::move(local);</code>. The warning is part of <code>-Wall</code> for exactly this reason.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "copy_elision",
+   "rvo",
+   "move_semantics",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does this program print? Why does <code>bad()</code> lose the rvalue-ness of its argument, while <code>wrap()</code> keeps it?",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n#include &lt;string&gt;\n#include &lt;utility&gt;\n\nvoid sink(std::string&amp; s)  { std::printf(\"lvalue: %s\\n\", s.c_str()); }\nvoid sink(std::string&amp;&amp; s) { std::printf(\"rvalue: %s\\n\", s.c_str()); }\n\ntemplate &lt;class T&gt;\nvoid wrap(T&amp;&amp; x) { sink(std::forward&lt;T&gt;(x)); }\n\ntemplate &lt;class T&gt;\nvoid bad(T&amp;&amp; x) { sink(x); }   // x is a named lvalue inside bad()\n\nint main() {\n    std::string s = \"hello\";\n    wrap(s);\n    wrap(std::string(\"world\"));\n    bad(std::string(\"temp\"));\n}</code></pre><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>lvalue: hello\nrvalue: world\nlvalue: temp</code></pre>In <code>template&lt;class T&gt; void f(T&amp;&amp; x)</code>, <code>T&amp;&amp;</code> is a forwarding reference. An lvalue argument deduces <code>T = std::string&amp;</code>, and an rvalue deduces <code>T = std::string</code>. <code>std::forward&lt;T&gt;(x)</code> casts <code>x</code> back to its original category. Inside <code>bad()</code>, <code>x</code> has a name, so it is an lvalue even though its declared type is an rvalue reference.<br>This is the mechanism behind factories and <code>emplace</code>-style wrappers that pass arguments of unknown category to a constructor.<br><b>Interview trap:</b> a parameter such as <code>std::vector&lt;T&gt;&amp;&amp;</code> is an ordinary rvalue reference, not a forwarding reference. Only a bare <code>T&amp;&amp;</code> with <code>T</code> deduced in that function template qualifies.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "perfect_forwarding",
+   "forwarding_reference",
+   "templates",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "A forwarding reference <code>T&amp;&amp;</code> called with an lvalue of type <code>X</code> deduces {{c1::T = X&amp;}}, and reference collapsing makes the parameter type {{c2::X&amp;}}. Only {{c3::&amp;&amp; applied to &amp;&amp;}} collapses to a true rvalue reference.",
+  "back": "The collapsing rules: <code>T&amp; &amp;</code>, <code>T&amp; &amp;&amp;</code> and <code>T&amp;&amp; &amp;</code> all become <code>T&amp;</code>. Only <code>T&amp;&amp; &amp;&amp;</code> becomes <code>T&amp;&amp;</code>. This is why one template signature can accept both lvalues and rvalues.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "references",
+   "forwarding",
+   "templates",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with this function? State the compiler warning, and what happened when the program ran.",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n#include &lt;string&gt;\n\nconst std::string&amp; label(int i) {\n    return std::to_string(i) + \"!\";   // reference to a temporary\n}\n\nint main() {\n    const std::string&amp; s = label(3);  // dangling\n    std::printf(\"%zu\\n\", s.size());\n}</code></pre>Compiler warning:<br><pre><code>s_c26_dangling_ref.cpp:5:30: warning: returning reference to temporary [-Wreturn-local-addr]</code></pre>Run result: the program ended with a segmentation fault (exit status -11) and printed nothing. Under AddressSanitizer the crash is reported as a SEGV inside <code>printf</code>, not as a use-after-return.<br>The temporary <code>std::to_string(i) + \"!\"</code> is destroyed when <code>label</code> returns, so the caller's reference refers to a destroyed object. The result is undefined, and here it crashed.<br>Fix: return by value, <code>std::string label(int i) { return std::to_string(i) + \"!\"; }</code>.<br><b>Interview trap:</b> lifetime extension applies to <code>const std::string&amp; s = std::to_string(3) + \"!\";</code> in a single scope, but not through a function return. A <code>std::string_view</code> returned the same way is worse, because a view never owns the string.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "dangling",
+   "references",
+   "undefined_behavior",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Coming from Python: predict the output. What does <code>auto b = a;</code> do here, and what does <code>auto&amp; c = a;</code> do?",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::vector&lt;int&gt; a{1, 2, 3};\n    auto b = a;          // deep copy: value semantics\n    auto&amp; c = a;         // alias: same object\n    b.push_back(4);\n    c.push_back(5);\n    std::printf(\"a=%zu b=%zu\\n\", a.size(), b.size());\n}</code></pre><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>a=4 b=4</code></pre>In Python, <code>b = a</code> binds a second name to the same list, so appending through <code>b</code> changes <code>a</code>. In C++, <code>auto b = a;</code> makes an independent copy of the vector, so the push on <code>b</code> leaves <code>a</code> alone. <code>auto&amp; c = a;</code> is an alias, the closest C++ equivalent of Python's behaviour. Both sizes are four because <code>c</code> pushed onto <code>a</code>.<br><b>Interview trap:</b> <code>auto</code> deduces a value type and copies silently. Write <code>const auto&amp;</code> for read-only access in loops, or the copies can dominate the run time.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "python_vs_cpp",
+   "value_semantics",
+   "references",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Predict the output of this program. In what order are the destructors called, and how does that compare with Python's <code>with</code> statement?",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n#include &lt;string&gt;\n#include &lt;utility&gt;\n\nstruct Guard {\n    std::string name;\n    explicit Guard(std::string n) : name(std::move(n)) { std::printf(\"open %s\\n\", name.c_str()); }\n    ~Guard() { std::printf(\"close %s\\n\", name.c_str()); }\n};\n\nstruct Pair {\n    Guard first{\"first-member\"};   // members are constructed in declaration order\n};\n\nint main() {\n    Guard a{\"A\"};\n    Guard b{\"B\"};\n    Pair p;\n    {\n        Guard c{\"C\"};\n    }\n    std::puts(\"end of main\");\n}</code></pre><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>open A\nopen B\nopen first-member\nopen C\nclose C\nend of main\nclose first-member\nclose B\nclose A</code></pre>Objects are destroyed in reverse order of construction when their scope ends. Members are constructed in declaration order and destroyed in reverse. Here <code>c</code> closes at its own brace, then <code>p</code> and its member, then <code>b</code>, then <code>a</code>.<br>Python's <code>with</code> is a special case of this: deterministic cleanup for objects that implement the context-manager protocol. In C++ every class with a destructor has that property, which is why RAII covers files, locks, buffers and sockets alike.<br><b>Interview trap:</b> destructors are <code>noexcept</code> by default. A throw from a destructor during stack unwinding calls <code>std::terminate</code>.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "raii",
+   "destructors",
+   "lifetime",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with this code? Give the compiler warning and the AddressSanitizer report.",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n\nint main() {\n    int* p = new int[10];\n    p[0] = 1;\n    std::printf(\"%d\\n\", p[0]);\n    delete p;     // should be delete[]\n}</code></pre>Compiler warning:<br><pre><code>s_c29_mismatch.cpp:7:12: warning: ‘void operator delete(void*, long unsigned int)’ called on pointer returned from a mismatched allocation function [-Wmismatched-new-delete]</code></pre>AddressSanitizer report:<br><pre><code>==10836==ERROR: AddressSanitizer: alloc-dealloc-mismatch (operator new [] vs operator delete) on 0x504000000010\nSUMMARY: AddressSanitizer: alloc-dealloc-mismatch ../../../../src/libsanitizer/asan/asan_new_delete.cpp:164 in operator delete(void*, unsigned long)</code></pre>The array came from <code>new int[10]</code>, so it must be freed with <code>delete[]</code>. The scalar <code>delete</code> is undefined behaviour. For element types with destructors, the array form runs a destructor per element and the scalar form does not. Fix: <code>delete[] p;</code>, or better, <code>std::vector&lt;int&gt;</code> or <code>std::unique_ptr&lt;int[]&gt;</code>.<br><b>Interview trap:</b> the compiler warning is reliable only when the allocation and the deletion are visible in the same function. Across function boundaries, a sanitizer or code review is what catches it.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "new_delete",
+   "sanitizer",
+   "undefined_behavior",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is wrong with this code? Explain the AddressSanitizer report and give the correct version.",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n#include &lt;memory&gt;\n\nstruct Widget {\n    ~Widget() { std::puts(\"~Widget\"); }\n    std::shared_ptr&lt;Widget&gt; self() { return std::shared_ptr&lt;Widget&gt;(this); }  // new control block\n};\n\nint main() {\n    auto a = std::make_shared&lt;Widget&gt;();\n    auto b = a-&gt;self();\n    std::printf(\"%ld %ld\\n\", a.use_count(), b.use_count());\n}</code></pre>AddressSanitizer report (built with <code>-fsanitize=address</code>):<br><pre><code>==10852==ERROR: AddressSanitizer: attempting free on address which was not malloc()-ed: 0x503000000050 in thread T0\nSUMMARY: AddressSanitizer: bad-free ../../../../src/libsanitizer/asan/asan_new_delete.cpp:164 in operator delete(void*, unsigned long)</code></pre>The expression <code>std::shared_ptr&lt;Widget&gt;(this)</code> creates a second, independent control block for an object that <code>a</code> already owns. Each control block eventually deletes the same object. The report shows the second release trying to free an address that was not allocated on its own, because the object sits inside the block that <code>make_shared</code> allocated.<br>Fix: inherit from <code>std::enable_shared_from_this&lt;Widget&gt;</code> and return <code>shared_from_this()</code>. The object holds a <code>weak_ptr</code> to its control block, so both returned pointers share it. Output of the corrected version:<br><pre><code>#include &lt;cstdio&gt;\n#include &lt;memory&gt;\n\nstruct Widget : std::enable_shared_from_this&lt;Widget&gt; {\n    ~Widget() { std::puts(\"~Widget\"); }\n    std::shared_ptr&lt;Widget&gt; self() { return shared_from_this(); }  // reuses the control block\n};\n\nint main() {\n    auto a = std::make_shared&lt;Widget&gt;();\n    auto b = a-&gt;self();\n    std::printf(\"%ld %ld\\n\", a.use_count(), b.use_count());\n}</code></pre><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>2 2\n~Widget</code></pre><b>Interview trap:</b> <code>shared_from_this()</code> needs an existing <code>shared_ptr</code> owner. Calling it in a constructor, or on an object no <code>shared_ptr</code> owns, throws <code>std::bad_weak_ptr</code> in C++17.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "shared_ptr",
+   "this_pointer",
+   "double_free",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What does this program print, and in what order are the destructors called?",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n#include &lt;memory&gt;\n\nstruct Inner { int v = 5; ~Inner() { std::puts(\"~Inner\"); } };\nstruct Outer { Inner in; ~Outer() { std::puts(\"~Outer\"); } };\n\nint main() {\n    auto o = std::make_shared&lt;Outer&gt;();\n    std::shared_ptr&lt;Inner&gt; p(o, &amp;o-&gt;in);   // aliasing constructor\n    std::printf(\"count=%ld v=%d\\n\", o.use_count(), p-&gt;v);\n    o.reset();\n    std::puts(\"outer reference released\");\n    std::printf(\"inner alive v=%d\\n\", p-&gt;v);\n}</code></pre><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>count=2 v=5\nouter reference released\ninner alive v=5\n~Outer\n~Inner</code></pre>The aliasing constructor <code>shared_ptr&lt;Inner&gt;(o, &amp;o-&gt;in)</code> shares <code>o</code>'s control block but points at the member. While both exist, the owner count is 2, so the whole <code>Outer</code> stays alive while <code>p</code> refers to its member. <code>o.reset()</code> does not destroy the <code>Outer</code>. The destructors run when <code>p</code> is destroyed at the end of <code>main</code>: <code>~Outer</code> first, then the member's <code>~Inner</code>.<br><b>Interview trap:</b> <code>use_count()</code> counts the whole owner, not the member. This is the tool for keeping a container alive while a handle to one of its elements is in use.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "shared_ptr",
+   "aliasing_constructor",
+   "ownership",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What do these sizes print, and what does a custom deleter cost?",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n#include &lt;memory&gt;\n\nvoid del_fn(int* p) { delete p; }\n\nint main() {\n    auto lam = [](int* p) { delete p; };   // captureless lambda: empty\n    std::printf(\"default=%zu lambda=%zu fnptr=%zu\\n\",\n                sizeof(std::unique_ptr&lt;int&gt;),\n                sizeof(std::unique_ptr&lt;int, decltype(lam)&gt;),\n                sizeof(std::unique_ptr&lt;int, void (*)(int*)&gt;));\n    std::unique_ptr&lt;int, void (*)(int*)&gt; p(new int(7), &amp;del_fn);\n    std::printf(\"%d\\n\", *p);\n}</code></pre><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>default=8 lambda=8 fnptr=16\n7</code></pre>The default deleter is an empty class and costs nothing. A captureless lambda is also empty, so the <code>unique_ptr</code> stays at 8 bytes. A function-pointer deleter has to be stored, which makes the object 16 bytes. The type changes too: <code>std::unique_ptr&lt;int, void(*)(int*)&gt;</code> is a different type from <code>std::unique_ptr&lt;int&gt;</code>.<br><b>Interview trap:</b> a capturing lambda as deleter grows with its captures, and a container of such pointers pays that size per element.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "unique_ptr",
+   "custom_deleter",
+   "sizeof",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Predict the output. Why do <code>Bad</code> and <code>Good</code> have different sizes when they hold the same members?",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n\nstruct Bad  { char a; int b; char c; };\nstruct Good { int b; char a; char c; };\nstruct alignas(64) Line { double x; };\n\nint main() {\n    std::printf(\"Bad=%zu Good=%zu\\n\", sizeof(Bad), sizeof(Good));\n    std::printf(\"alignof(int)=%zu alignof(Line)=%zu sizeof(Line)=%zu\\n\",\n                alignof(int), alignof(Line), sizeof(Line));\n}</code></pre><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>Bad=12 Good=8\nalignof(int)=4 alignof(Line)=64 sizeof(Line)=64</code></pre>Each member sits at an address that is a multiple of its alignment, and the compiler inserts padding to achieve that. <code>Bad</code>: a char at offset 0, three bytes of padding, an int at 4, a char at 8, then three bytes of tail padding, for 12 bytes. <code>Good</code>: an int at 0, a char at 4, a char at 5, then two bytes of tail padding, for 8 bytes. Ordering members by decreasing alignment minimises padding. <code>alignas(64)</code> raises the alignment, and <code>sizeof</code> is always a multiple of the alignment.<br><b>Interview trap:</b> an array of <code>Bad</code> uses 12 bytes per element, although its members total 6 bytes.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "alignment",
+   "padding",
+   "memory_layout",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "cloze",
+  "front": "<code>alignof(T)</code> gives the alignment requirement of <code>T</code>. <code>sizeof(T)</code> is always a multiple of {{c1::alignof(T)}} because of {{c2::tail padding}}, and the stride between elements of an array of <code>T</code> is {{c3::sizeof(T)}}.",
+  "back": "The stride is what matters for memory. A struct with 6 bytes of data and alignment 4 has a stride of 12 bytes, so ten million of them take 120 MB, not 60 MB. Size large arrays of small structs deliberately.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "alignment",
+   "sizeof",
+   "memory_layout",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Two loop orders sum the same 2048 by 2048 matrix. Which is faster, why, and what do the timings from this sandbox show?",
+  "back": "<pre><code>#include &lt;chrono&gt;\n#include &lt;cstddef&gt;\n#include &lt;cstdio&gt;\n#include &lt;vector&gt;\n\nint main() {\n    constexpr int n = 2048;   // 2048*2048*8 bytes = 32 MiB\n    std::vector&lt;double&gt; m(static_cast&lt;std::size_t&gt;(n) * n, 1.0);\n\n    auto t0 = std::chrono::steady_clock::now();\n    double row = 0.0;\n    for (int i = 0; i &lt; n; ++i)\n        for (int j = 0; j &lt; n; ++j) row += m[static_cast&lt;std::size_t&gt;(i) * n + j];   // contiguous\n    auto t1 = std::chrono::steady_clock::now();\n\n    double col = 0.0;\n    for (int j = 0; j &lt; n; ++j)\n        for (int i = 0; i &lt; n; ++i) col += m[static_cast&lt;std::size_t&gt;(i) * n + j];   // stride n*8 bytes\n    auto t2 = std::chrono::steady_clock::now();\n\n    using ms = std::chrono::duration&lt;double, std::milli&gt;;\n    std::printf(\"row sum=%.0f col sum=%.0f\\n\", row, col);\n    std::printf(\"row-major %.1f ms, column-major %.1f ms\\n\",\n                ms(t1 - t0).count(), ms(t2 - t1).count());\n}</code></pre><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>row sum=4194304 col sum=4194304\nrow-major 4.8 ms, column-major 22.8 ms</code></pre>The matrix is row-major, indexed <code>m[i*n + j]</code>. The row walk visits consecutive addresses, so each 64-byte cache line serves eight doubles and the hardware prefetcher can stream the data. The column walk jumps 16 KiB (2048 × 8 bytes) between accesses, so each access uses 8 bytes of a cache line whose neighbours are not reused before it is evicted.<br>Across repeated runs in this sandbox, row-major took 3.4 to 5.8 ms and column-major took 20 to 25 ms, roughly four to five times slower. The ratio depends on the machine, so measure your own.<br><b>Interview trap:</b> the two loops do the same arithmetic. NumPy arrays are row-major by default, so slicing columns of a C-ordered array carries the same penalty.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "cache",
+   "memory_layout",
+   "performance",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Implement a minimal <code>Owner&lt;T&gt;</code>, a stripped-down <code>unique_ptr</code> with deleted copies, <code>noexcept</code> moves, <code>release()</code>, and a move assignment that frees the old object. What does this program print?",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n#include &lt;utility&gt;\n\ntemplate &lt;class T&gt;\nclass Owner {\npublic:\n    explicit Owner(T* p = nullptr) noexcept : p_(p) {}\n    ~Owner() { delete p_; }\n    Owner(const Owner&amp;) = delete;\n    Owner&amp; operator=(const Owner&amp;) = delete;\n    Owner(Owner&amp;&amp; o) noexcept : p_(std::exchange(o.p_, nullptr)) {}\n    Owner&amp; operator=(Owner&amp;&amp; o) noexcept {\n        if (this != &amp;o) {\n            delete p_;\n            p_ = std::exchange(o.p_, nullptr);\n        }\n        return *this;\n    }\n    T&amp; operator*() const noexcept { return *p_; }\n    T* get() const noexcept { return p_; }\n    T* release() noexcept { return std::exchange(p_, nullptr); }\n\nprivate:\n    T* p_;\n};\n\nstruct Tracer {\n    int id;\n    explicit Tracer(int i) : id(i) { std::printf(\"make %d\\n\", id); }\n    ~Tracer() { std::printf(\"destroy %d\\n\", id); }\n};\n\nint main() {\n    Owner&lt;Tracer&gt; a(new Tracer(1));\n    Owner&lt;Tracer&gt; b = std::move(a);\n    std::printf(\"a null: %d, b id: %d\\n\", a.get() == nullptr, b.get()-&gt;id);\n    b = Owner&lt;Tracer&gt;(new Tracer(2));   // old Tracer 1 is destroyed here\n    std::printf(\"end\\n\");\n}</code></pre><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>make 1\na null: 1, b id: 1\nmake 2\ndestroy 1\nend\ndestroy 2</code></pre>The same file built with <code>-fsanitize=address</code> runs without any sanitizer report. The copy operations are deleted, so ownership only moves. <code>std::exchange</code> nulls the source as it takes the pointer. The move assignment checks for self-assignment, deletes the old pointer, then steals.<br>Trace: <code>Owner&lt;Tracer&gt; b = std::move(a)</code> leaves <code>a</code> null. In <code>b = Owner&lt;Tracer&gt;(new Tracer(2))</code>, Tracer 2 is constructed first, then the assignment destroys Tracer 1. The temporary is now empty, and <code>b</code> destroys Tracer 2 at the end of <code>main</code>.<br><b>Interview trap:</b> the two classic bugs are leaking the old pointer by overwriting it first, and omitting the self-assignment check, which deletes the object you are assigning from.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "unique_ptr",
+   "implementation",
+   "move_semantics",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "Python's <code>with</code> statement guarantees a lock is released. What is the C++ equivalent, and what does this program print?",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n#include &lt;mutex&gt;\n#include &lt;stdexcept&gt;\n\nstd::mutex m;\n\nvoid update(bool fail) {\n    std::lock_guard&lt;std::mutex&gt; lk(m);   // locks here\n    std::puts(\"locked\");\n    if (fail) throw std::runtime_error(\"boom\");\n    std::puts(\"work done\");\n}   // unlocked on every exit path, including the throw\n\nint main() {\n    try {\n        update(true);\n    } catch (const std::exception&amp; e) {\n        std::printf(\"caught %s\\n\", e.what());\n    }\n    std::printf(\"try_lock succeeds: %d\\n\", m.try_lock());\n    m.unlock();\n}</code></pre><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>locked\ncaught boom\ntry_lock succeeds: 1</code></pre><code>std::lock_guard</code> locks in its constructor and unlocks in its destructor. The destructor also runs while the exception unwinds the stack, before the <code>catch</code> block, so the mutex is free afterwards. That is why <code>try_lock()</code> succeeds.<br><b>Interview trap:</b> use <code>std::unique_lock</code> when you must unlock early or wait on a condition variable, and <code>std::scoped_lock</code> when you take several mutexes at once, which avoids deadlock from inconsistent lock ordering.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "raii",
+   "lock_guard",
+   "exceptions",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A <code>std::vector</code> of <code>unique_ptr</code> grows with <code>push_back</code>, even though <code>unique_ptr</code> is not copyable. Why does this compile and run, and what does it print?",
+  "back": "<pre><code>#include &lt;cstdio&gt;\n#include &lt;memory&gt;\n#include &lt;vector&gt;\n\nint main() {\n    std::vector&lt;std::unique_ptr&lt;int&gt;&gt; v;\n    for (int i = 0; i &lt; 5; ++i) v.push_back(std::make_unique&lt;int&gt;(i * i));   // growth moves the pointers\n    int sum = 0;\n    for (const auto&amp; p : v) sum += *p;\n    std::printf(\"size=%zu sum=%d\\n\", v.size(), sum);\n}</code></pre><b>Output</b> (g++ 13.3, -std=c++20 -Wall -Wextra -O2):<br><pre><code>size=5 sum=30</code></pre>Reallocation uses <code>std::move_if_noexcept</code>. The <code>unique_ptr</code> move constructor is <code>noexcept</code> and the type is not copyable, so the elements are moved. The sum is 0 + 1 + 4 + 9 + 16 = 30.<br><b>Interview trap:</b> <code>std::vector&lt;std::unique_ptr&lt;int&gt;&gt; w = v;</code> does not compile, because the vector cannot be copied when its elements are move-only. A deep copy has to be a loop that calls <code>std::make_unique</code> on each element.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "vector",
+   "unique_ptr",
+   "move_semantics",
+   "lvl_vp_core"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "A Python list of 10 million floats holds pointers to separate float objects. What is the layout of <code>std::vector&lt;double&gt;</code> instead, and why does it matter for a pricer?",
+  "back": "In CPython each float is a separate heap object of about 24 bytes on 64-bit (check with <code>sys.getsizeof</code>), and the list holds an 8-byte pointer to each. Ten million elements therefore cost about 320 MB, scattered across the heap, and every element access follows a pointer.<br><code>std::vector&lt;double&gt;</code> is one contiguous block of 8-byte values, about 80 MB for ten million, traversed in address order. Caches and the hardware prefetcher work well, and the compiler can vectorise the loop with SIMD.<br><b>Interview trap:</b> contiguous is not always best. Inserting in the middle of a vector is linear, and a vector of pointers reintroduces the scatter. Choose the layout that matches the access pattern.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "python_vs_cpp",
+   "memory_layout",
+   "performance",
+   "lvl_foundation"
+  ]
+ },
+ {
+  "type": "basic",
+  "front": "What is the correct parameter type for a function that takes ownership, one that only uses the object, and one that may replace the owned object?",
+  "back": "<b>Takes ownership:</b> <code>void sink(std::unique_ptr&lt;T&gt; p)</code>, called as <code>sink(std::move(p))</code>. The callee now owns the object and the caller's pointer is null.<br><b>Only uses the object:</b> <code>void use(T&amp; obj)</code>, called as <code>use(*p)</code>. The function does not need to know about the smart pointer.<br><b>May replace the owned object:</b> <code>void reseat(std::unique_ptr&lt;T&gt;&amp; p)</code>, since the function can assign a new object to <code>p</code>.<br>Avoid <code>const std::unique_ptr&lt;T&gt;&amp;</code>. It exposes the ownership wrapper without letting the callee change it, so use <code>T&amp;</code> instead.<br><b>Interview trap:</b> an rvalue reference parameter, <code>std::unique_ptr&lt;T&gt;&amp;&amp;</code>, does not transfer ownership by itself. It transfers only if the callee moves from it, and the caller cannot tell whether that happened. Prefer the by-value sink.",
+  "tags": [
+   "cpp",
+   "cpp_m3",
+   "unique_ptr",
+   "function_parameters",
+   "ownership",
+   "lvl_vp_core"
+  ]
+ }
+]
