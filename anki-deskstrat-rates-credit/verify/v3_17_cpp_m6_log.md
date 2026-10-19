@@ -6,7 +6,7 @@ Cards checked: 40 (all). Code blocks extracted, HTML-unescaped, compiled and run
 
 | file | card index | issue | fix | source or basis |
 |---|---|---|---|---|
-| 17_cpp_m6 | 17_cpp_m6 | 1 (back) | Bare `&` in "int&" (HTML validity) | Escaped to `int&amp;` | HTML rule |
+| 17_cpp_m6 | 1 (back) | Bare `&` in "int&" (HTML validity) | Escaped to `int&amp;` | HTML rule |
 | 17_cpp_m6 | 2 (back) | Sample -O0 numbers presented as "real output"; the value is nondeterministic | Relabelled as nondeterministic; replaced with six observed runs (994931 to 1322614). -O2 result 2000000 and `addl $1000000, counter(%rip)` confirmed; TSan race confirmed | compiled, run, asm |
 | 17_cpp_m6 | 5 (back) | "four synchronisations" miscounts the local version (it has no lock in the loop) | Reworded | recomputed (sum 0..999999 x 4 = 1999998000000) |
 | 17_cpp_m6 | 14 (back) | seq_cst load mapping stated as "usual", not checked | Checked: seq_cst load is plain `movl`; store `xchgl` confirmed | compiled, asm |
