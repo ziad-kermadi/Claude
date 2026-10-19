@@ -9,6 +9,9 @@
    "probability",
    "s_clt_normal_approx",
    "fmt_code"
+  ],
+  "figs_back": [
+   "f14_mc_error_loglog"
   ]
  },
  {
@@ -21,6 +24,9 @@
    "vectorisation",
    "s_reflection",
    "fmt_code"
+  ],
+  "figs_back": [
+   "f14_walk_reflection"
   ]
  },
  {
@@ -117,6 +123,9 @@
    "s_markov_chain",
    "s_first_step_conditioning",
    "fmt_code"
+  ],
+  "figs_back": [
+   "f14_hth_chain"
   ]
  },
  {
@@ -131,6 +140,9 @@
    "s_dynamic_programming",
    "s_backward_induction",
    "fmt_code"
+  ],
+  "figs_back": [
+   "f14_die_threshold"
   ]
  },
  {
@@ -245,6 +257,9 @@
    "discretisation",
    "s_sqrt_time_scaling",
    "fmt_code"
+  ],
+  "figs_back": [
+   "f14_euler_weak_bias"
   ]
  },
  {
@@ -259,6 +274,9 @@
    "s_taylor",
    "s_sqrt_time_scaling",
    "fmt_code"
+  ],
+  "figs_back": [
+   "f14_gbm_strong_order"
   ]
  },
  {
@@ -272,6 +290,9 @@
    "options",
    "s_reflection",
    "fmt_code"
+  ],
+  "figs_back": [
+   "f14_barrier_monitor"
   ]
  },
  {
@@ -321,6 +342,9 @@
    "options",
    "s_taylor",
    "fmt_code"
+  ],
+  "figs_back": [
+   "f14_fd_delta"
   ]
  },
  {
@@ -334,6 +358,9 @@
    "options",
    "s_taylor",
    "fmt_code"
+  ],
+  "figs_back": [
+   "f14_fd_gamma"
   ]
  },
  {
@@ -347,6 +374,9 @@
    "options",
    "s_taylor",
    "fmt_code"
+  ],
+  "figs_back": [
+   "f14_fd_delta"
   ]
  },
  {
@@ -360,6 +390,9 @@
    "vega",
    "s_taylor",
    "fmt_code"
+  ],
+  "figs_back": [
+   "f14_iv_newton_bisect"
   ]
  },
  {
@@ -372,6 +405,9 @@
    "options",
    "no_arbitrage",
    "fmt_code"
+  ],
+  "figs_back": [
+   "f14_iv_newton_bisect"
   ]
  },
  {
@@ -398,6 +434,9 @@
    "s_backward_induction",
    "s_replication",
    "fmt_code"
+  ],
+  "figs_back": [
+   "f14_crr_convergence"
   ]
  },
  {
@@ -553,6 +592,9 @@
    "stability",
    "fdm",
    "fmt_code"
+  ],
+  "figs_back": [
+   "f14_ftcs_stability"
   ]
  },
  {
@@ -566,6 +608,9 @@
    "fdm",
    "debug_stability",
    "fmt_code"
+  ],
+  "figs_back": [
+   "f14_ftcs_stability"
   ]
  },
  {
@@ -579,6 +624,9 @@
    "simpson",
    "s_taylor",
    "fmt_code"
+  ],
+  "figs_back": [
+   "f14_trap_simpson"
   ]
  },
  {
@@ -639,6 +687,9 @@
    "uniform",
    "s_symmetry",
    "fmt_code"
+  ],
+  "figs_back": [
+   "f14_reservoir_freq"
   ]
  },
  {
@@ -650,6 +701,9 @@
    "off_by_one",
    "debug_probability",
    "fmt_code"
+  ],
+  "figs_back": [
+   "f14_reservoir_freq"
   ]
  },
  {
@@ -777,6 +831,9 @@
    "sobol",
    "numerical_integration",
    "fmt_code"
+  ],
+  "figs_back": [
+   "f14_qmc_vs_mc"
   ]
  },
  {
@@ -800,6 +857,9 @@
    "standard_error",
    "s_geometric_probability",
    "fmt_code"
+  ],
+  "figs_back": [
+   "f14_pi_disc"
   ]
  },
  {
